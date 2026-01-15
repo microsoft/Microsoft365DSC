@@ -92,11 +92,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 # calls to Get-PnPSiteScript without proper Identity returns nothing
-                Mock -CommandName Get-PnPSiteScript -ParameterFilter {Identity -ne '12345-67890-abcde-f0123'} -MockWith {
+                Mock -CommandName Get-PnPSiteScript -ParameterFilter { $Identity -ne '12345-67890-abcde-f0123' } -MockWith {
                     return $null
                 }
                 # after Add-PnPSiteScript has been called, Get-PnPSiteScript should return the created site-script
-                Mock -CommandName Get-PnPSiteScript -ParameterFilter {Identity -eq '12345-67890-abcde-f0123'} -MockWith {
+                Mock -CommandName Get-PnPSiteScript -ParameterFilter { $Identity -eq '12345-67890-abcde-f0123' } -MockWith {
                     return @{
                         Id          = '12345-67890-abcde-f0123'
                         Title       = 'Title One'

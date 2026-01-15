@@ -40,6 +40,8 @@
   "requiredModules": [
     "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users",
     "MSCloudLoginAssistant"
   ],
   "supportedEnvironments": [

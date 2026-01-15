@@ -23,6 +23,16 @@
           }
         ]
       }
+    },
+    "exchange":{
+      "requiredroles":[
+        "Role Management",
+        "View-Only Configuration"
+      ],
+      "requiredrolegroups":[
+        "Organization Management",
+        "View-Only Organization Management"
+      ]
     }
   },
   "requiredModules": [],

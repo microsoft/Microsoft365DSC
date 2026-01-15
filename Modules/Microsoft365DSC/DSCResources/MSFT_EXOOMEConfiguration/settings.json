@@ -26,16 +26,14 @@
     },
     "exchange": {
       "requiredroles": [
-        "Compliance Admin",
-        "Security Admin",
-        "Data Loss Prevention",
-        "Transport Rules",
         "Information Rights Management",
-        "View-Only Configuration",
-        "Security Reader"
+        "Security Reader",
+        "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Compliance Management",
+        "Security Reader",
+        "View-Only Organization Management"
       ]
     }
   },

@@ -108,7 +108,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -178,11 +178,13 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Enabling SmtpDaneInbound for {$DomainName}"
-        try {
+        try
+        {
             Enable-SmtpDaneInbound -DomainName $DomainName -ErrorAction Stop | Out-Null
         }
-        catch {
-            write-verbose "Cannot enable SmtpDaneInbound for DomainName $DomainName - check that DNSSEC is enabled"
+        catch
+        {
+            Write-Warning -Message "Cannot enable SmtpDaneInbound for DomainName $DomainName - check that DNSSEC is enabled"
             New-M365DSCLogEntry -Message "Error enabling SmtpDaneInbound for DomainName '$DomainName'" `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
@@ -370,15 +372,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

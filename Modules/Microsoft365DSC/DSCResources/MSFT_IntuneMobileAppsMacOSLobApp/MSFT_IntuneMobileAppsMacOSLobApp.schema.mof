@@ -10,6 +10,24 @@ class MSFT_DeviceManagementMobileAppAssignment
     [Write, Description("Possible values for the install intent chosen by the admin."), ValueMap{"available", "required", "uninstall", "availableWithoutEnrollment"}, Values{"available", "required", "uninstall", "availableWithoutEnrollment"}] String intent;
 };
 
+[ClassVersion("1.0.0.3")]
+class MSFT_DeviceManagementMobileAppAssignmentSettings
+{
+    [Required, Description("The odata type of the assignment type."), ValueMap{"#microsoft.graph.androidManagedStoreAppAssignmentSettings", "#microsoft.graph.iosStoreAppAssignmentSettings", "#microsoft.graph.iosLobAppAssignmentSettings", "#microsoft.graph.macOsLobAppAssignmentSettings", "#microsoft.graph.win32LobAppAssignmentSettings", "#microsoft.graph.winGetAppAssignmentSettings", "#microsoft.graph.windowsUniversalAppXAppAssignmentSettings"}, Values{"#microsoft.graph.androidManagedStoreAppAssignmentSettings", "#microsoft.graph.iosLobAppAssignmentSettings", "#microsoft.graph.iosStoreAppAssignmentSettings", "#microsoft.graph.macOsLobAppAssignmentSettings", "#microsoft.graph.win32LobAppAssignmentSettings", "#microsoft.graph.winGetAppAssignmentSettings", "#microsoft.graph.windowsUniversalAppXAppAssignmentSettings"}] String odataType;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_DeviceManagementMacOSLobAppAssignmentSettings : MSFT_DeviceManagementMobileAppAssignmentSettings
+{
+    [Write, Description("When TRUE, indicates that the app should be uninstalled when the device is removed from Intune. When FALSE, indicates that the app will not be uninstalled when the device is removed from Intune.")] Boolean uninstallOnDeviceRemoval;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_DeviceManagementMacOSLobAppAssignment : MSFT_DeviceManagementMobileAppAssignment
+{
+    [Write, Description("The settings of the assignment."), EmbeddedInstance("MSFT_DeviceManagementMacOSLobAppAssignmentSettings")] String assignmentSettings;
+};
+
 [ClassVersion("1.0.0")]
 class MSFT_DeviceManagementMinimumOperatingSystem
 {

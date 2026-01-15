@@ -26,13 +26,11 @@
     },
     "exchange": {
       "requiredroles": [
-        "Hygiene Management",
-        "Compliance Management",
-        "Organization Management",
-        "View-Only Organization Management"
+        "Role Management"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Organization Management",
+        "View-Only Organization Management"
       ]
     }
   },

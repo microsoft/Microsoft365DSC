@@ -26,11 +26,13 @@
     },
     "exchange": {
       "requiredroles": [
-        "O365SupportViewConfig",
-        "OrganizationConfiguration",
-        "ViewOnlyConfiguration"
+        "Organization Configuration",
+        "View-Only Configuration"
       ],
-      "requiredrolegroups": []
+      "requiredrolegroups": [
+        "Organization Management",
+        "View-Only Organization Management"
+      ]
     }
   },
   "requiredModules": [],

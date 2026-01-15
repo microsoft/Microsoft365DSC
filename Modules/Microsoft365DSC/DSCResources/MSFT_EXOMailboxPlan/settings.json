@@ -26,14 +26,12 @@
     },
     "exchange": {
       "requiredroles": [
-        "Unified Messaging",
-        "View-Only Recipients",
-        "Mail Recipient Creation",
         "Mail Recipients",
-        "UM Mailboxes"
+        "View-Only Recipients"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Recipient Management",
+        "View-Only Organization Management"
       ]
     }
   },

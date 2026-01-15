@@ -43,6 +43,7 @@
   },
   "requiredModules": [
     "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement",
     "Microsoft.Graph.Beta.Devices.CorporateManagement",
     "Microsoft.Graph.Groups"
   ],
@@ -70,6 +71,7 @@
         "Get-MgBetaDeviceAppManagementiOSManagedAppProtection",
         "Get-MgBetaDeviceAppManagementiOSManagedAppProtectionApp",
         "Get-MgBetaDeviceAppManagementiOSManagedAppProtectionAssignment",
+        "Get-MgBetaDeviceAppManagementManagedAppStatus",
         "New-MgBetaDeviceAppManagementiOSManagedAppProtection",
         "Remove-MgBetaDeviceAppManagementiOSManagedAppProtection",
         "Update-MgBetaDeviceAppManagementiOSManagedAppProtection"

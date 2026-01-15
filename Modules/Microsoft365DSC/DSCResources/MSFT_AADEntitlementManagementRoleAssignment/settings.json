@@ -49,6 +49,7 @@
   "requiredModules": [
     "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Groups",
     "Microsoft.Graph.Users"
   ],
   "supportedEnvironments": [
@@ -57,6 +58,12 @@
   ],
   "mode": "Configuration",
   "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
     {
       "module": "Microsoft.Graph.Beta.Identity.Governance",
       "cmdlets": [

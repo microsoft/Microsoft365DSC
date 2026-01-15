@@ -28,7 +28,9 @@
       "requiredroles": [
         "Address Lists"
       ],
-      "requiredrolegroups": []
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
   },
   "requiredModules": [],

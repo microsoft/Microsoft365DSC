@@ -246,8 +246,7 @@ function Get-TargetResource
 
         if ($null -ne $schedule.ScheduleInfo.Expiration)
         {
-            $expirationValue = @{
-
+            $expirationValue = [ordered]@{
                 type     = $schedule.ScheduleInfo.Expiration.Type
             }
             if ($null -ne $schedule.ScheduleInfo.Expiration.Duration)
@@ -264,8 +263,8 @@ function Get-TargetResource
         {
             if (Test-M365DSCRecurrenceIsConfigured -RecurrenceSettings $schedule.ScheduleInfo.Recurrence)
             {
-                $recurrenceValue = @{
-                    pattern = @{
+                $recurrenceValue = [ordered]@{
+                    pattern = [ordered]@{
                         dayOfMonth     = $schedule.ScheduleInfo.Recurrence.Pattern.dayOfMonth
                         daysOfWeek     = $schedule.ScheduleInfo.Recurrence.Pattern.daysOfWeek
                         firstDayOfWeek = $schedule.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek
@@ -274,7 +273,7 @@ function Get-TargetResource
                         month          = $schedule.ScheduleInfo.Recurrence.Pattern.month
                         type           = $schedule.ScheduleInfo.Recurrence.Pattern.type
                     }
-                    range   = @{
+                    range   = [ordered]@{
                         endDate             = $schedule.ScheduleInfo.Recurrence.Range.endDate
                         numberOfOccurrences = $schedule.ScheduleInfo.Recurrence.Range.numberOfOccurrences
                         recurrenceTimeZone  = $schedule.ScheduleInfo.Recurrence.Range.recurrenceTimeZone
@@ -314,14 +313,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "Error: $_"
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -664,34 +662,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $postProcessingScript = {
-        param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
-        if (-not [System.String]::IsNullOrEmpty($DesiredValues.ScheduleInfo.StartDateTime))
-        {
-            $parsedDesiredDate = [System.DateTime]::MinValue
-            $parseResultDesired = [System.DateTime]::TryParse($DesiredValues.ScheduleInfo.StartDateTime, [ref]$parsedDesiredDate)
-
-            $parsedCurrentDate = [System.DateTime]::MinValue
-            $parseResultCurrent = [System.DateTime]::TryParse($CurrentValues.ScheduleInfo.StartDateTime, [ref]$parsedCurrentDate)
-
-            if ($parseResultDesired -and $parseResultCurrent)
-            {
-                Write-Verbose -Message "Parsed Desired StartDateTime: $parsedDesiredDate, Parsed Current StartDateTime: $parsedCurrentDate"
-                if ($parsedDesiredDate -ne $parsedCurrentDate -and $parsedDesiredDate -lt [System.DateTime]::UtcNow)
-                {
-                    Write-Verbose -Message "Ignoring StartDateTime in ScheduleInfo as it is in the past. StartDateTime cannot be set to a past date."
-                    Write-Verbose -Message "Aligning the Desired and Current StartDateTime values for comparison."
-                    $DesiredValues.ScheduleInfo.StartDateTime = $CurrentValues.ScheduleInfo.StartDateTime
-                }
-            }
-        }
-        return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
-    }
-
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
                                          -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -ExcludedProperties @('Action', 'IsValidationOnly', 'Justification', 'TicketInfo') `
-                                         -PostProcessing $postProcessingScript
+                                         @compareParameters
     return $result
 }
 
@@ -887,22 +861,21 @@ function Export-TargetResource
     catch
     {
         if ($_.ErrorDetails.Message -like '*The tenant needs an AAD Premium*' -or `
-                $_.ErrorDetails.MEssage -like '*[AadPremiumLicenseRequired]*')
+                $_.ErrorDetails.Message -like '*[AadPremiumLicenseRequired]*')
         {
             Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
+            return ''
         }
         else
         {
-            Write-Verbose -Message "Exception: $($_.Exception.Message)"
-            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantId `
                 -Credential $Credential
-        }
 
-        return ''
+            throw
+        }
     }
 }
 
@@ -936,4 +909,38 @@ function Test-M365DSCRecurrenceIsConfigured
     return $true
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('Action', 'IsValidationOnly', 'Justification', 'TicketInfo')
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            if (-not [System.String]::IsNullOrEmpty($DesiredValues.ScheduleInfo.StartDateTime))
+            {
+                $parsedDesiredDate = [System.DateTime]::MinValue
+                $parseResultDesired = [System.DateTime]::TryParse($DesiredValues.ScheduleInfo.StartDateTime, [ref]$parsedDesiredDate)
+
+                $parsedCurrentDate = [System.DateTime]::MinValue
+                $parseResultCurrent = [System.DateTime]::TryParse($CurrentValues.ScheduleInfo.StartDateTime, [ref]$parsedCurrentDate)
+
+                if ($parseResultDesired -and $parseResultCurrent)
+                {
+                    Write-Verbose -Message "Parsed Desired StartDateTime: $parsedDesiredDate, Parsed Current StartDateTime: $parsedCurrentDate"
+                    if ($parsedDesiredDate -ne $parsedCurrentDate -and $parsedDesiredDate -lt [System.DateTime]::UtcNow)
+                    {
+                        Write-Verbose -Message "Ignoring StartDateTime in ScheduleInfo as it is in the past. StartDateTime cannot be set to a past date."
+                        Write-Verbose -Message "Aligning the Desired and Current StartDateTime values for comparison."
+                        $DesiredValues.ScheduleInfo.StartDateTime = $CurrentValues.ScheduleInfo.StartDateTime
+                    }
+                }
+            }
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

@@ -282,23 +282,24 @@ function Get-TargetResource
             }
 
             Write-Verbose -Message "Retrieving group by id {$Id}"
-            [array]$group = Get-UnifiedGroup -Identity $Id -IncludeAllProperties @Script:displayNameProperties -ErrorAction SilentlyContinue
 
-            if ($group.Count -eq 0)
-            {
-                Write-Verbose -Message "Couldn't retrieve group by ID. Trying by DisplayName {$DisplayName}"
-                [array]$group = Get-UnifiedGroup -Identity $DisplayName -IncludeAllProperties @Script:displayNameProperties -ErrorAction SilentlyContinue
-            }
-
-            if ($group.Count -gt 1)
-            {
-                Write-Warning -Message "Multiple instances of a group named {$DisplayName} was discovered which could result in inconsistencies retrieving its values."
-            }
-            $group = $group[0]
+            $group = Get-UnifiedGroup -Identity $Id -IncludeAllProperties @Script:displayNameProperties -ErrorAction SilentlyContinue
             if ($null -eq $group)
             {
-                Write-Verbose -Message "The specified group {$DisplayName} doesn't already exist."
+                Write-Verbose -Message "Couldn't retrieve group by ID. Trying by DisplayName {$DisplayName}"
+                $group = Get-UnifiedGroup -Identity $DisplayName -IncludeAllProperties @Script:displayNameProperties -ErrorAction SilentlyContinue
+            }
+
+            if ($null -eq $group)
+            {
+                Write-Verbose -Message "The specified group {$DisplayName} doesn't exist."
                 return $nullReturn
+            }
+
+            if ($group -is [array] -and $group.Count -gt 1)
+            {
+                Write-Warning -Message "Multiple instances of a group named {$DisplayName} was discovered which could result in inconsistencies retrieving its values."
+                $group = $group[0]
             }
         }
         else
@@ -439,7 +440,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullReturn
+        throw
     }
 }
 
@@ -730,30 +731,6 @@ function Set-TargetResource
         $key = $key.Replace("Include", "").Replace("WithDisplayNames", "")
         if ($PSBoundParameters.ContainsKey($key))
         {
-            if ($null -eq $Script:RecipientsCache2)
-            {
-                $Script:RecipientsCache2 = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new()
-                if ($null -eq $Script:RecipientsCache)
-                {
-                    $recipients = Get-Recipient -ResultSize Unlimited
-                    foreach ($recipient in $recipients)
-                    {
-                        $Script:RecipientsCache2[$recipient.PrimarySmtpAddress] = @{
-                            Name               = $recipient.Name
-                            PrimarySmtpAddress = $recipient.PrimarySmtpAddress
-                            WindowsLiveID      = $recipient.WindowsLiveID
-                        }
-                    }
-                }
-                else
-                {
-                    foreach ($entry in $Script:RecipientsCache.GetEnumerator())
-                    {
-                        $Script:RecipientsCache2[$entry.Value.PrimarySmtpAddress] = $entry.Value
-                    }
-                }
-            }
-
             $convertedList = [System.Collections.Generic.List[System.String]]::new()
             foreach ($member in $UpdateParameters.$key)
             {
@@ -765,15 +742,8 @@ function Set-TargetResource
                     continue
                 }
 
-                $entry = $null
-                if ($Script:RecipientsCache2.TryGetValue($member, [ref]$entry))
-                {
-                    $convertedList.Add($entry.Name)
-                }
-                else
-                {
-                    $convertedList.Add($member)
-                }
+                $entry = Get-Recipient -Identity $member
+                $convertedList.Add($entry.Name)
             }
 
             $UpdateParameters[$key] = $convertedList.ToArray()
@@ -1041,53 +1011,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $postProcessingScript = {
-        param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
-        foreach ($key in $Script:displayNameProperties.Keys)
-        {
-            $key = $key.Replace("Include", "").Replace("WithDisplayNames", "")
-            if ($DesiredValues.ContainsKey($key))
-            {
-                if ($null -eq $Script:RecipientsCache)
-                {
-                    $Script:RecipientsCache = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new()
-                    Get-Recipient -ResultSize Unlimited | Foreach-Object {
-                        $Script:RecipientsCache[$_.Name] = @{
-                            Name               = $_.Name
-                            PrimarySmtpAddress = $_.PrimarySmtpAddress
-                            WindowsLiveID      = $_.WindowsLiveID
-                        }
-                    }
-                }
-                $convertedValues = @()
-                foreach ($member in $DesiredValues.$key)
-                {
-                    $guid = [System.Guid]::Empty
-                    if ([System.Guid]::TryParse($member, [ref]$guid))
-                    {
-                        $entry = $null
-                        if ($Script:RecipientsCache.TryGetValue($member, [ref]$entry))
-                        {
-                            $convertedValues += $entry.PrimarySmtpAddress
-                        }
-                        else
-                        {
-                            $convertedValues += $member
-                        }
-                    }
-                    else
-                    {
-                        $convertedValues += $member
-                    }
-                }
-                $DesiredValues.$key = $convertedValues
-            }
-        }
-        return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
-    }
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -PostProcessing $postProcessingScript
+                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                             @compareParameters
     return $result
 }
 
@@ -1210,15 +1137,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 
@@ -1240,4 +1165,40 @@ function Get-DisplayNameSimplified
     return $simplifiedNames | Sort-Object
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            foreach ($key in $Script:displayNameProperties.Keys)
+            {
+                $key = $key.Replace("Include", "").Replace("WithDisplayNames", "")
+                if ($DesiredValues.ContainsKey($key))
+                {
+                    $convertedValues = @()
+                    foreach ($member in $DesiredValues.$key)
+                    {
+                        $guid = [System.Guid]::Empty
+                        if ([System.Guid]::TryParse($member, [ref]$guid))
+                        {
+                            $entry = Get-Recipient -Identity $member
+                            $convertedValues += $entry.PrimarySmtpAddress
+                        }
+                        else
+                        {
+                            $convertedValues += $member
+                        }
+                    }
+                    $DesiredValues.$key = $convertedValues
+                }
+            }
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

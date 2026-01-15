@@ -290,7 +290,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullReturn
+        throw
     }
 }
 
@@ -587,7 +587,7 @@ function Set-TargetResource
             DisableCompanyWideSharingLinks              = $DisableCompanyWideSharingLinks
             #LCID Cannot be set after a Template has been applied;
             #LocaleId                       = $LocaleId
-            RestrictedToRegion                          = $RestrictedToRegion
+            RestrictedToGeo                              = $RestrictedToRegion
             #SocialBarOnSitePagesDisabled                = $SocialBarOnSitePagesDisabled
             SharingAllowedDomainList                    = $SharingAllowedDomainList
             SharingBlockedDomainList                    = $SharingBlockedDomainList
@@ -1022,15 +1022,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

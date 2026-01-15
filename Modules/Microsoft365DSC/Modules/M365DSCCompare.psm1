@@ -51,9 +51,18 @@ function Compare-M365DSCResourceState
         $schemaPath = Join-Path -Path $currentPath -ChildPath '..\SchemaDefinition.json'
         $schemaJSON = Get-Content $schemaPath -Raw
         $Script:M365DSCSchema = ConvertFrom-Json $schemaJSON
+
+        $Script:ResourceDefinitionCache = @{}
+        foreach ($schemaEntry in $Script:M365DSCSchema)
+        {
+            $Script:ResourceDefinitionCache[$schemaEntry.ClassName] = $schemaEntry
+        }
     }
-    $resourceDefinition = $Script:M365DSCSchema | Where-Object -FilterScript { $_.ClassName -eq "MSFT_$ResourceName" }
-    $resourceKeys = $resourceDefinition.Parameters | Where-Object -FilterScript { $_.Option -eq 'Key' }
+    $resourceDefinition = $Script:ResourceDefinitionCache["MSFT_$ResourceName"]
+    $resourceKeys = $resourceDefinition.Parameters.Where({ $_.Option -eq 'Key' })
+
+    # Create a cache for resource property lookups to improve performance
+    $Script:ResourcePropertyCache = @{}
 
     $ValuesToCheck = $DesiredValues.Clone()
 
@@ -81,34 +90,34 @@ function Compare-M365DSCResourceState
         }
     }
 
-    $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Identity') | Out-Null
+    $null = $ValuesToCheck.Remove('Id')
+    $null = $ValuesToCheck.Remove('Identity')
 
     # Remove the key parameters from the comparison
     foreach ($keyToRemove in $resourceKeys)
     {
-        $ValuesToCheck.Remove($keyToRemove.Name) | Out-Null
+        $null = $ValuesToCheck.Remove($keyToRemove.Name)
     }
 
     # Remove PSCredential object from the list of properties to be evaluated
-    $credentialProperties = $resourceDefinition.Parameters | Where-Object -FilterScript { $_.CIMType -eq 'MSFT_Credential' }
+    $credentialProperties = $resourceDefinition.Parameters.Where({ $_.CIMType -eq 'MSFT_Credential' })
     foreach ($property in $credentialProperties)
     {
-        $ValuesToCheck.Remove($property.Name) | Out-Null
+        $null = $ValuesToCheck.Remove($property.Name)
     }
 
     # Remove the ExcludedProperties from the list of properties to be evaluated
     foreach ($property in $ExcludedProperties)
     {
-        $ValuesToCheck.Remove($property) | Out-Null
+        $null = $ValuesToCheck.Remove($property)
     }
 
     # Add the IncludedProperties to the list of properties to be evaluated
     foreach ($property in $IncludedProperties)
     {
-        if ($DesiredValues.ContainsKey($property) -and -not $ValuesToCheck.ContainsKey($property))
+        if ($DesiredValues.ContainsKey($property))
         {
-            $ValuesToCheck.Add($property, $DesiredValues.$property)
+            $ValuesToCheck.$property = $DesiredValues.$property
         }
     }
 
@@ -123,6 +132,7 @@ function Compare-M365DSCResourceState
             DesiredValue = 'Present'
         }
         $testTargetResource = $false
+        $ExcludedProperties += 'Ensure'
     }
     elseif ($DesiredValues.Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
@@ -133,10 +143,11 @@ function Compare-M365DSCResourceState
             DesiredValue = 'Absent'
         }
         $testTargetResource = $false
+        $ExcludedProperties += 'Ensure'
     }
     elseif ($DesiredValues.Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "The resource $ResourceName with $finalString does not exist in the tenant as desired." -Verbose:$Verbose
+        Write-Verbose -Message "The resource $ResourceName with $finalString does not exist in the tenant as desired."
         $skipEvaluation = $true
     }
 
@@ -144,19 +155,32 @@ function Compare-M365DSCResourceState
     if ($testTargetResource -and -not $skipEvaluation)
     {
         # Compare Cim instances
+        # Create property lookup hashtable for this resource type if not already cached
+        if (-not $Script:ResourcePropertyCache.ContainsKey($ResourceName))
+        {
+            $propertyLookup = @{}
+            foreach ($prop in $resourceDefinition.Parameters)
+            {
+                $propertyLookup[$prop.Name] = $prop
+            }
+            $Script:ResourcePropertyCache[$ResourceName] = $propertyLookup
+        }
+        $resourcePropertyLookup = $Script:ResourcePropertyCache[$ResourceName]
+
         $desiredKeys = $DesiredValues.Clone().Keys
         foreach ($key in $desiredKeys)
         {
             $source = $DesiredValues.$key
             $target = $CurrentValues.$key
-            $parameterDefinition = $resourceDefinition.Parameters | Where-Object -FilterScript { $_.Name -eq $key }
+            $parameterDefinition = $resourcePropertyLookup[$key]
             if ($null -ne $source -and ($source.GetType().Name -like '*CimInstance*' -or $parameterDefinition.CIMType -like "MSFT_*"))
             {
                 Write-Verbose -Message "Comparing complex object property $key of resource $ResourceName"
                 $CIMProperty = $parameterDefinition
                 $CIMName = $CIMProperty.CIMType.Replace('[]', '')
-                $CIMDefinition = $Script:M365DSCSchema | Where-Object -FilterScript { $_.ClassName -eq $CIMName }
-                $CIMPrimaryKeys = $CIMDefinition.Parameters | Where-Object -FilterScript { $_.Option -eq 'Required' }
+                $CIMDefinition = $Script:M365DSCSchema.Where({ $_.ClassName -eq $CIMName })
+                # Can potentially be a single PSObject, therefore not using Where()
+                $CIMPrimaryKeys = $CIMDefinition.Parameters | Where-Object { $_.Option -eq 'Required' }
 
                 $targetObjects = @{}
                 if ($source.GetType().Name -in @('CimInstance[]', 'Object[]'))
@@ -228,7 +252,8 @@ function Compare-M365DSCResourceState
             -DesiredValues $DesiredValues `
             -ValuesToCheck $ValuesToCheck.Keys `
             -NoEventMessage `
-            -NoDriftReset
+            -NoDriftReset `
+            -ExcludedProperties $ExcludedProperties
     }
 
     if ($testResult -and -not $testResult2)

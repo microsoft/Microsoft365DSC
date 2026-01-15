@@ -23,6 +23,16 @@
           }
         ]
       }
+    },
+    "purview": {
+      "requiredroles": [
+        "Tag Reader",
+        "Tag Manager"
+      ],
+      "requiredrolegroups": [
+        "Security Reader",
+        "Security Administrator"
+      ]
     }
   },
   "requiredModules": [],

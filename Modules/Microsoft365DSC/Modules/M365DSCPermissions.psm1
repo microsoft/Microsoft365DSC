@@ -251,6 +251,67 @@ function Get-M365DSCCompiledPermissionList
                 Write-Verbose "  No Exchange node in settings.json for $resourceName."
             }
 
+            # Purview permissions
+            if ($null -ne $resourceSettings.permissions.purview)
+            {
+                Write-Verbose -Message '  Retrieving Purview permissions'
+                # Required Role
+                foreach ($requiredRole in $resourceSettings.permissions.purview.requiredroles)
+                {
+                    if (-not $results.RequiredRoles.Contains($requiredRole))
+                    {
+                        Write-Verbose -Message "    Found new Required Role {$($requiredRole)}"
+                        $results.RequiredRoles += $requiredRole
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "    Required Role {$($requiredRole)} was already added"
+                    }
+                }
+
+                # Required RoleGroups
+                foreach ($requiredRoleGroup in $resourceSettings.permissions.purview.requiredrolegroups)
+                {
+                    if (-not $results.RequiredRoleGroups.Contains($requiredRoleGroup))
+                    {
+                        Write-Verbose -Message "    Found new Required Role Group {$($requiredRoleGroup)}"
+                        $results.RequiredRoleGroups += $requiredRoleGroup
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "    Required Role Group {$($requiredRoleGroup)} was already added"
+                    }
+                }
+
+                $exchangeRead = $results.Read | Where-Object -FilterScript { $_.API -eq 'Exchange' -and $_.Permission.Name -eq 'Exchange.ManageAsApp' }
+                if ($null -eq $exchangeRead)
+                {
+                    $results.Read += @{
+                        API        = 'Exchange'
+                        Permission = @{
+                            Type = 'Application'
+                            Name = 'Exchange.ManageAsApp'
+                        }
+                    }
+                }
+
+                $exchangeUpdate = $results.Update | Where-Object -FilterScript { $_.API -eq 'Exchange' -and $_.Permission.Name -eq 'Exchange.ManageAsApp' }
+                if ($null -eq $exchangeUpdate)
+                {
+                    $results.Update += @{
+                        API        = 'Exchange'
+                        Permission = @{
+                            Type = 'Application'
+                            Name = 'Exchange.ManageAsApp'
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Write-Verbose "  No Purview node in settings.json for $resourceName."
+            }
+
             # SharePoint permissions
             if ($null -ne $resourceSettings.permissions.sharepoint)
             {

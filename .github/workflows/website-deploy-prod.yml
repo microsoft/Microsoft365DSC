@@ -9,12 +9,12 @@ jobs:
       name: PROD
     name: Build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - uses: actions/setup-node@v3
         with:
-          node-version: "22"
+          node-version: "24"
       - name: Generate workloads and resources
         shell: pwsh
         run: pwsh -command ".\$GITHUB_WORKSPACE\generator\scripts\Build-Workloads.ps1 -Force"
@@ -30,7 +30,7 @@ jobs:
           REACT_APP_SITE_DESCRIPTION: ${{ secrets.REACT_APP_SITE_DESCRIPTION }}
           REACT_APP_INSTRUMENTATION_KEY: ${{ secrets.REACT_APP_INSTRUMENTATION_KEY }}
       - name: Publish Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: website-build
           path: ${{ github.workspace }}/generator/build
@@ -43,7 +43,7 @@ jobs:
     name: Deploy to Production
     needs: build
     steps:
-      - uses: actions/download-artifact@4
+      - uses: actions/download-artifact@v7
         with:
           name: website-build
       - name: Deploy

@@ -203,21 +203,13 @@ function Add-M365DSCEvent
         }
         else
         {
-            if ([System.Diagnostics.EventLog]::Exists($LogName) -eq $false)
+            try
             {
-                # Create event log
-                $null = New-EventLog -LogName $LogName -Source $Source
+                [System.Diagnostics.EventLog]::CreateEventSource($Source, $LogName)
             }
-            else
+            catch [System.Security.SecurityException]
             {
-                try
-                {
-                    [System.Diagnostics.EventLog]::CreateEventSource($Source, $LogName)
-                }
-                catch [System.Security.SecurityException]
-                {
-                    Write-Verbose -Message "[WARNING] Not all event logs could be searched. Source might exist in another event log."
-                }
+                Write-Verbose -Message "[WARNING] Not all event logs could be searched. Source might exist in another event log."
             }
         }
 
@@ -246,8 +238,7 @@ function Add-M365DSCEvent
 
         try
         {
-            Write-EventLog -LogName $LogName -Source $Source `
-                -EventId $EventID -Message $outputMessage -EntryType $EntryType -ErrorAction Stop
+            [System.Diagnostics.EventLog]::WriteEntry($Source, $outputMessage, $EntryType, $EventID)
         }
         catch
         {
@@ -378,7 +369,7 @@ function Export-M365DSCDiagnosticData
     try
     {
         Write-Host '    * Anonymizing DSC Event Log' -ForegroundColor Gray
-        Get-EventLog -LogName 'M365Dsc' -After $afterDate | Export-Csv $evtExportLog -NoTypeInformation
+        Get-WinEvent -FilterHashtable @{ LogName = 'M365Dsc'; StartTime = $afterDate } -ErrorAction SilentlyContinue | Export-Csv $evtExportLog -NoTypeInformation
         if ($Anonymize)
         {
             $newLog = Import-Csv $evtExportLog

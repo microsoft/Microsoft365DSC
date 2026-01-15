@@ -10,6 +10,27 @@ class MSFT_DeviceManagementMobileAppAssignment
     [Write, Description("Possible values for the install intent chosen by the admin."), ValueMap{"available", "required", "uninstall", "availableWithoutEnrollment"}, Values{"available", "required", "uninstall", "availableWithoutEnrollment"}] String intent;
 };
 
+[ClassVersion("1.0.0.3")]
+class MSFT_DeviceManagementMobileAppAssignmentSettings
+{
+    [Required, Description("The odata type of the assignment type."), ValueMap{"#microsoft.graph.androidManagedStoreAppAssignmentSettings", "#microsoft.graph.iosStoreAppAssignmentSettings", "#microsoft.graph.iosLobAppAssignmentSettings", "#microsoft.graph.macOsLobAppAssignmentSettings", "#microsoft.graph.win32LobAppAssignmentSettings", "#microsoft.graph.winGetAppAssignmentSettings", "#microsoft.graph.windowsUniversalAppXAppAssignmentSettings"}, Values{"#microsoft.graph.androidManagedStoreAppAssignmentSettings", "#microsoft.graph.iosLobAppAssignmentSettings", "#microsoft.graph.iosStoreAppAssignmentSettings", "#microsoft.graph.macOsLobAppAssignmentSettings", "#microsoft.graph.win32LobAppAssignmentSettings", "#microsoft.graph.winGetAppAssignmentSettings", "#microsoft.graph.windowsUniversalAppXAppAssignmentSettings"}] String odataType;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_DeviceManagementBuiltInStoreAppAssignmentSettings : MSFT_DeviceManagementMobileAppAssignmentSettings
+{
+    [Write, Description("Display name or Id of the VPN configuration profile associated with this policy.")] String vpnConfigurationId;
+    [Write, Description("When TRUE, indicates that the app should be uninstalled when the device is removed from Intune. When FALSE, indicates that the app will not be uninstalled when the device is removed from Intune. By default, property is set to null which internally is treated as TRUE.")] Boolean uninstallOnDeviceRemoval;
+    [Write, Description("When TRUE, indicates that the app can be uninstalled by the user. When FALSE, indicates that the app cannot be uninstalled by the user. By default, this property is set to null which internally is treated as TRUE.")] Boolean isRemovable;
+    [Write, Description("When TRUE, indicates that the app should not be backed up to iCloud. When FALSE, indicates that the app may be backed up to iCloud. By default, this property is set to null which internally is treated as FALSE.")] Boolean preventManagedAppBackup;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_DeviceManagementBuiltInStoreAppAssignment : MSFT_DeviceManagementMobileAppAssignment
+{
+    [Write, Description("The settings of the assignment."), EmbeddedInstance("MSFT_DeviceManagementBuiltInStoreAppAssignmentSettings")] String assignmentSettings;
+};
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphIosDeviceType
 {

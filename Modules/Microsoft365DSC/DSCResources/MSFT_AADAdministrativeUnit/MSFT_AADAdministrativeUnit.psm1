@@ -180,7 +180,7 @@ function Get-TargetResource
                 $memberSpec = @()
                 foreach ($auMember in $auMembers)
                 {
-                    $member = @{}
+                    $member = [ordered]@{}
                     if ($auMember.AdditionalProperties.'@odata.type' -match 'user')
                     {
                         $member.Add('Identity', $auMember.AdditionalProperties.userPrincipalName)
@@ -235,9 +235,9 @@ function Get-TargetResource
                 Write-Verbose -Message "Found DirectoryRole '$($roleObject.DisplayName)' with id $($roleObject.Id)"
                 $scopedRoleMember = [ordered]@{
                     RoleName       = $roleObject.DisplayName
-                    RoleMemberInfo = @{
-                        Type     = $null
+                    RoleMemberInfo = [ordered]@{
                         Identity = $null
+                        Type     = $null
                     }
                 }
                 Write-Verbose -Message "AU {$DisplayName} verify RoleMemberInfo.Id {$($auScopedRoleMember.RoleMemberInfo.Id)}"
@@ -282,7 +282,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -535,7 +535,7 @@ function Set-TargetResource
                 {
                     throw "AU {$($DisplayName)}: ScopedRoleMember for role {$($roleMember.RoleName)}: $($roleMember.RoleMemberInfo.Type) {$($roleMember.RoleMemberInfo.Identity)} is not unique"
                 }
-                $scopedRoleMemberSpecification += @{
+                $scopedRoleMemberSpecification += [ordered]@{
                     RoleId         = $roleObject.Id
                     RoleMemberInfo = @{
                         Id = $roleMemberIdentity.Id
@@ -755,7 +755,7 @@ function Set-TargetResource
                 {
                     Write-Verbose -Message "Adding new scoped role {$($diff.RoleName)} member {$($diff.Identity)}, type {$($diff.Type)} to Administrative Unit {$DisplayName}"
 
-                    $scopedRoleMemberParam = @{
+                    $scopedRoleMemberParam = [ordered]@{
                         RoleId         = $roleObject.Id
                         RoleMemberInfo = @{
                             Id = $memberObject.Id
@@ -879,9 +879,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -ExcludedProperties @('Visibility')
+                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                             @compareParameters
     return $result
 }
 
@@ -1077,16 +1078,25 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('Visibility')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

@@ -28,7 +28,7 @@
         ]
       }
     },
-    "Azure Resource Manager": {
+    "Azure Service Management": {
       "delegated": {
         "read": [
           {

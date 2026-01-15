@@ -179,14 +179,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -318,7 +317,7 @@ function Set-TargetResource
     {
         try
         {
-            Write-Verbose -Message "Creating new Workflow Custom Task Extension {$DisplayName} with parameters:`r`n$(ConvertTo-Json $instanceParams)"
+            Write-Verbose -Message "Creating new Workflow Custom Task Extension with DisplayName {$DisplayName}"
             New-MgBetaIdentityGovernanceLifecycleWorkflowCustomTaskExtension -BodyParameter $instanceParams -ErrorAction Stop
         }
         catch
@@ -343,7 +342,7 @@ function Set-TargetResource
     {
         try
         {
-            Write-Verbose -Message "Updating Workflow Custom Task Extension {$DisplayName} with parameters:`r`n$(ConvertTo-Json $instanceParams)"
+            Write-Verbose -Message "Updating Workflow Custom Task Extension with DisplayName {$DisplayName}"
             Update-MgBetaIdentityGovernanceLifecycleWorkflowCustomTaskExtension -CustomTaskExtensionId $currentInstance.Id -BodyParameter $instanceParams -ErrorAction Stop
         }
         catch
@@ -626,16 +625,14 @@ function Export-TargetResource
         }
         else
         {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantId `
                 -Credential $Credential
-        }
 
-        return ''
+            throw
+        }
     }
 }
 

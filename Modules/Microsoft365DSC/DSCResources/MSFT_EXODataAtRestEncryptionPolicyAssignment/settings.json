@@ -29,7 +29,7 @@
         "Compliance Admin"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Compliance Management"
       ]
     }
   },

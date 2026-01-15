@@ -152,7 +152,7 @@ function Get-TargetResource
             foreach ($entity in $instance.Entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $current = @{
+                $current = [ordered]@{
                     Dmn        = $entity.Dmn
                     isMLSubDmn = $entity.isMLSubDmn
                 }
@@ -216,7 +216,7 @@ function Get-TargetResource
             foreach ($entity in $instance.Entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $site = @{
+                $site = [ordered]@{
                     Url  = $entity.Url
                     Name = $entity.Name
                     Guid = $entity.Guid
@@ -378,7 +378,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -1157,15 +1157,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

@@ -26,9 +26,13 @@
     },
     "exchange": {
       "requiredroles": [
-        "Address Lists"
+        "Mail Recipient Creation",
+        "View-Only Recipients"
       ],
-      "requiredrolegroups": []
+      "requiredrolegroups": [
+        "Recipient Management",
+        "View-Only Organization Management"
+      ]
     }
   },
   "requiredModules": [],

@@ -26,13 +26,12 @@
     },
     "exchange": {
       "requiredroles": [
-        "Hygiene Management",
-        "Compliance Management",
-        "Organization Management",
-        "View-Only Organization Management"
+        "View-Only Recipients",
+        "Mail Recipients"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Recipient Management",
+        "View-Only Organization Management"
       ]
     }
   },

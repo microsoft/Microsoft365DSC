@@ -445,9 +445,12 @@ function Get-TargetResource
         $policyApps = Get-MgBetaDeviceAppManagementAndroidManagedAppProtectionApp -AndroidManagedAppProtectionId $Id
 
         $appsArray = @()
-        foreach ($app in $policyApps)
+        if ($policy.AppGroupType -eq 'selectedPublicApps')
         {
-            $appsArray += $app.MobileAppIdentifier.AdditionalProperties.packageId
+            foreach ($app in $policyApps)
+            {
+                $appsArray += $app.MobileAppIdentifier.AdditionalProperties.packageId
+            }
         }
 
         $assignmentsValues = Get-MgBetaDeviceAppManagementAndroidManagedAppProtectionAssignment -AndroidManagedAppProtectionId $policy.Id
@@ -562,21 +565,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        if ($_.Exception.Message -eq 'Multiple Policies with same displayname identified - Module currently only functions with unique names')
-        {
-            throw $_
-        }
-        else
-        {
-            New-M365DSCLogEntry -Message 'Error retrieving data:' `
-                -Exception $_ `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
 
-            return $nullResult
-        }
+        throw
     }
 }
 
@@ -1025,7 +1020,7 @@ function Set-TargetResource
     $BoundParameters.CustomBrowserDisplayName = $ManagedBrowserValuesHash.CustomBrowserDisplayName
     $BoundParameters.CustomBrowserPackageId = $ManagedBrowserValuesHash.CustomBrowserPackageId
 
-    if (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Absent'))
+    if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         $createParameters = ([Hashtable]$BoundParameters).Clone()
         $createParameters.Remove('Id') | Out-Null
@@ -1037,9 +1032,9 @@ function Set-TargetResource
 
         if ($newPolicy.Id)
         {
-            Write-Verbose -Message "Update targetApps for Android App Protection Policy with Id {$($newpolicy.Id)} and DisplayName {$DisplayName}"
-            $targetApps = Get-IntuneAppProtectionPolicyAndroidAppsToHashtable -Apps $Apps
-            $Url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceAppManagement/androidManagedAppProtections('$($policy.Id)')/targetApps"
+            Write-Verbose -Message "Update targetApps for Android App Protection Policy with Id {$($newPolicy.Id)} and DisplayName {$DisplayName}"
+            $targetApps = Get-IntuneAppProtectionPolicyAndroidAppsToHashtable -Apps $Apps -AppGroupType $AppGroupType
+            $Url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceAppManagement/androidManagedAppProtections('$($newPolicy.Id)')/targetApps"
             Invoke-MgGraphRequest -Method POST -Uri $Url -Body $targetApps
 
             $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -1049,7 +1044,7 @@ function Set-TargetResource
                 -Repository 'deviceAppManagement/androidManagedAppProtections'
         }
     }
-    elseif (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Present'))
+    elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         $updateParameters = ([Hashtable]$BoundParameters).Clone()
         $updateParameters.Remove('Id') | Out-Null
@@ -1060,7 +1055,7 @@ function Set-TargetResource
         Update-MgBetaDeviceAppManagementAndroidManagedAppProtection -AndroidManagedAppProtectionId $currentPolicy.Id -BodyParameter $updateParameters
 
         Write-Verbose -Message "Update targetApps for Android App Protection Policy with Id {$($currentPolicy.Id)} and DisplayName {$DisplayName}"
-        $targetApps = Get-IntuneAppProtectionPolicyAndroidAppsToHashtable -Apps $Apps
+        $targetApps = Get-IntuneAppProtectionPolicyAndroidAppsToHashtable -Apps $Apps -AppGroupType $AppGroupType
         $Url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceAppManagement/androidManagedAppProtections('$($currentPolicy.Id)')/targetApps"
         Invoke-MgGraphRequest -Method POST -Uri $Url -Body $targetApps
 
@@ -1465,8 +1460,17 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $postProcessingScript = {
+        param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+        if ($DesiredValues.AppGroupType -ne 'SelectedPublicApps')
+        {
+            $ValuesToCheck.Remove('Apps')
+        }
+        return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+    }
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                         -PostProcessing $postProcessingScript
     return $result
 }
 
@@ -1604,16 +1608,14 @@ function Export-TargetResource
         }
         else
         {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantId `
                 -Credential $Credential
-        }
 
-        return ''
+            throw
+        }
     }
 }
 
@@ -1621,19 +1623,59 @@ function Get-IntuneAppProtectionPolicyAndroidAppsToHashtable
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
         [System.String[]]
-        $Apps
+        $Apps,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps','allApps')]
+        [System.String]
+        $AppGroupType
     )
 
     $formattedApps = @()
+    $allApps = (Get-MgBetaDeviceAppManagementManagedAppStatus -ManagedAppStatusId managedAppList).AdditionalProperties.content.appList | Where-Object {
+        $_.appIdentifier.'@odata.type' -eq '#microsoft.graph.androidMobileAppIdentifier'
+    }
+
+    switch ($AppGroupType)
+    {
+        'selectedPublicApps'
+        {
+            if ($Apps.Count -eq 0)
+            {
+                throw "AppGroupType is set to 'selectedPublicApps' but no Apps were provided."
+            }
+        }
+        'allCoreMicrosoftApps'
+        {
+            $Apps = $allApps | Where-Object appGroups -EQ 'coreMicrosoft' | ForEach-Object {
+                $_.appIdentifier.bundleId
+            }
+        }
+        'allMicrosoftApps'
+        {
+            $Apps = $allApps | Where-Object appGroups -EQ 'microsoft' | ForEach-Object {
+                $_.appIdentifier.bundleId
+            }
+        }
+        'allApps'
+        {
+            $Apps = $allApps | ForEach-Object {
+                $_.appIdentifier.bundleId
+            }
+        }
+    }
+
     foreach ($app in $Apps)
     {
         $formattedApps += @{
             id                  = $app + '.android'
             mobileAppIdentifier = @{
-                '@odata.type' = '#microsoft.graph.AndroidMobileAppIdentifier'
+                '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
                 packageId     = $app
             }
         }
@@ -1641,6 +1683,7 @@ function Get-IntuneAppProtectionPolicyAndroidAppsToHashtable
 
     return @{
         apps = $formattedApps
+        appGroupType = $AppGroupType
     }
 }
 

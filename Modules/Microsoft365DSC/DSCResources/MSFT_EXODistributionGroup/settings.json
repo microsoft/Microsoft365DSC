@@ -24,10 +24,13 @@
     },
     "exchange": {
       "requiredroles": [
-        "Organization Management",
-        "Recipient Management"
+        "Distribution Groups",
+        "View-Only Recipients"
       ],
-      "requiredrolegroups": []
+      "requiredrolegroups": [
+        "Recipient Management",
+        "View-Only Organization Management"
+      ]
     }
   },
   "requiredModules": [],

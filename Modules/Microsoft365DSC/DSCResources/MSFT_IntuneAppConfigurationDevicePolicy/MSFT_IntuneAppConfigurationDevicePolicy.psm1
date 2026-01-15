@@ -204,7 +204,13 @@ function Get-TargetResource
         $targetedApps = @()
         foreach ($targetedApp in $getValue.TargetedMobileApps)
         {
-            $app = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $targetedApp
+            $app = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $targetedApp -ErrorAction SilentlyContinue
+            if ($null -eq $app)
+            {
+                Write-Warning -Message "App [$targetedApp] was not found. Please make sure the targeted app exists."
+                continue
+            }
+
             if ($platform -eq 'android')
             {
                 $targetedApps += $app.AdditionalProperties.packageId
@@ -263,7 +269,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -760,15 +766,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

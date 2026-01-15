@@ -23,6 +23,16 @@
           }
         ]
       }
+    },
+    "exchange": {
+      "requiredroles": [
+        "Tenant AllowBlockList Manager",
+        "View-Only Configuration"
+      ],
+      "requiredrolegroups": [
+        "Security Operator",
+        "View-Only Organization Management"
+      ]
     }
   },
   "requiredModules": [],

@@ -312,18 +312,23 @@ function Get-TargetResource
             if ($null -eq $Script:RecipientsCache)
             {
                 $Script:RecipientsCache = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new()
-                Get-Recipient -ResultSize Unlimited | Foreach-Object {
-                    $Script:RecipientsCache[$_.Name] = @{
-                        PrimarySmtpAddress = $_.PrimarySmtpAddress
-                        WindowsLiveID      = $_.WindowsLiveID
-                    }
-                }
             }
             foreach ($manager in $distributionGroup.ManagedBy)
             {
                 try
                 {
-                    $recipient = $Script:RecipientsCache[$manager]
+                    if ($null -ne $Script:RecipientsCache -and $Script:RecipientsCache[$manager])
+                    {
+                        $recipient = $Script:RecipientsCache[$manager]
+                    }
+                    else
+                    {
+                        $recipient = Get-Recipient -Identity $manager -ErrorAction Stop
+                        $Script:RecipientsCache.Add($recipient.Name, @{
+                            PrimarySmtpAddress = $recipient.PrimarySmtpAddress
+                            WindowsLiveID      = $recipient.WindowsLiveID
+                        })
+                    }
                     if ($null -eq $recipient)
                     {
                         throw "Recipient not found in cache"
@@ -344,18 +349,23 @@ function Get-TargetResource
             if ($null -eq $Script:RecipientsCache)
             {
                 $Script:RecipientsCache = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new()
-                Get-Recipient -ResultSize Unlimited | Foreach-Object {
-                    $Script:RecipientsCache[$_.Name] = @{
-                        PrimarySmtpAddress = $_.PrimarySmtpAddress
-                        WindowsLiveID      = $_.WindowsLiveID
-                    }
-                }
             }
             foreach ($moderator in $distributionGroup.ModeratedBy)
             {
                 try
                 {
-                    $recipient = $Script:RecipientsCache[$moderator]
+                    if ($null -ne $Script:RecipientsCache -and $Script:RecipientsCache[$moderator])
+                    {
+                        $recipient = $Script:RecipientsCache[$moderator]
+                    }
+                    else
+                    {
+                        $recipient = Get-Recipient -Identity $moderator -ErrorAction Stop
+                        $Script:RecipientsCache.Add($recipient.Name, @{
+                            PrimarySmtpAddress = $recipient.PrimarySmtpAddress
+                            WindowsLiveID      = $recipient.WindowsLiveID
+                        })
+                    }
                     if ($null -eq $recipient)
                     {
                         throw "Recipient not found in cache"
@@ -434,7 +444,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullReturn
+        throw
     }
 }
 
@@ -1017,18 +1027,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $postProcessingScript = {
-        param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
-        if (-not $ValuesToCheck.OrganizationalUnit)
-        {
-            $ValuesToCheck.Remove('OrganizationalUnit') | Out-Null
-        }
-        return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
-    }
-
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -PostProcessing $postProcessingScript
+                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                             @compareParameters
     return $result
 }
 
@@ -1036,7 +1038,8 @@ function Export-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param (
+    param
+    (
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -1154,16 +1157,32 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            if (-not $ValuesToCheck.OrganizationalUnit)
+            {
+                $ValuesToCheck.Remove('OrganizationalUnit') | Out-Null
+            }
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

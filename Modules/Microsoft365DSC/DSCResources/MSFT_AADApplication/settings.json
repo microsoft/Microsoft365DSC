@@ -68,8 +68,10 @@
         "Get-MgServicePrincipal",
         "New-MgApplication",
         "New-MgApplicationOwnerByRef",
+        "New-MgApplicationTokenLifetimePolicyByRef",
         "Remove-MgApplication",
         "Remove-MgApplicationOwnerDirectoryObjectByRef",
+        "Remove-MgApplicationTokenLifetimePolicyByRef",
         "Update-MgApplication"
       ]
     },
@@ -97,9 +99,7 @@
     {
       "module": "Microsoft.Graph.Beta.Identity.SignIns",
       "cmdlets": [
-        "Get-MgBetaPolicyTokenLifetimePolicy",
-        "New-MgApplicationTokenLifetimePolicyByRef",
-        "Remove-MgApplicationTokenLifetimePolicyByRef"
+        "Get-MgBetaPolicyTokenLifetimePolicy"
       ]
     },
     {

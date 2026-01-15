@@ -26,9 +26,7 @@
     },
     "exchange": {
       "requiredroles": [
-        "Federated Sharing",
-        "Mail Tips",
-        "Message Tracking"
+        "Mail Tips"
       ],
       "requiredrolegroups": [
         "Organization Management"

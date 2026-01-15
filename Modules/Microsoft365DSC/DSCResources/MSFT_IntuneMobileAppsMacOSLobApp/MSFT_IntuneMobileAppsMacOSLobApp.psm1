@@ -267,14 +267,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -799,22 +798,27 @@ function Export-TargetResource
                 }
             }
 
-            if ($null -ne $Results.Assignments)
+            if ($Results.Assignments)
             {
-                if ($Results.Assignments)
-                {
-                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $Results.Assignments `
-                        -CIMInstanceName DeviceManagementMobileAppAssignment
+                $complexMapping = @(
+                    @{
+                        Name = 'AssignmentSettings'
+                        CIMInstanceName = 'DeviceManagementMacOSLobAppAssignmentSettings'
+                        IsRequired = $false
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Assignments `
+                    -CIMInstanceName DeviceManagementMacOSLobAppAssignment `
+                    -ComplexTypeMapping $complexMapping
 
-                    if ($complexTypeStringResult)
-                    {
-                        $Results.Assignments = $complexTypeStringResult
-                    }
-                    else
-                    {
-                        $Results.Remove('Assignments') | Out-Null
-                    }
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
                 }
             }
             #endregion complex types
@@ -837,15 +841,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

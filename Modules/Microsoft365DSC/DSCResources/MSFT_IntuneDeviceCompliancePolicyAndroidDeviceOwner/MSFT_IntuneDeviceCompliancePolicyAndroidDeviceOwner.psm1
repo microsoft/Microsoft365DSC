@@ -215,7 +215,7 @@ function Get-TargetResource
         Write-Verbose -Message "Found Intune Android Device Owner Device Compliance Policy with displayName {$DisplayName}"
 
         #scheduledActionsForRule needs processing before we can interact with it
-        $psCustomObject = $devicePolicy.ScheduledActionsForRule | convertTo-JSON | ConvertFrom-JSON
+        $psCustomObject = $devicePolicy.ScheduledActionsForRule | ConvertTo-Json -Depth 10 | ConvertFrom-Json
         $scheduledActionsForRuleHashTable = @{}
         $psCustomObject.PsObject.Properties | ForEach-Object {
             $scheduledActionsForRuleHashTable[$_.Name] = $_.Value
@@ -297,7 +297,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -902,16 +902,14 @@ function Export-TargetResource
         }
         else
         {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantId `
                 -Credential $Credential
-        }
 
-        return ''
+            throw
+        }
     }
 }
 

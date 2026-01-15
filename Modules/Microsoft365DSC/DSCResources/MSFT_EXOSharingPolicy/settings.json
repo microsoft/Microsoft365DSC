@@ -27,11 +27,11 @@
     "exchange": {
       "requiredroles": [
         "Federated Sharing",
-        "Mail Recipient Creation",
         "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Organization Management",
+        "View-Only Organization Management"
       ]
     }
   },

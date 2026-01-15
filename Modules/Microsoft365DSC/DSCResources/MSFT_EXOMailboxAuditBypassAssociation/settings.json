@@ -26,14 +26,12 @@
     },
     "exchange": {
       "requiredroles": [
-        "Compliance Admin",
-        "View-Only Configuration",
-        "Journaling"
+        "Audit Logs",
+        "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management",
-        "Compliance Management",
-        "Records Management"
+        "Records Management",
+        "View-Only Organization Management"
       ]
     }
   },

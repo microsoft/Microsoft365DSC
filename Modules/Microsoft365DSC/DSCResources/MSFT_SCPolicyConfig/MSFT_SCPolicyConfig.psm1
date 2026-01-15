@@ -186,7 +186,7 @@ function Get-TargetResource
 
         # AdvancedClassificationEnabled
         $AdvancedClassificationEnabledValue = $false # default value
-        $valueToParse =($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AdvancedClassificationEnabled' }).Value
+        $valueToParse = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AdvancedClassificationEnabled' }).Value
         if (-not [System.String]::IsNullOrEmpty($valueToParse))
         {
             $AdvancedClassificationEnabledValue = [Boolean]::Parse($valueToParse)
@@ -237,7 +237,7 @@ function Get-TargetResource
         if ($null -ne $entry)
         {
             $entry = ConvertFrom-Json $entry.Value
-            $EvidenceStoreSettingsValue = @{
+            $EvidenceStoreSettingsValue = [ordered]@{
                 FileEvidenceIsEnabled = $entry.FileEvidenceIsEnabled
                 NumberOfDaysToRetain  = [Uint32]$entry.NumberOfDaysToRetain
                 StorageAccounts       = [Array]$entry.StorageAccounts
@@ -260,7 +260,7 @@ function Get-TargetResource
         $DlpAppGroupsValue = @()
         foreach ($group in $DlpAppGroupsObject)
         {
-            $entry = @{
+            $entry = [ordered]@{
                 Name        = $group.Name
                 Id          = $group.Id
                 Description = $group.Description
@@ -269,7 +269,7 @@ function Get-TargetResource
 
             foreach ($appEntry in $group.Apps)
             {
-                $app = @{
+                $app = [ordered]@{
                     ExecutableName = $appEntry.ExecutableName
                     Name           = $appEntry.Name
                     Quarantine     = [Boolean]::Parse($appEntry.Quarantine)
@@ -284,7 +284,7 @@ function Get-TargetResource
         $UnallowedAppValue = @()
         foreach ($entry in $entries)
         {
-            $current = @{
+            $current = [ordered]@{
                 Value      = $entry.Value
                 Executable = $entry.Executable
             }
@@ -296,7 +296,7 @@ function Get-TargetResource
         $UnallowedCloudSyncAppValue = @()
         foreach ($entry in $entries)
         {
-            $current = @{
+            $current = [ordered]@{
                 Value      = $entry.Value
                 Executable = $entry.Executable
             }
@@ -316,7 +316,7 @@ function Get-TargetResource
         $UnallowedBluetoothAppValue = @()
         foreach ($entry in $entries)
         {
-            $current = @{
+            $current = [ordered]@{
                 Value      = $entry.Value
                 Executable = $entry.Executable
             }
@@ -328,7 +328,7 @@ function Get-TargetResource
         $UnallowedBrowserValue = @()
         foreach ($entry in $entries)
         {
-            $current = @{
+            $current = [ordered]@{
                 Value      = $entry.Value
                 Executable = $entry.Executable
             }
@@ -350,7 +350,7 @@ function Get-TargetResource
         $SiteGroupsValue = @()
         foreach ($siteGroup in $SiteGroupsObject)
         {
-            $entry = @{
+            $entry = [ordered]@{
                 Id   = $siteGroup.Id
                 Name = $siteGroup.Name
             }
@@ -358,7 +358,7 @@ function Get-TargetResource
             $addresses = @()
             foreach ($address in $siteGroup.Addresses)
             {
-                $addresses += @{
+                $addresses += [ordered]@{
                     MatchType    = $address.MatchType
                     Url          = $address.Url
                     AddressLower = $address.AddressLower
@@ -383,7 +383,7 @@ function Get-TargetResource
                 $BusinessJustificationListValue = @()
                 foreach ($entity in $entities)
                 {
-                    $current = @{
+                    $current = [ordered]@{
                         Id                = $entity.Id
                         Enable            = [Boolean]$entity.Enable
                         justificationText = $entity.justificationText
@@ -428,7 +428,7 @@ function Get-TargetResource
         $DlpPrinterGroupsValue = @()
         foreach ($group in $DlpPrinterGroupsObject.groups)
         {
-            $entry = @{
+            $entry = [ordered]@{
                 groupName = $group.groupName
                 groupId   = $group.groupId
             }
@@ -436,7 +436,7 @@ function Get-TargetResource
             $printers = @()
             foreach ($printer in $group.printers)
             {
-                $current = @{
+                $current = [ordered]@{
                     universalPrinter = [Boolean]$printer.universalPrinter
                     usbPrinter       = [Boolean]$printer.usbPrinter
                     usbPrinterId     = $printer.usbPrinterPID
@@ -462,14 +462,14 @@ function Get-TargetResource
         $DLPRemovableMediaGroupsValue = @()
         foreach ($group in $DLPRemovableMediaGroupsObject.groups)
         {
-            $entry = @{
+            $entry = [ordered]@{
                 groupName = $group.groupName
             }
 
             $medias = @()
             foreach ($media in $group.removableMedia)
             {
-                $current = @{
+                $current = [ordered]@{
                     deviceId          = $media.deviceId
                     removableMediaVID = $media.removableMediaVID
                     name              = $media.name
@@ -490,7 +490,7 @@ function Get-TargetResource
         $DlpNetworkShareGroupsValue = @()
         foreach ($group in $DlpNetworkShareGroupsObject.groups)
         {
-            $entry = @{
+            $entry = [ordered]@{
                 groupName    = $group.groupName
                 groupId      = $group.groupId
                 networkPaths = [Array]$group.networkPaths
@@ -503,7 +503,7 @@ function Get-TargetResource
         {
             $quarantineInfo = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'QuarantineParameters' }).Value
             $quarantineInfo = ConvertFrom-Json $quarantineInfo[0]
-            $QuarantineParametersValue = @{
+            $QuarantineParametersValue = [ordered]@{
                 EnableQuarantineForCloudSyncApps = $quarantineInfo.EnableQuarantineForCloudSyncApps
                 QuarantinePath                   = $quarantineInfo.QuarantinePath
                 MacQuarantinePath                = $quarantineInfo.MacQuarantinePath
@@ -570,14 +570,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -1611,15 +1610,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

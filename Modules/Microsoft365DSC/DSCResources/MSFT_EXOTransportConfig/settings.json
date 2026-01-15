@@ -27,11 +27,11 @@
     "exchange": {
       "requiredroles": [
         "Organization Transport Settings",
-        "View-Only Configuration",
-        "Journaling"
+        "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Organization Management",
+        "View-Only Organization Management"
       ]
     }
   },

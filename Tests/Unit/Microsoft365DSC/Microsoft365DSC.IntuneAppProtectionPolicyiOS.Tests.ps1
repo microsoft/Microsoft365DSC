@@ -162,6 +162,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 )
             }
 
+            Mock -CommandName Get-MgBetaDeviceAppManagementManagedAppStatus -MockWith {
+                return @(
+                    @{
+                        '@odata.type' = '#microsoft.graph.managedAppStatusRaw'
+                        id = 'managedAppList'
+                        displayName = 'Managed App collection for Tenant'
+                        content = @{
+                            '@odata.type' = '#microsoft.graph.managedAppList'
+                            appList = @(
+                                @{
+                                    appGroups = 'none'
+                                    appIdentifier = @{
+                                        '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
+                                        bundleId = 'com.cisco.jabberimintune.ios'
+                                    }
+                                }
+                                @{
+                                    appGroups = 'none'
+                                    appIdentifier = @{
+                                        '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
+                                        bundleId = 'com.pervasent.boardpapers.ios'
+                                    }
+                                }
+                                @{
+                                    appGroups = 'none'
+                                    appIdentifier = @{
+                                        '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
+                                        bundleId = 'com.sharefile.mobile.intune.ios'
+                                    }
+                                }
+                            )
+                        }
+                    }
+                )
+            }
+
             Mock -CommandName Get-MgBetaDeviceAppManagementiOSManagedAppProtectionAssignment -MockWith {
                 return @(
                     @{

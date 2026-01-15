@@ -26,10 +26,15 @@
     },
     "exchange": {
       "requiredroles": [
-        "SecurityAdmin",
-        "TransportHygiene"
+        "Security Reader",
+        "Transport Hygiene",
+        "View-Only Configuration"
       ],
-      "requiredrolegroups": []
+      "requiredrolegroups": [
+        "Hygiene Management",
+        "Security Reader",
+        "View-Only Organization Management"
+      ]
     }
   },
   "requiredModules": [],

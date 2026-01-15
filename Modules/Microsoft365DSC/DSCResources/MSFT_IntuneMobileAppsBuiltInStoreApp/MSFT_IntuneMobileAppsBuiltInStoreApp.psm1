@@ -276,6 +276,17 @@ function Get-TargetResource
         {
             $assignmentResult += ConvertFrom-IntuneMobileAppAssignment -Assignments $assignmentsValues -IncludeDeviceFilter $true
         }
+        foreach ($assignment in $assignmentResult)
+        {
+            if ($null -ne $assignment.assignmentSettings -and $null -ne $assignment.assignmentSettings.vpnConfigurationId)
+            {
+                $vpnConfiguration = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $assignment.assignmentSettings.vpnConfigurationId -Property "DisplayName" -ErrorAction SilentlyContinue
+                if ($null -ne $vpnConfiguration)
+                {
+                    $assignment.assignmentSettings.vpnConfigurationId = $vpnConfiguration.DisplayName
+                }
+            }
+        }
         $results.Add('Assignments', $assignmentResult)
 
         return $results
@@ -288,7 +299,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -454,6 +465,25 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
+
+    foreach ($assignment in $Assignments)
+    {
+        if ($null -ne $assignment.assignmentSettings -and -not [System.String]::IsNullOrEmpty($assignment.assignmentSettings.vpnConfigurationId))
+        {
+            $guid = [System.Guid]::Empty
+            if (-not [System.Guid]::TryParse($assignment.assignmentSettings.vpnConfigurationId, [ref]$guid))
+            {
+                $vpnConfiguration = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "displayName eq '$($assignment.assignmentSettings.vpnConfigurationId)'" | Where-Object -FilterScript {
+                    $_.AdditionalProperties.'@odata.type' -like "#microsoft.graph.*VpnConfiguration"
+                }
+                if ($null -eq $vpnConfiguration)
+                {
+                    throw "Could not find a VPN Configuration Policy with DisplayName '$($assignment.assignmentSettings.vpnConfigurationId)'."
+                }
+                $assignment.assignmentSettings.vpnConfigurationId = $vpnConfiguration.Id
+            }
+        }
+    }
 
     $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $boundParameters.Remove('Categories') | Out-Null
@@ -695,9 +725,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -ExcludedProperties @('AppStoreUrl', 'TargetPlatform')
+                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                             @compareParameters
     return $result
 }
 
@@ -872,7 +903,17 @@ function Export-TargetResource
 
             if ($Results.Assignments)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementMobileAppAssignment
+                $complexMapping = @(
+                    @{
+                        Name = 'AssignmentSettings'
+                        CIMInstanceName = 'DeviceManagementBuiltInStoreAppAssignmentSettings'
+                        IsRequired = $false
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Assignments `
+                    -CIMInstanceName DeviceManagementBuiltInStoreAppAssignment `
+                    -ComplexTypeMapping $complexMapping
                 if ($complexTypeStringResult)
                 {
                     $Results.Assignments = $complexTypeStringResult
@@ -899,16 +940,25 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('AppStoreUrl', 'TargetPlatform')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

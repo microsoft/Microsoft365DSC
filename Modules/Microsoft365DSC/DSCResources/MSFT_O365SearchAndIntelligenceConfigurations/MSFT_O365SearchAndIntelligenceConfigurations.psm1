@@ -141,7 +141,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullReturn
+        throw
     }
 }
 
@@ -450,7 +450,6 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
         $TenantId = $Credential.UserName.Split('@')[1]
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
@@ -458,7 +457,7 @@ function Export-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

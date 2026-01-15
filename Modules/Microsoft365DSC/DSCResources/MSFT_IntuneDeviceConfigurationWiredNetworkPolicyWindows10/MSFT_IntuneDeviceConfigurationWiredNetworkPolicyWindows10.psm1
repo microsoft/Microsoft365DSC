@@ -347,7 +347,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -1156,16 +1156,14 @@ function Export-TargetResource
         }
         else
         {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantId `
                 -Credential $Credential
-        }
 
-        return ''
+            throw
+        }
     }
 }
 
@@ -1173,7 +1171,8 @@ function Get-DeviceConfigurationPolicyCertificate
 {
     [CmdletBinding()]
     [OutputType([System.String], [System.String[]])]
-    param (
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $DeviceConfigurationPolicyId,
@@ -1208,7 +1207,8 @@ function Update-DeviceConfigurationPolicyCertificateId
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param (
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $DeviceConfigurationPolicyId,
@@ -1247,7 +1247,8 @@ function Remove-DeviceConfigurationPolicyCertificateId
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param (
+    param
+    (
         [Parameter(Mandatory = 'true')]
         [System.String]
         $DeviceConfigurationPolicyId,
@@ -1272,7 +1273,8 @@ function Remove-DeviceConfigurationPolicyCertificateId
 function Get-IntuneDeviceConfigurationCertificateId
 {
     [CmdletBinding()]
-    param (
+    param
+    (
         [Parameter(Mandatory = $true)]
         [System.String]
         $CertificateId,

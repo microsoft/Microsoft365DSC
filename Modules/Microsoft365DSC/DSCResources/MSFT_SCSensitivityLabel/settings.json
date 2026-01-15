@@ -23,6 +23,16 @@
           }
         ]
       }
+    },
+    "purview":{
+      "requiredroles":[
+        "Sensitivity Label Administrator",
+        "Sensitivity Label Reader"
+      ],
+      "requiredrolegroups":[
+        "Compliance Data Administrator",
+        "Security Reader"
+      ]
     }
   },
   "requiredModules": [],

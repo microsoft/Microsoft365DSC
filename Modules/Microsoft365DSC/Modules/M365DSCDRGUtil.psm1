@@ -27,7 +27,7 @@ function Get-StringFirstCharacterToLower
 function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable], [System.Collections.Hashtable[]])]
+    [OutputType([System.Collections.Hashtable], [System.Object[]])]
     param(
         [Parameter(Mandatory = $true)]
         $Properties,
@@ -45,18 +45,26 @@ function Rename-M365DSCCimInstanceParameter
         $values = @()
         foreach ($item in $Properties)
         {
-            try
+            $itemType = $item.GetType().FullName
+            if ($itemType -like '*Hashtable*' -or $itemType -like '*CimInstance*' -or $itemType -like '*Object*')
             {
-                $values += Rename-M365DSCCimInstanceParameter -Properties $item -KeyMapping $KeyMapping
+                try
+                {
+                    $values += Rename-M365DSCCimInstanceParameter -Properties $item -KeyMapping $KeyMapping
+                }
+                catch
+                {
+                    Write-Verbose -Message "Error getting values for item {$item}"
+                }
             }
-            catch
+            else
             {
-                Write-Verbose -Message "Error getting values for item {$item}"
+                $values += $item
             }
         }
         $result = $values
 
-        return ,[System.Collections.Hashtable[]]$result
+        return ,$result
     }
     #endregion
 
@@ -69,11 +77,11 @@ function Rename-M365DSCCimInstanceParameter
     if ($type -like '*CimInstance*' -or $type -like '*Hashtable*' -or $type -like '*Object*')
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
-        $keys = ($hashProperties.Clone()).keys
+        $keys = ($hashProperties.Clone()).Keys
 
         foreach ($key in $keys)
         {
-            $keyName = $key.Substring(0, 1).Tolower() + $key.Substring(1, $key.Length - 1)
+            $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
             if ($key -in $KeyMapping.Keys)
             {
                 $keyName = $KeyMapping.$key
@@ -190,7 +198,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
-                if ($null -ne $hash -and $hash.Keys.Count -gt 0)
+                if ($null -ne $hash -and ($hash.Keys.Count -gt 0 -or $hash.GetType().FullName -like '*[[\]]'))
                 {
                     if ($ComplexObject.$keyName.GetType().FullName -like '*[[\]]')
                     {
@@ -321,7 +329,7 @@ function Get-M365DSCDRGComplexTypeToString
     $indent = '    ' * $IndentLevel
     $keyNotNull = 0
 
-    $keys = $ComplexObject.Keys
+    $keys = $ComplexObject.Keys | Sort-Object
     if ($ComplexObject.Keys.Count -eq 0)
     {
         $properties = $ComplexObject | Get-Member -MemberType Properties
@@ -697,7 +705,8 @@ function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param(
+    param
+    (
         [Parameter()]
         $Source,
 
@@ -720,7 +729,8 @@ function Compare-M365DSCComplexObject
     # Compare two arbitrary objects iteratively (no recursion). Returns $true if identical (no drift).
     # This function will append potential drifts to $Global:PotentialDrifts if $NoDriftReport is $true, otherwise will append to $Global:AllDrifts.DriftInfo on real drifts.
     function ComparePairIterative {
-        param(
+        param
+        (
             [Parameter()]
             $Left,
 
@@ -798,8 +808,8 @@ function Compare-M365DSCComplexObject
                     Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($l.Count)}, Target {$($r.Count)}"
                     $Global:AllDrifts.DriftInfo += @{
                         PropertyName = $p
-                        CurrentValue = "Current value has {$($l.Count)} items"
-                        DesiredValue = "Desired value has {$($r.Count)} items"
+                        CurrentValue = "Current value has {$($r.Count)} items"
+                        DesiredValue = "Desired value has {$($l.Count)} items"
                     }
                     $result = $false
                     break
@@ -3530,7 +3540,7 @@ function Invoke-M365DSCIntuneMobileAppInitialUpload
             $encodedBody = $iso.GetString($body)
             Invoke-WebRequest -Uri $uri -Method PUT -Body $encodedBody -Headers @{
                 "x-ms-blob-type" = "BlockBlob"
-            } -ErrorAction Stop | Out-Null
+            } -ErrorAction Stop -UseBasicParsing | Out-Null
             Write-Verbose "File uploaded successfully to Azure Storage." -Verbose
             $success = $true
         } catch {

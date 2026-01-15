@@ -32,10 +32,10 @@ class MSFT_DeviceManagementWin32MobileAppAssignmentSettingsInstallTimeSettings
     [Write, Description("The time at which the app should be installed.")] String deadlineDateTime;
 };
 
-[ClassVersion("1.0.0.2")]
+[ClassVersion("1.0.0.3")]
 class MSFT_DeviceManagementMobileAppAssignmentSettings
 {
-    [Required, Description("The odata type of the assignment type."), ValueMap{"#microsoft.graph.iosStoreAppAssignmentSettings", "#microsoft.graph.win32LobAppAssignmentSettings", "#microsoft.graph.winGetAppAssignmentSettings", "#microsoft.graph.windowsUniversalAppXAppAssignmentSettings"}, Values{"#microsoft.graph.iosStoreAppAssignmentSettings", "#microsoft.graph.win32LobAppAssignmentSettings", "#microsoft.graph.winGetAppAssignmentSettings", "#microsoft.graph.windowsUniversalAppXAppAssignmentSettings"}] String odataType;
+    [Required, Description("The odata type of the assignment type."), ValueMap{"#microsoft.graph.androidManagedStoreAppAssignmentSettings", "#microsoft.graph.iosStoreAppAssignmentSettings", "#microsoft.graph.iosLobAppAssignmentSettings", "#microsoft.graph.macOsLobAppAssignmentSettings", "#microsoft.graph.win32LobAppAssignmentSettings", "#microsoft.graph.winGetAppAssignmentSettings", "#microsoft.graph.windowsUniversalAppXAppAssignmentSettings"}, Values{"#microsoft.graph.androidManagedStoreAppAssignmentSettings", "#microsoft.graph.iosLobAppAssignmentSettings", "#microsoft.graph.iosStoreAppAssignmentSettings", "#microsoft.graph.macOsLobAppAssignmentSettings", "#microsoft.graph.win32LobAppAssignmentSettings", "#microsoft.graph.winGetAppAssignmentSettings", "#microsoft.graph.windowsUniversalAppXAppAssignmentSettings"}] String odataType;
 };
 
 [ClassVersion("1.0.0.0")]

@@ -278,7 +278,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullReturn
+        throw
     }
 }
 function Set-TargetResource
@@ -625,10 +625,10 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message "    |---[$i/$($QuarantinePolicies.Length)] $($QuarantinePolicy.Identity)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($QuarantinePolicies.Length)] $($QuarantinePolicy.Name)" -DeferWrite
 
             $Params = @{
-                Identity              = $QuarantinePolicy.Identity
+                Identity              = $QuarantinePolicy.Name
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -668,15 +668,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 Export-ModuleMember -Function *-TargetResource

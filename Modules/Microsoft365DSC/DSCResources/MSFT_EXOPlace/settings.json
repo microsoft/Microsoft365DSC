@@ -26,11 +26,12 @@
     },
     "exchange": {
       "requiredroles": [
-        "Remote and Accepted Domains",
+        "TenantPlacesManagement",
         "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Places Administrator",
+        "View-Only Organization Management"
       ]
     }
   },

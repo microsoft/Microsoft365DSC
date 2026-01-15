@@ -21,25 +21,10 @@
             "name": "Organization.Read.All"
           },
           {
-            "name": "User.Read.All"
-          },
+              "name": "TeamSettings.ReadWrite.All"
+            },
           {
-            "name": "Group.ReadWrite.All"
-          },
-          {
-            "name": "AppCatalog.ReadWrite.All"
-          },
-          {
-            "name": "TeamSettings.ReadWrite.All"
-          },
-          {
-            "name": "Channel.Delete.All"
-          },
-          {
-            "name": "ChannelSettings.ReadWrite.All"
-          },
-          {
-            "name": "ChannelMember.ReadWrite.All"
+            "name": "ChannelSettings.Read.All"
           }
         ],
         "update": [
@@ -47,15 +32,6 @@
             "name": "Organization.Read.All"
           },
           {
-            "name": "User.Read.All"
-          },
-          {
-            "name": "Group.ReadWrite.All"
-          },
-          {
-            "name": "AppCatalog.ReadWrite.All"
-          },
-          {
             "name": "TeamSettings.ReadWrite.All"
           },
           {
@@ -63,9 +39,6 @@
           },
           {
             "name": "ChannelSettings.ReadWrite.All"
-          },
-          {
-            "name": "ChannelMember.ReadWrite.All"
           }
         ]
       }

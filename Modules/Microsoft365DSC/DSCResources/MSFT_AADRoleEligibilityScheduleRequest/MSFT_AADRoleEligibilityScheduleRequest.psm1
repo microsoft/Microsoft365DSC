@@ -240,7 +240,7 @@ function Get-TargetResource
 
         if ($null -ne $schedule.ScheduleInfo.Expiration)
         {
-            $expirationValue = @{
+            $expirationValue = [ordered]@{
                 duration = $schedule.ScheduleInfo.Expiration.Duration
                 type     = $schedule.ScheduleInfo.Expiration.Type
             }
@@ -254,8 +254,8 @@ function Get-TargetResource
         {
             if (Test-M365DSCRecurrenceIsConfigured -RecurrenceSettings $schedule.ScheduleInfo.Recurrence)
             {
-                $recurrenceValue = @{
-                    pattern = @{
+                $recurrenceValue = [ordered]@{
+                    pattern = [ordered]@{
                         dayOfMonth     = $schedule.ScheduleInfo.Recurrence.Pattern.dayOfMonth
                         daysOfWeek     = $schedule.ScheduleInfo.Recurrence.Pattern.daysOfWeek
                         firstDayOfWeek = $schedule.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek
@@ -264,7 +264,7 @@ function Get-TargetResource
                         month          = $schedule.ScheduleInfo.Recurrence.Pattern.month
                         type           = $schedule.ScheduleInfo.Recurrence.Pattern.type
                     }
-                    range   = @{
+                    range   = [ordered]@{
                         endDate             = $schedule.ScheduleInfo.Recurrence.Range.endDate
                         numberOfOccurrences = $schedule.ScheduleInfo.Recurrence.Range.numberOfOccurrences
                         recurrenceTimeZone  = $schedule.ScheduleInfo.Recurrence.Range.recurrenceTimeZone
@@ -304,14 +304,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "Error: $_"
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -634,9 +633,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -ExcludedProperties @('Action', 'IsValidationOnly', 'Justification')
+                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                             @compareParameters
     return $result
 }
 
@@ -821,15 +821,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 
@@ -863,4 +861,15 @@ function Test-M365DSCRecurrenceIsConfigured
     return $true
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('Action', 'IsValidationOnly', 'Justification')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

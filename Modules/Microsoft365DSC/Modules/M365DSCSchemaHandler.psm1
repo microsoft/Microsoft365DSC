@@ -93,6 +93,6 @@ function New-M365DSCSchemaDefinition
         }
     }
 
-    $jsonContent = ConvertTo-Json $classInfoList -Depth 99
+    $jsonContent = ConvertTo-Json $classInfoList -Depth 99 -Compress
     Set-Content -Value $jsonContent -Path '.\Modules\Microsoft365DSC\SchemaDefinition.json'
 }

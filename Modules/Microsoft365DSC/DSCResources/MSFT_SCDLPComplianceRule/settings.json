@@ -23,6 +23,16 @@
           }
         ]
       }
+    },
+    "purview": {
+      "requiredroles": [
+        "Security Reader",
+        "Organization Configuration"
+      ],
+      "requiredrolegroups": [
+        "Compliance Data Administrator",
+        "Security Reader"
+      ]
     }
   },
   "requiredModules": [],

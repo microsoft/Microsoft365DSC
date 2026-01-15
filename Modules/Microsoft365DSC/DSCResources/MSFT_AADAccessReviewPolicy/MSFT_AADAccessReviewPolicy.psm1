@@ -43,6 +43,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of AAD Access Review Policy"
+
     try
     {
         $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -60,12 +62,7 @@ function Get-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
-        $nullResult = $PSBoundParameters
-        $instance = Get-MgBetaPolicyAccessReviewPolicy -ErrorAction SilentlyContinue
-        if ($null -eq $instance)
-        {
-            throw 'Could not retrieve the Access Review Policy'
-        }
+        $instance = Get-MgBetaPolicyAccessReviewPolicy -ErrorAction Stop
 
         $results = @{
             IsSingleInstance              = 'Yes'
@@ -82,14 +79,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -321,15 +317,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

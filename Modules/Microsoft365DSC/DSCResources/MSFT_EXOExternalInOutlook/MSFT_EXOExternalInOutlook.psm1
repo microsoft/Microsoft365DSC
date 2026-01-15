@@ -72,7 +72,7 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $instance = Get-ExternalInOutlook -Identity $Identity -ErrorAction SilentlyContinue
+            $instance = Get-ExternalInOutlook -Identity $Identity
             if ($null -eq $instance)
             {
                 Write-Verbose -Message "No settings found for ExternalInOutlook with Identity $Identity"
@@ -109,7 +109,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -325,7 +325,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-ExternalInOutlook -ErrorAction Stop
+        [array]$getValue = Get-ExternalInOutlook
 
         $i = 1
         $dscContent = ''
@@ -373,15 +373,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

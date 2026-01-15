@@ -23,6 +23,16 @@
           }
         ]
       }
+    },
+    "purview":{
+      "requiredroles": [
+        "Security Reader",
+        "Supervisory Review Administrator"
+      ],
+      "requiredrolegroups":[
+        "Global Reader",
+        "Supervisory Review"
+      ]
     }
   },
   "requiredModules": [],

@@ -263,13 +263,13 @@ function Get-TargetResource
         $complexRange = [ordered]@{}
         if ($null -ne $getValue.settings.recurrence.range.endDate)
         {
-            $complexRange.Add('EndDate', ([DateTime]$getValue.settings.recurrence.range.endDate).ToString(''))
+            $complexRange.Add('EndDate', ([DateTime]$getValue.settings.recurrence.range.endDate).ToString('o'))
         }
         $complexRange.Add('NumberOfOccurrences', $getValue.settings.recurrence.range.numberOfOccurrences)
         $complexRange.Add('RecurrenceTimeZone', $getValue.settings.recurrence.range.recurrenceTimeZone)
         if ($null -ne $getValue.settings.recurrence.range.startDate)
         {
-            $complexRange.Add('StartDate', ([DateTime]$getValue.settings.recurrence.range.startDate).ToString(''))
+            $complexRange.Add('StartDate', ([DateTime]$getValue.settings.recurrence.range.startDate).ToString('o'))
         }
         if ($null -ne $getValue.settings.recurrence.range.type)
         {
@@ -450,7 +450,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -728,11 +728,6 @@ function Set-TargetResource
             }
         }
 
-        foreach ($hashtable in $createParameters.StageSettings)
-        {
-            Write-Verbose -Message "Priting Values: $(Convert-M365DscHashtableToString -Hashtable $hashtable)"
-        }
-
         $keys = (([Hashtable]$createParameters).Clone()).Keys
         foreach ($key in $keys)
         {
@@ -932,8 +927,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                         @compareParameters
     return $result
 }
 
@@ -1219,16 +1216,47 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            if (-not [System.String]::IsNullOrEmpty($DesiredValues.SettingsValue.Recurrence.Range.StartDate))
+            {
+                $parsedDesiredDate = [System.DateTime]::MinValue
+                $parseResultDesired = [System.DateTime]::TryParse($DesiredValues.SettingsValue.Recurrence.Range.StartDate, [ref]$parsedDesiredDate)
+
+                $parsedCurrentDate = [System.DateTime]::MinValue
+                $parseResultCurrent = [System.DateTime]::TryParse($CurrentValues.SettingsValue.Recurrence.Range.StartDate, [ref]$parsedCurrentDate)
+
+                if ($parseResultDesired -and $parseResultCurrent)
+                {
+                    Write-Verbose -Message "Parsed Desired StartDateTime: $parsedDesiredDate, Parsed Current StartDateTime: $parsedCurrentDate"
+                    if ($parsedDesiredDate -ne $parsedCurrentDate -and $parsedDesiredDate -lt [System.DateTime]::UtcNow)
+                    {
+                        Write-Verbose -Message "Ignoring StartDateTime in ScheduleInfo as it is in the past. StartDateTime cannot be set to a past date."
+                        Write-Verbose -Message "Aligning the Desired and Current StartDateTime values for comparison."
+                        $DesiredValues.SettingsValue.Recurrence.Range.StartDate = $CurrentValues.SettingsValue.Recurrence.Range.StartDate
+                    }
+                }
+            }
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

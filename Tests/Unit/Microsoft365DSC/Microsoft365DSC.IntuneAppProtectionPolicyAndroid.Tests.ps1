@@ -25,7 +25,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Function Get-DefaultTestParams
+            function Get-DefaultTestParams
             {
                 param (
                     [string]$description
@@ -127,7 +127,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Function Get-DefaultReturnObj
+            function Get-DefaultReturnObj
             {
                 param (
                     [string]$description
@@ -226,6 +226,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
+
+            Mock -CommandName Get-MgBetaDeviceAppManagementManagedAppStatus -MockWith {
+                return @(
+                    @{
+                        '@odata.type' = '#microsoft.graph.managedAppStatusRaw'
+                        id = 'managedAppList'
+                        displayName = 'Managed App collection for Tenant'
+                        content = @{
+                            '@odata.type' = '#microsoft.graph.managedAppList'
+                            appList = @(
+                                @{
+                                    appGroups = 'none'
+                                    appIdentifier = @{
+                                        '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
+                                        bundleId = 'com.cisco.im.intune'
+                                    }
+                                }
+                                @{
+                                    appGroups = 'none'
+                                    appIdentifier = @{
+                                        '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
+                                        bundleId = 'com.penlink.penpoint'
+                                    }
+                                }
+                                @{
+                                    appGroups = 'none'
+                                    appIdentifier = @{
+                                        '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
+                                        bundleId = 'com.slack.intune'
+                                    }
+                                }
+                            )
+                        }
+                    }
+                )
             }
 
             Mock -CommandName Get-MgBetaDeviceAppManagementAndroidManagedAppProtectionApp -MockWith {

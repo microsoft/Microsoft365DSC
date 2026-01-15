@@ -26,10 +26,12 @@
     },
     "exchange": {
       "requiredroles": [
-        "Compliance Admin"
+        "Compliance Admin",
+        "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Compliance Management",
+        "View-Only Organization Management"
       ]
     }
   },

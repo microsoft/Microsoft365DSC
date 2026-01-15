@@ -43,6 +43,7 @@
   },
   "requiredModules": [
     "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement",
     "Microsoft.Graph.Beta.Devices.CorporateManagement",
     "Microsoft.Graph.Groups"
   ],
@@ -61,7 +62,8 @@
     {
       "module": "Microsoft.Graph.Beta.DeviceManagement",
       "cmdlets": [
-        "Get-MgBetaDeviceManagementAssignmentFilter"
+        "Get-MgBetaDeviceManagementAssignmentFilter",
+        "Get-MgBetaDeviceManagementDeviceConfiguration"
       ]
     },
     {

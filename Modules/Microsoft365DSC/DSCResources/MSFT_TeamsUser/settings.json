@@ -2,8 +2,12 @@
   "resourceName": "TeamsUser",
   "description": "",
   "roles": {
-    "read": [],
-    "update": []
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
   },
   "permissions": {
     "graph": {
@@ -17,25 +21,7 @@
             "name": "Organization.Read.All"
           },
           {
-            "name": "User.Read.All"
-          },
-          {
-            "name": "Group.ReadWrite.All"
-          },
-          {
-            "name": "AppCatalog.ReadWrite.All"
-          },
-          {
-            "name": "TeamSettings.ReadWrite.All"
-          },
-          {
-            "name": "Channel.Delete.All"
-          },
-          {
-            "name": "ChannelSettings.ReadWrite.All"
-          },
-          {
-            "name": "ChannelMember.ReadWrite.All"
+            "name": "Team.ReadBasic.All"
           }
         ],
         "update": [
@@ -43,25 +29,7 @@
             "name": "Organization.Read.All"
           },
           {
-            "name": "User.Read.All"
-          },
-          {
-            "name": "Group.ReadWrite.All"
-          },
-          {
-            "name": "AppCatalog.ReadWrite.All"
-          },
-          {
-            "name": "TeamSettings.ReadWrite.All"
-          },
-          {
-            "name": "Channel.Delete.All"
-          },
-          {
-            "name": "ChannelSettings.ReadWrite.All"
-          },
-          {
-            "name": "ChannelMember.ReadWrite.All"
+            "name": "Team.ReadBasic.All"
           }
         ]
       }

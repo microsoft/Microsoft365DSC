@@ -69,8 +69,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return absent from the Get method' {
-                Get-TargetResource @testParams | Should -BeOfType "System.Collections.Hashtable"
+            It 'Should throw in the Get method' {
+                { Get-TargetResource @testParams } | Should -Throw
             }
         }
 

@@ -47,6 +47,12 @@
       "cmdlets": [
         "Invoke-MgGraphRequest"
       ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
     }
   ]
 }

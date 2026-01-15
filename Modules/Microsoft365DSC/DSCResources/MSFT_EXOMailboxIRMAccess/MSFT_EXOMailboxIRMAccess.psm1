@@ -109,7 +109,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -324,7 +324,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "    |---[$i/$($mailboxes.Count)] $($mailbox.UserPrincipalName)" -DeferWrite
 
-            [Array]$irmAccesses = Get-MailboxIRMAccess -Identity $mailbox.UserPrincipalName -ErrorAction Stop
+            [Array]$irmAccesses = Get-MailboxIRMAccess -Identity $mailbox.UserPrincipalName
 
             $j = 1
             Write-M365DSCHost -Message "`r`n" -DeferWrite
@@ -371,15 +371,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

@@ -28,7 +28,7 @@ jobs:
           New-M365DSCCmdletDocumentation
 
       - name: Upload documentation as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: docs-generation
           path: ./docs  # the folder containing the mkdocs.yml and generated docs
@@ -54,7 +54,7 @@ jobs:
           pip install mkdocs-include-dir-to-nav
 
       - name: Download generated docs
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: docs-generation
           path: ./docs
@@ -64,7 +64,7 @@ jobs:
         run: mkdocs build --site-dir ../site
 
       - name: Upload built site
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./site
 

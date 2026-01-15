@@ -26,14 +26,12 @@
     },
     "exchange": {
       "requiredroles": [
-        "Retention Management",
         "Remote and Accepted Domains",
-        "Distribution Groups",
-        "View-Only Configuration",
-        "Mail Recipients"
+        "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Organization Management",
+        "View-Only Organization Management"
       ]
     }
   },

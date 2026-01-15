@@ -155,7 +155,11 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($rule.certificatePayloadWithReusableSetting))
             {
                 $certificatePolicyId = $rule.certificatePayloadWithReusableSetting
-                $certificatePolicy = Invoke-MgGraphRequest -Uri "/beta/deviceManagement/reusablePolicySettings/$certificatePolicyId"
+                $certificatePolicy = Invoke-MgGraphRequest -Uri "/beta/deviceManagement/reusablePolicySettings/$certificatePolicyId" -Method GET -SkipHttpErrorCheck -ErrorAction SilentlyContinue
+                if ($certificatePolicy -is [hashtable] -and $certificatePolicy.ContainsKey('error'))
+                {
+                    throw "Could not retrieve the certificate policy with id '$certificatePolicyId' as a reusable Setting for the Elevation Rule with DisplayName '$($rule.name)' in policy '$($getValue.Name)'."
+                }
                 $complexElevationRuleName.Add('CertificatePayloadWithReusableSetting', $certificatePolicy.displayName)
             }
             $complexElevationRuleName.Add('CertificateFileUpload', $rule.certificateFileUpload)
@@ -214,7 +218,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -460,9 +464,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -IncludedProperties @('Elevationtype', 'FileName', 'Name')
+                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                             @compareParameters
     return $result
 }
 
@@ -620,16 +625,25 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        IncludedProperties = @('Elevationtype', 'FileName', 'Name')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

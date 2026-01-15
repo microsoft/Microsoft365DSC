@@ -23,6 +23,16 @@
           }
         ]
       }
+    },
+    "purview":{
+      "requiredroles":[
+        "Retention Management",
+        "View-Only Retention Management"
+      ],
+      "requiredrolegroups":[
+        "Records Management",
+        "Global Reader"
+      ]
     }
   },
   "requiredModules": [],

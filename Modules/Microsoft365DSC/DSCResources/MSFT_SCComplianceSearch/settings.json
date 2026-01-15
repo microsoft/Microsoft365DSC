@@ -23,6 +23,14 @@
           }
         ]
       }
+    },
+    "exchange": {
+      "requiredroles": [
+        "Mailbox Search"
+      ],
+      "requiredrolegroups": [
+        "Discovery Management"
+      ]
     }
   },
   "requiredModules": [],

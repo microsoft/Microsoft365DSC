@@ -1233,7 +1233,8 @@ function Compare-M365DSCConfigurations
     }
     else
     {
-        $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
+        $currentModule = Get-Module -Name 'Microsoft365DSC'
+        $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC' | Where-Object Version -EQ $currentModule.Version
     }
     # Loop through all items in the source array
     $i = 1
@@ -1738,21 +1739,18 @@ function Get-M365DSCResourceKey
         $Resource,
 
         [Parameter(Mandatory = $true)]
-        [Array]
+        [System.Collections.Hashtable]
         $DSCResourceInfo
     )
-    $resourceInfo = $DSCResourceInfo | Where-Object -FilterScript {$_.Name -eq $Resource.ResourceName}
+
+    $resourceInfo = $DSCResourceInfo[$Resource.ResourceName]
     [Array]$mandatoryParameters = $resourceInfo.Properties | Where-Object -FilterScript { $_.IsMandatory }
     if ($Resource.Contains('IsSingleInstance') -and $mandatoryParameters.Name.Contains('IsSingleInstance'))
     {
         return @('IsSingleInstance')
     }
-    elseif ($Resource.Contains('DisplayName') -and $mandatoryParameters.Name.Contains('DisplayName'))
+    elseif ($Resource.Contains('DisplayName') -and $mandatoryParameters.Name.Contains('DisplayName') -and $Resource.ResourceName -in @('AADGroup', 'IntuneDeviceEnrollmentPlatformRestriction', 'TeamsChannel', 'TeamsTeam'))
     {
-        if ($Resource.ResourceName -eq 'AADMSGroup' -and -not [System.String]::IsNullOrEmpty($Resource.Id))
-        {
-            return @('Id')
-        }
         if ($Resource.ResourceName -eq 'AADGroup' -and -not [System.String]::IsNullOrEmpty($Resource.MailNickname))
         {
             return ('DisplayName', 'MailNickname')
@@ -1970,11 +1968,22 @@ function New-M365DSCDeltaReport
     $isPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
     if ($isPowerShellCore)
     {
+        $module = Get-Module -Name PSDesiredStateConfiguration | Where-Object { $_.Version -ge [version]'2.0.7' }
+        if ($null -eq $module)
+        {
+            Import-Module -Name "PSDesiredStateConfiguration" -Global -Prefix 'Pwsh' -RequiredVersion 2.0.7
+        }
         $dscResourceInfo = Get-PwshDSCResource -Module 'Microsoft365DSC'
     }
     else
     {
-        $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
+        $currentModule = Get-Module -Name 'Microsoft365DSC'
+        $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC' | Where-Object Version -EQ $currentModule.Version
+    }
+    $dscResourceInfoMap = @{}
+    foreach ($resource in $dscResourceInfo)
+    {
+        $dscResourceInfoMap.Add($resource.Name, $resource)
     }
 
     Write-Verbose -Message 'Obtaining Delta between the source and destination configurations'
@@ -1996,20 +2005,20 @@ function New-M365DSCDeltaReport
         }
         # Parse the blueprint file, pass to Compare-M365DSCConfigurations as object (including comments aka metadata)
         [Array] $desiredConfiguration = Initialize-M365DSCReporting @desiredSplat
-        $sourceReporting = Initialize-M365DSCReporting -ConfigurationPath $Source
+        [Array]$sourceReporting = Initialize-M365DSCReporting -ConfigurationPath $Source
         $Delta = @()
         foreach ($resource in $sourceReporting)
         {
-            [array]$key = Get-M365DSCResourceKey -Resource $resource -DSCResourceInfo $dscResourceInfo
+            [array]$key = Get-M365DSCResourceKey -Resource $resource -DSCResourceInfo $dscResourceInfoMap
             #Write-Progress -Activity "Scanning Source $Source...[$i/$($SourceObject.Count)]" -PercentComplete ($i / ($SourceObject.Count) * 100)
-            [array]$destinationResource = $desiredConfiguration | Where-Object -FilterScript { $_.ResourceName -eq $resource.ResourceName -and $_.($key[0]) -eq $resource.($key[0]) }
+            [array]$destinationResource = $desiredConfiguration.Where({ $_.ResourceName -eq $resource.ResourceName -and $_.($key[0]) -eq $resource.($key[0]) })
 
             $keyName = $key[0..1] -join '\'
             $sourceKeyValue = $resource.($key[0])
             # Filter on the second key
             if ($key.Count -gt 1)
             {
-                [array]$destinationResource = $destinationResource | Where-Object -FilterScript { $_.($key[1]) -eq $resource.($key[1]) }
+                [array]$destinationResource = $destinationResource.Where({ $_.($key[1]) -eq $resource.($key[1]) })
                 $sourceKeyValue = $resource.($key[0]), $resource.($key[1]) -join '\'
             }
             if ($null -eq $destinationResource -or $destinationResource.Count -eq 0)
@@ -2027,7 +2036,60 @@ function New-M365DSCDeltaReport
                 }
                 continue
             }
-            $compareResult = Compare-M365DSCResourceState -ResourceName $resource.ResourceName -DesiredValues $destinationResource[0] -CurrentValues $resource -ExcludedProperties $ExcludedProperties
+
+            # Get resource-specific comparison parameters from metadata
+            $resourceCompareParams = @{
+                ResourceName = $resource.ResourceName
+                DesiredValues = $destinationResource[0]
+                CurrentValues = $resource
+                ExcludedProperties = $ExcludedProperties
+            }
+
+            # Check if this resource has custom comparison logic
+            $metadata = Get-M365DSCResourceComparisonMetadata -ResourceName $resource.ResourceName
+            if ($metadata.HasCustomComparison)
+            {
+                Write-Verbose -Message "Resource $($resource.ResourceName) has custom comparison logic. Retrieving parameters..."
+                try
+                {
+                    $customCompareParams = Get-M365DSCResourceComparisonParameters -ResourceName $resource.ResourceName
+
+                    # Merge resource-specific ExcludedProperties with global ones
+                    if ($customCompareParams.ContainsKey('ExcludedProperties') -and $null -ne $customCompareParams.ExcludedProperties)
+                    {
+                        $resourceCompareParams.ExcludedProperties = $ExcludedProperties + $customCompareParams.ExcludedProperties | Select-Object -Unique
+                        Write-Verbose -Message "  Merged ExcludedProperties: $($resourceCompareParams.ExcludedProperties -join ', ')"
+                    }
+
+                    # Add IncludedProperties if specified
+                    if ($customCompareParams.ContainsKey('IncludedProperties') -and $null -ne $customCompareParams.IncludedProperties)
+                    {
+                        $resourceCompareParams.IncludedProperties = $customCompareParams.IncludedProperties
+                        Write-Verbose -Message "  IncludedProperties: $($customCompareParams.IncludedProperties -join ', ')"
+                    }
+
+                    # Add PostProcessing scriptblock if specified
+                    if ($customCompareParams.ContainsKey('PostProcessing') -and $null -ne $customCompareParams.PostProcessing)
+                    {
+                        $resourceCompareParams.PostProcessing = $customCompareParams.PostProcessing
+                        Write-Verbose -Message "  PostProcessing scriptblock applied"
+                    }
+
+                    # Add PostProcessingArgs if specified
+                    if ($customCompareParams.ContainsKey('PostProcessingArgs') -and $null -ne $customCompareParams.PostProcessingArgs)
+                    {
+                        $resourceCompareParams.PostProcessingArgs = $customCompareParams.PostProcessingArgs
+                        Write-Verbose -Message "  PostProcessingArgs applied"
+                    }
+                }
+                catch
+                {
+                    Write-Warning -Message "Failed to retrieve custom comparison parameters for $($resource.ResourceName): $_. Using default comparison."
+                }
+            }
+
+            $compareResult = Compare-M365DSCResourceState @resourceCompareParams
+
             if (-not $compareResult -and $null -ne $Global:AllDrifts.DriftInfo -and $Global:AllDrifts.DriftInfo.Count -gt 0)
             {
                 foreach ($driftInfo in $Global:AllDrifts.DriftInfo)
@@ -2050,15 +2112,15 @@ function New-M365DSCDeltaReport
 
         foreach ($resource in $desiredConfiguration)
         {
-            [array]$key = Get-M365DSCResourceKey -Resource $resource -DSCResourceInfo $dscResourceInfo
+            [array]$key = Get-M365DSCResourceKey -Resource $resource -DSCResourceInfo $dscResourceInfoMap
             $keyName = $key[0..1] -join '\'
             $destinationKeyValue = $resource.($key[0])
-            $sourceResource = $sourceReporting | Where-Object { $_.ResourceName -eq $resource.ResourceName -and $_.($key[0]) -eq $resource.($key[0]) }
+            [array]$sourceResource = $sourceReporting.Where({ $_.ResourceName -eq $resource.ResourceName -and $_.($key[0]) -eq $resource.($key[0]) })
 
             # Filter on the second key
             if ($key.Count -gt 1)
             {
-                [array]$sourceResource = $sourceResource | Where-Object -FilterScript { $_.($key[1]) -eq $resource.($key[1]) }
+                [array]$sourceResource = $sourceResource.Where({ $_.($key[1]) -eq $resource.($key[1]) })
                 $destinationKeyValue = $resource.($key[0]), $resource.($key[1]) -join '\'
             }
 

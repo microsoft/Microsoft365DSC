@@ -25,7 +25,11 @@
       }
     }
   },
-  "requiredModules": [],
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users"
+  ],
   "mode": "Configuration",
   "commands": [
     {

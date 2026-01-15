@@ -138,6 +138,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             IsEnabled            = $True
                             CloudAppSecurityType = 'MonitorOnly'
                         }
+                        SecureSignInSession            = @{
+                            IsEnabled = $True
+                        }
                         SignInFrequency                 = @{
                             IsEnabled = $True
                             Type      = 'Days'
@@ -203,6 +206,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PersistentBrowserIsEnabled           = $True
                     PersistentBrowserMode                = 'Always'
                     DisableResilienceDefaultsIsEnabled   = $True
+                    SecureSignInSessionIsEnabled         = $True
                     SignInFrequencyIsEnabled             = $True
                     SignInFrequencyType                  = 'Days'
                     SignInFrequencyValue                 = 5
@@ -269,6 +273,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PersistentBrowserMode                    = 'Always'
                     DisableResilienceDefaultsIsEnabled       = $True
                     ServicePrincipalRiskLevels               = @('High')
+                    SecureSignInSessionIsEnabled             = $True
                     SignInFrequencyIsEnabled                 = $True
                     SignInFrequencyType                      = 'Days'
                     SignInFrequencyValue                     = 5
@@ -354,6 +359,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PersistentBrowserIsEnabled               = $True
                     PersistentBrowserMode                    = 'Always'
                     DisableResilienceDefaultsIsEnabled       = $True
+                    SecureSignInSessionIsEnabled             = $True
                     SignInFrequencyIsEnabled                 = $True
                     SignInFrequencyType                      = 'Days'
                     SignInFrequencyValue                     = 5
@@ -404,6 +410,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PersistentBrowserIsEnabled               = $True
                     PersistentBrowserMode                    = 'Always'
                     DisableResilienceDefaultsIsEnabled       = $True
+                    SecureSignInSessionIsEnabled             = $True
                     SignInFrequencyIsEnabled                 = $True
                     SignInFrequencyType                      = 'Days'
                     SignInFrequencyValue                     = 5

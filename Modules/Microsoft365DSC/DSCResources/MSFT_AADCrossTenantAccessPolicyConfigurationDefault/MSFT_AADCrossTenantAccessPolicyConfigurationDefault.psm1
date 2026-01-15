@@ -98,12 +98,12 @@ function Get-TargetResource
         $B2BCollaborationInboundValue = $null
         if ($null -ne $getValue.B2BCollaborationInbound)
         {
-            $B2BCollaborationInboundValue = @{
-                Applications = @{
+            $B2BCollaborationInboundValue = [ordered]@{
+                Applications = [ordered]@{
                     AccessType = $getValue.B2BCollaborationInbound.Applications.AccessType
                     Targets    = [System.Array]$getValue.B2BCollaborationInbound.Applications.Targets
                 }
-                UsersAndGroups =@{
+                UsersAndGroups = [ordered]@{
                     AccessType = $getValue.B2BCollaborationInbound.UsersAndGroups.AccessType
                     Targets    = [System.Array] $getValue.B2BCollaborationInbound.UsersAndGroups.Targets
                 }
@@ -113,7 +113,7 @@ function Get-TargetResource
             $newValue = @()
             foreach ($valueEntry in $B2BCollaborationInboundValue.UsersAndGroups.Targets)
             {
-                $currentEntry = @{
+                $currentEntry = [ordered]@{
                     Target     = $valueEntry.Target
                     TargetType = $valueEntry.TargetType
                 }
@@ -147,12 +147,12 @@ function Get-TargetResource
         }
         if ($null -ne $getValue.B2BCollaborationOutbound)
         {
-            $B2BCollaborationOutboundValue = @{
-                Applications = @{
+            $B2BCollaborationOutboundValue = [ordered]@{
+                Applications = [ordered]@{
                     AccessType = $getValue.B2BCollaborationOutbound.Applications.AccessType
                     Targets    = [System.Array] $getValue.B2BCollaborationOutbound.Applications.Targets
                 }
-                UsersAndGroups =@{
+                UsersAndGroups = [ordered]@{
                     AccessType = $getValue.B2BCollaborationOutbound.UsersAndGroups.AccessType
                     Targets    = [System.Array] $getValue.B2BCollaborationOutbound.UsersAndGroups.Targets
                 }
@@ -162,7 +162,7 @@ function Get-TargetResource
             $newValue = @()
             foreach ($valueEntry in $B2BCollaborationOutboundValue.UsersAndGroups.Targets)
             {
-                $currentEntry = @{
+                $currentEntry = [ordered]@{
                     Target     = $valueEntry.Target
                     TargetType = $valueEntry.TargetType
                 }
@@ -196,12 +196,12 @@ function Get-TargetResource
         }
         if ($null -ne $getValue.B2BDirectConnectInbound)
         {
-            $B2BDirectConnectInboundValue = @{
-                Applications = @{
+            $B2BDirectConnectInboundValue = [ordered]@{
+                Applications = [ordered]@{
                     AccessType = $getValue.B2BDirectConnectInbound.Applications.AccessType
                     Targets    = [System.Array] $getValue.B2BDirectConnectInbound.Applications.Targets
                 }
-                UsersAndGroups =@{
+                UsersAndGroups = [ordered]@{
                     AccessType = $getValue.B2BDirectConnectInbound.UsersAndGroups.AccessType
                     Targets    = [System.Array] $getValue.B2BDirectConnectInbound.UsersAndGroups.Targets
                 }
@@ -209,12 +209,12 @@ function Get-TargetResource
         }
         if ($null -ne $getValue.B2BDirectConnectOutbound)
         {
-            $B2BDirectConnectOutboundValue = @{
-                Applications = @{
+            $B2BDirectConnectOutboundValue = [ordered]@{
+                Applications = [ordered]@{
                     AccessType = $getValue.B2BDirectConnectOutbound.Applications.AccessType
                     Targets    = [System.Array] $getValue.B2BDirectConnectOutbound.Applications.Targets
                 }
-                UsersAndGroups =@{
+                UsersAndGroups = [ordered]@{
                     AccessType = $getValue.B2BDirectConnectOutbound.UsersAndGroups.AccessType
                     Targets    = [System.Array] $getValue.B2BDirectConnectOutbound.UsersAndGroups.Targets
                 }
@@ -223,7 +223,7 @@ function Get-TargetResource
             $newValue = @()
             foreach ($valueEntry in $B2BDirectConnectOutboundValue.UsersAndGroups.Targets)
             {
-                $currentEntry = @{
+                $currentEntry = [ordered]@{
                     Target     = $valueEntry.Target
                     TargetType = $valueEntry.TargetType
                 }
@@ -257,7 +257,7 @@ function Get-TargetResource
         }
         if ($null -ne $getValue.InboundTrust)
         {
-            $InboundTrustValue = @{
+            $InboundTrustValue = [ordered]@{
                 IsCompliantDeviceAccepted           = $getValue.InboundTrust.IsCompliantDeviceAccepted
                 IsHybridAzureADJoinedDeviceAccepted = $getValue.InboundTrust.IsHybridAzureADJoinedDeviceAccepted
                 IsMfaAccepted                       = $getValue.InboundTrust.IsMfaAccepted
@@ -291,7 +291,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -781,15 +781,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

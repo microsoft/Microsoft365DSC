@@ -14,7 +14,7 @@
             "type": "PowerShell",
             "request": "launch",
             "name": "Get current unit test code overage",
-            "script": "${workspaceRoot}/.vscode/GetTestCoverage.ps1",
+            "script": "${workspaceRoot}/Tests/Scripts/Get-TestCoverage.ps1",
             "args": [
                 "${file}"
             ],

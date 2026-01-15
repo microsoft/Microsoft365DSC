@@ -43,6 +43,7 @@
   },
   "requiredModules": [
     "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement",
     "Microsoft.Graph.Beta.DeviceManagement.Enrollment",
     "Microsoft.Graph.Groups"
   ],

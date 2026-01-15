@@ -23,6 +23,16 @@
           }
         ]
       }
+    },
+    "purview": {
+      "requiredroles": [
+        "Device Management",
+        "View-Only Device Management"
+      ],
+      "requiredrolegroups": [
+        "Compliance Data Administrator",
+        "Security Reader"
+      ]
     }
   },
   "requiredModules": [],

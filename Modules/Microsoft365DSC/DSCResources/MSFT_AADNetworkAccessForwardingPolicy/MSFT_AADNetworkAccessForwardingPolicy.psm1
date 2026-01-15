@@ -62,7 +62,6 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-            $nullResult = $PSBoundParameters
             $instance = Get-MgBetaNetworkAccessForwardingPolicy -Expand * -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $Name }
         }
         else
@@ -75,10 +74,10 @@ function Get-TargetResource
             throw "Could not retrieve the Forwarding Policy with name: $Name"
         }
 
-        $complexPolicyRules = Get-MicrosoftGraphNetworkAccessForwardingPolicyRules -PolicyRules $instance.PolicyRules
+        $complexPolicyRules = @(Get-MicrosoftGraphNetworkAccessForwardingPolicyRules -PolicyRules $instance.PolicyRules)
 
         $results = @{
-            Name                  = $instance.name
+            Name                  = $instance.Name
             PolicyRules           = $complexPolicyRules
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -92,14 +91,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -424,24 +422,24 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 
 function Get-MicrosoftGraphNetworkAccessForwardingPolicyRules
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.ArrayList])]
-    param(
+    [OutputType([System.Collections.Hashtable[]])]
+    param
+    (
         [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
         [System.Collections.ArrayList]
         $PolicyRules
     )
@@ -454,7 +452,7 @@ function Get-MicrosoftGraphNetworkAccessForwardingPolicyRules
         {
             $destinations += $destination.value
         }
-        $newPolicyRules += @{
+        $newPolicyRules += [ordered]@{
             Name         = $rule.Name
             ActionValue  = $rule.AdditionalProperties.action
             RuleType     = $rule.AdditionalProperties.ruleType

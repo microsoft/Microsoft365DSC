@@ -62,7 +62,8 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
                 'TeamSettings.ReadWrite.All',
                 'Channel.Delete.All',
                 'ChannelSettings.ReadWrite.All',
-                'ChannelMember.ReadWrite.All'
+                'ChannelMember.ReadWrite.All',
+                'Team.ReadBasic.All'
             )
         }
 

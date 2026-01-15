@@ -52,8 +52,8 @@
       "cmdlets": [
         "Get-MgBetaDirectoryCustomSecurityAttributeDefinition",
         "New-MgBetaDirectoryCustomSecurityAttributeDefinition",
-        "Update-MgBetaDirectoryCustomSecurityAttributeDefinition",
         "New-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue",
+        "Update-MgBetaDirectoryCustomSecurityAttributeDefinition",
         "Update-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue"
       ]
     }

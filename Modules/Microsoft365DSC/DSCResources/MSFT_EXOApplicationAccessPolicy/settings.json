@@ -26,11 +26,12 @@
     },
     "exchange": {
       "requiredroles": [
-        "View-Only Configuration",
-        "Organization Configuration"
+        "Organization Configuration",
+        "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Organization Management",
+        "View-Only Organization Management"
       ]
     }
   },

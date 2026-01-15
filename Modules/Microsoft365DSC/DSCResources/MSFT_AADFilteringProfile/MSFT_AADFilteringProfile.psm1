@@ -116,11 +116,11 @@ function Get-TargetResource
                 $policyInfo = Get-MgBetaNetworkAccessFilteringPolicy -FilteringPolicyId $link.Policy.Id
                 if ($null -ne $policyInfo)
                 {
-                    $entry = @{
-                        State        = $link.State
-                        Priority     = $link.AdditionalProperties.priority
-                        LoggingState = $link.AdditionalProperties.loggingState
+                    $entry = [ordered]@{
                         PolicyName   = $policyInfo.Name
+                        LoggingState = $link.AdditionalProperties.loggingState
+                        Priority     = $link.AdditionalProperties.priority
+                        State        = $link.State
                     }
                     $PolicyValue += $entry
                 }
@@ -147,14 +147,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -478,15 +477,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

@@ -263,18 +263,18 @@ function Get-TargetResource
                 $time = $null
             }
 
-            $assignmentResult += @{
+            $assignmentResult += [ordered]@{
+                Assignment           = (ConvertFrom-IntunePolicyAssignment `
+                        -IncludeDeviceFilter:$true `
+                        -Assignments $assignment) | Select-Object -First 1
                 RunRemediationScript = $assignment.runRemediationScript
-                RunSchedule          = @{
+                RunSchedule          = [ordered]@{
                     DataType = $assignment.RunSchedule.AdditionalProperties.'@odata.type'
                     Date     = $assignment.RunSchedule.AdditionalProperties.date
                     Interval = $assignment.RunSchedule.Interval
                     Time     = $time
                     UseUtc   = $assignment.RunSchedule.AdditionalProperties.useUtc
                 }
-                Assignment           = (ConvertFrom-IntunePolicyAssignment `
-                        -IncludeDeviceFilter:$true `
-                        -Assignments $assignment) | Select-Object -First 1
             }
         }
         $results.Add('Assignments', $assignmentResult)
@@ -289,7 +289,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -677,29 +677,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $postProcessingScript = {
-        param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
-        if ($CurrentValues.IsGlobalScript)
-        {
-            Write-Verbose -Message 'Detected a global script, removing read-only properties from the comparison'
-            $ValuesToCheck.Remove('DetectionScriptContent') | Out-Null
-            $ValuesToCheck.Remove('RemediationScriptContent') | Out-Null
-            $ValuesToCheck.Remove('DetectionScriptParameters') | Out-Null
-            $ValuesToCheck.Remove('RemediationScriptParameters') | Out-Null
-            $ValuesToCheck.Remove('DeviceHealthScriptType') | Out-Null
-            $ValuesToCheck.Remove('Publisher') | Out-Null
-            $ValuesToCheck.Remove('EnforceSignatureCheck') | Out-Null
-            $ValuesToCheck.Remove('DisplayName') | Out-Null
-            $ValuesToCheck.Remove('Description') | Out-Null
-        }
-
-        return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
-    }
-
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -ExcludedProperties @('IsGlobalScript') `
-                                         -PostProcessing $postProcessingScript
+                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                             @compareParameters
     return $result
 }
 
@@ -877,16 +858,43 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('IsGlobalScript')
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            if ($CurrentValues.IsGlobalScript)
+            {
+                Write-Verbose -Message 'Detected a global script, removing read-only properties from the comparison'
+                $ValuesToCheck.Remove('DetectionScriptContent') | Out-Null
+                $ValuesToCheck.Remove('RemediationScriptContent') | Out-Null
+                $ValuesToCheck.Remove('DetectionScriptParameters') | Out-Null
+                $ValuesToCheck.Remove('RemediationScriptParameters') | Out-Null
+                $ValuesToCheck.Remove('DeviceHealthScriptType') | Out-Null
+                $ValuesToCheck.Remove('Publisher') | Out-Null
+                $ValuesToCheck.Remove('EnforceSignatureCheck') | Out-Null
+                $ValuesToCheck.Remove('DisplayName') | Out-Null
+                $ValuesToCheck.Remove('Description') | Out-Null
+            }
+
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

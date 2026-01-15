@@ -63,6 +63,12 @@
   "mode": "Configuration",
   "commands": [
     {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
       "module": "Microsoft.Graph.Beta.DirectoryObjects",
       "cmdlets": [
         "Get-MgBetaDirectoryObjectById"

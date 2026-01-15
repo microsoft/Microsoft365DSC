@@ -53,12 +53,17 @@
   "mode": "Configuration",
   "commands": [
     {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
       "module": "Microsoft.Graph.Beta.DeviceManagement",
       "cmdlets": [
         "Get-MgBetaDeviceManagementAssignmentFilter",
         "Get-MgBetaDeviceManagementDeviceHealthScript",
         "Get-MgBetaDeviceManagementDeviceHealthScriptAssignment",
-        "New-MgBetaDeviceManagementDeviceHealthScript",
         "Remove-MgBetaDeviceManagementDeviceHealthScript",
         "Update-MgBetaDeviceManagementDeviceHealthScript"
       ]

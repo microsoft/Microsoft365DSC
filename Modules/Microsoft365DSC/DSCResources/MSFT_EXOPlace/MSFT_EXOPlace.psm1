@@ -234,7 +234,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullReturn
+        throw
     }
 }
 
@@ -607,7 +607,8 @@ function Export-TargetResource
     #endregion
     try
     {
-        [array]$places = Get-Place -ResultSize 'Unlimited' -ErrorAction Stop
+        [array]$places = Get-Place -ResultSize 'Unlimited' -ErrorAction Stop | `
+            Where-Object -FilterScript { $_.PlaceType -ne 'RoomList'}
         $dscContent = ''
 
         if ($places.Length -eq 0)
@@ -657,15 +658,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 Export-ModuleMember -Function *-TargetResource

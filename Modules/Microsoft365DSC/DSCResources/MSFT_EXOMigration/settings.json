@@ -26,14 +26,12 @@
     },
     "exchange": {
       "requiredroles": [
-        "User Options",
-        "Data Loss Prevention",
-        "Transport Rules",
-        "View-Only Configuration",
-        "Mail Recipients"
+        "Migration",
+        "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Recipient Management",
+        "View-Only Organization Management"
       ]
     }
   },

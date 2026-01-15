@@ -27,11 +27,11 @@
     "exchange": {
       "requiredroles": [
         "Security Admin",
-        "View-Only Configuration",
-        "Security Reader"
+        "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Security Administrator",
+        "View-Only Organization Management"
       ]
     }
   },

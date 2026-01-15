@@ -183,7 +183,6 @@ function Get-TargetResource
             $result.Remove($paramToRemove)
         }
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -194,7 +193,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullReturn
+        throw
     }
 }
 
@@ -495,11 +494,10 @@ function Export-TargetResource
         }
         else
         {
-            Write-M365DSCHost -Message "    `r`n* Searches not assigned to an eDiscovery Case"
+            Write-M365DSCHost -Message "`r`n    * Searches not assigned to an eDiscovery Case`r`n" -DeferWrite
         }
         $i = 1
         $dscContent = ''
-        $partialContent = ''
         foreach ($search in $searches)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -527,7 +525,7 @@ function Export-TargetResource
         {
             $searches = Get-ComplianceSearch -Case $case.Name
 
-            Write-M365DSCHost -Message "    * [$j/$($cases.Length)] Searches assigned to case $($case.Name)"
+            Write-M365DSCHost -Message "`r`n    * [$j/$($cases.Length)] Searches assigned to case $($case.Name)`r`n" -DeferWrite
             $i = 1
             foreach ($search in $searches)
             {
@@ -564,15 +562,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

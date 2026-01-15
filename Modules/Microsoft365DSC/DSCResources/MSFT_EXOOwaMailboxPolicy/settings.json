@@ -27,11 +27,11 @@
     "exchange": {
       "requiredroles": [
         "Recipient Policies",
-        "View-Only Configuration",
-        "Mail Recipients"
+        "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Recipient Management",
+        "View-Only Organization Management"
       ]
     }
   },

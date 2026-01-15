@@ -30,8 +30,9 @@
         "View-Only Configuration"
       ],
       "requiredrolegroups": [
+        "Compliance Management",
         "Organization Management",
-        "Compliance Management"
+        "View-Only Organization Management"
       ]
     }
   },

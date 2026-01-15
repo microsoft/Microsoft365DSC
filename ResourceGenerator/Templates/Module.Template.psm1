@@ -4,16 +4,12 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PrimaryKey,
-
-        ##TODO - Add the list of Parameters
+        #region resource generator code
+<ParameterBlock><AssignmentsParam>        #endregion
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
+        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -29,6 +25,10 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
@@ -41,63 +41,79 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
-    $null = New-M365DSCConnection -Workload 'Workload' `
-        -InboundParameters $PSBoundParameters
+    Write-Verbose -Message "Getting configuration for the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
+
+            $null = New-M365DSCConnection -Workload '<#Workload#>' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+            <#ResourceGenerator
+            #region resource generator code
+            if (-not [System.String]::IsNullOrEmpty($<PrimaryKey>))
+            {
+                $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
+            }
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
+
+                if (-not [System.String]::IsNullOrEmpty($<FilterKey>))
+                {
+                    $getValue = <GetCmdLetName> `
+    <AlternativeFilter>
+                }
+            }
+            #endregionResourceGenerator#>
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}."
+                return $nullResult
+            }
         }
         else
         {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
+            $getValue = $Script:exportedInstance
         }
-        if ($null -eq $instance)
-        {
-            return $nullResult
+        $<PrimaryKey> = $getValue.<PrimaryKey>
+        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found"<#ResourceGenerator
+<SettingsCatalogGetSettings><ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
+        $results = @{<#ResourceGenerator
+            #region resource generator code
+<HashTableMapping>            #endregionResourceGenerator#>
         }
-
-        $results = @{
-            ##TODO - Add the list of parameters to be returned
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
-        }
+<#ComplexTypeContent#><#SettingsCatalogAddSettings#><#AssignmentsGet#>
         return $results
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -106,16 +122,11 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PrimaryKey,
-
-        ##TODO - Add the list of Parameters
-
+        #region resource generator code
+<ParameterBlock><AssignmentsParam>        #endregion
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
+        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -131,6 +142,10 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
@@ -142,6 +157,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -157,25 +174,34 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    # CREATE
+<#SettingsCatalogProperties#>
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
+        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
+<#AssignmentsRemove#>
+<#DefaultCreateParameters#><#ResourceGenerator
+        #region resource generator code
+<NewDataType>        $policy = <NewCmdLetName> <#NewKeyIdentifier#>
+<#AssignmentsNew#>        #endregionResourceGenerator#>
     }
-    # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
+        Write-Verbose -Message "Updating the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
+<#AssignmentsRemove#>
+<#DefaultUpdateParameters#><#ResourceGenerator
+        #region resource generator code
+<UpdateDataType><UpdateCmdLetName><#UpdateKeyIdentifier#>
+<#AssignmentsUpdate#>
+        #endregionResourceGenerator#>
     }
-    # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
+        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"<#ResourceGenerator
+        #region resource generator code
+        <RemoveCmdLetName> <#removeKeyIdentifier#>
+        #endregionResourceGenerator#>
     }
 }
 
@@ -185,16 +211,12 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PrimaryKey,
-
-        ##TODO - Add the list of Parameters
+        #region resource generator code
+<ParameterBlock><AssignmentsParam>        #endregion
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
+        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -208,6 +230,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -243,6 +269,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -271,8 +301,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
-    $ConnectionMode = New-M365DSCConnection -Workload 'Workload' `
+    $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -288,47 +317,52 @@ function Export-TargetResource
     #endregion
 
     try
-    {
-        $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
+    {<#ResourceGenerator
+        #region resource generator code
+<exportGetCommand>        #endregionResourceGenerator#>
 
         $i = 1
         $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($getValue.Length -eq 0)
         {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $getValue)
         {
-            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            $displayedKey = $config.<PrimaryKey>
+            if (-not [System.String]::IsNullOrEmpty($config.displayName))
             {
-                $Global:M365DSCExportResourceInstancesCount++
+                $displayedKey = $config.displayName
             }
-
-            $displayedKey = $config.Id
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            elseif (-not [System.String]::IsNullOrEmpty($config.name))
+            {
+                $displayedKey = $config.name
+            }
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
+                <PrimaryKey>                    = $config.<PrimaryKey><RequiredKey>
+                Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+<#ConvertComplexToString#><#AssignmentsConvertComplexToString#>
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
+                -Credential $Credential <#AddToEscape#><#TrailingCharRemoval#>
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -339,15 +373,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

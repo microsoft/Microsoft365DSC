@@ -61,7 +61,8 @@
     {
       "module": "Microsoft.Graph.Beta.DeviceManagement",
       "cmdlets": [
-        "Get-MgBetaDeviceManagementAssignmentFilter"
+        "Get-MgBetaDeviceManagementAssignmentFilter",
+        "Get-MgBetaDeviceManagementDeviceConfiguration"
       ]
     },
     {

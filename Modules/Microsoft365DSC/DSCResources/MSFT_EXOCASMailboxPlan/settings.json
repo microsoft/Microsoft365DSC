@@ -26,13 +26,12 @@
     },
     "exchange": {
       "requiredroles": [
-        "Organization Client Access",
-        "View-Only Recipients",
-        "View-Only Configuration",
-        "Mail Recipients"
+        "Mail Recipients",
+        "View-Only Configuration"
       ],
       "requiredrolegroups": [
-        "Organization Management"
+        "Recipient Management",
+        "View-Only Organization Management"
       ]
     }
   },

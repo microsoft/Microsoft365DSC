@@ -68,6 +68,12 @@
       ]
     },
     {
+      "module": "Microsoft.Graph.Beta.DirectoryObjects",
+      "cmdlets": [
+        "Get-MgBetaDirectoryObjectById"
+      ]
+    },
+    {
       "module": "Microsoft.Graph.Beta.Identity.Governance",
       "cmdlets": [
         "Get-MgBetaRoleManagementDirectoryRoleAssignmentSchedule",

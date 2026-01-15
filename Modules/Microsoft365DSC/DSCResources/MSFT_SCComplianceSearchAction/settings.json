@@ -23,6 +23,14 @@
           }
         ]
       }
+    },
+    "purview": {
+      "requiredroles": [
+        "Compliance Search"
+      ],
+      "requiredrolegroups": [
+        "Compliance Data Administrator"
+      ]
     }
   },
   "requiredModules": [],

@@ -37,37 +37,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-AzRest -MockWith {
                 return @{
-                    content = ConvertTo-Json(
+                    content = ConvertTo-Json @{
+                        value = @(
                         @{
-                            value = @(
-                            @{
-                                id = "12345-12345-12345-12345-12345"
-                                name = 'MyAction'
-                                kind = "Email"
-                                properties = @{
-                                    displayName = "MyAction"
-                                    scope = "/providers/Microsoft.Billing/billingAccounts/1e5b9e50-a1ea-581e-fb3a-778b93a06854:6487d5cf-0a7b-42e6-9549-23cavvvvvvv_2019-05-31"
-                                    status = "Enabled"
-                                    viewId = "/providers/Microsoft.Billing/billingAccounts/xxxxx:xxxxx_xxxxx/providers/Microsoft.CostManagement/views/ms:AccumulatedCosts";
-                                    schedule = @{
-                                        daysOfWeek = @('Wednesday')
-                                        startDate = '2024-11-06T13:00:00Z'
-                                        endDate = '2025-11-06T05:00:00Z'
-                                        frequency = 'Weekly'
-                                        dayOfMonth = 0
-                                        hourOfDay = 13
-                                    }
-                                    notification = @{
-                                        subject = 'Cost Alert'
-                                        message = 'This is my demo message!'
-                                        to = @('john.smith@contoso.com')
-                                    }
-                                    notificationEmail = "alert@contoso.com";
+                            id = "12345-12345-12345-12345-12345"
+                            name = 'MyAction'
+                            kind = "Email"
+                            properties = @{
+                                displayName = "MyAction"
+                                scope = "/providers/Microsoft.Billing/billingAccounts/1e5b9e50-a1ea-581e-fb3a-778b93a06854:6487d5cf-0a7b-42e6-9549-23cavvvvvvv_2019-05-31"
+                                status = "Enabled"
+                                viewId = "/providers/Microsoft.Billing/billingAccounts/xxxxx:xxxxx_xxxxx/providers/Microsoft.CostManagement/views/ms:AccumulatedCosts";
+                                schedule = @{
+                                    daysOfWeek = @('Wednesday')
+                                    startDate = '2024-11-06T13:00:00Z'
+                                    endDate = '2025-11-06T05:00:00Z'
+                                    frequency = 'Weekly'
+                                    dayOfMonth = 0
+                                    hourOfDay = 13
                                 }
+                                notification = @{
+                                    subject = 'Cost Alert'
+                                    message = 'This is my demo message!'
+                                    to = @('john.smith@contoso.com')
+                                }
+                                notificationEmail = "alert@contoso.com";
                             }
-                            )
                         }
-                    ) -Depth 10 -Compress
+                        )
+                    } -Depth 10 -Compress
                 }
             }
 
@@ -115,7 +113,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-AzRest -MockWith {
-                    return $null
+                    return @{
+                        Content = ConvertTo-Json @{
+                            value = @()
+                        }
+                    }
                 }
             }
             It 'Should return Values from the Get method' {
