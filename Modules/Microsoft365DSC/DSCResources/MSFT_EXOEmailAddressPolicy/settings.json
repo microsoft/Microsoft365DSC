@@ -25,12 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "E-Mail Address Policies"
-      ],
-      "requiredrolegroups": [
-        "Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "E-Mail Address Policies"
+        ],
+        "update": [
+          "E-Mail Address Policies"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "Recipient Management"
+        ],
+        "update": [
+          "Organization Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

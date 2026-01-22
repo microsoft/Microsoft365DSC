@@ -25,14 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Role Management",
-        "View-Only Configuration"
-      ],
-      "requiredrolegroups": [
-        "Organization Management",
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "Role Management"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Organization Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

@@ -196,7 +196,10 @@ function Get-TargetResource
                     if ($roleEntry.DisplayName -eq $RoleDefinition)
                     {
                         $RoleDefinitionId = $roleEntry.Id
-                        $Script:RoleDefinitions.Add($scheduleRoleId, $roleEntry)
+                        if (-not $Script:RoleDefinitions.ContainsKey($scheduleRoleId))
+                        {
+                            $Script:RoleDefinitions.Add($scheduleRoleId, $roleEntry)
+                        }
                         $schedule = $foundSchedule
                         break
                     }

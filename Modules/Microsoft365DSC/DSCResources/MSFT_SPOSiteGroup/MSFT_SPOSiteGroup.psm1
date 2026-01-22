@@ -68,7 +68,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance -or $Script:exportedInstance.Url -ne $Url)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Title -ne $Identity)
         {
             $null = New-M365DSCConnection -Workload 'PNP' `
                 -InboundParameters $PSBoundParameters

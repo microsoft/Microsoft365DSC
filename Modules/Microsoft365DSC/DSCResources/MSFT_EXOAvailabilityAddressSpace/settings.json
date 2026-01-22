@@ -25,12 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Mail Tips"
-      ],
-      "requiredrolegroups": [
-        "Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "Mail Tips"
+        ],
+        "update": [
+          "Mail Tips"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "Organization Management"
+        ],
+        "update": [
+          "Organization Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

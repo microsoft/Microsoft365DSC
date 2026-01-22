@@ -25,14 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "View-Only Recipients",
-        "Mail Recipients"
-      ],
-      "requiredrolegroups": [
-        "Recipient Management",
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Recipients"
+        ],
+        "update": [
+          "Mail Recipients"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Recipient Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

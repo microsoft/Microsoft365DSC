@@ -1,5 +1,36 @@
 # Change log for Microsoft365DSC
 
+# 1.26.121.1
+
+* AADGroup
+  * Removed caching for the groups role assignments which was causing
+    performance issues in the Get-TargetResource.
+* AADRoleAssignmentScheduleRequest
+  * FIXES [#6810](https://github.com/microsoft/Microsoft365DSC/issues/6810)
+* AADRoleEligibilityScheduleRequest
+  * FIXES [#6810](https://github.com/microsoft/Microsoft365DSC/issues/6810)
+* M365DSCRuleEvaluation
+  * Fixes for an issue where the resource was complaining about the `Name`
+    parameter missing.
+* SPOSiteGroup
+  * Fixed a condition mismatch during export resulting in repeated logins.
+* M365DSCPermissions
+  * Changed the output of `Get-M365DSCCompiledPermissionList` to show the
+    required Read and Update permissions for `Roles` and `RoleGroups`.
+* MISC
+  * Updated the structure of all EXO settings.json files that contain the
+    `Roles` and `RoleGroups` properties.
+* M365DSCUtil
+  * Added the output of the drift event to the screen in Verbose mode.
+    FIXES [#6666](https://github.com/microsoft/Microsoft365DSC/issues/6666)
+  * Added the parameter `-WithStatistics` to `Export-M365DSCConfiguration`.
+  * Fixed an issue where the module is not being updated if installed
+    with `Install-PSResource` because the filter condition was incorrect.
+* DEPENDENCIES
+  * Fixed a case typo in `RequiredVersion` of a dependency.
+    FIXES [#6815](https://github.com/microsoft/Microsoft365DSC/issues/6815)
+  * Updated ReverseDSC to version 2.0.0.31.
+
 # 1.26.114.1
 
 * AADAuthenticationMethodPolicy

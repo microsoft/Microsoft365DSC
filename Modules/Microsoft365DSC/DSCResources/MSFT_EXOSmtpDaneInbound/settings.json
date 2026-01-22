@@ -25,14 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Security Admin",
-        "View-Only Configuration"
-      ],
-      "requiredrolegroups": [
-        "Security Administrator",
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "Security Admin"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Security Administrator"
+        ]
+      }
     }
   },
   "requiredModules": [],

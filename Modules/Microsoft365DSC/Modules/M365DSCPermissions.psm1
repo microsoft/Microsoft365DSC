@@ -85,8 +85,14 @@ function Get-M365DSCCompiledPermissionList
                 }
             }
         )
-        RequiredRoles       = @()
-        RequiredRoleGroups  = @()
+        RequiredRoles       = @{
+            Read = @()
+            Update = @()
+        }
+        RequiredRoleGroups  = @{
+            Read = @()
+            Update = @()
+        }
     }
 
     $total = $ResourceNameList.Count
@@ -195,30 +201,54 @@ function Get-M365DSCCompiledPermissionList
             {
                 Write-Verbose -Message '  Retrieving Exchange permissions'
                 # Required Role
-                foreach ($requiredRole in $resourceSettings.permissions.exchange.requiredroles)
+                foreach ($requiredRole in $resourceSettings.permissions.exchange.requiredroles.read)
                 {
-                    if (-not $results.RequiredRoles.Contains($requiredRole))
+                    if (-not $results.RequiredRoles.Read.Contains($requiredRole))
                     {
-                        Write-Verbose -Message "    Found new Required Role {$($requiredRole)}"
-                        $results.RequiredRoles += $requiredRole
+                        Write-Verbose -Message "    Found new Read Required Role {$($requiredRole)}"
+                        $results.RequiredRoles.Read += $requiredRole
                     }
                     else
                     {
-                        Write-Verbose -Message "    Required Role {$($requiredRole)} was already added"
+                        Write-Verbose -Message "    Required Read Role {$($requiredRole)} was already added"
+                    }
+                }
+                foreach ($requiredRole in $resourceSettings.permissions.exchange.requiredroles.update)
+                {
+                    if (-not $results.RequiredRoles.Update.Contains($requiredRole))
+                    {
+                        Write-Verbose -Message "    Found new Update Required Role {$($requiredRole)}"
+                        $results.RequiredRoles.Update += $requiredRole
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "    Required Update Role {$($requiredRole)} was already added"
                     }
                 }
 
                 # Required RoleGroups
-                foreach ($requiredRoleGroup in $resourceSettings.permissions.exchange.requiredrolegroups)
+                foreach ($requiredRoleGroup in $resourceSettings.permissions.exchange.requiredrolegroups.read)
                 {
-                    if (-not $results.RequiredRoleGroups.Contains($requiredRoleGroup))
+                    if (-not $results.RequiredRoleGroups.Read.Contains($requiredRoleGroup))
                     {
-                        Write-Verbose -Message "    Found new Required Role Group {$($requiredRoleGroup)}"
-                        $results.RequiredRoleGroups += $requiredRoleGroup
+                        Write-Verbose -Message "    Found new Read Required Role Group {$($requiredRoleGroup)}"
+                        $results.RequiredRoleGroups.Read += $requiredRoleGroup
                     }
                     else
                     {
-                        Write-Verbose -Message "    Required Role Group {$($requiredRoleGroup)} was already added"
+                        Write-Verbose -Message "    Required Read Role Group {$($requiredRoleGroup)} was already added"
+                    }
+                }
+                foreach ($requiredRoleGroup in $resourceSettings.permissions.exchange.requiredrolegroups.update)
+                {
+                    if (-not $results.RequiredRoleGroups.Update.Contains($requiredRoleGroup))
+                    {
+                        Write-Verbose -Message "    Found new Update Required Role Group {$($requiredRoleGroup)}"
+                        $results.RequiredRoleGroups.Update += $requiredRoleGroup
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "    Required Update Role Group {$($requiredRoleGroup)} was already added"
                     }
                 }
 
@@ -363,10 +393,14 @@ function Get-M365DSCCompiledPermissionList
         $results = @{
             AdministrativeRoles = $results.AdministrativeRoles.$AccessType
             Permissions = $resultsByType
-            RequiredRoles = $results.RequiredRoles
+            RequiredRoles = $results.RequiredRoles | Select-Object -ExpandProperty $AccessType
+            RequiredRoleGroups = $results.RequiredRoleGroups | Select-Object -ExpandProperty $AccessType
         }
     }
 
+    $results.AdministrativeRoles = $results.AdministrativeRoles | Sort-Object -Unique
+    $results.RequiredRoleGroups = $results.RequiredRoleGroups | Sort-Object -Unique
+    $results.RequiredRoles = $results.RequiredRoles | Sort-Object -Unique
     return $results
 }
 
@@ -500,6 +534,8 @@ function Update-M365DSCAllowedGraphScopes
     $results = (Get-M365DSCCompiledPermissionList -ResourceNameList $resourceNames -PermissionType 'Delegated' -AccessType $Type).Permissions
     $permissions = ($results | Where-Object -FilterScript { $_.API -eq 'Graph' }).PermissionName
 
+    # Remove the Tasks.Read.All permission from the list as it is causing an issue with the Graph SDK
+    $permissions.Remove('Tasks.Read.All') | Out-Null
     Write-Verbose -Message "Found permissions: $($permissions -join ', ')"
     $params = @{
         Scopes = $permissions

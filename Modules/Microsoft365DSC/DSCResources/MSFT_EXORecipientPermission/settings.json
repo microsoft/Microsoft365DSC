@@ -25,12 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Mail Recipients"
-      ],
-      "requiredrolegroups": [
-        "Recipient Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "Mail Recipients"
+        ],
+        "update": [
+          "Mail Recipients"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "Recipient Management"
+        ],
+        "update": [
+          "Recipient Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

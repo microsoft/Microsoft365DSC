@@ -199,7 +199,7 @@ function Test-TargetResource
         {
             $params.Add('Filter', $Filter)
         }
-
+        Initialize-M365DSCAllResourcesDictionary
         Write-Verbose -Message "Importing module from Path {$($module)}"
         Import-Module $module -Force -Function 'Export-TargetResource'
         $cmdName = "MSFT_$ResourceTypeName\Export-TargetResource"

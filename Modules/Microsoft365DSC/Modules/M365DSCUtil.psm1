@@ -1326,7 +1326,8 @@ function Test-M365DSCTargetResource
                                       -ResourceName $ResourceName `
                                       -TenantName $TenantName `
                                       -CurrentValues $CurrentValues `
-                                      -DesiredValues $DesiredValues
+                                      -DesiredValues $DesiredValues `
+                                      -Verbose:$Verbose
     }
 
     Write-Verbose -Message "Test-M365DSCTargetResource returned $testTargetResource" -Verbose:$Verbose
@@ -1482,6 +1483,9 @@ Specifies that the configuration needs to be validated for conflicts or issues a
 .PARAMETER TokenReplacement
     Specifies the hashtable to use for token replacement. Key is the value to replace, and the value is the variable to use for replacement without the '$' sign.
 
+.PARAMETER WithStatistics
+    Specifies that statistics about the export should be shown after completion.
+
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
 
@@ -1607,7 +1611,11 @@ function Export-M365DSCConfiguration
 
         [Parameter(ParameterSetName = 'Export')]
         [System.Collections.Hashtable]
-        $TokenReplacement
+        $TokenReplacement,
+
+        [Parameter(ParameterSetName = 'Export')]
+        [Switch]
+        $WithStatistics
     )
 
     $currentStartDateTime = [System.DateTime]::Now
@@ -1763,7 +1771,8 @@ function Export-M365DSCConfiguration
             -Validate:$Validate `
             -Parallel:$Parallel `
             -ResourceSettings $Script:M365DSCResourceSettings `
-            -ErrorAction $ErrorActionPreference
+            -ErrorAction $ErrorActionPreference `
+            -WithStatistics:$WithStatistics
     }
     elseif ($null -ne $Components)
     {
@@ -1786,7 +1795,8 @@ function Export-M365DSCConfiguration
             -Validate:$Validate `
             -Parallel:$Parallel `
             -ResourceSettings $Script:M365DSCResourceSettings `
-            -ErrorAction $ErrorActionPreference
+            -ErrorAction $ErrorActionPreference `
+            -WithStatistics:$WithStatistics
     }
     elseif ($null -ne $Mode)
     {
@@ -1810,7 +1820,8 @@ function Export-M365DSCConfiguration
             -Validate:$Validate `
             -Parallel:$Parallel `
             -ResourceSettings $Script:M365DSCResourceSettings `
-            -ErrorAction $ErrorActionPreference
+            -ErrorAction $ErrorActionPreference `
+            -WithStatistics:$WithStatistics
     }
 
     # Clear the exported resource instances' names Global variable
@@ -5084,7 +5095,7 @@ function Update-M365DSCModule
     }
     catch
     {
-        if ($_.Exception.Message -like "*Module 'Microsoft365DSC' was not installed by using Install-Module")
+        if ($_.Exception.Message -like "*Module 'Microsoft365DSC' was not installed by using Install-Module*")
         {
             Write-Verbose -Message "The Microsoft365DSC module might have been installed with Install-PSResource"
             if ($null -ne (Get-Module -Name Microsoft.PowerShell.PSResourceGet -ListAvailable))

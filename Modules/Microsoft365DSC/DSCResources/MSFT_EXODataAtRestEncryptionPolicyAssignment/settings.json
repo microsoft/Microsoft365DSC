@@ -25,12 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Compliance Admin"
-      ],
-      "requiredrolegroups": [
-        "Compliance Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "Compliance Admin"
+        ],
+        "update": [
+          "Compliance Admin"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "Compliance Management"
+        ],
+        "update": [
+          "Compliance Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

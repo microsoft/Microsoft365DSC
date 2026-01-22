@@ -25,12 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Federated Sharing"
-      ],
-      "requiredrolegroups": [
-        "Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "Federated Sharing"
+        ],
+        "update": [
+          "Federated Sharing"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "Organization Management"
+        ],
+        "update": [
+          "Organization Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

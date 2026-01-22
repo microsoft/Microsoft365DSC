@@ -25,14 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Audit Logs",
-        "View-Only Configuration"
-      ],
-      "requiredrolegroups": [
-        "Records Management",
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "Audit Logs"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Records Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

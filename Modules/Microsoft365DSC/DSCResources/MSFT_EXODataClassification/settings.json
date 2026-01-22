@@ -25,14 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Data Loss Prevention",
-        "View-Only Configuration"
-      ],
-      "requiredrolegroups": [
-        "Compliance Management",
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "Data Loss Prevention"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Compliance Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

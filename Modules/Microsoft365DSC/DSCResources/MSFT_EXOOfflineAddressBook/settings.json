@@ -25,12 +25,18 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Address Lists"
-      ],
-      "requiredrolegroups": [
-        "Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "Address Lists"
+        ],
+        "update": [
+          "Address Lists"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [],
+        "update": []
+      }
     }
   },
   "requiredModules": [],

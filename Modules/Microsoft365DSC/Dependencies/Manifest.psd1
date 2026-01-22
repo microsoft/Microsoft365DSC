@@ -34,7 +34,7 @@
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.Applications'
-            Requiredversion = '2.28.0'
+            RequiredVersion = '2.28.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Authentication'
@@ -150,7 +150,7 @@
         },
         @{
             ModuleName      = 'ReverseDSC'
-            RequiredVersion = '2.0.0.30'
+            RequiredVersion = '2.0.0.31'
         },
         @{
             ModuleName      = 'PSParallelPipeline'

@@ -25,16 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Security Reader",
-        "Transport Rules",
-        "View-Only Configuration"
-      ],
-      "requiredrolegroups": [
-        "Records Management",
-        "Security Reader",
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "Transport Rules"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Records Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

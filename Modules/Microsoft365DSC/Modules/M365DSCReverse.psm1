@@ -102,7 +102,11 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [System.Collections.Generic.Dictionary[System.String, System.Object]]
-        $ResourceSettings
+        $ResourceSettings,
+
+        [Parameter()]
+        [Switch]
+        $WithStatistics
     )
 
     # Start by checking to see if a new version of the tool is available in the PowerShell Gallery
@@ -687,8 +691,10 @@ function Start-M365DSCConfigurationExtract
         $partialExportName = $Global:PartialExportFileName
         $resourcesPath = $resourcesPath | Sort-Object $_.Name
         $synchronizedHashtable = [System.Collections.Hashtable]::Synchronized(@{
-            ResourceCounter = 1
-            ResourcesResult = @{}
+            ResourceCounter     = 1
+            ResourcesResult     = @{}
+            SuccessfulResources = 0
+            FailedResources     = 0
         })
         $resourceDictionary = Get-M365DSCAllResourcesDictionary
         $exportScriptBlock = {
@@ -798,10 +804,12 @@ function Start-M365DSCConfigurationExtract
                     $exportOutput = Export-TargetResource @parameters
                     $exportString.Append($exportOutput) | Out-Null
                     ($using:synchronizedHashtable).ResourcesResult.Add($resourceName, $exportString.ToString())
+                    ($using:synchronizedHashtable).SuccessfulResources++
                 }
                 catch
                 {
                     Write-M365DSCHost -Message "$($Global:M365DSCEmojiRedX)`r`n    An error occurred while exporting resource {$resourceName}: $($_.Exception.Message)" -ForegroundColor Red -CommitWrite
+                    ($using:synchronizedHashtable).FailedResources++
                     if ($ErrorActionPreference -eq 'Stop')
                     {
                         throw $_
@@ -883,7 +891,7 @@ function Start-M365DSCConfigurationExtract
                 $credsContent = ''
                 foreach ($credEntry in $Global:CredsRepo)
                 {
-                    if (!$credEntry.ToLower().StartsWith('builtin'))
+                    if (-not $credEntry.ToLower().StartsWith('builtin'))
                     {
                         if (!$AzureAutomation)
                         {
@@ -916,6 +924,16 @@ function Start-M365DSCConfigurationExtract
         Write-M365DSCHost -Message '} for {' -DeferWrite
         Write-M365DSCHost -Message "$($Global:M365DSCExportResourceInstancesCount) instances" -DeferWrite -ForegroundColor Magenta
         Write-M365DSCHost -Message '}' -CommitWrite
+        Write-M365DSCHost -Message "Successful exports: {$($synchronizedHashtable.SuccessfulResources)}"
+        Write-M365DSCHost -Message "Failed exports: {$($synchronizedHashtable.FailedResources)}"
+        if ($($synchronizedHashtable.FailedResources) -eq 0)
+        {
+            Write-M365DSCHost -Message "$($Global:M365DSCEmojiGreenCheckmark) Export completed successfully." -ForegroundColor Green
+        }
+        else
+        {
+            Write-M365DSCHost -Message "$($Global:M365DSCEmojiRedX) Export completed with errors." -ForegroundColor Red
+        }
         #endregion
 
         $sessions = Get-PSSession | Where-Object -FilterScript { $_.Name -like 'SfBPowerShellSessionViaTeamsModule_*' -or `
@@ -1075,6 +1093,15 @@ function Start-M365DSCConfigurationExtract
         }
 
         Pop-Location
+        if ($WithStatistics)
+        {
+            @{
+                ExportDurationInSeconds = $timeTaken.TotalSeconds
+                ExportedResourceCount   = $synchronizedHashtable.SuccessfulResources
+                FailedResourceCount     = $synchronizedHashtable.FailedResources
+                TotalResourceCount      = $synchronizedHashtable.SuccessfulResources + $synchronizedHashtable.FailedResources
+            }
+        }
     }
     catch
     {

@@ -25,16 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Information Rights Management",
-        "Security Reader",
-        "View-Only Configuration"
-      ],
-      "requiredrolegroups": [
-        "Compliance Management",
-        "Security Reader",
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "Information Rights Management"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Compliance Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

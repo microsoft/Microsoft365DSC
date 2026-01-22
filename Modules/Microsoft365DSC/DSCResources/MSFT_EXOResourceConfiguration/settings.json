@@ -25,12 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Organization Configuration"
-      ],
-      "requiredrolegroups": [
-        "Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "Organization Configuration"
+        ],
+        "update": [
+          "Organization Configuration"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "Organization Management"
+        ],
+        "update": [
+          "Organization Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

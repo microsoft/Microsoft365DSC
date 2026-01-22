@@ -25,13 +25,20 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Address Lists",
-        "View-Only Configuration"
-      ],
-      "requiredrolegroups": [
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "Address Lists"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": []
+      }
     }
   },
   "requiredModules": [],

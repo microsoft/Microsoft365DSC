@@ -25,16 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Security Reader",
-        "Transport Hygiene",
-        "View-Only Configuration"
-      ],
-      "requiredrolegroups": [
-        "Hygiene Management",
-        "Security Reader",
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "Transport Hygiene"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Hygiene Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

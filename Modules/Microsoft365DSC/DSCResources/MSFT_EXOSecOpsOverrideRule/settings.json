@@ -3,7 +3,7 @@
   "description": "Use this resource to manage phish sim override rules.",
   "roles": {
     "read": [
-      "Exchange Admin"
+      "Global Reader"
     ],
     "update": [
       "Exchange Admin"
@@ -25,16 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Organization Configuration",
-        "Security Reader",
-        "View-Only Configuration"
-      ],
-      "requiredrolegroups": [
-        "Organization Management",
-        "Security Reader",
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "Organization Configuration"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Organization Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

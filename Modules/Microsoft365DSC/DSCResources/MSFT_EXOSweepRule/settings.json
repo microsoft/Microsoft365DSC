@@ -3,7 +3,7 @@
   "description": "Use this resource to create Sweep rules in mailboxes. Sweep rules run at regular intervals to help keep your Inbox clean.",
   "roles": {
     "read": [
-      "Exchange Admin"
+      "Global Reader"
     ],
     "update": [
       "Exchange Admin"
@@ -25,14 +25,22 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "User Options",
-        "View-Only Configuration"
-      ],
-      "requiredrolegroups": [
-        "Organization Management",
-        "View-Only Organization Management"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "User Options"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Organization Management"
+        ]
+      }
     }
   },
   "requiredModules": [],

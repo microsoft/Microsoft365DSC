@@ -310,30 +310,15 @@ function Get-TargetResource
             }
         }
 
-        if ($null -eq $Script:DirectoryRoleAssignments)
-        {
-            $Script:DirectoryRoleAssignments = [System.Collections.Generic.Dictionary[string, string[]]]::new()
-            $allRoleAssignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -All
-            foreach ($roleAssignment in $allRoleAssignments)
-            {
-                if (-not $Script:DirectoryRoleAssignments.ContainsKey($roleAssignment.PrincipalId))
-                {
-                    $Script:DirectoryRoleAssignments[$roleAssignment.PrincipalId] = @()
-                }
-                $Script:DirectoryRoleAssignments[$roleAssignment.PrincipalId] += $roleAssignment.RoleDefinitionId
-            }
-        }
-
         # AssignedToRole
         $AssignedToRoleValues = @()
         if ($Group.IsAssignableToRole -eq $true)
         {
-            $AssignedToRoleValues = @()
-            $roleDefinitionIds = $Script:DirectoryRoleAssignments[$Group.Id]
-            foreach ($roleDefinitionId in $roleDefinitionIds)
+            $roleAssignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "PrincipalId eq '$($Group.Id)'"
+            foreach ($assignment in $roleAssignments)
             {
-                $roleDefinitionName = $Script:DirectoryRoleDefinitions[$roleDefinitionId]
-                $AssignedToRoleValues += $roleDefinitionName
+                $roleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $assignment.RoleDefinitionId
+                $AssignedToRoleValues += $roleDefinition.DisplayName
             }
         }
 

@@ -21,10 +21,18 @@
       }
     },
     "exchange": {
-      "requiredroles": [
-        "Address Lists"
-      ],
-      "requiredrolegroups": []
+      "requiredroles": {
+        "read": [
+          "Address Lists"
+        ],
+        "update": [
+          "Address Lists"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [],
+        "update": []
+      }
     }
   },
   "requiredModules": [],
