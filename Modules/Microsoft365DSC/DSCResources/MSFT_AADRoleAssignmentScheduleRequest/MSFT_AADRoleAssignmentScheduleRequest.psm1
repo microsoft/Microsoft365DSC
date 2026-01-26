@@ -471,6 +471,11 @@ function Set-TargetResource
     $ParametersOps.Remove('Principal') | Out-Null
 
     $RoleDefinitionIdValue = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($RoleDefinition -replace "'", "''")'").Id
+    if ($null -eq $RoleDefinitionIdValue)
+    {
+        throw "Couldn't find Role Definition {$RoleDefinition}"
+    }
+
     $ParametersOps.Add('RoleDefinitionId', $RoleDefinitionIdValue)
     $ParametersOps.Remove('RoleDefinition') | Out-Null
 

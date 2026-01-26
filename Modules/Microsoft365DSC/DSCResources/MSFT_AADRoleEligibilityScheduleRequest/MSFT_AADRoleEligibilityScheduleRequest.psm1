@@ -446,6 +446,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Retrieving RoleDefinitionId from Set-TargetResource"
     $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($RoleDefinition -replace "'", "''")'").Id
+    if ($null -eq $RoleDefinitionId)
+    {
+        throw "Couldn't find Role Definition {$RoleDefinition}"
+    }
 
     $instanceParams = @{
         directoryScopeId = $DirectoryScopeId
