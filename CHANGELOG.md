@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADRoleAssignmentScheduleRequest
+  * Fixes issue where if role not found would make a POST to PIM API
+    FIXES [#6841](https://github.com/microsoft/Microsoft365DSC/issues/6841)
+* AADRoleEligibilityScheduleRequest
+  * Fixes issue where if role not found would make a POST to PIM API
+    FIXES [#6841](https://github.com/microsoft/Microsoft365DSC/issues/6841)
+
 # 1.26.218.1
 
 * AADConditionalAccessPolicy
