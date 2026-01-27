@@ -16,6 +16,7 @@ nav:
           - 'October 2022': 'blog/october-2022-major-release.md'
       - Concepts:
           - 'DSC Error Flow': 'blog/2024/dsc-error-flow/dsc-error-flow.md'
+          - 'Moving from Microsoft365DSC to Tenant Configuration Management APIs': 'blog/2026/utcm-transition/utcm-transition.md'
   - User Guide:
       - 'Get Started':
           - 'Introduction': 'user-guide/get-started/introduction.md'

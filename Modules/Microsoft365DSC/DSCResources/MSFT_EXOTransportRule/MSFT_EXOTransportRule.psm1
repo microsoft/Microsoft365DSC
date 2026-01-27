@@ -1687,7 +1687,6 @@ function Set-TargetResource
 
     $SetTransportRuleParams = $newTransportRuleParams.Clone()
     $SetTransportRuleParams.Add('Identity', $Name)
-    $SetTransportRuleParams.Remove('Enabled') | Out-Null
 
     # CASE: Transport Rule doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentTransportRuleConfig.Ensure -eq 'Absent')
@@ -1807,6 +1806,20 @@ function Set-TargetResource
             }
         }
 
+        if ($SetTransportRuleParams.ContainsKey('Enabled'))
+        {
+            if ($Enabled)
+            {
+                Write-Verbose -Message "Enabling TransportRule {$Name}"
+                Enable-TransportRule -Identity $Name
+            }
+            else
+            {
+                Write-Verbose -Message "Disabling TransportRule {$Name}"
+                Disable-TransportRule -Identity $Name
+            }
+        }
+        $SetTransportRuleParams.Remove('Enabled') | Out-Null
         Write-Verbose -Message "Transport Rule '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting Transport Rule $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetTransportRuleParams)"
         Set-TransportRule @SetTransportRuleParams
