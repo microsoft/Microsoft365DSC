@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCPermissions
+  * Fixed an issue where Purview permissions were not in the correct format.
+    FIXES [#6822](https://github.com/microsoft/Microsoft365DSC/issues/6822)
+
 # 1.26.121.1
 
 * AADGroup

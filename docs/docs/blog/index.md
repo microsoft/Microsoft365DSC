@@ -12,4 +12,5 @@
 
 ## Concepts
 
+* [Migrating to the Unified Tenant Configuration Management APIs](https://microsoft365dsc.com/blog/2026/utcm-transition/utcm-transition/index.html)
 * [DSC Error Flow](https://microsoft365dsc.com/blog/2024/dsc-error-flow/dsc-error-flow/index.html)

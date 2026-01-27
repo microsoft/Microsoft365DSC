@@ -286,30 +286,54 @@ function Get-M365DSCCompiledPermissionList
             {
                 Write-Verbose -Message '  Retrieving Purview permissions'
                 # Required Role
-                foreach ($requiredRole in $resourceSettings.permissions.purview.requiredroles)
+                foreach ($requiredRole in $resourceSettings.permissions.purview.requiredroles.read)
                 {
-                    if (-not $results.RequiredRoles.Contains($requiredRole))
+                    if (-not $results.RequiredRoles.Read.Contains($requiredRole))
                     {
-                        Write-Verbose -Message "    Found new Required Role {$($requiredRole)}"
-                        $results.RequiredRoles += $requiredRole
+                        Write-Verbose -Message "    Found new Read Required Role {$($requiredRole)}"
+                        $results.RequiredRoles.Read += $requiredRole
                     }
                     else
                     {
-                        Write-Verbose -Message "    Required Role {$($requiredRole)} was already added"
+                        Write-Verbose -Message "    Required Read Role {$($requiredRole)} was already added"
+                    }
+                }
+                foreach ($requiredRole in $resourceSettings.permissions.purview.requiredroles.update)
+                {
+                    if (-not $results.RequiredRoles.Update.Contains($requiredRole))
+                    {
+                        Write-Verbose -Message "    Found new Update Required Role {$($requiredRole)}"
+                        $results.RequiredRoles.Update += $requiredRole
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "    Required Update Role {$($requiredRole)} was already added"
                     }
                 }
 
                 # Required RoleGroups
-                foreach ($requiredRoleGroup in $resourceSettings.permissions.purview.requiredrolegroups)
+                foreach ($requiredRoleGroup in $resourceSettings.permissions.purview.requiredrolegroups.read)
                 {
-                    if (-not $results.RequiredRoleGroups.Contains($requiredRoleGroup))
+                    if (-not $results.RequiredRoleGroups.Read.Contains($requiredRoleGroup))
                     {
-                        Write-Verbose -Message "    Found new Required Role Group {$($requiredRoleGroup)}"
-                        $results.RequiredRoleGroups += $requiredRoleGroup
+                        Write-Verbose -Message "    Found new Read Required Role Group {$($requiredRoleGroup)}"
+                        $results.RequiredRoleGroups.Read += $requiredRoleGroup
                     }
                     else
                     {
-                        Write-Verbose -Message "    Required Role Group {$($requiredRoleGroup)} was already added"
+                        Write-Verbose -Message "    Required Read Role Group {$($requiredRoleGroup)} was already added"
+                    }
+                }
+                foreach ($requiredRoleGroup in $resourceSettings.permissions.purview.requiredrolegroups.update)
+                {
+                    if (-not $results.RequiredRoleGroups.Update.Contains($requiredRoleGroup))
+                    {
+                        Write-Verbose -Message "    Found new Update Required Role Group {$($requiredRoleGroup)}"
+                        $results.RequiredRoleGroups.Update += $requiredRoleGroup
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "    Required Update Role Group {$($requiredRoleGroup)} was already added"
                     }
                 }
 
@@ -535,7 +559,7 @@ function Update-M365DSCAllowedGraphScopes
     $permissions = ($results | Where-Object -FilterScript { $_.API -eq 'Graph' }).PermissionName
 
     # Remove the Tasks.Read.All permission from the list as it is causing an issue with the Graph SDK
-    $permissions.Remove('Tasks.Read.All') | Out-Null
+    $permissions = $permissions | Where-Object { $_ -ne "Tasks.Read.All" }
     Write-Verbose -Message "Found permissions: $($permissions -join ', ')"
     $params = @{
         Scopes = $permissions

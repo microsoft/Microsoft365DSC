@@ -43,14 +43,22 @@
       }
     },
     "purview": {
-      "requiredroles": [
-        "Device Management",
-        "View-Only Device Management"
-      ],
-      "requiredrolegroups": [
-        "Compliance Data Administrator",
-        "Security Reader"
-      ]
+      "requiredroles": {
+        "read": [
+          "View-Only Device Management"
+        ],
+        "update": [
+          "Device Management"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "Compliance Data Administrator"
+        ],
+        "update": [
+          "Compliance Data Administrator"
+        ]
+      }
     }
   },
   "requiredModules": [

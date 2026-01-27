@@ -25,14 +25,22 @@
       }
     },
     "purview": {
-      "requiredroles": [
-        "Tag Reader",
-        "Tag Manager"
-      ],
-      "requiredrolegroups": [
-        "Security Reader",
-        "Security Administrator"
-      ]
+      "requiredroles": {
+        "read": [
+          "Tag Reader"
+        ],
+        "update": [
+          "Tag Manager"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "Security Reader"
+        ],
+        "update": [
+          "Security Administrator"
+        ]
+      }
     }
   },
   "requiredModules": [],

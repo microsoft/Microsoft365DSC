@@ -294,14 +294,13 @@ function Get-TargetResource
         $response = Invoke-PnPSPRestMethod -Method Get `
             -Url "$((Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl)/_api/SPO.Tenant?`$select=$($parametersToRetrieve -join ',')"
 
-
         return @{
             IsSingleInstance                                       = 'Yes'
             ExemptNativeUsersFromTenantLevelRestricedAccessControl = $response.ExemptNativeUsersFromTenantLevelRestricedAccessControl
-            AllowSelectSGsInODBListInTenant                        = $response.AllowSelectSGsInODBListInTenant
-            DenySelectSGsInODBListInTenant                         = $response.DenySelectSGsInODBListInTenant
-            DenySelectSecurityGroupsInSPSitesList                  = $response.DenySelectSecurityGroupsInSPSitesList
-            AllowSelectSecurityGroupsInSPSitesList                 = $response.AllowSelectSecurityGroupsInSPSitesList
+            AllowSelectSGsInODBListInTenant                        = [System.String[]]$response.AllowSelectSGsInODBListInTenant
+            DenySelectSGsInODBListInTenant                         = [System.String[]]$response.DenySelectSGsInODBListInTenant
+            DenySelectSecurityGroupsInSPSitesList                  = [System.String[]]$response.DenySelectSecurityGroupsInSPSitesList
+            AllowSelectSecurityGroupsInSPSitesList                 = [System.String[]]$response.AllowSelectSecurityGroupsInSPSitesList
             EnableAzureADB2BIntegration                            = $response.EnableAzureADB2BIntegration
             HideSyncButtonOnODB                                    = $response.HideSyncButtonOnODB
             MobileFriendlyUrlEnabledInTenant                       = $response.MobileFriendlyUrlEnabledInTenant

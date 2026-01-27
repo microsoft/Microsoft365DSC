@@ -1,6 +1,10 @@
-!!! cite "What is Microsoft365DSC?"
+!!! cite "Transitioning to the new Tenant Configuration Management APIs"
 
-    Microsoft365DSC is the most comprehensive and complete solution to have your Microsoft 365 tenant configuration simple and stable. It's an Open-Source initiative hosted on [GitHub](https://github.com/Microsoft/Microsoft365DSC), led by Microsoft engineers and maintained by the community.
+    On January 27th, 2026, Microsoft launched the public preview of the Tenant Configuration Management APIs on Microsoft Graph. To learn more, take a look at this <a href="https://microsoft365dsc.com/blog/2026/utcm-transition/utcm-transition/index.html">blog post</a> to learn how you can transition from Microsoft365DSC to using the new APIS.
+
+# What is Microsoft365DSC?
+
+Microsoft365DSC is the most comprehensive and complete solution to have your Microsoft 365 tenant configuration simple and stable. It's an Open-Source initiative hosted on [GitHub](https://github.com/Microsoft/Microsoft365DSC), led by Microsoft engineers and maintained by the community.
 
 # Automate Configuration Changes
 
