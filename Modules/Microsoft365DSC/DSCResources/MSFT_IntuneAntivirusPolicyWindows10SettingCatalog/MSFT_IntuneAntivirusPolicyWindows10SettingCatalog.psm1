@@ -349,6 +349,11 @@ function Get-TargetResource
         $SubmitSamplesConsent,
 
         [Parameter()]
+        [ValidateSet('Onboarding', 'Offboarding', 'ControlledConfig_Onboarding')]
+        [System.String]
+        $ControlledConfiguration,
+
+        [Parameter()]
         [ValidateSet('Onboarding', 'Offboarding')]
         [System.String]
         $TamperProtection,
@@ -913,6 +918,11 @@ function Set-TargetResource
         $SubmitSamplesConsent,
 
         [Parameter()]
+        [ValidateSet('Onboarding', 'Offboarding', 'ControlledConfig_Onboarding')]
+        [System.String]
+        $ControlledConfiguration,
+
+        [Parameter()]
         [ValidateSet('Onboarding', 'Offboarding')]
         [System.String]
         $TamperProtection,
@@ -1005,6 +1015,12 @@ function Set-TargetResource
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    if ($BoundParameters.ContainsKey('TamperProtection'))
+    {
+        $BoundParameters['ControlledConfiguration'] = $BoundParameters['TamperProtection']
+        $BoundParameters.Remove('TamperProtection')
+    }
 
     if ($BoundParameters.ContainsKey('SevereThreats'))
     {
@@ -1444,6 +1460,11 @@ function Test-TargetResource
         $SubmitSamplesConsent,
 
         [Parameter()]
+        [ValidateSet('Onboarding', 'Offboarding', 'ControlledConfig_Onboarding')]
+        [System.String]
+        $ControlledConfiguration,
+
+        [Parameter()]
         [ValidateSet('Onboarding', 'Offboarding')]
         [System.String]
         $TamperProtection,
@@ -1576,8 +1597,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload:$true
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1708,6 +1728,18 @@ function Get-CompareParameters
                         }
                     }
                 }
+            }
+
+            # Map the renaming of TamperProtection to ControlledConfiguration for comparison
+            if ($DesiredValues.ContainsKey('TamperProtection'))
+            {
+                $DesiredValues['ControlledConfiguration'] = $DesiredValues['TamperProtection']
+                $DesiredValues.Remove('TamperProtection')
+            }
+            if ($CurrentValues.ContainsKey('TamperProtection'))
+            {
+                $CurrentValues['ControlledConfiguration'] = $CurrentValues['TamperProtection']
+                $CurrentValues.Remove('TamperProtection')
             }
 
             return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)

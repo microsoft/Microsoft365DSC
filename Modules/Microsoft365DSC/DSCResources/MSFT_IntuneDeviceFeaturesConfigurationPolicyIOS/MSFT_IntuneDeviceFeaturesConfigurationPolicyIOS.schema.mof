@@ -9,6 +9,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
+
 [ClassVersion("1.0.0.0")]
 class MSFT_airPrintDestination
 {
@@ -17,6 +18,7 @@ class MSFT_airPrintDestination
     [Write, Description("The listening port of the AirPrint destination. If this key is not specified, AirPrint will use the default port. Available in iOS 11.0 and later.")] uint32 port;
     [Write, Description("If true, AirPrint connections are secured by Transport Layer Security (TLS). Default is false. Available in iOS 11.0 and later.")] Boolean forceTls;
 };
+
 [ClassVersion("1.0.0.0")]
 class MSFT_iosWebContentFilterBase
 {
@@ -25,6 +27,7 @@ class MSFT_iosWebContentFilterBase
     [Write, Description("displayName.")] String displayName;
 
 };
+
 [ClassVersion("1.0.0.0")]
 class MSFT_iosWebContentFilterSpecificWebsitesAccess
 {
@@ -34,18 +37,28 @@ class MSFT_iosWebContentFilterSpecificWebsitesAccess
     [Write, Description("allowedUrls.")] String allowedUrls[];
     [Write, Description("blockedUrls.")] String blockedUrls[];
 };
+
 [ClassVersion("1.0.0.0")]
+class MSFT_iosHomeScreenFolderPage
+{
+    [Write, Description("A list of apps, folders, and web clips to appear on a page. This collection can contain a maximum of 500 elements."), EmbeddedInstance("MSFT_iosHomeScreenApp")] String apps[];
+};
+
+[ClassVersion("1.0.0.1")]
 class MSFT_iosHomeScreenApp
 {
     [Write, Description("Name of the app. Inherited from iosHomeScreenItem.")] String displayName;
     [Write, Description("BundleID of the app if isWebClip is false or the URL of a web clip if isWebClip is true.")] String bundleID;
     [Write, Description("Is it a website URL or an app")] Boolean isWebClip;
+    [Write, Description("Pages of the folder."), EmbeddedInstance("MSFT_iosHomeScreenFolderPage")] String pages[];
 };
+
 [ClassVersion("1.0.0.0")]
 class MSFT_iosHomeScreenItem
 {
     [Write, Description("A list of apps, folders, and web clips to appear on a page. This collection can contain a maximum of 500 elements."), EmbeddedInstance("MSFT_iosHomeScreenApp")] String icons[];
 };
+
 [ClassVersion("1.0.0.0")]
 class MSFT_iosNotificationSettings
 {
@@ -60,6 +73,7 @@ class MSFT_iosNotificationSettings
     [Write, Description("Indicates whether sounds are allowed for this app.")] Boolean soundsEnabled;
     [Write, Description("Overrides the notification preview policy set by the user on an iOS device. Possible values are: notConfigured, alwaysShow, hideWhenLocked, neverShow."), ValueMap{"notConfigured", "alwaysShow", "hideWhenLocked", "neverShow"}, Values{"notConfigured", "alwaysShow", "hideWhenLocked", "neverShow"}] String previewVisibility;
 };
+
 [ClassVersion("1.0.0.0")]
 class MSFT_appListItem
 {
@@ -68,6 +82,7 @@ class MSFT_appListItem
     [Write, Description("The Store URL of the application.")] String appStoreUrl;
     [Write, Description("The application or bundle identifier of the application.")] String appId;
 };
+
 [ClassVersion("1.0.0.0")]
 class MSFT_iosSingleSignOnSettings
 {
@@ -77,12 +92,14 @@ class MSFT_iosSingleSignOnSettings
     [Write, Description("A Kerberos principal name. If not provided, the user is prompted for one during profile installation.")] String kerberosPrincipalName;
     [Write, Description("A Kerberos realm name. Case sensitive.")] String kerberosRealm;
 };
+
 [ClassVersion("1.0.0.0")]
 class MSFT_mimeContent
 {
     [Write, Description("Indicates the content mime type.")] String type;
     [Write, Description("The byte array that contains the actual content.")] String value[];
 };
+
 [ClassVersion("1.0.0.0")]
 class MSFT_keyTypedValuePair
 {
@@ -90,6 +107,7 @@ class MSFT_keyTypedValuePair
     [Write, Description("Key for the custom data entry.")] String key;
     [Write, Description("Value for the custom data entry.")] String value;
 };
+
 [ClassVersion("1.0.0.0")]
 class MSFT_iosSingleSignOnExtension
 {
@@ -124,6 +142,7 @@ class MSFT_iosSingleSignOnExtension
     [Write, Description("Gets or sets the team ID of the app extension that performs SSO for the specified URLs.")] string TeamIdentifier;
     [Write, Description("One or more URL prefixes of identity providers on whose behalf the app extension performs single sign-on. URLs must begin with http:// or https://. All URL prefixes must be unique for all profiles.")] String urlPrefixes[];
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_deviceManagementApplicabilityRuleOsEdition
 {
@@ -131,6 +150,7 @@ class MSFT_deviceManagementApplicabilityRuleOsEdition
     [Write, Description("Applicability rule OS edition type")] String OsEditionTypes[];
     [Write, Description("Applicability Rule type"), ValueMap{"include","exclude"}, Values{"include","exclude"}] String RuleType;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_deviceManagementApplicabilityRuleOsVersion
 {
@@ -139,6 +159,7 @@ class MSFT_deviceManagementApplicabilityRuleOsVersion
     [Write, Description("Max OS version for Applicability Rule")] String MaxOSVersion;
     [Write, Description("Applicability Rule type"), ValueMap{"include","exclude"}, Values{"include","exclude"}] String RuleType;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_deviceManagementApplicabilityRuleDeviceMode
 {

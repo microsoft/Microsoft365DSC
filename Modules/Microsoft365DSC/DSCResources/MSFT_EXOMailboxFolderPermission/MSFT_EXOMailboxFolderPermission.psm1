@@ -56,17 +56,8 @@ function Get-TargetResource
 
     try
     {
-        if ($Global:CurrentModeIsExport)
-        {
-            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-                -InboundParameters $PSBoundParameters `
-                -SkipModuleReload $true
-        }
-        else
-        {
-            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-                -InboundParameters $PSBoundParameters
-        }
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -96,7 +87,7 @@ function Get-TargetResource
         {
             $currentPermission = @{}
             $currentPermission.Add('User', $mailboxFolderPermission.User.ToString())
-            $currentPermission.Add('AccessRights', $mailboxFolderPermission.AccessRights)
+            $currentPermission.Add('AccessRights', [System.String[]]@($mailboxFolderPermission.AccessRights | ForEach-Object { $_.ToString() }))
             if ($null -ne $mailboxFolderPermission.SharingPermissionFlags)
             {
                 $currentPermission.Add('SharingPermissionFlags', $mailboxFolderPermission.SharingPermissionFlags)

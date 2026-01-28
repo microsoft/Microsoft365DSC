@@ -82,17 +82,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Security Filter for $FilterName"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-            -InboundParameters $PSBoundParameters
-    }
+    $null = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

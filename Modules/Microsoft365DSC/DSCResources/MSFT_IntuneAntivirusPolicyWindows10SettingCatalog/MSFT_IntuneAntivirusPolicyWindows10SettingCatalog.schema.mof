@@ -10,13 +10,14 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
-[ClassVersion("1.0.0.2"), FriendlyName("IntuneAntivirusPolicyWindows10SettingCatalog")]
+[ClassVersion("1.0.0.3"), FriendlyName("IntuneAntivirusPolicyWindows10SettingCatalog")]
 class MSFT_IntuneAntivirusPolicyWindows10SettingCatalog : OMI_BaseResource
 {
     [Key, Description("Display name of the endpoint protection policy for Windows 10.")] String DisplayName;
     [Write, Description("Identity of the endpoint protection policy for Windows 10.")] String Identity;
     [Write, Description("Description of the endpoint protection policy for Windows 10.")] String Description;
     [Write, Description("List of Scope Tags for this Entity instance.")] String RoleScopeTagIds[];
+    [Write, Description("Tamper protection (Device). (Offboarding, Onboarding, ControlledConfig_Onboarding)"), ValueMap{"Onboarding","Offboarding","ControlledConfig_Onboarding"}, Values{"Onboarding","Offboarding","ControlledConfig_Onboarding"}] String ControlledConfiguration;
     [Write, Description("Tamper protection (Device). (Offboarding, Onboarding)"), ValueMap{"Onboarding","Offboarding"}, Values{"Onboarding","Offboarding"}] String TamperProtection;
     [Write, Description("Use this policy setting to specify if to display the Account protection area in Windows Defender Security Center. (0: disable feature. 1: enable feature)"), ValueMap{"0","1"}, Values{"0","1"}] String DisableAccountProtectionUI;
     [Write, Description("Use this policy setting if you want to disable the display of the app and browser protection area in Windows Defender Security Center. (0: disable feature. 1: enable feature)"), ValueMap{"0","1"}, Values{"0","1"}] String DisableAppBrowserUI;

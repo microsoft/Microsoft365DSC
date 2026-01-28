@@ -384,8 +384,6 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $allTargetValues = Convert-M365DscHashtableToString -Hashtable $BoundParameters
-
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Features Configuration Policy for iOS with DisplayName {$DisplayName}"
@@ -404,22 +402,35 @@ function Set-TargetResource
 
         #create params need some processing to get payload in correct format
         $CreateParameters.Add('@odata.type', '#microsoft.graph.iosDeviceFeaturesConfiguration') #add odata type or payload will be rejected
-        if($CreateParameters.WallpaperImage)
+        if ($CreateParameters.WallpaperImage)
         {
             $CreateParameters['WallpaperImage'] = $CreateParameters.WallpaperImage[0] #needs the hashtable not embedded in array
             $CreateParameters.WallpaperImage['value'] = [Convert]::FromBase64String($CreateParameters.WallpaperImage['value'])
         }
         if ($CreateParameters.HomeScreenPages)
         {
-            foreach ($homeScreenPage in $CreateParameters.HomeScreenPages){
-                foreach ($icon in $homeScreenPage.icons){
+            foreach ($homeScreenPage in $CreateParameters.HomeScreenPages)
+            {
+                foreach ($icon in $homeScreenPage.icons)
+                {
+                    if ($icon.ContainsKey('pages'))
+                    {
+                        $icon.Add('@odata.type',"#microsoft.graph.iosHomeScreenFolder")
+                        continue
+                    }
                     $icon.Add('@odata.type',"#microsoft.graph.iosHomeScreenApp")
                 }
             }
         }
         if ($CreateParameters.HomeScreenDockIcons)
         {
-            foreach ($homeScreenDockIcon in $CreateParameters.HomeScreenDockIcons){
+            foreach ($homeScreenDockIcon in $CreateParameters.HomeScreenDockIcons)
+            {
+                if ($homeScreenDockIcon.ContainsKey('pages'))
+                {
+                    $homeScreenDockIcon.Add('@odata.type',"#microsoft.graph.iosHomeScreenFolder")
+                    continue
+                }
                 $homeScreenDockIcon.Add('@odata.type',"#microsoft.graph.iosHomeScreenApp")
             }
         }
@@ -482,15 +493,28 @@ function Set-TargetResource
         }
         if ($UpdateParameters.HomeScreenPages)
         {
-            foreach ($homeScreenPage in $UpdateParameters.HomeScreenPages){
-                foreach ($icon in $homeScreenPage.icons){
+            foreach ($homeScreenPage in $UpdateParameters.HomeScreenPages)
+            {
+                foreach ($icon in $homeScreenPage.icons)
+                {
+                    if ($icon.ContainsKey('pages'))
+                    {
+                        $icon.Add('@odata.type',"#microsoft.graph.iosHomeScreenFolder")
+                        continue
+                    }
                     $icon.Add('@odata.type',"#microsoft.graph.iosHomeScreenApp")
                 }
             }
         }
         if ($UpdateParameters.HomeScreenDockIcons)
         {
-            foreach ($homeScreenDockIcon in $UpdateParameters.HomeScreenDockIcons){
+            foreach ($homeScreenDockIcon in $UpdateParameters.HomeScreenDockIcons)
+            {
+                if ($homeScreenDockIcon.ContainsKey('pages'))
+                {
+                    $homeScreenDockIcon.Add('@odata.type',"#microsoft.graph.iosHomeScreenFolder")
+                    continue
+                }
                 $homeScreenDockIcon.Add('@odata.type',"#microsoft.graph.iosHomeScreenApp")
             }
         }
@@ -829,9 +853,22 @@ function Export-TargetResource
 
             if ($null -ne $Results.HomeScreenDockIcons)
             {
+                $complexMapping = @(
+                    @{
+                        Name = 'pages'
+                        CimInstanceName = 'MSFT_iosHomeScreenFolderPage'
+                        IsRequired = $false
+                    },
+                    @{
+                        Name = 'apps'
+                        CimInstanceName = 'iosHomeScreenApp'
+                        IsRequired = $false
+                    }
+                )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.HomeScreenDockIcons `
-                    -CIMInstanceName 'MSFT_iosHomeScreenApp'
+                    -CIMInstanceName 'MSFT_iosHomeScreenApp' `
+                    -ComplexTypeMapping $complexMapping
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.HomeScreenDockIcons = $complexTypeStringResult
@@ -847,6 +884,16 @@ function Export-TargetResource
                 $complexMapping = @(
                     @{
                         Name = 'icons'
+                        CimInstanceName = 'iosHomeScreenApp'
+                        IsRequired = $false
+                    },
+                    @{
+                        Name = 'pages'
+                        CimInstanceName = 'MSFT_iosHomeScreenFolderPage'
+                        IsRequired = $false
+                    },
+                    @{
+                        Name = 'apps'
                         CimInstanceName = 'iosHomeScreenApp'
                         IsRequired = $false
                     }
