@@ -6,6 +6,7 @@
   * Updated logic to properly handle the Enabled property.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Added missing property `ControlledConfiguration`.
+    FIXES [#6855](https://github.com/microsoft/Microsoft365DSC/issues/6855)
 * M365DSCPermissions
   * Fixed an issue where Purview permissions were not in the correct format.
     FIXES [#6822](https://github.com/microsoft/Microsoft365DSC/issues/6822)
