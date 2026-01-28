@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAccessReviewDefinition
+  * [BREAKING CHANGE] Fixed the type definition of the `ScopeValue` property.
 * EXOTransportRule
   * Updated logic to properly handle the Enabled property.
 * M365DSCPermissions
