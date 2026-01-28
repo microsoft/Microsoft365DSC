@@ -128,6 +128,11 @@ function Get-TargetResource
         $CompanyName,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $ControlledConfiguration,
+
+        [Parameter()]
         [System.Int32]
         $DaysToRetainCleanedMalware,
 
@@ -692,6 +697,11 @@ function Set-TargetResource
         $CompanyName,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $ControlledConfiguration,
+
+        [Parameter()]
         [System.Int32]
         $DaysToRetainCleanedMalware,
 
@@ -1221,6 +1231,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CompanyName,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $ControlledConfiguration,
 
         [Parameter()]
         [System.Int32]

@@ -33,6 +33,7 @@ class MSFT_IntuneAntivirusPolicyWindows10SettingCatalog : OMI_BaseResource
     [Write, Description("Enable this policy to display your company name and contact options in the notifications. (0: disable feature. 1: enable feature)"), ValueMap{"0","1"}, Values{"0","1"}] String EnableCustomizedToasts;
     [Write, Description("Enable this policy to have your company name and contact options displayed in a contact card fly out in Windows Defender Security Center. (0: disable feature. 1: enable feature)"), ValueMap{"0","1"}, Values{"0","1"}] String EnableInAppCustomization;
     [Write, Description("The company name that is displayed to the users. CompanyName is required for both EnableCustomizedToasts and EnableInAppCustomization.")] String CompanyName;
+    [Write, Description("This setting can be used to turn on controlled configuration or tamper protection to help protect important security features from unwanted changes and interference. If the setting is configured to Tamper Protection (On), this turns on tamper protection to enforce tamper protected settings to their secure defaults. This includes real-time protection, behavior monitoring, and more. Settings are configured with an MDM solution, such as Intune and is available in Windows 10 Enterprise E5 or equivalent subscriptions. If the setting is configured to Controlled Configuration (On), this turns on controlled configuration, which enforces the configuration coming from Intune exclusively and any non-configured settings to their secure defaults. Controlled configuration is applicable to Antivirus and Endpoint detection and response settings. If the setting is configured to OFF, this turns off Controlled Configuration and Tamper Protection."), ValueMap{"0","1"}, Values{"0","1"}] String ControlledConfiguration;
     [Write, Description("The email address that is displayed to users. The default mail application is used to initiate email actions.")] String Email;
     [Write, Description("The phone number or Skype ID that is displayed to users. Skype is used to initiate the call.")] String Phone;
     [Write, Description("The help portal URL that is displayed to users. The default browser is used to initiate this action.")] String URL;
@@ -100,6 +101,6 @@ class MSFT_IntuneAntivirusPolicyWindows10SettingCatalog : OMI_BaseResource
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };
