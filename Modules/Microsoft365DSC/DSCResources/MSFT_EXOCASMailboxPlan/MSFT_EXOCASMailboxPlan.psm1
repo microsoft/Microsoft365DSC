@@ -111,7 +111,7 @@ function Get-TargetResource
                     if ($null -eq $CASMailboxPlan)
                     {
                         Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
-                        return $nullResult
+                        throw "The specified CAS Mailbox Plan {$($Identity)} doesn't exist"
                     }
                 }
             }
