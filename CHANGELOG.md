@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOCASMailboxPlan
+  * Error Handling when plan not found.
+    FIXED [#6774](https://github.com/microsoft/Microsoft365DSC/issues/6774)
 * FabricAdmintenantsettings
   * Refreshed the property list.
    FIXES [#6866](https://github.com/microsoft/Microsoft365DSC/issues/6866)
