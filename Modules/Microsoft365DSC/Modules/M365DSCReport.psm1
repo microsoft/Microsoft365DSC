@@ -1236,6 +1236,21 @@ function Compare-M365DSCConfigurations
         $currentModule = Get-Module -Name 'Microsoft365DSC'
         $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC' | Where-Object Version -EQ $currentModule.Version
     }
+    # Normalize DSC resource info to hashtable (Fix for Issue #6888)
+if ($dscResourceInfo -is [System.Array])
+{
+    $normalizedDscResourceInfo = @{}
+
+    foreach ($resource in $dscResourceInfo)
+    {
+        if ($null -ne $resource.Name)
+        {
+            $normalizedDscResourceInfo[$resource.Name] = $resource
+        }
+    }
+
+    $dscResourceInfo = $normalizedDscResourceInfo
+}
     # Loop through all items in the source array
     $i = 1
     foreach ($sourceResource in $SourceObject)
