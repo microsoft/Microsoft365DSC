@@ -147,19 +147,19 @@ function Get-TargetResource
             }
         }
 
-        $ResourceScopesDisplayNames = @()
-        foreach ($ResourceScope in $getValue.ResourceScopes)
+        $resourceScopesDisplayNamesValue = @()
+        foreach ($resourceScope in $getValue.ResourceScopes)
         {
-            $group = Get-MgGroup -GroupId $ResourceScope -ErrorAction SilentlyContinue
+            $group = Get-MgGroup -GroupId $resourceScope -ErrorAction SilentlyContinue
             if ($null -eq $group)
             {
-                Write-Warning -Message "Could not find group with Id {$ResourceScope} when retrieving resource scope display names"
+                Write-Warning -Message "Could not find group with Id {$resourceScope} when retrieving resource scope display names"
                 continue
             }
-            $ResourceScopesDisplayNames += $group.DisplayName
+            $resourceScopesDisplayNamesValue += $group.DisplayName
         }
 
-        $MembersDisplayNames = @()
+        $membersDisplayNamesValue = @()
         foreach ($tempMember in $getValue.Members)
         {
             $group = Get-MgGroup -GroupId $tempMember -ErrorAction SilentlyContinue
@@ -168,7 +168,7 @@ function Get-TargetResource
                 Write-Warning -Message "Could not find group with Id {$tempMember} when retrieving member display names"
                 continue
             }
-            $MembersDisplayNames += $group.DisplayName
+            $membersDisplayNamesValue += $group.DisplayName
         }
 
         $scopeTypeValue = $null
@@ -181,10 +181,10 @@ function Get-TargetResource
             Description                = $getValue.Description
             DisplayName                = $getValue.DisplayName
             ResourceScopes             = $getValue.ResourceScopes
-            ResourceScopesDisplayNames = $ResourceScopesDisplayNames
+            ResourceScopesDisplayNames = $resourceScopesDisplayNamesValue
             ScopeType                  = $scopeTypeValue
             Members                    = $getValue.Members
-            MembersDisplayNames        = $MembersDisplayNames
+            MembersDisplayNames        = $membersDisplayNamesValue
             RoleDefinition             = $RoleDefinition
             RoleDefinitionDisplayName  = $RoleDefinitionDisplayName
             Ensure                     = 'Present'
@@ -308,12 +308,12 @@ function Set-TargetResource
 
     if ($RoleDefinition -notmatch '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$' -or $RoleDefinition -eq '00000000-0000-0000-0000-000000000000')
     {
-        [string]$roleDefinition = $null
+        $RoleDefinition = $null
         $filter = "DisplayName eq '$($RoleDefinitionDisplayName -replace "'", "''")'"
         $roleDefinitionId = Get-MgDeviceManagementRoleDefinition -All -Filter $filter -ErrorAction SilentlyContinue
         if ($null -ne $roleDefinitionId)
         {
-            $roleDefinition = $roleDefinitionId.Id
+            $RoleDefinition = $roleDefinitionId.Id
         }
         else
         {
@@ -321,50 +321,66 @@ function Set-TargetResource
         }
     }
 
-    [array]$members = @()
-    foreach ($membersDisplayName in $MembersDisplayNames)
+    [array]$membersValue = @()
+    if ($PSBoundParameters.ContainsKey('MembersDisplayNames'))
     {
-        $filter = "displayName eq '$($membersDisplayName -replace "'", "''")'"
-        $memberId = Get-MgGroup -Filter $filter -ErrorAction SilentlyContinue
-        if ($null -ne $memberId)
+        foreach ($membersDisplayName in $MembersDisplayNames)
         {
-            if ($members -notcontains $memberId.Id)
+            $filter = "displayName eq '$($membersDisplayName -replace "'", "''")'"
+            $memberId = Get-MgGroup -Filter $filter -ErrorAction SilentlyContinue
+            if ($null -ne $memberId)
             {
-                $members += $memberId.Id
+                if ($membersValue -notcontains $memberId.Id)
+                {
+                    $membersValue += $memberId.Id
+                }
+            }
+            else
+            {
+                Write-Verbose -Message "No member of type group with DisplayName {$membersDisplayName} was found"
             }
         }
-        else
-        {
-            Write-Verbose -Message "No member of type group with DisplayName {$membersDisplayName} was found"
-        }
-    }
-
-    [array]$resourceScopes = @()
-    foreach ($resourceScopesDisplayName in $ResourceScopesDisplayNames)
-    {
-        $filter = "DisplayName eq '$($resourceScopesDisplayName -replace "'", "''")'"
-        $resourceScopeId = Get-MgGroup -Filter $filter -ErrorAction SilentlyContinue
-        if ($null -ne $resourceScopeId)
-        {
-            if ($ResourceScopes -notcontains $resourceScopeId.Id)
-            {
-                $ResourceScopes += $resourceScopeId.Id
-            }
-        }
-        else
-        {
-            Write-Verbose -Message "No resource scope of type group with DisplayName {$ResourceScopesDisplayName} was found"
-        }
-    }
-    if ($ScopeType -match 'AllDevices|AllLicensedUsers|AllDevicesAndLicensedUsers')
-    {
-        $ResourceScopes = $null
     }
     else
     {
-        $ScopeType = 'resourceScope'
-        $ResourceScopes = $resourceScopes
+        $membersValue = $Members
     }
+
+    [array]$resourceScopesValue = @()
+    if ($PSBoundParameters.ContainsKey('ResourceScopesDisplayNames'))
+    {
+        foreach ($resourceScopesDisplayName in $ResourceScopesDisplayNames)
+        {
+            $filter = "DisplayName eq '$($resourceScopesDisplayName -replace "'", "''")'"
+            $resourceScopeId = Get-MgGroup -Filter $filter -ErrorAction SilentlyContinue
+            if ($null -ne $resourceScopeId)
+            {
+                if ($resourceScopesValue -notcontains $resourceScopeId.Id)
+                {
+                    $resourceScopesValue += $resourceScopeId.Id
+                }
+            }
+            else
+            {
+                Write-Verbose -Message "No resource scope of type group with DisplayName {$resourceScopesDisplayName} was found"
+            }
+        }
+    }
+    else
+    {
+        $resourceScopesValue = $ResourceScopes
+    }
+
+    $scopeTypeValue = $ScopeType
+    if ($ScopeType -match 'AllDevices|AllLicensedUsers|AllDevicesAndLicensedUsers')
+    {
+        $resourceScopesValue = $null
+    }
+    else
+    {
+        $scopeTypeValue = 'resourceScope'
+    }
+
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Role Assignment with DisplayName {$DisplayName}"
@@ -372,12 +388,13 @@ function Set-TargetResource
         $CreateParameters = @{
             description                 = $Description
             displayName                 = $DisplayName
-            resourceScopes              = $ResourceScopes
-            scopeType                   = $ScopeType
-            members                     = $Members
+            resourceScopes              = $resourceScopesValue
+            scopeType                   = $scopeTypeValue
+            members                     = $membersValue
             '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
-            'roleDefinition@odata.bind' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceManagement/roleDefinitions('$roleDefinition')"
+            'roleDefinition@odata.bind' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceManagement/roleDefinitions('$RoleDefinition')"
         }
+
         $null = New-MgBetaDeviceManagementRoleAssignment -BodyParameter $CreateParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -387,14 +404,15 @@ function Set-TargetResource
         $UpdateParameters = @{
             description                 = $Description
             displayName                 = $DisplayName
-            resourceScopes              = $ResourceScopes
-            scopeType                   = $ScopeType
-            members                     = $Members
+            resourceScopes              = $resourceScopesValue
+            scopeType                   = $scopeTypeValue
+            members                     = $membersValue
             '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
-            'roleDefinition@odata.bind' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceManagement/roleDefinitions('$roleDefinition')"
+            'roleDefinition@odata.bind' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceManagement/roleDefinitions('$RoleDefinition')"
         }
 
-        Update-MgBetaDeviceManagementRoleAssignment -BodyParameter $UpdateParameters `
+        $null = Update-MgBetaDeviceManagementRoleAssignment `
+            -BodyParameter $UpdateParameters `
             -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -493,57 +511,6 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if (-not ($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'))
-    {
-        [string]$roleDefinition = $null
-        $filter = "displayName eq '$($RoleDefinitionDisplayName -replace "'", "''")'"
-        $roleDefinitionId = Get-MgDeviceManagementRoleDefinition -All -Filter $filter -ErrorAction SilentlyContinue
-        if ($null -ne $roleDefinitionId)
-        {
-            $roleDefinition = $roleDefinitionId.Id
-            $PSBoundParameters.RoleDefinition = $roleDefinition
-        }
-        else
-        {
-            Write-Verbose -Message "No role definition with DisplayName {$RoleDefinitionDisplayName} was found"
-        }
-    }
-
-    foreach ($membersDisplayName in $MembersDisplayNames)
-    {
-        $filter = "DisplayName eq '$($MembersDisplayName -replace "'", "''")'"
-        $newMember = Get-MgGroup -Filter $filter -ErrorAction SilentlyContinue
-        if ($null -ne $newMember)
-        {
-            if ($Members -notcontains $newMember.Id)
-            {
-                $Members += $newMember.Id
-            }
-        }
-        else
-        {
-            Write-Verbose -Message "No member of type group with DisplayName {$membersDisplayName} was found"
-        }
-    }
-    $PSBoundParameters.Members = $Members
-
-    foreach ($resourceScopesDisplayName in $ResourceScopesDisplayNames)
-    {
-        $filter = "displayName eq '$($resourceScopesDisplayName -replace "'", "''")'"
-        $newResourceScope = Get-MgGroup -Filter $filter -ErrorAction SilentlyContinue
-        if ($null -ne $newResourceScope)
-        {
-            if ($ResourceScopes -notcontains $newResourceScope.Id)
-            {
-                $ResourceScopes += $newResourceScope.Id
-            }
-        }
-        else
-        {
-            Write-Verbose -Message "No resource scope of type group with DisplayName {$ResourceScopesDisplayName} was found"
-        }
-    }
-    $PSBoundParameters.ResourceScopes = $ResourceScopes
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
@@ -700,7 +667,22 @@ function Get-CompareParameters
     param()
 
     return @{
-        ExcludedProperties = @('ResourceScopesDisplayNames', 'MembersDisplayNames')
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            if ($DesiredValues.ContainsKey('MembersDisplayNames'))
+            {
+                $ValuesToCheck.Remove('Members') | Out-Null
+            }
+            if ($DesiredValues.ContainsKey('ResourceScopesDisplayNames'))
+            {
+                $ValuesToCheck.Remove('ResourceScopes') | Out-Null
+            }
+            if ($DesiredValues.ContainsKey('RoleDefinitionDisplayName'))
+            {
+                $ValuesToCheck.Remove('RoleDefinition') | Out-Null
+            }
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
     }
 }
 

@@ -134,6 +134,9 @@ function Get-TargetResource
         if (-not $Script:exportMode)
         {
             $null = New-M365DSCConnection -Workload 'PnP' `
+                -InboundParameters $PSBoundParameters
+
+            $null = New-M365DSCConnection -Workload 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl
 
@@ -897,6 +900,9 @@ function Export-TargetResource
 
     try
     {
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters
+
         $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters `
             -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl

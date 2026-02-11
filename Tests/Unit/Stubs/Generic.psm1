@@ -508,7 +508,11 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.String]
-        $Url
+        $Url,
+
+        [Parameter()]
+        [switch]
+        $EnableSearchOnlySession
     )
 }
 

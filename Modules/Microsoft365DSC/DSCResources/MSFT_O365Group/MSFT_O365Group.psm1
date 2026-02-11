@@ -60,7 +60,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+    Write-Verbose -Message "Getting configuration of Office 365 Group $DisplayName"
 
     try
     {

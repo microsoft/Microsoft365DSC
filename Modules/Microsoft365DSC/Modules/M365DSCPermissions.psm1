@@ -417,8 +417,8 @@ function Get-M365DSCCompiledPermissionList
         $results = @{
             AdministrativeRoles = $results.AdministrativeRoles.$AccessType
             Permissions = $resultsByType
-            RequiredRoles = $results.RequiredRoles | Select-Object -ExpandProperty $AccessType
-            RequiredRoleGroups = $results.RequiredRoleGroups | Select-Object -ExpandProperty $AccessType
+            RequiredRoles = ($results.RequiredRoles).$AccessType
+            RequiredRoleGroups = ($results.RequiredRoleGroups).$AccessType
         }
     }
 
@@ -1089,7 +1089,7 @@ function Update-M365DSCAzureAdApplication
         Write-LogEntry ' '
         Write-LogEntry 'Checking app permissions'
         $allRequiredAccess = @{}
-        foreach ($permission in $Permissions.Permissions)
+        foreach ($permission in $Permissions)
         {
             if ($null -eq $permission.Api -or $permission.Api -notin @('Graph', 'SharePoint', 'Exchange'))
             {
