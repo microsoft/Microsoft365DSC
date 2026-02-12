@@ -72,7 +72,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $policy = Get-CsTeamsTemplatePermissionPolicy -Identity $Identity -ErrorAction 'SilentlyContinue'
+            $policy = Get-CsTeamsTemplatePermissionPolicy -Identity $Identity -ErrorAction Stop
         }
         else
         {
@@ -85,7 +85,7 @@ function Get-TargetResource
             return $nullReturn
         }
         Write-Verbose -Message "Found Teams Templates Policy {$Identity}"
-        $allTemplates = Get-CsTeamTemplateList
+        $allTemplates = Get-CsTeamTemplateList -ErrorAction Stop
 
         $hiddenTemplatesNames = @()
         if ($null -ne $policy.HiddenTemplates)
@@ -190,7 +190,7 @@ function Set-TargetResource
     $hideTemplatesValues = @()
     if ($null -ne $HiddenTemplates)
     {
-        $allTemplates = Get-CsTeamTemplateList
+        $allTemplates = Get-CsTeamTemplateList -ErrorAction Stop
         foreach ($hiddenTemplate in $HiddenTemplates)
         {
             $template = $allTemplates | Where-Object -FilterScript { $_.Name -eq $hiddenTemplate }
@@ -328,7 +328,7 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array]$policies = Get-CsTeamsTemplatePermissionPolicy
+        [array]$policies = Get-CsTeamsTemplatePermissionPolicy -ErrorAction Stop
         $dscContent = ''
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($policy in $policies)
