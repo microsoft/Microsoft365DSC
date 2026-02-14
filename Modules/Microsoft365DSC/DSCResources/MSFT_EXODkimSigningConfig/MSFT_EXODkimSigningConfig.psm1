@@ -236,7 +236,32 @@ function Set-TargetResource
         }
         $PSBoundParameters.Remove('Identity') | Out-Null
         Write-Verbose -Message "Creating DkimSigningConfig $($Identity)."
-        New-DkimSigningConfig @PSBoundParameters
+        try
+        {
+            New-DkimSigningConfig @PSBoundParameters
+        }
+        catch
+        {
+            $ErrorMessage = $_.Exception.Message
+            if ($ErrorMessage -like '*Invalid domain name*')
+            {
+                Write-Verbose -Message "Failed to create DkimSigningConfig for $($Identity) with error '$ErrorMessage'. Attempting to set existing configuration."
+                $PSBoundParameters['Identity'] = $Identity
+                if ($PSBoundParameters.ContainsKey('DomainName'))
+                {
+                    $PSBoundParameters.Remove('DomainName')
+                }
+                if ($PSBoundParameters.ContainsKey('KeySize'))
+                {
+                    $PSBoundParameters.Remove('KeySize')
+                }
+                Set-DkimSigningConfig @PSBoundParameters -Confirm:$false
+            }
+            else
+            {
+                throw $_
+            }
+        }
     }
     elseif ($Ensure -eq 'Present' -and $DkimSigningConfig.Ensure -eq 'Present')
     {
