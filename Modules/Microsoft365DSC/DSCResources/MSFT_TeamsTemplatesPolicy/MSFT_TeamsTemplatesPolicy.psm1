@@ -72,7 +72,21 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $policy = Get-CsTeamsTemplatePermissionPolicy -Identity $Identity -ErrorAction Stop
+            try
+            {
+                $policy = Get-CsTeamsTemplatePermissionPolicy -Identity $Identity -ErrorAction Stop
+            }
+            catch
+            {
+                if ($_.Exception.Message -match 'not found' -or $_.FullyQualifiedErrorId -match 'NotFound')
+                {
+                    return $nullReturn
+                }
+                else
+                {
+                    throw
+                }
+            }
         }
         else
         {
