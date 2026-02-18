@@ -85,7 +85,7 @@ function Get-TargetResource
             return $nullReturn
         }
         Write-Verbose -Message "Found Teams Templates Policy {$Identity}"
-        $allTemplates = Get-CsTeamTemplateList
+        $allTemplates = Get-CsTeamTemplateList -ErrorAction 'Stop'
 
         $hiddenTemplatesNames = @()
         if ($null -ne $policy.HiddenTemplates)

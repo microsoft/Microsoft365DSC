@@ -235,7 +235,6 @@ This function creates a new Markdown document from the specified exported config
 .Functionality
 Internal, Hidden
 #>
-
 function New-M365DSCConfigurationToMarkdown
 {
     [CmdletBinding()]
@@ -2105,6 +2104,15 @@ function New-M365DSCDeltaReport
                             ValueInDestination = $driftInfo.DesiredValue
                         })
                     }
+
+                    if ($destinationResource.ContainsKey("_metadata_$($driftInfo.PropertyName)"))
+                    {
+                        $Metadata = $destinationResource."_metadata_$($driftInfo.PropertyName)"
+                        $Level = $Metadata.Split('|')[0].Replace('### ', '')
+                        $Information = $Metadata.Split('|')[1]
+                        $Delta[-1].Properties[0].Add('_Metadata_Level', $Level)
+                        $Delta[-1].Properties[0].Add('_Metadata_Info', $Information)
+                    }
                 }
                 $Global:AllDrifts.DriftInfo = @()
             }
@@ -2144,6 +2152,17 @@ function New-M365DSCDeltaReport
     if ($Type -eq 'HTML')
     {
         $reportSB = [System.Text.StringBuilder]::new()
+        $ReportTitle = 'Microsoft365DSC - Delta Report'
+        $headerTitle = 'Delta Report'
+        if ($IsBlueprintAssessment)
+        {
+            $ReportTitle = 'Microsoft365DSC - Blueprint Assessment Report'
+            $headerTitle = 'Blueprint Assessment Report'
+        }
+        [void]$reportSB.AppendLine("<html><head><meta charset='utf-8'><title>$ReportTitle</title>")
+        [void]$reportSB.AppendLine($Script:ReportCSS)
+        [void]$reportSB.AppendLine("</head><body><div class='report-container'>")
+
         #region Custom Header
         if (-not [System.String]::IsNullOrEmpty($HeaderFilePath))
         {
@@ -2163,17 +2182,6 @@ function New-M365DSCDeltaReport
         }
         #endregion
 
-        $ReportTitle = 'Microsoft365DSC - Delta Report'
-        $headerTitle = 'Delta Report'
-        if ($IsBlueprintAssessment)
-        {
-            $ReportTitle = 'Microsoft365DSC - Blueprint Assessment Report'
-            $headerTitle = 'Blueprint Assessment Report'
-        }
-        [void]$reportSB.AppendLine("<html><head><meta charset='utf-8'><title>$ReportTitle</title>")
-        [void]$reportSB.AppendLine($Script:ReportCSS)
-        [void]$reportSB.AppendLine("</head><body><div class='report-container'>")
-
         [void]$reportSB.AppendLine("<h1>$headerTitle</h1>")
         [void]$reportSB.AppendLine("<div class='logo-container'>")
         [void]$reportSB.AppendLine("<img src='" + (Get-IconPath -ResourceName "Promo") + "' alt='Microsoft365DSC Slogan' width='500'  />")
@@ -2185,7 +2193,9 @@ function New-M365DSCDeltaReport
             [void]$reportSB.AppendLine("<ul>")
             [void]$reportSB.AppendLine("<li><strong>Source: </strong>$Source</li>")
             [void]$reportSB.AppendLine("<li><strong>Destination: </strong>$Destination</li>")
-            [void]$reportSB.AppendLine("</ul></div>")
+            [void]$reportSB.AppendLine("</ul>")
+            [void]$reportSB.AppendLine("<p>Report generated on: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')</p>")
+            [void]$reportSB.AppendLine("</div>")
         }
 
         [array]$resourcesMissingInSource = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -eq '_IsInConfiguration_' -and `
