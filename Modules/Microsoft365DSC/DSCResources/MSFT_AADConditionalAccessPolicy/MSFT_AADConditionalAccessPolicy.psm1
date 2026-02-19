@@ -686,9 +686,9 @@ function Get-TargetResource
         }
 
         $DisableResilienceDefaultsIsEnabledValue = $null
-        if (-not [System.String]::IsNullOrEmpty($Policy.SessionControls.disableResilienceDefaults.isEnabled))
+        if (-not [System.String]::IsNullOrEmpty($Policy.SessionControls.disableResilienceDefaults))
         {
-            $DisableResilienceDefaultsIsEnabledValue = [Boolean]::Parse($Policy.SessionControls.disableResilienceDefaults.isEnabled)
+            $DisableResilienceDefaultsIsEnabledValue = [Boolean]::Parse($Policy.SessionControls.disableResilienceDefaults)
         }
 
         $result = @{

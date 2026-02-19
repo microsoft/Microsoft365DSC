@@ -81,7 +81,7 @@ function Get-TargetResource
         Write-Verbose -Message "Getting Group with Id {$GroupId}"
         if ($GroupId -match '\b[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}\b' -and $GroupId -ne '00000000-0000-0000-0000-000000000000')
         {
-            $Group = Find-CsGroup -SearchQuery $GroupId -ExactMatchOnly $true -ErrorAction SilentlyContinue
+            $Group = Find-CsGroup -SearchQuery $GroupId -ExactMatchOnly $true -ErrorAction Stop
         }
         else
         {
@@ -90,7 +90,7 @@ function Get-TargetResource
         if ($null -eq $Group)
         {
             Write-Verbose -Message "Could not find Group with Id {$GroupId}, searching with DisplayName {$GroupDisplayName}"
-            $Group = Find-CsGroup -SearchQuery $GroupDisplayName -ExactMatchOnly $true -ErrorAction SilentlyContinue
+            $Group = Find-CsGroup -SearchQuery $GroupDisplayName -ExactMatchOnly $true -ErrorAction Stop
 
             if ($null -eq $Group)
             {
@@ -111,7 +111,7 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Getting GroupPolicyAssignment with PolicyType {$PolicyType} for Group {$($Group.DisplayName)}"
-        $AllGroupPolicyAssignment = Get-CsGroupPolicyAssignment -ErrorAction SilentlyContinue
+        $AllGroupPolicyAssignment = Get-CsGroupPolicyAssignment -ErrorAction Stop
         $GroupPolicyAssignment = $AllGroupPolicyAssignment | Where-Object{$_.GroupId -eq $Group.Id -and $_.PolicyType -eq $PolicyType}
         if ($null -eq $GroupPolicyAssignment)
         {

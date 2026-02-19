@@ -811,11 +811,11 @@ function Test-M365DSCParameterState
                                     Write-Verbose -Message "$($_.InputObject) - $($_.SideIndicator)"
                                 }
 
-                                $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
-                                $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                $EventValue = "<CurrentValue>$($CurrentValues.$fieldName -join ", ")</CurrentValue>"
+                                $EventValue += "<DesiredValue>$($DesiredValues.$fieldName -join ", ")</DesiredValue>"
                                 $DriftObject.DriftInfo.Add($fieldName, @{
-                                    CurrentValue = $CurrentValues.$fieldName
-                                    DesiredValue = $DesiredValues.$fieldName
+                                    CurrentValue = $CurrentValues.$fieldName -join ", "
+                                    DesiredValue = $DesiredValues.$fieldName -join ", "
                                 })
                                 $DriftedParameters.Add($fieldName, $EventValue)
                                 $returnValue = $false

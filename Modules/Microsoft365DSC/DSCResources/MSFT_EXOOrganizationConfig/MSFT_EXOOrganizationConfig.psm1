@@ -1247,7 +1247,38 @@ function Set-TargetResource
         $SetValues.Remove('AutoExpandingArchive') | Out-Null
     }
 
+    $secondaryParameterSet = @{}
+    if ($SetValues.ContainsKey('TenantAdminNotificationForDelayedDelicensingEnabled') -or $SetValues.ContainsKey('DelayedDelicensingEnabled') -or $SetValues.ContainsKey('EndUserMailNotificationForDelayedDelicensingEnabled'))
+    {
+        if ($SetValues.ContainsKey('DefaultMinutesToReduceLongEventsBy'))
+        {
+            $secondaryParameterSet.Add('DefaultMinutesToReduceLongEventsBy', $SetValues['DefaultMinutesToReduceLongEventsBy'])
+            $SetValues.Remove('DefaultMinutesToReduceLongEventsBy') | Out-Null
+        }
+        if ($SetValues.ContainsKey('DefaultMinutesToReduceShortEventsBy'))
+        {
+            $secondaryParameterSet.Add('DefaultMinutesToReduceShortEventsBy', $SetValues['DefaultMinutesToReduceShortEventsBy'])
+            $SetValues.Remove('DefaultMinutesToReduceShortEventsBy') | Out-Null
+        }
+        if ($SetValues.ContainsKey('ShortenEventScopeDefault'))
+        {
+            $secondaryParameterSet.Add('ShortenEventScopeDefault', $SetValues['ShortenEventScopeDefault'])
+            $SetValues.Remove('ShortenEventScopeDefault') | Out-Null
+        }
+    }
+
+    if ($SetValues.DelayedDelicensingEnabled -ne $true)
+    {
+        # If DelayedDelicensingEnabled is being set to false or does not exist, we cannot set the other two parameters
+        $SetValues.Remove('TenantAdminNotificationForDelayedDelicensingEnabled') | Out-Null
+        $SetValues.Remove('EndUserMailNotificationForDelayedDelicensingEnabled') | Out-Null
+    }
     Set-OrganizationConfig @SetValues
+
+    if ($secondaryParameterSet.Count -gt 0)
+    {
+        Set-OrganizationConfig @secondaryParameterSet
+    }
 }
 
 function Test-TargetResource
@@ -1752,8 +1783,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                         @compareParameters
     return $result
 }
 
@@ -1864,4 +1897,26 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            if ($DesiredValues.ContainsKey('DelayedDelicensingEnabled'))
+            {
+                if ($DesiredValues.DelayedDelicensingEnabled -ne $true)
+                {
+                    $ValuesToCheck.Remove('TenantAdminNotificationForDelayedDelicensingEnabled') | Out-Null
+                    $ValuesToCheck.Remove('EndUserMailNotificationForDelayedDelicensingEnabled') | Out-Null
+                }
+            }
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')
