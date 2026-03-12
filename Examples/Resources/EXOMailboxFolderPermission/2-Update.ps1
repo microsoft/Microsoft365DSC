@@ -28,19 +28,20 @@ Configuration Example
             CertificateThumbprint = $CertificateThumbprint
             Ensure                = "Present";
             Identity              = "admin:\Calendar";
-            UserPermissions       = @(MSFT_EXOMailboxFolderUserPermission {
-                User                   = 'Default'
-                AccessRights           = 'AvailabilityOnly'
-            }
-MSFT_EXOMailboxFolderUserPermission {
-                User                   = 'Anonymous'
-                AccessRights           = 'AvailabilityOnly'
-            }
-MSFT_EXOMailboxFolderUserPermission {
-                User                   = 'AlexW'
-                AccessRights           = 'Editor'
-		SharingPermissionFlags = 'Delegate'
-            }
+            UserPermissions       = @(
+                MSFT_EXOMailboxFolderUserPermission {
+                    User                   = 'Default'
+                    AccessRights           = 'AvailabilityOnly'
+                }
+                MSFT_EXOMailboxFolderUserPermission {
+                    User                   = 'Anonymous'
+                    AccessRights           = 'AvailabilityOnly'
+                }
+                MSFT_EXOMailboxFolderUserPermission {
+                    User                   = 'AlexW'
+                    AccessRights           = 'Editor'
+                    SharingPermissionFlags = 'Delegate'
+                }
             );
         }
     }

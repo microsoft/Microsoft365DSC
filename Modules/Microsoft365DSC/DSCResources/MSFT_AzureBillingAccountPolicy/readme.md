@@ -1,4 +1,3 @@
-
 # AzureBillingAccountPolicy
 
 ## Description

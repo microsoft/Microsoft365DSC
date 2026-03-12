@@ -1,4 +1,3 @@
-
 # AADAuthenticationRequirement
 
 ## Description

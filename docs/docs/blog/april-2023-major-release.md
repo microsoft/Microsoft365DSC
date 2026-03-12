@@ -58,76 +58,46 @@ Three resources had typos in their names. With this release these typos are now 
 
 We are removing parameters that have been deprecated from various resources as part of this major update. As a reminder, parameters that become deprecated on Microsoft 365 are being marked as deprecated in Microsoft365DSC until the next major release. In the past, using these parameters would have resulted in a warning letting the users know that they are using a deprecated parameter and that it would simply be ignored. Starting with this release, using these deprecated parameters will generate an error. It is recommended to scan existing configurations and remove deprecated parameters. The following resources have deprecated parameters that have been removed as part of this release, along with the parameters that have been removed:
 
-<ul>
- <li>AADApplication
-  <ul>
-   <li>Oauth2RequirePostResponse</li>
-  </ul>
- </li>
- <li>AADConditionalAccessPolicy
-  <ul>
-  <li>IncludeDevices</li>
-  <li>ExcludeDevices</li>
-   </ul></li>
- <li>AADUser
-  <ul>
-  <li>PreferredDataLocation</li>
-   </ul></li>
- <li>EXOAntiPhishPolicy
-  <ul>
-  <li>EnableAntispoofEnforcement</li>
-  <li>TargetedDomainProtectionAction</li>
-   </ul></li>
- <li>EXOHostedContentFilterPolicy
-  <ul>
-  <li>EndUserSpamNotificationCustomFromAddress</li>
-  <li>EndUserSpamNotificationCustomFromName</li>
-   </ul></li>
- <li>EXOMalwareFilterPolicy
-  <ul>
-  <li>Action</li>
-  <li>CustomAlertText</li>
-  <li>EnableExternalSenderNotifications</li>
-  <li>EnableInternalSenderNotifications</li>
-   </ul></li>
- <li>EXOOrganizationConfig
-  <ul>
-  <li>AllowPlusAddressInRecipients</li>
-  </ul>
- <li>EXOSaveLinksPolicy
-  <ul>
- <li>DoNotAllowClickThrough</li>
-  <li>DoNotTrackUserClicks</li>
-  <li>IsEnabled</li>
-   </ul></li>
- <li>EXOSharedMailbox
-  <ul>
-  <li>Aliases</li>
-   </ul></li>
- <li>EXOTransportRule
-  <ul>
-  <li>ExceptIfMessageContainsAllDataClassifications</li>
-  <li>IncidentReportOriginalMail</li>
-  <li>MessageContainsAllDataClassifications</li>
-   </ul></li>
- <li>SCSensitivityLabel
-  <ul>
-  <li>Disabled
-  <li>ApplyContentMarkingFooterFontName</li>
-  <li>ApplyContentMarkingHeaderFontName</li>
-  <li>ApplyWaterMarkingFontName</li>
-  <li>EncryptionAipTemplateScopes</li>
-   </ul></li>
- <li>SPOTenantSettings
-  <ul>
-  <li>RequireAcceptingAccountMatchInvitedAccount</li>
-   </ul></li>
- <li>TeamsMeetingPolicy
-  <ul>
-   <li>RecordingStorageMode</li>
-  </ul>
-  </li>
-</ul>
+* AADApplication
+  * Oauth2RequirePostResponse
+* AADConditionalAccessPolicy
+  * IncludeDevices
+  * ExcludeDevices
+* AADUser
+  * PreferredDataLocation
+* EXOAntiPhishPolicy
+  * EnableAntispoofEnforcement
+  * TargetedDomainProtectionAction
+* EXOHostedContentFilterPolicy
+  * EndUserSpamNotificationCustomFromAddress
+  * EndUserSpamNotificationCustomFromName
+* EXOMalwareFilterPolicy
+  * Action
+  * CustomAlertText
+  * EnableExternalSenderNotifications
+  * EnableInternalSenderNotifications
+* EXOOrganizationConfig
+  * AllowPlusAddressInRecipients
+* EXOSaveLinksPolicy
+  * DoNotAllowClickThrough
+  * DoNotTrackUserClicks
+  * IsEnabled
+* EXOSharedMailbox
+  * Aliases
+* EXOTransportRule
+  * ExceptIfMessageContainsAllDataClassifications
+  * IncidentReportOriginalMail
+  * MessageContainsAllDataClassifications
+* SCSensitivityLabel
+  * Disabled
+  * ApplyContentMarkingFooterFontName
+  * ApplyContentMarkingHeaderFontName
+  * ApplyWaterMarkingFontName
+  * EncryptionAipTemplateScopes
+* SPOTenantSettings
+  * RequireAcceptingAccountMatchInvitedAccount
+* TeamsMeetingPolicy
+  * RecordingStorageMode
 
 ## TeamsGroupPolicyAssignment: New Key Parameters ([3054](https://github.com/microsoft/Microsoft365DSC/issues/3054))
 
@@ -182,4 +152,4 @@ These events will be reported as Information entries having an Event ID of 2.
 
 ## Enforcing Tenant ID to be in Format '.onmicrosoft.' ([#3137](https://github.com/microsoft/Microsoft365DSC/pull/3137))
 
-Starting with this version, the TenantID property will no longer be accepting GUIDs. Instead customers should provide their tenants' name, ideally in the format of <tenant>.onmicrosoft.<extension>.
+Starting with this version, the TenantID property will no longer be accepting GUIDs. Instead customers should provide their tenants' name, ideally in the format of `<tenant>.onmicrosoft.<extension>`.

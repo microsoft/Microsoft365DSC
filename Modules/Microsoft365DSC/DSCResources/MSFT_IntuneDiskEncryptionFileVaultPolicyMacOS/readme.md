@@ -1,4 +1,3 @@
-
 # IntuneDiskEncryptionFileVaultPolicyMacOS
 
 ## Description

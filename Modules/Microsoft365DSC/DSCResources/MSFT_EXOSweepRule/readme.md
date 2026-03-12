@@ -1,4 +1,3 @@
-
 # EXOSweepRule
 
 ## Description

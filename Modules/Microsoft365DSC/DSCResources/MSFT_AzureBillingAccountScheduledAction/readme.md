@@ -1,4 +1,3 @@
-
 # AzureBillingAccountScheduledAction
 
 ## Description

@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
 
 ## Description

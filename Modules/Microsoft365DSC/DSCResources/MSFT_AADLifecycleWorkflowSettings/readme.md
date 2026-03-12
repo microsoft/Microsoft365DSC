@@ -1,4 +1,3 @@
-
 # AADLifecycleWorkflowSettings
 
 ## Description

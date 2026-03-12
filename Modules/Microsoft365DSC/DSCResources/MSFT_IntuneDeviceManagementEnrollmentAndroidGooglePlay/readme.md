@@ -1,4 +1,3 @@
-
 # IntuneDeviceManagementEnrollmentAndroidGooglePlay
 
 ## Description

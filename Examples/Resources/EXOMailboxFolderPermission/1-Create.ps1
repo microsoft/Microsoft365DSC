@@ -30,19 +30,20 @@ Configuration Example
             CertificateThumbprint = $CertificateThumbprint
             Ensure                = "Present";
             Identity              = "amdin:\Calendar";
-            UserPermissions       = @(MSFT_EXOMailboxFolderUserPermission {
-                User                   = 'Default'
-                AccessRights           = 'AvailabilityOnly'
-            }
-            MSFT_EXOMailboxFolderUserPermission {
-                User                   = 'Anonymous'
-                AccessRights           = 'AvailabilityOnly'
-            }
-            MSFT_EXOMailboxFolderUserPermission {
-                User                          = 'AlexW'
-                AccessRights                  = 'Owner'
-                SharingPermissionFlags        = 'Delegate'
-            }
+            UserPermissions       = @(
+                MSFT_EXOMailboxFolderUserPermission {
+                    User                   = 'Default'
+                    AccessRights           = 'AvailabilityOnly'
+                }
+                MSFT_EXOMailboxFolderUserPermission {
+                    User                   = 'Anonymous'
+                    AccessRights           = 'AvailabilityOnly'
+                }
+                MSFT_EXOMailboxFolderUserPermission {
+                    User                          = 'AlexW'
+                    AccessRights                  = 'Owner'
+                    SharingPermissionFlags        = 'Delegate'
+                }
             );
         }
     }

@@ -1,4 +1,3 @@
-
 # TeamsUnassignedNumberTreatment
 
 ## Description

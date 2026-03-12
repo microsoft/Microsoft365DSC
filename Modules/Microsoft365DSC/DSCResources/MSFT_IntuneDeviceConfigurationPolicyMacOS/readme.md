@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationPolicyMacOS
 
 ## Description

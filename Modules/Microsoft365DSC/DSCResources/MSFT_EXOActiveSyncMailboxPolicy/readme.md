@@ -1,4 +1,4 @@
-﻿# EXOActiveSyncMailboxPolicy
+# EXOActiveSyncMailboxPolicy
 
 ## Description
 

@@ -1,4 +1,3 @@
-
 # AADHomeRealmDiscoveryPolicy
 
 ## Description

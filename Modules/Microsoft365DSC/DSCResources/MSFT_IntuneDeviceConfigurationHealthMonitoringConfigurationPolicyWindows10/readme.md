@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
 
 ## Description

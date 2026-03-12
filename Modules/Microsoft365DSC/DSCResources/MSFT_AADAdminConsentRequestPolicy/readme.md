@@ -1,4 +1,3 @@
-
 # AADAdminConsentRequestPolicy
 
 ## Description

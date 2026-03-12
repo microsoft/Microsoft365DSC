@@ -1982,7 +1982,7 @@ function Confirm-M365DSCLoadedModule
     PS> Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADApplication'
 
 .FUNCTIONALITY
-    Public
+    Internal
 #>
 function Confirm-M365DSCModuleDependency
 {
@@ -4718,7 +4718,7 @@ function New-M365DSCCmdletDocumentation
     Write-Host -Object 'Creating Markdown documentation for M365DSC cmdlets:' -ForegroundColor Gray
 
     $counter = 0
-    foreach ($command in (Get-Module Microsoft365Dsc).ExportedCommands.GetEnumerator())
+    foreach ($command in (Get-Module Microsoft365DSC).ExportedCommands.GetEnumerator())
     {
         $commandName = $command.Key
         $helpInfo = Get-Help $commandName
@@ -4730,32 +4730,32 @@ function New-M365DSCCmdletDocumentation
             $output = New-Object -TypeName System.Text.StringBuilder
 
             $null = $output.AppendLine("# $($commandName)")
-            $null = $output.AppendLine('')
+            $null = $output.AppendLine()
 
             $helpInfo = Get-Help -Name $commandName
             if ($helpInfo.description.Count -ne 0)
             {
                 $null = $output.AppendLine('## Description')
-                $null = $output.AppendLine('')
+                $null = $output.AppendLine()
                 $null = $output.AppendLine($helpInfo.Description[0].Text)
-                $null = $output.AppendLine('')
+                $null = $output.AppendLine()
             }
 
             $cmd = Get-Command -Name $commandName
             if ([String]::IsNullOrEmpty($cmd.OutputType) -eq $false)
             {
                 $null = $output.AppendLine('## Output')
-                $null = $output.AppendLine('')
+                $null = $output.AppendLine()
                 $null = $output.AppendLine('This function outputs information as the following type:')
                 $null = $output.AppendLine("**$($cmd.OutputType)**")
-                $null = $output.AppendLine('')
+                $null = $output.AppendLine()
             }
             else
             {
                 $null = $output.AppendLine('## Output')
-                $null = $output.AppendLine('')
+                $null = $output.AppendLine()
                 $null = $output.AppendLine('This function does not generate any output.')
-                $null = $output.AppendLine('')
+                $null = $output.AppendLine()
             }
 
             $ast = $cmd.ScriptBlock.Ast
@@ -4763,7 +4763,7 @@ function New-M365DSCCmdletDocumentation
             $parameters = $ast.FindAll({ $args[0] -is [System.Management.Automation.Language.ParameterAst] }, $true)
 
             $null = $output.AppendLine('## Parameters')
-            $null = $output.AppendLine('')
+            $null = $output.AppendLine()
             if ($parameters.Count -gt 0)
             {
                 $null = $output.AppendLine('| Parameter | Required | DataType | Default Value | Allowed Values | Description |')
@@ -4788,32 +4788,47 @@ function New-M365DSCCmdletDocumentation
                     }
                     $mandatory = (Get-Culture).TextInfo.ToTitleCase($mandatory.ToLower())
 
-                    $null = $output.AppendLine("| $($paramName) | $($mandatory) | $($parameter.StaticType.Name) | $($parameter.DefaultValue.Value) | $($parameter.Attributes.Where({$_.TypeName.FullName -eq 'ValidateSet'}).PositionalArguments.Value -join ', ') | $($description) |")
-
+                    $defaultValue = " $($parameter.DefaultValue.Value) "
+                    if ($defaultValue -eq '  ')
+                    {
+                        $defaultValue = ' '
+                    }
+                    $validateSetValue = " $($parameter.Attributes.Where({$_.TypeName.FullName -eq 'ValidateSet'}).PositionalArguments.Value -join ', ') "
+                    if ($validateSetValue -eq '  ')
+                    {
+                        $validateSetValue = ' '
+                    }
+                    $description = " $($description.Split("`n") -join ' ') "
+                    if ($description -eq '  ')
+                    {
+                        $description = ' '
+                    }
+                    $null = $output.AppendLine("| $($paramName) | $($mandatory) | $($parameter.StaticType.Name) |$defaultValue|$validateSetValue|$description|")
                 }
-                $null = $output.AppendLine('')
+                $null = $output.AppendLine()
             }
             else
             {
                 $null = $output.AppendLine('This function does not have any input parameters.')
+                $null = $output.AppendLine()
             }
 
             if ($helpInfo.examples.example.Count -ne 0)
             {
                 $null = $output.AppendLine('## Examples')
-                $null = $output.AppendLine('')
+                $null = $output.AppendLine()
                 foreach ($example in $helpInfo.examples.example)
                 {
                     $null = $output.AppendLine($example.title)
-                    $null = $output.AppendLine('')
+                    $null = $output.AppendLine()
                     $null = $output.AppendLine("``$($example.code)``")
-                    $null = $output.AppendLine('')
+                    $null = $output.AppendLine()
                 }
             }
 
             $savePath = Join-Path -Path $cmdletDocsRoot -ChildPath "$commandName.md"
             $null = Out-File `
-                -InputObject ($output.ToString() -replace '\r?\n', "`r`n") `
+                -InputObject ($output.ToString() -replace '\r?\n', "`r`n").TrimEnd("`r`n") `
                 -FilePath $savePath `
                 -Encoding utf8 `
                 -Force:$Force

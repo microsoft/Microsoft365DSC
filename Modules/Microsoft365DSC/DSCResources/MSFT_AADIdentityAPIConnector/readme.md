@@ -1,4 +1,3 @@
-
 # AADIdentityAPIConnector
 
 ## Description

@@ -21,6 +21,16 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        SentinelSetting 'SentinelSetting'
+        {
+            AnomaliesIsEnabled    = $true
+            EyesOnIsEnabled       = $true
+            ResourceGroupName     = 'test'
+            WorkspaceName         = 'test'
+            SubscriptionId        = 'test'
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
+        }
     }
 }

@@ -1,4 +1,3 @@
-
 # IntuneMobileAppsWin32AppWindows10
 
 ## Description

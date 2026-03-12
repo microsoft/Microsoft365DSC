@@ -1,4 +1,3 @@
-
 # IntuneMobileAppsWebLink
 
 ## Description

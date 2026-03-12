@@ -1,4 +1,3 @@
-
 # AADFilteringPolicyRule
 
 ## Description

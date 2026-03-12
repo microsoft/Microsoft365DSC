@@ -41,6 +41,7 @@ nav:
           - 'Dynamic Resource Generator (DRG)': 'user-guide/advanced/dynamic-resource-generator.md'
       - Cmdlets:
           - 'Assert-M365DSCBlueprint': 'user-guide/cmdlets/Assert-M365DSCBlueprint.md'
+          - 'Confirm-M365DSCModuleDependency': 'user-guide/cmdlets/Confirm-M365DSCModuleDependency.md'
           - 'Export-M365DSCConfiguration': 'user-guide/cmdlets/Export-M365DSCConfiguration.md'
           - 'Export-M365DSCDiagnosticData': 'user-guide/cmdlets/Export-M365DSCDiagnosticData.md'
           - 'Compare-M365DSCConfigurations': 'user-guide/cmdlets/Compare-M365DSCConfigurations.md'
@@ -60,6 +61,7 @@ nav:
           - 'Remove-M365DSCNotificationEndpointRegistration': 'user-guide/cmdlets/Remove-M365DSCNotificationEndpointRegistration.md'
           - 'Set-M365DSCAgentCertificateConfiguration': 'user-guide/cmdlets/Set-M365DSCAgentCertificateConfiguration.md'
           - 'Set-M365DSCLoggingOption': 'user-guide/cmdlets/Set-M365DSCLoggingOption.md'
+          - 'Split-M365DSCConfiguration': 'user-guide/cmdlets/Split-M365DSCConfiguration.md'
           - 'Set-M365DSCTelemetryOption': 'user-guide/cmdlets/Set-M365DSCTelemetryOption.md'
           - 'Test-M365DSCAgent': 'user-guide/cmdlets/Test-M365DSCAgent.md'
           - 'Test-M365DSCDependenciesForNewVersions': 'user-guide/cmdlets/Test-M365DSCDependenciesForNewVersions.md'

@@ -1,4 +1,3 @@
-
 # IntuneVPNConfigurationPolicyAndroidWork
 
 ## Description

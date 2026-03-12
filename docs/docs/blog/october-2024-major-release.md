@@ -15,7 +15,8 @@ The PhishThresholdLevel property of the EXOAntiPhishPolicy resource was incorrec
 The ComplianceRecordingApplications parameter of the TeamsComplianceRecordingPolicy resource was changed from being a string array to being an array of CIMInstances (complex types). There are unfortunately no direct ways to update existing configurations. Instead, make sure you search for the ComplianceRecordingApplications property in your config and update the entries to match the CimInstances definition.
 
 e.g.,
-```Powershell
+
+```powershell
 ComplianceRecordingApplications                     = @(
     MSFT_TeamsComplianceRecordingApplication{
         Id = '00000000-0000-0000-0000-000000000000'

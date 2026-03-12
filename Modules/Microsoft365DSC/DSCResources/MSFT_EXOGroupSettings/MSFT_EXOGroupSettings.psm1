@@ -1159,9 +1159,13 @@ function Get-DisplayNameSimplified
     $simplifiedNames = @()
     foreach ($name in $DisplayName)
     {
+        if ([System.String]::IsNullOrEmpty($name))
+        {
+            continue
+        }
         $simplifiedNames += $name.Split(',')[0].Replace('(','')
     }
-    return $simplifiedNames | Sort-Object
+    return ,@($simplifiedNames | Sort-Object)
 }
 
 function Get-CompareParameters

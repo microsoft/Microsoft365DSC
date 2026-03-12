@@ -49,6 +49,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AccessReviewSettings    = @{
                         isEnabled                       = $True
                         isAccessRecommendationEnabled   = $True
+                        isAgenticExperienceEnabled      = $True
                         isApprovalJustificationRequired = $True
                         recurrenceType                  = 'FakeStringValue'
                         reviewerType                    = 'FakeStringValue'
@@ -129,6 +130,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AccessReviewSettings    = (New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
                             isEnabled                       = $True
                             isAccessRecommendationEnabled   = $True
+                            isAgenticExperienceEnabled      = $True
                             isApprovalJustificationRequired = $True
                             recurrenceType                  = 'FakeStringValue'
                             reviewerType                    = 'FakeStringValue'
@@ -192,6 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AccessReviewSettings    = (New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
                             isEnabled                       = $True
                             isAccessRecommendationEnabled   = $True
+                            isAgenticExperienceEnabled      = $True
                             isApprovalJustificationRequired = $True
                             recurrenceType                  = 'FakeStringValue'
                             reviewerType                    = 'FakeStringValue'
@@ -254,6 +257,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AccessReviewSettings    = (New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
                             isEnabled                       = $True
                             isAccessRecommendationEnabled   = $True
+                            isAgenticExperienceEnabled      = $True
                             isApprovalJustificationRequired = $True
                             recurrenceType                  = 'FakeStringValue'
                             reviewerType                    = 'FakeStringValue'
@@ -308,6 +312,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AccessReviewSettings    = (New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
                             isEnabled                       = $True
                             isAccessRecommendationEnabled   = $True
+                            isAgenticExperienceEnabled      = $True
                             isApprovalJustificationRequired = $True
                             recurrenceType                  = 'FakeStringValue'
                             reviewerType                    = 'FakeStringValue'

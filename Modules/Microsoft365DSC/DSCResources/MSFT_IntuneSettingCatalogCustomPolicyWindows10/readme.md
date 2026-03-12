@@ -1,4 +1,3 @@
-
 # IntuneSettingCatalogCustomPolicyWindows10
 
 ## Description

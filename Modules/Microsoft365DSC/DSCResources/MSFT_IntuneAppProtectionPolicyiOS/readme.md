@@ -1,4 +1,3 @@
-
 # IntuneAppProtectionPolicyiOS
 
 ## Description

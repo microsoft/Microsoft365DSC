@@ -20,7 +20,7 @@ function Get-TargetResource
         $ExpirationDate,
 
         [Parameter()]
-        [ValidateSet('AdvancedDelivery', 'Tenant')]
+        [ValidateSet('AdvancedDelivery', 'Submission', 'Tenant')]
         [System.String]
         $ListSubType,
 
@@ -183,7 +183,7 @@ function Set-TargetResource
         $ExpirationDate,
 
         [Parameter()]
-        [ValidateSet('AdvancedDelivery', 'Tenant')]
+        [ValidateSet('AdvancedDelivery', 'Submission', 'Tenant')]
         [System.String]
         $ListSubType,
 
@@ -357,7 +357,7 @@ function Test-TargetResource
         $ExpirationDate,
 
         [Parameter()]
-        [ValidateSet('AdvancedDelivery', 'Tenant')]
+        [ValidateSet('AdvancedDelivery', 'Submission', 'Tenant')]
         [System.String]
         $ListSubType,
 

@@ -1,4 +1,3 @@
-
 # IntuneWifiConfigurationPolicyAndroidForWork
 
 ## Description

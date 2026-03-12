@@ -1,4 +1,3 @@
-
 # IntuneAzureNetworkConnectionWindows365
 
 ## Description

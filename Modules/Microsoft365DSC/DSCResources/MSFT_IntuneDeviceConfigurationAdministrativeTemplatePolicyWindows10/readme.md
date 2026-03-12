@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
 
 ## Description

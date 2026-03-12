@@ -339,8 +339,24 @@ function Export-TargetResource
         }
         foreach ($partner in $policyPartners)
         {
-            $config = Get-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization `
-                -CrossTenantAccessPolicyConfigurationPartnerTenantId $partner.TenantId
+            $config = $null
+            try
+            {
+                $config = Get-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization `
+                    -CrossTenantAccessPolicyConfigurationPartnerTenantId $partner.TenantId `
+                    -ErrorAction Stop
+            }
+            catch
+            {
+                Write-M365DSCHost -Message "    |---[$i/$($policyPartners.Count)] $($partner.TenantId)$Global:M365DSCEmojiRedX" -CommitWrite
+                New-M365DSCLogEntry -Message 'Error during Export:' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+                $i++
+                continue
+            }
 
             $Script:exportedInstances += $config
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)

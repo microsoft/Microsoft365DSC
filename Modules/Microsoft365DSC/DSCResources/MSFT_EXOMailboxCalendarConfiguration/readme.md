@@ -1,4 +1,3 @@
-
 # EXOMailboxCalendarConfiguration
 
 ## Description

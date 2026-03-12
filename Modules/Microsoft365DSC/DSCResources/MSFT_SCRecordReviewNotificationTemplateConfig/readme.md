@@ -1,4 +1,3 @@
-
 # SCRecordReviewNotificationTemplateConfig
 
 ## Description

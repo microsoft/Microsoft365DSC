@@ -269,15 +269,15 @@ function Get-TargetResource {
             $getValue.PrincipalType = $objectInfo.AdditionalProperties['@odata.type'].Split('.')[2]
         }
 
-       	switch ($getValue.PrincipalType)
+        switch ($getValue.PrincipalType)
         {
-       	    'user' {
+            'user' {
                 $PrincipalValue = $objectInfo.AdditionalProperties['userPrincipalName']
             }
-       	    default {
+            default {
                 $PrincipalValue = $objectInfo.AdditionalProperties['displayName']
             }
-       	}
+        }
 
         Write-Verbose "PrincipalValue = $PrincipalValue"
         $results = @{

@@ -1,4 +1,3 @@
-
 # IntuneSecurityBaselineWindows365
 
 ## Description

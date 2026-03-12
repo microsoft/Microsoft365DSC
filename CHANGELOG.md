@@ -2,15 +2,45 @@
 
 # UNRELEASED
 
+* AADCrossTenantIdentitySyncPolicyPartner
+  * Fixed an issue where the export would fail if the secondary tenant does
+    not allow reading of the tenant information.
+    FIXES [#6843](https://github.com/microsoft/Microsoft365DSC/issues/6843)
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Add missing sub-property `IsAgenticExperienceEnabled` to
+    complex object `AccessReviewSettings` and `ApproverInformationVisibility` to
+    `ApprovalStages[]`
+    FIXES [#6930](https://github.com/microsoft/Microsoft365DSC/issues/6930)
+* AADGroupEligibilitySchedule
+  * Change resource to `Data` plane
 * AADRoleAssignmentScheduleRequest
   * Fixes issue where if role not found would make a POST to PIM API
     FIXES [#6841](https://github.com/microsoft/Microsoft365DSC/issues/6841)
 * AADRoleEligibilityScheduleRequest
   * Fixes issue where if role not found would make a POST to PIM API
     FIXES [#6841](https://github.com/microsoft/Microsoft365DSC/issues/6841)
+* EXODistributionGroup
+  * Updated `Get-TargetResource` to use properties with display name.
+    FIXES [#6769](https://github.com/microsoft/Microsoft365DSC/issues/6769)
+* EXOTenantAllowBlockListItems
+  * Fixed issue where value `Submission` was missing from the validate
+    set from `ListSubType` parameter.
+    FIXES [#6918](https://github.com/microsoft/Microsoft365DSC/issues/6918)
+* IntuneAppProtectionPolicyWindows10
+  * Initial release.
+* IntuneRoleAssignmentWindows365
+  * Initial release.
+* IntuneRoleDefinitionWindows365
+  * Initial release.
+* IntuneTermsAndConditions
+  * Initial release.
+* MISC
+  * Aligned markdown documents and description to common standards.
 
 # 1.26.218.1
 
+* Compare-M365DSCConfigurations
+  * Fixed an issue where the Get-DSCResource was passed to a function which expected a hashtable which resulted in a type mismatch
 * AADConditionalAccessPolicy
   * Fixed an issue where `DisableResilienceDefaultsIsEnabled` was not
     evaluated correctly during `Get`.

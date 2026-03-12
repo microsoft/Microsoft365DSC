@@ -1,4 +1,3 @@
-
 # TeamsApplicationInstance
 
 ## Description

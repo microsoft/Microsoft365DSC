@@ -1,4 +1,3 @@
-
 # TeamsAppSetupPolicy
 
 ## Description

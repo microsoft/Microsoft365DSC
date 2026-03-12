@@ -1,4 +1,3 @@
-
 # AADAuthenticationMethodPolicy
 
 ## Description

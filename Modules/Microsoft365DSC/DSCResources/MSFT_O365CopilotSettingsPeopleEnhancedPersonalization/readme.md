@@ -1,4 +1,3 @@
-
 # O365CopilotSettingsPeopleEnhancedPersonalization
 
 ## Description

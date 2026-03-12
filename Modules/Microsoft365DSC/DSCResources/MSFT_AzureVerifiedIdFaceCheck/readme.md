@@ -1,4 +1,3 @@
-
 # AzureVerifiedIdFaceCheck
 
 ## Description

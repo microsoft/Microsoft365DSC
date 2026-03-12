@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
 
 ## Description

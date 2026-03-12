@@ -1,10 +1,11 @@
-[ClassVersion("1.0.0.0"), FriendlyName("EXODistributionGroup")]
+[ClassVersion("1.0.0.1"), FriendlyName("EXODistributionGroup")]
 class MSFT_EXODistributionGroup : OMI_BaseResource
 {
     [Key, Description("The Identity parameter specifies the distribution group or mail-enabled security group that you want to modify. You can use any value that uniquely identifies the group.")] String Identity;
     [Required, Description("The Name parameter specifies a unique name for the address list.")] String Name;
     [Write, Description("Exchange alias (also known as the mail nickname) for the recipient")] String Alias;
     [Write, Description("Is Bcc blocked for the distribution group.")] Boolean BccBlocked;
+    [Write, Description("The BypassModerationFromSendersOrMembers parameter specifies who is allowed to send messages to this moderated recipient without approval from a moderator. Valid values for this parameter are individual senders and groups in your organization. Specifying a group means all members of the group are allowed to send messages to this recipient without approval from a moderator.")] String BypassModerationFromSendersOrMembers[];
     [Write, Description("The ByPassNestedModerationEnabled parameter specifies how to handle message approval when a moderated group contains other moderated groups as members.")] Boolean BypassNestedModerationEnabled;
     [Write, Description("Description of the distribution group.")] String Description;
     [Write, Description("The DisplayName parameter specifies the display name of the group. The display name is visible in the Exchange admin center and in address lists. The maximum length is 256 characters.")] String DisplayName;

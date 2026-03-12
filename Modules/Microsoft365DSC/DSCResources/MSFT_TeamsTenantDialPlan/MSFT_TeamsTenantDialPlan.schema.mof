@@ -6,7 +6,7 @@ class MSFT_TeamsVoiceNormalizationRule
     [Write, Description("A friendly description of the normalization rule.")] String Description;
     [Write, Description("A regular expression that the dialed number must match in order for this rule to be applied.")] String Pattern;
     [Write, Description("The regular expression pattern that will be applied to the number to convert it to E.164 format.")] String Translation;
-    [Write, Description("If True, the result of applying this rule will be a number internal to the organization. If False, applying the rule results in an external number.")] Boolean IsInternalExtension;
+    [Write, Description("If True, the result of applying this rule will be a number internal to the organization. If False, applying the rule results in an external number. This value is ignored if the value of the OptimizeDeviceDialing property of the associated dial plan is set to False.")] Boolean IsInternalExtension;
 };
 [ClassVersion("1.0.0.1"), FriendlyName("TeamsTenantDialPlan")]
 class MSFT_TeamsTenantDialPlan : OMI_BaseResource

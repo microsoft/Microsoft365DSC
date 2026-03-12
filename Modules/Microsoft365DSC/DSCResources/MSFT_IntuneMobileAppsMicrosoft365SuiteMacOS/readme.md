@@ -1,4 +1,3 @@
-
 # IntuneMobileAppsMicrosoft365SuiteMacOS
 
 ## Description

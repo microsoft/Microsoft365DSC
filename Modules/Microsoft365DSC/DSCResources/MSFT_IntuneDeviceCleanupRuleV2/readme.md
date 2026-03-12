@@ -1,4 +1,3 @@
-
 # IntuneDeviceCleanupRuleV2
 
 ## Description

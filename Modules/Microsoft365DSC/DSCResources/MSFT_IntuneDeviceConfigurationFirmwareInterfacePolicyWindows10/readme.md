@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10
 
 ## Description

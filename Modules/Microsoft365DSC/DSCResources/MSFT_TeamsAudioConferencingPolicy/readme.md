@@ -1,4 +1,3 @@
-
 # TeamsAudioConferencingPolicy
 
 ## Description

@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
 
 ## Description

@@ -1,4 +1,3 @@
-
 # O365ExternalConnection
 
 ## Description

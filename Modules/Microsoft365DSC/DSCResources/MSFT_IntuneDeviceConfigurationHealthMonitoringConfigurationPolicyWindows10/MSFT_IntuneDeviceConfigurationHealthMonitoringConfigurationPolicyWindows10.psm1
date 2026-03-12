@@ -299,18 +299,18 @@ function Set-TargetResource
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
-		if ($CreateParameters.ContainsKey('ConfigDeviceHealthMonitoringScope')) {
-			$CreateParameters['configDeviceHealthMonitoringScope'] = ($CreateParameters['ConfigDeviceHealthMonitoringScope'] -join ',')
-			$CreateParameters.Remove('ConfigDeviceHealthMonitoringScope') | Out-Null
-		}
-		if ($CreateParameters.ContainsKey('AllowDeviceHealthMonitoring')) {
-			$CreateParameters['allowDeviceHealthMonitoring'] = $CreateParameters['AllowDeviceHealthMonitoring']
-			$CreateParameters.Remove('AllowDeviceHealthMonitoring') | Out-Null
-		}
-		if ($CreateParameters.ContainsKey('ConfigDeviceHealthMonitoringCustomScope')) {
-			$CreateParameters['configDeviceHealthMonitoringCustomScope'] = $CreateParameters['ConfigDeviceHealthMonitoringCustomScope']
-			$CreateParameters.Remove('ConfigDeviceHealthMonitoringCustomScope') | Out-Null
-		}
+        if ($CreateParameters.ContainsKey('ConfigDeviceHealthMonitoringScope')) {
+            $CreateParameters['configDeviceHealthMonitoringScope'] = ($CreateParameters['ConfigDeviceHealthMonitoringScope'] -join ',')
+            $CreateParameters.Remove('ConfigDeviceHealthMonitoringScope') | Out-Null
+        }
+        if ($CreateParameters.ContainsKey('AllowDeviceHealthMonitoring')) {
+            $CreateParameters['allowDeviceHealthMonitoring'] = $CreateParameters['AllowDeviceHealthMonitoring']
+            $CreateParameters.Remove('AllowDeviceHealthMonitoring') | Out-Null
+        }
+        if ($CreateParameters.ContainsKey('ConfigDeviceHealthMonitoringCustomScope')) {
+            $CreateParameters['configDeviceHealthMonitoringCustomScope'] = $CreateParameters['ConfigDeviceHealthMonitoringCustomScope']
+            $CreateParameters.Remove('ConfigDeviceHealthMonitoringCustomScope') | Out-Null
+        }
         #region resource generator code
         $CreateParameters.Add('@odata.type', '#microsoft.graph.windowsHealthMonitoringConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
@@ -342,18 +342,18 @@ function Set-TargetResource
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
         }
-		if ($UpdateParameters.ContainsKey('ConfigDeviceHealthMonitoringScope')) {
-			$UpdateParameters['configDeviceHealthMonitoringScope'] = ($UpdateParameters['ConfigDeviceHealthMonitoringScope'] -join ',')
-			$UpdateParameters.Remove('ConfigDeviceHealthMonitoringScope') | Out-Null
-		}
-		if ($UpdateParameters.ContainsKey('AllowDeviceHealthMonitoring')) {
-			$UpdateParameters['allowDeviceHealthMonitoring'] = $UpdateParameters['AllowDeviceHealthMonitoring']
-			$UpdateParameters.Remove('AllowDeviceHealthMonitoring') | Out-Null
-		}
-		if ($UpdateParameters.ContainsKey('ConfigDeviceHealthMonitoringCustomScope')) {
-			$UpdateParameters['configDeviceHealthMonitoringCustomScope'] = $UpdateParameters['ConfigDeviceHealthMonitoringCustomScope']
-			$UpdateParameters.Remove('ConfigDeviceHealthMonitoringCustomScope') | Out-Null
-		}
+        if ($UpdateParameters.ContainsKey('ConfigDeviceHealthMonitoringScope')) {
+            $UpdateParameters['configDeviceHealthMonitoringScope'] = ($UpdateParameters['ConfigDeviceHealthMonitoringScope'] -join ',')
+            $UpdateParameters.Remove('ConfigDeviceHealthMonitoringScope') | Out-Null
+        }
+        if ($UpdateParameters.ContainsKey('AllowDeviceHealthMonitoring')) {
+            $UpdateParameters['allowDeviceHealthMonitoring'] = $UpdateParameters['AllowDeviceHealthMonitoring']
+            $UpdateParameters.Remove('AllowDeviceHealthMonitoring') | Out-Null
+        }
+        if ($UpdateParameters.ContainsKey('ConfigDeviceHealthMonitoringCustomScope')) {
+            $UpdateParameters['configDeviceHealthMonitoringCustomScope'] = $UpdateParameters['ConfigDeviceHealthMonitoringCustomScope']
+            $UpdateParameters.Remove('ConfigDeviceHealthMonitoringCustomScope') | Out-Null
+        }
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.windowsHealthMonitoringConfiguration')
         Update-MgBetaDeviceManagementDeviceConfiguration  `

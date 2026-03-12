@@ -1,4 +1,3 @@
-
 # IntuneTrustedRootCertificateAndroidDeviceOwner
 
 ## Description

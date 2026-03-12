@@ -1,4 +1,3 @@
-
 # IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
 
 ## Description

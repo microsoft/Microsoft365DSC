@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationWiredNetworkPolicyWindows10
 
 ## Description

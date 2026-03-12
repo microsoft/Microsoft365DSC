@@ -1,4 +1,3 @@
-
 # IntuneMobileAppsWindowsOfficeSuiteApp
 
 ## Description

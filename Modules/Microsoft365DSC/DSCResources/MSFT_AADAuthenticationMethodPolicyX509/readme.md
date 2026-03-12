@@ -1,4 +1,3 @@
-
 # AADAuthenticationMethodPolicyX509
 
 ## Description

@@ -1,4 +1,3 @@
-
 # AADAuthenticationContextClassReference
 
 ## Description

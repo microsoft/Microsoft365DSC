@@ -1,4 +1,3 @@
-
 # IntuneDiskEncryptionWindows10
 
 ## Description

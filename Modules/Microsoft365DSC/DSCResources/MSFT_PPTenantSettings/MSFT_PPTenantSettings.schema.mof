@@ -51,7 +51,7 @@ class MSFT_PPTenantSettings : OMI_BaseResource
     [Write, Description("When this setting is true, users in the environment can see a message that indicates Microsoft Learn and documentation search categories have been turned off by the administrator. Default value is false.")] boolean DisableDocsSearch;
     [Write, Description("When this setting is true, users in the environment can see a message that indicates community and blog search categories have been turned off by the administrator. Default value is false.")] boolean DisableCommunitySearch;
     [Write, Description("When this setting is true, users in the environment can see a message that indicates video search categories have been turned off by the administrator. Default value is false.")] boolean DisableBingVideoSearch;
-    [Write, Description("	Ability to turn off the Share with Everyone capability for nonadmin users in all Power Apps. Default value is true.")] boolean DisableShareWithEveryone;
+    [Write, Description("Ability to turn off the Share with Everyone capability for nonadmin users in all Power Apps. Default value is true.")] boolean DisableShareWithEveryone;
     [Write, Description("When set to true this will enable the ability for guests in your tenant to create Power Platform resources.")] boolean EnableGuestsToMake;
     [Write, Description("Maximum value setting for the number of users in a security group used to share an app built using Power Apps on Microsoft Teams. Default value is 10000 but can be increased or decreased, as required.")] uint32 ShareWithColleaguesUserLimit;
     [Write, Description("Credentials of the Power Platform Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

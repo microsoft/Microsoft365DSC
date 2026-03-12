@@ -1,4 +1,3 @@
-
 # IntuneMobileAppsMicrosoftStoreAppWindows10
 
 ## Description

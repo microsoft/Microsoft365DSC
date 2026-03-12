@@ -1,4 +1,3 @@
-
 # SPOSiteGroup
 
 ## Description

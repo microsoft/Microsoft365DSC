@@ -1,4 +1,3 @@
-
 # IntuneAppAndBrowserIsolationPolicyWindows10
 
 ## Description

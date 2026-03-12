@@ -1,4 +1,3 @@
-
 # AADNetworkAccessSettingCrossTenantAccess
 
 ## Description

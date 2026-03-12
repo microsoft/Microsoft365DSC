@@ -1,4 +1,3 @@
-
 # IntuneWindowsAutopilotDeploymentProfileAzureADJoined
 
 ## Description

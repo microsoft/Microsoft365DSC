@@ -4,7 +4,7 @@ The Microsoft365DSC project is open to contribution from the community. In order
 
 ## Fork the base repository
 
-- Navigate to the main repository page of the Microsoft365DSC project (e.g. https://GitHub.com/Microsoft/Microsoft365DSC);
+- Navigate to the main repository page of the Microsoft365DSC project (e.g. <https://GitHub.com/Microsoft/Microsoft365DSC/>);
 
 - In the top right corner of the page, click on the **Fork** button;
 
@@ -24,12 +24,14 @@ The Microsoft365DSC project is open to contribution from the community. In order
 
 - Creating a fork is the equivalent of creating a separate workspace for you to start working on your changes. What we need to do now, is create a new branch inside that fork. Think of a branch as being a project within your workspace. Every feature or issue you work on should be in its own branch. By default, when you forked the main repository, you created a copy of the **Dev** repository from the main repository, inside your fork. Every branch you create in your fork, will essentially be a copy of that Forked Dev branch. Let's put all this in context:
 
-          **Main Repository**                             **Forked Repository**
-                 Branches:                                      Branches:
-                     - Dev                                            - Dev
-                                                                           --> Feature 1
-                                                                           --> Feature 2
-                                                                           --> ...
+```text
+**Main Repository**        **Forked Repository**
+    Branches:                  Branches:
+        - Dev                      - Dev
+                                    --> Feature 1
+                                    --> Feature 2
+                                    --> ...
+```
 
 In the example above, Feature 1 and Feature 2 are both branches that were created from the Dev branch of the forked repository. In order to submit the changes in Feature 1 back into the Main repository, you will need to first create a Pull Request to have Feature 1 merged back into the Dev branch of your forked repository, and then once done, create yet another Pull Request to merge the forked repository's Dev branch (which now includes the changes for Feature 1) back in the main repository's Dev branch.
 
@@ -47,7 +49,7 @@ In the example above, Feature 1 and Feature 2 are both branches that were create
 
 ## Cloning the Forked Repository
 
-- In GitHub, cloning is the process of "downloading" the content of a branch onto your local machine for editing. My recommendation here will be to download and install the GitHub client for Windows https://desktop.github.com/. It just makes things a lot easier than having to deal with the console Git client (or even the VSCode built-in tools for that matter).
+- In GitHub, cloning is the process of "downloading" the content of a branch onto your local machine for editing. My recommendation here will be to download and install the GitHub client for Windows <https://desktop.github.com/>. It just makes things a lot easier than having to deal with the console Git client (or even the VSCode built-in tools for that matter).
 
 - Open GitHub for Windows, and select **File > Clone Repository...**.
 
@@ -71,7 +73,7 @@ In the example above, Feature 1 and Feature 2 are both branches that were create
 
 ## Making Changes
 
-- Once you made sure the branch representing the feature or the issue you are about to work on is selected in the Current Branch of the GitHub client for Windows, you can go ahead and start making changes to the local files. I personally recommend editing the files in Visual Studio Code (https://code.visualstudio.com/), but using other tools such as the PowerShell Integrated Script Editor (ISE) or even other Scripting Editor tool will work just as good.
+- Once you made sure the branch representing the feature or the issue you are about to work on is selected in the Current Branch of the GitHub client for Windows, you can go ahead and start making changes to the local files. I personally recommend editing the files in Visual Studio Code (<https://code.visualstudio.com/>), but using other tools such as the PowerShell Integrated Script Editor (ISE) or even other Scripting Editor tool will work just as good.
 
 ## Committing Changes
 

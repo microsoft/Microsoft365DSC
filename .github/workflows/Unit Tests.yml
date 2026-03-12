@@ -2,8 +2,7 @@ name: Unit Tests
 on: [push, pull_request]
 
 jobs:
-  # This workflow contains a single job called "build"
-  UnitTests:
+  quality-test:
     # The type of runner that the job will run on
     runs-on: windows-latest
 
@@ -46,6 +45,30 @@ jobs:
           {
               throw "{$($results.FailedCount)} Quality Check(s) Failed"
           }
+
+  unit-test:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    permissions: write-all
+
+    # Only when run from the main repo
+    if: github.repository == 'microsoft/Microsoft365DSC'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Modules
+        shell: pwsh
+        run: |
+          Install-PSResource -Name ReverseDSC -Scope AllUsers -TrustRepository
+          Install-PSResource -Name DSCParser -Scope AllUsers -TrustRepository
+          Install-PSResource -Name PSDesiredStateConfiguration -Scope AllUsers -TrustRepository
+          Install-PSResource -Name Pester -Scope AllUsers -TrustRepository
+          [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
       - name: Run Test Harness
         shell: pwsh
         run: |

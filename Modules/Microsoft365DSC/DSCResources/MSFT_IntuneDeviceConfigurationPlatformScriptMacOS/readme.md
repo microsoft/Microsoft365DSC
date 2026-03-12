@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationPlatformScriptMacOS
 
 ## Description

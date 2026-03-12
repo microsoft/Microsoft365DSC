@@ -1,4 +1,3 @@
-
 # AADCrossTenantAccessPolicyConfigurationPartner
 
 ## Description

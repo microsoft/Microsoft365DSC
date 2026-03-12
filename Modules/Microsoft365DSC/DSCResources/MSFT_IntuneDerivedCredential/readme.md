@@ -1,6 +1,5 @@
-
 # IntuneDerivedCredential
 
 ## Description
 
-## Create new navigation property to derivedCredentials for deviceManagement for Intune.
+This resources configures derived credentials in Intune.

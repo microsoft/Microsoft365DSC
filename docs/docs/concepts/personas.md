@@ -16,15 +16,15 @@ As mentioned in our User Guide section, there are three main types of authentica
 
 ## Azure AD / Entra
 
-| Identity Administrator |||
-|-|-|-|
+| Identity Administrator | | |
+| - | - | - |
 | ![Identity Administrator](../Images/Personas/IdentityAdmin.jpg){ width=300 } | **Description:** | The Identity Administrators are responsible for managing users and groups settings. They define what permissions users and service principals are granted in the tenant. They work with components such as: <br> <ul><li>AADAdministrativeUnit</li><li>AADApplication</li><li>AADGroups</li><li>AADGroupsNamingPolicy</li><li>AADRoleDefinition</li><li>AADServicePrincipal</li><li>AADUser</li><li>etc.</li></ul> |
 | | **Associated Azure AD Roles:** | **Create & Update** <br> <ul><li>Groups Administrator</li><li>Identity Governance Administrator</li><li>Security Administrator</li><li>User Administrator</li></ul> **Export & Monitor** <br> <ul><li>Global Reader</li><li>Security Reader</li></ul>|
 
 ---
 
-| Security Administrator |||
-|-|-|-|
+| Security Administrator | | |
+| - | - | - |
 | ![Security Administrator](../Images/Personas/SecurityAdmin.jpg){ width=300 } | **Description:** | Security Administrators define and update Entra Identity policies and monitor them for configuration drift across tenants. Their goal is to ensure tenant security by enforcing authorized operations. They work with components such as: <br> <ul><li>AADAuthenticationMethodPolicy</li><li>AADAuthorizationPolicy</li><li>AADConditionalAccessPolicy</li><li>AADCrossTenantAccessPolicy</li><li>AADEntitlementManagementAccessPackage</li><li>etc.</li></ul> |
 | | **Associated Azure AD Roles:** | **Create & Update** <br> <ul><li>Authentication Policy Administrator</li><li>Conditional Access Administrator</li><li>Privileged Role Administrator</li><li>Security Administrator</li></ul> **Export & Monitor** <br> <ul><li>Global Reader</li><li>Security Reader</li></ul>|
 
@@ -32,8 +32,8 @@ As mentioned in our User Guide section, there are three main types of authentica
 
 ## Exchange Online
 
-| Exchange Administrator |||
-|-|-|-|
+| Exchange Administrator | | |
+| - | - | - |
 | ![Exchange Administrator](../Images/Personas/ExchangeAdmin.jpg){ width=300 } | **Description:** | Exchange Administrators ensure mail and calendar functionality and secure communications. They work with components such as: <br> <ul><li>EXOAntiphishPolicy</li><li>EXOMalwareFilterRule</li><li>EXOPerimeterConfiguration</li><li>EXOTransportRule</li><li>etc.</li></ul> |
 | | **Associated Azure AD Roles:** | **Create & Update** <br> <ul><li>Exchange Administrator</li></ul> **Export & Monitor** <br> <ul><li>Global Reader</li><li>Security Reader</li></ul>|
 
@@ -41,12 +41,12 @@ As mentioned in our User Guide section, there are three main types of authentica
 
 ## Microsoft Teams
 
-| Teams Collaboration Administrator |||
-|-|-|-|
+| Teams Collaboration Administrator | | |
+| - | - | - |
 | ![Teams Collaboration Administrator](../Images/Personas/CollabAdmin.jpg){ width=300 } | **Description:** | Teams Collaboration Administrators manage Teams collaboration features (channels, teams) and their policies (e.g., channel and messaging policies). They work with components such as: <br> <ul><li>TeamsAppPermissionPolicy</li><li>TeamsChannel</li><li>TeamsMessagingPolicy</li><li>TeamsShiftPolicy</li><li>etc.</li></ul> |
 | | **Associated Azure AD Roles:** | **Create & Update** <br> <ul><li>Teams Administrator</li></ul> **Export & Monitor** <br> <ul><li>Global Reader</li></ul>|
 
-| Teams Voice Administrator |||
-|-|-|-|
+| Teams Voice Administrator | | |
+| - | - | - |
 | ![Teams Voice Administrator](../Images/Personas/VoiceAdmin.jpg){ width=300 } | **Description:** | Teams Voice Administrators manage voice features in Teams (IP phone policies, voicemail, dial plans). They work with components such as: <br> <ul><li>TeamsEmergencyCallingPolicy</li><li>TeamsIPPhonePolicy</li><li>TeamsOnlineVoicemailPolicy</li><li>TeamsTenantDialPlan</li><li>etc.</li></ul> |
 | | **Associated Azure AD Roles:** | **Create & Update** <br> <ul><li>Teams Administrator</li></ul> **Export & Monitor** <br> <ul><li>Global Reader</li></ul>|

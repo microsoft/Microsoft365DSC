@@ -1,4 +1,3 @@
-
 # TeamsEnhancedEncryptionPolicy
 
 ## Description
