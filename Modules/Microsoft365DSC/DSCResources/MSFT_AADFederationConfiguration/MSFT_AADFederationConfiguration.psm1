@@ -72,6 +72,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration for the AAD Federation Configuration with Id {$Id} and DisplayName {$DisplayName}"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
@@ -264,7 +266,7 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $uri = "/beta/directory/federationConfigurations/microsoft.graph.samlOrWsFedExternalDomainFederation"
+        $uri = '/beta/directory/federationConfigurations/microsoft.graph.samlOrWsFedExternalDomainFederation'
         $body = ConvertTo-Json $instanceParams -Depth 10 -Compress
         Write-Verbose -Message "Creating federation configuration {$DisplayName} with:`r`n$body"
         Invoke-MgGraphRequest -Uri $uri -Method POST -Body $body
@@ -368,7 +370,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -378,6 +380,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -425,6 +431,10 @@ function Export-TargetResource
     try
     {
         $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/directory/federationConfigurations/microsoft.graph.samlOrWsFedExternalDomainFederation'
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $uri += "?`$filter=$Filter"
+        }
         [array] $Script:exportedInstances = Invoke-MgGraphRequest $uri -Method Get
 
         $i = 1

@@ -1,4 +1,5 @@
-﻿function Get-SettingsCatalogSettingName {
+﻿function Get-SettingsCatalogSettingName
+{
     [CmdletBinding()]
     [OutputType([System.String])]
     param (
@@ -11,8 +12,8 @@
     )
 
     # Remove invalid characters
-    $settingName = [regex]::Replace($SettingDefinition.Name, "[\{\}\$]", "")
-    $settingName = $settingName.Replace(" ", "_")
+    $settingName = [regex]::Replace($SettingDefinition.Name, '[\{\}\$]', '')
+    $settingName = $settingName.Replace(' ', '_')
 
     $settingsWithSameName = $AllSettingDefinitions.Where({ $_.Name -eq $settingName })
 
@@ -21,7 +22,7 @@
     if ($settingsWithSameName.Count -eq 2)
     {
         if ($settingsWithSameName[0].Id -eq $settingsWithSameName[1].Id -and `
-            $settingsWithSameName[0].Name -eq $settingsWithSameName[1].Name)
+                $settingsWithSameName[0].Name -eq $settingsWithSameName[1].Name)
         {
             $settingsWithSameName = $settingsWithSameName[0]
         }
@@ -47,7 +48,7 @@
             # If the combination of parent setting and setting name is unique, add the parent setting name to the setting name
             if ($combinationMatchesWithParent.Count -eq 1)
             {
-                $settingName = $parentSetting.Name + "_" + $settingName
+                $settingName = $parentSetting.Name + '_' + $settingName
             }
             # If the combination of parent setting and setting name is still not unique, do it with the OffsetUri of the current setting
             else
@@ -61,9 +62,9 @@
                 {
                     # Alternative way if no unique setting name can be found
                     $parentSettingIdProperty = $parentSetting.Id.Split('_')[-1]
-                    $parentSettingIdWithoutProperty = $parentSetting.Id.Replace("_$parentSettingIdProperty", "")
+                    $parentSettingIdWithoutProperty = $parentSetting.Id.Replace("_$parentSettingIdProperty", '')
                     # We can't use the entire setting here, because the child setting id does not have to come after the parent setting id
-                    $settingName = $SettingDefinition.Id.Replace($parentSettingIdWithoutProperty + "_", "").Replace($parentSettingIdProperty + "_", "")
+                    $settingName = $SettingDefinition.Id.Replace($parentSettingIdWithoutProperty + '_', '').Replace($parentSettingIdProperty + '_', '')
                 }
             }
         }
@@ -81,42 +82,103 @@
             {
                 # Can happen if both settings have the same name and the same OffsetUri, e.g. "enforcementLevel" in the IntuneAntivirusPolicyLinux resource
                 # Potential risk of overwriting settings with the same name but different OffsetUri
-                $settingIdWithoutName = $SettingDefinition.Id -replace "_$settingName", ""
-                $settingIdWithoutNameSplitted = $settingIdWithoutName.Split("_")[-1]
-                $settingName = $settingIdWithoutNameSplitted + "_" + $settingName
+                $settingIdWithoutName = $SettingDefinition.Id -replace "_$settingName", ''
+                $settingIdWithoutNameSplitted = $settingIdWithoutName.Split('_')[-1]
+                $settingName = $settingIdWithoutNameSplitted + '_' + $settingName
             }
         }
 
         # Simplify names from the OffsetUri. This is done to make the names more readable, especially in case of long and complex OffsetUris.
         switch -wildcard ($settingName)
         {
-            'com.apple.managedclient.preferences_enforcementLevel' { $settingName = 'enforcementLevel' } # IntuneAntivirusPolicyMacOS
-            'access16v2~Policy~L_MicrosoftOfficeaccess~L_ApplicationSettings~*' { $settingName = $settingName.Replace('access16v2~Policy~L_MicrosoftOfficeaccess~L_ApplicationSettings', 'MicrosoftAccess_') }
-            'excel16v2~Policy~L_MicrosoftOfficeExcel~L_ExcelOptions~*' { $settingName = $settingName.Replace('excel16v2~Policy~L_MicrosoftOfficeExcel~L_ExcelOptions', 'MicrosoftExcel_') }
-            'word16v2~Policy~L_MicrosoftOfficeWord~L_WordOptions~*' { $settingName = $settingName.Replace('word16v2~Policy~L_MicrosoftOfficeWord~L_WordOptions', 'MicrosoftWord_') }
-            'ppt16v2~Policy~L_MicrosoftOfficePowerPoint~L_PowerPointOptions~*' { $settingName = $settingName.Replace('ppt16v2~Policy~L_MicrosoftOfficePowerPoint~L_PowerPointOptions', 'MicrosoftPowerPoint_') }
-            'proj16v2~Policy~L_Proj~L_ProjectOptions~*' { $settingName = $settingName.Replace('proj16v2~Policy~L_Proj~L_ProjectOptions', 'MicrosoftProject_') }
-            'visio16v2~Policy~L_MicrosoftVisio~L_VisioOptions~*' { $settingName = $settingName.Replace('visio16v2~Policy~L_MicrosoftVisio~L_VisioOptions', 'MicrosoftVisio_') }
-            'pub16v2~Policy~L_MicrosoftOfficePublisher~*' { $settingName = $settingName.Replace('pub16v2~Policy~L_MicrosoftOfficePublisher', 'MicrosoftPublisherV2_') }
-            'pub16v3~Policy~L_MicrosoftOfficePublisher~*' { $settingName = $settingName.Replace('pub16v3~Policy~L_MicrosoftOfficePublisher', 'MicrosoftPublisherV3_') }
-            'microsoft_edge~Policy~microsoft_edge~*' { $settingName = $settingName.Replace('microsoft_edge~Policy~microsoft_edge', 'MicrosoftEdge_') }
-            'edge~httpauthentication*' { $settingName = $settingName.Replace('edge~httpauthentication', 'MicrosoftEdge_HTTPAuthentication') }
-            'edge~contentsettings*' { $settingName = $settingName.Replace('edge~contentsettings', 'MicrosoftEdge_ContentSettings') }
-            'edge~passwordmanager*' { $settingName = $settingName.Replace('edge~passwordmanager', 'MicrosoftEdge_PasswordManager') }
-            '*~SmartScreen_*' { $settingName = $settingName.Replace('~SmartScreen', 'SmartScreen') }
-            '*~L_Security~*' { $settingName = $settingName.Replace('~L_Security', 'Security') }
-            '*~L_TrustCenter*' { $settingName = $settingName.Replace('~L_TrustCenter', '_TrustCenter') }
-            '*~L_ProtectedView_*' { $settingName = $settingName.Replace('~L_ProtectedView', 'ProtectedView') }
-            '*~L_FileBlockSettings_*' { $settingName = $settingName.Replace('~L_FileBlockSettings', 'FileBlockSettings') }
-            '*~L_TrustedLocations*' { $settingName = $settingName.Replace('~L_TrustedLocations', 'TrustedLocations') }
-            '*~HTTPAuthentication_*' { $settingName = $settingName.Replace('~HTTPAuthentication', 'HTTPAuthentication') }
+            'com.apple.managedclient.preferences_enforcementLevel'
+            {
+                $settingName = 'enforcementLevel'
+            } # IntuneAntivirusPolicyMacOS
+            'access16v2~Policy~L_MicrosoftOfficeaccess~L_ApplicationSettings~*'
+            {
+                $settingName = $settingName.Replace('access16v2~Policy~L_MicrosoftOfficeaccess~L_ApplicationSettings', 'MicrosoftAccess_')
+            }
+            'excel16v2~Policy~L_MicrosoftOfficeExcel~L_ExcelOptions~*'
+            {
+                $settingName = $settingName.Replace('excel16v2~Policy~L_MicrosoftOfficeExcel~L_ExcelOptions', 'MicrosoftExcel_')
+            }
+            'word16v2~Policy~L_MicrosoftOfficeWord~L_WordOptions~*'
+            {
+                $settingName = $settingName.Replace('word16v2~Policy~L_MicrosoftOfficeWord~L_WordOptions', 'MicrosoftWord_')
+            }
+            'ppt16v2~Policy~L_MicrosoftOfficePowerPoint~L_PowerPointOptions~*'
+            {
+                $settingName = $settingName.Replace('ppt16v2~Policy~L_MicrosoftOfficePowerPoint~L_PowerPointOptions', 'MicrosoftPowerPoint_')
+            }
+            'proj16v2~Policy~L_Proj~L_ProjectOptions~*'
+            {
+                $settingName = $settingName.Replace('proj16v2~Policy~L_Proj~L_ProjectOptions', 'MicrosoftProject_')
+            }
+            'visio16v2~Policy~L_MicrosoftVisio~L_VisioOptions~*'
+            {
+                $settingName = $settingName.Replace('visio16v2~Policy~L_MicrosoftVisio~L_VisioOptions', 'MicrosoftVisio_')
+            }
+            'pub16v2~Policy~L_MicrosoftOfficePublisher~*'
+            {
+                $settingName = $settingName.Replace('pub16v2~Policy~L_MicrosoftOfficePublisher', 'MicrosoftPublisherV2_')
+            }
+            'pub16v3~Policy~L_MicrosoftOfficePublisher~*'
+            {
+                $settingName = $settingName.Replace('pub16v3~Policy~L_MicrosoftOfficePublisher', 'MicrosoftPublisherV3_')
+            }
+            'microsoft_edge~Policy~microsoft_edge~*'
+            {
+                $settingName = $settingName.Replace('microsoft_edge~Policy~microsoft_edge', 'MicrosoftEdge_')
+            }
+            'edge~httpauthentication*'
+            {
+                $settingName = $settingName.Replace('edge~httpauthentication', 'MicrosoftEdge_HTTPAuthentication')
+            }
+            'edge~contentsettings*'
+            {
+                $settingName = $settingName.Replace('edge~contentsettings', 'MicrosoftEdge_ContentSettings')
+            }
+            'edge~passwordmanager*'
+            {
+                $settingName = $settingName.Replace('edge~passwordmanager', 'MicrosoftEdge_PasswordManager')
+            }
+            '*~SmartScreen_*'
+            {
+                $settingName = $settingName.Replace('~SmartScreen', 'SmartScreen')
+            }
+            '*~L_Security~*'
+            {
+                $settingName = $settingName.Replace('~L_Security', 'Security')
+            }
+            '*~L_TrustCenter*'
+            {
+                $settingName = $settingName.Replace('~L_TrustCenter', '_TrustCenter')
+            }
+            '*~L_ProtectedView_*'
+            {
+                $settingName = $settingName.Replace('~L_ProtectedView', 'ProtectedView')
+            }
+            '*~L_FileBlockSettings_*'
+            {
+                $settingName = $settingName.Replace('~L_FileBlockSettings', 'FileBlockSettings')
+            }
+            '*~L_TrustedLocations*'
+            {
+                $settingName = $settingName.Replace('~L_TrustedLocations', 'TrustedLocations')
+            }
+            '*~HTTPAuthentication_*'
+            {
+                $settingName = $settingName.Replace('~HTTPAuthentication', 'HTTPAuthentication')
+            }
         }
     }
 
     $settingName
 }
 
-function Get-ParentSettingDefinition {
+function Get-ParentSettingDefinition
+{
     param(
         [Parameter(Mandatory = $true)]
         $SettingDefinition,
@@ -142,7 +204,8 @@ function Get-ParentSettingDefinition {
     $parentSetting
 }
 
-function Get-UniqueSettingDefinitionNameFromMultipleMatches {
+function Get-UniqueSettingDefinitionNameFromMultipleMatches
+{
     param (
         [Parameter(Mandatory = $true)]
         $SettingDefinition,
@@ -160,7 +223,8 @@ function Get-UniqueSettingDefinitionNameFromMultipleMatches {
     $breakCounter = 0
     $threshold = 8
     $newSettingName = $SettingName
-    do {
+    do
+    {
         $previousSettingName = $newSettingName
         $newSettingName = Get-SettingDefinitionNameFromOffsetUri -OffsetUri $SettingDefinition.OffsetUri -SettingName $newSettingName -Skip $skip
 
@@ -170,8 +234,8 @@ function Get-UniqueSettingDefinitionNameFromMultipleMatches {
             if ($newName -eq $newSettingName)
             {
                 # Exclude v2 versions from the comparison
-                if ($SettingDefinition.Id -like "*_v2" -and $_.Id -ne $SettingDefinition.Id.Replace('_v2', '') -or
-                    $SettingDefinition.Id -notlike "*_v2" -and $_.Id -ne $SettingDefinition.Id + "_v2")
+                if ($SettingDefinition.Id -like '*_v2' -and $_.Id -ne $SettingDefinition.Id.Replace('_v2', '') -or
+                    $SettingDefinition.Id -notlike '*_v2' -and $_.Id -ne $SettingDefinition.Id + '_v2')
                 {
                     $combinationMatchesWithOffsetUri += $_
                 }
@@ -185,21 +249,22 @@ function Get-UniqueSettingDefinitionNameFromMultipleMatches {
     $success = $false
     if ($breakCounter -lt $threshold)
     {
-        if ($SettingDefinition.Id -like "*_v2" -and $newSettingName -notlike "*_v2")
+        if ($SettingDefinition.Id -like '*_v2' -and $newSettingName -notlike '*_v2')
         {
-            $newSettingName += "_v2"
+            $newSettingName += '_v2'
         }
         $settingName = $newSettingName
         $success = $true
     }
 
     @{
-        Success = $success
+        Success     = $success
         SettingName = $settingName
     }
 }
 
-function Get-SettingDefinitionNameFromOffsetUri {
+function Get-SettingDefinitionNameFromOffsetUri
+{
     param (
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -216,7 +281,7 @@ function Get-SettingDefinitionNameFromOffsetUri {
 
     # If the last part of the OffsetUri is the same as the setting name or it contains invalid characters, we traverse up until we reach the first element
     # Invalid characters are { and } which are used in the OffsetUri to indicate a variable
-    $splittedOffsetUri = $OffsetUri.Split("/")
+    $splittedOffsetUri = $OffsetUri.Split('/')
     if ([string]::IsNullOrEmpty($splittedOffsetUri[0]))
     {
         $splittedOffsetUri = $splittedOffsetUri[1..($splittedOffsetUri.Length - 1)]
@@ -232,7 +297,7 @@ function Get-SettingDefinitionNameFromOffsetUri {
     while (-not $traversed -and $splittedOffsetUri.Length -gt 1) # Prevent adding the first element of the OffsetUri
     {
         $traversed = $true
-        if ($splittedOffsetUri[-1] -eq $SettingName -or $splittedOffsetUri[-1] -match "[\{\}]" -or $SettingName.StartsWith($splittedOffsetUri[-1]))
+        if ($splittedOffsetUri[-1] -eq $SettingName -or $splittedOffsetUri[-1] -match '[\{\}]' -or $SettingName.StartsWith($splittedOffsetUri[-1]))
         {
             $splittedOffsetUri = $splittedOffsetUri[0..($splittedOffsetUri.Length - 2)]
             $traversed = $false
@@ -241,7 +306,7 @@ function Get-SettingDefinitionNameFromOffsetUri {
 
     if ($splittedOffsetUri.Length -gt 1)
     {
-        $splittedOffsetUri[-1] + "_" + $SettingName
+        $splittedOffsetUri[-1] + '_' + $SettingName
     }
     else
     {

@@ -2,8 +2,12 @@
   "resourceName": "AADTenantAppManagementPolicy",
   "description": "Tenant-wide application authentication method policy to enforce app management restrictions for all applications and service principals.",
   "roles": {
-    "read": [],
-    "update": []
+    "read": [
+      "Application Administrator"
+    ],
+    "update": [
+      "Application Administrator"
+    ]
   },
   "permissions": {
     "graph": {

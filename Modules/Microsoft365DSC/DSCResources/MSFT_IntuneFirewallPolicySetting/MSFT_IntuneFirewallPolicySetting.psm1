@@ -1,5 +1,5 @@
 
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_IntuneFirewallPolicySetting"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneFirewallPolicySetting'
 $Script:PropertiesToRetrieve = @('id', 'displayName', 'description', 'settingDefinitionId', 'settingInstance')
 
 function Get-TargetResource
@@ -27,8 +27,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -151,17 +151,17 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Description                    = $getValue.description
-            DisplayName                    = $getValue.displayName
-            Id                             = $getValue.id
-            PolicySettings                 = $reusableSettings
-            Ensure                         = 'Present'
-            Credential                     = $Credential
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            ApplicationSecret              = $ApplicationSecret
-            CertificateThumbprint          = $CertificateThumbprint
-            ManagedIdentity                = $ManagedIdentity.IsPresent
+            Description           = $getValue.description
+            DisplayName           = $getValue.displayName
+            Id                    = $getValue.id
+            PolicySettings        = $reusableSettings
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
 
@@ -203,8 +203,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -258,8 +258,8 @@ function Set-TargetResource
         id                  = $currentInstance.Id
         settingDefinitionId = 'vendor_msft_firewall_mdmstore_dynamickeywords_addresses_{id}'
         settingInstance     = @{
-            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-            settingDefinitionId = 'vendor_msft_firewall_mdmstore_dynamickeywords_addresses_{id}'
+            '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+            settingDefinitionId         = 'vendor_msft_firewall_mdmstore_dynamickeywords_addresses_{id}'
             groupSettingCollectionValue = @()
         }
     }
@@ -272,8 +272,8 @@ function Set-TargetResource
         if (-not $policySetting.AutoResolve)
         {
             $autoResolveChild += @{
-                '@odata.type'          = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                settingDefinitionId    = 'vendor_msft_firewall_mdmstore_dynamickeywords_addresses_{id}_addresses'
+                '@odata.type'                = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
+                settingDefinitionId          = 'vendor_msft_firewall_mdmstore_dynamickeywords_addresses_{id}_addresses'
                 simpleSettingCollectionValue = @()
             }
             foreach ($address in $policySetting.Addresses)
@@ -288,9 +288,9 @@ function Set-TargetResource
 
         $autoResolveValue = 'vendor_msft_firewall_mdmstore_dynamickeywords_addresses_{id}_autoresolve_' + $policySetting.AutoResolve.ToString().ToLower()
         $autoResolveObject = @{
-            '@odata.type'          = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-            settingDefinitionId    = 'vendor_msft_firewall_mdmstore_dynamickeywords_addresses_{id}_autoresolve'
-            choiceSettingValue     = @{
+            '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+            settingDefinitionId = 'vendor_msft_firewall_mdmstore_dynamickeywords_addresses_{id}_autoresolve'
+            choiceSettingValue  = @{
                 '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue'
                 value         = $autoResolveValue
                 children      = $autoResolveChildren
@@ -299,9 +299,9 @@ function Set-TargetResource
         $groupSettingCollectionChildren += $autoResolveObject
 
         $keywordObject = @{
-            '@odata.type'          = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-            settingDefinitionId    = 'vendor_msft_firewall_mdmstore_dynamickeywords_addresses_{id}_keyword'
-            simpleSettingValue     = @{
+            '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+            settingDefinitionId = 'vendor_msft_firewall_mdmstore_dynamickeywords_addresses_{id}_keyword'
+            simpleSettingValue  = @{
                 '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
                 value         = $policySetting.Keyword
             }
@@ -346,7 +346,7 @@ function Set-TargetResource
         catch
         {
             $errorMessage = "Failed to remove the Intune Firewall Policy Setting with Id {$($currentInstance.Id)} and Name {$($currentInstance.DisplayName)}."
-            $errorMessage += " Please make sure it is not referenced by a Firewall policy."
+            $errorMessage += ' Please make sure it is not referenced by a Firewall policy.'
             throw $errorMessage
         }
         #endregion
@@ -378,8 +378,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -422,8 +422,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

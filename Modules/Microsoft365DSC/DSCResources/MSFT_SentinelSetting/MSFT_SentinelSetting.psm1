@@ -78,8 +78,6 @@ function Get-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
-        $nullResult = $PSBoundParameters
-
         $ResourceGroupNameValue = $ResourceGroupName
         $WorkspaceNameValue = $WorkspaceName
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
@@ -228,7 +226,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for Sentinel Settings for Resource Group: $ResourceGroupName, Workspace: $WorkspaceName"
 
     $null = New-M365DSCConnection -Workload 'Azure' `
-            -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -345,7 +343,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

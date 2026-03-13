@@ -24,8 +24,8 @@ function Get-TargetResource
         $AllowedCombinations,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -154,8 +154,8 @@ function Set-TargetResource
         $AllowedCombinations,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -265,8 +265,8 @@ function Test-TargetResource
         $AllowedCombinations,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -308,7 +308,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -318,6 +318,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -365,8 +369,19 @@ function Export-TargetResource
     try
     {
         #region resource generator code
+        $baseFilter = "policyType ne 'builtIn'"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
         [array]$getValue = Get-MgBetaPolicyAuthenticationStrengthPolicy `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.PolicyType -ne 'builtIn' }
+            -All `
+            -Filter $Filter `
+            -ErrorAction Stop
         #endregion
 
         $i = 1

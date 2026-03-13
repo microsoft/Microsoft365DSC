@@ -1,4 +1,3 @@
-
 # AADIdentityProvider
 
 ## Description

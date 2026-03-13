@@ -7,8 +7,8 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -84,7 +84,7 @@ function Get-TargetResource
             $PerimeterConfiguration = $Script:exportedInstance
         }
 
-        Write-Verbose -Message "Found Perimeter Configuration"
+        Write-Verbose -Message 'Found Perimeter Configuration'
 
         $result = @{
             IsSingleInstance      = 'Yes'
@@ -120,8 +120,8 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -199,8 +199,8 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -255,7 +255,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -324,7 +324,7 @@ function Export-TargetResource
 
         $dscContent = ''
         Write-M365DSCHost -Message "`r`n" -DeferWrite
-        Write-M365DSCHost -Message  "    |---[1/1] $($PerimeterConfiguration.Identity)" -DeferWrite
+        Write-M365DSCHost -Message "    |---[1/1] $($PerimeterConfiguration.Identity)" -DeferWrite
 
         $Params = @{
             IsSingleInstance      = 'Yes'

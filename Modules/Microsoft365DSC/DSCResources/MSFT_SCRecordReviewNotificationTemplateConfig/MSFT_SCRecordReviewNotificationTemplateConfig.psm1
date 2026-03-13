@@ -52,7 +52,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of Record Management Disposition settings for Purview"
+    Write-Verbose -Message 'Getting configuration of Record Management Disposition settings for Purview'
 
     try
     {
@@ -72,8 +72,6 @@ function Get-TargetResource
                 -Parameters $PSBoundParameters
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
-
-            $nullResult = $PSBoundParameters
 
             $instance = Get-RecordReviewNotificationTemplateConfig -ErrorAction Stop
         }
@@ -165,7 +163,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of Record Management Disposition settings for Purview"
+    Write-Verbose -Message 'Setting configuration of Record Management Disposition settings for Purview'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -247,7 +245,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

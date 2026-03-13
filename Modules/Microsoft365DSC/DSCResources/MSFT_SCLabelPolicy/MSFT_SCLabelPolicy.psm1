@@ -174,35 +174,35 @@ function Get-TargetResource
 
         if ($null -ne $policy.Settings)
         {
-            Write-Verbose -Message "Converting Settings"
+            Write-Verbose -Message 'Converting Settings'
             $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $policy.Settings
         }
 
         $ExchangeLocationValue = $null
         if ($null -ne $policy.ExchangeLocation)
         {
-            Write-Verbose -Message "Converting ExchangeLocation to an Array."
+            Write-Verbose -Message 'Converting ExchangeLocation to an Array.'
             $ExchangeLocationValue = Convert-ArrayList -CurrentProperty $policy.ExchangeLocation
         }
 
         $ExchangeLocationExceptionValue = $null
         if ($null -ne $policy.ExchangeLocationException)
         {
-            Write-Verbose -Message "Converting ExchangeLocationException to an Array."
+            Write-Verbose -Message 'Converting ExchangeLocationException to an Array.'
             $ExchangeLocationExceptionValue = Convert-ArrayList -CurrentProperty $policy.ExchangeLocationException
         }
 
         $ModernGroupLocationValue = $null
         if ($null -ne $policy.ModernGroupLocation)
         {
-            Write-Verbose -Message "Converting ModernGroupLocation to an Array."
+            Write-Verbose -Message 'Converting ModernGroupLocation to an Array.'
             $ModernGroupLocationValue = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocation
         }
 
         $ModernGroupLocationExceptionValue = $null
         if ($null -ne $policy.ModernGroupLocationException)
         {
-            Write-Verbose -Message "Converting ModernGroupLocationException to an Array."
+            Write-Verbose -Message 'Converting ModernGroupLocationException to an Array.'
             $ModernGroupLocationExceptionValue = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocationException
         }
 

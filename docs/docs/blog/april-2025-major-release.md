@@ -4,7 +4,7 @@ As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts
 
 ## AADPasswordRuleSettings - Updated the BannedPasswordCheckOnPremisesMode Accepted Values ([5966](https://github.com/microsoft/Microsoft365DSC/pull/5966))
 
-To reflect and align with a change in the associated API, we are changing the possible value of the BannedPasswordCheckOnPremisesMode property from <strong>Enforced</strong> to <strong>Enforce</strong>. Existing configuration that use this resource, should check for that property and make sure that if the value is specified as Enforced, that it gets updated to Enforce.
+To reflect and align with a change in the associated API, we are changing the possible value of the BannedPasswordCheckOnPremisesMode property from **Enforced** to **Enforce**. Existing configuration that use this resource, should check for that property and make sure that if the value is specified as Enforced, that it gets updated to Enforce.
 
 ## EXOArcConfig - Removed Identity Parameter ([#5917](https://github.com/microsoft/Microsoft365DSC/pull/5917))
 
@@ -34,6 +34,6 @@ When the CRG was created, the decision was made to rename the resources that all
 As it turns out, this choice has created more challenges than benefits. Converting all resources consistently and predictable is a challenge. And code that has to do the opposite (plural to singular name) is even more challenging. That is why we decided to remove this conversion and revert back to the original M365DSC resource naming.
 
 ### How to fix
-When you switch to v1.25.402.1 or later of Microsoft365DSC, you have rename the resources in your data files to their singular, original names (without the workload prefix) or else the unit tests in the pipelines will fail. Check out the original naming [here](https://microsoft365dsc.com/resources/overview/). For example: ConditionalAccessPolicies should be renamed to ConditionalAccessPolicy, since the original resource name is AADConditionalAccessPolicy.
-<img src="../images/CRGDatafileRename.png" />
 
+When you switch to v1.25.402.1 or later of Microsoft365DSC, you have rename the resources in your data files to their singular, original names (without the workload prefix) or else the unit tests in the pipelines will fail. Check out the original naming [here](https://microsoft365dsc.com/resources/overview/). For example: ConditionalAccessPolicies should be renamed to ConditionalAccessPolicy, since the original resource name is AADConditionalAccessPolicy.
+![Data File Renaming](images/CRGDatafileRename.png)

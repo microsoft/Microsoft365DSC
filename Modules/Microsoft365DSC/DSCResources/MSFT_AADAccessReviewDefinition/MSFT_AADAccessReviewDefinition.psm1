@@ -43,8 +43,8 @@ function Get-TargetResource
         $Id,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -115,10 +115,7 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaIdentityGovernanceAccessReviewDefinition `
                         -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
-                        -ErrorAction SilentlyContinue | Where-Object `
-                        -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.AccessReviewScheduleDefinition'
-                    }
+                        -ErrorAction SilentlyContinue
                 }
             }
             #endregion
@@ -355,11 +352,11 @@ function Get-TargetResource
                 $currentQuery = $batchResponses | Where-Object { $_.id -eq $currentFallbackReviewer.Query }
                 switch ($currentFallbackReviewer.Query)
                 {
-                    { $_ -like "*users*" }
+                    { $_ -like '*users*' }
                     {
                         $reviewerType = 'User'
                     }
-                    { $_ -like "*groups*" }
+                    { $_ -like '*groups*' }
                     {
                         $reviewerType = 'Group'
                     }
@@ -376,7 +373,7 @@ function Get-TargetResource
         $batchRequests = @()
         foreach ($query in $allQueries)
         {
-            if ($query -like "*manager*")
+            if ($query -like '*manager*')
             {
                 continue
             }
@@ -397,19 +394,19 @@ function Get-TargetResource
             $currentQuery = $batchResponses | Where-Object { $_.id -eq $currentReviewer.Query }
             switch ($currentReviewer.Query)
             {
-                { $_ -like "*manager*" }
+                { $_ -like '*manager*' }
                 {
                     $reviewerType = 'Manager'
                 }
-                { $_ -like "*users*" }
+                { $_ -like '*users*' }
                 {
                     $reviewerType = 'User'
                 }
-                { $_ -like "*groups*" }
+                { $_ -like '*groups*' }
                 {
                     $reviewerType = 'Group'
                 }
-                { $_ -like "*/owners"}
+                { $_ -like '*/owners' }
                 {
                     $reviewerType = 'Owner'
                 }
@@ -496,8 +493,8 @@ function Set-TargetResource
         $Id,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -561,9 +558,9 @@ function Set-TargetResource
             }
             $filter = "displayName eq '$($currentFallbackReviewer.DisplayName -replace "'", "''")'"
             $batchRequests += @{
-                id = $currentFallbackReviewer.DisplayName
+                id     = $currentFallbackReviewer.DisplayName
                 method = 'GET'
-                url = "/$($reviewerType)?`$filter=$filter"
+                url    = "/$($reviewerType)?`$filter=$filter"
             }
         }
         if ($batchRequests.Count -gt 0)
@@ -591,8 +588,8 @@ function Set-TargetResource
                     $append = '/transitiveMembers/microsoft.graph.user'
                 }
                 $myFallbackReviewer = @{
-                    query = "/v1.0/$reviewerType/$($currentQuery.body.value.id)$append"
-                    queryType = "MicrosoftGraph"
+                    query     = "/v1.0/$reviewerType/$($currentQuery.body.value.id)$append"
+                    queryType = 'MicrosoftGraph'
                 }
                 $newFallbackReviewers += $myFallbackReviewer
             }
@@ -613,13 +610,16 @@ function Set-TargetResource
 
             switch ($currentReviewer.Type)
             {
-                'User' {
+                'User'
+                {
                     $reviewerType = 'users'
                 }
-                'Group' {
+                'Group'
+                {
                     $reviewerType = 'groups'
                 }
-                'Owner' {
+                'Owner'
+                {
                     $reviewerType = 'groups'
                 }
             }
@@ -627,9 +627,9 @@ function Set-TargetResource
             {
                 $filter = "displayName eq '$($currentReviewer.DisplayName -replace "'", "''")'"
                 $batchRequests += @{
-                    id = $currentReviewer.DisplayName
+                    id     = $currentReviewer.DisplayName
                     method = 'GET'
-                    url = "/$($reviewerType)?`$filter=$filter"
+                    url    = "/$($reviewerType)?`$filter=$filter"
                 }
             }
         }
@@ -644,13 +644,16 @@ function Set-TargetResource
             $currentQuery = $batchResponses | Where-Object { $_.id -eq $currentReviewer.DisplayName }
             switch ($currentReviewer.Type)
             {
-                'User' {
+                'User'
+                {
                     $reviewerType = 'users'
                 }
-                'Group' {
+                'Group'
+                {
                     $reviewerType = 'groups'
                 }
-                'Owner' {
+                'Owner'
+                {
                     $reviewerType = 'groups'
                 }
             }
@@ -666,14 +669,14 @@ function Set-TargetResource
                     $append = '/owners'
                 }
                 $myReviewer = @{
-                    query = "/v1.0/$reviewerType/$($currentQuery.body.value.id)$append"
-                    queryType = "MicrosoftGraph"
+                    query     = "/v1.0/$reviewerType/$($currentQuery.body.value.id)$append"
+                    queryType = 'MicrosoftGraph'
                 }
 
                 if ($currentReviewer.Type -eq 'Manager')
                 {
-                    $myReviewer.query = "./manager"
-                    $myReviewer.queryRoot = "decisions"
+                    $myReviewer.query = './manager'
+                    $myReviewer.queryRoot = 'decisions'
                 }
                 $newReviewers += $myReviewer
             }
@@ -885,8 +888,8 @@ function Test-TargetResource
         $Id,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -929,8 +932,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -1248,8 +1251,8 @@ function Get-CompareParameters
                     Write-Verbose -Message "Parsed Desired StartDateTime: $parsedDesiredDate, Parsed Current StartDateTime: $parsedCurrentDate"
                     if ($parsedDesiredDate -ne $parsedCurrentDate -and $parsedDesiredDate -lt [System.DateTime]::UtcNow)
                     {
-                        Write-Verbose -Message "Ignoring StartDateTime in ScheduleInfo as it is in the past. StartDateTime cannot be set to a past date."
-                        Write-Verbose -Message "Aligning the Desired and Current StartDateTime values for comparison."
+                        Write-Verbose -Message 'Ignoring StartDateTime in ScheduleInfo as it is in the past. StartDateTime cannot be set to a past date.'
+                        Write-Verbose -Message 'Aligning the Desired and Current StartDateTime values for comparison.'
                         $DesiredValues.SettingsValue.Recurrence.Range.StartDate = $CurrentValues.SettingsValue.Recurrence.Range.StartDate
                     }
                 }

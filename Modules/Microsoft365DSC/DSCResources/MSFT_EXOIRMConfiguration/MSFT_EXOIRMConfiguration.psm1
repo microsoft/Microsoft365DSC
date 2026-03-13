@@ -7,8 +7,8 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -131,9 +131,6 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-            $nullReturn = $PSBoundParameters
-            $nullReturn.Ensure = 'Absent'
-
             $IRMConfiguration = Get-IRMConfiguration -ErrorAction Stop
         }
         else
@@ -203,8 +200,8 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -341,8 +338,8 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -454,7 +451,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -522,7 +519,7 @@ function Export-TargetResource
         $IRMConfiguration = Get-IRMConfiguration -ErrorAction Stop
         $dscContent = ''
         Write-M365DSCHost -Message "`r`n" -DeferWrite
-        Write-M365DSCHost -Message  "    |---[1/1] $($IRMConfiguration.Identity)" -DeferWrite
+        Write-M365DSCHost -Message "    |---[1/1] $($IRMConfiguration.Identity)" -DeferWrite
 
         $Params = @{
             IsSingleInstance      = 'Yes'

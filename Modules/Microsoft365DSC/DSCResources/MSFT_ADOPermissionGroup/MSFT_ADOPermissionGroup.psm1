@@ -71,39 +71,28 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of ADO Permission Group for Organization {$OrganizationName} and Principal {$PrincipalName}"
 
-    $null = New-M365DSCConnection -Workload 'AzureDevOPS' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if ($null -eq $Script:exportedInstances -or -not $Script:ExportMode)
         {
-            if (-not [System.String]::IsNullOrEmpty($Descriptor))
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.descriptor -eq $Descriptor }
-            }
+            $null = New-M365DSCConnection -Workload 'AzureDevOPS' `
+                -InboundParameters $PSBoundParameters
 
-            if ($null -eq $instance)
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.principalName -eq $PrincipalName }
-            }
-        }
-        else
-        {
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
             $uri = "https://vssps.dev.azure.com/$OrganizationName/_apis/graph/groups?api-version=7.1-preview.1"
             $allInstances = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).value
             if (-not [System.String]::IsNullOrEmpty($Descriptor))
@@ -114,10 +103,23 @@ function Get-TargetResource
             {
                 $instance = $allInstances | Where-Object -FilterScript { $_.principalName -eq $PrincipalName }
             }
+
+            if ($null -eq $instance)
+            {
+                return $nullResult
+            }
         }
-        if ($null -eq $instance)
+        else
         {
-            return $nullResult
+            if (-not [System.String]::IsNullOrEmpty($Descriptor))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.descriptor -eq $Descriptor }
+            }
+
+            if ($null -eq $instance)
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.principalName -eq $PrincipalName }
+            }
         }
 
         # Level
@@ -407,7 +409,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

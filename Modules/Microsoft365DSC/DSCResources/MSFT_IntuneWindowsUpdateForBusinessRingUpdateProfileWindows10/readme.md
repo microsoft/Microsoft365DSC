@@ -1,4 +1,3 @@
-
 # IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
 
 ## Description

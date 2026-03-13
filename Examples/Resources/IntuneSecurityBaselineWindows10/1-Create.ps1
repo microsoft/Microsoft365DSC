@@ -29,7 +29,7 @@ Configuration Example
             {
                 Pol_MSS_DisableIPSourceRoutingIPv6 = '1'
                 DisableIPSourceRoutingIPv6 = '0'
-                BlockExecutionOfPotentiallyObfuscatedScripts = 'block'                             
+                BlockExecutionOfPotentiallyObfuscatedScripts = 'block'
                 HardenedUNCPaths_Pol_HardenedPaths = '1'
                 pol_hardenedPaths = @(
                     MSFT_MicrosoftGraphIntuneSettingsCatalogpol_hardenedpaths{

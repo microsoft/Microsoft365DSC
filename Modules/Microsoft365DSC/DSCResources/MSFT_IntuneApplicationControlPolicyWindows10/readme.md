@@ -1,4 +1,3 @@
-
 # IntuneApplicationControlPolicyWindows10
 
 ## Description

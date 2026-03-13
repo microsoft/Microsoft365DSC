@@ -1,4 +1,4 @@
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_AADCrossTenantIdentitySyncPolicyPartner"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADCrossTenantIdentitySyncPolicyPartner'
 
 function Get-TargetResource
 {
@@ -48,41 +48,43 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+    Write-Verbose -Message "Getting Cross-Tenant Identity Sync Policy for Tenant {$CrossTenantAccessPolicyConfigurationPartnerTenantId}"
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        Write-Verbose -Message "Retrieving Cross-Tenant Identity Sync Policy for Tenant {$CrossTenantAccessPolicyConfigurationPartnerTenantId}"
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            Write-Verbose -Message "Retrieving instance from cache."
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.TenantId -eq $CrossTenantAccessPolicyConfigurationPartnerTenantId}
+            Write-Verbose -Message 'Retrieving instance from cache.'
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.TenantId -eq $CrossTenantAccessPolicyConfigurationPartnerTenantId }
         }
         else
         {
-            Write-Verbose -Message "Retrieving instance from API call."
+            Write-Verbose -Message 'Retrieving instance from API call.'
             $instance = Get-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization `
-                            -CrossTenantAccessPolicyConfigurationPartnerTenantId $CrossTenantAccessPolicyConfigurationPartnerTenantId `
-                            -ErrorAction SilentlyContinue
+                -CrossTenantAccessPolicyConfigurationPartnerTenantId $CrossTenantAccessPolicyConfigurationPartnerTenantId `
+                -ErrorAction SilentlyContinue
         }
         if ($null -eq $instance)
         {
-            Write-Verbose -Message "No instance found."
+            Write-Verbose -Message 'No instance found.'
             return $nullResult
         }
 
@@ -267,7 +269,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -277,6 +279,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -325,7 +331,10 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
 
-        $policyPartners = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -All -ErrorAction Stop
+        $policyPartners = Get-MgBetaPolicyCrossTenantAccessPolicyPartner `
+        -All `
+        -Filter $Filter `
+        -ErrorAction Stop
         [array] $Script:exportedInstances = @()
         $i = 1
         $dscContent = ''
@@ -339,8 +348,24 @@ function Export-TargetResource
         }
         foreach ($partner in $policyPartners)
         {
-            $config = Get-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization `
-                -CrossTenantAccessPolicyConfigurationPartnerTenantId $partner.TenantId
+            $config = $null
+            try
+            {
+                $config = Get-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization `
+                    -CrossTenantAccessPolicyConfigurationPartnerTenantId $partner.TenantId `
+                    -ErrorAction Stop
+            }
+            catch
+            {
+                Write-M365DSCHost -Message "    |---[$i/$($policyPartners.Count)] $($partner.TenantId)$Global:M365DSCEmojiRedX" -CommitWrite
+                New-M365DSCLogEntry -Message 'Error during Export:' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+                $i++
+                continue
+            }
 
             $Script:exportedInstances += $config
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)

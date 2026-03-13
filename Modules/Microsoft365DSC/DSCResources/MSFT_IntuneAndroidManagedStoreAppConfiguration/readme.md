@@ -1,4 +1,3 @@
-
 # IntuneAndroidManagedStoreAppConfiguration
 
 ## Description

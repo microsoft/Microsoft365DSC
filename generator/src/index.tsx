@@ -1,9 +1,8 @@
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { mergeStyles } from '@fluentui/react';
 import { initializeIcons } from '@uifabric/icons';
-import reportWebVitals from './reportWebVitals';
-import { ThemeProvider } from '@fluentui/react-theme-provider';
+import { FluentProvider, webLightTheme } from '@fluentui/react-components';
 
 initializeIcons(undefined, { disableWarnings: true });
 
@@ -16,14 +15,9 @@ mergeStyles({
   },
 });
 
-ReactDOM.render(
-  <ThemeProvider>
+const root = createRoot(document.getElementById('root')!);
+root.render(
+  <FluentProvider theme={webLightTheme}>
     <App />
-  </ThemeProvider>,
-  document.getElementById('root')
+  </FluentProvider>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

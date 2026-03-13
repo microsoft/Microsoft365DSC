@@ -98,10 +98,6 @@ function Get-TargetResource
                 -Parameters $PSBoundParameters
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
-
-            $nullReturn = @{
-                Identity = 'Global'
-            }
         }
 
         $config = Get-CsTenantFederationConfiguration -ErrorAction Stop
@@ -361,7 +357,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

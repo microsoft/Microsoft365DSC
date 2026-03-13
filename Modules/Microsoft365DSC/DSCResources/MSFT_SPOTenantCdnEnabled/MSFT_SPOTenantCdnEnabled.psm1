@@ -57,10 +57,10 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message 'Getting configuration of SPO Tenant Cdn Enabled'
+
     try
     {
-        Write-Verbose -Message 'Getting configuration of SPO Tenant Cdn Enabled'
-
         if (-not $Script:ExportMode)
         {
             $null = New-M365DSCConnection -Workload 'PNP' `
@@ -77,10 +77,6 @@ function Get-TargetResource
                 -Parameters $PSBoundParameters
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
-        }
-
-        $nullResult = @{
-            CdnType = $CdnType
         }
 
         $cdnEnabled = Get-PnPTenantCdnEnabled -CdnType $CdnType `
@@ -258,7 +254,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -336,7 +332,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message  "    |---[$i/2] $cType" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/2] $cType" -DeferWrite
             $Params = @{
                 Credential            = $Credential
                 CdnType               = $cType

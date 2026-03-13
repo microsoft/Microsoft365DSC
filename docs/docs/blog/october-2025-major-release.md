@@ -10,13 +10,11 @@ The UnifiedGroupWelcomeMessageEnabled parameter of the EXOGroupsSettings resourc
 
 The following parameters were removed from the EXOHostedContentFIlterPolicy resource given they have been deprecated for some time already:
 
-<ul>
-<li>DownloadLink</li>
-<li>EnableEndUserSpamNotifications</li>
-<li>EndUserSpamNotificationCustomSubject</li>
-<li>EndUserSpamNotificationFrequency</li>
-<li>EndUserSpamNotificationLanguage</li>
-</ul>
+* DownloadLink
+* EnableEndUserSpamNotifications
+* EndUserSpamNotificationCustomSubject
+* EndUserSpamNotificationFrequency
+* EndUserSpamNotificationLanguage
 
 To fix existing configuration files, search for instance of these parameters in the configuration file and remove them.
 
@@ -24,14 +22,12 @@ To fix existing configuration files, search for instance of these parameters in 
 
 We've removed the following 6 resources due to them being deprecated or because of equivlent resource having been created (in the case of IntuneWifiConfigurationPolicyAndroidForWork):
 
-<ul>
-<li>IntuneDeviceCompliancePolicyAndroid</li>
-<li>IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator</li>
-<li>IntuneTrustedRootCertificateAndroidEnterprise</li>
-<li>IntuneVPNConfigurationPolicyAndroidEnterprise</li>
-<li>IntuneWifiConfigurationPolicyAndroidDeviceAdministrator</li>
-<li>IntuneWifiConfigurationPolicyAndroidForWork </li>
-</ul>
+* IntuneDeviceCompliancePolicyAndroid
+* IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
+* IntuneTrustedRootCertificateAndroidEnterprise
+* IntuneVPNConfigurationPolicyAndroidEnterprise
+* IntuneWifiConfigurationPolicyAndroidDeviceAdministrator
+* IntuneWifiConfigurationPolicyAndroidForWork
 
 To fix impacted configurations, simply remove any instances of the listed resources.
 
@@ -47,10 +43,9 @@ In the AADGroupEligibilitySchedule, we've made the AccessId parameter mandatory 
 
 The IntuneAppProtectionPolicyAndroid and IntuneAppProtectionPolicyiOS resources underwent major refactoring as part of this major release. These changes were made to account for generic Intune assignments and to streamline its logic to better align it with other resources. Given the number of changes in the resources, it is recommended that existing instance of the resources in old configurations be reviewed manually to ensure alignment with the new changes. One alternative would be to use the Export/Snapshot feature to extract existing instances of these resources in the new proposed shape and include them as part of your configuration files.
 
-
 ## EXOClientAccessRule Deprecation ([#6379](https://github.com/microsoft/Microsoft365DSC/pull/6379))
 
-The cmdlets associated with the EXOClientAccessRule resource have been deprecated as of September 1st, 2025 [Article] (https://learn.microsoft.com/en-us/powershell/module/exchangepowershell/set-clientaccessrule?view=exchange-ps). To fix your configuration files, simply remove any instances of this resource.
+The cmdlets associated with the EXOClientAccessRule resource have been deprecated as of September 1st, 2025 [Article](https://learn.microsoft.com/en-us/powershell/module/exchangepowershell/set-clientaccessrule?view=exchange-ps). To fix your configuration files, simply remove any instances of this resource.
 
 ## Removal of the SupportsScopeTags Parameter Across Intune Resources ([#6180](https://github.com/microsoft/Microsoft365DSC/pull/6180))
 
@@ -76,26 +71,21 @@ The IntuneASRRulesPolicyWindows10 resource is being deprecated in favor of the I
 
 Parameters that have been marked deprecated since last release have been removed from the resources. In order to fix your configuration files, simply remove these properties when encountered. Here is the full list of resources and their associated deprecated parameters that are now being removed from the solution:
 
-<ul>
-<li><strong>AADApplication:</strong> AvailableToOtherTenants</li>
-<li><strong>AADAuthenticationMethodPolicy:</strong> PolicyMigrationState</li>
-<li><strong>AADAuthenticationMethodPolicyAuthenticator:</strong> NumberMatchingRequiredState</li>
-<li><strong>EXOFocusedInbox:</strong> FocusedInboxOnLastUpdateTime</li>
-<li><strong>EXOHostedCOntentFilterPolicy:</strong> ActionOnError</li>
-<li><strong>EXOSafeAttachmentPolicy:</strong> ActionOnError</li>
-<li><strong>EXOTransportRule:</strong> ApplyOME, ExceptIfHasSenderOverride, ExceptIfMessageContainsDataClassifications, HasSenderOverride, MessageContainsDataClassifications, NotifySender, RemoveOME</li>
-<li><strong>O365OrgSettings:</strong> MicrosoftVivaBriefingEmail</li>
-<li><strong>ODSettings:</strong> NotifyOwnersWhenInvitationsAccepted</li>
-<li><strong>SPOSharingSettings:</strong> RequireAcceptingAccountMatchInvitedAccount </li>
-<li><strong>SPOTenantSettings:</strong> UserVoiceForFeedbackEnabled</li>
-<li><strong>TeamsFederationConfiguration:</strong> AllowPublicUsers</li>
-<li><strong>TeamsMeetingPolicy:</strong> ForceStreamingAttendeeMode</li>
-<li><strong>TeamsShiftPolicy:</strong> EnableShiftPresence</li>
-<li><strong>TeamsTenantDialPlan:</strong> ExternalAccessPrefix, OptimizeDeviceDialing</li>
-<li><strong></strong></li>
-<li><strong></strong></li>
-<li><strong></strong></li>
-</ul>
+* **AADApplication:** AvailableToOtherTenants
+* **AADAuthenticationMethodPolicy:** PolicyMigrationState
+* **AADAuthenticationMethodPolicyAuthenticator:** NumberMatchingRequiredState
+* **EXOFocusedInbox:** FocusedInboxOnLastUpdateTime
+* **EXOHostedCOntentFilterPolicy:** ActionOnError
+* **EXOSafeAttachmentPolicy:** ActionOnError
+* **EXOTransportRule:** ApplyOME, ExceptIfHasSenderOverride, ExceptIfMessageContainsDataClassifications, HasSenderOverride, MessageContainsDataClassifications, NotifySender, RemoveOME
+* **O365OrgSettings:** MicrosoftVivaBriefingEmail
+* **ODSettings:** NotifyOwnersWhenInvitationsAccepted
+* **SPOSharingSettings:** RequireAcceptingAccountMatchInvitedAccount
+* **SPOTenantSettings:** UserVoiceForFeedbackEnabled
+* **TeamsFederationConfiguration:** AllowPublicUsers
+* **TeamsMeetingPolicy:** ForceStreamingAttendeeMode
+* **TeamsShiftPolicy:** EnableShiftPresence
+* **TeamsTenantDialPlan:** ExternalAccessPrefix, OptimizeDeviceDialing
 
 ## IntuneAccountProtection Resource is Removed ([#6510](https://github.com/microsoft/Microsoft365DSC/pull/6510))
 

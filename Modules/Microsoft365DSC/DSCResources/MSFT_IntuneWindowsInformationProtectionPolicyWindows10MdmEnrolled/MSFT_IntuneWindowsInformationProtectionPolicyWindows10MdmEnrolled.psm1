@@ -114,8 +114,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -179,7 +179,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Could not find an Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with Id {$Id}"
 
-            if (-Not [string]::IsNullOrEmpty($DisplayName))
+            if (-not [string]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
                     -All `
@@ -796,8 +796,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -839,7 +839,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -952,7 +952,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.DataRecoveryCertificate `
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionDataRecoveryCertificate'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.DataRecoveryCertificate = $complexTypeStringResult
                 }
@@ -966,7 +966,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.EnterpriseInternalProxyServers `
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionResourceCollection'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.EnterpriseInternalProxyServers = $complexTypeStringResult
                 }
@@ -994,7 +994,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionIPRangeCollection' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.EnterpriseIPRanges = $complexTypeStringResult
                 }
@@ -1008,7 +1008,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.EnterpriseNetworkDomainNames `
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionResourceCollection'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.EnterpriseNetworkDomainNames = $complexTypeStringResult
                 }
@@ -1022,7 +1022,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.EnterpriseProtectedDomainNames `
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionResourceCollection'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.EnterpriseProtectedDomainNames = $complexTypeStringResult
                 }
@@ -1050,7 +1050,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionProxiedDomainCollection' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.EnterpriseProxiedDomains = $complexTypeStringResult
                 }
@@ -1064,7 +1064,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.EnterpriseProxyServers `
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionResourceCollection'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.EnterpriseProxyServers = $complexTypeStringResult
                 }
@@ -1078,7 +1078,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.ExemptApps `
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionApp'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.ExemptApps = $complexTypeStringResult
                 }
@@ -1092,7 +1092,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.NeutralDomainResources `
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionResourceCollection'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.NeutralDomainResources = $complexTypeStringResult
                 }
@@ -1106,7 +1106,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.ProtectedApps `
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionApp'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.ProtectedApps = $complexTypeStringResult
                 }
@@ -1120,7 +1120,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.SmbAutoEncryptedFileExtensions `
                     -CIMInstanceName 'MicrosoftGraphwindowsInformationProtectionResourceCollection'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.SmbAutoEncryptedFileExtensions = $complexTypeStringResult
                 }
@@ -1147,9 +1147,9 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('DataRecoveryCertificate', 'EnterpriseInternalProxyServers', 'EnterpriseIPRanges',
-                    'EnterpriseNetworkDomainNames', 'EnterpriseProtectedDomainNames', 'EnterpriseProxiedDomains',
-                    'EnterpriseProxyServers', 'ExemptApps', 'NeutralDomainResources', 'ProtectedApps',
-                    'SmbAutoEncryptedFileExtensions', 'Assignments')
+                'EnterpriseNetworkDomainNames', 'EnterpriseProtectedDomainNames', 'EnterpriseProxiedDomains',
+                'EnterpriseProxyServers', 'ExemptApps', 'NeutralDomainResources', 'ProtectedApps',
+                'SmbAutoEncryptedFileExtensions', 'Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

@@ -7,18 +7,16 @@ import { SideNavigation } from '../../components/SideNavigation/SideNavigation';
 import { GeneratorPanel } from '../../components/GeneratorPanel/GeneratorPanel';
 import { ExtractionType } from '../../models/ExtractionType';
 import { Generator } from '../../components/Generator/Generator';
-import { selectedResourcesState } from '../../state/resourcesState';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { extractionTypeState } from '../../state/extractionTypeState';
-import { workloadsState } from '../../state/workloadState';
-import { generatorPanelState } from '../../state/generatorPanelState';
+import { useAppStore } from '../../state/store';
 
 export const GeneratorPage: React.FunctionComponent = () => {
-  const extractionType = useRecoilValue(extractionTypeState);
-  const [generatorPanelOpen, setGeneratorPanelOpen] = useRecoilState(generatorPanelState);
+  const extractionType = useAppStore((s) => s.extractionType);
+  const generatorPanelOpen = useAppStore((s) => s.generatorPanelOpen);
+  const setGeneratorPanelOpen = useAppStore((s) => s.setGeneratorPanelOpen);
   const [navigationItems, setNavigationItems] = React.useState<INavLinkGroup[]>([]);
-  const [selectedResources, setSelectedResources] = useRecoilState(selectedResourcesState);
-  const [workloads, setWorkloads] = useRecoilState(workloadsState);
+  const setSelectedResources = useAppStore((s) => s.setSelectedResources);
+  const workloads = useAppStore((s) => s.workloads);
+  const setWorkloads = useAppStore((s) => s.setWorkloads);
 
   const _isResourceChecked = React.useCallback(
     (resource: Resource) => {
@@ -121,8 +119,8 @@ export const GeneratorPage: React.FunctionComponent = () => {
   }, [workloads, _buildResourcesForExtractionType, setSelectedResources, setNavigationItems, _buildNavigationItems]);
 
   React.useEffect(() => {
-    if (workloads && workloads.length > 0 && selectedResources && selectedResources.length > 0) {
-      setSelectedResources(_buildResourcesForExtractionType(selectedResources));
+    if (workloads && workloads.length > 0) {
+      setSelectedResources((prev) => prev.length > 0 ? _buildResourcesForExtractionType(prev) : prev);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [extractionType, setSelectedResources, _buildResourcesForExtractionType]);

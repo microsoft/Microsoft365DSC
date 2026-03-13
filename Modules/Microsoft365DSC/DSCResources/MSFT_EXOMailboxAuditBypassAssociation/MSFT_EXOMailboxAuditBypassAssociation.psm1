@@ -65,8 +65,8 @@ function Get-TargetResource
 
             # We need the Where-Object clause because calling the cmdlet by Identity only can retrieve similar
             # patterns.
-            $instance = Get-MailboxAuditBypassAssociation -Identity $Identity.Replace("`r",'') -ErrorAction SilentlyContinue
-            $instance = $instance | Where-Object -FilterScript {$_.Identity -eq $Identity.Replace("`r",'')}
+            $instance = Get-MailboxAuditBypassAssociation -Identity $Identity.Replace("`r", '') -ErrorAction SilentlyContinue
+            $instance = $instance | Where-Object -FilterScript { $_.Identity -eq $Identity.Replace("`r", '') }
             if ($null -eq $instance)
             {
                 Write-Verbose -Message "Mailbox Audit Bypass Association with Identity $Identity not found"
@@ -154,10 +154,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentInstance = Get-TargetResource @PSBoundParameters
-
+    $null = Get-TargetResource @PSBoundParameters
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
     Set-MailboxAuditBypassAssociation @SetParameters
 }
 
@@ -210,7 +208,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -282,7 +280,7 @@ function Export-TargetResource
             $displayedKey = $config.Identity
             Write-M365DSCHost -Message "    |---[$i/$($associations.Count)] $displayedKey" -DeferWrite
             $params = @{
-                Identity              = $config.Identity.Replace("`r","")
+                Identity              = $config.Identity.Replace("`r", '')
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

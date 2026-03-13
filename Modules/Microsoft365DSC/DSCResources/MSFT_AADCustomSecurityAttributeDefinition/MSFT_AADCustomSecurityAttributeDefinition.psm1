@@ -423,8 +423,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -568,7 +568,7 @@ function Get-CompareParameters
 
     return @{
         IncludedProperties = @('ValueId', 'IsActive')
-        PostProcessing = {
+        PostProcessing     = {
             param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
             # Values cannot be removed from AllowedValues
             # Therefore, we add the missing values from CurrentValues to DesiredValues for comparison
@@ -585,7 +585,7 @@ function Get-CompareParameters
                         {
                             $DesiredValues.AllowedValues += New-CimInstance -ClassName MSFT_CustomSecurityAttributeAllowedValue -Property @{
                                 IsActive = $currentValue.IsActive
-                                ValueId = $currentValue.ValueId
+                                ValueId  = $currentValue.ValueId
                             } -Namespace root/Microsoft/Windows/DesiredStateConfiguration -ClientOnly
                         }
                         else
@@ -593,8 +593,8 @@ function Get-CompareParameters
                             $DesiredValues.AllowedValues = @($DesiredValues.AllowedValues)
                             $DesiredValues.AllowedValues += @{
                                 CIMInstance = 'MSFT_CustomSecurityAttributeAllowedValue'
-                                IsActive = $currentValue.IsActive
-                                ValueId = $currentValue.ValueId
+                                IsActive    = $currentValue.IsActive
+                                ValueId     = $currentValue.ValueId
                             }
                         }
                     }

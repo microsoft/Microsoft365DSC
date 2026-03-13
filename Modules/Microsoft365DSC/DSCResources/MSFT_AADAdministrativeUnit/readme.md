@@ -1,4 +1,3 @@
-
 # AADAdministrativeUnit
 
 ## Description

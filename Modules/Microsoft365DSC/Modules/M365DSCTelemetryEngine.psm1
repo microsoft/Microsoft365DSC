@@ -141,15 +141,15 @@ function Add-M365DSCTelemetryEvent
                     $currentUserId = $currentUser.id
 
                     $assignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "principalId eq '$currentUserId'" `
-                                    -Property @('RoleDefinitionId', 'DirectoryScopeId') -All -ErrorAction 'SilentlyContinue'
+                        -Property @('RoleDefinitionId', 'DirectoryScopeId') -All -ErrorAction 'SilentlyContinue'
 
                     if ($null -ne $assignments)
                     {
                         $roles = Get-MgBetaRoleManagementDirectoryRoleDefinition -All `
-                                    -Property @('Id', 'DisplayName')
+                            -Property @('Id', 'DisplayName')
                         foreach ($assignment in $assignments)
                         {
-                            $role = $roles | Where-Object -FilterScript {$_.Id -eq $assignment.RoleDefinitionId}
+                            $role = $roles | Where-Object -FilterScript { $_.Id -eq $assignment.RoleDefinitionId }
                             if ($null -ne $role)
                             {
                                 $Script:M365DSCCurrentRoles += $role.DisplayName + '|' + $assignment.DirectoryScopeId
@@ -174,18 +174,18 @@ function Add-M365DSCTelemetryEvent
 
                         $Script:M365DSCCurrentRoles = @()
                         $sp = Get-MgServicePrincipal -Filter "AppId eq '$($telemetryParameters.ApplicationId)'" `
-                                -ErrorAction 'SilentlyContinue'
+                            -ErrorAction 'SilentlyContinue'
                         if ($null -ne $sp)
                         {
                             $assignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "principalId eq '$($sp.Id)'" `
-                                        -Property @('RoleDefinitionId', 'DirectoryScopeId') -All -ErrorAction 'SilentlyContinue'
+                                -Property @('RoleDefinitionId', 'DirectoryScopeId') -All -ErrorAction 'SilentlyContinue'
                             if ($null -ne $assignments)
                             {
                                 $roles = Get-MgBetaRoleManagementDirectoryRoleDefinition -All `
-                                            -Property @('Id', 'DisplayName')
+                                    -Property @('Id', 'DisplayName')
                                 foreach ($assignment in $assignments)
                                 {
-                                    $role = $roles | Where-Object -FilterScript {$_.Id -eq $assignment.RoleDefinitionId}
+                                    $role = $roles | Where-Object -FilterScript { $_.Id -eq $assignment.RoleDefinitionId }
                                     if ($null -ne $role)
                                     {
                                         $Script:M365DSCCurrentRoles += $role.DisplayName + '|' + $assignment.DirectoryScopeId
@@ -354,20 +354,20 @@ function Add-M365DSCTelemetryEvent
                 $Data.Resource = $Data.Resource.Replace('MSFT_', '')
             }
 
-            if ($Type -eq "ExportCompleted")
+            if ($Type -eq 'ExportCompleted')
             {
                 if ($null -ne $Global:M365DSCExportResourceInstancesCount)
                 {
-                    $Data.Add("ExportedResourceInstancesCount", $Global:M365DSCExportResourceInstancesCount)
+                    $Data.Add('ExportedResourceInstancesCount', $Global:M365DSCExportResourceInstancesCount)
                 }
                 if ($null -ne $Global:M365DSCExportResourceTypes)
                 {
-                    $Data.Add("ExportedResourceTypes", $Global:M365DSCExportResourceTypes)
-                    $Data.Add("ExportedResourceTypesCount", $Global:M365DSCExportResourceTypes.Length)
+                    $Data.Add('ExportedResourceTypes', $Global:M365DSCExportResourceTypes)
+                    $Data.Add('ExportedResourceTypesCount', $Global:M365DSCExportResourceTypes.Length)
                 }
-                if($null -ne $Global:M365DSCExportContentSize)
+                if ($null -ne $Global:M365DSCExportContentSize)
                 {
-                    $Data.Add("ExportedContentSize", $Global:M365DSCExportContentSize)
+                    $Data.Add('ExportedContentSize', $Global:M365DSCExportContentSize)
                 }
             }
 
@@ -456,7 +456,7 @@ function Add-M365DSCTelemetryEvent
                 Write-Verbose -Message $_
             }
 
-            $M365DSCTelemetryEventId = (New-GUID).ToString()
+            $M365DSCTelemetryEventId = (New-Guid).ToString()
             $Data.Add('M365DSCTelemetryEventId', $M365DSCTelemetryEventId)
 
             if ([System.String]::IsNullOrEMpty($Type))

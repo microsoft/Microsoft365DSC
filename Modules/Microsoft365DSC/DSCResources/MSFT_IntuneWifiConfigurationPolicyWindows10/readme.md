@@ -1,4 +1,3 @@
-
 # IntuneWifiConfigurationPolicyWindows10
 
 ## Description

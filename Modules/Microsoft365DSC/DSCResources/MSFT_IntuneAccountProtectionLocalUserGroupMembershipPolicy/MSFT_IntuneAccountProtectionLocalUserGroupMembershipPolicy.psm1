@@ -31,8 +31,8 @@ function Get-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -146,12 +146,30 @@ function Get-TargetResource
                 $member = $group.desc[$i]
                 switch ($member)
                 {
-                    "S-1-5-32-544" { $member = "administrators" }
-                    "S-1-5-32-545" { $member = "users" }
-                    "S-1-5-32-546" { $member = "guests" }
-                    "S-1-5-32-547" { $member = "powerusers" }
-                    "S-1-5-32-555" { $member = "remotedesktopusers" }
-                    "S-1-5-32-580" { $member = "RemoteManagementUsers" }
+                    'S-1-5-32-544'
+                    {
+                        $member = 'administrators'
+                    }
+                    'S-1-5-32-545'
+                    {
+                        $member = 'users'
+                    }
+                    'S-1-5-32-546'
+                    {
+                        $member = 'guests'
+                    }
+                    'S-1-5-32-547'
+                    {
+                        $member = 'powerusers'
+                    }
+                    'S-1-5-32-555'
+                    {
+                        $member = 'remotedesktopusers'
+                    }
+                    'S-1-5-32-580'
+                    {
+                        $member = 'RemoteManagementUsers'
+                    }
                 }
                 $group.desc[$i] = $member
             }
@@ -222,8 +240,8 @@ function Set-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -283,12 +301,30 @@ function Set-TargetResource
             $member = $group.desc[$i]
             switch ($member)
             {
-                "administrators" { $member = "S-1-5-32-544" }
-                "users" { $member = "S-1-5-32-545" }
-                "guests" { $member = "S-1-5-32-546" }
-                "powerusers" { $member = "S-1-5-32-547" }
-                "remotedesktopusers" { $member = "S-1-5-32-555" }
-                "RemoteManagementUsers" { $member = "S-1-5-32-580" }
+                'administrators'
+                {
+                    $member = 'S-1-5-32-544'
+                }
+                'users'
+                {
+                    $member = 'S-1-5-32-545'
+                }
+                'guests'
+                {
+                    $member = 'S-1-5-32-546'
+                }
+                'powerusers'
+                {
+                    $member = 'S-1-5-32-547'
+                }
+                'remotedesktopusers'
+                {
+                    $member = 'S-1-5-32-555'
+                }
+                'RemoteManagementUsers'
+                {
+                    $member = 'S-1-5-32-580'
+                }
             }
             $group.desc[$i] = $member
         }
@@ -393,8 +429,8 @@ function Test-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -436,7 +472,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

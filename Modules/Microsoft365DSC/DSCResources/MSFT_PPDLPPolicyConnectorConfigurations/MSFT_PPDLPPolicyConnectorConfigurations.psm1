@@ -72,8 +72,8 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-                "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
+            $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+                '/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01'
 
             $policies = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
 
@@ -96,8 +96,8 @@ function Get-TargetResource
             return $nullResult
         }
 
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/PowerPlatform.Governance/v1/tenants/$($PPTenantId)/policies/$($policy.Name)/policyconnectorconfigurations"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            "/providers/PowerPlatform.Governance/v1/tenants/$($PPTenantId)/policies/$($policy.Name)/policyconnectorconfigurations"
 
         $ActionList = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
         $ActionsValue = @()
@@ -210,8 +210,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-        "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
+    $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+        '/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01'
 
     $policies = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
 
@@ -251,8 +251,8 @@ function Set-TargetResource
         $payload = $(ConvertTo-Json $body -Depth 9 -Compress)
         Write-Verbose -Message "Setting Connector Configuration for Policy {$($PolicyNameValue)} with parameters:`r`n$payload"
 
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/PowerPlatform.Governance/v1/tenants/$($PPTenantId)/policies/$($policy.Name)/policyconnectorconfigurations"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            "/providers/PowerPlatform.Governance/v1/tenants/$($PPTenantId)/policies/$($policy.Name)/policyconnectorconfigurations"
 
         Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST' -Body $body
     }
@@ -260,8 +260,8 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Removing Connector Configuration for Policy {$($PolicyNameValue)}"
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/PowerPlatform.Governance/v1/tenants/$($PPTenantId)/policies/$($policy.Name)/policyconnectorconfigurations"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            "/providers/PowerPlatform.Governance/v1/tenants/$($PPTenantId)/policies/$($policy.Name)/policyconnectorconfigurations"
 
         Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'DELETE'
     }
@@ -325,7 +325,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -381,8 +381,8 @@ function Export-TargetResource
 
     try
     {
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            '/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01'
 
         [array]$policies = (Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET').value
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -433,7 +433,7 @@ function Export-TargetResource
                     -ComplexObject $Results.ConnectorActionConfigurations `
                     -CIMInstanceName 'PPDLPPolicyConnectorConfigurationsAction' `
                     -ComplexTypeMapping $complexMapping
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.ConnectorActionConfigurations = $complexTypeStringResult
                 }

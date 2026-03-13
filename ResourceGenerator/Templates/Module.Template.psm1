@@ -8,8 +8,8 @@ function Get-TargetResource
 <ParameterBlock><AssignmentsParam>        #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -125,8 +125,8 @@ function Set-TargetResource
         #region resource generator code
 <ParameterBlock><AssignmentsParam>        #endregion
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -215,8 +215,8 @@ function Test-TargetResource
 <ParameterBlock><AssignmentsParam>        #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]

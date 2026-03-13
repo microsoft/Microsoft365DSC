@@ -1,4 +1,3 @@
-
 # AADAuthenticationMethodPolicySms
 
 ## Description

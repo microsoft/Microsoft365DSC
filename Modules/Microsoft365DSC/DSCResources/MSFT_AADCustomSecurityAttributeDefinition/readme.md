@@ -1,4 +1,3 @@
-
 # AADCustomSecurityAttributeDefinition
 
 ## Description

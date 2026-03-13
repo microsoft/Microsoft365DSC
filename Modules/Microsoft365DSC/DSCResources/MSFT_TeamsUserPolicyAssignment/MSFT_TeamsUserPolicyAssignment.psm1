@@ -811,7 +811,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -882,7 +882,7 @@ function Export-TargetResource
             {
                 $totalCount = 1
             }
-            Write-M365DSCHost -Message  "    |---[$j/$totalCount] Policy Assignment(s) for user {$($user.UserPrincipalName)}" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$j/$totalCount] Policy Assignment(s) for user {$($user.UserPrincipalName)}" -DeferWrite
             $getParams = @{
                 User                  = $user.UserPrincipalName
                 Credential            = $Credential

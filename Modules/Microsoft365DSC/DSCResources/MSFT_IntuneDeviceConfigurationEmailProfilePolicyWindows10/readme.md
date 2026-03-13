@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationEmailProfilePolicyWindows10
 
 ## Description

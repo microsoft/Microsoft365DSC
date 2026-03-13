@@ -1,4 +1,3 @@
-
 # IntuneMobileAppsLobAppMsiWindows10
 
 ## Description

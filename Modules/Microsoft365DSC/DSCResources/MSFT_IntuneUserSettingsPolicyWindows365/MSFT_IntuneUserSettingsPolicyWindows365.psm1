@@ -1,4 +1,4 @@
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_IntuneUserSettingsPolicyWindows365"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneUserSettingsPolicyWindows365'
 
 function Get-TargetResource
 {
@@ -41,8 +41,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -103,7 +103,7 @@ function Get-TargetResource
             #region resource generator code
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaDeviceManagementVirtualEndpointUserSetting -CloudPcUserSettingId $Id -ExpandProperty "assignments" -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaDeviceManagementVirtualEndpointUserSetting -CloudPcUserSettingId $Id -ExpandProperty 'assignments' -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $getValue)
@@ -114,7 +114,7 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementVirtualEndpointUserSetting `
                         -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
-                        -ExpandProperty "assignments" `
+                        -ExpandProperty 'assignments' `
                         -ErrorAction SilentlyContinue
                 }
             }
@@ -156,7 +156,7 @@ function Get-TargetResource
         {
             $complexDisasterRecoveryNetworkSetting = $null
         }
-        $complexCrossRegionDisasterRecoverySetting.Add('DisasterRecoveryNetworkSetting',$complexDisasterRecoveryNetworkSetting)
+        $complexCrossRegionDisasterRecoverySetting.Add('DisasterRecoveryNetworkSetting', $complexDisasterRecoveryNetworkSetting)
         if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.AdditionalProperties.disasterRecoveryType)
         {
             $complexCrossRegionDisasterRecoverySetting.Add('DisasterRecoveryType', $getValue.CrossRegionDisasterRecoverySetting.AdditionalProperties.disasterRecoveryType)
@@ -272,8 +272,8 @@ function Set-TargetResource
         $Assignments,
         #endregion
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -343,7 +343,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune User Settings Policy for Windows365 with DisplayName {$DisplayName}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $createParameters = ([Hashtable]$boundParameters).Clone()
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
@@ -375,7 +375,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune User Settings Policy for Windows365 with Id {$($currentInstance.Id)}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
@@ -453,8 +453,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -501,7 +501,7 @@ function Test-TargetResource
     }
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -564,7 +564,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaDeviceManagementVirtualEndpointUserSetting `
             -Filter $Filter `
-            -ExpandProperty "assignments" `
+            -ExpandProperty 'assignments' `
             -All `
             -ErrorAction Stop
         #endregion
@@ -610,14 +610,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'CrossRegionDisasterRecoverySetting'
+                        Name            = 'CrossRegionDisasterRecoverySetting'
                         CimInstanceName = 'MicrosoftGraphCloudPcCrossRegionDisasterRecoverySetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'DisasterRecoveryNetworkSetting'
+                        Name            = 'DisasterRecoveryNetworkSetting'
                         CimInstanceName = 'MicrosoftGraphCloudPcDisasterRecoveryNetworkSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `

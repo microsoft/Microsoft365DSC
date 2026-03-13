@@ -265,8 +265,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -276,6 +276,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter = "*",
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -322,7 +326,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-CsTenantNetworkSubnet -ErrorAction Stop
+        [array]$getValue = Get-CsTenantNetworkSubnet -Filter $Filter -ErrorAction Stop
 
         $i = 1
         $dscContent = ''

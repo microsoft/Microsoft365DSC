@@ -77,7 +77,7 @@ function Get-TargetResource
         $SingleSignOnSettings,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "lockScreen", "homeScreen", "lockAndHomeScreens")]
+        [ValidateSet('notConfigured', 'lockScreen', 'homeScreen', 'lockAndHomeScreens')]
         [System.String]
         $WallpaperDisplayLocation,
 
@@ -95,8 +95,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -135,7 +135,7 @@ function Get-TargetResource
         if (-not $Script:exportedInstance)
         {
             $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
+                -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
             Confirm-M365DSCDependencies
@@ -161,9 +161,9 @@ function Get-TargetResource
             if ($null -eq $getValue)
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                -FilterScript { `
-                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosDeviceFeaturesConfiguration' `
-                }
+                    -FilterScript { `
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosDeviceFeaturesConfiguration' `
+                    }
             }
             #endregion
 
@@ -184,7 +184,7 @@ function Get-TargetResource
 
         #value could be bool, string or int - export as a string and handle later
         $complexIosSingleSignonExtension = Convert-ComplexObjectToHashtableArray_ExportDataType $getValue.AdditionalProperties.iosSingleSignOnExtension
-        foreach($configuration in $complexIosSingleSignonExtension.configurations)
+        foreach ($configuration in $complexIosSingleSignonExtension.configurations)
         {
             $configuration.value = [string]$configuration.value
         }
@@ -222,8 +222,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
         Write-Verbose -Message "Returning {$DisplayName}"
@@ -316,7 +316,7 @@ function Set-TargetResource
         $SingleSignOnSettings,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "lockScreen", "homeScreen", "lockAndHomeScreens")]
+        [ValidateSet('notConfigured', 'lockScreen', 'homeScreen', 'lockAndHomeScreens')]
         [System.String]
         $WallpaperDisplayLocation,
 
@@ -334,8 +334,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -415,10 +415,10 @@ function Set-TargetResource
                 {
                     if ($icon.ContainsKey('pages'))
                     {
-                        $icon.Add('@odata.type',"#microsoft.graph.iosHomeScreenFolder")
+                        $icon.Add('@odata.type', '#microsoft.graph.iosHomeScreenFolder')
                         continue
                     }
-                    $icon.Add('@odata.type',"#microsoft.graph.iosHomeScreenApp")
+                    $icon.Add('@odata.type', '#microsoft.graph.iosHomeScreenApp')
                 }
             }
         }
@@ -428,10 +428,10 @@ function Set-TargetResource
             {
                 if ($homeScreenDockIcon.ContainsKey('pages'))
                 {
-                    $homeScreenDockIcon.Add('@odata.type',"#microsoft.graph.iosHomeScreenFolder")
+                    $homeScreenDockIcon.Add('@odata.type', '#microsoft.graph.iosHomeScreenFolder')
                     continue
                 }
-                $homeScreenDockIcon.Add('@odata.type',"#microsoft.graph.iosHomeScreenApp")
+                $homeScreenDockIcon.Add('@odata.type', '#microsoft.graph.iosHomeScreenApp')
             }
         }
         if ($CreateParameters.ContentFilterSettings)
@@ -479,14 +479,14 @@ function Set-TargetResource
         {
             if ($UpdateParameters[$key].GetType().Fullname -like '*CimInstance*')
             {
-            Write-Verbose -Message "Converting CIM {$UpdateParameters[$key]}"
+                Write-Verbose -Message "Converting CIM {$UpdateParameters[$key]}"
                 $UpdateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
             }
         }
 
         #update params need some processing to get payload in correct format
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.iosDeviceFeaturesConfiguration') #add odata type or payload will be rejected
-        if($UpdateParameters.WallpaperImage)
+        if ($UpdateParameters.WallpaperImage)
         {
             $UpdateParameters['WallpaperImage'] = $UpdateParameters.WallpaperImage[0] #needs the hashtable not embedded in array
             $UpdateParameters.WallpaperImage['value'] = [Convert]::FromBase64String($UpdateParameters.WallpaperImage['value'])
@@ -499,10 +499,10 @@ function Set-TargetResource
                 {
                     if ($icon.ContainsKey('pages'))
                     {
-                        $icon.Add('@odata.type',"#microsoft.graph.iosHomeScreenFolder")
+                        $icon.Add('@odata.type', '#microsoft.graph.iosHomeScreenFolder')
                         continue
                     }
-                    $icon.Add('@odata.type',"#microsoft.graph.iosHomeScreenApp")
+                    $icon.Add('@odata.type', '#microsoft.graph.iosHomeScreenApp')
                 }
             }
         }
@@ -512,10 +512,10 @@ function Set-TargetResource
             {
                 if ($homeScreenDockIcon.ContainsKey('pages'))
                 {
-                    $homeScreenDockIcon.Add('@odata.type',"#microsoft.graph.iosHomeScreenFolder")
+                    $homeScreenDockIcon.Add('@odata.type', '#microsoft.graph.iosHomeScreenFolder')
                     continue
                 }
-                $homeScreenDockIcon.Add('@odata.type',"#microsoft.graph.iosHomeScreenApp")
+                $homeScreenDockIcon.Add('@odata.type', '#microsoft.graph.iosHomeScreenApp')
             }
         }
         if ($UpdateParameters.ContentFilterSettings)
@@ -539,7 +539,7 @@ function Set-TargetResource
         #finished processing update parameters
 
         #region resource generator code
-        Update-MgBetaDeviceManagementDeviceConfiguration  -BodyParameter $UpdateParameters `
+        Update-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
@@ -632,7 +632,7 @@ function Test-TargetResource
         $SingleSignOnSettings,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "lockScreen", "homeScreen", "lockAndHomeScreens")]
+        [ValidateSet('notConfigured', 'lockScreen', 'homeScreen', 'lockAndHomeScreens')]
         [System.String]
         $WallpaperDisplayLocation,
 
@@ -650,8 +650,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -693,7 +693,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -813,7 +813,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.AirPrintDestinations `
                     -CIMInstanceName 'MSFT_airPrintDestination'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.AirPrintDestinations = $complexTypeStringResult
                 }
@@ -827,21 +827,21 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'websiteList'
+                        Name            = 'websiteList'
                         CimInstanceName = 'iosWebContentFilterBase'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                     @{
-                        Name = 'specificWebsitesOnly'
+                        Name            = 'specificWebsitesOnly'
                         CimInstanceName = 'iosWebContentFilterBase'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.ContentFilterSettings `
                     -CIMInstanceName 'MSFT_iosWebContentFilterSpecificWebsitesAccess' `
                     -ComplexTypeMapping $complexMapping
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.ContentFilterSettings = $complexTypeStringResult
                 }
@@ -855,21 +855,21 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'pages'
+                        Name            = 'pages'
                         CimInstanceName = 'MSFT_iosHomeScreenFolderPage'
-                        IsRequired = $false
+                        IsRequired      = $false
                     },
                     @{
-                        Name = 'apps'
+                        Name            = 'apps'
                         CimInstanceName = 'iosHomeScreenApp'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.HomeScreenDockIcons `
                     -CIMInstanceName 'MSFT_iosHomeScreenApp' `
                     -ComplexTypeMapping $complexMapping
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.HomeScreenDockIcons = $complexTypeStringResult
                 }
@@ -883,26 +883,26 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'icons'
+                        Name            = 'icons'
                         CimInstanceName = 'iosHomeScreenApp'
-                        IsRequired = $false
+                        IsRequired      = $false
                     },
                     @{
-                        Name = 'pages'
+                        Name            = 'pages'
                         CimInstanceName = 'MSFT_iosHomeScreenFolderPage'
-                        IsRequired = $false
+                        IsRequired      = $false
                     },
                     @{
-                        Name = 'apps'
+                        Name            = 'apps'
                         CimInstanceName = 'iosHomeScreenApp'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.HomeScreenPages `
                     -CIMInstanceName 'MSFT_iosHomeScreenItem' `
                     -ComplexTypeMapping $complexMapping
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.HomeScreenPages = $complexTypeStringResult
                 }
@@ -917,7 +917,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.WallpaperImage `
                     -CIMInstanceName 'MSFT_mimeContent'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.WallpaperImage = $complexTypeStringResult
                 }
@@ -931,16 +931,16 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'configurations'
+                        Name            = 'configurations'
                         CimInstanceName = 'keyTypedValuePair'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.IosSingleSignOnExtension `
                     -CIMInstanceName 'MSFT_iosSingleSignOnExtension' `
                     -ComplexTypeMapping $complexMapping
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.IosSingleSignOnExtension = $complexTypeStringResult
                 }
@@ -955,7 +955,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.NotificationSettings `
                     -CIMInstanceName 'MSFT_iosNotificationSettings'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.NotificationSettings = $complexTypeStringResult
                 }
@@ -969,16 +969,16 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'allowedAppsList'
+                        Name            = 'allowedAppsList'
                         CimInstanceName = 'appListItem'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.SingleSignOnSettings `
                     -CIMInstanceName 'MSFT_iosSingleSignOnSettings' `
                     -ComplexTypeMapping $complexMapping
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.SingleSignOnSettings = $complexTypeStringResult
                 }
@@ -1006,7 +1006,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -1023,7 +1023,8 @@ function Export-TargetResource
     }
 }
 
-function Convert-ComplexObjectToHashtableArray {
+function Convert-ComplexObjectToHashtableArray
+{
     param
     (
         [Parameter()]
@@ -1032,17 +1033,19 @@ function Convert-ComplexObjectToHashtableArray {
 
     $resultArray = @()
 
-    foreach ($item in $InputObject) {
+    foreach ($item in $InputObject)
+    {
         $hashtable = [ordered]@{}
 
-        foreach ($key in $item.Keys) {
+        foreach ($key in $item.Keys)
+        {
             $keyValue = $item.$key
             if ($key -ne '@odata.type')
             {
                 if ($keyValue -is [array])
                 {
                     $elementTypes = $keyValue | ForEach-Object { $_.GetType().Name }
-                    if($elementTypes -contains 'Dictionary`2') #another embedded complex type, not a string array
+                    if ($elementTypes -contains 'Dictionary`2') #another embedded complex type, not a string array
                     {
                         $keyValue = Convert-ComplexObjectToHashtableArray $keyValue #recurse the function
                     }
@@ -1052,15 +1055,17 @@ function Convert-ComplexObjectToHashtableArray {
         }
 
         # Add the hash table to the result array only if it contains non-null values
-        if ($hashtable.Values.Where({ $null -ne $_ }).Count -gt 0) {
+        if ($hashtable.Values.Where({ $null -ne $_ }).Count -gt 0)
+        {
             $resultArray += $hashtable
         }
     }
 
-    return ,$resultArray
+    return , $resultArray
 }
 
-function Convert-ComplexObjectToHashtableArray_ExportDataType {
+function Convert-ComplexObjectToHashtableArray_ExportDataType
+{
     param
     (
         [Parameter()]
@@ -1069,78 +1074,99 @@ function Convert-ComplexObjectToHashtableArray_ExportDataType {
 
     $resultArray = @()
 
-    foreach ($item in $InputObject) {
+    foreach ($item in $InputObject)
+    {
         $hashtable = [ordered]@{}
 
-        foreach ($key in $item.Keys) {
+        foreach ($key in $item.Keys)
+        {
             $keyValue = $item.$key
             if ($key -ne '@odata.type')
             {
                 if ($keyValue -is [array])
                 {
                     $elementTypes = $keyValue | ForEach-Object { $_.GetType().Name }
-                    if($elementTypes -contains 'Dictionary`2') #another embedded complex type, not a string array
+                    if ($elementTypes -contains 'Dictionary`2') #another embedded complex type, not a string array
                     {
                         $keyValue = Convert-ComplexObjectToHashtableArray_ExportDataType $keyValue #recurse the function
                     }
                 }
                 $hashtable.Add($key, $keyValue)
-            }else{
+            }
+            else
+            {
                 $hashtable.Add('dataType', $item.$key)
             }
         }
 
         # Add the hash table to the result array only if it contains non-null values
-        if ($hashtable.Values.Where({ $null -ne $_ }).Count -gt 0) {
+        if ($hashtable.Values.Where({ $null -ne $_ }).Count -gt 0)
+        {
             $resultArray += $hashtable
         }
     }
 
-    return ,$resultArray
+    return , $resultArray
 }
 
-function Convert-StringToBooleans {
+function Convert-StringToBooleans
+{
     param
     (
         [Parameter(Mandatory = $true)]
         [array]$Configurations
     )
 
-    foreach ($config in $Configurations) {
-        if ($config.ContainsKey("value")) {
-            switch ($config.value) {
-                "True"  { $config.value = $true }
-                "False" { $config.value = $false }
+    foreach ($config in $Configurations)
+    {
+        if ($config.ContainsKey('value'))
+        {
+            switch ($config.value)
+            {
+                'True'
+                {
+                    $config.value = $true
+                }
+                'False'
+                {
+                    $config.value = $false
+                }
             }
         }
     }
     return $Configurations
 }
 
-function Convert-DataTypeFormat {
+function Convert-DataTypeFormat
+{
     param
     (
         [Parameter()]
         [Object]$InputObject
     )
-    foreach ($item in $InputObject) {
+    foreach ($item in $InputObject)
+    {
         $keysToModify = @()
         $keysToRecurse = @()
-        foreach ($key in $item.Keys) {
-            if ($key -eq 'dataType') {
+        foreach ($key in $item.Keys)
+        {
+            if ($key -eq 'dataType')
+            {
                 $keysToModify += $key
             }
             if ($item.$key -is [array] -and ($item.$key | Where-Object { $_ -is [hashtable] }))
             {
-            $keysToRecurse += $key
+                $keysToRecurse += $key
             }
         }
-        foreach ($key in $keysToModify) {
+        foreach ($key in $keysToModify)
+        {
 
             $item['@odata.type'] = $item.$key
             $item.Remove($key)
         }
-        foreach ($key in $keysToRecurse) {
+        foreach ($key in $keysToRecurse)
+        {
 
             $item[$key] = Convert-DataTypeFormat $item.$key
         }

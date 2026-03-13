@@ -514,11 +514,6 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-            $nullReturn = @{
-                IsSingleInstance = 'Yes'
-                Ensure = 'Absent'
-            }
-
             $ConfigSettings = Get-OrganizationConfig -ErrorAction SilentlyContinue
             if ($null -eq $ConfigSettings)
             {
@@ -531,7 +526,7 @@ function Get-TargetResource
         }
 
         # DelayedDelicensingEnabledState
-        $DelayedDelicensingEnabledStateParsed = $configSettings.DelayedDelicensingEnabledState.ToString().Split(';')[0].Replace('Enabled: ','')
+        $DelayedDelicensingEnabledStateParsed = $configSettings.DelayedDelicensingEnabledState.ToString().Split(';')[0].Replace('Enabled: ', '')
         $DelayedDelicensingEnabledStateValue = $false
         if ($DelayedDelicensingEnabledStateParsed -eq 'True')
         {
@@ -543,7 +538,7 @@ function Get-TargetResource
         }
 
         # EndUserMailNotificationForDelayedDelicensingEnabled
-        $EndUserMailNotificationForDelayedDelicensingEnabledParsed = $configSettings.EndUserMailNotificationForDelayedDelicensingState.ToString().Split(';')[0].Replace('Enabled: ','')
+        $EndUserMailNotificationForDelayedDelicensingEnabledParsed = $configSettings.EndUserMailNotificationForDelayedDelicensingState.ToString().Split(';')[0].Replace('Enabled: ', '')
         $EndUserMailNotificationForDelayedDelicensingEnabledValue = $false
         if ($EndUserMailNotificationForDelayedDelicensingEnabledParsed -eq 'True')
         {
@@ -555,7 +550,7 @@ function Get-TargetResource
         }
 
         # TenantAdminNotificationForDelayedDelicensingEnabled
-        $TenantAdminNotificationForDelayedDelicensingEnabledParsed = $configSettings.TenantAdminNotificationForDelayedDelicensingState.ToString().Split(';')[0].Replace('Enabled: ','')
+        $TenantAdminNotificationForDelayedDelicensingEnabledParsed = $configSettings.TenantAdminNotificationForDelayedDelicensingState.ToString().Split(';')[0].Replace('Enabled: ', '')
         $TenantAdminNotificationForDelayedDelicensingEnabledValue = $false
         if ($TenantAdminNotificationForDelayedDelicensingEnabledParsed -eq 'True')
         {
@@ -1785,8 +1780,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

@@ -255,7 +255,7 @@ function Set-TargetResource
 
         # Before calling Set-CsTeamsComplianceRecordingPolicy, convert IDs (strings) to ComplianceRecordingApplication objects
         if ($CreateParameters.ContainsKey('ComplianceRecordingApplications') -and `
-            $null -ne $CreateParameters.ComplianceRecordingApplications)
+                $null -ne $CreateParameters.ComplianceRecordingApplications)
         {
             # Fetch ComplianceRecordingApplication objects based on provided IDs
             $appObjects = @()
@@ -342,7 +342,7 @@ function Set-TargetResource
 
         # Before calling Set-CsTeamsComplianceRecordingPolicy, convert IDs (strings) to ComplianceRecordingApplication objects
         if ($UpdateParameters.ContainsKey('ComplianceRecordingApplications') -and `
-            $null -ne $UpdateParameters.ComplianceRecordingApplications)
+                $null -ne $UpdateParameters.ComplianceRecordingApplications)
         {
             # Fetch ComplianceRecordingApplication objects based on provided IDs
             $appObjects = @()
@@ -491,7 +491,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -501,6 +501,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter = "*",
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -547,7 +551,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-CsTeamsComplianceRecordingPolicy -ErrorAction Stop
+        [array]$getValue = Get-CsTeamsComplianceRecordingPolicy -Filter $Filter -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -600,7 +604,7 @@ function Export-TargetResource
                     -CIMInstanceName 'TeamsComplianceRecordingApplication' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.ComplianceRecordingApplications = $complexTypeStringResult
                 }

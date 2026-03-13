@@ -8,7 +8,7 @@ function Get-TargetResource
     (
         #region resource generator code
         [Parameter(Mandatory = $true)]
-        [ValidateSet("cloudPcProvisionScenario", "cloudPcImageUploadScenario", "cloudPcOnPremiseNetworkConnectionCheckScenario", "cloudPcInGracePeriodScenario", "cloudPcFrontlineInsufficientLicensesScenario", "cloudPcInaccessibleScenario", "cloudPcFrontlineConcurrencyScenario", "cloudPcUserSettingsPersistenceScenario", "cloudPcDeprovisionFailedScenario")]
+        [ValidateSet('cloudPcProvisionScenario', 'cloudPcImageUploadScenario', 'cloudPcOnPremiseNetworkConnectionCheckScenario', 'cloudPcInGracePeriodScenario', 'cloudPcFrontlineInsufficientLicensesScenario', 'cloudPcInaccessibleScenario', 'cloudPcFrontlineConcurrencyScenario', 'cloudPcUserSettingsPersistenceScenario', 'cloudPcDeprovisionFailedScenario')]
         [System.String]
         $AlertRuleTemplate,
 
@@ -127,7 +127,7 @@ function Get-TargetResource
         {
             $complexNotificationChannels += [ordered]@{
                 NotificationChannelType = $channel.notificationChannelType
-                NotificationReceivers   = @($channel.notificationReceivers | Foreach-Object {
+                NotificationReceivers   = @($channel.notificationReceivers | ForEach-Object {
                     [ordered]@{
                         ContactInformation = $_.ContactInformation
                         Locale             = $_.locale
@@ -174,7 +174,7 @@ function Set-TargetResource
     (
         #region resource generator code
         [Parameter(Mandatory = $true)]
-        [ValidateSet("cloudPcProvisionScenario", "cloudPcImageUploadScenario", "cloudPcOnPremiseNetworkConnectionCheckScenario", "cloudPcInGracePeriodScenario", "cloudPcFrontlineInsufficientLicensesScenario", "cloudPcInaccessibleScenario", "cloudPcFrontlineConcurrencyScenario", "cloudPcUserSettingsPersistenceScenario", "cloudPcDeprovisionFailedScenario")]
+        [ValidateSet('cloudPcProvisionScenario', 'cloudPcImageUploadScenario', 'cloudPcOnPremiseNetworkConnectionCheckScenario', 'cloudPcInGracePeriodScenario', 'cloudPcFrontlineInsufficientLicensesScenario', 'cloudPcInaccessibleScenario', 'cloudPcFrontlineConcurrencyScenario', 'cloudPcUserSettingsPersistenceScenario', 'cloudPcDeprovisionFailedScenario')]
         [System.String]
         $AlertRuleTemplate,
 
@@ -267,8 +267,8 @@ function Set-TargetResource
     {
         $boundParameters.Add('threshold', @{
             aggregation = $aggregation
-            operator = "greaterOrEqual"
-            target = 1
+            operator    = 'greaterOrEqual'
+            target      = 1
         })
     }
 
@@ -308,7 +308,7 @@ function Test-TargetResource
     (
         #region resource generator code
         [Parameter(Mandatory = $true)]
-        [ValidateSet("cloudPcProvisionScenario", "cloudPcImageUploadScenario", "cloudPcOnPremiseNetworkConnectionCheckScenario", "cloudPcInGracePeriodScenario", "cloudPcFrontlineInsufficientLicensesScenario", "cloudPcInaccessibleScenario", "cloudPcFrontlineConcurrencyScenario", "cloudPcUserSettingsPersistenceScenario", "cloudPcDeprovisionFailedScenario")]
+        [ValidateSet('cloudPcProvisionScenario', 'cloudPcImageUploadScenario', 'cloudPcOnPremiseNetworkConnectionCheckScenario', 'cloudPcInGracePeriodScenario', 'cloudPcFrontlineInsufficientLicensesScenario', 'cloudPcInaccessibleScenario', 'cloudPcFrontlineConcurrencyScenario', 'cloudPcUserSettingsPersistenceScenario', 'cloudPcDeprovisionFailedScenario')]
         [System.String]
         $AlertRuleTemplate,
 
@@ -374,7 +374,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -474,7 +474,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.Conditions `
                     -CIMInstanceName 'IntuneAlertRuleCondition'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.Conditions = $complexTypeStringResult
                 }
@@ -487,14 +487,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'NotificationChannels'
+                        Name            = 'NotificationChannels'
                         CimInstanceName = 'IntuneAlertRuleNotificationChannel'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'NotificationReceivers'
+                        Name            = 'NotificationReceivers'
                         CimInstanceName = 'IntuneAlertRuleNotificationChannelReceiver'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -502,7 +502,7 @@ function Export-TargetResource
                     -CIMInstanceName 'IntuneAlertRuleNotificationChannel' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.NotificationChannels = $complexTypeStringResult
                 }

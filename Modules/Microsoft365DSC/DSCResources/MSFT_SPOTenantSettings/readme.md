@@ -1,5 +1,4 @@
-
-# SPO Tenant Settings
+# SPOTenantSettings
 
 ## Description
 

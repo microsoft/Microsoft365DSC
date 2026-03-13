@@ -1,4 +1,3 @@
-
 # AADIdentityGovernanceLifecycleWorkflowCustomTaskExtension
 
 ## Description

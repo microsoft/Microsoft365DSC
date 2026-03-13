@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
 
 ## Description

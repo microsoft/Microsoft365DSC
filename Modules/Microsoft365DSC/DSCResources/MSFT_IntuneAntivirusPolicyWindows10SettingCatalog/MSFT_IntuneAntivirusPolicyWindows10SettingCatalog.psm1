@@ -397,8 +397,8 @@ function Get-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -475,7 +475,7 @@ function Get-TargetResource
                         -Filter "Name eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue | Where-Object `
                         -FilterScript {
-                        $_.TemplateReference.TemplateId -in $templateReferences
+                            $_.TemplateReference.TemplateId -in $templateReferences
                         }
 
                     if ($policy.Length -gt 1)
@@ -534,6 +534,11 @@ function Get-TargetResource
         {
             $returnHashtable.Add('LowSeverityThreats', $policySettings.LowSeverityThreatDefaultAction)
             $policySettings.Remove('LowSeverityThreatDefaultAction')
+        }
+        if ($policySettings.ContainsKey('EnableDnsSinkhole'))
+        {
+            Write-Warning -Message "The setting 'EnableDnsSinkhole' is deprecated and will be ignored."
+            $policySettings.Remove('EnableDnsSinkhole') | Out-Null
         }
         $returnHashtable += $policySettings
 
@@ -966,8 +971,8 @@ function Set-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -1508,8 +1513,8 @@ function Test-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -1552,8 +1557,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -1714,7 +1719,7 @@ function Get-CompareParameters
     param()
 
     return @{
-        PostProcessing = {
+        PostProcessing     = {
             param($DesiredValues, $CurrentValues, $ValuesToCheck, $PostProcessingArgs)
             $PostProcessingArgs[0] | ForEach-Object {
                 if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))

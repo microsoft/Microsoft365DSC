@@ -219,7 +219,7 @@ function Set-TargetResource
         # Post data sharing consent as granted between Intune and Apple. NOTE: It's a one-way operation. Once agreed, it can't be revoked.
         # so first check if it is $false, then make a post call to agree to the consent, this set the DataSharingConsetGranted to $true.
         $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'appleMDMPushCertificate'
-        If ($consentInstance.Granted -eq $False)
+        if ($consentInstance.Granted -eq $False)
         {
             Invoke-MgGraphRequest -Method POST -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/dataSharingConsents/appleMDMPushCertificate/consentToDataSharing') -Headers @{ 'Content-Type' = 'application/json' }
         }
@@ -319,7 +319,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

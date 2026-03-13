@@ -1,11 +1,9 @@
 import { DefaultButton, Panel, PanelType, PrimaryButton } from '@fluentui/react';
 import Editor from '@monaco-editor/react';
 import * as React from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAppStore } from '../../state/store';
+import { useShallow } from 'zustand/react/shallow';
 import { AuthenticationType } from '../../models/AuthenticationType';
-import { authenticationTypeState } from '../../state/authenticationTypeState';
-import { generatorPanelState } from '../../state/generatorPanelState';
-import { selectedResourcesState } from '../../state/resourcesState';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import './GeneratorPanel.module.css';
 import { ScriptParameter } from '../../models/ScriptParameter';
@@ -15,9 +13,11 @@ export interface IGeneratorPanelProps {
 
 export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (props) => {
   const [isCopied, setIsCopied] = React.useState<boolean>(false);
-  const authenticationType = useRecoilValue(authenticationTypeState);
-  const [selectedResources] = useRecoilState(selectedResourcesState);
-  const setGeneratorPanel = useSetRecoilState(generatorPanelState);
+  const authenticationType = useAppStore((s) => s.authenticationType);
+  const selectedResources = useAppStore(
+    useShallow((s) => s.selectedResources)
+  );
+  const setGeneratorPanel = useAppStore((s) => s.setGeneratorPanelOpen);
 
   const buttonStyles = { root: { marginRight: 8 } };
 
@@ -108,7 +108,7 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
       <div style={{display: 'flex'}}>
         <CopyToClipboard
           text={_getExportScript()}
-          onCopy={(text, result) => { setIsCopied(result); }}>
+          onCopy={(_text, result) => { setIsCopied(result); }}>
           <PrimaryButton iconProps={{iconName: 'PasteAsCode'}} styles={buttonStyles} disabled={isCopied}>
             {isCopied ? "Copied!" : "Copy to clipboard"}
           </PrimaryButton>

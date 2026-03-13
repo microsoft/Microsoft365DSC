@@ -1,4 +1,3 @@
-
 # AADEntitlementManagementAccessPackageCatalog
 
 ## Description

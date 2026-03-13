@@ -1,16 +1,16 @@
 [ClassVersion("1.0.0")]
 class MSFT_AADHomeRealDiscoveryPolicyDefinition
 {
-	[Write, Description("Accelerate to Federated Domain.")] Boolean AccelerateToFederatedDomain;
-	[Write, Description("Allow cloud password validation.")] Boolean AllowCloudPasswordValidation;
-	[Write, Description("AlternateIdLogin complex object."), EmbeddedInstance("MSFT_AADHomeRealDiscoveryPolicyDefinitionAlternateIdLogin")] String AlternateIdLogin;
-	[Write, Description("Preffered Domain value.")] String PreferredDomain;
+    [Write, Description("Accelerate to Federated Domain.")] Boolean AccelerateToFederatedDomain;
+    [Write, Description("Allow cloud password validation.")] Boolean AllowCloudPasswordValidation;
+    [Write, Description("AlternateIdLogin complex object."), EmbeddedInstance("MSFT_AADHomeRealDiscoveryPolicyDefinitionAlternateIdLogin")] String AlternateIdLogin;
+    [Write, Description("Preffered Domain value.")] String PreferredDomain;
 };
 
 [ClassVersion("1.0.0")]
 class MSFT_AADHomeRealDiscoveryPolicyDefinitionAlternateIdLogin
 {
-	[Write, Description("Boolean for whether AlternateIdLogin is enabled.")] Boolean Enabled;
+    [Write, Description("Boolean for whether AlternateIdLogin is enabled.")] Boolean Enabled;
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("AADHomeRealmDiscoveryPolicy")]
@@ -30,4 +30,3 @@ class MSFT_AADHomeRealmDiscoveryPolicy : OMI_BaseResource
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };
-

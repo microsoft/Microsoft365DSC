@@ -1160,7 +1160,7 @@ function Export-TargetResource
                         $group.Remove('sensitivetypes') | Out-Null
                     }
                     $Results.ContentContainsSensitiveInformation = @{
-                        Groups = [array]$Results.ContentContainsSensitiveInformation.groups
+                        Groups   = [array]$Results.ContentContainsSensitiveInformation.groups
                         Operator = $Results.ContentContainsSensitiveInformation.operator
                     }
                 }
@@ -1227,7 +1227,7 @@ function Export-TargetResource
                         $group.Remove('sensitivetypes') | Out-Null
                     }
                     $Results.ExceptIfContentContainsSensitiveInformation = @{
-                        Groups = [array]$Results.ExceptIfContentContainsSensitiveInformation.groups
+                        Groups   = [array]$Results.ExceptIfContentContainsSensitiveInformation.groups
                         Operator = $Results.ExceptIfContentContainsSensitiveInformation.operator
                     }
                 }

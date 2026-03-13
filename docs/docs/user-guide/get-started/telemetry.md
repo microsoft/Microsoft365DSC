@@ -1,10 +1,12 @@
+# Telemetry
+
 By default, Microsoft365DSC is sending telemetry back to Microsoft to help the team improve the solution in a pro-active manner. Information is all captured using Azure Application Insights. We are capturing information about what operations are being called, what any errors were encountered, used authentication types, used PowerShell version, etc.
 
 ## Telemetry Configuration
 
 Users can decide to stop sending telemetry back to Microsoft at any given point by opting out. To do so, simply run the [Set-M365DSCTelemetryOption](../cmdlets/Set-M365DSCTelemetryOption.md) PowerShell command:
 
-```PowerShell
+```powerShell
 Set-M365DSCTelemetryOption -Enabled $false
 ```
 

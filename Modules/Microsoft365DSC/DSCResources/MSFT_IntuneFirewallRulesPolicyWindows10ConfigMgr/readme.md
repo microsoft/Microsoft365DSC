@@ -1,4 +1,3 @@
-
 # IntuneFirewallRulesPolicyWindows10ConfigMgr
 
 ## Description

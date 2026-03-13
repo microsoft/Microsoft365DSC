@@ -1,24 +1,23 @@
 import { IStackTokens, mergeStyles, Stack } from '@fluentui/react';
 import * as React from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useAppStore } from '../../state/store';
 import { Resource } from '../../models/Resource';
-import { selectedResourcesState } from '../../state/resourcesState';
 import { GenerationOptions } from '../GeneratorOptions/GeneratorOptions';
 import { WorkloadOptions } from '../WorkloadOptions/WorkloadOptions';
 
 export interface IGeneratorProps {}
 
 export const Generator: React.FunctionComponent<IGeneratorProps> = (props) => {
-  const setSelectedResources = useSetRecoilState(selectedResourcesState);
+  const setSelectedResources = useAppStore((s) => s.setSelectedResources);
 
-  const _onSelectedResourcesChange = (changedResource: Resource, checked?: boolean) => {
+  const _onSelectedResourcesChange = React.useCallback((changedResource: Resource, checked?: boolean) => {
     setSelectedResources((selectedResources) => {
       return selectedResources.map((resource) => {
         const updatedResource = resource.name === changedResource.name ? { ...resource, checked: checked } : resource;
         return updatedResource;
       });
     });
-  };
+  }, [setSelectedResources]);
 
   const stackTokens: IStackTokens = { childrenGap: 30 };
 

@@ -86,7 +86,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Device Registration Policy"
+    Write-Verbose -Message 'Getting configuration of AzureAD Device Registration Policy'
 
     try
     {
@@ -338,7 +338,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of AzureAD Device Registration Policy"
+    Write-Verbose -Message 'Setting configuration of AzureAD Device Registration Policy'
 
     $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -539,7 +539,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

@@ -3,31 +3,27 @@ import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTheme } from '@fluentui/react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { selectedWorkloadState } from '../../state/selectedWorkloadState';
-import { selectedResourcesState } from '../../state/resourcesState';
+import { useAppStore } from '../../state/store';
+import { useShallow } from 'zustand/react/shallow';
 import { Workload } from '../../models/Workload';
 
 export interface IContentCardProps {
   workload: Workload;
   onSelectAll(workload: Workload, isIndeterminate?: boolean, checked?: boolean): void;
 }
-export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) => {
+export const ContentCard: React.FunctionComponent<React.PropsWithChildren<IContentCardProps>> = (props) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const theme = getTheme();
-  const setSelectedWorkload = useSetRecoilState(selectedWorkloadState);
-  const selectedResources = useRecoilValue(selectedResourcesState);
-
-  const _getWorkloadResources = React.useCallback(() => {
-    return selectedResources.filter((r) => r.workload === props.workload.id);
-  }, [selectedResources, props]);
+  const setSelectedWorkload = useAppStore((s) => s.setSelectedWorkload);
+  const workloadResources = useAppStore(
+    useShallow((s) => s.selectedResources.filter((r) => r.workload === props.workload.id))
+  );
 
   React.useEffect(() => {
-    let workloadResources = _getWorkloadResources();
 
     if (
       workloadResources
@@ -37,6 +33,7 @@ export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) =
         })
     ) {
       setIsChecked(true);
+      setIsIndeterminate(false);
     } else if (
       workloadResources
         .map((r) => r.checked)
@@ -45,16 +42,17 @@ export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) =
         })
     ) {
       setIsChecked(false);
+      setIsIndeterminate(false);
     } else {
       setIsChecked(false);
       setIsIndeterminate(true);
     }
 
     setIsLoading(false);
-  }, [_getWorkloadResources]);
+  }, [workloadResources]);
 
   const _getCheckedWorkloadResources = () => {
-    return _getWorkloadResources().filter((r) => r.checked === true);
+    return workloadResources.filter((r) => r.checked === true);
   };
 
   const contentCardStyles: IStyle = {

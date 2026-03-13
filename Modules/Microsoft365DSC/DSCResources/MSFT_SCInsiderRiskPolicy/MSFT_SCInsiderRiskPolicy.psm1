@@ -828,14 +828,14 @@ function Get-TargetResource
 
             $IRASettingsEnabledValue = $false
             if ($null -ne $tenantSettings.InterpretedSettings -and `
-                -not [System.String]::IsNullOrEmpty($tenantSettings.InterpretedSettings.IRASettings.Enabled))
+                    -not [System.String]::IsNullOrEmpty($tenantSettings.InterpretedSettings.IRASettings.Enabled))
             {
                 $IRASettingsEnabledValue = [Boolean]::Parse($tenantSettings.InterpretedSettings.IRASettings.Enabled)
             }
 
             $InlineAlertPolicyCustomizationValue = $true
             if ($null -ne $tenantSettings.FeatureSettings -and `
-                -not [System.String]::IsNullOrEmpty($tenantSettings.FeatureSettings.InlineAlertPolicyCustomization))
+                    -not [System.String]::IsNullOrEmpty($tenantSettings.FeatureSettings.InlineAlertPolicyCustomization))
             {
                 $InlineAlertPolicyCustomizationValue = [Boolean]::Parse($tenantSettings.FeatureSettings.InlineAlertPolicyCustomization)
             }
@@ -1912,16 +1912,16 @@ function Set-TargetResource
     }
 
     # Tenant Settings
-    $MDATPTriageStatusValue = "["
+    $MDATPTriageStatusValue = '['
     foreach ($status in $MDATPTriageStatus)
     {
         $MDATPTriageStatusValue += "\`"$($status)\`","
     }
     if ($MDATPTriageStatusValue.EndsWith(','))
     {
-        $MDATPTriageStatusValue = $MDATPTriageStatusValue.Substring(0, $MDATPTriageStatusValue.Length -1)
+        $MDATPTriageStatusValue = $MDATPTriageStatusValue.Substring(0, $MDATPTriageStatusValue.Length - 1)
     }
-    $MDATPTriageStatusValue += "]"
+    $MDATPTriageStatusValue += ']'
     $featureSettingsValue = "{`"Anonymization`":$($Anonymization.ToString().ToLower()), `"DLPUserRiskSync`":$($DLPUserRiskSync.ToString().ToLower()), `"OptInIRMDataExport`":$($OptInIRMDataExport.ToString().ToLower()), `"RaiseAuditAlert`":$($RaiseAuditAlert.ToString().ToLower()), `"EnableTeam`":$($EnableTeam.ToString().ToLower()), `"InlineAlertPolicyCustomization`":$($InlineAlertPolicyCustomization.ToString().ToLower())}"
     $intelligentDetectionValue = "{`"FileVolCutoffLimits`":`"$($FileVolCutoffLimits)`", `"AlertVolume`":`"$($AlertVolume)`", `"MDATPTriageStatus`": `"$($MDATPTriageStatusValue)`"}"
 
@@ -2728,7 +2728,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

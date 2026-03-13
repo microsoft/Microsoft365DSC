@@ -21,7 +21,7 @@ function Get-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('dev','beta','stable','unknownFutureValue')]
+        [ValidateSet('dev', 'beta', 'stable', 'unknownFutureValue')]
         [System.String]
         $Channel,
 
@@ -79,8 +79,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -114,13 +114,13 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for the Intune Mobile Apps Microsoft Edge with Id {$Id} and DisplayName {$DisplayName}"
 
-    if ($TargetPlatform -eq 'macOS' -and $PSBoundParameters.ContainsKey('DisplayLanguageLocale'))
-    {
-        throw "DisplayLanguageLocale is not supported for macOS target platform."
-    }
-
     try
     {
+        if ($TargetPlatform -eq 'macOS' -and $PSBoundParameters.ContainsKey('DisplayLanguageLocale'))
+        {
+            throw 'DisplayLanguageLocale is not supported for macOS target platform.'
+        }
+
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
 
@@ -147,7 +147,7 @@ function Get-TargetResource
             #region resource generator code
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id -ExpandProperty 'categories'  -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id -ExpandProperty 'categories' -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $getValue)
@@ -168,7 +168,7 @@ function Get-TargetResource
                 return $nullResult
             }
 
-            $getValue = Get-MgBetadeviceAppManagementMobileApp -MobileAppId $getValue.Id -ExpandProperty 'categories'
+            $getValue = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $getValue.Id -ExpandProperty 'categories'
         }
         else
         {
@@ -270,7 +270,7 @@ function Set-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('dev','beta','stable','unknownFutureValue')]
+        [ValidateSet('dev', 'beta', 'stable', 'unknownFutureValue')]
         [System.String]
         $Channel,
 
@@ -328,8 +328,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -365,7 +365,7 @@ function Set-TargetResource
 
     if ($TargetPlatform -eq 'macOS' -and $PSBoundParameters.ContainsKey('DisplayLanguageLocale'))
     {
-        throw "DisplayLanguageLocale is not supported for macOS target platform."
+        throw 'DisplayLanguageLocale is not supported for macOS target platform.'
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -391,7 +391,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Mobile Apps Microsoft Edge with DisplayName {$DisplayName}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $createParameters = ([Hashtable]$boundParameters).Clone()
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
@@ -406,8 +406,8 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $createParameters.Add("@odata.type", "#microsoft.graph.$($TargetPlatform)MicrosoftEdgeApp")
-        $policy = Invoke-MgGraphRequest -Method POST -Uri "/beta/deviceAppManagement/mobileApps" -Body $($createParameters | ConvertTo-Json -Depth 10)
+        $createParameters.Add('@odata.type', "#microsoft.graph.$($TargetPlatform)MicrosoftEdgeApp")
+        $policy = Invoke-MgGraphRequest -Method POST -Uri '/beta/deviceAppManagement/mobileApps' -Body $($createParameters | ConvertTo-Json -Depth 10)
 
         if ($PSBoundParameters.ContainsKey('Categories'))
         {
@@ -426,7 +426,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Mobile Apps Microsoft Edge with Id {$($currentInstance.Id)}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
@@ -443,7 +443,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $updateParameters.Add("@odata.type", "#microsoft.graph.$($TargetPlatform)MicrosoftEdgeApp")
+        $updateParameters.Add('@odata.type', "#microsoft.graph.$($TargetPlatform)MicrosoftEdgeApp")
         Invoke-MgGraphRequest -Method PATCH -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)" -Body $($updateParameters | ConvertTo-Json -Depth 10)
 
         if ($PSBoundParameters.ContainsKey('Categories'))
@@ -487,7 +487,7 @@ function Test-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('dev','beta','stable','unknownFutureValue')]
+        [ValidateSet('dev', 'beta', 'stable', 'unknownFutureValue')]
         [System.String]
         $Channel,
 
@@ -545,8 +545,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -589,8 +589,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

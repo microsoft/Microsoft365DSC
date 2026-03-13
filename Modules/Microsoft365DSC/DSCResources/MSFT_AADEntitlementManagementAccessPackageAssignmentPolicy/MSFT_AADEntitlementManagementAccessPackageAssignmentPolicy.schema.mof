@@ -1,15 +1,16 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.2")]
 class MSFT_MicrosoftGraphassignmentreviewsettings
 {
     [Write, Description("The default decision to apply if the request is not reviewed within the period specified in durationInDays."), ValueMap{"acceptAccessRecommendation","keepAccess","removeAccess","unknownFutureValue"}, Values{"acceptAccessRecommendation","keepAccess","removeAccess","unknownFutureValue"}] String AccessReviewTimeoutBehavior;
     [Write, Description("The number of days within which reviewers should provide input.")] UInt32 DurationInDays;
     [Write, Description("Specifies whether to display recommendations to the reviewer. The default value is true")] Boolean IsAccessRecommendationEnabled;
+    [Write, Description("Specifies whether the agentic experience is enabled for this policy.")] Boolean IsAgenticExperienceEnabled;
     [Write, Description("Specifies whether the reviewer must provide justification for the approval. The default value is true.")] Boolean IsApprovalJustificationRequired;
     [Write, Description("If true, access reviews are required for assignments from this policy.")] Boolean IsEnabled;
     [Write, Description("The interval for recurrence, such as monthly or quarterly.")] String RecurrenceType;
     [Write, Description("Who should be asked to do the review, either Self or Reviewers.")] String ReviewerType;
     [Write, Description("If the reviewerType is Reviewers, this collection specifies the users who will be reviewers, either by ID or as members of a group, using a collection of singleUser and groupMembers."), EmbeddedInstance("MSFT_MicrosoftGraphuserset")] String Reviewers[];
-    [Write, Description("When the first review should start.")] DATETIME StartDateTime;
+    [Write, Description("When the first review should start.")] String StartDateTime;
 };
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphuserset
@@ -64,10 +65,11 @@ class MSFT_MicrosoftGraphapprovalsettings
     [Write, Description("Indicates whether approval is required for a user to extend their assignment.")] Boolean IsApprovalRequiredForExtension;
     [Write, Description("Indicates whether the requestor is required to supply a justification in their request.")] Boolean IsRequestorJustificationRequired;
 };
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.1")]
 class MSFT_MicrosoftGraphapprovalstage1
 {
     [Write, Description("The number of days that a request can be pending a response before it is automatically denied.")] UInt32 ApprovalStageTimeOutInDays;
+    [Write, Description("Defines whether approver information is visible to the requestor in approval processes within Microsoft Entra entitlement management and related governance scenarios."), ValueMap{"default","notVisible","visible","unknownFutureValue"}, Values{"default","notVisible","visible","unknownFutureValue"}] String ApproverInformationVisibility;
     [Write, Description("Indicates whether the approver is required to provide a justification for approving a request.")] UInt32 EscalationTimeInMinutes;
     [Write, Description("If true, then one or more escalation approvers are configured in this approval stage.")] Boolean IsApproverJustificationRequired;
     [Write, Description("If escalation is required, the time a request can be pending a response from a primary approver.")] Boolean IsEscalationEnabled;

@@ -1,4 +1,3 @@
-
 # IntuneWindowsHelloForBusinessGlobalPolicy
 
 ## Description

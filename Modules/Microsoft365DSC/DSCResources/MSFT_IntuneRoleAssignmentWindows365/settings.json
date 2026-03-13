@@ -1,0 +1,65 @@
+{
+  "resourceName": "IntuneRoleAssignmentWindows365",
+  "description": "This resource configures an Intune Role Assignment Windows365.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "read": [
+          {
+            "name": "CloudPC.Read.All"
+          },
+          {
+            "name": "DeviceManagementRBAC.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "delegated": {
+        "read": [
+          {
+            "name": "CloudPC.Read.All"
+          },
+          {
+            "name": "DeviceManagementRBAC.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Enrollment"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement.Enrollment",
+      "cmdlets": [
+        "Get-MgBetaRoleManagementCloudPcRoleAssignment",
+        "Get-MgBetaRoleManagementCloudPcRoleDefinition",
+        "New-MgBetaRoleManagementCloudPcRoleAssignment",
+        "Remove-MgBetaRoleManagementCloudPcRoleAssignment",
+        "Update-MgBetaRoleManagementCloudPcRoleAssignment"
+      ]
+    }
+  ]
+}

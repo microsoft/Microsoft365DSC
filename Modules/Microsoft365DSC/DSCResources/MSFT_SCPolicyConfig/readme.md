@@ -1,4 +1,3 @@
-
 # SCPolicyConfig
 
 ## Description

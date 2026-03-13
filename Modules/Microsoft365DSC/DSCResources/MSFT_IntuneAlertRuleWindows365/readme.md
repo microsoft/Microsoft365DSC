@@ -1,4 +1,3 @@
-
 # IntuneAlertRuleWindows365
 
 ## Description

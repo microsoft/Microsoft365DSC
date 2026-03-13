@@ -195,7 +195,7 @@ function Set-TargetResource
 
     if (-not [System.String]::IsNullOrEmpty($ResourceAccountType))
     {
-        Write-Verbose -Message "ResourceAccountType specified. Retrieving associated ApplicationId"
+        Write-Verbose -Message 'ResourceAccountType specified. Retrieving associated ApplicationId'
         if ($ResourceAccountType -eq 'AutoAttendant')
         {
             $params.Add('ApplicationId', 'ce933385-9390-45d1-9512-c8d228074e07')
@@ -220,7 +220,7 @@ function Set-TargetResource
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        throw "Resource instances of type {TeamsApplicationInstance} cannot be removed."
+        throw 'Resource instances of type {TeamsApplicationInstance} cannot be removed.'
     }
 }
 
@@ -283,7 +283,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -339,7 +339,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $Script:exportedInstances = Get-CsOnlineApplicationInstance -ErrorAction Stop
+        [array]$Script:exportedInstances = Get-CsOnlineApplicationInstance -ErrorAction Stop
 
         $i = 1
         $dscContent = ''

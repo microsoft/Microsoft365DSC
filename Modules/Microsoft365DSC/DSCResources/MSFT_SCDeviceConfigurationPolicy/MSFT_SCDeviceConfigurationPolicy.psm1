@@ -91,9 +91,9 @@ function Get-TargetResource
         }
 
         $CommentValue = $PolicyObject.Comment
-        if ($CommentValue.Replace("`r", "").Replace("`n", "").Length -eq 0)
+        if ($CommentValue.Replace("`r", '').Replace("`n", '').Length -eq 0)
         {
-            $CommentValue = ""
+            $CommentValue = ''
         }
 
         Write-Verbose "Found existing Device Configuration Policy $($Name)"
@@ -276,7 +276,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

@@ -1,4 +1,3 @@
-
 # ADOSecurityPolicy
 
 ## Description

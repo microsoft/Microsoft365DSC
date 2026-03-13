@@ -1,4 +1,3 @@
-
 # AADCrossTenantAccessPolicyConfigurationDefault
 
 ## Description

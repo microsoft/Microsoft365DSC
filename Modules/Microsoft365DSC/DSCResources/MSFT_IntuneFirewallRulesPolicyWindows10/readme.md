@@ -1,4 +1,3 @@
-
 # IntuneFirewallRulesPolicyWindows10
 
 ## Description

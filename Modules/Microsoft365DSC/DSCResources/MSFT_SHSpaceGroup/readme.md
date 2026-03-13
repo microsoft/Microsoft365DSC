@@ -1,4 +1,3 @@
-
 # SHSpaceGroup
 
 ## Description

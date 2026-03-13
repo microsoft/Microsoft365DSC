@@ -1,4 +1,3 @@
-
 # IntuneTrustedRootCertificateIOS
 
 ## Description

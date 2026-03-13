@@ -37,8 +37,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -170,12 +170,12 @@ function Get-TargetResource
             {
                 $myPol_hardenedpaths.Add('Key', $currentPol_hardenedpaths.key)
             }
-            if ($myPol_hardenedpaths.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myPol_hardenedpaths.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexPol_hardenedpaths += $myPol_hardenedpaths
             }
         }
-        $complexDeviceSettings.Add('Pol_hardenedpaths',$complexPol_hardenedpaths)
+        $complexDeviceSettings.Add('Pol_hardenedpaths', $complexPol_hardenedpaths)
         $complexDeviceSettings.Add('WCM_BlockNonDomain', $policySettings.DeviceSettings.wCM_BlockNonDomain)
         $complexDeviceSettings.Add('ConfigureRedirectionGuardPolicy', $policySettings.DeviceSettings.configureRedirectionGuardPolicy)
         $complexDeviceSettings.Add('RedirectionGuardPolicy_Enum', $policySettings.DeviceSettings.redirectionGuardPolicy_Enum)
@@ -688,7 +688,7 @@ function Get-TargetResource
                 $complexUserSettings.Remove($key)
             }
         }
-        if ($complexUserSettings.Values.Where({$null -ne $_}).Count -eq 0)
+        if ($complexUserSettings.Values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserSettings = $null
         }
@@ -771,8 +771,8 @@ function Set-TargetResource
         $Assignments,
         #endregion
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -862,7 +862,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Security Baseline for Windows10 with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
@@ -933,8 +933,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -977,8 +977,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -1175,7 +1175,7 @@ function Get-CompareParameters
     param()
 
     return @{
-        PostProcessing = {
+        PostProcessing     = {
             param($DesiredValues, $CurrentValues, $ValuesToCheck, $PostProcessingArgs)
             $PostProcessingArgs[0] | ForEach-Object {
                 if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))

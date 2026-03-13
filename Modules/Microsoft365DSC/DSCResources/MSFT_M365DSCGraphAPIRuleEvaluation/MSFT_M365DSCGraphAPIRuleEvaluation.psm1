@@ -382,4 +382,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-

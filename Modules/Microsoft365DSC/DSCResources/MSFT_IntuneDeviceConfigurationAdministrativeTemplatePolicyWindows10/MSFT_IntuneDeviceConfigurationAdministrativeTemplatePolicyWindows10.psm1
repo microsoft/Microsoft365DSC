@@ -38,8 +38,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -106,7 +106,7 @@ function Get-TargetResource
             {
                 Write-Verbose -Message "Could not find an Intune Device Configuration Administrative Template Policy for Windows10 with Id {$Id}"
 
-                if (-Not [string]::IsNullOrEmpty($DisplayName))
+                if (-not [string]::IsNullOrEmpty($DisplayName))
                 {
                     $getValue = Get-MgBetaDeviceManagementGroupPolicyConfiguration `
                         -All `
@@ -132,14 +132,6 @@ function Get-TargetResource
 
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Device Configuration Administrative Template Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
-
-        #region resource generator code
-        $enumPolicyConfigurationIngestionType = $null
-        if ($null -ne $getValue.PolicyConfigurationIngestionType)
-        {
-            $enumPolicyConfigurationIngestionType = $getValue.PolicyConfigurationIngestionType.ToString()
-        }
-        #endregion
 
         #region
         $settings = Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValue `
@@ -212,11 +204,11 @@ function Get-TargetResource
                             $complexKeyValuePairValues += @{
                                 Name  = $(if ($null -ne $value.name)
                                     {
-                                        $value.name.replace('"', '')
+                                        $value.name.Replace('"', '')
                                     })
                                 Value = $(if ($null -ne $value.value)
                                     {
-                                        $value.value.replace('"', '')
+                                        $value.value.Replace('"', '')
                                     })
                             }
                         }
@@ -243,7 +235,6 @@ function Get-TargetResource
             #region resource generator code
             Description           = $getValue.Description
             DisplayName           = $getValue.DisplayName
-            #PolicyConfigurationIngestionType = $enumPolicyConfigurationIngestionType
             DefinitionValues      = $complexDefinitionValues
             Id                    = $getValue.Id
             RoleScopeTagIds       = $getValue.RoleScopeTagIds
@@ -317,8 +308,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -414,11 +405,6 @@ function Set-TargetResource
         foreach ($definitionValue in $targetDefinitionValues)
         {
             $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue -KeyMapping $keyToRename
-            $enumConfigurationType = $null
-            if ($null -ne $definitionValue.ConfigurationType)
-            {
-                $enumConfigurationType = $definitionValue.ConfigurationType.ToString()
-            }
             $complexPresentationValues = @()
             if ($null -ne $definitionValue.PresentationValues)
             {
@@ -510,11 +496,6 @@ function Set-TargetResource
         {
             $definitionValue = $targetDefinitionValues | Where-Object -FilterScript { $_.Definition.Id -eq $definitionValueId }
             $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue -KeyMapping $keyToRename
-            $enumConfigurationType = $null
-            if ($null -ne $definitionValue.ConfigurationType)
-            {
-                $enumConfigurationType = $definitionValue.ConfigurationType.ToString()
-            }
             $complexPresentationValues = @()
             if ($null -ne $definitionValue.PresentationValues)
             {
@@ -543,11 +524,6 @@ function Set-TargetResource
             $definitionValue = $targetDefinitionValues | Where-Object -FilterScript { $_.Definition.Id -eq $definitionValueId }
             $currentDefinitionValue = $currentDefinitionValues | Where-Object -FilterScript { $_.definition.id -eq $definitionValueId }
             $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue -KeyMapping $keyToRename
-            $enumConfigurationType = $null
-            if ($null -ne $definitionValue.ConfigurationType)
-            {
-                $enumConfigurationType = $definitionValue.ConfigurationType.ToString()
-            }
             $complexPresentationValues = @()
             if ($null -ne $definitionValue.PresentationValues)
             {
@@ -633,8 +609,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]

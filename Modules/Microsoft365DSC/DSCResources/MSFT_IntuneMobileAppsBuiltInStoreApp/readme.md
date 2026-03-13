@@ -1,4 +1,3 @@
-
 # IntuneMobileAppsBuiltInStoreApp
 
 ## Description

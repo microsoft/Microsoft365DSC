@@ -166,7 +166,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleAssignmentScheduleRequestSchedule -Property @{
                         startDateTime   = '2023-09-01T02:40:44Z'
                         expiration = New-CimInstance -ClassName MSFT_AADRoleAssignmentScheduleRequestScheduleExpiration -Property @{
-                            endDateTime = '2025-10-31T02:40:09Z'
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly
@@ -193,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleAssignmentScheduleRequestSchedule -Property @{
                         startDateTime   = '2025-09-01T02:40:44Z'
                         expiration = New-CimInstance -ClassName MSFT_AADRoleAssignmentScheduleRequestScheduleExpiration -Property @{
-                            endDateTime = '2025-12-31T02:40:09Z' # Drift
+                            endDateTime = (Get-Date).AddYears(1).ToString("yyyy-MM-ddTHH:mm:ssZ") # Drift
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly

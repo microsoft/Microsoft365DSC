@@ -8,7 +8,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
-        [String]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -159,7 +159,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of Office 365 Org Settings"
+    Write-Verbose -Message 'Getting configuration of Office 365 Org Settings'
 
     try
     {
@@ -173,7 +173,7 @@ function Get-TargetResource
         # Workaround for issue when if connected to S+C prior to calling cmdlet, an error about an invalid token is thrown.
         # If connected to S+C, then we need to re-initialize the connection to EXO.
         if ((Get-MSCloudLoginConnectionProfile -Workload SecurityComplianceCenter).Connected -and `
-                (Get-MSCloudLoginConnectionProfile -Workload ExchangeOnline).Connected)
+            (Get-MSCloudLoginConnectionProfile -Workload ExchangeOnline).Connected)
         {
             Reset-MSCloudLoginConnectionProfileContext -Workload ExchangeOnline
         }
@@ -206,7 +206,7 @@ function Get-TargetResource
         }
 
         if ($PSBoundParameters.ContainsKey('M365WebEnableUsersToOpenFilesFrom3PStorage') -or `
-            $Script:exportedInstance)
+                $Script:exportedInstance)
         {
             $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
             $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled' -ErrorAction SilentlyContinue
@@ -227,8 +227,8 @@ function Get-TargetResource
 
         # Planner iCal settings
         if ($PSBoundParameters.ContainsKey('PlannerAllowCalendarSharing') -or `
-            $PSBoundParameters.ContainsKey('AllowPlannerCopilot') -or `
-            $Script:exportedInstance)
+                $PSBoundParameters.ContainsKey('AllowPlannerCopilot') -or `
+                $Script:exportedInstance)
         {
             $PlannerSettings = Get-M365DSCO365OrgSettingsPlannerConfig
             if ($null -ne $PlannerSettings)
@@ -242,7 +242,7 @@ function Get-TargetResource
 
         # Cortana settings
         if ($PSBoundParameters.ContainsKey('CortanaEnabled') -or `
-            $Script:exportedInstance)
+                $Script:exportedInstance)
         {
             $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
             $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled'
@@ -256,10 +256,10 @@ function Get-TargetResource
 
         # Viva Insights settings
         if ($PSBoundParameters.ContainsKey('VivaInsightsDigestEmail') -or `
-            $PSBoundParameters.ContainsKey('VivaInsightsOutlookAddInAndInlineSuggestions') -or `
-            $PSBoundParameters.ContainsKey('VivaInsightsScheduleSendSuggestions') -or `
-            $PSBoundParameters.ContainsKey('VivaInsightsWebExperience') -or `
-            $Script:exportedInstance)
+                $PSBoundParameters.ContainsKey('VivaInsightsOutlookAddInAndInlineSuggestions') -or `
+                $PSBoundParameters.ContainsKey('VivaInsightsScheduleSendSuggestions') -or `
+                $PSBoundParameters.ContainsKey('VivaInsightsWebExperience') -or `
+                $Script:exportedInstance)
         {
             $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig
             if ($null -ne $currentVivaInsightsSettings)
@@ -290,7 +290,7 @@ function Get-TargetResource
 
         # Reports Display Settings
         if ($PSBoundParameters.ContainsKey('AdminCenterReportDisplayConcealedNames') -or `
-            $Script:exportedInstance)
+                $Script:exportedInstance)
         {
             $AdminCenterReportDisplayConcealedNamesValue = Get-M365DSCOrgSettingsAdminCenterReport
             if ($null -ne $AdminCenterReportDisplayConcealedNamesValue)
@@ -303,9 +303,9 @@ function Get-TargetResource
 
         # Installation Options
         if ($PsBoundParameters.ContainsKey('InstallationOptionsUpdateChannel') -or `
-            $PsBoundParameters.ContainsKey('InstallationOptionsAppsForWindows') -or `
-            $PsBoundParameters.ContainsKey('InstallationOptionsAppsForMac') -or `
-            $Script:exportedInstance)
+                $PsBoundParameters.ContainsKey('InstallationOptionsAppsForWindows') -or `
+                $PsBoundParameters.ContainsKey('InstallationOptionsAppsForMac') -or `
+                $Script:exportedInstance)
         {
             $installationOptions = Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks
             if ($null -ne $installationOptions)
@@ -337,13 +337,13 @@ function Get-TargetResource
 
         # Forms
         if ($PSBoundParameters.ContainsKey('FormsIsExternalSendFormEnabled') -or `
-            $PSBoundParameters.ContainsKey('FormsIsExternalShareCollaborationEnabled') -or `
-            $PSBoundParameters.ContainsKey('FormsIsExternalShareResultEnabled') -or `
-            $PSBoundParameters.ContainsKey('FormsIsExternalShareTemplateEnabled') -or `
-            $PSBoundParameters.ContainsKey('FormsIsRecordIdentityByDefaultEnabled') -or `
-            $PSBoundParameters.ContainsKey('FormsIsBingImageSearchEnabled') -or `
-            $PSBoundParameters.ContainsKey('FormsIsInOrgFormsPhishingScanEnabled') -or `
-            $Script:exportedInstance)
+                $PSBoundParameters.ContainsKey('FormsIsExternalShareCollaborationEnabled') -or `
+                $PSBoundParameters.ContainsKey('FormsIsExternalShareResultEnabled') -or `
+                $PSBoundParameters.ContainsKey('FormsIsExternalShareTemplateEnabled') -or `
+                $PSBoundParameters.ContainsKey('FormsIsRecordIdentityByDefaultEnabled') -or `
+                $PSBoundParameters.ContainsKey('FormsIsBingImageSearchEnabled') -or `
+                $PSBoundParameters.ContainsKey('FormsIsInOrgFormsPhishingScanEnabled') -or `
+                $Script:exportedInstance)
         {
             $FormsSettings = Get-M365DSCOrgSettingsForms
             if ($null -ne $FormsSettings)
@@ -362,9 +362,9 @@ function Get-TargetResource
 
         # DynamicsCustomerVoice
         if ($PSBoundParameters.ContainsKey('DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled') -or `
-            $PSBoundParameters.ContainsKey('DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled') -or `
-            $PSBoundParameters.ContainsKey('DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled') -or `
-            $Script:exportedInstance)
+                $PSBoundParameters.ContainsKey('DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled') -or `
+                $PSBoundParameters.ContainsKey('DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled') -or `
+                $Script:exportedInstance)
         {
             $DynamicCustomerVoiceSettings = Get-M365DSCOrgSettingsDynamicsCustomerVoice
             if ($null -ne $DynamicCustomerVoiceSettings)
@@ -379,8 +379,8 @@ function Get-TargetResource
 
         # Apps and Services
         if ($PSBoundParameters.ContainsKey('AppsAndServicesIsOfficeStoreEnabled') -or `
-            $PSBoundParameters.ContainsKey('AppsAndServicesIsAppAndServicesTrialEnabled') -or `
-            $Script:exportedInstance)
+                $PSBoundParameters.ContainsKey('AppsAndServicesIsAppAndServicesTrialEnabled') -or `
+                $Script:exportedInstance)
         {
             $AppsAndServicesSettings = Get-M365DSCOrgSettingsAppsAndServices
             if ($null -ne $AppsAndServicesSettings)
@@ -394,9 +394,9 @@ function Get-TargetResource
 
         # To do
         if ($PSBoundParameters.ContainsKey('ToDoIsPushNotificationEnabled') -or `
-            $PSBoundParameters.ContainsKey('ToDoIsExternalJoinEnabled') -or `
-            $PSBoundParameters.ContainsKey('ToDoIsExternalShareEnabled') -or `
-            $Script:exportedInstance)
+                $PSBoundParameters.ContainsKey('ToDoIsExternalJoinEnabled') -or `
+                $PSBoundParameters.ContainsKey('ToDoIsExternalShareEnabled') -or `
+                $Script:exportedInstance)
         {
             $ToDoSettings = Get-M365DSCOrgSettingsToDo
             if ($null -ne $ToDoSettings)
@@ -430,7 +430,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
-        [String]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -581,7 +581,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of Office 365 Org Settings"
+    Write-Verbose -Message 'Setting configuration of Office 365 Org Settings'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -609,13 +609,13 @@ function Set-TargetResource
             -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
     }
     if (($PSBoundParameters.ContainsKey('PlannerAllowCalendarSharing') -and `
-        ($PlannerAllowCalendarSharing -ne $currentValues.PlannerAllowCalendarSharing)) -or `
+            ($PlannerAllowCalendarSharing -ne $currentValues.PlannerAllowCalendarSharing)) -or `
         ($PSBoundParameters.ContainsKey('AllowPlannerCopilot') -and `
-        ($AllowPlannerCopilot -ne $currentValues.AllowPlannerCopilot)))
+            ($AllowPlannerCopilot -ne $currentValues.AllowPlannerCopilot)))
     {
         Write-Verbose -Message "Updating the Planner Allow Calendar Sharing setting to {$PlannerAllowCalendarSharing}"
         Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing `
-                                                -AllowPlannerCopilot $AllowPlannerCopilot
+            -AllowPlannerCopilot $AllowPlannerCopilot
     }
 
     if ($PSBoundParameters.ContainsKey('CortanaEnabled') -and `
@@ -851,7 +851,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
-        [String]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -1012,7 +1012,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

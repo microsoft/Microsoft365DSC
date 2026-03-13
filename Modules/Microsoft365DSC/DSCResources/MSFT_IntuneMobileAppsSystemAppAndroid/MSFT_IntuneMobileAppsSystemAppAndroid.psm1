@@ -1,4 +1,4 @@
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_IntuneMobileAppsSystemAppAndroid"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneMobileAppsSystemAppAndroid'
 
 function Get-TargetResource
 {
@@ -33,8 +33,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -119,11 +119,11 @@ function Get-TargetResource
                 return $nullResult
             }
 
-            $getValue = Get-MgBetadeviceAppManagementMobileApp -MobileAppId $getValue.Id
+            $getValue = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $getValue.Id
         }
         else
         {
-            $getValue = $getValue = Get-MgBetadeviceAppManagementMobileApp -MobileAppId $Script:exportedInstance.Id
+            $getValue = $getValue = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Script:exportedInstance.Id
         }
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Mobile Apps System App for Android with Id {$Id} and DisplayName {$DisplayName} was found"
@@ -198,8 +198,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -253,7 +253,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Mobile Apps System App for Android with DisplayName {$DisplayName}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $createParameters = ([Hashtable]$boundParameters).Clone()
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
@@ -268,8 +268,8 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $createParameters.Add("@odata.type", "#microsoft.graph.androidManagedStoreApp")
-        $createParameters.Add("isSystemApp", $true)
+        $createParameters.Add('@odata.type', '#microsoft.graph.androidManagedStoreApp')
+        $createParameters.Add('isSystemApp', $true)
         $policy = Invoke-MgGraphRequest -Method POST -Uri '/beta/deviceAppManagement/mobileApps' -Body $($createParameters | ConvertTo-Json -Depth 10)
 
         if ($policy.Id)
@@ -284,7 +284,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Mobile Apps System App for Android with Id {$($currentInstance.Id)}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
@@ -302,7 +302,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $updateParameters.Add("@odata.type", "#microsoft.graph.androidManagedStoreApp")
+        $updateParameters.Add('@odata.type', '#microsoft.graph.androidManagedStoreApp')
         Update-MgBetaDeviceAppManagementMobileApp `
             -MobileAppId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -355,8 +355,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -398,7 +398,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

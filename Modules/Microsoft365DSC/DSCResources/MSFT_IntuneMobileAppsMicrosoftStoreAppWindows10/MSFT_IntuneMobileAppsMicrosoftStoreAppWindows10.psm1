@@ -73,8 +73,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -309,8 +309,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -364,11 +364,11 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Mobile Apps Microsoft Store App for Windows10 with DisplayName {$DisplayName}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         if (-not $boundParameters.ContainsKey('InstallExperience'))
         {
-            throw "InstallExperience is required for creation of an Intune Mobile Apps Microsoft Store App for Windows10."
+            throw 'InstallExperience is required for creation of an Intune Mobile Apps Microsoft Store App for Windows10.'
         }
 
         $createParameters = ([Hashtable]$boundParameters).Clone()
@@ -384,8 +384,8 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $createParameters.Add("@odata.type", "#microsoft.graph.winGetApp")
-        $policy = Invoke-MgGraphRequest -Method POST -Uri "/beta/deviceAppManagement/mobileApps" -Body $($createParameters | ConvertTo-Json -Depth 10)
+        $createParameters.Add('@odata.type', '#microsoft.graph.winGetApp')
+        $policy = Invoke-MgGraphRequest -Method POST -Uri '/beta/deviceAppManagement/mobileApps' -Body $($createParameters | ConvertTo-Json -Depth 10)
 
         if ($PSBoundParameters.ContainsKey('Categories'))
         {
@@ -404,7 +404,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Mobile Apps Microsoft Store App for Windows10 with Id {$($currentInstance.Id)}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
         $boundParameters.Remove('PackageIdentifier') | Out-Null
         $boundParameters.Remove('InstallExperience') | Out-Null
 
@@ -413,7 +413,7 @@ function Set-TargetResource
         $updateParameters.Remove('Id') | Out-Null
 
         #region resource generator code
-        $updateParameters.Add("@odata.type", "#microsoft.graph.winGetApp")
+        $updateParameters.Add('@odata.type', '#microsoft.graph.winGetApp')
         Invoke-MgGraphRequest -Method PATCH -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)" -Body $($updateParameters | ConvertTo-Json -Depth 10)
 
         if ($PSBoundParameters.ContainsKey('Categories'))
@@ -509,8 +509,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -553,8 +553,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -716,19 +716,19 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'AssignmentSettings'
+                        Name            = 'AssignmentSettings'
                         CIMInstanceName = 'DeviceManagementWinGetMobileAppAssignmentSettings'
-                        IsRequired = $false
+                        IsRequired      = $false
                     },
                     @{
-                        Name = 'InstallTimeSettings'
+                        Name            = 'InstallTimeSettings'
                         CIMInstanceName = 'DeviceManagementWinGetMobileAppAssignmentSettingsInstallTimeSettings'
-                        IsRequired = $false
+                        IsRequired      = $false
                     },
                     @{
-                        Name = 'RestartSettings'
+                        Name            = 'RestartSettings'
                         CIMInstanceName = 'DeviceManagementWinGetMobileAppAssignmentSettingsRestartSettings'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `

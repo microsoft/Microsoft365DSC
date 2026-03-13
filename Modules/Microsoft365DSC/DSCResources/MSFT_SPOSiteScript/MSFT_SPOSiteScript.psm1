@@ -288,10 +288,12 @@ function Set-TargetResource
                 throw $Message
             }
         }
-        try {
+        try
+        {
             Remove-PnPSiteScript -Identity $sitescript.Id -Force -ErrorAction Stop
         }
-        catch {
+        catch
+        {
             New-M365DSCLogEntry -Message 'Error removing Site Script:' `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
@@ -413,7 +415,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

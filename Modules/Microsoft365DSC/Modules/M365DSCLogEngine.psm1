@@ -189,7 +189,7 @@ function Add-M365DSCEvent
         }
         catch [System.Security.SecurityException]
         {
-            Write-Verbose -Message "[WARNING] Not all event logs could be searched. Source might exist in another event log."
+            Write-Verbose -Message '[WARNING] Not all event logs could be searched. Source might exist in another event log.'
         }
 
         if ($sourceExists)
@@ -209,7 +209,7 @@ function Add-M365DSCEvent
             }
             catch [System.Security.SecurityException]
             {
-                Write-Verbose -Message "[WARNING] Not all event logs could be searched. Source might exist in another event log."
+                Write-Verbose -Message '[WARNING] Not all event logs could be searched. Source might exist in another event log.'
             }
         }
 
@@ -252,7 +252,7 @@ function Add-M365DSCEvent
         $MessageText = "Could not write to event log Source {$Source} EntryType {$EntryType} Message {$Message}"
         # Check call stack to prevent indefinite loop between New-M365DSCLogEntry and this function
         if ((Get-PSCallStack)[1].FunctionName -ne 'New-M365DSCLogEntry' -and `
-            -not $_.ToString().Contains('EventLog access is not supported on this platform.'))
+                -not $_.ToString().Contains('EventLog access is not supported on this platform.'))
         {
             New-M365DSCLogEntry -Exception $_ -Message $MessageText `
                 -Source '[M365DSCLogEngine]' `
@@ -717,7 +717,7 @@ function Get-M365DSCLoggingOption
     {
         return @{
             IncludeNonDrifted = [Boolean]([System.Environment]::GetEnvironmentVariable('M365DSCEventLogIncludeNonDrifted', `
-                    [System.EnvironmentVariableTarget]::Machine))
+                        [System.EnvironmentVariableTarget]::Machine))
         }
     }
     catch

@@ -1,4 +1,3 @@
-
 # IntuneAntivirusExclusionsPolicyMacOS
 
 ## Description

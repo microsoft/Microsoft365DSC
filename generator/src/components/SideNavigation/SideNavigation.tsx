@@ -1,8 +1,7 @@
 import { INavLink, INavLinkGroup, INavStyles, Nav } from '@fluentui/react';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { selectedWorkloadState } from '../../state/selectedWorkloadState';
+import { useAppStore } from '../../state/store';
 
 export interface ISideNavigationProps {
   items: INavLinkGroup[];
@@ -11,7 +10,8 @@ export interface ISideNavigationProps {
 const SideNavigationComponent: React.FunctionComponent<ISideNavigationProps> = (props) => {
   const { items } = props;
   const navigate = useNavigate();
-  const [selectedWorkload, setSelectedWorkload] = useRecoilState(selectedWorkloadState);
+  const selectedWorkload = useAppStore((s) => s.selectedWorkload);
+  const setSelectedWorkload = useAppStore((s) => s.setSelectedWorkload);
 
   const navStyles: Partial<INavStyles> = {
     groupContent: {

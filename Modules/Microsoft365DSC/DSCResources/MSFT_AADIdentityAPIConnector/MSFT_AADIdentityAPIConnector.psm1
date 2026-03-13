@@ -34,8 +34,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -66,6 +66,8 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting configuration for the Azure AD Identity API Connector with Id {$Id} and DisplayName {$DisplayName}"
 
     try
     {
@@ -119,11 +121,9 @@ function Get-TargetResource
         Write-Verbose -Message "An Azure AD Identity API Connector with Id {$Id} and DisplayName {$DisplayName} was found"
 
         #region resource generator code
-        $complexAuthenticationConfiguration = [ordered]@{}
         if ($null -ne $getValue.AuthenticationConfiguration.AdditionalProperties.password)
         {
             $securePassword = ConvertTo-SecureString $getValue.AuthenticationConfiguration.AdditionalProperties.password -AsPlainText -Force
-
             $Password = New-Object System.Management.Automation.PSCredential ('Password', $securePassword)
         }
 
@@ -209,8 +209,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -447,8 +447,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -491,8 +491,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -630,7 +630,7 @@ function Export-TargetResource
             $currentDSCBlock = $currentDSCBlock.Replace('"New-Object System.', 'New-Object System.').Replace(') -AsPlainText -Force));";', ') -AsPlainText -Force));')
 
             # Replace the certificate variables.
-            $currentDSCBlock = $currentDSCBlock.Replace("'New-Object System.", "New-Object System.").Replace(" -Force))'", " -Force))")
+            $currentDSCBlock = $currentDSCBlock.Replace("'New-Object System.", 'New-Object System.').Replace(" -Force))'", ' -Force))')
             $currentDSCBlock = $currentDSCBlock.Replace("(ConvertTo-SecureString (''", "(ConvertTo-SecureString ('").Replace("''Password''", "'Password'").Replace("'') -AsPlainText", "') -AsPlainText")
             $currentDSCBlock = $currentDSCBlock.Replace(''') -AsPlainText -Force))"', "') -AsPlainText -Force))")
 

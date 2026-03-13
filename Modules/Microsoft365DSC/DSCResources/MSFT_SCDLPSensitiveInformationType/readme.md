@@ -1,4 +1,3 @@
-
 # SCDLPSensitiveInformationType
 
 ## Description

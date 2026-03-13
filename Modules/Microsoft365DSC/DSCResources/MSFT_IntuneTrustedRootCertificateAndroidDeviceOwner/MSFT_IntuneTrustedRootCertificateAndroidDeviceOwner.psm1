@@ -37,8 +37,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -103,9 +103,9 @@ function Get-TargetResource
             if ($null -eq $getValue)
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                -FilterScript { `
-                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerTrustedRootCertificate' `
-                }
+                    -FilterScript { `
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerTrustedRootCertificate' `
+                    }
             }
             #endregion
 
@@ -126,21 +126,21 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Id                             = $getValue.Id
-            Description                    = $getValue.Description
-            DisplayName                    = $getValue.DisplayName
-            RoleScopeTagIds                = $getValue.RoleScopeTagIds
-            certFileName                   = $getValue.AdditionalProperties.certFileName
-            trustedRootCertificate         = $getValue.AdditionalProperties.trustedRootCertificate
-            Ensure                         = 'Present'
-            Credential                     = $Credential
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            ApplicationSecret              = $ApplicationSecret
-            CertificateThumbprint          = $CertificateThumbprint
-            ManagedIdentity                = $ManagedIdentity.IsPresent
-            AccessTokens                   = $AccessTokens
-            version                        = $getValue.AdditionalProperties.version
+            Id                     = $getValue.Id
+            Description            = $getValue.Description
+            DisplayName            = $getValue.DisplayName
+            RoleScopeTagIds        = $getValue.RoleScopeTagIds
+            certFileName           = $getValue.AdditionalProperties.certFileName
+            trustedRootCertificate = $getValue.AdditionalProperties.trustedRootCertificate
+            Ensure                 = 'Present'
+            Credential             = $Credential
+            ApplicationId          = $ApplicationId
+            TenantId               = $TenantId
+            ApplicationSecret      = $ApplicationSecret
+            CertificateThumbprint  = $CertificateThumbprint
+            ManagedIdentity        = $ManagedIdentity.IsPresent
+            AccessTokens           = $AccessTokens
+            version                = $getValue.AdditionalProperties.version
         }
 
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Results.Id
@@ -148,8 +148,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -203,8 +203,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -270,9 +270,10 @@ function Set-TargetResource
             }
         }
 
-        if ($AdditionalProperties.ContainsKey('trustedRootCertificate')) {
+        if ($AdditionalProperties.ContainsKey('trustedRootCertificate'))
+        {
             $AdditionalProperties['trustedRootCertificate'] = [Convert]::FromBase64String($AdditionalProperties['trustedRootCertificate'])
-            Write-Verbose "trustedRootCertificate converted to bytes."
+            Write-Verbose 'trustedRootCertificate converted to bytes.'
         }
 
         $CreateParameters.Remove('Id') | Out-Null
@@ -316,9 +317,10 @@ function Set-TargetResource
             }
         }
 
-        if ($AdditionalProperties.ContainsKey('trustedRootCertificate')) {
+        if ($AdditionalProperties.ContainsKey('trustedRootCertificate'))
+        {
             $AdditionalProperties['trustedRootCertificate'] = [Convert]::FromBase64String($AdditionalProperties['trustedRootCertificate'])
-            Write-Verbose "trustedRootCertificate converted to bytes."
+            Write-Verbose 'trustedRootCertificate converted to bytes.'
         }
 
         $UpdateParameters.Remove('Id') | Out-Null
@@ -387,8 +389,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -430,7 +432,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -565,7 +567,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

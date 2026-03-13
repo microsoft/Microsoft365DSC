@@ -1,4 +1,3 @@
-
 # IntuneAntivirusPolicyLinux
 
 ## Description

@@ -1,3 +1,5 @@
+# Developing new resources
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/Bax6eVshfwY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Before getting ready to contribute a resource to the project, make sure you've read and followed the steps described in [Setting up your Environment to Contribute to the Project](getting-started.md).
@@ -28,7 +30,7 @@ Now that you've identified what resource you wish to work on, take a look at the
 
 Take a look at the list of parameters and figure out which one should be implemented by your resource. For the Compliance Case example, the documentation lists the following properties:
 
-```PowerShell
+```powershell
 New-ComplianceCase
    [-Name] String
    [-Confirm]
@@ -45,7 +47,7 @@ The list of parameters is not yet complete at this point. If we take a look at t
 
 We now need to write the list of parameters our Get, Set, and Test functions will accept. Note that the list of parameters for these three functions need to be **exactly the same** otherwise the resource validation will fail. In the Compliance Case example, the properties will translate to the following:
 
-```PowerShell
+```powershell
 [Parameter(Mandatory = $true)]
 [System.String]
 $Name,
@@ -62,7 +64,7 @@ $Status = "Active"
 
 On top of these resources specific parameters, each resource should define the **Ensure** when they support removing instances of the resource. Every resource is  also required to define **Credential** . By adding these two additional properties, the function signature of our resource then becomes:
 
-```PowerShell
+```powershell
 function Get|Set|Test-TargetResource
 [CmdletBinding()]
 [OutputType([Hashtable|void|Boolean])]
@@ -101,7 +103,7 @@ Other authentication properties should be added if the resource supports it:
 * `ManagedIdentity` - If the resource supports managed identity for authentication
 * `AccessTokens` - Access tokens passed to the authentication
 
-```PowerShell
+```powershell
 function Get|Set|Test-TargetResource
 [CmdletBinding()]
 [OutputType([Hashtable|void|Boolean])]
@@ -147,15 +149,15 @@ Microsoft365DSC also supports [ReverseDSC](https://github.com/Microsoft/ReverseD
 
 Next is the schema file where we will define what properties are expected by our resources in the public scope. You need to make sure you clearly identify the requirement type of each parameter in our resources. These can be:
 
-- **Key**: Represents a unique identifier of the resource. There can be more than one key parameter for your resource. Any given configuration cannot define duplicates of the same instance of key parameters. These need to be unique inside a node in your configuration.
-- **Required**: Represents a property that is mandatory. These are not primary keys and can have duplicate values inside your configuration.
-- **Write**: Represents optional properties.
+* **Key**: Represents a unique identifier of the resource. There can be more than one key parameter for your resource. Any given configuration cannot define duplicates of the same instance of key parameters. These need to be unique inside a node in your configuration.
+* **Required**: Represents a property that is mandatory. These are not primary keys and can have duplicate values inside your configuration.
+* **Write**: Represents optional properties.
 
 Some properties can also define a restricted set of accepted values. These can be identified as **ValueMap** in the parameter definition (see example below). You will also need to provide a description for each parameter. Ideally you should simply copy the description of the property from the official documentation on [docs.microsoft.com](https://docs.microsoft.com).
 
 If we take our previous example, the schema file for our MSFT_SCComplianceCase resource would become:
 
-```PowerShell
+```powershell
 [ClassVersion("1.0.0.0"), FriendlyName("SCComplianceCase")]
 class MSFT_SCComplianceCase : OMI_BaseResource
 {

@@ -1,4 +1,3 @@
-
 # IntuneRoleAssignment
 
 ## Description

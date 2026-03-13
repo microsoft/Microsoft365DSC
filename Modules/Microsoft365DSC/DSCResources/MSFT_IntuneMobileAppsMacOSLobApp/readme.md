@@ -1,4 +1,3 @@
-
 # IntuneMobileAppsMacOSLobApp
 
 ## Description

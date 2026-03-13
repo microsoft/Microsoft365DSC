@@ -76,8 +76,8 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-                "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
+            $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+                '/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01'
 
             $policies = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
 
@@ -194,14 +194,14 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $schema = "https://schema.management.azure.com/providers/Microsoft.BusinessAppPlatform/schemas/2016-10-01-preview/apiPolicyDefinition.json#"
+    $schema = 'https://schema.management.azure.com/providers/Microsoft.BusinessAppPlatform/schemas/2016-10-01-preview/apiPolicyDefinition.json#'
     $constraints = @{}
     if ($null -ne $Environments -and $Environments.Length -gt 0)
     {
         $environmentInfo = @()
         foreach ($environment in $Environments)
         {
-            $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
                 "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments/$($environment)?`$expand=permissions&api-version=2016-11-01"
 
             Write-Verbose -Message "Creating new policy with body:`r`n$(ConvertTo-Json $newPolicy -Depth 20)"
@@ -212,50 +212,50 @@ function Set-TargetResource
             environmentFilter1 = @{
                 parameters = @{
                     environments = $environmentInfo
-                    filterType = $FilterType
+                    filterType   = $FilterType
                 }
-                type = "environmentFilter"
+                type       = 'environmentFilter'
             }
         }
     }
     $rules = @{
         dataFlowRule = @{
-            actions = @{
+            actions    = @{
                 blockAction = @{
-                    type = "Block"
+                    type = 'Block'
                 }
             }
             parameters = @{
-                destinationApiGroup = "lbi"
-                sourceApiGroup = "hbi"
+                destinationApiGroup = 'lbi'
+                sourceApiGroup      = 'hbi'
             }
-            type = "DataFlowRestriction"
+            type       = 'DataFlowRestriction'
         }
     }
-    $CreatedTime = Get-Date -Format "o"
+    $CreatedTime = Get-Date -Format 'o'
     $policyObject = @{
-        id = ""
-        name = ""
-        type = $type
-        tags = @{}
+        id         = ''
+        name       = ''
+        type       = $type
+        tags       = @{}
         properties = @{
             createdTime = $CreatedTime
             displayName = $DisplayName
-            definition = @{
-                "`$schema" = $schema
-                defaultApiGroup = "lbi"
-                constraints = $constraints
-                apiGroups = @{
+            definition  = @{
+                "`$schema"      = $schema
+                defaultApiGroup = 'lbi'
+                constraints     = $constraints
+                apiGroups       = @{
                     hbi = @{
-                        apis = $hbiApis
-                        description = "Business data only"
+                        apis        = $hbiApis
+                        description = 'Business data only'
                     }
                     lbi = @{
-                        apis =  @()
+                        apis        = @()
                         description = $lbiDescription
                     }
                 }
-                rules = $rules
+                rules           = $rules
             }
         }
     }
@@ -266,8 +266,8 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Data Policy {$DisplayName}"
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            '/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01'
 
 
         Write-Verbose -Message "Creating new policy with body:`r`n$(ConvertTo-Json $newPolicy -Depth 20)"
@@ -294,8 +294,8 @@ function Set-TargetResource
             $setParameters.Environments = ($setParameters.Environments -join ',')
         }
         Write-Verbose -Message "Updating Data Policy {$DisplayName} with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $setParameters)"
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies/$($policyName)?api-version=2016-11-01"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies/$($policyName)?api-version=2016-11-01"
 
         $policy = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'PUT' -Body $policyObject
     }
@@ -303,8 +303,8 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Data Policy {$DisplayName}"
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies/$($policyName)?api-version=2016-11-01"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies/$($policyName)?api-version=2016-11-01"
 
         $policy = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'DELETE'
     }
@@ -372,7 +372,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -429,8 +429,8 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-            "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            '/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01'
 
         [array] $Script:exportedInstances = (Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET').value
 

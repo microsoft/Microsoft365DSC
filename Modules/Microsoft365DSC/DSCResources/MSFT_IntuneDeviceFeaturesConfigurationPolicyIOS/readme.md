@@ -1,4 +1,3 @@
-
 # IntuneDeviceFeaturesConfigurationPolicyIOS
 
 ## Description

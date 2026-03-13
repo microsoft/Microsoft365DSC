@@ -285,7 +285,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -295,6 +295,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter = "*",
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -341,7 +345,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-CsTeamsMobilityPolicy -ErrorAction Stop
+        [array]$getValue = Get-CsTeamsMobilityPolicy -Filter $Filter -ErrorAction Stop
 
         $i = 1
         $dscContent = ''

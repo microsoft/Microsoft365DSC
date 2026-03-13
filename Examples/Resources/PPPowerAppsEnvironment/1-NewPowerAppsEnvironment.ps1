@@ -20,7 +20,7 @@ Configuration Example
             Location           = "canada"
             ProvisionDatabase  = $true
             LanguageName       = 1033;
-            CurrencyName	   = "CAD";
+            CurrencyName       = "CAD";
             Ensure             = "Present"
             Credential         = $Credscredential
         }

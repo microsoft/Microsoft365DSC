@@ -65,8 +65,8 @@ function Get-TargetResource
         $ConversationThreadId,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -314,8 +314,8 @@ function Set-TargetResource
         $ConversationThreadId,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -424,15 +424,15 @@ function Set-TargetResource
 
     #region Categories
     $categoriesValue = @{
-        category1 = $false
-        category2 = $false
-        category3 = $false
-        category4 = $false
-        category5 = $false
-        category6 = $false
-        category7 = $false
-        category8 = $false
-        category9 = $false
+        category1  = $false
+        category2  = $false
+        category3  = $false
+        category4  = $false
+        category5  = $false
+        category6  = $false
+        category7  = $false
+        category8  = $false
+        category9  = $false
         category10 = $false
         category11 = $false
         category12 = $false
@@ -615,8 +615,8 @@ function Test-TargetResource
         $ConversationThreadId,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -655,8 +655,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -877,79 +877,79 @@ function Get-TaskCategoryNameByColor
         }
         'Bronze'
         {
-            return "category7"
+            return 'category7'
         }
         'Lime'
         {
-            return "category8"
+            return 'category8'
         }
         'Aqua'
         {
-            return "category9"
+            return 'category9'
         }
         'Gray'
         {
-            return "category10"
+            return 'category10'
         }
         'Silver'
         {
-            return "category11"
+            return 'category11'
         }
         'Brown'
         {
-            return "category12"
+            return 'category12'
         }
         'Cranberry'
         {
-            return "category13"
+            return 'category13'
         }
         'Orange'
         {
-            return "category14"
+            return 'category14'
         }
         'Peach'
         {
-            return "category15"
+            return 'category15'
         }
         'Marigold'
         {
-            return "category16"
+            return 'category16'
         }
         'Light green'
         {
-            return "category17"
+            return 'category17'
         }
         'Dark green'
         {
-            return "category18"
+            return 'category18'
         }
         'Teal'
         {
-            return "category19"
+            return 'category19'
         }
         'Light blue'
         {
-            return "category20"
+            return 'category20'
         }
         'Dark blue'
         {
-            return "category21"
+            return 'category21'
         }
         'Lavender'
         {
-            return "category22"
+            return 'category22'
         }
         'Plum'
         {
-            return "category23"
+            return 'category23'
         }
         'Light gray'
         {
-            return "category24"
+            return 'category24'
         }
         'Dark gray'
         {
-            return "category25"
+            return 'category25'
         }
     }
     return $null
@@ -1080,7 +1080,7 @@ function Get-CompareParameters
         PostProcessing = {
             param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
             if ([System.String]::IsNullOrEmpty($DesiredValues.Bucket) -and
-                    -not [System.String]::IsNullOrEmpty($CurrentValues.Bucket))
+                -not [System.String]::IsNullOrEmpty($CurrentValues.Bucket))
             {
                 if (-not $ValuesToCheck.ContainsKey('Bucket'))
                 {

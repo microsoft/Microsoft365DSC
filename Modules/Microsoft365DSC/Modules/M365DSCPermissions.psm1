@@ -64,13 +64,13 @@ function Get-M365DSCCompiledPermissionList
 
     $results = @{
         AdministrativeRoles = @{
-            Read = @()
+            Read   = @()
             Update = @()
         }
         Read                = @(
             @{
-                API         = 'Graph'
-                Permission  = @{
+                API        = 'Graph'
+                Permission = @{
                     Name = 'Organization.Read.All'
                     Type = 'Application'
                 }
@@ -78,19 +78,19 @@ function Get-M365DSCCompiledPermissionList
         )
         Update              = @(
             @{
-                API         = 'Graph'
-                Permission  = @{
+                API        = 'Graph'
+                Permission = @{
                     Name = 'Organization.Read.All'
                     Type = 'Application'
                 }
             }
         )
         RequiredRoles       = @{
-            Read = @()
+            Read   = @()
             Update = @()
         }
         RequiredRoleGroups  = @{
-            Read = @()
+            Read   = @()
             Update = @()
         }
     }
@@ -416,9 +416,9 @@ function Get-M365DSCCompiledPermissionList
         }
         $results = @{
             AdministrativeRoles = $results.AdministrativeRoles.$AccessType
-            Permissions = $resultsByType
-            RequiredRoles = ($results.RequiredRoles).$AccessType
-            RequiredRoleGroups = ($results.RequiredRoleGroups).$AccessType
+            Permissions         = $resultsByType
+            RequiredRoles       = ($results.RequiredRoles).$AccessType
+            RequiredRoleGroups  = ($results.RequiredRoleGroups).$AccessType
         }
     }
 
@@ -559,7 +559,7 @@ function Update-M365DSCAllowedGraphScopes
     $permissions = ($results | Where-Object -FilterScript { $_.API -eq 'Graph' }).PermissionName
 
     # Remove the Tasks.Read.All permission from the list as it is causing an issue with the Graph SDK
-    $permissions = $permissions | Where-Object { $_ -ne "Tasks.Read.All" }
+    $permissions = $permissions | Where-Object { $_ -ne 'Tasks.Read.All' }
     Write-Verbose -Message "Found permissions: $($permissions -join ', ')"
     $params = @{
         Scopes = $permissions
@@ -1199,17 +1199,16 @@ function Update-M365DSCAzureAdApplication
 
                 Write-LogEntry ' '
                 Write-LogEntry 'Providing Admin Consent for application permissions'
-                $tenantid = $Credential.UserName.Split('@')[1]
-                $username = $Credential.UserName
-                $password = $Credential.GetNetworkCredential().password
 
-                $uri = 'https://login.microsoftonline.com/{0}/oauth2/token' -f $tenantid
-                $body = 'resource=74658136-14ec-4630-ad9b-26e160ff0fc6&client_id=1950a258-227b-4e31-a9cf-717495945fc2&grant_type=password&username={1}&password={0}' -f [System.Web.HttpUtility]::UrlEncode($password), $username
-                $token = Invoke-RestMethod $uri `
-                    -Method POST `
-                    -Body $body `
-                    -ContentType 'application/x-www-form-urlencoded' `
-                    -ErrorAction SilentlyContinue
+                $currentConnectionProfile = Get-MSCloudLoginConnectionProfile -Workload 'MicrosoftGraph'
+                $authorizationUrl = $currentConnectionProfile.AuthorizationUrl
+                $tenantId = $Credential.GetNetworkCredential().UserName.Split('@')[-1]
+                $token = Get-AuthToken -AuthorizationUrl $authorizationUrl `
+                    -ClientId '1950a258-227b-4e31-a9cf-717495945fc2' `
+                    -Scope '74658136-14ec-4630-ad9b-26e160ff0fc6/.default' `
+                    -Credentials $Credential `
+                    -TenantId $tenantId `
+                    -DeviceCode
 
                 $headers = @{
                     Authorization            = "Bearer $($token.access_token)"
@@ -1331,9 +1330,9 @@ function Update-M365DSCAzureAdApplication
 
                     Write-LogEntry "    Certificate details: $($cerCert.Subject) ($($cerCert.Thumbprint))"
                     $params = @{
-                        Type        = 'AsymmetricX509Cert'
-                        Usage       = 'Verify'
-                        Key         = $cerCert.GetRawCertData()
+                        Type  = 'AsymmetricX509Cert'
+                        Usage = 'Verify'
+                        Key   = $cerCert.GetRawCertData()
                     }
 
                     $maxRetries = 3

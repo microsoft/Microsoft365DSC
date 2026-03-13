@@ -91,8 +91,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -158,9 +158,9 @@ function Get-TargetResource
             if ($null -eq $getValue)
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                -FilterScript { `
-                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerVpnConfiguration' `
-                }
+                    -FilterScript { `
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerVpnConfiguration' `
+                    }
             }
             #endregion
 
@@ -186,7 +186,7 @@ function Get-TargetResource
             $myservers.Add('address', $currentservers.address)
             $myservers.Add('description', $currentservers.description)
             $myservers.Add('isDefaultServer', $currentservers.isDefaultServer)
-            if ($myservers.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myservers.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexServers += $myservers
             }
@@ -199,7 +199,7 @@ function Get-TargetResource
             $myservers.Add('automaticConfigurationScriptUrl', $currentservers.automaticConfigurationScriptUrl)
             $myservers.Add('address', $currentservers.address)
             $myservers.Add('port', $currentservers.port)
-            if ($myservers.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myservers.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexProxyServers += $myservers
             }
@@ -211,7 +211,7 @@ function Get-TargetResource
             $myCustomdata = [ordered]@{}
             $myCustomdata.Add('key', $value.key)
             $myCustomdata.Add('value', $value.value)
-            if ($myCustomdata.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myCustomdata.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexCustomData += $myCustomdata
             }
@@ -223,7 +223,7 @@ function Get-TargetResource
             $myCVdata = [ordered]@{}
             $myCVdata.Add('name', $value.name)
             $myCVdata.Add('value', $value.value)
-            if ($myCVdata.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myCVdata.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexCustomKeyValueData += $myCVdata
             }
@@ -237,7 +237,7 @@ function Get-TargetResource
             $myTMAdata.Add('publisher', $value.publisher)
             $myTMAdata.Add('appStoreUrl', $value.appStoreUrl)
             $myTMAdata.Add('appId', $value.appId)
-            if ($myTMAdata.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myTMAdata.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexTargetedMobileApps += $myTMAdata
             }
@@ -245,33 +245,33 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Id                             = $getValue.Id
-            Description                    = $getValue.Description
-            DisplayName                    = $getValue.DisplayName
-            RoleScopeTagIds                = $getValue.RoleScopeTagIds
-            authenticationMethod           = $getValue.AdditionalProperties.authenticationMethod
-            connectionName                 = $getValue.AdditionalProperties.connectionName
-            role                           = $getValue.AdditionalProperties.role
-            realm                          = $getValue.AdditionalProperties.realm
-            servers                        = $complexServers
-            connectionType                 = $getValue.AdditionalProperties.connectionType
-            proxyServer                    = $complexProxyServers
-            targetedPackageIds             = $getValue.AdditionalProperties.targetedPackageIds
-            targetedMobileApps             = $complexTargetedMobileApps
-            alwaysOn                       = $getValue.AdditionalProperties.alwaysOn
-            alwaysOnLockdown               = $getValue.AdditionalProperties.alwaysOnLockdown
-            microsoftTunnelSiteId          = $getValue.AdditionalProperties.microsoftTunnelSiteId
-            proxyExclusionList             = $getValue.AdditionalProperties.proxyExclusionList
-            customData                     = $complexCustomData
-            customKeyValueData             = $complexCustomKeyValueData
-            Ensure                         = 'Present'
-            Credential                     = $Credential
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            ApplicationSecret              = $ApplicationSecret
-            CertificateThumbprint          = $CertificateThumbprint
-            ManagedIdentity                = $ManagedIdentity.IsPresent
-            AccessTokens                   = $AccessTokens
+            Id                    = $getValue.Id
+            Description           = $getValue.Description
+            DisplayName           = $getValue.DisplayName
+            RoleScopeTagIds       = $getValue.RoleScopeTagIds
+            authenticationMethod  = $getValue.AdditionalProperties.authenticationMethod
+            connectionName        = $getValue.AdditionalProperties.connectionName
+            role                  = $getValue.AdditionalProperties.role
+            realm                 = $getValue.AdditionalProperties.realm
+            servers               = $complexServers
+            connectionType        = $getValue.AdditionalProperties.connectionType
+            proxyServer           = $complexProxyServers
+            targetedPackageIds    = $getValue.AdditionalProperties.targetedPackageIds
+            targetedMobileApps    = $complexTargetedMobileApps
+            alwaysOn              = $getValue.AdditionalProperties.alwaysOn
+            alwaysOnLockdown      = $getValue.AdditionalProperties.alwaysOnLockdown
+            microsoftTunnelSiteId = $getValue.AdditionalProperties.microsoftTunnelSiteId
+            proxyExclusionList    = $getValue.AdditionalProperties.proxyExclusionList
+            customData            = $complexCustomData
+            customKeyValueData    = $complexCustomKeyValueData
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Results.Id
@@ -279,8 +279,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -388,8 +388,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -449,8 +449,9 @@ function Set-TargetResource
     }
 
     $proxyHashtable = @{}
-    $proxyBlock -split ";" | ForEach-Object {
-        if ($_ -match '^(.*?)=(.*)$') {
+    $proxyBlock -split ';' | ForEach-Object {
+        if ($_ -match '^(.*?)=(.*)$')
+        {
             $key = $matches[1].Trim()
             $value = $matches[2].Trim()
             $proxyHashtable[$key] = $value
@@ -487,7 +488,7 @@ function Set-TargetResource
         if ($AdditionalProperties.proxyServer)
         {
             $AdditionalProperties.Remove('proxyServer') #this is not in a format Update-MgBetaDeviceManagementDeviceConfiguration will accept
-            $AdditionalProperties.Add('proxyServer',$proxyHashtable) #replaced with the hashtable we created earlier
+            $AdditionalProperties.Add('proxyServer', $proxyHashtable) #replaced with the hashtable we created earlier
         }
 
         $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
@@ -535,7 +536,7 @@ function Set-TargetResource
         if ($AdditionalProperties.proxyServer)
         {
             $AdditionalProperties.Remove('proxyServer') #this is not in a format Update-MgBetaDeviceManagementDeviceConfiguration will accept
-            $AdditionalProperties.Add('proxyServer',$proxyHashtable) #replaced with the hashtable we created earlier
+            $AdditionalProperties.Add('proxyServer', $proxyHashtable) #replaced with the hashtable we created earlier
         }
 
         if ($AdditionalProperties)
@@ -653,8 +654,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -696,7 +697,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -817,7 +818,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.servers `
                     -CIMInstanceName 'MicrosoftGraphvpnServer' #MSFT_MicrosoftGraphVpnServer
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.servers = $complexTypeStringResult
                 }
@@ -832,7 +833,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.proxyServer `
                     -CIMInstanceName 'MSFT_MicrosoftvpnProxyServer'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.proxyServer = $complexTypeStringResult
                 }
@@ -847,7 +848,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.customData `
                     -CIMInstanceName 'MSFT_CustomData'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.customData = $complexTypeStringResult
                 }
@@ -862,7 +863,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.customKeyValueData `
                     -CIMInstanceName 'MSFT_customKeyValueData'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.customKeyValueData = $complexTypeStringResult
                 }
@@ -877,7 +878,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.targetedMobileApps `
                     -CIMInstanceName 'MSFT_targetedMobileApps'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.targetedMobileApps = $complexTypeStringResult
                 }
@@ -905,7 +906,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

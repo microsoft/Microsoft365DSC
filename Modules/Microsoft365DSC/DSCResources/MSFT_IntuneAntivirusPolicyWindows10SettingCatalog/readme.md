@@ -1,4 +1,3 @@
-
 # IntuneAntivirusPolicyWindows10SettingCatalog
 
 ## Description

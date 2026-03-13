@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
 
 ## Description

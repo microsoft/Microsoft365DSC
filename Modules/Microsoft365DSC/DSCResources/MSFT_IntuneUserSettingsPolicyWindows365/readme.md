@@ -1,4 +1,3 @@
-
 # IntuneUserSettingsPolicyWindows365
 
 ## Description

@@ -1,4 +1,3 @@
-
 # TeamsAppPermissionPolicy
 
 ## Description

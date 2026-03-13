@@ -1,4 +1,4 @@
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_IntuneAntivirusPolicyWindows10ConfigMgr"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneAntivirusPolicyWindows10ConfigMgr'
 
 function Get-TargetResource
 {
@@ -233,8 +233,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -334,10 +334,10 @@ function Get-TargetResource
         $policySettings = @{}
         $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings
 
-        $disableRestorePointInstance = $settings | Where-Object { $_.SettingInstance.SettingDefinitionId -like "*_disablerestorepoint" }
+        $disableRestorePointInstance = $settings | Where-Object { $_.SettingInstance.SettingDefinitionId -like '*_disablerestorepoint' }
         if ($null -ne $disableRestorePointInstance)
         {
-            $policySettings.DisableRestorePoint = [int]$disableRestorePointInstance.SettingInstance.AdditionalProperties.choiceSettingValue.value.Split("_")[-1]
+            $policySettings.DisableRestorePoint = [int]$disableRestorePointInstance.SettingInstance.AdditionalProperties.choiceSettingValue.value.Split('_')[-1]
         }
 
         $results = @{
@@ -611,8 +611,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -670,62 +670,66 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Antivirus Policy for Windows10 Config Mgr with DisplayName {$DisplayName}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         [array]$settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$boundParameters) `
             -TemplateId $templateReferenceId
 
-        if ($PSBoundParameters.ContainsKey('DisableRestorePoint')) {
+        if ($PSBoundParameters.ContainsKey('DisableRestorePoint'))
+        {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    choiceSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    choiceSettingValue  = @{
                         children = @()
-                        value = "defender_disablerestorepoint_$DisableRestorePoint"
+                        value    = "defender_disablerestorepoint_$DisableRestorePoint"
                     }
                     settingDefinitionId = 'defender_disablerestorepoint'
                 }
             }
         }
 
-        if ($PSBoundParameters.ContainsKey('RandomizeScheduleTaskTimes')) {
+        if ($PSBoundParameters.ContainsKey('RandomizeScheduleTaskTimes'))
+        {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    choiceSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    choiceSettingValue  = @{
                         children = @()
-                        value = "defender_randomizescheduletasktimes_$RandomizeScheduleTaskTimes"
+                        value    = "defender_randomizescheduletasktimes_$RandomizeScheduleTaskTimes"
                     }
                     settingDefinitionId = 'defender_randomizescheduletasktimes'
                 }
             }
         }
 
-        if ($PSBoundParameters.ContainsKey('SecurityIntelligenceLocation')) {
+        if ($PSBoundParameters.ContainsKey('SecurityIntelligenceLocation'))
+        {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                    simpleSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                    simpleSettingValue  = @{
                         '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                        value = "$SecurityIntelligenceLocation"
+                        value         = "$SecurityIntelligenceLocation"
                     }
                     settingDefinitionId = 'device_vendor_msft_policy_config_defender_securityintelligencelocation'
                 }
             }
         }
 
-        if ($PSBoundParameters.ContainsKey('DisablePrivacyMode')) {
+        if ($PSBoundParameters.ContainsKey('DisablePrivacyMode'))
+        {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    choiceSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    choiceSettingValue  = @{
                         children = @()
-                        value = "defender_disableprivacymode_$DisablePrivacyMode"
+                        value    = "defender_disableprivacymode_$DisablePrivacyMode"
                     }
                     settingDefinitionId = 'defender_disableprivacymode'
                 }
@@ -733,12 +737,12 @@ function Set-TargetResource
         }
 
         $createParameters = @{
-            Name              = $DisplayName
-            Description       = $Description
-            CreationSource    = 'SccmAV'
-            Platforms         = $platforms
-            Technologies      = $technologies
-            Settings          = $settings
+            Name           = $DisplayName
+            Description    = $Description
+            CreationSource = 'SccmAV'
+            Platforms      = $platforms
+            Technologies   = $technologies
+            Settings       = $settings
         }
 
         #region resource generator code
@@ -757,62 +761,66 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Antivirus Policy for Windows10 Config Mgr with Id {$($currentInstance.Id)}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         [array]$settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$boundParameters) `
             -TemplateId $templateReferenceId
 
-        if ($PSBoundParameters.ContainsKey('DisableRestorePoint')) {
+        if ($PSBoundParameters.ContainsKey('DisableRestorePoint'))
+        {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    choiceSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    choiceSettingValue  = @{
                         children = @()
-                        value = "defender_disablerestorepoint_$DisableRestorePoint"
+                        value    = "defender_disablerestorepoint_$DisableRestorePoint"
                     }
                     settingDefinitionId = 'defender_disablerestorepoint'
                 }
             }
         }
 
-        if ($PSBoundParameters.ContainsKey('RandomizeScheduleTaskTimes')) {
+        if ($PSBoundParameters.ContainsKey('RandomizeScheduleTaskTimes'))
+        {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    choiceSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    choiceSettingValue  = @{
                         children = @()
-                        value = "defender_randomizescheduletasktimes_$RandomizeScheduleTaskTimes"
+                        value    = "defender_randomizescheduletasktimes_$RandomizeScheduleTaskTimes"
                     }
                     settingDefinitionId = 'defender_randomizescheduletasktimes'
                 }
             }
         }
 
-        if ($PSBoundParameters.ContainsKey('SecurityIntelligenceLocation')) {
+        if ($PSBoundParameters.ContainsKey('SecurityIntelligenceLocation'))
+        {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                    simpleSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                    simpleSettingValue  = @{
                         '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                        value = "$SecurityIntelligenceLocation"
+                        value         = "$SecurityIntelligenceLocation"
                     }
                     settingDefinitionId = 'device_vendor_msft_policy_config_defender_securityintelligencelocation'
                 }
             }
         }
 
-        if ($PSBoundParameters.ContainsKey('DisablePrivacyMode')) {
+        if ($PSBoundParameters.ContainsKey('DisablePrivacyMode'))
+        {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    choiceSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    choiceSettingValue  = @{
                         children = @()
-                        value = "defender_disableprivacymode_$DisablePrivacyMode"
+                        value    = "defender_disableprivacymode_$DisablePrivacyMode"
                     }
                     settingDefinitionId = 'defender_disableprivacymode'
                 }
@@ -1080,8 +1088,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -1124,8 +1132,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -1285,7 +1293,7 @@ function Get-CompareParameters
     param()
 
     return @{
-        PostProcessing = {
+        PostProcessing     = {
             param($DesiredValues, $CurrentValues, $ValuesToCheck, $PostProcessingArgs)
             $PostProcessingArgs[0] | ForEach-Object {
                 if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))

@@ -1,5 +1,5 @@
 
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_IntuneFirewallPolicySetting"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneFirewallPolicySetting'
 $Script:PropertiesToRetrieve = @('id', 'displayName', 'description', 'settingDefinitionId', 'settingInstance')
 
 function Get-TargetResource
@@ -36,8 +36,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -147,7 +147,7 @@ function Get-TargetResource
         $printerReusableSettings = @()
         foreach ($groupSetting in $groupSettingsObject.groupSettingCollectionValue)
         {
-            if ($groupSetting.children[0].settingDefinitionId -like "*descriptoridlist*")
+            if ($groupSetting.children[0].settingDefinitionId -like '*descriptoridlist*')
             {
                 $serialNumberIdObject = $groupSetting.children | Where-Object { $_.settingDefinitionId -eq 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_descriptoridlist_serialnumberid' }
                 $deviceIdObject       = $groupSetting.children | Where-Object { $_.settingDefinitionId -eq 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_descriptoridlist_deviceid' }
@@ -193,8 +193,8 @@ function Get-TargetResource
                 $policySetting = [ordered]@{
                     FriendlyNameId      = $friendlyNameIdObject.simpleSettingValue.value
                     Name                = $nameObject.simpleSettingValue.value
-                    PrinterConnectionId = [System.Int32]::Parse($printerConnectionIdObject.choiceSettingValue.value.Split("_")[-1])
-                    PrimaryId           = [System.Int32]::Parse($primaryIdObject.choiceSettingValue.value.Split("_")[-1])
+                    PrinterConnectionId = [System.Int32]::Parse($printerConnectionIdObject.choiceSettingValue.value.Split('_')[-1])
+                    PrimaryId           = [System.Int32]::Parse($primaryIdObject.choiceSettingValue.value.Split('_')[-1])
                     VID_PID             = $vid_PidObject.simpleSettingValue.value
                 }
                 $policySetting.Keys.Clone().GetEnumerator() | ForEach-Object {
@@ -209,19 +209,19 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Description                    = $getValue.description
-            DisplayName                    = $getValue.displayName
-            Id                             = $getValue.id
-            MatchType                      = $matchObject.choiceSettingValue.value.Split('_')[-1].Replace("matcha", "A")
-            PrinterPolicySettings          = $printerReusableSettings
-            StoragePolicySettings          = $storageReusableSettings
-            Ensure                         = 'Present'
-            Credential                     = $Credential
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            ApplicationSecret              = $ApplicationSecret
-            CertificateThumbprint          = $CertificateThumbprint
-            ManagedIdentity                = $ManagedIdentity.IsPresent
+            Description           = $getValue.description
+            DisplayName           = $getValue.displayName
+            Id                    = $getValue.id
+            MatchType             = $matchObject.choiceSettingValue.value.Split('_')[-1].Replace('matcha', 'A')
+            PrinterPolicySettings = $printerReusableSettings
+            StoragePolicySettings = $storageReusableSettings
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
 
@@ -272,8 +272,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -330,11 +330,11 @@ function Set-TargetResource
             settingDefinitionId         = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata'
             groupSettingCollectionValue = @(
                 @{
-                    children      = @(
+                    children = @(
                         @{
-                            '@odata.type'          = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                            settingDefinitionId    = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_matchtype'
-                            choiceSettingValue     = @{
+                            '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            settingDefinitionId = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_matchtype'
+                            choiceSettingValue  = @{
                                 '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue'
                                 value         = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_matchtype_match' + $MatchType.ToLower()
                             }
@@ -346,13 +346,13 @@ function Set-TargetResource
     }
 
     $storageSettings = @{
-        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-        settingDefinitionId = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_descriptoridlist'
+        '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+        settingDefinitionId         = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_descriptoridlist'
         groupSettingCollectionValue = @()
     }
     $printerSettings = @{
-        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-        settingDefinitionId = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_printerdevicesidlist'
+        '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+        settingDefinitionId         = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_printerdevicesidlist'
         groupSettingCollectionValue = @()
     }
 
@@ -366,9 +366,9 @@ function Set-TargetResource
             if ($property.Name -in @('FriendlyNameId', 'Name', 'VID_PID'))
             {
                 $policySettingInitializer.children += @{
-                    '@odata.type'          = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                    settingDefinitionId    = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_printerdevicesidlist_' + $property.Name.ToLower()
-                    simpleSettingValue     = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                    settingDefinitionId = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_printerdevicesidlist_' + $property.Name.ToLower()
+                    simpleSettingValue  = @{
                         '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
                         value         = $property.Value
                     }
@@ -377,9 +377,9 @@ function Set-TargetResource
             else
             {
                 $policySettingInitializer.children += @{
-                    '@odata.type'          = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    settingDefinitionId    = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_printerdevicesidlist_' + $property.Name.ToLower()
-                    choiceSettingValue     = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    settingDefinitionId = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_printerdevicesidlist_' + $property.Name.ToLower()
+                    choiceSettingValue  = @{
                         '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue'
                         children      = @()
                         value         = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_printerdevicesidlist_' + $property.Name.ToLower() + '_' + $property.Value
@@ -398,9 +398,9 @@ function Set-TargetResource
         foreach ($property in $policySetting.CimInstanceProperties.GetEnumerator())
         {
             $policySettingInitializer.children += @{
-                '@odata.type'          = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                settingDefinitionId    = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_descriptoridlist_' + $property.Name.ToLower()
-                simpleSettingValue     = @{
+                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                settingDefinitionId = 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_descriptoridlist_' + $property.Name.ToLower()
+                simpleSettingValue  = @{
                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
                     value         = $property.Value
                 }
@@ -450,7 +450,7 @@ function Set-TargetResource
         catch
         {
             $errorMessage = "Failed to remove the Intune Device Control Policy Setting with Id {$($currentInstance.Id)} and Name {$($currentInstance.DisplayName)}."
-            $errorMessage += " Please make sure it is not referenced by a Device Control policy."
+            $errorMessage += ' Please make sure it is not referenced by a Device Control policy.'
             throw $errorMessage
         }
         #endregion
@@ -491,8 +491,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -535,8 +535,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -635,7 +635,7 @@ function Export-TargetResource
             }
             Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $matchObject = $config.settingInstance.groupSettingCollectionValue[0].children | Where-Object { $_.settingDefinitionId -eq 'device_vendor_msft_defender_configuration_devicecontrol_policygroups_{groupid}_groupdata_matchtype' }
-            $matchType = $matchObject.choiceSettingValue.value.Split('_')[-1].Replace("matcha", "A")
+            $matchType = $matchObject.choiceSettingValue.value.Split('_')[-1].Replace('matcha', 'A')
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.DisplayName

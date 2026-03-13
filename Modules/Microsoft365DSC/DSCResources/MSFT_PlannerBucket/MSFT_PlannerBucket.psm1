@@ -19,8 +19,8 @@ function Get-TargetResource
         $BucketId,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -134,8 +134,8 @@ function Set-TargetResource
         $BucketId,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -217,8 +217,8 @@ function Test-TargetResource
         $BucketId,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -256,7 +256,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

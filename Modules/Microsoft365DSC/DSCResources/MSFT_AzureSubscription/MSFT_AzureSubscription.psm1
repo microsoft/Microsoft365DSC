@@ -54,39 +54,28 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for Azure Subscription with Name $Name"
 
-    $null = New-M365DSCConnection -Workload 'Azure' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if ($null -eq $Script:exportedInstances -or -not $Script:ExportMode)
         {
-            if (-not [System.String]::IsNullOrEmpty($Id))
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Id }
-            }
-            elseif ($null -eq $instance -and -not [System.String]::IsNullOrEmpty($Name))
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.properties.displayName -eq $DisplayName -and `
-                        $_.properties.invoiceSectionId -eq $InvoiceSectionId }
-            }
-        }
-        else
-        {
+            $null = New-M365DSCConnection -Workload 'Azure' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 $uri = "https://management.azure.com$($InvoiceSectionId)/billingSubscriptions/$($Id)?api-version=2024-04-01"
@@ -100,10 +89,23 @@ function Get-TargetResource
                 $instances = (ConvertFrom-Json $response.Content).value
                 $instance = $instances | Where-Object -FilterScript { $_.properties.displayName -eq $DisplayName }
             }
+
+            if ($null -eq $instance)
+            {
+                return $nullResult
+            }
         }
-        if ($null -eq $instance)
+        else
         {
-            return $nullResult
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Id }
+            }
+            elseif ($null -eq $instance -and -not [System.String]::IsNullOrEmpty($Name))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.properties.displayName -eq $DisplayName -and `
+                        $_.properties.invoiceSectionId -eq $InvoiceSectionId }
+            }
         }
 
         $results = @{
@@ -302,7 +304,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

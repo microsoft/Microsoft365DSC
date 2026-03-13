@@ -268,7 +268,7 @@ function Set-TargetResource
     }
 
     #No site design rights currently exist so add them
-    If ($currentSiteDesignRights.Ensure -eq 'Absent')
+    if ($currentSiteDesignRights.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Granting SiteDesign rights on site design $SiteDesignTitle"
         Grant-PnPSiteDesignRights -Identity $cursiteDesign.Id -Principals $UserPrincipals -Rights $Rights
@@ -347,8 +347,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

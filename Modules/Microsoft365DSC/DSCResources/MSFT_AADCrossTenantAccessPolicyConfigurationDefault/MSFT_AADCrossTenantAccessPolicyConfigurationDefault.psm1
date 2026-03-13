@@ -7,8 +7,8 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -65,7 +65,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Cross Tenant Access Policy Configuration Default"
+    Write-Verbose -Message 'Getting configuration of AzureAD Cross Tenant Access Policy Configuration Default'
 
     try
     {
@@ -91,7 +91,7 @@ function Get-TargetResource
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Cross Tenant Access Configuration Default"
+            Write-Verbose -Message 'Could not find an Azure AD Cross Tenant Access Configuration Default'
             return $nullResult
         }
 
@@ -99,7 +99,7 @@ function Get-TargetResource
         if ($null -ne $getValue.B2BCollaborationInbound)
         {
             $B2BCollaborationInboundValue = [ordered]@{
-                Applications = [ordered]@{
+                Applications   = [ordered]@{
                     AccessType = $getValue.B2BCollaborationInbound.Applications.AccessType
                     Targets    = [System.Array]$getValue.B2BCollaborationInbound.Applications.Targets
                 }
@@ -148,7 +148,7 @@ function Get-TargetResource
         if ($null -ne $getValue.B2BCollaborationOutbound)
         {
             $B2BCollaborationOutboundValue = [ordered]@{
-                Applications = [ordered]@{
+                Applications   = [ordered]@{
                     AccessType = $getValue.B2BCollaborationOutbound.Applications.AccessType
                     Targets    = [System.Array] $getValue.B2BCollaborationOutbound.Applications.Targets
                 }
@@ -197,7 +197,7 @@ function Get-TargetResource
         if ($null -ne $getValue.B2BDirectConnectInbound)
         {
             $B2BDirectConnectInboundValue = [ordered]@{
-                Applications = [ordered]@{
+                Applications   = [ordered]@{
                     AccessType = $getValue.B2BDirectConnectInbound.Applications.AccessType
                     Targets    = [System.Array] $getValue.B2BDirectConnectInbound.Applications.Targets
                 }
@@ -210,7 +210,7 @@ function Get-TargetResource
         if ($null -ne $getValue.B2BDirectConnectOutbound)
         {
             $B2BDirectConnectOutboundValue = [ordered]@{
-                Applications = [ordered]@{
+                Applications   = [ordered]@{
                     AccessType = $getValue.B2BDirectConnectOutbound.Applications.AccessType
                     Targets    = [System.Array] $getValue.B2BDirectConnectOutbound.Applications.Targets
                 }
@@ -301,8 +301,8 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -359,7 +359,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of AzureAD Cross Tenant Access Policy Configuration Default"
+    Write-Verbose -Message 'Setting configuration of AzureAD Cross Tenant Access Policy Configuration Default'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -439,8 +439,8 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -507,7 +507,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -610,7 +610,7 @@ function Export-TargetResource
                 -CIMInstanceName 'AADCrossTenantAccessPolicyB2BSetting' `
                 -ComplexTypeMapping $complexMapping
 
-            if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
             {
                 $Results.B2BCollaborationInbound = $complexTypeStringResult
             }
@@ -649,7 +649,7 @@ function Export-TargetResource
                 -CIMInstanceName 'AADCrossTenantAccessPolicyB2BSetting' `
                 -ComplexTypeMapping $complexMapping
 
-            if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
             {
                 $Results.B2BCollaborationOutbound = $complexTypeStringResult
             }
@@ -688,7 +688,7 @@ function Export-TargetResource
                 -CIMInstanceName 'AADCrossTenantAccessPolicyB2BSetting' `
                 -ComplexTypeMapping $complexMapping
 
-            if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
             {
                 $Results.B2BDirectConnectInbound = $complexTypeStringResult
             }
@@ -727,7 +727,7 @@ function Export-TargetResource
                 -CIMInstanceName 'AADCrossTenantAccessPolicyB2BSetting' `
                 -ComplexTypeMapping $complexMapping
 
-            if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
             {
                 $Results.B2BDirectConnectOutbound = $complexTypeStringResult
             }
@@ -751,7 +751,7 @@ function Export-TargetResource
                 -CIMInstanceName 'AADCrossTenantAccessPolicyInboundTrust' `
                 -ComplexTypeMapping $complexMapping
 
-            if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
             {
                 $Results.InboundTrust = $complexTypeStringResult
             }
@@ -880,7 +880,7 @@ function Get-M365DSCAADCrossTenantAccessPolicyB2BSetting
         $targets = @()
         foreach ($currentTarget in $Setting.usersAndGroups.targets)
         {
-            $user  = $null
+            $user = $null
             $group = $null
             if ($currentTarget.targetType -eq 'User')
             {

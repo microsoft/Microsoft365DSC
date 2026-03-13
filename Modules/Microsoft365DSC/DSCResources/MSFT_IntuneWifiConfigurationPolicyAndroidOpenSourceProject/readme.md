@@ -1,4 +1,3 @@
-
 # IntuneWifiConfigurationPolicyAndroidOpenSourceProject
 
 ## Description

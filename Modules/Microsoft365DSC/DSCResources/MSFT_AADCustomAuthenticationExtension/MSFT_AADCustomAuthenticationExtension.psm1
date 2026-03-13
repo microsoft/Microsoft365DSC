@@ -498,7 +498,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -508,6 +508,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -554,7 +558,10 @@ function Export-TargetResource
 
     try
     {
-        [array] $Script:exportedInstances = Get-MgBetaIdentityCustomAuthenticationExtension -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaIdentityCustomAuthenticationExtension `
+        -All `
+        -Filter $Filter `
+        -ErrorAction Stop
 
         $i = 1
         $dscContent = ''

@@ -1,4 +1,3 @@
-
 # IntuneTrustedRootCertificateAndroidWork
 
 ## Description

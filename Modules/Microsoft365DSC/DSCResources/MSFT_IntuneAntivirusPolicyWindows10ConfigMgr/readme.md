@@ -1,4 +1,3 @@
-
 # IntuneAntivirusPolicyWindows10ConfigMgr
 
 ## Description

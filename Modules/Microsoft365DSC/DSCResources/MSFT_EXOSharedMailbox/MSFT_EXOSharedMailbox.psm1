@@ -276,7 +276,7 @@ function Set-TargetResource
             $emails += $secondaryAlias + ','
         }
         $emails += $PrimarySMTPAddress
-        $proxyAddresses = $emails -Split ','
+        $proxyAddresses = $emails -split ','
         $CurrentParameters.EmailAddresses = $proxyAddresses
         $NewMailBoxParameters = @{
             Name               = $DisplayName
@@ -318,7 +318,7 @@ function Set-TargetResource
                     $emailsToAdd += $secondaryAlias.InputObject + ','
                 }
                 $emailsToAdd += $PrimarySMTPAddress
-                $proxyAddresses = $emailsToAdd -Split ','
+                $proxyAddresses = $emailsToAdd -split ','
 
                 Write-Verbose -Message "Adding the following EmailAddresses: $emailsToAdd"
                 Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $proxyAddresses }
@@ -333,7 +333,7 @@ function Set-TargetResource
                     $emailsToRemoved += $secondaryAlias.InputObject + ','
                 }
                 $emailsToRemoved += $PrimarySMTPAddress
-                $proxyAddresses = $emailsToRemoved -Split ','
+                $proxyAddresses = $emailsToRemoved -split ','
 
                 Write-Verbose -Message "Removing the following EmailAddresses: $emailsToRemoved"
                 Set-Mailbox -Identity $DisplayName -EmailAddresses @{remove = $proxyAddresses }
@@ -437,8 +437,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

@@ -1,4 +1,3 @@
-
 # IntuneEndpointDetectionAndResponsePolicyWindows10
 
 ## Description

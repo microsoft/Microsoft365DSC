@@ -1,4 +1,3 @@
-
 # IntuneDeviceEnrollmentLimitRestriction
 
 ## Description

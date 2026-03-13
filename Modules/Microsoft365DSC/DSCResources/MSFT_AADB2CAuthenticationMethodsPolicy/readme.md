@@ -1,4 +1,3 @@
-
 # AADB2CAuthenticationMethodsPolicy
 
 ## Description

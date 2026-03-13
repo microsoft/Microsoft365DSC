@@ -32,8 +32,8 @@ function Get-TargetResource
         $IsExternallyVisible,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -188,8 +188,8 @@ function Set-TargetResource
         $IsExternallyVisible,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -311,8 +311,8 @@ function Test-TargetResource
         $IsExternallyVisible,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -354,7 +354,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -364,6 +364,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -411,7 +415,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = (Get-MgBetaEntitlementManagementAccessPackage -All -ErrorAction Stop) | Select-Object -Unique CatalogId | Select-Object -ExpandProperty CatalogId
+        [array]$getValue = (Get-MgBetaEntitlementManagementAccessPackage -All -Filter $Filter -ErrorAction Stop) | Select-Object -Unique CatalogId | Select-Object -ExpandProperty CatalogId
         #endregion
         $i = 1
         $dscContent = ''

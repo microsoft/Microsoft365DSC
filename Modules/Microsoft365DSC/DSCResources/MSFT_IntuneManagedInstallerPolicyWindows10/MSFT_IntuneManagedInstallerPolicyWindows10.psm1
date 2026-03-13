@@ -33,8 +33,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -200,8 +200,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -248,14 +248,20 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $boundParameters.Remove('IsIntuneManagedInstaller') | Out-Null
+
+    $isIntuneManagedInstallerValue = 'false'
+    if ($IsIntuneManagedInstaller)
+    {
+        $isIntuneManagedInstallerValue = 'true'
+    }
     $boundParameters.detectionScriptParameters = @(
         @{
-            '@odata.type' = "#microsoft.graph.deviceHealthScriptStringParameter"
+            '@odata.type'                    = '#microsoft.graph.deviceHealthScriptStringParameter'
             applyDefaultValueWhenNotAssigned = $true
-            defaultValue = if ($IsIntuneManagedInstaller) { "true" } else { "false" }
-            description = "Enable Intune Managed Extension as Managed Installer"
-            isRequired = $true
-            name = "Enabled"
+            defaultValue                     = $isIntuneManagedInstallerValue
+            description                      = 'Enable Intune Managed Extension as Managed Installer'
+            isRequired                       = $true
+            name                             = 'Enabled'
         }
     )
     $boundParameters.enforceSignatureCheck = $true
@@ -285,13 +291,13 @@ function Set-TargetResource
             $createParameters.Remove('RoleScopeTagIds') | Out-Null
         }
         $createParameters.deviceHealthScriptType = 'managedInstallerScript'
-        $createParameters.detectionScriptContent = "ZGV0ZWN0aW9uU2NyaXB0Q29udGVudA=="
-        $createParameters.remediationScriptContent = "cmVtZWRpYXRpb25TY3JpcHRDb250ZW50"
+        $createParameters.detectionScriptContent = 'ZGV0ZWN0aW9uU2NyaXB0Q29udGVudA=='
+        $createParameters.remediationScriptContent = 'cmVtZWRpYXRpb25TY3JpcHRDb250ZW50'
         $createParameters.isGlobalScript = $false
-        $createParameters.'@odata.type' = "#microsoft.graph.deviceHealthScript"
+        $createParameters.'@odata.type' = '#microsoft.graph.deviceHealthScript'
 
         #region resource generator code
-        $policy = Invoke-MgGraphRequest -Uri "/beta/deviceManagement/deviceHealthScripts" `
+        $policy = Invoke-MgGraphRequest -Uri '/beta/deviceManagement/deviceHealthScripts' `
             -Method POST `
             -Body $($createParameters | ConvertTo-Json -Depth 10) `
             -SkipHttpErrorCheck
@@ -299,7 +305,7 @@ function Set-TargetResource
         if ($policy.error)
         {
             Write-Warning -Message "Received error while creating Intune Managed Installer Policy for Windows10: $($policy.error.message)"
-            Write-Verbose -Message "Check if policy was created despite the error."
+            Write-Verbose -Message 'Check if policy was created despite the error.'
             $policy = Get-MgBetaDeviceManagementDeviceHealthScript -Filter "displayName eq '$DisplayName' and deviceHealthScriptType eq 'managedInstallerScript'" -ErrorAction SilentlyContinue
 
             if ($null -eq $policy)
@@ -397,8 +403,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -440,7 +446,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 
 }

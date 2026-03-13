@@ -18,7 +18,7 @@ function Get-TargetResource
         $AdDomainUsername,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('hybridAzureADJoin','azureADJoin')]
+        [ValidateSet('hybridAzureADJoin', 'azureADJoin')]
         [System.String]
         $ConnectionType,
 
@@ -56,8 +56,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -120,7 +120,7 @@ function Get-TargetResource
             #region resource generator code
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaDeviceManagementVirtualEndpointOnPremiseConnection -CloudPcOnPremisesConnectionId $Id  -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaDeviceManagementVirtualEndpointOnPremiseConnection -CloudPcOnPremisesConnectionId $Id -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $getValue)
@@ -158,24 +158,24 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            AdDomainName             = $getValue.AdDomainName
-            AdDomainUsername         = $getValue.AdDomainUsername
-            ConnectionType           = $enumConnectionType
-            DisplayName              = $getValue.DisplayName
-            OrganizationalUnit       = $getValue.OrganizationalUnit
-            ResourceGroupId          = $getValue.ResourceGroupId.Replace("/subscriptions/$($getValue.SubscriptionId)/", "/subscriptions/$($getValue.SubscriptionName)/")
-            RoleScopeTagIds          = $getValue.ScopeIds
-            SubnetId                 = $getValue.SubnetId.Replace("/subscriptions/$($getValue.SubscriptionId)/", "/subscriptions/$($getValue.SubscriptionName)/")
-            SubscriptionName         = $getValue.SubscriptionName
-            VirtualNetworkId         = $getValue.VirtualNetworkId.Replace("/subscriptions/$($getValue.SubscriptionId)/", "/subscriptions/$($getValue.SubscriptionName)/")
-            Id                       = $getValue.Id
-            Ensure                   = 'Present'
-            Credential               = $Credential
-            ApplicationId            = $ApplicationId
-            TenantId                 = $TenantId
-            ApplicationSecret        = $ApplicationSecret
-            CertificateThumbprint    = $CertificateThumbprint
-            ManagedIdentity          = $ManagedIdentity.IsPresent
+            AdDomainName          = $getValue.AdDomainName
+            AdDomainUsername      = $getValue.AdDomainUsername
+            ConnectionType        = $enumConnectionType
+            DisplayName           = $getValue.DisplayName
+            OrganizationalUnit    = $getValue.OrganizationalUnit
+            ResourceGroupId       = $getValue.ResourceGroupId.Replace("/subscriptions/$($getValue.SubscriptionId)/", "/subscriptions/$($getValue.SubscriptionName)/")
+            RoleScopeTagIds       = $getValue.ScopeIds
+            SubnetId              = $getValue.SubnetId.Replace("/subscriptions/$($getValue.SubscriptionId)/", "/subscriptions/$($getValue.SubscriptionName)/")
+            SubscriptionName      = $getValue.SubscriptionName
+            VirtualNetworkId      = $getValue.VirtualNetworkId.Replace("/subscriptions/$($getValue.SubscriptionId)/", "/subscriptions/$($getValue.SubscriptionName)/")
+            Id                    = $getValue.Id
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
 
@@ -219,7 +219,7 @@ function Set-TargetResource
         $AdDomainUsername,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('hybridAzureADJoin','azureADJoin')]
+        [ValidateSet('hybridAzureADJoin', 'azureADJoin')]
         [System.String]
         $ConnectionType,
 
@@ -257,8 +257,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -294,7 +294,7 @@ function Set-TargetResource
 
     if ($Type -eq 'hybridAzureADJoin' -and ($PSBoundParameters.ContainsKey('AdDomainName') -or $PSBoundParameters.ContainsKey('AdDomainPassword') -or $PSBoundParameters.ContainsKey('AdDomainUsername')))
     {
-        throw "AdDomainName, AdDomainPassword and AdDomainUsername are required for hybridAzureADJoin"
+        throw 'AdDomainName, AdDomainPassword and AdDomainUsername are required for hybridAzureADJoin'
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -409,7 +409,7 @@ function Test-TargetResource
         $AdDomainUsername,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('hybridAzureADJoin','azureADJoin')]
+        [ValidateSet('hybridAzureADJoin', 'azureADJoin')]
         [System.String]
         $ConnectionType,
 
@@ -447,8 +447,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -498,8 +498,8 @@ function Test-TargetResource
     $compareParameters = Get-CompareParameters
     $compareParameters.ExcludedProperties += $excludedProperties
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

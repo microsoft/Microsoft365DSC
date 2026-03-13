@@ -1,5 +1,7 @@
-# Generated with Microsoft365DSC version 1.24.1016.1
-# For additional information on how to use Microsoft365DSC, please visit https://aka.ms/M365DSC
+<#
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+#>
 
 Configuration Example
 {

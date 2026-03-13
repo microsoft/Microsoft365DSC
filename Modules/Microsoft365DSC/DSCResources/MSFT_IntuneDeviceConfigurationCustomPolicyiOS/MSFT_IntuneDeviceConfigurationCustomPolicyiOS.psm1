@@ -41,8 +41,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -108,9 +108,9 @@ function Get-TargetResource
             if ($null -eq $getValue)
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                -FilterScript { `
-                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosCustomConfiguration' `
-                }
+                    -FilterScript { `
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosCustomConfiguration' `
+                    }
             }
             #endregion
 
@@ -131,20 +131,20 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Id                             = $getValue.Id
-            Description                    = $getValue.Description
-            DisplayName                    = $getValue.DisplayName
-            PayloadName                    = $getValue.AdditionalProperties.payloadName
-            PayloadFileName                = $getValue.AdditionalProperties.payloadFileName
-            Payload                        = $getValue.AdditionalProperties.payload
-            Ensure                         = 'Present'
-            Credential                     = $Credential
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            ApplicationSecret              = $ApplicationSecret
-            CertificateThumbprint          = $CertificateThumbprint
-            ManagedIdentity                = $ManagedIdentity.IsPresent
-            AccessTokens                   = $AccessTokens
+            Id                    = $getValue.Id
+            Description           = $getValue.Description
+            DisplayName           = $getValue.DisplayName
+            PayloadName           = $getValue.AdditionalProperties.payloadName
+            PayloadFileName       = $getValue.AdditionalProperties.payloadFileName
+            Payload               = $getValue.AdditionalProperties.payload
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Results.Id
@@ -152,8 +152,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -211,8 +211,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -267,7 +267,7 @@ function Set-TargetResource
         $BoundParameters.Remove('Assignments') | Out-Null
         $CreateParameters = ([Hashtable]$BoundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Add('@odata.type',"#microsoft.graph.iosCustomConfiguration")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.iosCustomConfiguration')
         $CreateParameters.Remove('Id') | Out-Null
 
         foreach ($key in ($CreateParameters.Clone()).Keys)
@@ -297,7 +297,7 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
         $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Add('@odata.type',"#microsoft.graph.iosCustomConfiguration")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.iosCustomConfiguration')
 
         foreach ($key in ($UpdateParameters.Clone()).Keys)
         {
@@ -367,8 +367,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -410,7 +410,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -545,7 +545,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

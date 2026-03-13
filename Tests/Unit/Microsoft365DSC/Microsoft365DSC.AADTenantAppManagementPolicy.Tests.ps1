@@ -53,7 +53,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 state = "enabled"
                             },
                             @{
-                                maxLifetime = "P90DT0H0M0S"
+                                maxLifetime = @{
+                                    Days    = 90
+                                    Hours   = 0
+                                    Minutes = 0
+                                    Seconds = 0
+                                }
                                 restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
                                 restrictionType = "passwordLifetime"
                                 state = "enabled"
@@ -64,7 +69,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 state = "enabled"
                             },
                             @{
-                                maxLifetime = "P90DT0H0M0S"
+                                maxLifetime = @{
+                                    Days    = 90
+                                    Hours   = 0
+                                    Minutes = 0
+                                    Seconds = 0
+                                }
                                 restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
                                 restrictionType = "symmetricKeyLifetime"
                                 state = "enabled"
@@ -99,31 +109,51 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "Get-TargetResource returns ApplicationRestrictions with maxLifetime converted to ISO 8601" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName         = "MyPolicy"
+                    Description         = "MyDescription"
+                    Ensure              = 'Present'
+                    Credential          = $Credential;
+                }
+            }
+
+            It 'Should return maxLifetime in ISO 8601 format from the Get method' {
+                $result = Get-TargetResource @testParams
+                $result.Ensure | Should -Be 'Present'
+                $result.ApplicationRestrictions.passwordCredentials | Should -HaveCount 4
+                $lifetimeCred = $result.ApplicationRestrictions.passwordCredentials | Where-Object { $_.restrictionType -eq 'passwordLifetime' }
+                $lifetimeCred | Should -Not -BeNullOrEmpty
+                $lifetimeCred.maxLifetime | Should -Be 'P90DT0H0M0S'
+            }
+        }
+
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
                     DisplayName         = "MyPolicy"
                     Description         = "MyDescription"
                     IsEnabled           = $true
-                    ApplicationRestrictions          = (New-CimInstance -ClassName MSFT_AADAppManagementPolicyRestrictions -Property @{
+                    ApplicationRestrictions          = (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictions -Property @{
                         passwordCredentials = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_AADAppManagementPolicyRestrictionsCredential -Property @{
+                            (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
                                 restrictForAppsCreatedAfterDateTime = "1/1/0001 5:00:00 AM"
                                 restrictionType = "passwordAddition"
                                 state = "enabled"
                             } -ClientOnly);
-                            (New-CimInstance -ClassName MSFT_AADAppManagementPolicyRestrictionsCredential -Property @{
+                            (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
                                 maxLifetime = "P90DT0H0M0S"
                                 restrictForAppsCreatedAfterDateTime = "1/1/0001 5:00:00 AM"
                                 restrictionType = "passwordLifetime"
                                 state = "enabled"
                             } -ClientOnly);
-                            (New-CimInstance -ClassName MSFT_AADAppManagementPolicyRestrictionsCredential -Property @{
+                            (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
                                 restrictForAppsCreatedAfterDateTime = "1/1/0001 5:00:00 AM"
                                 restrictionType = "symmetricKeyAddition"
                                 state = "enabled"
                             } -ClientOnly);
-                            (New-CimInstance -ClassName MSFT_AADAppManagementPolicyRestrictionsCredential -Property @{
+                            (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
                                 maxLifetime = "P90DT0H0M0S"
                                 restrictForAppsCreatedAfterDateTime = "1/1/0001 5:00:00 AM"
                                 restrictionType = "symmetricKeyLifetime"
@@ -147,6 +177,126 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaPolicyDefaultAppManagementPolicy -Exactly 1
+            }
+        }
+
+        Context -Name "The instance exists with keyCredentials including trustedCertificateAuthority and values are in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName         = "MyPolicy"
+                    Description         = "MyDescription"
+                    IsEnabled           = $true
+                    ApplicationRestrictions = (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictions -Property @{
+                        keyCredentials = [CimInstance[]]@(
+                            (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
+                                maxLifetime = "P30DT0H0M0S"
+                                restrictForAppsCreatedAfterDateTime = "0001-01-01T00:00:00.0000000"
+                                restrictionType = "asymmetricKeyLifetime"
+                                state = "enabled"
+                            } -ClientOnly);
+                            (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
+                                certificateBasedApplicationConfigurationIds = [System.String[]]@("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                                restrictForAppsCreatedAfterDateTime = "0001-01-01T00:00:00.0000000"
+                                restrictionType = "trustedCertificateAuthority"
+                                state = "enabled"
+                            } -ClientOnly);
+                        )
+                    } -ClientOnly);
+                    Ensure              = 'Present'
+                    Credential          = $Credential;
+                }
+
+                Mock -CommandName Get-MgBetaPolicyDefaultAppManagementPolicy -MockWith {
+                    return @{
+                        DisplayName  = "MyPolicy"
+                        Description  = "MyDescription"
+                        Id           = "12345-12345-12345-12345-12345"
+                        IsEnabled    = $true
+                        ApplicationRestrictions = @{
+                            keyCredentials = @(
+                                @{
+                                    maxLifetime = @{
+                                        Days    = 30
+                                        Hours   = 0
+                                        Minutes = 0
+                                        Seconds = 0
+                                    }
+                                    restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
+                                    restrictionType = "asymmetricKeyLifetime"
+                                    state = "enabled"
+                                },
+                                @{
+                                    certificateBasedApplicationConfigurationIds = @("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                                    restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
+                                    restrictionType = "trustedCertificateAuthority"
+                                    state = "enabled"
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                $result = Get-TargetResource @testParams
+                $result.Ensure | Should -Be 'Present'
+                $result.ApplicationRestrictions.keyCredentials | Should -HaveCount 2
+                $trustedCACred = $result.ApplicationRestrictions.keyCredentials | Where-Object { $_.restrictionType -eq 'trustedCertificateAuthority' }
+                $trustedCACred | Should -Not -BeNullOrEmpty
+                $trustedCACred.certificateBasedApplicationConfigurationIds | Should -Contain 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
+        Context -Name "The instance exists with ServicePrincipalRestrictions and values are in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName         = "MyPolicy"
+                    Description         = "MyDescription"
+                    IsEnabled           = $true
+                    ServicePrincipalRestrictions = (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictions -Property @{
+                        passwordCredentials = [CimInstance[]]@(
+                            (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
+                                restrictForAppsCreatedAfterDateTime = "0001-01-01T00:00:00.0000000"
+                                restrictionType = "passwordAddition"
+                                state = "enabled"
+                            } -ClientOnly);
+                        )
+                    } -ClientOnly);
+                    Ensure              = 'Present'
+                    Credential          = $Credential;
+                }
+
+                Mock -CommandName Get-MgBetaPolicyDefaultAppManagementPolicy -MockWith {
+                    return @{
+                        DisplayName  = "MyPolicy"
+                        Description  = "MyDescription"
+                        Id           = "12345-12345-12345-12345-12345"
+                        IsEnabled    = $true
+                        ServicePrincipalRestrictions = @{
+                            passwordCredentials = @(
+                                @{
+                                    restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
+                                    restrictionType = "passwordAddition"
+                                    state = "enabled"
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                $result = Get-TargetResource @testParams
+                $result.Ensure | Should -Be 'Present'
+                $result.ServicePrincipalRestrictions.passwordCredentials | Should -HaveCount 1
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
             }
         }
 

@@ -1,4 +1,3 @@
-
 # IntuneSecurityBaselineMicrosoft365AppsForEnterprise
 
 ## Description

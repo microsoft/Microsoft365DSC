@@ -1,4 +1,4 @@
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_IntuneDeviceComplianceNotificationMessageTemplate"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceComplianceNotificationMessageTemplate'
 
 function Get-TargetResource
 {
@@ -8,7 +8,7 @@ function Get-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [ValidateSet('none','includeCompanyLogo','includeCompanyName','includeContactInformation','includeCompanyPortalLink','includeDeviceDetails')]
+        [ValidateSet('none', 'includeCompanyLogo', 'includeCompanyName', 'includeContactInformation', 'includeCompanyPortalLink', 'includeDeviceDetails')]
         [System.String[]]
         $BrandingOptions,
 
@@ -34,8 +34,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -74,7 +74,7 @@ function Get-TargetResource
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
 
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
@@ -98,7 +98,7 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 $getValue = Get-MgBetaDeviceManagementNotificationMessageTemplate -NotificationMessageTemplateId $Id `
-                    -ExpandProperty "localizedNotificationMessages" `
+                    -ExpandProperty 'localizedNotificationMessages' `
                     -ErrorAction SilentlyContinue
             }
 
@@ -110,7 +110,7 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementNotificationMessageTemplate `
                         -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
-                        -ExpandProperty "localizedNotificationMessages" `
+                        -ExpandProperty 'localizedNotificationMessages' `
                         -ErrorAction SilentlyContinue
                 }
             }
@@ -132,7 +132,7 @@ function Get-TargetResource
         $enumBrandingOptions = $null
         if ($null -ne $getValue.BrandingOptions)
         {
-            $enumBrandingOptions = $getValue.BrandingOptions.ToString().Split(",")
+            $enumBrandingOptions = $getValue.BrandingOptions.ToString().Split(',')
         }
 
         $messages = @()
@@ -186,7 +186,7 @@ function Set-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [ValidateSet('none','includeCompanyLogo','includeCompanyName','includeContactInformation','includeCompanyPortalLink','includeDeviceDetails')]
+        [ValidateSet('none', 'includeCompanyLogo', 'includeCompanyName', 'includeContactInformation', 'includeCompanyPortalLink', 'includeDeviceDetails')]
         [System.String[]]
         $BrandingOptions,
 
@@ -212,8 +212,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -372,7 +372,7 @@ function Test-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [ValidateSet('none','includeCompanyLogo','includeCompanyName','includeContactInformation','includeCompanyPortalLink','includeDeviceDetails')]
+        [ValidateSet('none', 'includeCompanyLogo', 'includeCompanyName', 'includeContactInformation', 'includeCompanyPortalLink', 'includeDeviceDetails')]
         [System.String[]]
         $BrandingOptions,
 
@@ -398,8 +398,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -441,7 +441,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

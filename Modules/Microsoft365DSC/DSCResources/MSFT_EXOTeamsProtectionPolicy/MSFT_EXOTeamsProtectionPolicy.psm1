@@ -62,7 +62,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of EXO Teams Protection Policy"
+    Write-Verbose -Message 'Getting configuration of EXO Teams Protection Policy'
 
     try
     {
@@ -94,7 +94,7 @@ function Get-TargetResource
             $ProtectionPolicy = Get-TeamsProtectionPolicy -ErrorAction SilentlyContinue
             if ($null -eq $ProtectionPolicy)
             {
-                Write-Verbose -Message "Teams Protection Policy does not exist."
+                Write-Verbose -Message 'Teams Protection Policy does not exist.'
                 return $nullReturn
             }
         }
@@ -103,7 +103,7 @@ function Get-TargetResource
             $ProtectionPolicy = $Script:exportedInstance
         }
 
-        Write-Verbose -Message "An EXO Teams Protection Policy was found."
+        Write-Verbose -Message 'An EXO Teams Protection Policy was found.'
         $result = @{
             IsSingleInstance                 = 'Yes'
             AdminDisplayName                 = $ProtectionPolicy.AdminDisplayName
@@ -205,14 +205,14 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Setting configuration of Teams Protection Policy"
+    Write-Verbose -Message 'Setting configuration of Teams Protection Policy'
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
     if ($null -eq $currentValues.AdminDisplayName -and `
-        $null -eq $currentValues.HighConfidencePhishQuarantineTag -and `
-        $null -eq $currentValues.MalwareQuarantineTag -and `
-        $null -eq $currentValues.ZapEnabled)
+            $null -eq $currentValues.HighConfidencePhishQuarantineTag -and `
+            $null -eq $currentValues.MalwareQuarantineTag -and `
+            $null -eq $currentValues.ZapEnabled)
     {
         Write-Verbose -Message 'Teams Protection Policy does not exist, creating new policy'
         New-TeamsProtectionPolicy -Name 'Teams Protection Policy'
@@ -297,7 +297,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

@@ -68,7 +68,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of HostedConnectionFilterPolicy for $Identity"
+    Write-Verbose -Message "Getting configuration of HostedConnectionFilterPolicy for $Identity"
 
     try
     {
@@ -352,7 +352,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

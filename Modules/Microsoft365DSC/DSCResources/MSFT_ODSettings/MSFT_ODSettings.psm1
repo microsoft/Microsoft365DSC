@@ -173,7 +173,7 @@ function Get-TargetResource
             $FixedExcludedFileExtensions = @()
         }
 
-        $FixedAllowedDomainList = @($tenantRestrictions.AllowedDomainList | Foreach-Object {
+        $FixedAllowedDomainList = @($tenantRestrictions.AllowedDomainList | ForEach-Object {
             $_.ToString()
         })
         if ($FixedAllowedDomainList.Count -eq 0 -or
@@ -569,7 +569,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

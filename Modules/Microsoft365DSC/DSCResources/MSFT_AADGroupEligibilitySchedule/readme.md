@@ -1,4 +1,3 @@
-
 # AADGroupEligibilitySchedule
 
 ## Description

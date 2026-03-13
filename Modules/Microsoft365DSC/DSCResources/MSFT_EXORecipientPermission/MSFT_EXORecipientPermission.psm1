@@ -291,7 +291,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -388,7 +388,7 @@ function Export-TargetResource
             $Script:UsersCache = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new()
             Get-User -ResultSize Unlimited | ForEach-Object {
                 $Script:UsersCache[$_.Identity] = @{
-                    Identity = $_.Identity
+                    Identity          = $_.Identity
                     UserPrincipalName = $_.UserPrincipalName
                 }
             }

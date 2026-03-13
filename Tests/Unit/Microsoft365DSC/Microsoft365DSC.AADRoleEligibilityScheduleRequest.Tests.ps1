@@ -186,9 +186,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
-                        startDateTime = '2023-01-01T02:40:44Z' # Drift
+                        startDateTime = '2023-01-01T02:40:44Z'
                         expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
-                            endDateTime = '2025-10-31T02:40:09Z'
+                            endDateTime = (Get-Date).AddYears(1).ToString("yyyy-MM-ddTHH:mm:ssZ")
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly

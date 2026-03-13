@@ -1,4 +1,4 @@
-EXOEmailTenantSettings
+# EXOEmailTenantSettings
 
 ## Description
 

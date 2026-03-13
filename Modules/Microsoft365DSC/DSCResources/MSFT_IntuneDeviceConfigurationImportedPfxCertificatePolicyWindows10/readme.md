@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
 
 ## Description

@@ -7,6 +7,7 @@ As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts
 We are removing the Organization parameter from the resource and adding the IsSingleInstance parameter as the primary key for it. This is to make sure we align the logic of this resource with the logic of other resources that are tenant-wide components, which means that there can only ever be a single instance of it across the tenant. The remediation here involves checking existing configuration to see if it contains the EXOMailTips instance and to replace the Organization parameter by the new IsSingleInstance one. E.g.,
 
 From:
+
 ```powershell
 EXOMailTips Tips
 {
@@ -16,6 +17,7 @@ EXOMailTips Tips
 ```
 
 To:
+
 ```powershell
 EXOMailTips Tips
 {
@@ -29,6 +31,7 @@ EXOMailTips Tips
 The Priority parameter used to be defined as a string data type. With this breaking change we are changing the data type to be an Integer. Remediation involves checking existing configuration files that include EXOTransportRule definitions and to make sure the parameters are numbers instead of string. This normally involves removing the double quotes around the value. E.g.,
 
 From:
+
 ```powershell
 EXOTransportRule MyRule
 {
@@ -38,6 +41,7 @@ EXOTransportRule MyRule
 ```
 
 To:
+
 ```powershell
 EXOTransportRule MyRule
 {

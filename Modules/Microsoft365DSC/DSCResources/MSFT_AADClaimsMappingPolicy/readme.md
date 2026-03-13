@@ -1,4 +1,3 @@
-
 # AADClaimsMappingPolicy
 
 ## Description

@@ -105,7 +105,7 @@ function Get-TargetResource
         {
             $userInfo = Get-User -Identity $IdentityParts[0]
         }
-        $IdentityValue = $userInfo.UserPrincipalName + ":" + $IdentityParts[1]
+        $IdentityValue = $userInfo.UserPrincipalName + ':' + $IdentityParts[1]
         $folder = Get-MailboxCalendarFolder -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $folder)
@@ -235,8 +235,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentValues = Get-TargetResource @PSBoundParameters
-
+    $null = Get-TargetResource @PSBoundParameters
     $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     # The SharedCalendarSyncStartDate needs to be used by itself in a subsequent call.
@@ -335,7 +334,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

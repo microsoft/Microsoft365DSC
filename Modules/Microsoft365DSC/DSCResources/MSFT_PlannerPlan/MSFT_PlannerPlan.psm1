@@ -15,8 +15,8 @@ function Get-TargetResource
         $OwnerGroup,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -168,8 +168,8 @@ function Set-TargetResource
         $OwnerGroup,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -228,7 +228,7 @@ function Set-TargetResource
             Desired State. Updating it."
         [Array]$AllGroups = Get-MgGroup -GroupId $OwnerGroup -ErrorAction 'SilentlyContinue'
         Write-Verbose -Message $AllGroups[0]
-        if ($AllGroups -eq $null)
+        if ($null -eq $AllGroups)
         {
             [Array]$AllGroups = Get-MgGroup -Search $OwnerGroup
         }
@@ -259,8 +259,8 @@ function Test-TargetResource
         $OwnerGroup,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -298,7 +298,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

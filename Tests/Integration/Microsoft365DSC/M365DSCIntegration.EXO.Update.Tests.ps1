@@ -808,7 +808,7 @@
         MSFT_EXOMailboxFolderUserPermission {
                         User                   = 'AlexW'
                         AccessRights           = 'Editor'
-        		SharingPermissionFlags = 'Delegate'
+                SharingPermissionFlags = 'Delegate'
                     }
                     );
                 }

@@ -118,10 +118,6 @@ function Get-TargetResource
                 -Parameters $PSBoundParameters
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
-
-            $nullReturn = @{
-                Identity = 'Global'
-            }
         }
 
         $config = Get-CsTeamsClientConfiguration -ErrorAction Stop
@@ -283,7 +279,6 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $SetParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
     if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
     {
         $SetParams.Remove('RestrictedSenderList') | Out-Null
@@ -411,8 +406,8 @@ function Test-TargetResource
         $excludedProperties += 'RestrictedSenderList'
     }
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -ExcludedProperties $excludedProperties
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        -ExcludedProperties $excludedProperties
     return $result
 }
 

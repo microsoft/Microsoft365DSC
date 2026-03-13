@@ -50,44 +50,40 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting the Power Platform Tenant Isolation Settings Configuration'
 
-    if ($PSBoundParameters.ContainsKey('Rules') -and `
-        ($PSBoundParameters.ContainsKey('RulesToInclude') -or `
-                $PSBoundParameters.ContainsKey('RulesToExclude')))
-    {
-        $message = 'You cannot specify Rules and RulesToInclude/RulesToExclude.'
-        Add-M365DSCEvent -Message $message -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-        throw $message
-    }
-
-    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    $tenantid = (Get-MgContext).TenantId
-
-    $null = New-M365DSCConnection -Workload 'PowerPlatformREST' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = @{
-        IsSingleInstance = 'Yes'
-    }
-
     try
     {
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/PowerPlatform.Governance/v1/tenants/$($tenantId)/tenantIsolationPolicy?api-version=2016-11-01"
+        if ($PSBoundParameters.ContainsKey('Rules') -and `
+            ($PSBoundParameters.ContainsKey('RulesToInclude') -or `
+                    $PSBoundParameters.ContainsKey('RulesToExclude')))
+        {
+            $message = 'You cannot specify Rules and RulesToInclude/RulesToExclude.'
+            Add-M365DSCEvent -Message $message -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            throw $message
+        }
+
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        $tenantid = (Get-MgContext).TenantId
+
+        $null = New-M365DSCConnection -Workload 'PowerPlatformREST' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            "/providers/PowerPlatform.Governance/v1/tenants/$($tenantId)/tenantIsolationPolicy?api-version=2016-11-01"
         $tenantIsolationPolicy = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET' -Body $RequestBody
         if ($tenantIsolationPolicy.StatusCode -eq 403)
         {
@@ -226,8 +222,8 @@ function Set-TargetResource
 
     $tenantIsolationPolicy = @{
         properties = @{
-            tenantId = $tenantinfo
-            isDisabled = $false
+            tenantId       = $tenantinfo
+            isDisabled     = $false
             allowedTenants = @()
         }
     }
@@ -271,8 +267,8 @@ function Set-TargetResource
                 }
 
                 $newRule = @{
-                    tenantId          = $ruleTenantId
-                    direction         = $direction
+                    tenantId  = $ruleTenantId
+                    direction = $direction
                 }
 
                 $existingAllowedRules += $newRule
@@ -405,8 +401,8 @@ function Set-TargetResource
         [Array]$newRules = $existingAllowedRules | Where-Object -FilterScript { $_.tenantId -notin $removeRules }
         $tenantIsolationPolicy.Properties.allowedTenants = $newRules
     }
-    $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/PowerPlatform.Governance/v1/tenants/$($tenantinfo)/tenantIsolationPolicy?api-version=2020-06-01"
+    $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+        "/providers/PowerPlatform.Governance/v1/tenants/$($tenantinfo)/tenantIsolationPolicy?api-version=2020-06-01"
     Write-Verbose -Message "Updating with payload:`r`n$(ConvertTo-Json $tenantIsolationPolicy -Depth 20)"
     Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'PUT' -Body $tenantIsolationPolicy
 }

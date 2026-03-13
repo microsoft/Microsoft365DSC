@@ -6,7 +6,7 @@
 
 When you are using Credentials and Delegated Authentication (for more info, see: <a href="../../get-started/authentication-and-permissions/#microsoft-graph-permissions" target="_blank">Delegated Permissions</a>), it is possible that you receive the following error:
 
-```
+```powershell
 Device code terminal timed-out after 120 seconds. Please try again.
 + CategoryInfo : NotSpecified: (:) [], CimException
 + FullyQualifiedErrorId : Microsoft.Graph.PowerShell.Authentication.Cmdlets.ConnectMgGraph
@@ -21,14 +21,13 @@ This is caused by the fact that the delegated Graph application has not been giv
 
 This issue can be resolved by granting and consenting the correct permissions. You can do this via the Azure Admin Portal or by running using the <a href="../../cmdlets/Update-M365DSCAllowedGraphScopes/" target="_blank">Update-M365DSCAllowedGraphScopes</a> cmdlet. More information about that process can be found <a href="../authentication-and-permissions/#providing-consent-for-graph-permissions" target="_blank">here</a>.
 
-
 ## Error "The WMI service or the WMI provider returned an unknown error: HRESULT 0x80041033" when running Exchange workload
 
 ### ISSUE
 
 When you are running a configuration apply or test with many Exchange workload resources, it is possible that the WMI provider throws an error and high memory usage is detected.
 
-```
+```powershell
 The WS-Management service cannot process the request. The WMI service or the WMI provider returned an unknown error: HRESULT 0x80041033
 + CategoryInfo : ResourceUnavailable: (root/Microsoft/...gurationManager:String) [], CimException
 + FullyQualifiedErrorId : HRESULT 0x80041033
@@ -65,7 +64,6 @@ $quotaConfiguration.HandlesPerHost = 8192
 $quotaConfiguration.ThreadsPerHost = 512
 ```
 
-
 ## Error "InvalidOperation: Cannot index into a null array" when creating a report from configuration
 
 ### ISSUE
@@ -89,7 +87,6 @@ The nested objects are resolved from their CIM definitions, and if multiple vers
 ### RESOLUTION
 
 Update and install to the latest supported version of Microsoft365DSC using `Update-M365DSCModule`. This will uninstall all outdated versions and dependencies and update to the latest version available on the PowerShell Gallery.
-
 
 ## Error during configuration compilation or report generation
 

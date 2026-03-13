@@ -1,0 +1,54 @@
+name: Check Documentation on PR
+on:
+  pull_request:
+    branches:
+      - Master
+      - Dev
+
+jobs:
+  CheckDocs:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Import Module & Generate Documentation
+        shell: pwsh
+        run: |
+          Import-Module -Name "./Modules/Microsoft365DSC"
+          Update-M365DSCResourceDocumentationPage -SourcePath ./Modules/Microsoft365DSC
+          New-M365DSCCmdletDocumentation
+
+      - name: Upload documentation for mdl check
+        uses: actions/upload-artifact@v6
+        with:
+          name: generated-docs
+          path: ./docs
+
+  CheckMarkdownLint:
+    needs: CheckDocs
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download generated docs
+        uses: actions/download-artifact@v7
+        with:
+          name: generated-docs
+          path: ./docs
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+
+      - name: Install mdl
+        run: gem install mdl
+
+      - name: Run mdl on documentation
+        continue-on-error: true
+        run: |
+          echo "Running markdownlint on documentation files..."
+          mdl ./docs --style ./.mdlrc || true
+          echo "Markdown lint check completed. See output above for any issues."

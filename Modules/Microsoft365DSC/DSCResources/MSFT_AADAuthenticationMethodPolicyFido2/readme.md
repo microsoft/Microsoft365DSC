@@ -1,4 +1,3 @@
-
 # AADAuthenticationMethodPolicyFido2
 
 ## Description

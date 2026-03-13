@@ -1,4 +1,3 @@
-
 # SPOSiteAuditSettings
 
 ## Description

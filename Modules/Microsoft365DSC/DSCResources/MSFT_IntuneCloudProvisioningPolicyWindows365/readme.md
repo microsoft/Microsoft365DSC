@@ -1,4 +1,3 @@
-
 # IntuneCloudProvisioningPolicyWindows365
 
 ## Description

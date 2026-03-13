@@ -79,7 +79,7 @@ function Get-TargetResource
         $AdvancedRecordVersioningDisabledValue      = Invoke-M365DSCSPORetentionLabelsSetting -CommandName 'GetAdvancedRecordVersioningDisabled'
         $MetadataEditBlockingEnabledValue           = Invoke-M365DSCSPORetentionLabelsSetting -CommandName 'GetMetadataEditBlockingEnabled'
         $results = @{
-            IsSingleInstance      = 'Yes'
+            IsSingleInstance                      = 'Yes'
             AllowFilesWithKeepLabelToBeDeletedODB = $AllowFilesWithKeepLabelToBeDeletedODBValue
             AllowFilesWithKeepLabelToBeDeletedSPO = $AllowFilesWithKeepLabelToBeDeletedSPOValue
             AdvancedRecordVersioningDisabled      = $AdvancedRecordVersioningDisabledValue
@@ -156,7 +156,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting SPORetentionLabelsSettings configuration"
+    Write-Verbose -Message 'Setting SPORetentionLabelsSettings configuration'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -174,31 +174,31 @@ function Set-TargetResource
 
     if ($AllowFilesWithKeepLabelToBeDeletedODB -ne $currentInstance.AllowFilesWithKeepLabelToBeDeletedODB)
     {
-        Write-verbose -Message "Updating AllowFilesWithKeepLabelToBeDeletedODB with value {$AllowFilesWithKeepLabelToBeDeletedODB}"
-        Invoke-M365DSCSPORetentionLabelsSetting -CommandName "SetAllowFilesWithKeepLabelToBeDeletedODB" `
-                                                -Method 'POST' `
-                                                -Body @{allowDeletion = $AllowFilesWithKeepLabelToBeDeletedODB}
+        Write-Verbose -Message "Updating AllowFilesWithKeepLabelToBeDeletedODB with value {$AllowFilesWithKeepLabelToBeDeletedODB}"
+        Invoke-M365DSCSPORetentionLabelsSetting -CommandName 'SetAllowFilesWithKeepLabelToBeDeletedODB' `
+            -Method 'POST' `
+            -Body @{allowDeletion = $AllowFilesWithKeepLabelToBeDeletedODB }
     }
     if ($AllowFilesWithKeepLabelToBeDeletedSPO -ne $currentInstance.AllowFilesWithKeepLabelToBeDeletedSPO)
     {
-        Write-verbose -Message "Updating AllowFilesWithKeepLabelToBeDeletedSPO with value {$AllowFilesWithKeepLabelToBeDeletedSPO}"
-        Invoke-M365DSCSPORetentionLabelsSetting -CommandName "SetAllowFilesWithKeepLabelToBeDeletedSPO" `
-                                                -Method 'POST' `
-                                                -Body @{allowDeletion = $AllowFilesWithKeepLabelToBeDeletedSPO}
+        Write-Verbose -Message "Updating AllowFilesWithKeepLabelToBeDeletedSPO with value {$AllowFilesWithKeepLabelToBeDeletedSPO}"
+        Invoke-M365DSCSPORetentionLabelsSetting -CommandName 'SetAllowFilesWithKeepLabelToBeDeletedSPO' `
+            -Method 'POST' `
+            -Body @{allowDeletion = $AllowFilesWithKeepLabelToBeDeletedSPO }
     }
     if ($AdvancedRecordVersioningDisabled -ne $currentInstance.AdvancedRecordVersioningDisabled)
     {
-        Write-verbose -Message "Updating AdvancedRecordVersioningDisabled with value {$AdvancedRecordVersioningDisabled}"
-        Invoke-M365DSCSPORetentionLabelsSetting -CommandName "SetAdvancedRecordVersioningDisabled" `
-                                                -Method 'POST' `
-                                                -Body @{disabled = $AdvancedRecordVersioningDisabled}
+        Write-Verbose -Message "Updating AdvancedRecordVersioningDisabled with value {$AdvancedRecordVersioningDisabled}"
+        Invoke-M365DSCSPORetentionLabelsSetting -CommandName 'SetAdvancedRecordVersioningDisabled' `
+            -Method 'POST' `
+            -Body @{disabled = $AdvancedRecordVersioningDisabled }
     }
     if ($MetadataEditBlockingEnabled -ne $currentInstance.MetadataEditBlockingEnabled)
     {
-        Write-verbose -Message "Updating MetadataEditBlockingEnabled with value {$MetadataEditBlockingEnabled}"
-        Invoke-M365DSCSPORetentionLabelsSetting -CommandName "SetMetadataEditBlockingEnabled" `
-                                                -Method 'POST' `
-                                                -Body @{enabled = $MetadataEditBlockingEnabled}
+        Write-Verbose -Message "Updating MetadataEditBlockingEnabled with value {$MetadataEditBlockingEnabled}"
+        Invoke-M365DSCSPORetentionLabelsSetting -CommandName 'SetMetadataEditBlockingEnabled' `
+            -Method 'POST' `
+            -Body @{enabled = $MetadataEditBlockingEnabled }
     }
 }
 
@@ -264,7 +264,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -373,7 +373,7 @@ function Invoke-M365DSCSPORetentionLabelsSetting
 
         [Parameter()]
         [System.String]
-        $Method = "GET",
+        $Method = 'GET',
 
         [Parameter()]
         [System.Collections.Hashtable]
@@ -386,8 +386,8 @@ function Invoke-M365DSCSPORetentionLabelsSetting
             "/_api/SP.CompliancePolicy.SPPolicyStoreProxy.$($CommandName)/"
 
         $invokeParams = @{
-            Url = $url
-            Method = $Method
+            Url     = $url
+            Method  = $Method
             Content = $Body
         }
 

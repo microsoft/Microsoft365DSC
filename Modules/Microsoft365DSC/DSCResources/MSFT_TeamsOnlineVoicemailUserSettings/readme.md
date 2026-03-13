@@ -1,4 +1,3 @@
-
 # TeamsOnlineVoicemailUserSettings
 
 ## Description

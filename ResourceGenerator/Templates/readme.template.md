@@ -1,4 +1,3 @@
-
 # <ResourceFriendlyName>
 
 ## Description

@@ -1,4 +1,3 @@
-
 # IntuneAppConfigurationDevicePolicy
 
 ## Description

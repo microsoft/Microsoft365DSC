@@ -42,7 +42,7 @@ function Get-TargetResource
         $ImageId,
 
         [Parameter()]
-        [ValidateSet('gallery','custom')]
+        [ValidateSet('gallery', 'custom')]
         [System.String]
         $ImageType,
 
@@ -51,7 +51,7 @@ function Get-TargetResource
         $LocalAdminEnabled,
 
         [Parameter()]
-        [ValidateSet('dedicated','shared','sharedByUser','sharedByEntraGroup','reserve')]
+        [ValidateSet('dedicated', 'shared', 'sharedByUser', 'sharedByEntraGroup', 'reserve')]
         [System.String]
         $ProvisioningType,
 
@@ -60,7 +60,7 @@ function Get-TargetResource
         $RoleScopeTagIds,
 
         [Parameter()]
-        [ValidateSet('cloudPc','cloudApp')]
+        [ValidateSet('cloudPc', 'cloudApp')]
         [System.String]
         $UserExperienceType,
 
@@ -82,8 +82,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -145,9 +145,9 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 $getValue = Get-MgBetaDeviceManagementVirtualEndpointProvisioningPolicy `
-                -CloudPcProvisioningPolicyId $Id `
-                -ExpandProperty 'Assignments' `
-                -ErrorAction SilentlyContinue
+                    -CloudPcProvisioningPolicyId $Id `
+                    -ExpandProperty 'Assignments' `
+                    -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $getValue)
@@ -214,7 +214,11 @@ function Get-TargetResource
             {
                 $myDomainJoinConfigurations.Add('Type', $currentDomainJoinConfigurations.type.ToString())
             }
-            if ($myDomainJoinConfigurations.values.Where({$null -ne $_}).Count -gt 0)
+            if ($null -ne $currentDomainJoinConfigurations.AdditionalProperties.geographicLocationType)
+            {
+                $myDomainJoinConfigurations.Add('GeographicLocationType', $currentDomainJoinConfigurations.AdditionalProperties.geographicLocationType)
+            }
+            if ($myDomainJoinConfigurations.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexDomainJoinConfigurations += $myDomainJoinConfigurations
             }
@@ -348,7 +352,7 @@ function Set-TargetResource
         $ImageId,
 
         [Parameter()]
-        [ValidateSet('gallery','custom')]
+        [ValidateSet('gallery', 'custom')]
         [System.String]
         $ImageType,
 
@@ -357,7 +361,7 @@ function Set-TargetResource
         $LocalAdminEnabled,
 
         [Parameter()]
-        [ValidateSet('dedicated','shared','sharedByUser','sharedByEntraGroup','reserve')]
+        [ValidateSet('dedicated', 'shared', 'sharedByUser', 'sharedByEntraGroup', 'reserve')]
         [System.String]
         $ProvisioningType,
 
@@ -366,7 +370,7 @@ function Set-TargetResource
         $RoleScopeTagIds,
 
         [Parameter()]
-        [ValidateSet('cloudPc','cloudApp')]
+        [ValidateSet('cloudPc', 'cloudApp')]
         [System.String]
         $UserExperienceType,
 
@@ -388,8 +392,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -425,7 +429,7 @@ function Set-TargetResource
 
     if (-not $PSBoundParameters.ContainsKey('Credential') -and -not [System.String]::IsNullOrEmpty($Autopatch.AutopatchGroupId))
     {
-        throw "Credential authentication is required when deploying with Autopatch configuration"
+        throw 'Credential authentication is required when deploying with Autopatch configuration'
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -447,20 +451,20 @@ function Set-TargetResource
         $boundParameters.Add('ScopeIds', $boundParameters['RoleScopeTagIds'])
         $boundParameters.Remove('RoleScopeTagIds') | Out-Null
     }
-    $managedDesktopType = "notManaged"
+    $managedDesktopType = 'notManaged'
     if ($boundParameters.ContainsKey('Autopatch') -and -not [System.String]::IsNullOrEmpty($boundParameters.Autopatch.AutopatchGroupId))
     {
-        $managedDesktopType = "starterManaged"
+        $managedDesktopType = 'starterManaged'
     }
     $boundParameters.Add('MicrosoftManagedDesktop', @{
         managedType = $managedDesktopType
-        type = $managedDesktopType
+        type        = $managedDesktopType
     })
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Cloud Provisioning Policy for Windows365 with DisplayName {$DisplayName}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $createParameters = ([Hashtable]$boundParameters).Clone()
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
@@ -475,7 +479,6 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $createParameters.Add("@odata.type", "#microsoft.graph.CloudPcProvisioningPolicy")
         $policy = New-MgBetaDeviceManagementVirtualEndpointProvisioningPolicy -BodyParameter $createParameters
 
         if ($policy.Id)
@@ -491,8 +494,8 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Cloud Provisioning Policy for Windows365 with Id {$($currentInstance.Id)}"
-        $boundParameters.Remove("Assignments") | Out-Null
-        $boundParameters.Remove("ProvisioningType") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
+        $boundParameters.Remove('ProvisioningType') | Out-Null
         $boundParameters.Add('managedBy', 'Windows365')
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
@@ -509,10 +512,10 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $updateParameters.Add("@odata.type", "#microsoft.graph.CloudPcProvisioningPolicy")
         Update-MgBetaDeviceManagementVirtualEndpointProvisioningPolicy `
             -CloudPcProvisioningPolicyId $currentInstance.Id `
             -BodyParameter $UpdateParameters
+
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.Id `
@@ -578,7 +581,7 @@ function Test-TargetResource
         $ImageId,
 
         [Parameter()]
-        [ValidateSet('gallery','custom')]
+        [ValidateSet('gallery', 'custom')]
         [System.String]
         $ImageType,
 
@@ -587,7 +590,7 @@ function Test-TargetResource
         $LocalAdminEnabled,
 
         [Parameter()]
-        [ValidateSet('dedicated','shared','sharedByUser','sharedByEntraGroup','reserve')]
+        [ValidateSet('dedicated', 'shared', 'sharedByUser', 'sharedByEntraGroup', 'reserve')]
         [System.String]
         $ProvisioningType,
 
@@ -596,7 +599,7 @@ function Test-TargetResource
         $RoleScopeTagIds,
 
         [Parameter()]
-        [ValidateSet('cloudPc','cloudApp')]
+        [ValidateSet('cloudPc', 'cloudApp')]
         [System.String]
         $UserExperienceType,
 
@@ -618,8 +621,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -662,8 +665,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -726,7 +729,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaDeviceManagementVirtualEndpointProvisioningPolicy `
             -Filter $Filter `
-            -ExpandProperty "assignments" `
+            -ExpandProperty 'assignments' `
             -All `
             -ErrorAction Stop
         #endregion
@@ -899,7 +902,7 @@ function Get-CompareParameters
     param()
 
     return @{
-        ExcludedProperties = @('ProvisioningType', 'UserExperienceType')
+        ExcludedProperties = @('GeographicLocationType', 'ProvisioningType', 'UserExperienceType')
     }
 }
 
