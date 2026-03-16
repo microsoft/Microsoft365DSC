@@ -1,4 +1,3 @@
-
 # IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
 
 ## Description

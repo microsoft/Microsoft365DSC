@@ -388,7 +388,8 @@ function Set-TargetResource
     #endregion
 
     $null = New-M365DSCConnection -Workload 'PnP' `
-        -InboundParameters $PSBoundParameters  -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl
+        -InboundParameters $PSBoundParameters `
+        -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl
 
     if ($Ensure -eq 'Absent')
     {
@@ -851,7 +852,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

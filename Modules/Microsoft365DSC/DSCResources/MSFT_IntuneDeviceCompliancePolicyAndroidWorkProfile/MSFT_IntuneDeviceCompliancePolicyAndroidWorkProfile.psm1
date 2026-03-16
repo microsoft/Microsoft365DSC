@@ -170,8 +170,8 @@ function Get-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -251,7 +251,7 @@ function Get-TargetResource
         Write-Verbose -Message "Found Intune Android Work Profile Device Compliance Policy with displayName {$DisplayName}"
 
         #scheduledActionsForRule needs processing before we can interact with it
-        $psCustomObject = $devicePolicy.ScheduledActionsForRule | ConvertTo-Json -Depth 10 | ConvertFrom-JSON
+        $psCustomObject = $devicePolicy.ScheduledActionsForRule | ConvertTo-Json -Depth 10 | ConvertFrom-Json
         $scheduledActionsForRuleHashTable = @{}
         $psCustomObject.PsObject.Properties | ForEach-Object {
             $scheduledActionsForRuleHashTable[$_.Name] = $_.Value
@@ -259,16 +259,17 @@ function Get-TargetResource
         $hashtable = @{}
         $complexScheduledActionsForRule = @()
         $scheduledActionsForRuleHashTable.ScheduledActionConfigurations.PsObject.Properties | ForEach-Object {
-            if($_.Value -match "ActionType")
+            if ($_.Value -match 'ActionType')
             {
-                foreach($item in $_.Value){
-                        $hashtable = @{}
-                        $hashtable.Add('actionType', $item.ActionType)
-                        $hashtable.Add('gracePeriodHours', $item.GracePeriodHours)
-                        $hashtable.Add('notificationMessageCcList', ([Array]$item.NotificationMessageCcList -split " ") )
-                        $hashtable.Add('notificationTemplateId', $item.NotificationTemplateId)
-                        $complexScheduledActionsForRule += $hashtable
-                 }
+                foreach ($item in $_.Value)
+                {
+                    $hashtable = @{}
+                    $hashtable.Add('actionType', $item.ActionType)
+                    $hashtable.Add('gracePeriodHours', $item.GracePeriodHours)
+                    $hashtable.Add('notificationMessageCcList', ([Array]$item.NotificationMessageCcList -split ' ') )
+                    $hashtable.Add('notificationTemplateId', $item.NotificationTemplateId)
+                    $complexScheduledActionsForRule += $hashtable
+                }
             }
         }
 
@@ -514,8 +515,8 @@ function Set-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -810,8 +811,8 @@ function Test-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -853,7 +854,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

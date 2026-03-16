@@ -728,7 +728,7 @@ function Set-TargetResource
 
     foreach ($key in $Script:displayNameProperties.Keys)
     {
-        $key = $key.Replace("Include", "").Replace("WithDisplayNames", "")
+        $key = $key.Replace('Include', '').Replace('WithDisplayNames', '')
         if ($PSBoundParameters.ContainsKey($key))
         {
             $convertedList = [System.Collections.Generic.List[System.String]]::new()
@@ -1013,8 +1013,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -1159,9 +1159,13 @@ function Get-DisplayNameSimplified
     $simplifiedNames = @()
     foreach ($name in $DisplayName)
     {
-        $simplifiedNames += $name.Split(',')[0].Replace('(','')
+        if ([System.String]::IsNullOrEmpty($name))
+        {
+            continue
+        }
+        $simplifiedNames += $name.Split(',')[0].Replace('(', '')
     }
-    return $simplifiedNames | Sort-Object
+    return ,@($simplifiedNames | Sort-Object)
 }
 
 function Get-CompareParameters
@@ -1175,7 +1179,7 @@ function Get-CompareParameters
             param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
             foreach ($key in $Script:displayNameProperties.Keys)
             {
-                $key = $key.Replace("Include", "").Replace("WithDisplayNames", "")
+                $key = $key.Replace('Include', '').Replace('WithDisplayNames', '')
                 if ($DesiredValues.ContainsKey($key))
                 {
                     $convertedValues = @()

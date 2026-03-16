@@ -1,4 +1,3 @@
-
 # IntuneSecurityBaselineMicrosoftEdge
 
 ## Description

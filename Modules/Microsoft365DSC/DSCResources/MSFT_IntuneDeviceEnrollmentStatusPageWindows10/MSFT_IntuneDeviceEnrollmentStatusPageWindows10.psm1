@@ -85,8 +85,8 @@ function Get-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -159,7 +159,7 @@ function Get-TargetResource
             {
                 Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with Id {$Id}"
 
-                if (-Not [string]::IsNullOrEmpty($DisplayName))
+                if (-not [string]::IsNullOrEmpty($DisplayName))
                 {
                     $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
                         -All `
@@ -179,7 +179,7 @@ function Get-TargetResource
 
             if ($getValue -is [Array] -and $getValue.Length -gt 1)
             {
-                Throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
+                throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
             }
         }
         else
@@ -336,8 +336,8 @@ function Set-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -587,8 +587,8 @@ function Test-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -637,7 +637,7 @@ function Test-TargetResource
     $PSBoundParameters.Remove('SelectedMobileAppIds') | Out-Null
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

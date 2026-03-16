@@ -1,4 +1,3 @@
-
 # IntuneMobileThreatDefenseConnector
 
 ## Description

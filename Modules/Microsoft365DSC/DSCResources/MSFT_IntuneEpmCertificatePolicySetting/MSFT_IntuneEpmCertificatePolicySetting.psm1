@@ -1,5 +1,5 @@
 
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_IntuneEpmCertificatePolicySetting"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneEpmCertificatePolicySetting'
 $Script:PropertiesToRetrieve = @('id', 'displayName', 'description', 'settingDefinitionId', 'settingInstance')
 
 function Get-TargetResource
@@ -27,8 +27,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -132,18 +132,18 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            CertificateFile                = $getValue.settingInstance.simpleSettingValue.value
-            Description                    = $getValue.description
-            DisplayName                    = $getValue.displayName
-            Id                             = $getValue.id
-            PolicySettings                 = $reusableSettings
-            Ensure                         = 'Present'
-            Credential                     = $Credential
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            ApplicationSecret              = $ApplicationSecret
-            CertificateThumbprint          = $CertificateThumbprint
-            ManagedIdentity                = $ManagedIdentity.IsPresent
+            CertificateFile       = $getValue.settingInstance.simpleSettingValue.value
+            Description           = $getValue.description
+            DisplayName           = $getValue.displayName
+            Id                    = $getValue.id
+            PolicySettings        = $reusableSettings
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
 
@@ -185,8 +185,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -240,9 +240,9 @@ function Set-TargetResource
         id                  = $currentInstance.Id
         settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_reusablesettings_certificatefile'
         settingInstance     = @{
-            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+            '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
             settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_reusablesettings_certificatefile'
-            simpleSettingValue = @{
+            simpleSettingValue  = @{
                 '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
                 value         = $CertificateFile
             }
@@ -282,7 +282,7 @@ function Set-TargetResource
         catch
         {
             $errorMessage = "Failed to remove the Intune Epm Certificate Policy Setting with Id {$($currentInstance.Id)} and Name {$($currentInstance.DisplayName)}."
-            $errorMessage += " Please make sure it is not referenced by a Firewall policy."
+            $errorMessage += ' Please make sure it is not referenced by a Firewall policy.'
             throw $errorMessage
         }
         #endregion
@@ -314,8 +314,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -358,8 +358,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

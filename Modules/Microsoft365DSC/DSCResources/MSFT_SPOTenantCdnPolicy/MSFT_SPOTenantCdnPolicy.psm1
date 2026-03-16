@@ -78,10 +78,6 @@ function Get-TargetResource
             #endregion
         }
 
-        $nullReturn = @{
-            CDNType = $CDNType
-        }
-
         $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
         if ($Policies['ExcludeRestrictedSiteClassifications'].Length -gt 0)
         {
@@ -289,7 +285,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

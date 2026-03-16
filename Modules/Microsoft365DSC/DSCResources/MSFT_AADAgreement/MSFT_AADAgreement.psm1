@@ -43,8 +43,8 @@ function Get-TargetResource
         $Language,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -78,31 +78,31 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for the Azure AD Agreement with DisplayName {$DisplayName}"
 
-    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = @{
-        DisplayName = $DisplayName
-        Ensure      = 'Absent'
-    }
-
     try
     {
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullReturn = @{
+            DisplayName = $DisplayName
+            Ensure      = 'Absent'
+        }
+
         if ($null -ne $Script:exportedInstances -and $Script:exportedInstances.Count -gt 0)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
         }
         else
         {
@@ -123,23 +123,23 @@ function Get-TargetResource
         }
 
         $results = @{
-            DisplayName                          = $instance.DisplayName
-            Id                                   = $instance.Id
-            IsViewingBeforeAcceptanceRequired    = $instance.IsViewingBeforeAcceptanceRequired
-            IsPerDeviceAcceptanceRequired        = $instance.IsPerDeviceAcceptanceRequired
-            UserReacceptRequiredFrequency        = $instance.UserReacceptRequiredFrequency
-            AcceptanceStatement                  = $instance.AcceptanceStatement
-            FileData                             = $fileContent
-            FileName                             = $instance.File.Name
-            Language                             = $instance.File.Language
-            Ensure                               = 'Present'
-            Credential                           = $Credential
-            ApplicationId                        = $ApplicationId
-            TenantId                             = $TenantId
-            ApplicationSecret                    = $ApplicationSecret
-            CertificateThumbprint                = $CertificateThumbprint
-            ManagedIdentity                      = $ManagedIdentity.IsPresent
-            AccessTokens                         = $AccessTokens
+            DisplayName                       = $instance.DisplayName
+            Id                                = $instance.Id
+            IsViewingBeforeAcceptanceRequired = $instance.IsViewingBeforeAcceptanceRequired
+            IsPerDeviceAcceptanceRequired     = $instance.IsPerDeviceAcceptanceRequired
+            UserReacceptRequiredFrequency     = $instance.UserReacceptRequiredFrequency
+            AcceptanceStatement               = $instance.AcceptanceStatement
+            FileData                          = $fileContent
+            FileName                          = $instance.File.Name
+            Language                          = $instance.File.Language
+            Ensure                            = 'Present'
+            Credential                        = $Credential
+            ApplicationId                     = $ApplicationId
+            TenantId                          = $TenantId
+            ApplicationSecret                 = $ApplicationSecret
+            CertificateThumbprint             = $CertificateThumbprint
+            ManagedIdentity                   = $ManagedIdentity.IsPresent
+            AccessTokens                      = $AccessTokens
         }
 
         return $results
@@ -198,8 +198,8 @@ function Set-TargetResource
         $Language,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -252,27 +252,27 @@ function Set-TargetResource
         # Prepare the file content
         $fileContent = @()
         $fileContent += @{
-            fileData = @{
-                data     = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($FileData))
+            fileData  = @{
+                data = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($FileData))
             }
-            fileName     = $FileName
-            language = $Language
+            fileName  = $FileName
+            language  = $Language
             isDefault = $true
         }
 
         $CreateParameters = @{
-            displayName                        = $DisplayName
-            isViewingBeforeAcceptanceRequired  = $IsViewingBeforeAcceptanceRequired
-            isPerDeviceAcceptanceRequired      = $IsPerDeviceAcceptanceRequired
-            userReacceptRequiredFrequency      = $UserReacceptRequiredFrequency
-            acceptanceStatement                = $AcceptanceStatement
-            files                              = $fileContent
+            displayName                       = $DisplayName
+            isViewingBeforeAcceptanceRequired = $IsViewingBeforeAcceptanceRequired
+            isPerDeviceAcceptanceRequired     = $IsPerDeviceAcceptanceRequired
+            userReacceptRequiredFrequency     = $UserReacceptRequiredFrequency
+            acceptanceStatement               = $AcceptanceStatement
+            files                             = $fileContent
         }
 
         $CreateParameters = Remove-NullEntriesFromHashtable -Hash $CreateParameters
         Write-Verbose -Message "Creating Azure AD Agreement with DisplayName {$DisplayName} with:`r`n$(ConvertTo-Json $CreateParameters -Depth 5)"
 
-        Invoke-MgGraphRequest -Uri "/beta/agreements" -Method POST -Body ($CreateParameters | ConvertTo-Json -Depth 5) | Out-Null
+        Invoke-MgGraphRequest -Uri '/beta/agreements' -Method POST -Body ($CreateParameters | ConvertTo-Json -Depth 5) | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -282,20 +282,20 @@ function Set-TargetResource
         {
             $fileContent = @()
             $fileContent += @{
-                fileData     = @{
+                fileData = @{
                     data = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($FileData))
                 }
-                fileName     = $FileName
+                fileName = $FileName
                 language = $Language
             }
         }
 
         $UpdateParameters = @{
-            displayName                        = $DisplayName
-            isViewingBeforeAcceptanceRequired  = $IsViewingBeforeAcceptanceRequired
-            isPerDeviceAcceptanceRequired      = $IsPerDeviceAcceptanceRequired
-            userReacceptRequiredFrequency      = $UserReacceptRequiredFrequency
-            acceptanceStatement                = $AcceptanceStatement
+            displayName                       = $DisplayName
+            isViewingBeforeAcceptanceRequired = $IsViewingBeforeAcceptanceRequired
+            isPerDeviceAcceptanceRequired     = $IsPerDeviceAcceptanceRequired
+            userReacceptRequiredFrequency     = $UserReacceptRequiredFrequency
+            acceptanceStatement               = $AcceptanceStatement
         }
 
         if ($null -ne $fileContent)
@@ -306,8 +306,8 @@ function Set-TargetResource
         $UpdateParameters = Remove-NullEntriesFromHashtable -Hash $UpdateParameters
         Write-Verbose -Message "Updating Azure AD Agreement with ID {$($currentInstance.Id)} with:`r`n$(ConvertTo-Json $UpdateParameters -Depth 5)"
         Invoke-MgGraphRequest -Method PATCH `
-                              -Uri "/beta/agreements/$($currentInstance.Id)" `
-                              -Body ($UpdateParameters | ConvertTo-Json -Depth 5) | Out-Null
+            -Uri "/beta/agreements/$($currentInstance.Id)" `
+            -Body ($UpdateParameters | ConvertTo-Json -Depth 5) | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -359,8 +359,8 @@ function Test-TargetResource
         $Language,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -402,7 +402,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -412,6 +412,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -459,7 +463,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaAgreement -All
+        [array] $Script:exportedInstances = Get-MgBetaAgreement -Filter $Filter -All
 
         $i = 1
         $dscContent = ''

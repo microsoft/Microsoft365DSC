@@ -36,8 +36,8 @@ function Get-TargetResource
         $RoleScopeTagIds,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -127,7 +127,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Device Enrollment Limit Restriction with Name {$DisplayName}"
 
-        $results =  @{
+        $results = @{
             Id                    = $config.Id
             DisplayName           = $config.DisplayName
             Description           = $config.Description
@@ -203,8 +203,8 @@ function Set-TargetResource
         $RoleScopeTagIds,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -379,8 +379,8 @@ function Test-TargetResource
         $RoleScopeTagIds,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -422,7 +422,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

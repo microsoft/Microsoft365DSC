@@ -1,4 +1,3 @@
-
 # AADCrossTenantIdentitySyncPolicyPartner
 
 ## Description

@@ -18,7 +18,7 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('None', 'All', 'Children', 'Descendents', 'SelfAndChildren')]
-        $InheritanceType = 'All',
+        $InheritanceType,
 
         [Parameter()]
         [System.String]
@@ -163,7 +163,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('None', 'All', 'Children', 'Descendents', 'SelfAndChildren')]
-        $InheritanceType = 'All',
+        $InheritanceType,
 
         [Parameter()]
         [System.String]
@@ -262,7 +262,7 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('None', 'All', 'Children', 'Descendents', 'SelfAndChildren')]
-        $InheritanceType = 'All',
+        $InheritanceType,
 
         [Parameter()]
         [System.String]
@@ -324,7 +324,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

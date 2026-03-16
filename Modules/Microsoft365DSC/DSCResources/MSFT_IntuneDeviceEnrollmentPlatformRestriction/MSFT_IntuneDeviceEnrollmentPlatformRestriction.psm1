@@ -68,8 +68,8 @@ function Get-TargetResource
         $Priority,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -289,8 +289,8 @@ function Set-TargetResource
         $Priority,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -557,8 +557,8 @@ function Test-TargetResource
         $Priority,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -600,8 +600,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -820,8 +820,8 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('Assignments', 'IosRestriction', 'WindowsRestriction', 'WindowsHomeSkuRestriction',
-                    'WindowsMobileRestriction', 'AndroidRestriction', 'AndroidForWorkRestriction',
-                    'MacRestriction','MacOSRestriction')
+                'WindowsMobileRestriction', 'AndroidRestriction', 'AndroidForWorkRestriction',
+                'MacRestriction', 'MacOSRestriction')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -884,12 +884,12 @@ function Get-DevicePlatformRestrictionSetting
                     }
                     'String'
                     {
-                        if (-Not [String]::IsNullOrEmpty($keyValue.$key))
+                        if (-not [String]::IsNullOrEmpty($keyValue.$key))
                         {
                             $hash.Add($key, $keyValue.$key)
                         }
                     }
-                    Default
+                    default
                     {
                         $hash.Add($key, $keyValue.$key)
                     }
@@ -923,12 +923,12 @@ function Get-DevicePlatformRestrictionSetting
                         }
                         'String'
                         {
-                            if (-Not [String]::IsNullOrEmpty($keyValue.$key))
+                            if (-not [String]::IsNullOrEmpty($keyValue.$key))
                             {
                                 $hash.Add($key, $keyValue.$key)
                             }
                         }
-                        Default
+                        default
                         {
                             $hash.Add($key, $keyValue.$key)
                         }

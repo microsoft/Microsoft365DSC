@@ -1,16 +1,19 @@
-<h1>Moving from Microsoft365DSC to Tenant Configuration Management APIs</h1>
+# Moving from Microsoft365DSC to Tenant Configuration Management APIs
 
-<p>Microsoft recently announced the public preview of the <a href="https://learn.microsoft.com/en-us/graph/unified-tenant-configuration-management-concept-overview">Tenant Configuration Management APIs (TCM)</a>. TCM is an official solution that is supported by Microsoft, which offers the same high-level features as Microsoft365DSC. During the preview phase, only the configuration export/snapshot and the drift detection/monitoring  features are available. The ability to push configuration changes and to remediate to detected drifts will be made available later. The APIs are hosted on the Microsoft Graph, which means you can either access them directly via REST calls, or leverage the Microsoft Graph SDKs such as the Graph .NET SDK, the Graph Java SDK, or Graph PowerShell SDK to interact with them. It is important to note that because these are available on the Graph APIs, you are no longer tied to and forced to use PowerShell to automate your tenant configuration management tasks.</p>
-<p>At their core, the features work in similar fashion, where the main difference is that all the computing is done on the Microsoft side, instead of running locally via PowerShell console. Another difference is that the configuration templates are based in JSON instead of DSC. In this article, we will cover both the Snapshot and the Monitoring features of the new Tenant Configuration Management APIs and discuss how you can transition from using these features in Microsoft365DSC.</p>
-<h2>Configuration Snapshot</h2>
-<p>We refer to snapshot as the feature that allows you to extract the current configuration of an existing tenant. In Microsoft365DSC, this is performed by running the Export-M365DSCConfiguration cmdlet and is typically executed synchronously. With TCM, the user simply makes a call to the APIs to start an asynchronous job and collects the results (JSON snapshot representing the current configuration) once the job completes. Just like in Microsoft365DSC, the APIs allow users to specify at a very granular level what configuration components they wish to capture as part of their snapshot.</p>
-<p>For example, if you are trying to capture the conditional access policies and named locations policies of a given tenant via Microsoft365DSC, you would run the following command:</p>
+Microsoft recently announced the public preview of the [Tenant Configuration Management APIs (TCM)](https://learn.microsoft.com/en-us/graph/unified-tenant-configuration-management-concept-overview). TCM is an official solution that is supported by Microsoft, which offers the same high-level features as Microsoft365DSC. During the preview phase, only the configuration export/snapshot and the drift detection/monitoring  features are available. The ability to push configuration changes and to remediate to detected drifts will be made available later. The APIs are hosted on the Microsoft Graph, which means you can either access them directly via REST calls, or leverage the Microsoft Graph SDKs such as the Graph .NET SDK, the Graph Java SDK, or Graph PowerShell SDK to interact with them. It is important to note that because these are available on the Graph APIs, you are no longer tied to and forced to use PowerShell to automate your tenant configuration management tasks.
+At their core, the features work in similar fashion, where the main difference is that all the computing is done on the Microsoft side, instead of running locally via PowerShell console. Another difference is that the configuration templates are based in JSON instead of DSC. In this article, we will cover both the Snapshot and the Monitoring features of the new Tenant Configuration Management APIs and discuss how you can transition from using these features in Microsoft365DSC.
 
-``` powershell
+## Configuration Snapshot
+
+We refer to snapshot as the feature that allows you to extract the current configuration of an existing tenant. In Microsoft365DSC, this is performed by running the Export-M365DSCConfiguration cmdlet and is typically executed synchronously. With TCM, the user simply makes a call to the APIs to start an asynchronous job and collects the results (JSON snapshot representing the current configuration) once the job completes. Just like in Microsoft365DSC, the APIs allow users to specify at a very granular level what configuration components they wish to capture as part of their snapshot.
+For example, if you are trying to capture the conditional access policies and named locations policies of a given tenant via Microsoft365DSC, you would run the following command:
+
+```powershell
 Export-M365DSCConfiguration <auth parameters> -Components @('AADConditionalAccessPolicies', 'AADNamedLocationPolicy') -Path $path
 ```
-<p>Once the operation completes, a DSC configuration file will be generated as a .ps1 file locally on the machine where you executed the command.</p>
-<p>The TCM Snapshot APIs work in a similar fashion, where you simply make a call to the APIs and pass in the details about the snapshot you are trying to capture, including the list of components to capture.</p>
+
+Once the operation completes, a DSC configuration file will be generated as a .ps1 file locally on the machine where you executed the command.
+The TCM Snapshot APIs work in a similar fashion, where you simply make a call to the APIs and pass in the details about the snapshot you are trying to capture, including the list of components to capture.
 
 ```json
 POST /beta/admin/configurationManagement/configurationSnapshots/createSnapshot
@@ -23,7 +26,8 @@ POST /beta/admin/configurationManagement/configurationSnapshots/createSnapshot
   ]
 }
 ```
-<p>Once the job is created, you will get the job Id back and it will take some time to complete. At the moment, it is up to the user to ping the APIs to retrieve the status of the job to determine when it completes. In the future, Microsoft will be introducing Graph Change Notifications for the TCM APIs which will allow you to be automatically notified once a job completes. In order to poll the job's status, you can make the following API calls:</p>
+
+Once the job is created, you will get the job Id back and it will take some time to complete. At the moment, it is up to the user to ping the APIs to retrieve the status of the job to determine when it completes. In the future, Microsoft will be introducing Graph Change Notifications for the TCM APIs which will allow you to be automatically notified once a job completes. In order to poll the job's status, you can make the following API calls:
 
 ```json
 GET /beta/admin/configurationManagement/configurationSnapshotJobs/{JobId}
@@ -57,7 +61,8 @@ GET /beta/admin/configurationManagement/configurationSnapshotJobs/{JobId}
     ]
 }
 ```
-<p>Once the job's status changes to "succeeded" the user will also be provided with the resourceLocation value, which represents the API call to make to be able to download the JSON snapshot that has been generated by the job. This file is stored within the tenant itself and the only way to get its content is by making this API call. Making this API call will validate the permissions of the user before allowing the file to be returned.</p>
+
+Once the job's status changes to "succeeded" the user will also be provided with the resourceLocation value, which represents the API call to make to be able to download the JSON snapshot that has been generated by the job. This file is stored within the tenant itself and the only way to get its content is by making this API call. Making this API call will validate the permissions of the user before allowing the file to be returned.
 
 ```json
 GET /beta/admin/configurationManagement/configurationSnapshots('9125b3ac-2895-4af7-b488-d6bbf34f3e7b')
@@ -141,12 +146,15 @@ GET /beta/admin/configurationManagement/configurationSnapshots('9125b3ac-2895-4a
     ]
 }
 ```
-<p>It is up to the customers to download and store these snapshots. TCM is not a file management solution, and the generated snapshots will be purged 7 days after creation. Our recommendation would be for organizations to store these in some Application Lifecycle Management solution such as Azure DevOPS of GitHub Enterprise.</p>
-<h2>Configuration Monitoring</h2>
-<p>TCM has the concept of a monitor, which contains information about the configuration template to use to monitor configuration settings on a tenant. A monitor has a name, a description, a status (Active or Disabled), an associated schedule (run frequency) and a mode. During the preview phase, the only mode available for monitors is MonitorOnly which means that it will simply report detected drifts. In the near future, Microsoft will introduce additional modes that will allow users to apply configuration changes defined in the configuration template and to automatically remediate to detected drifts.</p>
-<p>If we were to make a comparison, a TCM monitor is very similar to an instance of the Local Configuration Manager (LCM) service in the Microsoft365DSC world. Today with Microsoft365DSC, if you wish to run multiple LCM instances, you will need multiple machines or containers since the LCM is a unique instance. With TCM, you can have as many monitors (up to 100) as you want per tenant.</p>
-<p>When using Microsoft365DSC to monitor a tenant for configuration drifts, you first need to define your configuration as a DSC file with a .ps1 extension and execute it as if it was any regular PowerShell script. Doing this will compile your DSC configuration file into a .mof file, which is a cryptic representation of your configuration that will be understood by the Local Configuration Manager service on the local machine. Once that MOF file has been generated, you can initiate the continuous monitoring of your configuration by calling either the Test-DSCConfiguration cmdlet if you want to orchestrate the calls yourself or Start-DSCConfiguration if you wish to have it running on a schedule.</p>
-<p>With the TCM APIs, you define your configuration template in a JSON format instead of the proprietary DSC format, and you do not need to compile your configuration. You simply call into the TCM APIs, passing in the details for the monitor you wish to create, including the configuration template content. In the following example, we are creating a new monitor in MonitorOnly mode, which will run every 6 hours (only available frequency during preview).</p>
+
+It is up to the customers to download and store these snapshots. TCM is not a file management solution, and the generated snapshots will be purged 7 days after creation. Our recommendation would be for organizations to store these in some Application Lifecycle Management solution such as Azure DevOPS of GitHub Enterprise.
+
+## Configuration Monitoring
+
+TCM has the concept of a monitor, which contains information about the configuration template to use to monitor configuration settings on a tenant. A monitor has a name, a description, a status (Active or Disabled), an associated schedule (run frequency) and a mode. During the preview phase, the only mode available for monitors is MonitorOnly which means that it will simply report detected drifts. In the near future, Microsoft will introduce additional modes that will allow users to apply configuration changes defined in the configuration template and to automatically remediate to detected drifts.
+If we were to make a comparison, a TCM monitor is very similar to an instance of the Local Configuration Manager (LCM) service in the Microsoft365DSC world. Today with Microsoft365DSC, if you wish to run multiple LCM instances, you will need multiple machines or containers since the LCM is a unique instance. With TCM, you can have as many monitors (up to 100) as you want per tenant.
+When using Microsoft365DSC to monitor a tenant for configuration drifts, you first need to define your configuration as a DSC file with a .ps1 extension and execute it as if it was any regular PowerShell script. Doing this will compile your DSC configuration file into a .mof file, which is a cryptic representation of your configuration that will be understood by the Local Configuration Manager service on the local machine. Once that MOF file has been generated, you can initiate the continuous monitoring of your configuration by calling either the Test-DSCConfiguration cmdlet if you want to orchestrate the calls yourself or Start-DSCConfiguration if you wish to have it running on a schedule.
+With the TCM APIs, you define your configuration template in a JSON format instead of the proprietary DSC format, and you do not need to compile your configuration. You simply call into the TCM APIs, passing in the details for the monitor you wish to create, including the configuration template content. In the following example, we are creating a new monitor in MonitorOnly mode, which will run every 6 hours (only available frequency during preview).
 
 ```json
 POST /beta/admin/configurationManagement/configurationMonitors/
@@ -233,7 +241,8 @@ POST /beta/admin/configurationManagement/configurationMonitors/
   "status": "active"
 }
 ```
-<p>This call will create a new monitor for the given tenant, which will execute on the specified frequency as determined by the schedule, which is every 6 hours by default during the preview. Microsoft will soon offer the ability to change this schedule and will allow users to set their monitors to execute every 1h, 2h, 6h, 12h, 24h. Every time a monitor executes, it will generate a MonitorResult object, which is a metadata summary of the results of the execution. It will contain information about how long it took for the monitor to check all associated settings, whether or not it encountered any errors validating the configuration and whether or not any configuration drifts were encountered. This information can be retrieved by making a call to the following APIs and specifying the monitor ID that was returned when you created the monitor in the first place.</p>
+
+This call will create a new monitor for the given tenant, which will execute on the specified frequency as determined by the schedule, which is every 6 hours by default during the preview. Microsoft will soon offer the ability to change this schedule and will allow users to set their monitors to execute every 1h, 2h, 6h, 12h, 24h. Every time a monitor executes, it will generate a MonitorResult object, which is a metadata summary of the results of the execution. It will contain information about how long it took for the monitor to check all associated settings, whether or not it encountered any errors validating the configuration and whether or not any configuration drifts were encountered. This information can be retrieved by making a call to the following APIs and specifying the monitor ID that was returned when you created the monitor in the first place.
 
 ```json
 GET /beta/admin/configurationManagement/configurationMonitoringResults
@@ -251,7 +260,8 @@ GET /beta/admin/configurationManagement/configurationMonitoringResults
     ]
 }
 ```
-<p>In the example above, we can see that the monitor executed and detected a single drift. The MonitorResult doesn't include details about what the drift is. In order for the user to retrieve this, a call to the configuration drift API must be made.</p>
+
+In the example above, we can see that the monitor executed and detected a single drift. The MonitorResult doesn't include details about what the drift is. In order for the user to retrieve this, a call to the configuration drift API must be made.
 
 ```json
 GET /beta/admin/configurationManagement/configurationDrifts?$filter=monitorId eq '98b166c9cb-db29-438b-95fb-247da1dc72c3'
@@ -278,12 +288,15 @@ GET /beta/admin/configurationManagement/configurationDrifts?$filter=monitorId eq
     ]
 }
 ```
-<p>The returned configuration drift indicates that a new drift was detected related o the fact that the 'Multifactor authentication for partners' conditional access policy was defined by the configuration template as existing, where it doesn't actually exist on the tenant.</p>
-<h2>Convert Microsoft365DSC Configurations to TCM Configuration Templates</h2>
-<p>A great way for organizations to get started with the TCM APIs is to start fresh and generate a snapshot of an existing tenant to get a baseline JSON configuration template. However, we understand that customers have made significant investments in creating DSC configurations and would rather just convert them from their current DSC format into the new TCM JSON-based format. To facilitate the TCM onboarding, the Microsoft365DSC team has put together a conversion utility that will allow organizations to convert simple Microsoft365DSC configurations into TCM configuration templates. We are using the term 'simple Microsoft365DSC configurations' here to indicate that the utility works with fully declarative configurations only. If your Microsoft365DSC configuration contains embedded PowerShell logic (if/else, for loops, while loops, etc.) or if it is a composite DSC configuration, then it won't be supported by the utility.</p>
-<p>It is important to note that the conversion utility is provided on a best-effort basis as an Open-Source solution. It is not an official solution provided by Microsoft, and its sole purpose is to convert a DSC configuration into its TCM JSON equivalent. You can find a copy of the solution at the following location:
-<a href='https://GitHub.com/Microsoft/M365DSC-to-TCM'>https://GitHub.com/Microsoft/M365DSC-to-TCM</a></p>
-<p>For the purpose of this demo, I will be using the following DSC configuration, which I've store locally under C:\DSC\DSCConfig.ps1</p>
+
+The returned configuration drift indicates that a new drift was detected related o the fact that the 'Multifactor authentication for partners' conditional access policy was defined by the configuration template as existing, where it doesn't actually exist on the tenant.
+
+## Convert Microsoft365DSC Configurations to TCM Configuration Templates
+
+A great way for organizations to get started with the TCM APIs is to start fresh and generate a snapshot of an existing tenant to get a baseline JSON configuration template. However, we understand that customers have made significant investments in creating DSC configurations and would rather just convert them from their current DSC format into the new TCM JSON-based format. To facilitate the TCM onboarding, the Microsoft365DSC team has put together a conversion utility that will allow organizations to convert simple Microsoft365DSC configurations into TCM configuration templates. We are using the term 'simple Microsoft365DSC configurations' here to indicate that the utility works with fully declarative configurations only. If your Microsoft365DSC configuration contains embedded PowerShell logic (if/else, for loops, while loops, etc.) or if it is a composite DSC configuration, then it won't be supported by the utility.
+It is important to note that the conversion utility is provided on a best-effort basis as an Open-Source solution. It is not an official solution provided by Microsoft, and its sole purpose is to convert a DSC configuration into its TCM JSON equivalent. You can find a copy of the solution at the following location:
+<https://github.com/Microsoft/M365DSC-to-TCM/>
+For the purpose of this demo, I will be using the following DSC configuration, which I've store locally under C:\DSC\DSCConfig.ps1
 
 ```powershell
 param (
@@ -361,16 +374,19 @@ Configuration M365TenantConfig
 M365TenantConfig -ConfigurationData .\ConfigurationData.psd1
 ```
 
-<p>In order to use the utility, you will first need to download it locally which can be done by running the following PowerShell command:</p>
+In order to use the utility, you will first need to download it locally which can be done by running the following PowerShell command:
+
 ```powershell
 Install-Module 'Microsoft365DSC-to-TCM'
 ```
-<p>Once the module has been installed on your machine, open a new PowerShell console, running as an administrator and run the following command:</p>
+
+Once the module has been installed on your machine, open a new PowerShell console, running as an administrator and run the following command:
+
 ```powershell
 ConvertFrom-M365DSCToTCM -Path C:\dsc\DSCConfig.ps1
 ```
 
-<p>It will take some time for the operation to complete, but once it finishes, it will return the JSON equivalent content, therefore, you may wish to capture this content in a variable or export it to a local file somewhere. For my demo, the generated content is as follow:</p>
+It will take some time for the operation to complete, but once it finishes, it will return the JSON equivalent content, therefore, you may wish to capture this content in a variable or export it to a local file somewhere. For my demo, the generated content is as follow:
 
 ```json
 {
@@ -460,4 +476,4 @@ ConvertFrom-M365DSCToTCM -Path C:\dsc\DSCConfig.ps1
 }
 ```
 
-<p>Because my initial DSC configuration included some variables ($OrganizationName), these have been replaced by parameters in my configuration template. When creating my monitor I can simply specify what these parameters' value should be, in my case contoso.com. Parameters will be discussed in the official TCM APIs documentation, but they are a great way to keep your actual environment specific variables separate from your actual configuration templates.</p>
+Because my initial DSC configuration included some variables ($OrganizationName), these have been replaced by parameters in my configuration template. When creating my monitor I can simply specify what these parameters' value should be, in my case contoso.com. Parameters will be discussed in the official TCM APIs documentation, but they are a great way to keep your actual environment specific variables separate from your actual configuration templates.

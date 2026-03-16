@@ -1,4 +1,3 @@
-
 # IntuneAppleMDMPushNotificationCertificate
 
 ## Description

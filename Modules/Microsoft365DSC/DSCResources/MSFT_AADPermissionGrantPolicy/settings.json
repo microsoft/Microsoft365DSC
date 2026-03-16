@@ -1,0 +1,74 @@
+{
+  "resourceName": "AADPermissionGrantPolicy",
+  "description": "This resource configures an Entra ID Permission Grant Policy.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Privileged Role Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Policy.Read.PermissionGrant"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.PermissionGrant"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.PermissionGrant"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.PermissionGrant"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgServicePrincipal"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyPermissionGrantPolicy",
+        "New-MgBetaPolicyPermissionGrantPolicy",
+        "Update-MgBetaPolicyPermissionGrantPolicy",
+        "Remove-MgBetaPolicyPermissionGrantPolicy",
+        "Get-MgBetaPolicyPermissionGrantPolicyInclude",
+        "New-MgBetaPolicyPermissionGrantPolicyInclude",
+        "Remove-MgBetaPolicyPermissionGrantPolicyInclude",
+        "Get-MgBetaPolicyPermissionGrantPolicyExclude",
+        "New-MgBetaPolicyPermissionGrantPolicyExclude",
+        "Remove-MgBetaPolicyPermissionGrantPolicyExclude"
+      ]
+    }
+  ]
+}

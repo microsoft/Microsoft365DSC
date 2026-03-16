@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationVpnPolicyWindows10
 
 ## Description

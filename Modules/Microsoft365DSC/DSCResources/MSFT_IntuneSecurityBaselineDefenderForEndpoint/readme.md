@@ -1,4 +1,3 @@
-
 # IntuneSecurityBaselineDefenderForEndpoint
 
 ## Description

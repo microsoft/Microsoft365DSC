@@ -41,7 +41,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UserPrincipalName = 'alexw@contoso.com'
                 }
             }
-            Mock -CommandName Get-MGGroup -MockWith {
+            Mock -CommandName Get-MgGroup -MockWith {
                 return @{
                     Id          = 'f1eb1a09-c0c2-4df4-9e69-fee01f00db31'
                     DisplayName = 'Group 01'
@@ -150,9 +150,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             IsEnabled = $True
                             Mode      = 'Always'
                         }
-                        disableResilienceDefaults       = @{
-                            IsEnabled = $True
-                        }
+                        disableResilienceDefaults       = $true
                     }
                 }
             }

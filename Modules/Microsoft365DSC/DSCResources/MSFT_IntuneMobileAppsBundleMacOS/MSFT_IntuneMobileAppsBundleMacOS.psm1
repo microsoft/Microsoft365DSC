@@ -94,8 +94,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -269,7 +269,7 @@ function Get-TargetResource
         }
         if ($results.PackageFileType -eq 'Pkg')
         {
-            $results.PreInstallScript  = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($getValue.AdditionalProperties.preInstallScript.scriptContent))
+            $results.PreInstallScript = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($getValue.AdditionalProperties.preInstallScript.scriptContent))
             $results.PostInstallScript = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($getValue.AdditionalProperties.postInstallScript.scriptContent))
         }
         $assignmentsValues = Get-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $Id
@@ -387,8 +387,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -424,7 +424,7 @@ function Set-TargetResource
 
     if ($PSBoundParameters.PackageFileType -eq 'Dmg' -and ($PSBoundParameters.ContainsKey('PreInstallScript') -or $PSBoundParameters.ContainsKey('PostInstallScript')))
     {
-        throw "PreInstallScript and PostInstallScript are not supported for Dmg package type."
+        throw 'PreInstallScript and PostInstallScript are not supported for Dmg package type.'
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -465,7 +465,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Mobile Apps Bundle for macOS with DisplayName {$DisplayName}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $createParameters = ([Hashtable]$boundParameters).Clone()
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
@@ -473,7 +473,7 @@ function Set-TargetResource
 
         if (-not $createParameters.ContainsKey('FileName') -or -not $createParameters.ContainsKey('IncludedApps'))
         {
-            throw "FileName and IncludedApps are required parameters."
+            throw 'FileName and IncludedApps are required parameters.'
         }
 
         $keys = (([Hashtable]$createParameters).Clone()).Keys
@@ -486,10 +486,10 @@ function Set-TargetResource
         }
         #region resource generator code
         $odataType = "#microsoft.graph.macOS$($PackageFileType)App"
-        $createParameters.Add("@odata.type", $odataType)
+        $createParameters.Add('@odata.type', $odataType)
         $createParameters.Add('primaryBundleId', $createParameters.IncludedApps[0].BundleId)
         $createParameters.Add('primaryBundleVersion', $createParameters.IncludedApps[0].BundleVersion)
-        $policy = Invoke-MgGraphRequest -Method POST -Uri "/beta/deviceAppManagement/mobileApps" -Body ($createParameters | ConvertTo-Json -Depth 10)
+        $policy = Invoke-MgGraphRequest -Method POST -Uri '/beta/deviceAppManagement/mobileApps' -Body ($createParameters | ConvertTo-Json -Depth 10)
 
         Invoke-M365DSCIntuneMobileAppInitialUpload -AppId $policy.Id -OdataType $odataType -FileExtension $PackageFileType.ToLower()
 
@@ -506,13 +506,13 @@ function Set-TargetResource
                 -Assignments $assignmentsHash
         }
 
-        Write-Warning -Message "The Intune Mobile Apps Bundle for macOS resource has been created and the sample content was uploaded. Please ensure to upload the actual content from the Intune portal."
+        Write-Warning -Message 'The Intune Mobile Apps Bundle for macOS resource has been created and the sample content was uploaded. Please ensure to upload the actual content from the Intune portal.'
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Mobile Apps Bundle for macOS with Id {$($currentInstance.Id)}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
@@ -529,7 +529,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $updateParameters.Add("@odata.type", "#microsoft.graph.macOS$($PackageFileType)App")
+        $updateParameters.Add('@odata.type', "#microsoft.graph.macOS$($PackageFileType)App")
         Invoke-MgGraphRequest -Method PATCH -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)" -Body ($updateParameters | ConvertTo-Json -Depth 10)
 
         if ($PSBoundParameters.ContainsKey('Categories'))
@@ -646,8 +646,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -681,7 +681,7 @@ function Test-TargetResource
 
     if ($PSBoundParameters.PackageFileType -eq 'Dmg' -and ($PSBoundParameters.ContainsKey('PreInstallScript') -or $PSBoundParameters.ContainsKey('PostInstallScript')))
     {
-        throw "PreInstallScript and PostInstallScript are not supported for Dmg package type."
+        throw 'PreInstallScript and PostInstallScript are not supported for Dmg package type.'
     }
 
     #region Telemetry
@@ -695,8 +695,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

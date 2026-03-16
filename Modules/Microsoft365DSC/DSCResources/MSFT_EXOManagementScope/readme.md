@@ -1,4 +1,3 @@
-
 # EXOManagementScope
 
 ## Description

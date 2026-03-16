@@ -27,7 +27,7 @@
     "exchange": {
       "requiredroles": {
         "read": [
-          "View-Only Configuration"
+          "Role Management"
         ],
         "update": [
           "Role Management"
@@ -35,7 +35,7 @@
       },
       "requiredrolegroups": {
         "read": [
-          "View-Only Organization Management"
+          "Organization Management"
         ],
         "update": [
           "Organization Management"

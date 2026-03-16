@@ -41,7 +41,7 @@ function Get-TargetResource
         $AppActionIfUnableToAuthenticateUser,
 
         [Parameter()]
-        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps','allApps')]
+        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps', 'allApps')]
         [System.String]
         $AppGroupType,
 
@@ -58,7 +58,7 @@ function Get-TargetResource
         $DeployedAppCount,
 
         [Parameter()]
-        [ValidateSet('allApps','managedApps','customApp','blocked')]
+        [ValidateSet('allApps', 'managedApps', 'customApp', 'blocked')]
         [System.String]
         $DialerRestrictionLevel,
 
@@ -100,12 +100,12 @@ function Get-TargetResource
         $MinimumWarningSdkVersion,
 
         [Parameter()]
-        [ValidateSet('defenderOverThirdPartyPartner','thirdPartyPartnerOverDefender','unknownFutureValue')]
+        [ValidateSet('defenderOverThirdPartyPartner', 'thirdPartyPartnerOverDefender', 'unknownFutureValue')]
         [System.String]
         $MobileThreatDefensePartnerPriority,
 
         [Parameter()]
-        [ValidateSet('block','wipe','warn','blockWhenSettingIsSupported')]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         [System.String]
         $MobileThreatDefenseRemediationAction,
 
@@ -114,7 +114,7 @@ function Get-TargetResource
         $PreviousPinBlockCount,
 
         [Parameter()]
-        [ValidateSet('anyApp','anyManagedApp','specificApps','blocked')]
+        [ValidateSet('anyApp', 'anyManagedApp', 'specificApps', 'blocked')]
         [System.String]
         $ProtectedMessagingRedirectAppType,
 
@@ -321,8 +321,8 @@ function Get-TargetResource
         $CustomBrowserProtocol,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -406,7 +406,7 @@ function Get-TargetResource
         $IdArray = [Array]($policy.Id)
         if ($IdArray.Length -gt 1)
         {
-            throw "Multiple Policies with same displayname identified - Module currently only functions with unique names"
+            throw 'Multiple Policies with same displayname identified - Module currently only functions with unique names'
         }
         else
         {
@@ -608,7 +608,7 @@ function Set-TargetResource
         $AppActionIfUnableToAuthenticateUser,
 
         [Parameter()]
-        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps','allApps')]
+        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps', 'allApps')]
         [System.String]
         $AppGroupType,
 
@@ -625,7 +625,7 @@ function Set-TargetResource
         $DeployedAppCount,
 
         [Parameter()]
-        [ValidateSet('allApps','managedApps','customApp','blocked')]
+        [ValidateSet('allApps', 'managedApps', 'customApp', 'blocked')]
         [System.String]
         $DialerRestrictionLevel,
 
@@ -667,12 +667,12 @@ function Set-TargetResource
         $MinimumWarningSdkVersion,
 
         [Parameter()]
-        [ValidateSet('defenderOverThirdPartyPartner','thirdPartyPartnerOverDefender','unknownFutureValue')]
+        [ValidateSet('defenderOverThirdPartyPartner', 'thirdPartyPartnerOverDefender', 'unknownFutureValue')]
         [System.String]
         $MobileThreatDefensePartnerPriority,
 
         [Parameter()]
-        [ValidateSet('block','wipe','warn','blockWhenSettingIsSupported')]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         [System.String]
         $MobileThreatDefenseRemediationAction,
 
@@ -681,7 +681,7 @@ function Set-TargetResource
         $PreviousPinBlockCount,
 
         [Parameter()]
-        [ValidateSet('anyApp','anyManagedApp','specificApps','blocked')]
+        [ValidateSet('anyApp', 'anyManagedApp', 'specificApps', 'blocked')]
         [System.String]
         $ProtectedMessagingRedirectAppType,
 
@@ -888,8 +888,8 @@ function Set-TargetResource
         $CustomBrowserProtocol,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -959,7 +959,7 @@ function Set-TargetResource
         $createParameters.ExemptedAppProtocols = $myExemptedAppProtocols
 
         # Remove empty string parameters that the cmdlet can't handle
-        $arrayTemp = @("MinimumWarningSdkVersion", "MaximumRequiredOsVersion", "MaximumWarningOsVersion", "MaximumWipeOsVersion")
+        $arrayTemp = @('MinimumWarningSdkVersion', 'MaximumRequiredOsVersion', 'MaximumWarningOsVersion', 'MaximumWipeOsVersion')
         foreach ($item in $arrayTemp)
         {
             if ([System.String]::IsNullOrEmpty($createParameters.$item))
@@ -994,7 +994,7 @@ function Set-TargetResource
         $updateParameters.TargetedAppManagementLevels = $updateParameters.TargetedAppManagementLevels -join ','
 
         # Remove empty string parameters that the cmdlet can't handle
-        $arrayTemp = @("MinimumWarningSdkVersion", "MaximumRequiredOsVersion", "MaximumWarningOsVersion", "MaximumWipeOsVersion")
+        $arrayTemp = @('MinimumWarningSdkVersion', 'MaximumRequiredOsVersion', 'MaximumWarningOsVersion', 'MaximumWipeOsVersion')
         foreach ($item in $arrayTemp)
         {
             if ([System.String]::IsNullOrEmpty($updateParameters.$item))
@@ -1074,7 +1074,7 @@ function Test-TargetResource
         $AppActionIfUnableToAuthenticateUser,
 
         [Parameter()]
-        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps','allApps')]
+        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps', 'allApps')]
         [System.String]
         $AppGroupType,
 
@@ -1091,7 +1091,7 @@ function Test-TargetResource
         $DeployedAppCount,
 
         [Parameter()]
-        [ValidateSet('allApps','managedApps','customApp','blocked')]
+        [ValidateSet('allApps', 'managedApps', 'customApp', 'blocked')]
         [System.String]
         $DialerRestrictionLevel,
 
@@ -1133,12 +1133,12 @@ function Test-TargetResource
         $MinimumWarningSdkVersion,
 
         [Parameter()]
-        [ValidateSet('defenderOverThirdPartyPartner','thirdPartyPartnerOverDefender','unknownFutureValue')]
+        [ValidateSet('defenderOverThirdPartyPartner', 'thirdPartyPartnerOverDefender', 'unknownFutureValue')]
         [System.String]
         $MobileThreatDefensePartnerPriority,
 
         [Parameter()]
-        [ValidateSet('block','wipe','warn','blockWhenSettingIsSupported')]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         [System.String]
         $MobileThreatDefenseRemediationAction,
 
@@ -1147,7 +1147,7 @@ function Test-TargetResource
         $PreviousPinBlockCount,
 
         [Parameter()]
-        [ValidateSet('anyApp','anyManagedApp','specificApps','blocked')]
+        [ValidateSet('anyApp', 'anyManagedApp', 'specificApps', 'blocked')]
         [System.String]
         $ProtectedMessagingRedirectAppType,
 
@@ -1354,8 +1354,8 @@ function Test-TargetResource
         $CustomBrowserProtocol,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -1405,9 +1405,9 @@ function Test-TargetResource
         return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
     }
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -ExcludedProperties @('DeployedAppCount') `
-                                         -PostProcessing $postProcessingScript
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        -ExcludedProperties @('DeployedAppCount') `
+        -PostProcessing $postProcessingScript
     return $result
 }
 
@@ -1568,7 +1568,7 @@ function Get-IntuneAppProtectionPolicyiOSAppsToHashtable
         $Apps,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps','allApps')]
+        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps', 'allApps')]
         [System.String]
         $AppGroupType
     )
@@ -1619,7 +1619,7 @@ function Get-IntuneAppProtectionPolicyiOSAppsToHashtable
     }
 
     return @{
-        apps = $formattedApps
+        apps         = $formattedApps
         appGroupType = $AppGroupType
     }
 }

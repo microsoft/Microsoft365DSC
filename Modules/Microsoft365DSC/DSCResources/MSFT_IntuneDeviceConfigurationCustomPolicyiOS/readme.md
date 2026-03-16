@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationCustomPolicyiOS
 
 ## Description

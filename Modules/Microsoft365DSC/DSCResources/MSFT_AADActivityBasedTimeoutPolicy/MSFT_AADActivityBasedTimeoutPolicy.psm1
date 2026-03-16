@@ -25,8 +25,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -159,8 +159,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -213,15 +213,13 @@ function Set-TargetResource
     $DefaultTimeOutexistst = $false
     if ($BoundParameters.ContainsKey('AzurePortalTimeOut') `
             -and $null -ne $BoundParameters.AzurePortalTimeOut `
-            -and $BoundParameters.AzurePortalTimeOut -ne '' `
-            -and $BoundParameters.AzurePortalTimeOut -ne $nullString)
+            -and -not [System.String]::IsNullOrEmpty($BoundParameters.AzurePortalTimeOut))
     {
         $AzurePortalTimeOutexist = $true
     }
     if ($BoundParameters.ContainsKey('DefaultTimeOut') `
             -and $null -ne $BoundParameters.DefaultTimeOut `
-            -and $BoundParameters.DefaultTimeOut -ne '' `
-            -and $BoundParameters.DefaultTimeOut -ne $nullString)
+            -and -not [System.String]::IsNullOrEmpty($BoundParameters.DefaultTimeOut))
     {
         $DefaultTimeOutexistst = $true
     }
@@ -346,8 +344,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -389,7 +387,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -399,6 +397,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -446,7 +448,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaPolicyActivityBasedTimeoutPolicy `
+        [array]$getValue = Get-MgBetaPolicyActivityBasedTimeoutPolicy -Filter $Filter `
             -All `
             -ErrorAction Stop
         #endregion

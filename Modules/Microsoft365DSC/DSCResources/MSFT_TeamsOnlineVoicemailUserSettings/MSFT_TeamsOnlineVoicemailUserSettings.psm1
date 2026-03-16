@@ -352,7 +352,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -362,6 +362,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -404,7 +408,14 @@ function Export-TargetResource
 
     try
     {
-        $allUsers = Get-CsOnlineUser -Properties 'UserPrincipalName'
+        $splat = @{
+            Properties = 'UserPrincipalName'
+        }
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $splat.Add('Filter', $Filter)
+        }
+        $allUsers = Get-CsOnlineUser @splat
         $i = 1
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         $dscContent = [System.Text.StringBuilder]::new()

@@ -353,8 +353,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -416,7 +416,7 @@ function Export-TargetResource
             {
                 $channels = Get-TeamChannel -GroupId $team.GroupId
                 $i = 1
-                Write-M365DSCHost -Message  "    |---[$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+                Write-M365DSCHost -Message "    |---[$j/$($Teams.Length)] Team {$($team.DisplayName)}"
                 foreach ($channel in $channels)
                 {
                     if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -454,7 +454,7 @@ function Export-TargetResource
             }
             else
             {
-                Write-M365DSCHost -Message  "    |---[$j/$($Teams.Length)] Team has no GroupId and will be skipped"
+                Write-M365DSCHost -Message "    |---[$j/$($Teams.Length)] Team has no GroupId and will be skipped"
             }
             $j++
         }

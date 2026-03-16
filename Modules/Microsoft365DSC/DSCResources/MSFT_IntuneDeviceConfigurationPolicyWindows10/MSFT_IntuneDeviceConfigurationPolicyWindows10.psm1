@@ -1208,8 +1208,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -1269,7 +1269,7 @@ function Get-TargetResource
             #region resource generator code
             if (-not [string]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration  -All -Filter "Id eq '$Id'" -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $getValue)
@@ -3225,8 +3225,8 @@ function Set-TargetResource
         $Assignments,
         #endregion
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -4584,8 +4584,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -4627,7 +4627,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -4738,7 +4738,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.DefenderDetectedMalwareActions `
                     -CIMInstanceName 'MicrosoftGraphdefenderDetectedMalwareActions1'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.DefenderDetectedMalwareActions = $complexTypeStringResult
                 }
@@ -4752,7 +4752,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.EdgeHomeButtonConfiguration `
                     -CIMInstanceName 'MicrosoftGraphedgeHomeButtonConfiguration'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.EdgeHomeButtonConfiguration = $complexTypeStringResult
                 }
@@ -4766,7 +4766,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.EdgeSearchEngine `
                     -CIMInstanceName 'MicrosoftGraphedgeSearchEngineBase'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.EdgeSearchEngine = $complexTypeStringResult
                 }
@@ -4780,7 +4780,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.NetworkProxyServer `
                     -CIMInstanceName 'MicrosoftGraphwindows10NetworkProxyServer'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.NetworkProxyServer = $complexTypeStringResult
                 }
@@ -4794,7 +4794,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.Windows10AppsForceUpdateSchedule `
                     -CIMInstanceName 'MicrosoftGraphwindows10AppsForceUpdateSchedule'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.Windows10AppsForceUpdateSchedule = $complexTypeStringResult
                 }
@@ -4821,7 +4821,7 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('DefenderDetectedMalwareActions', 'EdgeHomeButtonConfiguration', 'EdgeSearchEngine',
-                    'NetworkProxyServer', 'Windows10AppsForceUpdateSchedule', 'Assignments')
+                'NetworkProxyServer', 'Windows10AppsForceUpdateSchedule', 'Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

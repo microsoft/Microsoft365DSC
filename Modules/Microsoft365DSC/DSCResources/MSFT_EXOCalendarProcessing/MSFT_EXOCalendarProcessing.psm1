@@ -205,27 +205,26 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Calendar Processing settings for $Identity"
 
-    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = 'Absent'
+
         $calendarProc = Get-CalendarProcessing -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $calendarProc)
@@ -822,7 +821,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -895,12 +894,12 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
-        Write-Verbose -Message "Fetching all users for caching purposes"
+        Write-Verbose -Message 'Fetching all users for caching purposes'
         $Script:UsersCache = [System.Collections.Generic.Dictionary[System.String, System.String]]::new()
         Get-User -ResultSize 'Unlimited' | ForEach-Object {
             $Script:UsersCache[$_.Identity] = $_.UserPrincipalName
         }
-        Write-Verbose -Message "Fetching all recipients for caching purposes"
+        Write-Verbose -Message 'Fetching all recipients for caching purposes'
         Get-Recipient -ResultSize 'Unlimited' | ForEach-Object {
             $Script:UsersCache[$_.Identity] = $_.PrimarySmtpAddress
         }

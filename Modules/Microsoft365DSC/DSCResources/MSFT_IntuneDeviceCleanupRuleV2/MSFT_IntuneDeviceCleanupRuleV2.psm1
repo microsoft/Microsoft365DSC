@@ -12,7 +12,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('all','androidAOSP','androidDeviceAdministrator','androidDedicatedAndFullyManagedCorporateOwnedWorkProfile','chromeOS','androidPersonallyOwnedWorkProfile','ios','macOS','windows','windowsHolographic','visionOS','tvOS')]
+        [ValidateSet('all', 'androidAOSP', 'androidDeviceAdministrator', 'androidDedicatedAndFullyManagedCorporateOwnedWorkProfile', 'chromeOS', 'androidPersonallyOwnedWorkProfile', 'ios', 'macOS', 'windows', 'windowsHolographic', 'visionOS', 'tvOS')]
         [System.String]
         $DeviceCleanupRulePlatformType,
 
@@ -30,8 +30,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -93,7 +93,7 @@ function Get-TargetResource
             #region resource generator code
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaDeviceManagementManagedDeviceCleanupRule -ManagedDeviceCleanupRuleId $Id  -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaDeviceManagementManagedDeviceCleanupRule -ManagedDeviceCleanupRuleId $Id -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $getValue)
@@ -171,7 +171,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('all','androidAOSP','androidDeviceAdministrator','androidDedicatedAndFullyManagedCorporateOwnedWorkProfile','chromeOS','androidPersonallyOwnedWorkProfile','ios','macOS','windows','windowsHolographic','unknownFutureValue','visionOS','tvOS')]
+        [ValidateSet('all', 'androidAOSP', 'androidDeviceAdministrator', 'androidDedicatedAndFullyManagedCorporateOwnedWorkProfile', 'chromeOS', 'androidPersonallyOwnedWorkProfile', 'ios', 'macOS', 'windows', 'windowsHolographic', 'unknownFutureValue', 'visionOS', 'tvOS')]
         [System.String]
         $DeviceCleanupRulePlatformType,
 
@@ -189,8 +189,8 @@ function Set-TargetResource
 
         #endregion
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -258,7 +258,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $createParameters.Add("@odata.type", "#microsoft.graph.ManagedDeviceCleanupRule")
+        $createParameters.Add('@odata.type', '#microsoft.graph.ManagedDeviceCleanupRule')
         $policy = New-MgBetaDeviceManagementManagedDeviceCleanupRule -BodyParameter $createParameters
         #endregion
     }
@@ -281,7 +281,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $updateParameters.Add("@odata.type", "#microsoft.graph.ManagedDeviceCleanupRule")
+        $updateParameters.Add('@odata.type', '#microsoft.graph.ManagedDeviceCleanupRule')
         Update-MgBetaDeviceManagementManagedDeviceCleanupRule `
             -ManagedDeviceCleanupRuleId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -309,7 +309,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('all','androidAOSP','androidDeviceAdministrator','androidDedicatedAndFullyManagedCorporateOwnedWorkProfile','chromeOS','androidPersonallyOwnedWorkProfile','ios','macOS','windows','windowsHolographic','unknownFutureValue','visionOS','tvOS')]
+        [ValidateSet('all', 'androidAOSP', 'androidDeviceAdministrator', 'androidDedicatedAndFullyManagedCorporateOwnedWorkProfile', 'chromeOS', 'androidPersonallyOwnedWorkProfile', 'ios', 'macOS', 'windows', 'windowsHolographic', 'unknownFutureValue', 'visionOS', 'tvOS')]
         [System.String]
         $DeviceCleanupRulePlatformType,
 
@@ -328,8 +328,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -371,7 +371,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

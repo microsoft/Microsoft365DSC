@@ -1,4 +1,3 @@
-
 # AADConnectorGroupApplicationProxy
 
 ## Description

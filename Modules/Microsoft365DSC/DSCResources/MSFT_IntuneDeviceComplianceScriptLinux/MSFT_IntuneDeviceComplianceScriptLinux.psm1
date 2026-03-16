@@ -1,4 +1,4 @@
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_IntuneDeviceComplianceScriptLinux"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceComplianceScriptLinux'
 $Script:PropertiesToRetrieve = @('id', 'displayName', 'description', 'settingDefinitionId', 'settingInstance')
 
 function Get-TargetResource
@@ -26,8 +26,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -88,9 +88,9 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 $getValue = Invoke-MgGraphRequest -Uri "/beta/deviceManagement/reusablePolicySettings/$($Id)?`$select=$($Script:PropertiesToRetrieve -join ',')" `
-                -Method GET `
-                -SkipHttpErrorCheck `
-                -ErrorAction SilentlyContinue
+                    -Method GET `
+                    -SkipHttpErrorCheck `
+                    -ErrorAction SilentlyContinue
                 if ($getValue -is [hashtable] -and $getValue.ContainsKey('error'))
                 {
                     # Policy does not exist, set it to $null
@@ -130,17 +130,17 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Description                    = $getValue.description
-            DiscoveryScript                = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($getValue.settingInstance.simpleSettingValue.value))
-            DisplayName                    = $getValue.displayName
-            Id                             = $getValue.id
-            Ensure                         = 'Present'
-            Credential                     = $Credential
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            ApplicationSecret              = $ApplicationSecret
-            CertificateThumbprint          = $CertificateThumbprint
-            ManagedIdentity                = $ManagedIdentity.IsPresent
+            Description           = $getValue.description
+            DiscoveryScript       = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($getValue.settingInstance.simpleSettingValue.value))
+            DisplayName           = $getValue.displayName
+            Id                    = $getValue.id
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
 
@@ -182,8 +182,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -235,13 +235,13 @@ function Set-TargetResource
     $boundParameters.Remove('DiscoveryScript') | Out-Null
     $boundParameters.Add('settingDefinitionId', 'linux_customcompliance_discoveryscript_reusablesetting')
     $boundParameters.Add('settingInstance', @{
-        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-        settingDefinitionId = 'linux_customcompliance_discoveryscript_reusablesetting'
-        simpleSettingValue = @{
-            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-            value = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($DiscoveryScript))
-        }
-    })
+            '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+            settingDefinitionId = 'linux_customcompliance_discoveryscript_reusablesetting'
+            simpleSettingValue  = @{
+                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                value         = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($DiscoveryScript))
+            }
+        })
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -278,7 +278,7 @@ function Set-TargetResource
         catch
         {
             $errorMessage = "Failed to remove the Intune Device Compliance Script for Linux with Id {$($currentInstance.Id)} and Name {$($currentInstance.DisplayName)}."
-            $errorMessage += " Please make sure it is not referenced by a Linux compliance policy."
+            $errorMessage += ' Please make sure it is not referenced by a Linux compliance policy.'
             throw $errorMessage
         }
         #endregion
@@ -310,8 +310,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -353,7 +353,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

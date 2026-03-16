@@ -1,4 +1,4 @@
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_IntuneAntivirusPolicySecurityExperienceWindows10ConfigMgr"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneAntivirusPolicySecurityExperienceWindows10ConfigMgr'
 
 function Get-TargetResource
 {
@@ -115,8 +115,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -216,10 +216,10 @@ function Get-TargetResource
         $policySettings = @{}
         $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings
 
-        $disableNotificationsInstance = $settings | Where-Object { $_.SettingInstance.SettingDefinitionId -like "*_disablenotifications" }
+        $disableNotificationsInstance = $settings | Where-Object { $_.SettingInstance.SettingDefinitionId -like '*_disablenotifications' }
         if ($null -ne $disableNotificationsInstance)
         {
-            $policySettings.DisableNotifications = [int]$disableNotificationsInstance.SettingInstance.AdditionalProperties.choiceSettingValue.value.Split("_")[-1]
+            $policySettings.DisableNotifications = [int]$disableNotificationsInstance.SettingInstance.AdditionalProperties.choiceSettingValue.value.Split('_')[-1]
         }
 
         $results = @{
@@ -375,8 +375,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -433,7 +433,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Antivirus Policy Security Experience for Windows10 Config Mgr with Name {$DisplayName}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         [array]$settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$boundParameters) `
@@ -442,12 +442,12 @@ function Set-TargetResource
         if ($PSBoundParameters.ContainsKey('DisableNotifications'))
         {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    choiceSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    choiceSettingValue  = @{
                         children = @()
-                        value = "device_vendor_msft_policy_config_windowsdefendersecuritycenter_disablenotifications_$DisableNotifications"
+                        value    = "device_vendor_msft_policy_config_windowsdefendersecuritycenter_disablenotifications_$DisableNotifications"
                     }
                     settingDefinitionId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disablenotifications'
                 }
@@ -457,12 +457,12 @@ function Set-TargetResource
         if ($PSBoundParameters.ContainsKey('TamperProtection'))
         {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    choiceSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    choiceSettingValue  = @{
                         children = @()
-                        value = "vendor_msft_defender_configuration_tamperprotection_$TamperProtection"
+                        value    = "vendor_msft_defender_configuration_tamperprotection_$TamperProtection"
                     }
                     settingDefinitionId = 'vendor_msft_defender_configuration_tamperprotection'
                 }
@@ -470,12 +470,12 @@ function Set-TargetResource
         }
 
         $createParameters = @{
-            Name              = $DisplayName
-            Description       = $Description
-            CreationSource    = 'WindowsSecurity'
-            Platforms         = $platforms
-            Technologies      = $technologies
-            Settings          = $settings
+            Name           = $DisplayName
+            Description    = $Description
+            CreationSource = 'WindowsSecurity'
+            Platforms      = $platforms
+            Technologies   = $technologies
+            Settings       = $settings
         }
 
         #region resource generator code
@@ -494,7 +494,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Antivirus Policy Security Experience for Windows10 Config Mgr with Id {$($currentInstance.Id)}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         [array]$settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$boundParameters) `
@@ -503,12 +503,12 @@ function Set-TargetResource
         if ($PSBoundParameters.ContainsKey('DisableNotifications'))
         {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    choiceSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    choiceSettingValue  = @{
                         children = @()
-                        value = "device_vendor_msft_policy_config_windowsdefendersecuritycenter_disablenotifications_$DisableNotifications"
+                        value    = "device_vendor_msft_policy_config_windowsdefendersecuritycenter_disablenotifications_$DisableNotifications"
                     }
                     settingDefinitionId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disablenotifications'
                 }
@@ -518,12 +518,12 @@ function Set-TargetResource
         if ($PSBoundParameters.ContainsKey('TamperProtection'))
         {
             $settings += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
+                '@odata.type'   = '#microsoft.graph.deviceManagementConfigurationSetting'
                 settingInstance = @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                    choiceSettingValue = @{
+                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                    choiceSettingValue  = @{
                         children = @()
-                        value = "vendor_msft_defender_configuration_tamperprotection_$TamperProtection"
+                        value    = "vendor_msft_defender_configuration_tamperprotection_$TamperProtection"
                     }
                     settingDefinitionId = 'vendor_msft_defender_configuration_tamperprotection'
                 }
@@ -673,8 +673,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -717,8 +717,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -878,7 +878,7 @@ function Get-CompareParameters
     param()
 
     return @{
-        PostProcessing = {
+        PostProcessing     = {
             param($DesiredValues, $CurrentValues, $ValuesToCheck, $PostProcessingArgs)
             $PostProcessingArgs[0] | ForEach-Object {
                 if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))

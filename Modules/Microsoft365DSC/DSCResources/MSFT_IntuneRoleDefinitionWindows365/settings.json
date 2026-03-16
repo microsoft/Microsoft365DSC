@@ -1,0 +1,52 @@
+{
+  "resourceName": "IntuneRoleDefinitionWindows365",
+  "description": "This resource configures an Intune Role Definition Windows365.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "update": [
+          {
+            "name": "DeviceManagementRBAC.ReadWrite.All"
+          }
+        ],
+        "read": [
+          {
+            "name": "DeviceManagementRBAC.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "update": [
+          {
+            "name": "DeviceManagementRBAC.ReadWrite.All"
+          }
+        ],
+        "read": [
+          {
+            "name": "DeviceManagementRBAC.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Enrollment"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement.Enrollment",
+      "cmdlets": [
+        "Get-MgBetaRoleManagementCloudPcRoleDefinition",
+        "New-MgBetaRoleManagementCloudPcRoleDefinition",
+        "Remove-MgBetaRoleManagementCloudPcRoleDefinition",
+        "Update-MgBetaRoleManagementCloudPcRoleDefinition"
+      ]
+    }
+  ]
+}

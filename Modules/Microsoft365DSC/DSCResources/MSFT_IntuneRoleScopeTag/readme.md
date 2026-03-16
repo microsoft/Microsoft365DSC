@@ -1,4 +1,3 @@
-
 # IntuneRoleScopeTag
 
 ## Description

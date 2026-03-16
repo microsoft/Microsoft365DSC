@@ -353,7 +353,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -422,7 +422,7 @@ function Export-TargetResource
         $dscContent = ''
         foreach ($mailbox in $mailboxes)
         {
-            Write-M365DSCHost -Message  "    |---[$j/$($mailboxes.Count)] $($mailbox.Name)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$j/$($mailboxes.Count)] $($mailbox.Name)" -DeferWrite
             [Array] $currentInstances = Get-SweepRule -Mailbox $mailbox.Name -ErrorAction Stop
 
             $i = 1

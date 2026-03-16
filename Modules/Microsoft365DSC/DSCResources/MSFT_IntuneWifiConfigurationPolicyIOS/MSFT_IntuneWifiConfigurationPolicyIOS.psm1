@@ -79,8 +79,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -294,8 +294,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -327,11 +327,13 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    if ($ProxySettings -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '') {
+    if ($ProxySettings -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '')
+    {
         throw 'ProxyAutomaticConfigurationUrl must be empty if ProxySettings is not "automatic"'
     }
 
-    if ($WiFiSecurityType -eq 'wpaPersonal' -and [string]::IsNullOrEmpty($PreSharedKey)) {
+    if ($WiFiSecurityType -eq 'wpaPersonal' -and [string]::IsNullOrEmpty($PreSharedKey))
+    {
         throw 'PreSharedKey is required but was not set.'
     }
 
@@ -378,7 +380,8 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
-            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '') {
+            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '')
+            {
                 $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
             }
             $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
@@ -425,7 +428,8 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
-            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '') {
+            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '')
+            {
                 $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
             }
             $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
@@ -528,8 +532,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -561,7 +565,8 @@ function Test-TargetResource
         $AccessTokens
     )
 
-    if ($ProxySettings -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '') {
+    if ($ProxySettings -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '')
+    {
         throw 'ProxyAutomaticConfigurationUrl must be empty if ProxySettings is not "automatic".'
     }
 
@@ -576,8 +581,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

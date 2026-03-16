@@ -1,4 +1,3 @@
-
 # TeamsMobilityPolicy
 
 ## Description

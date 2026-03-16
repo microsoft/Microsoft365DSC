@@ -1,4 +1,3 @@
-
 # IntuneWindowsBackupForOrganizationConfiguration
 
 ## Description

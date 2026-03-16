@@ -82,34 +82,28 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Security Filter for $FilterName"
 
-    $null = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters `
-        -EnableSearchOnlySession
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        try
-        {
-            $secFilter = Get-ComplianceSecurityFilter -FilterName $FilterName -ErrorAction SilentlyContinue -WarningAction Ignore -Confirm:$false
-        }
-        catch
-        {
-            throw $_
-        }
+        $null = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -EnableSearchOnlySession
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = 'Absent'
+
+        $secFilter = Get-ComplianceSecurityFilter -FilterName $FilterName -ErrorAction SilentlyContinue -WarningAction Ignore -Confirm:$false
 
         if ($null -eq $secFilter)
         {
@@ -415,7 +409,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

@@ -1,4 +1,3 @@
-
 # SPOSharingSettings
 
 ## Description

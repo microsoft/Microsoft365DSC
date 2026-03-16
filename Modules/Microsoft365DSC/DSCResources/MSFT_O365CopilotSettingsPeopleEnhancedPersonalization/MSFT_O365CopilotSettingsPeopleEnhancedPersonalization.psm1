@@ -7,6 +7,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -47,27 +48,28 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Get the Copilot setting for personalization capabilities"
+    Write-Verbose -Message 'Get the Copilot setting for personalization capabilities'
 
-    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
     try
     {
-        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/copilot/settings/people/enhancedpersonalization"
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/copilot/settings/people/enhancedpersonalization'
         $instance = Invoke-MgGraphRequest -Uri $uri -Method Get
         if ($null -eq $instance)
         {
@@ -83,7 +85,14 @@ function Get-TargetResource
         $results = @{
             IsSingleInstance        = 'Yes'
             isEnabledInOrganization = $instance.isEnabledInOrganization
-            disabledForGroup        = if ($null -ne $currdisabledForGroup) { $currdisabledForGroup.displayName } else { $null }
+            disabledForGroup        = if ($null -ne $currdisabledForGroup)
+            {
+                $currdisabledForGroup.displayName
+            }
+            else
+            {
+                $null
+            }
             Credential              = $Credential
             ApplicationId           = $ApplicationId
             TenantId                = $TenantId
@@ -112,6 +121,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -152,7 +162,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Set the Copilot setting for personalization capabilities"
+    Write-Verbose -Message 'Set the Copilot setting for personalization capabilities'
 
     $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -190,10 +200,17 @@ function Set-TargetResource
     Write-Verbose -Message "Updating the isEnabledInOrganization setting to {$($isEnabledInOrganization.ToString())}"
     $settings = @{
         isEnabledInOrganization = $isEnabledInOrganization
-        disabledForGroup = if ([string]::IsNullOrEmpty($disabledForGroup)) { $null } else { $disabledForGroup }
+        disabledForGroup        = if ([string]::IsNullOrEmpty($disabledForGroup))
+        {
+            $null
+        }
+        else
+        {
+            $disabledForGroup
+        }
     }
     $body = ConvertTo-Json $settings
-    $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/copilot/settings/people/enhancedpersonalization"
+    $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/copilot/settings/people/enhancedpersonalization'
     Invoke-MgGraphRequest -Uri $uri -Method PATCH -Body $Body | Out-Null
 }
 
@@ -204,6 +221,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -254,7 +272,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

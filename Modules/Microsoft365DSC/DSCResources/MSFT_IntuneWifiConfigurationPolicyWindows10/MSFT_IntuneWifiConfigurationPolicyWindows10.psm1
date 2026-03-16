@@ -96,8 +96,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -186,7 +186,7 @@ function Get-TargetResource
         $complexDeviceManagementApplicabilityRuleOsEdition = [ordered]@{}
         $complexDeviceManagementApplicabilityRuleOsEdition.Add('OsEditionTypes', [string[]]$getValue.DeviceManagementApplicabilityRuleOSEdition.OsEditionTypes)
         $complexDeviceManagementApplicabilityRuleOsEdition.Add('RuleType', [string]$getValue.DeviceManagementApplicabilityRuleOSEdition.RuleType)
-        if ($complexDeviceManagementApplicabilityRuleOsEdition.values.Where({$null -ne $_}).Count -eq 0)
+        if ($complexDeviceManagementApplicabilityRuleOsEdition.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexDeviceManagementApplicabilityRuleOsEdition = $null
         }
@@ -195,7 +195,7 @@ function Get-TargetResource
         $complexDeviceManagementApplicabilityRuleOsVersion.Add('MaxOSVersion', $getValue.DeviceManagementApplicabilityRuleOSVersion.MaxOSVersion)
         $complexDeviceManagementApplicabilityRuleOsVersion.Add('MinOSVersion', $getValue.DeviceManagementApplicabilityRuleOSVersion.MinOSVersion)
         $complexDeviceManagementApplicabilityRuleOsVersion.Add('RuleType', [string]$getValue.DeviceManagementApplicabilityRuleOSVersion.RuleType)
-        if ($complexDeviceManagementApplicabilityRuleOsVersion.values.Where({$null -ne $_}).Count -eq 0)
+        if ($complexDeviceManagementApplicabilityRuleOsVersion.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexDeviceManagementApplicabilityRuleOsVersion = $null
         }
@@ -350,8 +350,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -383,11 +383,13 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    if ($ProxySetting -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '') {
+    if ($ProxySetting -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '')
+    {
         throw 'ProxyAutomaticConfigurationUrl must be empty if ProxySetting is not "automatic"'
     }
 
-    if ($WiFiSecurityType -eq 'wpaPersonal' -and [string]::IsNullOrEmpty($PreSharedKey)) {
+    if ($WiFiSecurityType -eq 'wpaPersonal' -and [string]::IsNullOrEmpty($PreSharedKey))
+    {
         throw 'PreSharedKey is required but was not set.'
     }
 
@@ -435,7 +437,8 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
-            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '') {
+            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '')
+            {
                 $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
             }
             $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
@@ -482,7 +485,8 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
-            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '') {
+            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '')
+            {
                 $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
             }
             $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
@@ -603,8 +607,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -636,7 +640,8 @@ function Test-TargetResource
         $AccessTokens
     )
 
-    if ($ProxySetting -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '') {
+    if ($ProxySetting -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '')
+    {
         throw 'ProxyAutomaticConfigurationUrl must be empty if ProxySetting is not "automatic".'
     }
 
@@ -651,8 +656,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

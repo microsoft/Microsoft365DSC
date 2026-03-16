@@ -1,4 +1,3 @@
-
 # SPOTheme
 
 ## Description

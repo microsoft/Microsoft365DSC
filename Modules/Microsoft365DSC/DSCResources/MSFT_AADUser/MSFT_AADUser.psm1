@@ -1,6 +1,7 @@
 Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADUser'
 
 $Script:propertiesToRetrieve = @('Id', 'AccountEnabled', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FaxNumber', 'MobilePhone', 'OfficeLocation', 'Mail', 'OtherMails', 'BusinessPhones', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+$Script:creationParamsMap = @{AccountEnabled = 'AccountEnabled'; City = 'City'; Country = 'Country'; Department = 'Department'; DisplayName = 'DisplayName'; FaxNumber = 'Fax'; GivenName = 'FirstName'; JobTitle = 'Title'; MobilePhone = 'MobilePhone'; OfficeLocation = 'Office'; Mail = 'Mail'; OtherMails = 'OtherMails'; PostalCode = 'PostalCode'; PreferredLanguage = 'PreferredLanguage'; State = 'State'; StreetAddress = 'StreetAddress'; Surname = 'LastName'; BusinessPhones = 'PhoneNumber'; UsageLocation = 'UsageLocation'; UserPrincipalName = 'UserPrincipalName'; UserType = 'UserType'; PasswordPolicies = 'PasswordPolicies'}
 
 function Get-TargetResource
 {
@@ -150,12 +151,13 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.UserPrincipalName -ne $UserPrincipalName)
         {
-            Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
-
             $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
 
@@ -214,9 +216,9 @@ function Get-TargetResource
                 url    = "/users/$($UserPrincipalName)/licenseDetails"
             }
             @{
-                id     = 'MemberOf'
-                method = 'GET'
-                url    = "/users/$($UserPrincipalName)/memberOf?`$select=displayName&`$filter=not(groupTypes/any(c:c eq 'DynamicMembership'))"
+                id      = 'MemberOf'
+                method  = 'GET'
+                url     = "/users/$($UserPrincipalName)/memberOf?`$select=displayName&`$filter=not(groupTypes/any(c:c eq 'DynamicMembership'))"
                 headers = @{
                     'ConsistencyLevel' = 'eventual'
                 }
@@ -229,7 +231,7 @@ function Get-TargetResource
         # During normal Get or Test, we would have already returned $nullReturn above
         if ($null -ne $Script:exportedInstance -and $batchResponse.status -contains '404')
         {
-            Write-Verbose -Message "The specified user was deleted in the meantime."
+            Write-Verbose -Message 'The specified user was deleted in the meantime.'
             return @{}
         }
 
@@ -495,31 +497,16 @@ function Set-TargetResource
         {
             $PasswordPolicies = 'None'
         }
-        $CreationParams = @{
-            AccountEnabled           = $AccountEnabled
-            City                     = $City
-            Country                  = $Country
-            Department               = $Department
-            DisplayName              = $DisplayName
-            FaxNumber                = $Fax
-            GivenName                = $FirstName
-            JobTitle                 = $Title
-            MobilePhone              = $MobilePhone
-            PasswordPolicies         = $PasswordPolicies
-            OfficeLocation           = $Office
-            Mail                     = $Mail
-            OtherMails               = $OtherMails
-            PostalCode               = $PostalCode
-            PreferredLanguage        = $PreferredLanguage
-            State                    = $State
-            StreetAddress            = $StreetAddress
-            Surname                  = $LastName
-            BusinessPhones           = $PhoneNumber
-            UsageLocation            = $UsageLocation
-            UserPrincipalName        = $UserPrincipalName
-            UserType                 = $UserType
+
+        $creationParams = @{}
+        foreach ($kvp in $Script:creationParamsMap.GetEnumerator())
+        {
+            if ($PSBoundParameters.ContainsKey($($kvp.Value)))
+            {
+                $creationParams.Add($kvp.Key, $PSBoundParameters.$($kvp.Value))
+            }
         }
-        $CreationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
+        $creationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
 
         #region Licenses
         if ($null -ne $LicenseAssignment)
@@ -570,8 +557,8 @@ function Set-TargetResource
                 Write-Verbose -Message 'PasswordProfile property will not be updated'
             }
 
-            $CreationParams.Add('UserId', $UserPrincipalName)
-            Update-MgUser @CreationParams
+            $creationParams.Add('UserId', $UserPrincipalName)
+            Update-MgUser @creationParams
             $userId = (Get-MgUser -UserId $UserPrincipalName).Id
         }
         else
@@ -612,16 +599,16 @@ function Set-TargetResource
             $PasswordProfile = @{
                 Password = $passwordValue
             }
-            $CreationParams.Add('PasswordProfile', $PasswordProfile)
+            $creationParams.Add('PasswordProfile', $PasswordProfile)
 
             Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
-            if (-not $CreationParams.ContainsKey('AccountEnabled') -or -not $CreationParams.AccountEnabled)
+            if (-not $creationParams.ContainsKey('AccountEnabled') -or $null -eq $creationParams.AccountEnabled)
             {
-                $CreationParams.AccountEnabled = $true
+                $creationParams.AccountEnabled = $true
             }
-            $CreationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
-            Write-Verbose -Message "Creating new user with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
-            $user = New-MgUser @CreationParams
+            $creationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
+            Write-Verbose -Message "Creating new user with values: $(Convert-M365DscHashtableToString -Hashtable $creationParams)"
+            $user = New-MgUser @creationParams
             $userId = $user.Id
         }
 
@@ -922,7 +909,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

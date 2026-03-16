@@ -97,7 +97,7 @@ function Get-TargetResource
             $servicePrincipal = $Script:exportedInstance2
         }
 
-         Write-Verbose -Message "Found Service Principal with AppName {$AppName}"
+        Write-Verbose -Message "Found Service Principal with AppName {$AppName}"
 
         $results = @{
             Identity              = $servicePrincipal.Id
@@ -277,7 +277,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

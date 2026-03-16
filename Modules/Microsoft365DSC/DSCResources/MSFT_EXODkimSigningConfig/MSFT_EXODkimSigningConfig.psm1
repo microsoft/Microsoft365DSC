@@ -227,35 +227,33 @@ function Set-TargetResource
     #endregion
 
     $DkimSigningConfig = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $DkimSigningConfig.Ensure -eq 'Absent')
     {
-        $PSBoundParameters += @{
-            DomainName = $PSBoundParameters.Identity
-        }
-        $PSBoundParameters.Remove('Identity') | Out-Null
+        $boundParameters.Add('DomainName', $Identity) | Out-Null
+        $boundParameters.Remove('Identity') | Out-Null
         Write-Verbose -Message "Creating DkimSigningConfig $($Identity)."
         try
         {
-            New-DkimSigningConfig @PSBoundParameters
+            New-DkimSigningConfig @boundParameters
         }
         catch
         {
-            $ErrorMessage = $_.Exception.Message
-            if ($ErrorMessage -like '*Invalid domain name*')
+            $errorMessage = $_.Exception.Message
+            if ($errorMessage -like '*Invalid domain name*')
             {
-                Write-Verbose -Message "Failed to create DkimSigningConfig for $($Identity) with error '$ErrorMessage'. Attempting to set existing configuration."
-                $PSBoundParameters['Identity'] = $Identity
-                if ($PSBoundParameters.ContainsKey('DomainName'))
+                Write-Verbose -Message "Failed to create DkimSigningConfig for $($Identity) with error '$errorMessage'. Attempting to set existing configuration."
+                $boundParameters['Identity'] = $Identity
+                if ($boundParameters.ContainsKey('DomainName'))
                 {
-                    $PSBoundParameters.Remove('DomainName')
+                    $boundParameters.Remove('DomainName')
                 }
-                if ($PSBoundParameters.ContainsKey('KeySize'))
+                if ($boundParameters.ContainsKey('KeySize'))
                 {
-                    $PSBoundParameters.Remove('KeySize')
+                    $boundParameters.Remove('KeySize')
                 }
-                Set-DkimSigningConfig @PSBoundParameters -Confirm:$false
+                Set-DkimSigningConfig @boundParameters -Confirm:$false
             }
             else
             {
@@ -265,9 +263,9 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $DkimSigningConfig.Ensure -eq 'Present')
     {
-        $PSBoundParameters.Remove('KeySize') | Out-Null
-        Write-Verbose -Message "Setting DkimSigningConfig $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-        Set-DkimSigningConfig @PSBoundParameters -Confirm:$false
+        $boundParameters.Remove('KeySize') | Out-Null
+        Write-Verbose -Message "Setting DkimSigningConfig $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $boundParameters)"
+        Set-DkimSigningConfig @boundParameters -Confirm:$false
     }
 
     if ($Ensure -eq 'Absent' -and $DkimSigningConfig.Ensure -eq 'Present')
@@ -358,7 +356,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

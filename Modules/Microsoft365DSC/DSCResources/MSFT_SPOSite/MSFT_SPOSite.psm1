@@ -587,7 +587,7 @@ function Set-TargetResource
             DisableCompanyWideSharingLinks              = $DisableCompanyWideSharingLinks
             #LCID Cannot be set after a Template has been applied;
             #LocaleId                       = $LocaleId
-            RestrictedToGeo                              = $RestrictedToRegion
+            RestrictedToGeo                             = $RestrictedToRegion
             #SocialBarOnSitePagesDisabled                = $SocialBarOnSitePagesDisabled
             SharingAllowedDomainList                    = $SharingAllowedDomainList
             SharingBlockedDomainList                    = $SharingBlockedDomainList
@@ -850,7 +850,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

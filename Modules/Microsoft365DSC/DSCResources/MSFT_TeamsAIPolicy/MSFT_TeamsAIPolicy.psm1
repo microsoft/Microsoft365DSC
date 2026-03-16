@@ -298,7 +298,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.String]
-        $Filter = "*",
+        $Filter = '*',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

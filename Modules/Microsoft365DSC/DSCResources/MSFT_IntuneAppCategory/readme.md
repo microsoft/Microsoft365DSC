@@ -1,4 +1,3 @@
-
 # IntuneAppCategory
 
 ## Description

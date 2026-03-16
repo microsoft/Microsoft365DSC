@@ -1,4 +1,3 @@
-
 # AADTenantAppManagementPolicy
 
 ## Description

@@ -1,0 +1,77 @@
+{
+  "resourceName": "AADCertificateBasedApplicationConfiguration",
+  "description": "Manages certificate-based application configurations that define trusted certificate authorities for application authentication.",
+  "roles": {
+    "read": [
+      "Application Administrator",
+      "Global Reader"
+    ],
+    "update": [
+      "Application Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "AppCertTrustConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.ReadWrite.All"
+          },
+          {
+            "name": "AppCertTrustConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Organization.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.ReadWrite.All"
+          },
+          {
+            "name": "Organization.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.DirectoryManagement"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration",
+        "Get-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority",
+        "New-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration",
+        "Update-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration",
+        "Remove-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration",
+        "New-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority",
+        "Update-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority",
+        "Remove-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority"
+      ]
+    }
+  ]
+}

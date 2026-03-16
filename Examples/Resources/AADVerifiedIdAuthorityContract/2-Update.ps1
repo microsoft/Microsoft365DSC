@@ -54,7 +54,6 @@ Configuration Example
                             type = 'String'
                         }
                     )
-
                 }
             );
             Ensure               = "Present";
@@ -65,7 +64,7 @@ Configuration Example
                 vc = MSFT_AADVerifiedIdAuthorityContractVcType{
                     type = @('VerifiedCredentialExpert')
                 }
-                            attestations = MSFT_AADVerifiedIdAuthorityContractAttestations{
+                attestations = MSFT_AADVerifiedIdAuthorityContractAttestations{
                     idTokenHints = @(
                         MSFT_AADVerifiedIdAuthorityContractAttestationValues{
                             mapping = @(
@@ -85,9 +84,7 @@ Configuration Example
                             required = $False
                         }
                     )
-
                 }
-            
             };
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId

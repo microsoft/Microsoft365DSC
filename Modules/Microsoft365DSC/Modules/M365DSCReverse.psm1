@@ -300,8 +300,11 @@ function Start-M365DSCConfigurationExtract
         }
 
         Write-Verbose -Message 'Based on provided parameters, retrieving the most secure authentication method to use.'
+        $moduleConfiguration = Get-M365DSCModuleConfiguration
+        Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $true
         $allSupportedResourcesWithMostSecureAuthMethod = Get-M365DSCComponentsWithMostSecureAuthenticationType -AuthenticationMethod $AuthMethods `
             -Resources $selectedResources
+        Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $moduleConfiguration.skipModuleDependencyValidation
 
         try
         {
@@ -313,7 +316,14 @@ function Start-M365DSCConfigurationExtract
             {
                 $selectedResources = @()
             }
-            [Array]$compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResourcesWithMostSecureAuthMethod.Resource `
+            # Filter null elements in case one resource was provided and is not supported with the provided authentication method
+            # to avoid Compare-Object from throwing a ParameterArgumentValidationErrorNullNotAllowed error
+            $allSupportedResourcesWithMostSecureAuthMethodArray = @()
+            foreach ($resource in $allSupportedResourcesWithMostSecureAuthMethod | Where-Object -FilterScript { $null -ne $_ })
+            {
+                $allSupportedResourcesWithMostSecureAuthMethodArray += $resource.Resource
+            }
+            [Array]$compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResourcesWithMostSecureAuthMethodArray `
                 -DifferenceObject $selectedResources | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
         }
         catch
@@ -360,12 +370,12 @@ function Start-M365DSCConfigurationExtract
 
             $organization = $TenantId
         }
-        elseif ($AuthMethods -Contains 'Credentials' -or `
-                $AuthMethods -Contains 'CredentialsWithApplicationId')
+        elseif ($AuthMethods -contains 'Credentials' -or `
+                $AuthMethods -contains 'CredentialsWithApplicationId')
         {
             if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
             {
-                Write-Verbose -Message "Retrieving organization name based on provided credentials."
+                Write-Verbose -Message 'Retrieving organization name based on provided credentials.'
                 $organization = $Credential.UserName.Split('@')[1]
             }
         }
@@ -403,7 +413,7 @@ function Start-M365DSCConfigurationExtract
                 {
                     $DSCContent.Append("`r`n") | Out-Null
                 }
-                $DSCContent.Append("    [parameter()]`r`n") | Out-Null
+                $DSCContent.Append("    [Parameter()]`r`n") | Out-Null
                 $DSCContent.Append("    [System.Management.Automation.PSCredential]`r`n") | Out-Null
                 $DSCContent.Append("    `$CertificatePassword`r`n") | Out-Null
                 $newline = $true
@@ -414,7 +424,7 @@ function Start-M365DSCConfigurationExtract
                 {
                     $DSCContent.Append("`r`n") | Out-Null
                 }
-                $DSCContent.Append("    [parameter()]`r`n") | Out-Null
+                $DSCContent.Append("    [Parameter()]`r`n") | Out-Null
                 $DSCContent.Append("    [System.Management.Automation.PSCredential]`r`n") | Out-Null
                 $DSCContent.Append("    `$Credential`r`n") | Out-Null
                 $newline = $true
@@ -476,7 +486,7 @@ function Start-M365DSCConfigurationExtract
                 {
                     $DSCContent.Append("`r`n") | Out-Null
                 }
-                $DSCContent.Append("        [parameter()]`r`n") | Out-Null
+                $DSCContent.Append("        [Parameter()]`r`n") | Out-Null
                 $DSCContent.Append("        [System.Management.Automation.PSCredential]`r`n") | Out-Null
                 $DSCContent.Append("        `$CertificatePassword`r`n") | Out-Null
 
@@ -528,7 +538,7 @@ function Start-M365DSCConfigurationExtract
                 {
                     $DSCContent.Append("`r`n") | Out-Null
                 }
-                $DSCContent.Append("        [parameter()]`r`n") | Out-Null
+                $DSCContent.Append("        [Parameter()]`r`n") | Out-Null
                 $DSCContent.Append("        [System.Management.Automation.PSCredential]`r`n") | Out-Null
                 $DSCContent.Append("        `$Credential`r`n") | Out-Null
 
@@ -602,11 +612,11 @@ function Start-M365DSCConfigurationExtract
                         (-not $Components -and $null -eq $Workloads)) -and `
                     ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
                         $resourcesNotSupported -notcontains $resourceName -and `
-                    -not $resourceName.StartsWith("M365DSC"))
+                        -not $resourceName.StartsWith('M365DSC'))
                 {
-                    $authMethod = $allSupportedResourcesWithMostSecureAuthMethod | Where-Object -FilterScript {$_.Resource -eq $ResourceName}
+                    $authMethod = $allSupportedResourcesWithMostSecureAuthMethod | Where-Object -FilterScript { $_.Resource -eq $ResourceName }
                     $resourceInfo = @{
-                        Name = $ResourceName
+                        Name                 = $ResourceName
                         AuthenticationMethod = $authMethod.AuthMethod
                     }
                     $ResourcesToExport += $resourceInfo
@@ -621,57 +631,13 @@ function Start-M365DSCConfigurationExtract
             }
         }
 
-        # Retrieve the list of Workloads represented by the resources to export and pre-authenticate to each one;
-        if ($ResourcesToExport.Count -gt 0)
-        {
-            $WorkloadsToConnectTo = Get-M365DSCConnectedWorkloadList -ResourceNames $ResourcesToExport
-        }
-        foreach ($Workload in $WorkloadsToConnectTo)
-        {
-            Write-M365DSCHost -Message "Connecting to {$($Workload.Name)}..." -DeferWrite
-            $ConnectionParams = @{
-                Workload              = $Workload.Name
-                ApplicationId         = $ApplicationId
-                ApplicationSecret     = $ApplicationSecret
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword.Password
-                Credential            = $Credential
-                Identity              = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokens
-            }
-
-            if ($workload.AuthenticationMethod -eq 'Credentials')
-            {
-                $ConnectionParams.Remove('TenantId') | Out-Null
-                $ConnectionParams.Remove('ApplicationId') | Out-Null
-            }
-
-            try
-            {
-                $existingEndpoints = (Get-MSCloudLoginConnectionProfile -Workload $Workload.Name).Endpoints
-                if ($null -ne $existingEndpoints)
-                {
-                    $ConnectionParams.Add('Endpoints', $existingEndpoints)
-                }
-                Connect-M365Tenant @ConnectionParams | Out-Null
-                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckmark -CommitWrite
-            }
-            catch
-            {
-                Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-                throw $_
-            }
-        }
-
         # If the tenant id is not a GUID, retrieve it based on the organization name
         # Only implemented for public cloud tenants
         if (-not ($TenantId -match ('^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$')))
         {
             try
             {
-                Write-Verbose -Message "Retrieving Tenant Id based on provided organization name."
+                Write-Verbose -Message 'Retrieving Tenant Id based on provided organization name.'
                 $tenantGuid = (Invoke-RestMethod -Uri "https://login.microsoftonline.com/$organization/.well-known/openid-configuration" -Method Get).authorization_endpoint.Split('/')[3]
                 $currentStringReplacementMap = Get-M365DSCStringReplacementMap
                 if (-not $currentStringReplacementMap.ContainsKey($tenantGuid))
@@ -706,7 +672,7 @@ function Start-M365DSCConfigurationExtract
             $resourceName = $resource.Name.Split('.')[0] -replace 'MSFT_', ''
             $mostSecureAuthMethod = ($using:allSupportedResourcesWithMostSecureAuthMethod | Where-Object { $_.Resource -eq $resourceName }).AuthMethod
 
-            Import-Module $resource.FullName | Out-Null
+            Import-Module $resource.FullName -Force | Out-Null
             $filterExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains('Filter')
 
             $parameters = @{}
@@ -763,7 +729,7 @@ function Start-M365DSCConfigurationExtract
                     $module = Get-Module PSDesiredStateConfiguration
                     if ($null -eq $module)
                     {
-                        Import-Module -Name "PSDesiredStateConfiguration" -Global -Prefix 'Pwsh' -RequiredVersion 2.0.7
+                        Import-Module -Name 'PSDesiredStateConfiguration' -Global -Prefix 'Pwsh' -RequiredVersion 2.0.7
                     }
                 }
                 $counter = ($using:synchronizedHashtable).ResourceCounter++
@@ -838,12 +804,19 @@ function Start-M365DSCConfigurationExtract
                         }
                     }
                 }
-                $resourcesPath | Where-Object { $_ -like "*MSFT_$workload*" } | Invoke-Parallel -ScriptBlock $exportScriptBlock -ModuleName $requiredModules -Verbose
+                $arguments = @{
+                    ScriptBlock = $exportScriptBlock
+                }
+                if ($requiredModules.Count -gt 0)
+                {
+                    $arguments.Add('ModuleName', $requiredModules)
+                }
+                $resourcesPath | Where-Object { $_ -like "*MSFT_$workload*" } | Invoke-Parallel @arguments -Verbose
             }
         }
         else
         {
-            Write-M365DSCHost -Message "Starting export in sequential mode..."
+            Write-M365DSCHost -Message 'Starting export in sequential mode...'
             $exportScriptBlock = [ScriptBlock]::Create($exportScriptBlock.ToString().Replace('$using:', '$'))
             $resourcesPath | ForEach-Object -Process $exportScriptBlock
         }
@@ -956,7 +929,7 @@ function Start-M365DSCConfigurationExtract
         {
             Write-M365DSCHost -Message "$($Global:M365DSCMagnifyingGlass) Starting configuration validation..."
             [Array]$results = Get-M365DSCConfigurationConflict -ConfigurationContent $DSCContent.ToString()
-            Write-M365DSCHost -Message "Results:"
+            Write-M365DSCHost -Message 'Results:'
             if ($results.Count -gt 0)
             {
                 $errorMessage = ''
@@ -968,14 +941,14 @@ function Start-M365DSCConfigurationExtract
             }
             else
             {
-                Write-M365DSCHost -Message "No conflicts detected"
+                Write-M365DSCHost -Message 'No conflicts detected'
             }
         }
 
         #region Copy Downloaded files back into output folder
         if (($null -ne $Components -and $Components.Contains('SPOApp') -and -not $ComponentsToSkip.Contains('SPOApp')) -or $AllComponents)
         {
-            if ($AuthMethods -Contains 'Credentials')
+            if ($AuthMethods -contains 'Credentials')
             {
                 $filesToDownload = Get-AllSPOPackages -Credential $Credential
             }
@@ -1065,7 +1038,7 @@ function Start-M365DSCConfigurationExtract
             }
             catch
             {
-                Write-Verbose -Message "Could not retrieve current Windows Principal. This may be due to the fact that the current OS is not Windows."
+                Write-Verbose -Message 'Could not retrieve current Windows Principal. This may be due to the fact that the current OS is not Windows.'
             }
         }
         $outputConfigurationData = '.\ConfigurationData.psd1'

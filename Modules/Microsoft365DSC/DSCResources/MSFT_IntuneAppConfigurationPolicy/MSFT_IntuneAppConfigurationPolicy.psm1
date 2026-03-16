@@ -24,7 +24,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('unspecified','unmanaged','mdm','androidEnterprise','androidEnterpriseDedicatedDevicesWithAzureAdSharedMode','androidOpenSourceProjectUserAssociated','androidOpenSourceProjectUserless','unknownFutureValue')]
+        [ValidateSet('unspecified', 'unmanaged', 'mdm', 'androidEnterprise', 'androidEnterpriseDedicatedDevicesWithAzureAdSharedMode', 'androidOpenSourceProjectUserAssociated', 'androidOpenSourceProjectUserless', 'unknownFutureValue')]
         $TargetedAppManagementLevels,
 
         [Parameter()]
@@ -34,7 +34,7 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet(
-        'selectedPublicApps','allCoreMicrosoftApps','allMicrosoftApps','allApps')]
+            'selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps', 'allApps')]
         $AppGroupType,
 
         [Parameter()]
@@ -46,8 +46,8 @@ function Get-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -146,7 +146,8 @@ function Get-TargetResource
         {
             $AppConfiguration = Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $configPolicy.Id
             $complexAppsArray = @()
-            foreach($currentValue in $AppConfiguration){
+            foreach ($currentValue in $AppConfiguration)
+            {
                 if ($null -ne $currentValue)
                 {
                     if ($null -ne $currentValue.mobileAppIdentifier.AdditionalProperties.bundleId)
@@ -166,7 +167,7 @@ function Get-TargetResource
                     if ($null -ne $currentValue.mobileAppIdentifier.AdditionalProperties.windowsAppId)
                     {
                         $complexMobileAppIdentifier = @{
-                            windowsAppId  = $currentValue.mobileAppIdentifier.AdditionalProperties.windowsAppId
+                            windowsAppId = $currentValue.mobileAppIdentifier.AdditionalProperties.windowsAppId
                         }
                     }
                     $complexAppsHash = [ordered]@{}
@@ -243,7 +244,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('unspecified','unmanaged','mdm','androidEnterprise','androidEnterpriseDedicatedDevicesWithAzureAdSharedMode','androidOpenSourceProjectUserAssociated','androidOpenSourceProjectUserless','unknownFutureValue')]
+        [ValidateSet('unspecified', 'unmanaged', 'mdm', 'androidEnterprise', 'androidEnterpriseDedicatedDevicesWithAzureAdSharedMode', 'androidOpenSourceProjectUserAssociated', 'androidOpenSourceProjectUserless', 'unknownFutureValue')]
         $TargetedAppManagementLevels,
 
         [Parameter()]
@@ -253,7 +254,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet(
-        'selectedPublicApps','allCoreMicrosoftApps','allMicrosoftApps','allApps')]
+            'selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps', 'allApps')]
         $AppGroupType,
 
         [Parameter()]
@@ -265,8 +266,8 @@ function Set-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -330,33 +331,34 @@ function Set-TargetResource
         if ($null -ne $Apps)
         {
             $appsArray = @()
-            foreach($app in $Apps){
+            foreach ($app in $Apps)
+            {
                 if ($null -ne $app.mobileAppIdentifier.bundleID)
                 {
                     $mobileAppIdentifierHashtable = @{
-                        '@odata.type' = "#microsoft.graph.iosMobileAppIdentifier"
-                        'bundleId' = $app.mobileAppIdentifier.bundleId
+                        '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
+                        'bundleId'    = $app.mobileAppIdentifier.bundleId
                     }
                 }
 
                 if ($null -ne $app.mobileAppIdentifier.packageID)
                 {
                     $mobileAppIdentifierHashtable = @{
-                        '@odata.type' = "#microsoft.graph.androidMobileAppIdentifier"
-                        'packageId' = $app.mobileAppIdentifier.packageId
+                        '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
+                        'packageId'   = $app.mobileAppIdentifier.packageId
                     }
                 }
 
                 if ($null -ne $app.mobileAppIdentifier.windowsAppID)
                 {
                     $mobileAppIdentifierHashtable = @{
-                        '@odata.type' = "#microsoft.graph.windowsAppIdentifier"
+                        '@odata.type'  = '#microsoft.graph.windowsAppIdentifier'
                         'windowsAppId' = $app.mobileAppIdentifier.windowsAppId
                     }
                 }
 
                 $appHashtable = @{
-                    'id' = $App.Id
+                    'id'                  = $App.Id
                     'mobileAppIdentifier' = $mobileAppIdentifierHashtable
                 }
 
@@ -402,7 +404,7 @@ function Set-TargetResource
                 if ($null -ne $app.mobileAppIdentifier.bundleID)
                 {
                     $mobileAppIdentifierHashtable = @{
-                        '@odata.type' = "#microsoft.graph.iosMobileAppIdentifier"
+                        '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
                         bundleId      = $app.mobileAppIdentifier.bundleID
                     }
                 }
@@ -410,7 +412,7 @@ function Set-TargetResource
                 if ($null -ne $app.mobileAppIdentifier.packageID)
                 {
                     $mobileAppIdentifierHashtable = @{
-                        '@odata.type' = "#microsoft.graph.androidMobileAppIdentifier"
+                        '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
                         packageId     = $app.mobileAppIdentifier.packageId
                     }
                 }
@@ -418,7 +420,7 @@ function Set-TargetResource
                 if ($null -ne $app.mobileAppIdentifier.windowsAppID)
                 {
                     $mobileAppIdentifierHashtable = @{
-                        '@odata.type' = "#microsoft.graph.windowsAppIdentifier"
+                        '@odata.type' = '#microsoft.graph.windowsAppIdentifier'
                         windowsAppId  = $app.mobileAppIdentifier.windowsAppId
                     }
                 }
@@ -430,7 +432,7 @@ function Set-TargetResource
 
             $appsBody = @{
                 appGroupType = $AppGroupType
-                apps = $appsArray
+                apps         = $appsArray
             }
             #apps handled separately as not supported by Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
             Write-Verbose -Message "Updating Apps for Intune App Configuration Policy {$DisplayName}"
@@ -476,7 +478,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('unspecified','unmanaged','mdm','androidEnterprise','androidEnterpriseDedicatedDevicesWithAzureAdSharedMode','androidOpenSourceProjectUserAssociated','androidOpenSourceProjectUserless','unknownFutureValue')]
+        [ValidateSet('unspecified', 'unmanaged', 'mdm', 'androidEnterprise', 'androidEnterpriseDedicatedDevicesWithAzureAdSharedMode', 'androidOpenSourceProjectUserAssociated', 'androidOpenSourceProjectUserless', 'unknownFutureValue')]
         $TargetedAppManagementLevels,
 
         [Parameter()]
@@ -486,7 +488,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet(
-        'selectedPublicApps','allCoreMicrosoftApps','allMicrosoftApps','allApps')]
+            'selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps', 'allApps')]
         $AppGroupType,
 
         [Parameter()]
@@ -498,8 +500,8 @@ function Test-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -541,7 +543,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -606,7 +608,7 @@ function Export-TargetResource
             $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
             $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
         }
-        [array]$configPolicies = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All:$true  -ExpandProperty 'Apps' -Filter $Filter -ErrorAction Stop
+        [array]$configPolicies = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All:$true -ExpandProperty 'Apps' -Filter $Filter -ErrorAction Stop
         $configPolicies = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $configPolicies
 
         $i = 1

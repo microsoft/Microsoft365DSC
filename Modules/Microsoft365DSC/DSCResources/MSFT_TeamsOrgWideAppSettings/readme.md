@@ -1,4 +1,3 @@
-
 # TeamsOgWideAppSettings
 
 ## Description

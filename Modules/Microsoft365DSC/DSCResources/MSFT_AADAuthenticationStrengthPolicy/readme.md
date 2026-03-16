@@ -1,4 +1,3 @@
-
 # AADAuthenticationStrengthPolicy
 
 ## Description

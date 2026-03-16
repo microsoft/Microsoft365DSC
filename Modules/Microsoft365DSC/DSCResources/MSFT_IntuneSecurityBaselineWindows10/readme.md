@@ -1,4 +1,3 @@
-
 # IntuneSecurityBaselineWindows10
 
 ## Description

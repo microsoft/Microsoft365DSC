@@ -1,4 +1,3 @@
-
 # TeamsTranslationRule
 
 ## Description

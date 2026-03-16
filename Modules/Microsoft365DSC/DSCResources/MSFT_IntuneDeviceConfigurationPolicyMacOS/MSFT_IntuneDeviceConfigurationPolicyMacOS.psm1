@@ -274,8 +274,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -359,6 +359,15 @@ function Get-TargetResource
             $getValue = $Script:exportedInstance
         }
 
+        $updateDelayPolicyValue = @()
+        if (-not [System.String]::IsNullOrEmpty($getValue.AdditionalProperties.updateDelayPolicy))
+        {
+            foreach ($policy in ($getValue.AdditionalProperties.updateDelayPolicy -split "," | Where-Object { -not [System.String]::IsNullOrEmpty($_) }))
+            {
+                $updateDelayPolicyValue += $policy
+            }
+        }
+
         Write-Verbose -Message "Found something with id {$($getValue.Id)}"
         $results = @{
 
@@ -422,7 +431,7 @@ function Get-TargetResource
             SoftwareUpdatesEnforcedDelayInDays              = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays
             SpotlightBlockInternetResults                   = $getValue.AdditionalProperties.spotlightBlockInternetResults
             TouchIdTimeoutInHours                           = $getValue.AdditionalProperties.touchIdTimeoutInHours
-            UpdateDelayPolicy                               = $getValue.AdditionalProperties.updateDelayPolicy -split ','
+            UpdateDelayPolicy                               = $updateDelayPolicyValue
             WallpaperModificationBlocked                    = $getValue.AdditionalProperties.wallpaperModificationBlocked
             Ensure                                          = 'Present'
             Credential                                      = $Credential
@@ -733,8 +742,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -1137,8 +1146,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -1180,7 +1189,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

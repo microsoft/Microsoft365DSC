@@ -1,4 +1,3 @@
-
 # IntuneWindowsUpdateForBusinessQualityUpdateProfileWindows10
 
 ## Description

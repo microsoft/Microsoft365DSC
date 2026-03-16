@@ -91,8 +91,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -216,9 +216,9 @@ function Get-TargetResource
             if ($null -eq $getValue)
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                -FilterScript { `
-                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosVpnConfiguration' `
-                }
+                    -FilterScript { `
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosVpnConfiguration' `
+                    }
             }
             #endregion
 
@@ -244,7 +244,7 @@ function Get-TargetResource
             $myservers.Add('address', $currentservers.address)
             $myservers.Add('description', $currentservers.description)
             $myservers.Add('isDefaultServer', $currentservers.isDefaultServer)
-            if ($myservers.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myservers.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexServers += $myservers
             }
@@ -257,7 +257,7 @@ function Get-TargetResource
             $myservers.Add('automaticConfigurationScriptUrl', $currentservers.automaticConfigurationScriptUrl)
             $myservers.Add('address', $currentservers.address)
             $myservers.Add('port', $currentservers.port)
-            if ($myservers.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myservers.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexProxyServers += $myservers
             }
@@ -269,7 +269,7 @@ function Get-TargetResource
             $myCustomdata = [ordered]@{}
             $myCustomdata.Add('key', $value.key)
             $myCustomdata.Add('value', $value.value)
-            if ($myCustomdata.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myCustomdata.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexCustomData += $myCustomdata
             }
@@ -281,7 +281,7 @@ function Get-TargetResource
             $myCVdata = [ordered]@{}
             $myCVdata.Add('name', $value.name)
             $myCVdata.Add('value', $value.value)
-            if ($myCVdata.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myCVdata.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexCustomKeyValueData += $myCVdata
             }
@@ -295,7 +295,7 @@ function Get-TargetResource
             $myTMAdata.Add('publisher', $value.publisher)
             $myTMAdata.Add('appStoreUrl', $value.appStoreUrl)
             $myTMAdata.Add('appId', $value.appId)
-            if ($myTMAdata.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myTMAdata.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexTargetedMobileApps += $myTMAdata
             }
@@ -352,8 +352,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -461,8 +461,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -580,8 +580,9 @@ function Set-TargetResource
     }
 
     $serverHashtable = @{}
-    $serverBlock -split ";" | ForEach-Object {
-        if ($_ -match '^(.*?)=(.*)$') {
+    $serverBlock -split ';' | ForEach-Object {
+        if ($_ -match '^(.*?)=(.*)$')
+        {
             $key = $matches[1].Trim()
             $value = $matches[2].Trim()
             $serverHashtable[$key] = $value
@@ -593,8 +594,9 @@ function Set-TargetResource
     }
 
     $proxyHashtable = @{}
-    $proxyBlock -split ";" | ForEach-Object {
-        if ($_ -match '^(.*?)=(.*)$') {
+    $proxyBlock -split ';' | ForEach-Object {
+        if ($_ -match '^(.*?)=(.*)$')
+        {
             $key = $matches[1].Trim()
             $value = $matches[2].Trim()
             $proxyHashtable[$key] = $value
@@ -631,12 +633,12 @@ function Set-TargetResource
         if ($AdditionalProperties.server)
         {
             $AdditionalProperties.Remove('server') #this is not in a format Update-MgBetaDeviceManagementDeviceConfiguration will accept
-            $AdditionalProperties.Add('server',$serverHashtable) #replaced with the hashtable we created earlier
+            $AdditionalProperties.Add('server', $serverHashtable) #replaced with the hashtable we created earlier
         }
         if ($AdditionalProperties.proxyServer)
         {
             $AdditionalProperties.Remove('proxyServer') #this is not in a format Update-MgBetaDeviceManagementDeviceConfiguration will accept
-            $AdditionalProperties.Add('proxyServer',$proxyHashtable) #replaced with the hashtable we created earlier
+            $AdditionalProperties.Add('proxyServer', $proxyHashtable) #replaced with the hashtable we created earlier
         }
 
         $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
@@ -687,12 +689,12 @@ function Set-TargetResource
             if ($AdditionalProperties.server)
             {
                 $AdditionalProperties.Remove('server') #this is not in a format Update-MgBetaDeviceManagementDeviceConfiguration will accept
-                $AdditionalProperties.Add('server',$serverHashtable) #replaced with the hashtable we created earlier
+                $AdditionalProperties.Add('server', $serverHashtable) #replaced with the hashtable we created earlier
             }
             if ($AdditionalProperties.proxyServer)
             {
                 $AdditionalProperties.Remove('proxyServer') #this is not in a format Update-MgBetaDeviceManagementDeviceConfiguration will accept
-                $AdditionalProperties.Add('proxyServer',$proxyHashtable) #replaced with the hashtable we created earlier
+                $AdditionalProperties.Add('proxyServer', $proxyHashtable) #replaced with the hashtable we created earlier
             }
 
             #add the additional properties to the updateparameters
@@ -808,8 +810,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -908,7 +910,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -1029,7 +1031,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.server `
                     -CIMInstanceName 'MicrosoftGraphvpnServer' #MSFT_MicrosoftGraphVpnServer
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.server = $complexTypeStringResult
                 }
@@ -1044,7 +1046,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.onDemandRules `
                     -CIMInstanceName 'MSFT_DeviceManagementConfigurationPolicyVpnOnDemandRule' #MSFT_DeviceManagementConfigurationPolicyVpnOnDemandRule
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.onDemandRules = $complexTypeStringResult
                 }
@@ -1059,7 +1061,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.proxyServer `
                     -CIMInstanceName 'MSFT_MicrosoftvpnProxyServer'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.proxyServer = $complexTypeStringResult
                 }
@@ -1074,7 +1076,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.customData `
                     -CIMInstanceName 'MSFT_CustomData'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.customData = $complexTypeStringResult
                 }
@@ -1089,7 +1091,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.customKeyValueData `
                     -CIMInstanceName 'MSFT_customKeyValueData'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.customKeyValueData = $complexTypeStringResult
                 }
@@ -1104,7 +1106,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.targetedMobileApps `
                     -CIMInstanceName 'MSFT_targetedMobileApps'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.targetedMobileApps = $complexTypeStringResult
                 }
@@ -1132,7 +1134,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

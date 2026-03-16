@@ -261,7 +261,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -271,6 +271,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -317,7 +321,16 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array]$users = Get-CsOnlineUser -Filter { (FeatureTypes -contains 'PhoneSystem') -and (AccountEnabled -eq $True) } `
+        $baseFilter = "(FeatureTypes -contains 'PhoneSystem') -and (AccountEnabled -eq '$True')"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) -and ($Filter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$users = Get-CsOnlineUser -Filter $Filter `
             -AccountType User `
             -ErrorAction Stop
         $dscContent = ''

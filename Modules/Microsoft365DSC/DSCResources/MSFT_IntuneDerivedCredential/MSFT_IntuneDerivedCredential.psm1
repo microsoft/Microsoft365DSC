@@ -336,7 +336,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -346,41 +346,9 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-
-        #region resource params
-
         [Parameter()]
         [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $HelpUrl,
-
-        [Parameter()]
-        [ValidateSet('intercede', 'entrustData', 'purebred')]
-        [System.String]
-        $Issuer,
-
-        [Parameter()]
-        [ValidateSet('none', 'email', 'companyPortal', 'companyPortal,email')]
-        [System.String]
-        $NotificationType = 'none',
-
-        [Parameter()]
-        [System.Int32]
-        $RenewalThresholdPercentage,
-
-        #endregion resource params
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
+        $Filter,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -429,7 +397,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $getValue = Get-MgBetaDeviceManagementDerivedCredential -ErrorAction Stop
+        [array] $getValue = Get-MgBetaDeviceManagementDerivedCredential -Filter $Filter -ErrorAction Stop
 
         $i = 1
         $dscContent = ''

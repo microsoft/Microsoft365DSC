@@ -1,4 +1,3 @@
-
 # AADAuthenticationMethodPolicyVoice
 
 ## Description

@@ -92,86 +92,86 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidDeviceManufacturerNotAllowed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidDeviceModelNotAllowed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidSafetyNetAppsVerificationFailed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidSafetyNetDeviceAttestationFailed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfDeviceComplianceRequired,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfDeviceLockNotSet,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfMaximumPinRetriesExceeded,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfUnableToAuthenticateUser,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $MobileThreatDefenseRemediationAction,
 
         [Parameter()]
-        [ValidateSet("allApps", "managedApps", "customApp", "blocked")]
+        [ValidateSet('allApps', 'managedApps', 'customApp', 'blocked')]
         [System.String]
         $DialerRestrictionLevel,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "secured", "low", "medium", "high")]
+        [ValidateSet('notConfigured', 'secured', 'low', 'medium', 'high')]
         [System.String]
         $MaximumAllowedDeviceThreatLevel,
 
         [Parameter()]
-        [ValidateSet("allow", "blockOrganizationalData", "block")]
+        [ValidateSet('allow', 'blockOrganizationalData', 'block')]
         [System.String]
         $NotificationRestriction,
 
         [Parameter()]
-        [ValidateSet("anyApp", "anyManagedApp", "specificApps", "blocked")]
+        [ValidateSet('anyApp', 'anyManagedApp', 'specificApps', 'blocked')]
         [System.String]
         $ProtectedMessagingRedirectAppType,
 
         [Parameter()]
-        [ValidateSet("none", "enabled")]
+        [ValidateSet('none', 'enabled')]
         [System.String]
         $RequiredAndroidSafetyNetAppsVerificationType,
 
         [Parameter()]
-        [ValidateSet("none", "basicIntegrity", "basicIntegrityAndDeviceCertification")]
+        [ValidateSet('none', 'basicIntegrity', 'basicIntegrityAndDeviceCertification')]
         [System.String]
         $RequiredAndroidSafetyNetDeviceAttestationType,
 
         [Parameter()]
-        [ValidateSet("basic", "hardwareBacked")]
+        [ValidateSet('basic', 'hardwareBacked')]
         [System.String]
         $RequiredAndroidSafetyNetEvaluationType,
 
         [Parameter()]
-        [ValidateSet("unspecified", "unmanaged", "mdm", "androidEnterprise", "androidEnterpriseDedicatedDevicesWithAzureAdSharedMode", "androidOpenSourceProjectUserAssociated", "androidOpenSourceProjectUserless", "unknownFutureValue")]
+        [ValidateSet('unspecified', 'unmanaged', 'mdm', 'androidEnterprise', 'androidEnterpriseDedicatedDevicesWithAzureAdSharedMode', 'androidOpenSourceProjectUserAssociated', 'androidOpenSourceProjectUserless', 'unknownFutureValue')]
         [System.String]
         $TargetedAppManagementLevels,
 
@@ -342,8 +342,8 @@ function Get-TargetResource
         $EncryptAppData,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -435,7 +435,7 @@ function Get-TargetResource
         $IdArray = [Array]($policy.Id)
         if ($IdArray.Length -gt 1)
         {
-            throw "Multiple Policies with same displayname identified - Module currently only functions with unique names"
+            throw 'Multiple Policies with same displayname identified - Module currently only functions with unique names'
         }
         else
         {
@@ -473,94 +473,94 @@ function Get-TargetResource
         }
 
         return @{
-            AllowedAndroidDeviceModels                          = $policy.AllowedAndroidDeviceModels
-            AllowedDataIngestionLocations                       = [string[]]$policy.AllowedDataIngestionLocations
-            AllowedDataStorageLocations                         = [string[]]$policy.AllowedDataStorageLocations
-            AllowedInboundDataTransferSources                   = [string]$policy.AllowedInboundDataTransferSources
-            AllowedOutboundClipboardSharingExceptionLength      = $policy.AllowedOutboundClipboardSharingExceptionLength
-            AllowedOutboundClipboardSharingLevel                = [string]$policy.AllowedOutboundClipboardSharingLevel
-            AllowedOutboundDataTransferDestinations             = [string]$policy.AllowedOutboundDataTransferDestinations
-            AppActionIfAndroidDeviceManufacturerNotAllowed      = [string]$policy.AppActionIfAndroidDeviceManufacturerNotAllowed
-            AppActionIfAndroidDeviceModelNotAllowed             = [string]$policy.AppActionIfAndroidDeviceModelNotAllowed
-            AppActionIfAndroidSafetyNetAppsVerificationFailed   = [string]$policy.AppActionIfAndroidSafetyNetAppsVerificationFailed
-            AppActionIfAndroidSafetyNetDeviceAttestationFailed  = [string]$policy.AppActionIfAndroidSafetyNetDeviceAttestationFailed
-            AppActionIfDeviceComplianceRequired                 = [string]$policy.AppActionIfDeviceComplianceRequired
-            AppActionIfDeviceLockNotSet                         = [string]$policy.AppActionIfDeviceLockNotSet
-            AppActionIfMaximumPinRetriesExceeded                = [string]$policy.AppActionIfMaximumPinRetriesExceeded
-            AppActionIfUnableToAuthenticateUser                 = [string]$policy.AppActionIfUnableToAuthenticateUser
-            AppGroupType                                        = $policy.AppGroupType.ToString()
-            ApprovedKeyboards                                   = $approvedKeyboardArray
-            Apps                                                = $appsArray
-            Assignments                                         = $assignmentResult
-            BiometricAuthenticationBlocked                      = $policy.BiometricAuthenticationBlocked
-            BlockAfterCompanyPortalUpdateDeferralInDays         = $policy.BlockAfterCompanyPortalUpdateDeferralInDays
-            BlockDataIngestionIntoOrganizationDocuments         = $policy.BlockDataIngestionIntoOrganizationDocuments
-            ConnectToVpnOnLaunch                                = $policy.ConnectToVpnOnLaunch
-            ContactSyncBlocked                                  = $policy.ContactSyncBlocked
-            CustomBrowserDisplayName                            = $policy.CustomBrowserDisplayName
-            CustomBrowserPackageId                              = $policy.CustomBrowserPackageId
-            CustomDialerAppDisplayName                          = $policy.CustomDialerAppDisplayName
-            CustomDialerAppPackageId                            = $policy.CustomDialerAppPackageId
-            DataBackupBlocked                                   = $policy.DataBackupBlocked
-            Description                                         = $policy.Description
-            DeviceComplianceRequired                            = $policy.DeviceComplianceRequired
-            DeviceLockRequired                                  = $policy.DeviceLockRequired
-            DialerRestrictionLevel                              = [string]$policy.DialerRestrictionLevel
-            DisableAppEncryptionIfDeviceEncryptionIsEnabled     = $policy.DisableAppEncryptionIfDeviceEncryptionIsEnabled
-            DisableAppPinIfDevicePinIsSet                       = $policy.DisableAppPinIfDevicePinIsSet
-            DisplayName                                         = $policy.DisplayName
-            EncryptAppData                                      = $policy.EncryptAppData
-            ExemptedAppPackages                                 = $exemptedAppPackagesArray
-            FingerprintAndBiometricEnabled                      = $policy.FingerprintAndBiometricEnabled
-            FingerprintBlocked                                  = $policy.FingerprintBlocked
-            Id                                                  = $policy.Id
-            KeyboardsRestricted                                 = $policy.KeyboardsRestricted
-            ManagedBrowser                                      = $policy.ManagedBrowser.ToString()
-            ManagedBrowserToOpenLinksRequired                   = $policy.ManagedBrowserToOpenLinksRequired
-            MaximumAllowedDeviceThreatLevel                     = [string]$policy.MaximumAllowedDeviceThreatLevel
-            MaximumPinRetries                                   = $policy.MaximumPinRetries
-            MessagingRedirectAppDisplayName                     = $policy.MessagingRedirectAppDisplayName
-            MessagingRedirectAppPackageId                       = $policy.MessagingRedirectAppPackageId
-            MinimumPinLength                                    = $policy.MinimumPinLength
-            MinimumRequiredAppVersion                           = $policy.MinimumRequiredAppVersion
-            MinimumRequiredOSVersion                            = $policy.MinimumRequiredOSVersion
-            MinimumRequiredPatchVersion                         = $policy.MinimumRequiredPatchVersion
-            MinimumWarningAppVersion                            = $policy.MinimumWarningAppVersion
-            MinimumWarningOSVersion                             = $policy.MinimumWarningOSVersion
-            MinimumWarningPatchVersion                          = $policy.MinimumWarningPatchVersion
-            MinimumWipePatchVersion                             = $policy.MinimumWipePatchVersion
-            MobileThreatDefenseRemediationAction                = [string]$policy.MobileThreatDefenseRemediationAction
-            NotificationRestriction                             = [string]$policy.NotificationRestriction
-            OrganizationalCredentialsRequired                   = $policy.OrganizationalCredentialsRequired
-            PeriodBeforePinReset                                = [System.Xml.XmlConvert]::ToString($policy.PeriodBeforePinReset)
-            PeriodOfflineBeforeAccessCheck                      = [System.Xml.XmlConvert]::ToString($policy.PeriodOfflineBeforeAccessCheck)
-            PeriodOfflineBeforeWipeIsEnforced                   = [System.Xml.XmlConvert]::ToString($policy.PeriodOfflineBeforeWipeIsEnforced)
-            PeriodOnlineBeforeAccessCheck                       = [System.Xml.XmlConvert]::ToString($policy.PeriodOnlineBeforeAccessCheck)
-            PinCharacterSet                                     = [string]$policy.PinCharacterSet
-            PinRequired                                         = $policy.PinRequired
-            PreviousPinBlockCount                               = $policy.PreviousPinBlockCount
-            PrintBlocked                                        = $policy.PrintBlocked
-            ProtectedMessagingRedirectAppType                   = [string]$policy.ProtectedMessagingRedirectAppType
-            RequireClass3Biometrics                             = $policy.RequireClass3Biometrics
-            RequiredAndroidSafetyNetAppsVerificationType        = [string]$policy.RequiredAndroidSafetyNetAppsVerificationType
-            RequiredAndroidSafetyNetDeviceAttestationType       = [string]$policy.RequiredAndroidSafetyNetDeviceAttestationType
-            RequiredAndroidSafetyNetEvaluationType              = [string]$policy.RequiredAndroidSafetyNetEvaluationType
-            RequirePinAfterBiometricChange                      = $policy.RequirePinAfterBiometricChange
-            RoleScopeTagIds                                     = $policy.RoleScopeTagIds
-            SaveAsBlocked                                       = $policy.SaveAsBlocked
-            ScreenCaptureBlocked                                = $policy.ScreenCaptureBlocked
-            SimplePinBlocked                                    = $policy.SimplePinBlocked
-            TargetedAppManagementLevels                         = [string]$policy.TargetedAppManagementLevels
-            WarnAfterCompanyPortalUpdateDeferralInDays          = $policy.WarnAfterCompanyPortalUpdateDeferralInDays
-            WipeAfterCompanyPortalUpdateDeferralInDays          = $policy.WipeAfterCompanyPortalUpdateDeferralInDays
-            Ensure                                              = 'Present'
-            Credential                                          = $Credential
-            ApplicationId                                       = $ApplicationId
-            ApplicationSecret                                   = $ApplicationSecret
-            TenantId                                            = $TenantId
-            CertificateThumbprint                               = $CertificateThumbprint
-            ManagedIdentity                                     = $ManagedIdentity.IsPresent
-            AccessTokens                                        = $AccessTokens
+            AllowedAndroidDeviceModels                         = $policy.AllowedAndroidDeviceModels
+            AllowedDataIngestionLocations                      = [string[]]$policy.AllowedDataIngestionLocations
+            AllowedDataStorageLocations                        = [string[]]$policy.AllowedDataStorageLocations
+            AllowedInboundDataTransferSources                  = [string]$policy.AllowedInboundDataTransferSources
+            AllowedOutboundClipboardSharingExceptionLength     = $policy.AllowedOutboundClipboardSharingExceptionLength
+            AllowedOutboundClipboardSharingLevel               = [string]$policy.AllowedOutboundClipboardSharingLevel
+            AllowedOutboundDataTransferDestinations            = [string]$policy.AllowedOutboundDataTransferDestinations
+            AppActionIfAndroidDeviceManufacturerNotAllowed     = [string]$policy.AppActionIfAndroidDeviceManufacturerNotAllowed
+            AppActionIfAndroidDeviceModelNotAllowed            = [string]$policy.AppActionIfAndroidDeviceModelNotAllowed
+            AppActionIfAndroidSafetyNetAppsVerificationFailed  = [string]$policy.AppActionIfAndroidSafetyNetAppsVerificationFailed
+            AppActionIfAndroidSafetyNetDeviceAttestationFailed = [string]$policy.AppActionIfAndroidSafetyNetDeviceAttestationFailed
+            AppActionIfDeviceComplianceRequired                = [string]$policy.AppActionIfDeviceComplianceRequired
+            AppActionIfDeviceLockNotSet                        = [string]$policy.AppActionIfDeviceLockNotSet
+            AppActionIfMaximumPinRetriesExceeded               = [string]$policy.AppActionIfMaximumPinRetriesExceeded
+            AppActionIfUnableToAuthenticateUser                = [string]$policy.AppActionIfUnableToAuthenticateUser
+            AppGroupType                                       = $policy.AppGroupType.ToString()
+            ApprovedKeyboards                                  = $approvedKeyboardArray
+            Apps                                               = $appsArray
+            Assignments                                        = $assignmentResult
+            BiometricAuthenticationBlocked                     = $policy.BiometricAuthenticationBlocked
+            BlockAfterCompanyPortalUpdateDeferralInDays        = $policy.BlockAfterCompanyPortalUpdateDeferralInDays
+            BlockDataIngestionIntoOrganizationDocuments        = $policy.BlockDataIngestionIntoOrganizationDocuments
+            ConnectToVpnOnLaunch                               = $policy.ConnectToVpnOnLaunch
+            ContactSyncBlocked                                 = $policy.ContactSyncBlocked
+            CustomBrowserDisplayName                           = $policy.CustomBrowserDisplayName
+            CustomBrowserPackageId                             = $policy.CustomBrowserPackageId
+            CustomDialerAppDisplayName                         = $policy.CustomDialerAppDisplayName
+            CustomDialerAppPackageId                           = $policy.CustomDialerAppPackageId
+            DataBackupBlocked                                  = $policy.DataBackupBlocked
+            Description                                        = $policy.Description
+            DeviceComplianceRequired                           = $policy.DeviceComplianceRequired
+            DeviceLockRequired                                 = $policy.DeviceLockRequired
+            DialerRestrictionLevel                             = [string]$policy.DialerRestrictionLevel
+            DisableAppEncryptionIfDeviceEncryptionIsEnabled    = $policy.DisableAppEncryptionIfDeviceEncryptionIsEnabled
+            DisableAppPinIfDevicePinIsSet                      = $policy.DisableAppPinIfDevicePinIsSet
+            DisplayName                                        = $policy.DisplayName
+            EncryptAppData                                     = $policy.EncryptAppData
+            ExemptedAppPackages                                = $exemptedAppPackagesArray
+            FingerprintAndBiometricEnabled                     = $policy.FingerprintAndBiometricEnabled
+            FingerprintBlocked                                 = $policy.FingerprintBlocked
+            Id                                                 = $policy.Id
+            KeyboardsRestricted                                = $policy.KeyboardsRestricted
+            ManagedBrowser                                     = $policy.ManagedBrowser.ToString()
+            ManagedBrowserToOpenLinksRequired                  = $policy.ManagedBrowserToOpenLinksRequired
+            MaximumAllowedDeviceThreatLevel                    = [string]$policy.MaximumAllowedDeviceThreatLevel
+            MaximumPinRetries                                  = $policy.MaximumPinRetries
+            MessagingRedirectAppDisplayName                    = $policy.MessagingRedirectAppDisplayName
+            MessagingRedirectAppPackageId                      = $policy.MessagingRedirectAppPackageId
+            MinimumPinLength                                   = $policy.MinimumPinLength
+            MinimumRequiredAppVersion                          = $policy.MinimumRequiredAppVersion
+            MinimumRequiredOSVersion                           = $policy.MinimumRequiredOSVersion
+            MinimumRequiredPatchVersion                        = $policy.MinimumRequiredPatchVersion
+            MinimumWarningAppVersion                           = $policy.MinimumWarningAppVersion
+            MinimumWarningOSVersion                            = $policy.MinimumWarningOSVersion
+            MinimumWarningPatchVersion                         = $policy.MinimumWarningPatchVersion
+            MinimumWipePatchVersion                            = $policy.MinimumWipePatchVersion
+            MobileThreatDefenseRemediationAction               = [string]$policy.MobileThreatDefenseRemediationAction
+            NotificationRestriction                            = [string]$policy.NotificationRestriction
+            OrganizationalCredentialsRequired                  = $policy.OrganizationalCredentialsRequired
+            PeriodBeforePinReset                               = [System.Xml.XmlConvert]::ToString($policy.PeriodBeforePinReset)
+            PeriodOfflineBeforeAccessCheck                     = [System.Xml.XmlConvert]::ToString($policy.PeriodOfflineBeforeAccessCheck)
+            PeriodOfflineBeforeWipeIsEnforced                  = [System.Xml.XmlConvert]::ToString($policy.PeriodOfflineBeforeWipeIsEnforced)
+            PeriodOnlineBeforeAccessCheck                      = [System.Xml.XmlConvert]::ToString($policy.PeriodOnlineBeforeAccessCheck)
+            PinCharacterSet                                    = [string]$policy.PinCharacterSet
+            PinRequired                                        = $policy.PinRequired
+            PreviousPinBlockCount                              = $policy.PreviousPinBlockCount
+            PrintBlocked                                       = $policy.PrintBlocked
+            ProtectedMessagingRedirectAppType                  = [string]$policy.ProtectedMessagingRedirectAppType
+            RequireClass3Biometrics                            = $policy.RequireClass3Biometrics
+            RequiredAndroidSafetyNetAppsVerificationType       = [string]$policy.RequiredAndroidSafetyNetAppsVerificationType
+            RequiredAndroidSafetyNetDeviceAttestationType      = [string]$policy.RequiredAndroidSafetyNetDeviceAttestationType
+            RequiredAndroidSafetyNetEvaluationType             = [string]$policy.RequiredAndroidSafetyNetEvaluationType
+            RequirePinAfterBiometricChange                     = $policy.RequirePinAfterBiometricChange
+            RoleScopeTagIds                                    = $policy.RoleScopeTagIds
+            SaveAsBlocked                                      = $policy.SaveAsBlocked
+            ScreenCaptureBlocked                               = $policy.ScreenCaptureBlocked
+            SimplePinBlocked                                   = $policy.SimplePinBlocked
+            TargetedAppManagementLevels                        = [string]$policy.TargetedAppManagementLevels
+            WarnAfterCompanyPortalUpdateDeferralInDays         = $policy.WarnAfterCompanyPortalUpdateDeferralInDays
+            WipeAfterCompanyPortalUpdateDeferralInDays         = $policy.WipeAfterCompanyPortalUpdateDeferralInDays
+            Ensure                                             = 'Present'
+            Credential                                         = $Credential
+            ApplicationId                                      = $ApplicationId
+            ApplicationSecret                                  = $ApplicationSecret
+            TenantId                                           = $TenantId
+            CertificateThumbprint                              = $CertificateThumbprint
+            ManagedIdentity                                    = $ManagedIdentity.IsPresent
+            AccessTokens                                       = $AccessTokens
         }
     }
     catch
@@ -666,86 +666,86 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidDeviceManufacturerNotAllowed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidDeviceModelNotAllowed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidSafetyNetAppsVerificationFailed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidSafetyNetDeviceAttestationFailed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfDeviceComplianceRequired,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfDeviceLockNotSet,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfMaximumPinRetriesExceeded,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfUnableToAuthenticateUser,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $MobileThreatDefenseRemediationAction,
 
         [Parameter()]
-        [ValidateSet("allApps", "managedApps", "customApp", "blocked")]
+        [ValidateSet('allApps', 'managedApps', 'customApp', 'blocked')]
         [System.String]
         $DialerRestrictionLevel,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "secured", "low", "medium", "high")]
+        [ValidateSet('notConfigured', 'secured', 'low', 'medium', 'high')]
         [System.String]
         $MaximumAllowedDeviceThreatLevel,
 
         [Parameter()]
-        [ValidateSet("allow", "blockOrganizationalData", "block")]
+        [ValidateSet('allow', 'blockOrganizationalData', 'block')]
         [System.String]
         $NotificationRestriction,
 
         [Parameter()]
-        [ValidateSet("anyApp", "anyManagedApp", "specificApps", "blocked")]
+        [ValidateSet('anyApp', 'anyManagedApp', 'specificApps', 'blocked')]
         [System.String]
         $ProtectedMessagingRedirectAppType,
 
         [Parameter()]
-        [ValidateSet("none", "enabled")]
+        [ValidateSet('none', 'enabled')]
         [System.String]
         $RequiredAndroidSafetyNetAppsVerificationType,
 
         [Parameter()]
-        [ValidateSet("none", "basicIntegrity", "basicIntegrityAndDeviceCertification")]
+        [ValidateSet('none', 'basicIntegrity', 'basicIntegrityAndDeviceCertification')]
         [System.String]
         $RequiredAndroidSafetyNetDeviceAttestationType,
 
         [Parameter()]
-        [ValidateSet("basic", "hardwareBacked")]
+        [ValidateSet('basic', 'hardwareBacked')]
         [System.String]
         $RequiredAndroidSafetyNetEvaluationType,
 
         [Parameter()]
-        [ValidateSet("unspecified", "unmanaged", "mdm", "androidEnterprise", "androidEnterpriseDedicatedDevicesWithAzureAdSharedMode", "androidOpenSourceProjectUserAssociated", "androidOpenSourceProjectUserless", "unknownFutureValue")]
+        [ValidateSet('unspecified', 'unmanaged', 'mdm', 'androidEnterprise', 'androidEnterpriseDedicatedDevicesWithAzureAdSharedMode', 'androidOpenSourceProjectUserAssociated', 'androidOpenSourceProjectUserless', 'unknownFutureValue')]
         [System.String]
         $TargetedAppManagementLevels,
 
@@ -916,8 +916,8 @@ function Set-TargetResource
         $EncryptAppData,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -976,7 +976,7 @@ function Set-TargetResource
     foreach ($keyboard in $ApprovedKeyboards)
     {
         $myApprovedKeyboards += @{
-            name = $keyboard.Split('|')[0]
+            name  = $keyboard.Split('|')[0]
             value = $keyboard.Split('|')[1]
         }
     }
@@ -986,7 +986,7 @@ function Set-TargetResource
     foreach ($exemptedAppPackage in $ExemptedAppPackages)
     {
         $myExemptedAppPackages += @{
-            name = $exemptedAppPackage.Split('|')[0]
+            name  = $exemptedAppPackage.Split('|')[0]
             value = $exemptedAppPackage.Split('|')[1]
         }
     }
@@ -1164,86 +1164,86 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidDeviceManufacturerNotAllowed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidDeviceModelNotAllowed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidSafetyNetAppsVerificationFailed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfAndroidSafetyNetDeviceAttestationFailed,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfDeviceComplianceRequired,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfDeviceLockNotSet,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfMaximumPinRetriesExceeded,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $AppActionIfUnableToAuthenticateUser,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        [ValidateSet('block', 'wipe', 'warn', 'blockWhenSettingIsSupported')]
         $MobileThreatDefenseRemediationAction,
 
         [Parameter()]
-        [ValidateSet("allApps", "managedApps", "customApp", "blocked")]
+        [ValidateSet('allApps', 'managedApps', 'customApp', 'blocked')]
         [System.String]
         $DialerRestrictionLevel,
 
         [Parameter()]
-        [ValidateSet("notConfigured", "secured", "low", "medium", "high")]
+        [ValidateSet('notConfigured', 'secured', 'low', 'medium', 'high')]
         [System.String]
         $MaximumAllowedDeviceThreatLevel,
 
         [Parameter()]
-        [ValidateSet("allow", "blockOrganizationalData", "block")]
+        [ValidateSet('allow', 'blockOrganizationalData', 'block')]
         [System.String]
         $NotificationRestriction,
 
         [Parameter()]
-        [ValidateSet("anyApp", "anyManagedApp", "specificApps", "blocked")]
+        [ValidateSet('anyApp', 'anyManagedApp', 'specificApps', 'blocked')]
         [System.String]
         $ProtectedMessagingRedirectAppType,
 
         [Parameter()]
-        [ValidateSet("none", "enabled")]
+        [ValidateSet('none', 'enabled')]
         [System.String]
         $RequiredAndroidSafetyNetAppsVerificationType,
 
         [Parameter()]
-        [ValidateSet("none", "basicIntegrity", "basicIntegrityAndDeviceCertification")]
+        [ValidateSet('none', 'basicIntegrity', 'basicIntegrityAndDeviceCertification')]
         [System.String]
         $RequiredAndroidSafetyNetDeviceAttestationType,
 
         [Parameter()]
-        [ValidateSet("basic", "hardwareBacked")]
+        [ValidateSet('basic', 'hardwareBacked')]
         [System.String]
         $RequiredAndroidSafetyNetEvaluationType,
 
         [Parameter()]
-        [ValidateSet("unspecified", "unmanaged", "mdm", "androidEnterprise", "androidEnterpriseDedicatedDevicesWithAzureAdSharedMode", "androidOpenSourceProjectUserAssociated", "androidOpenSourceProjectUserless", "unknownFutureValue")]
+        [ValidateSet('unspecified', 'unmanaged', 'mdm', 'androidEnterprise', 'androidEnterpriseDedicatedDevicesWithAzureAdSharedMode', 'androidOpenSourceProjectUserAssociated', 'androidOpenSourceProjectUserless', 'unknownFutureValue')]
         [System.String]
         $TargetedAppManagementLevels,
 
@@ -1414,8 +1414,8 @@ function Test-TargetResource
         $EncryptAppData,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -1469,8 +1469,8 @@ function Test-TargetResource
         return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
     }
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -PostProcessing $postProcessingScript
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        -PostProcessing $postProcessingScript
     return $result
 }
 
@@ -1631,7 +1631,7 @@ function Get-IntuneAppProtectionPolicyAndroidAppsToHashtable
         $Apps,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps','allApps')]
+        [ValidateSet('selectedPublicApps', 'allCoreMicrosoftApps', 'allMicrosoftApps', 'allApps')]
         [System.String]
         $AppGroupType
     )
@@ -1682,7 +1682,7 @@ function Get-IntuneAppProtectionPolicyAndroidAppsToHashtable
     }
 
     return @{
-        apps = $formattedApps
+        apps         = $formattedApps
         appGroupType = $AppGroupType
     }
 }

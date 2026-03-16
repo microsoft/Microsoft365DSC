@@ -1,3 +1,5 @@
+# Securing your Configurations
+
 In the case where you are using credentials to authenticate to your tenant, you will be prompted to provide credentials at compilation time for your configuration. By default, these credentials will be stored as plain text in the resulting MOF file, which is a big security concern.
 
 <figure markdown>
@@ -7,7 +9,7 @@ In the case where you are using credentials to authenticate to your tenant, you 
 
 ## Creating an encryption certificate
 
-To remediate this, PowerShell DSC lets us <a href="https://docs.microsoft.com/en-us/powershell/dsc/pull-server/securemof?view=dsc-1.1" target="_blank">use an encryption certificate to encrypt information about credentials in the MOF files</a>. To make this process easier for users, Microsoft365DSC defines a function named <a href="../../cmdlets/Set-M365DSCAgentCertificateConfiguration/">Set-M365DSCAgentCertificateConfiguration</a> which will automatically generate an encryption certificate and configure the PowerShell DSC engine on the system to use it for encrypting the MOF files. The cmdlet will return the Thumbprint for the newly generated certificate.
+To remediate this, PowerShell DSC let's us [use an encryption certificate to encrypt information about credentials in the MOF files](https://docs.microsoft.com/en-us/powershell/dsc/pull-server/securemof?view=dsc-1.1). To make this process easier for users, Microsoft365DSC defines a function named [Set-M365DSCAgentCertificateConfiguration](../cmdlets/Set-M365DSCAgentCertificateConfiguration.md) which will automatically generate an encryption certificate and configure the PowerShell DSC engine on the system to use it for encrypting the MOF files. The cmdlet will return the Thumbprint for the newly generated certificate.
 
 <figure markdown>
   ![Example of cmdlet to generate LCM certificate](../../Images/ConfigureLCMCertificate.png)

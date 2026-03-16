@@ -53,41 +53,26 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for ADO Permission Group Settings for Organization {$OrganizationName} and Group {$GroupName}"
 
-    $null = New-M365DSCConnection -Workload 'AzureDevOPS' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if ($null -eq $Script:exportedInstances -or -not $Script:ExportMode)
         {
-            if (-not [System.String]::IsNullOrEmpty($Descriptor))
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.descriptor -eq $Descriptor }
-            }
+            $null = New-M365DSCConnection -Workload 'AzureDevOPS' `
+            -InboundParameters $PSBoundParameters
 
-            if ($null -eq $instance)
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.principalName -eq $GroupName }
-            }
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-            $Script:AllGroups = $Script:exportedInstances
-            $Script:CurrentOrganization = $OrganizationName
-        }
-        else
-        {
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
             if ($null -eq $Script:AllGroups -or $Script:CurrentOrganization -ne $OrganizationName)
             {
                 $uri = "https://vssps.dev.azure.com/$OrganizationName/_apis/graph/groups?api-version=7.1-preview.1"
@@ -103,10 +88,26 @@ function Get-TargetResource
             {
                 $instance = $Script:AllGroups | Where-Object -FilterScript { $_.principalName -eq $GroupName }
             }
+
+            if ($null -eq $instance)
+            {
+                return $nullResult
+            }
         }
-        if ($null -eq $instance)
+        else
         {
-            return $nullResult
+            if (-not [System.String]::IsNullOrEmpty($Descriptor))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.descriptor -eq $Descriptor }
+            }
+
+            if ($null -eq $instance)
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.principalName -eq $GroupName }
+            }
+
+            $Script:AllGroups = $Script:exportedInstances
+            $Script:CurrentOrganization = $OrganizationName
         }
 
         $groupPermissions = Get-M365DSCADOGroupPermission -GroupName $instance.principalName -OrganizationName $OrganizationName
@@ -322,7 +323,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -523,7 +524,7 @@ function Get-M365DSCADOGroupPermission
 
         if ($null -eq $Script:AllAccessControlLists -or $Script:CurrentOrganization -ne $OrganizationName)
         {
-            $Script:AllAccessControlLists = [System.Collections.Generic.Dictionary[System.String,System.Object[]]]::new(100)
+            $Script:AllAccessControlLists = [System.Collections.Generic.Dictionary[System.String, System.Object[]]]::new(100)
             foreach ($namespace in $Script:AllSecurityNamespaces)
             {
                 $uri = "https://dev.azure.com/$($OrganizationName)/_apis/accesscontrollists/$($namespace.namespaceId)?api-version=7.2-preview.1"

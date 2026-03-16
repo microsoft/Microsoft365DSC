@@ -21,10 +21,10 @@ function Invoke-M365DSCFabricWebRequest
     }
 
     $response = Invoke-WebRequest -Method $Method `
-                                  -Uri $Uri `
-                                  -Headers $headers `
-                                  -Body $Body `
-                                  -UseBasicParsing
+        -Uri $Uri `
+        -Headers $headers `
+        -Body $Body `
+        -UseBasicParsing
     $result = ConvertFrom-Json $response.Content
     return $result
 }

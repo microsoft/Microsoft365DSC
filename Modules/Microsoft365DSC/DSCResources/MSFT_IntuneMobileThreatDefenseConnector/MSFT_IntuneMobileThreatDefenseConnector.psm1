@@ -149,7 +149,7 @@ function Get-TargetResource
         if ($null -eq $instance)
         {
             Write-Verbose -Message "Could not find MobileThreatDefenseConnector by Id: {$Id}."
-            if (-Not [string]::IsNullOrEmpty($DisplayName))
+            if (-not [string]::IsNullOrEmpty($DisplayName))
             {
                 # There is no API which searches MobileThreatDefenseConnector by its DisplayName so the below code is commented out.
                 # $instance = Get-MgBetaDeviceManagementMobileThreatDefenseConnector `
@@ -489,8 +489,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -500,6 +500,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -547,7 +551,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $getValue = Get-MgBetaDeviceManagementMobileThreatDefenseConnector -ErrorAction Stop
+        [array] $getValue = Get-MgBetaDeviceManagementMobileThreatDefenseConnector -Filter $Filter -ErrorAction Stop
 
         $i = 1
         $dscContent = ''

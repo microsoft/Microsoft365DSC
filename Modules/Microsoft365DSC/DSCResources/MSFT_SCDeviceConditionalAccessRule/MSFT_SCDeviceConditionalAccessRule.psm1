@@ -287,7 +287,7 @@ function Get-TargetResource
         $groupNames = @()
         foreach ($group in $instance.TargetGroups)
         {
-            $groupValue = Get-Group $group.Guid -ErrorAction SilentlyContinue | Where-Object -FilterScript {$_.GUID -eq $group.Guid}
+            $groupValue = Get-Group $group.Guid -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.GUID -eq $group.Guid }
             if ($null -ne $groupValue)
             {
                 $groupNames += $groupValue.Name
@@ -638,7 +638,6 @@ function Set-TargetResource
         $targetGroupsValue = @()
         foreach ($group in $TargetGroups)
         {
-            $groupValue = ''
             $entry = Get-Group $group -ErrorAction SilentlyContinue
             if ($null -ne $entry)
             {
@@ -921,8 +920,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

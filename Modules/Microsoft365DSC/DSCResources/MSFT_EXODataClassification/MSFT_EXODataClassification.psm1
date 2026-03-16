@@ -247,7 +247,7 @@ function Set-TargetResource
         $verboseMessage = "Setting Data classification policy $($Identity) with values:" + `
             " $(Convert-M365DscHashtableToString -Hashtable $DataClassificationParams)"
         Write-Verbose -Message $verboseMessage
-        if (-Not [String]::IsNullOrEmpty($Locale))
+        if (-not [String]::IsNullOrEmpty($Locale))
         {
             $DataClassificationParams.Locale = New-Object system.globalization.cultureinfo($Locale)
         }
@@ -345,7 +345,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

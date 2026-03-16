@@ -1,4 +1,3 @@
-
 # IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
 
 ## Description

@@ -1,3 +1,5 @@
+# Generating Reports
+
 Microsoft365DSC makes it very easy to generate user-friendly reports from any configuration, whether you wrote it yourself or generated it using the configuration snapshot feature. The solution allows you to generate CSV, HTML, Excel, Markdown and JSON reports from existing files.
 
 > **NOTE:** To generate Excel reports, you need to have Office installed on the machine on which you are trying to generate the report.

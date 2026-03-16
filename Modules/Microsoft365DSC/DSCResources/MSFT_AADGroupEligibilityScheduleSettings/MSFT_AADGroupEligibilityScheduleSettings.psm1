@@ -72,6 +72,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration for the Azure AD Group Eligibility Schedule Settings with Id {$Id} and GroupDisplayName {$GroupDisplayName}"
+
     try
     {
         if ($null -eq $Script:exportedInstance)
@@ -311,9 +313,9 @@ function Set-TargetResource
     }
 
     if ($GroupDisplayName.Contains("'"))
-        {
-            $GroupDisplayName = $GroupDisplayName -replace "'", "''"
-        }
+    {
+        $GroupDisplayName = $GroupDisplayName -replace "'", "''"
+    }
     $filter = "DisplayName eq '$GroupDisplayName'"
     $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
     if ($Group.Length -gt 1)
@@ -419,7 +421,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -480,13 +482,13 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/privilegedAccess/aadGroups/resources"
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/privilegedAccess/aadGroups/resources'
         [array]$groups = (Invoke-MgGraphRequest -Method GET -Uri $uri -ErrorAction SilentlyContinue).value
 
         $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         $j = 1
-        $PIMGroupRole = @("member", "owner")
+        $PIMGroupRole = @('member', 'owner')
 
         $batchRequests = @()
         foreach ($group in $groups)
@@ -505,10 +507,10 @@ function Export-TargetResource
             foreach ($PIMRole in $PIMGroupRole)
             {
                 $assignment = ($batchResponses | Where-Object { $_.id -eq $group.Id }).body.value `
-                    | Where-Object { $_.roleDefinitionId -eq $PIMRole }
+                | Where-Object { $_.roleDefinitionId -eq $PIMRole }
                 $rules = $assignment.policy.rules
 
-                Write-M365DSCHost -Message  "    |---[$j/$($groups.Count * 2)] $($group.displayName) ($PIMRole)`r`n" -DeferWrite
+                Write-M365DSCHost -Message "    |---[$j/$($groups.Count * 2)] $($group.displayName) ($PIMRole)`r`n" -DeferWrite
                 $i = 1
                 foreach ($rule in $rules)
                 {

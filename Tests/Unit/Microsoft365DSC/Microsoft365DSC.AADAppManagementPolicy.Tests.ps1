@@ -291,6 +291,134 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "The instance exists with keyCredentials including trustedCertificateAuthority and values are in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName         = "MyPolicy"
+                    Description         = "MyDescription"
+                    IsEnabled           = $true
+                    Restrictions          = (New-CimInstance -ClassName MSFT_AADAppManagementPolicyRestrictions -Property @{
+                        keyCredentials = [CimInstance[]]@(
+                            (New-CimInstance -ClassName MSFT_AADAppManagementPolicyRestrictionsCredential -Property @{
+                                maxLifetime = "P30DT0H0M0S"
+                                restrictForAppsCreatedAfterDateTime = "0001-01-01T00:00:00.0000000"
+                                restrictionType = "asymmetricKeyLifetime"
+                                state = "enabled"
+                            } -ClientOnly);
+                            (New-CimInstance -ClassName MSFT_AADAppManagementPolicyRestrictionsCredential -Property @{
+                                certificateBasedApplicationConfigurationIds = [System.String[]]@("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                                restrictForAppsCreatedAfterDateTime = "0001-01-01T00:00:00.0000000"
+                                restrictionType = "trustedCertificateAuthority"
+                                state = "enabled"
+                            } -ClientOnly);
+                        )
+                    } -ClientOnly);
+                    Ensure              = 'Present'
+                    Credential          = $Credential;
+                }
+
+                Mock -CommandName Get-MgBetaPolicyAppManagementPolicy -MockWith {
+                    return @{
+                        DisplayName  = "MyPolicy"
+                        Description  = "MyDescription"
+                        Id           = "12345-12345-12345-12345-12345"
+                        IsEnabled    = $true
+                        Restrictions = @{
+                            keyCredentials = @(
+                                @{
+                                    maxLifetime = @{
+                                        Days    = 30
+                                        Hours   = 0
+                                        Minutes = 0
+                                        Seconds = 0
+                                    }
+                                    restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
+                                    restrictionType = "asymmetricKeyLifetime"
+                                    state = "enabled"
+                                },
+                                @{
+                                    certificateBasedApplicationConfigurationIds = @("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                                    restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
+                                    restrictionType = "trustedCertificateAuthority"
+                                    state = "enabled"
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                $result = Get-TargetResource @testParams
+                $result.Ensure | Should -Be 'Present'
+                $result.Restrictions.keyCredentials | Should -HaveCount 2
+                $trustedCACred = $result.Restrictions.keyCredentials | Where-Object { $_.restrictionType -eq 'trustedCertificateAuthority' }
+                $trustedCACred | Should -Not -BeNullOrEmpty
+                $trustedCACred.certificateBasedApplicationConfigurationIds | Should -Contain 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
+        Context -Name "The instance exists with keyCredentials including trustedCertificateAuthority and values are NOT in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName         = "MyPolicy"
+                    Description         = "MyDescription"
+                    IsEnabled           = $true
+                    Restrictions          = (New-CimInstance -ClassName MSFT_AADAppManagementPolicyRestrictions -Property @{
+                        keyCredentials = [CimInstance[]]@(
+                            (New-CimInstance -ClassName MSFT_AADAppManagementPolicyRestrictionsCredential -Property @{
+                                certificateBasedApplicationConfigurationIds = [System.String[]]@("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "11111111-2222-3333-4444-555555555555")
+                                restrictForAppsCreatedAfterDateTime = "0001-01-01T00:00:00.0000000"
+                                restrictionType = "trustedCertificateAuthority"
+                                state = "enabled"
+                            } -ClientOnly);
+                        )
+                    } -ClientOnly);
+                    Ensure              = 'Present'
+                    Credential          = $Credential;
+                }
+
+                Mock -CommandName Get-MgBetaPolicyAppManagementPolicy -MockWith {
+                    return @{
+                        DisplayName  = "MyPolicy"
+                        Description  = "MyDescription"
+                        Id           = "12345-12345-12345-12345-12345"
+                        IsEnabled    = $true
+                        Restrictions = @{
+                            keyCredentials = @(
+                                @{
+                                    certificateBasedApplicationConfigurationIds = @("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                                    restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
+                                    restrictionType = "trustedCertificateAuthority"
+                                    state = "enabled"
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                $result = Get-TargetResource @testParams
+                $result.Ensure | Should -Be 'Present'
+                $trustedCACred = $result.Restrictions.keyCredentials | Where-Object { $_.restrictionType -eq 'trustedCertificateAuthority' }
+                $trustedCACred.certificateBasedApplicationConfigurationIds | Should -HaveCount 1
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Update-MgBetaPolicyAppManagementPolicy -Exactly 1
+            }
+        }
+
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true

@@ -1,4 +1,3 @@
-
 # IntuneAppControlForBusinessPolicyWindows10
 
 ## Description

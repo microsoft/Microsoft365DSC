@@ -1,4 +1,4 @@
-Confirm-M365DSCModuleDependency -ModuleName "MSFT_IntuneWindowsBackupForOrganizationConfiguration"
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneWindowsBackupForOrganizationConfiguration'
 
 function Get-TargetResource
 {
@@ -8,11 +8,12 @@ function Get-TargetResource
     (
         #region resource generator code
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
-        $IsSingleInstance = 'Yes',
+        $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $State,
 
@@ -45,7 +46,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration for the Intune Windows Backup For Organization Configuration"
+    Write-Verbose -Message 'Getting configuration for the Intune Windows Backup For Organization Configuration'
 
     try
     {
@@ -73,11 +74,11 @@ function Get-TargetResource
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Windows Backup For Organization Configuration."
+            Write-Verbose -Message 'Could not find an Intune Windows Backup For Organization Configuration.'
             return $nullResult
         }
         $Script:IntuneWindowsBackupForOrganizationConfigurationId = $getValue.Id
-        Write-Verbose -Message "An Intune Windows Backup For Organization Configuration was found"
+        Write-Verbose -Message 'An Intune Windows Backup For Organization Configuration was found'
 
         #region resource generator code
         $enumState = $null
@@ -89,14 +90,14 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            State                             = $enumState
-            IsSingleInstance                  = 'Yes'
-            Credential                        = $Credential
-            ApplicationId                     = $ApplicationId
-            TenantId                          = $TenantId
-            ApplicationSecret                 = $ApplicationSecret
-            CertificateThumbprint             = $CertificateThumbprint
-            ManagedIdentity                   = $ManagedIdentity.IsPresent
+            State                 = $enumState
+            IsSingleInstance      = 'Yes'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
 
@@ -121,11 +122,12 @@ function Set-TargetResource
     (
         #region resource generator code
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
-        $IsSingleInstance = 'Yes',
+        $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $State,
 
@@ -158,7 +160,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of the Intune Windows Backup For Organization Configuration"
+    Write-Verbose -Message 'Setting configuration of the Intune Windows Backup For Organization Configuration'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -191,11 +193,12 @@ function Test-TargetResource
     (
         #region resource generator code
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
-        $IsSingleInstance = 'Yes',
+        $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $State,
 
@@ -238,7 +241,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

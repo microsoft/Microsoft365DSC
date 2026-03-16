@@ -1,4 +1,3 @@
-
 # IntuneDeviceEnrollmentStatusPageWindows10
 
 ## Description

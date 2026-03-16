@@ -1,4 +1,3 @@
-
 # IntuneMobileAppsLobAppiOS
 
 ## Description

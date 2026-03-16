@@ -1,4 +1,3 @@
-
 # IntuneDefenderGlobalExclusionsPolicyLinux
 
 ## Description

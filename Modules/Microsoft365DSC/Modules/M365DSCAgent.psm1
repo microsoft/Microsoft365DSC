@@ -11,9 +11,7 @@ Public
 function Test-M365DSCAgent
 {
     [CmdletBinding()]
-    param(
-
-    )
+    param()
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()

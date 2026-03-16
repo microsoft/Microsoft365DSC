@@ -6,8 +6,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #region Intune params
-
         [Parameter()]
         [System.String]
         $Id,
@@ -15,8 +13,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-
-        #endregion Intune params
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -137,8 +133,6 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        #region Intune params
-
         [Parameter()]
         [System.String]
         $Id,
@@ -146,8 +140,6 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-
-        #endregion Intune params
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -229,8 +221,6 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        #region Intune params
-
         [Parameter()]
         [System.String]
         $Id,
@@ -238,8 +228,6 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-
-        #endregion Intune params
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -286,8 +274,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -297,6 +285,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -343,7 +335,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $getValue = Get-MgBetaDeviceAppManagementMobileAppCategory -ErrorAction Stop
+        [array] $getValue = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter $Filter -ErrorAction Stop
 
         $i = 1
         $dscContent = ''

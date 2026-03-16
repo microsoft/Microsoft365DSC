@@ -1,4 +1,3 @@
-
 # IntuneMobileAppsLobAppWindows10
 
 ## Description

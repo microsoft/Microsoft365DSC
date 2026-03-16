@@ -1,5 +1,15 @@
 Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXODistributionGroup'
 
+$Script:displayNameProperties = @{
+    IncludeAcceptMessagesOnlyFromDLMembersWithDisplayNames        = $true
+    IncludeAcceptMessagesOnlyFromSendersOrMembersWithDisplayNames = $true
+    IncludeAcceptMessagesOnlyFromWithDisplayNames                 = $true
+    IncludeBypassModerationFromSendersOrMembersWithDisplayNames   = $true
+    IncludeGrantSendOnBehalfToWithDisplayNames                    = $true
+    IncludeManagedByWithDisplayNames                              = $true
+    IncludeModeratedByWithDisplayNames                            = $true
+}
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -33,6 +43,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $BccBlocked,
+
+        [Parameter()]
+        [System.String[]]
+        $BypassModerationFromSendersOrMembers,
 
         [Parameter()]
         [System.Boolean]
@@ -246,11 +260,11 @@ function Get-TargetResource
 
             if (-not [System.String]::IsNullOrEmpty($PrimarySmtpAddress))
             {
-                $distributionGroup = Get-DistributionGroup -Identity $PrimarySmtpAddress -ErrorAction SilentlyContinue
+                $distributionGroup = Get-DistributionGroup -Identity $PrimarySmtpAddress @Script:displayNameProperties -ErrorAction SilentlyContinue
             }
             else
             {
-                $distributionGroup = Get-DistributionGroup -Identity $Identity -ErrorAction SilentlyContinue
+                $distributionGroup = Get-DistributionGroup -Identity $Identity @Script:displayNameProperties -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $distributionGroup)
@@ -274,8 +288,8 @@ function Get-TargetResource
         else
         {
             $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity `
-                    -ErrorAction 'Stop' `
-                    -ResultSize 'Unlimited'
+                -ErrorAction 'Stop' `
+                -ResultSize 'Unlimited'
         }
 
         $distributionMembersValue = @()
@@ -287,7 +301,7 @@ function Get-TargetResource
             }
             else
             {
-                 # For RecipientType 'User', PrimarySmtpAddress is unavailable, but WindowsLiveID is, and works with Add-DistributionGroupMember
+                # For RecipientType 'User', PrimarySmtpAddress is unavailable, but WindowsLiveID is, and works with Add-DistributionGroupMember
                 $distributionMembersValue += $member.WindowsLiveID
             }
         }
@@ -305,93 +319,28 @@ function Get-TargetResource
             $groupTypeValue = 'Security'
         }
 
-        $ManagedByValue = @()
-        if ($null -ne $distributionGroup.ManagedBy)
-        {
-            Write-Verbose -Message "Getting Distribution Group managers for $Identity"
-            if ($null -eq $Script:RecipientsCache)
-            {
-                $Script:RecipientsCache = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new()
-            }
-            foreach ($manager in $distributionGroup.ManagedBy)
-            {
-                try
-                {
-                    if ($null -ne $Script:RecipientsCache -and $Script:RecipientsCache[$manager])
-                    {
-                        $recipient = $Script:RecipientsCache[$manager]
-                    }
-                    else
-                    {
-                        $recipient = Get-Recipient -Identity $manager -ErrorAction Stop
-                        $Script:RecipientsCache.Add($recipient.Name, @{
-                            PrimarySmtpAddress = $recipient.PrimarySmtpAddress
-                            WindowsLiveID      = $recipient.WindowsLiveID
-                        })
-                    }
-                    if ($null -eq $recipient)
-                    {
-                        throw "Recipient not found in cache"
-                    }
-                    $ManagedByValue += $recipient.PrimarySmtpAddress
-                }
-                catch
-                {
-                    Write-Verbose -Message "Couldn't retrieve manager recipient {$manager}"
-                }
-            }
-        }
-
-        $ModeratedByValue = @()
-        if ($null -ne $distributionGroup.ModeratedBy)
-        {
-            Write-Verbose -Message "Getting Distribution Group moderators for $Identity"
-            if ($null -eq $Script:RecipientsCache)
-            {
-                $Script:RecipientsCache = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new()
-            }
-            foreach ($moderator in $distributionGroup.ModeratedBy)
-            {
-                try
-                {
-                    if ($null -ne $Script:RecipientsCache -and $Script:RecipientsCache[$moderator])
-                    {
-                        $recipient = $Script:RecipientsCache[$moderator]
-                    }
-                    else
-                    {
-                        $recipient = Get-Recipient -Identity $moderator -ErrorAction Stop
-                        $Script:RecipientsCache.Add($recipient.Name, @{
-                            PrimarySmtpAddress = $recipient.PrimarySmtpAddress
-                            WindowsLiveID      = $recipient.WindowsLiveID
-                        })
-                    }
-                    if ($null -eq $recipient)
-                    {
-                        throw "Recipient not found in cache"
-                    }
-                    $ModeratedByValue += $recipient.PrimarySmtpAddress
-                }
-                catch
-                {
-                    Write-Verbose -Message "Couldn't retrieve moderating recipient {$moderator}"
-                }
-            }
-        }
+        $acceptMessagesOnlyFromValue = Get-DisplayNameSimplified -DisplayName $distributionGroup.AcceptMessagesOnlyFromWithDisplayNames
+        $acceptMessagesOnlyFromDlMembersValue = Get-DisplayNameSimplified -DisplayName $distributionGroup.AcceptMessagesOnlyFromDLMembersWithDisplayNames
+        $acceptMessagesOnlyFromSendersOrMembersValue = Get-DisplayNameSimplified -DisplayName $distributionGroup.AcceptMessagesOnlyFromWithDisplayNames
+        $bypassModerationFromSendersOrMembersValue = Get-DisplayNameSimplified -DisplayName $distributionGroup.BypassModerationFromSendersOrMembersWithDisplayNames
+        $grantSendOnBehalfToValue = Get-DisplayNameSimplified -DisplayName $distributionGroup.GrantSendOnBehalfToWithDisplayNames
+        $managedByValue = Get-DisplayNameSimplified -DisplayName $distributionGroup.ManagedByWithDisplayName
+        $moderatedByValue = Get-DisplayNameSimplified -DisplayName $distributionGroup.ModeratedByWithDisplayNames
 
         $result = @{
             Identity                               = $distributionGroup.Identity
             Alias                                  = $distributionGroup.Alias
             BccBlocked                             = $distributionGroup.BccBlocked
+            BypassModerationFromSendersOrMembers   = $bypassModerationFromSendersOrMembersValue
             BypassNestedModerationEnabled          = $distributionGroup.BypassNestedModerationEnabled
             Description                            = $descriptionValue
             DisplayName                            = $distributionGroup.DisplayName
             HiddenGroupMembershipEnabled           = $distributionGroup.HiddenGroupMembershipEnabled
-            ManagedBy                              = $ManagedByValue
+            ManagedBy                              = $managedByValue
             MemberDepartRestriction                = $distributionGroup.MemberDepartRestriction
             MemberJoinRestriction                  = $distributionGroup.MemberJoinRestriction
             Members                                = $distributionMembersValue
-            ModeratedBy                            = $ModeratedByValue
+            ModeratedBy                            = $moderatedByValue
             ModerationEnabled                      = $distributionGroup.ModerationEnabled
             Name                                   = $distributionGroup.Name
             Notes                                  = $distributionGroup.Notes
@@ -400,9 +349,9 @@ function Get-TargetResource
             RequireSenderAuthenticationEnabled     = $distributionGroup.RequireSenderAuthenticationEnabled
             RoomList                               = $distributionGroup.RoomList
             SendModerationNotifications            = $distributionGroup.SendModerationNotifications
-            AcceptMessagesOnlyFrom                 = [Array]$distributionGroup.AcceptMessagesOnlyFrom
-            AcceptMessagesOnlyFromDLMembers        = [Array]$distributionGroup.AcceptMessagesOnlyFromDLMembers
-            AcceptMessagesOnlyFromSendersOrMembers = [Array]$distributionGroup.AcceptMessagesOnlyFromSendersOrMembers
+            AcceptMessagesOnlyFrom                 = $acceptMessagesOnlyFromValue
+            AcceptMessagesOnlyFromDLMembers        = $acceptMessagesOnlyFromDlMembersValue
+            AcceptMessagesOnlyFromSendersOrMembers = $acceptMessagesOnlyFromSendersOrMembersValue
             CustomAttribute1                       = $distributionGroup.CustomAttribute1
             CustomAttribute2                       = $distributionGroup.CustomAttribute2
             CustomAttribute3                       = $distributionGroup.CustomAttribute3
@@ -419,7 +368,7 @@ function Get-TargetResource
             CustomAttribute14                      = $distributionGroup.CustomAttribute14
             CustomAttribute15                      = $distributionGroup.CustomAttribute15
             EmailAddresses                         = [Array]$distributionGroup.EmailAddresses
-            GrantSendOnBehalfTo                    = [Array]$distributionGroup.GrantSendOnBehalfTo
+            GrantSendOnBehalfTo                    = $grantSendOnBehalfToValue
             HiddenFromAddressListsEnabled          = [Boolean]$distributionGroup.HiddenFromAddressListsEnabled
             SendOofMessageToOriginatorEnabled      = [Boolean]$distributionGroup.SendOofMessageToOriginatorEnabled
             Type                                   = $groupTypeValue
@@ -480,6 +429,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $BccBlocked,
+
+        [Parameter()]
+        [System.String[]]
+        $BypassModerationFromSendersOrMembers,
 
         [Parameter()]
         [System.Boolean]
@@ -713,7 +666,9 @@ function Set-TargetResource
         $CreateParameters.Remove('GrantSendOnBehalfTo') | Out-Null
         $CreateParameters.Remove('HiddenFromAddressListsEnabled') | Out-Null
         $CreateParameters.Remove('SendOofMessageToOriginatorEnabled') | Out-Null
+        $CreateParameters.Remove('BypassModerationFromSendersOrMembers') | Out-Null
         $newGroup = New-DistributionGroup @CreateParameters
+        Start-Sleep -Seconds 5
         Write-Verbose -Message "New Distribution Group with Identity {$($newGroup.Identity)} was successfully created"
     }
     # Distribution group exists but shouldn't
@@ -722,8 +677,8 @@ function Set-TargetResource
         Write-Verbose -Message "The Distribution Group {$Identity} exists but shouldn't. Removing it."
         # Use the group identity value retrieved from Get-TargetResource, in case we got the group using PrimarySmtpAddress
         Remove-DistributionGroup -Identity $currentDistributionGroup.Identity `
-                                -BypassSecurityGroupManagerCheck `
-                                -Confirm:$false
+            -BypassSecurityGroupManagerCheck `
+            -Confirm:$false
     }
     # Update even if we just created the group. There are properties that can only be set with the set- cmdlet.
     if ($Ensure -eq 'Present')
@@ -734,7 +689,8 @@ function Set-TargetResource
             $currentParameters.Identity = $newGroup.Identity
         }
         # Otherwise, use the existing group identity (using the value retrieved from Get-TargetResource, in the event that we got the group using PrimarySmtpAddress)
-        else {
+        else
+        {
             $currentParameters.Identity = $currentDistributionGroup.Identity
         }
 
@@ -777,9 +733,9 @@ function Set-TargetResource
                 Write-Verbose -Message "Removing member {$member}"
                 # Use the group identity value retrieved from Get-TargetResource, in case we got the group using PrimarySmtpAddress
                 Remove-DistributionGroupMember -Identity $currentParameters.Identity `
-                                            -Member $member `
-                                            -BypassSecurityGroupManagerCheck `
-                                            -Confirm:$false
+                    -Member $member `
+                    -BypassSecurityGroupManagerCheck `
+                    -Confirm:$false
             }
             $currentParameters.Remove('Members') | Out-Null
         }
@@ -831,6 +787,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $BccBlocked,
+
+        [Parameter()]
+        [System.String[]]
+        $BypassModerationFromSendersOrMembers,
 
         [Parameter()]
         [System.Boolean]
@@ -1029,8 +989,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -1089,9 +1049,10 @@ function Export-TargetResource
     #endregion
     try
     {
-        $dscContent = [System.Text.StringBuilder]::New()
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-DistributionGroup -ResultSize 'Unlimited' -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-DistributionGroup @Script:displayNameProperties -ResultSize 'Unlimited' -ErrorAction Stop
+
+        $i = 1
         if ($Script:exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -1100,8 +1061,8 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        $i = 1
 
+        $dscContent = [System.Text.StringBuilder]::new()
         foreach ($distributionGroup in $Script:exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -1166,6 +1127,28 @@ function Export-TargetResource
     }
 }
 
+function Get-DisplayNameSimplified
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [AllowNull()]
+        [System.String[]]
+        $DisplayName
+    )
+
+    $simplifiedNames = @()
+    foreach ($name in $DisplayName)
+    {
+        if ([System.String]::IsNullOrEmpty($name))
+        {
+            continue
+        }
+        $simplifiedNames += $name.Split(',')[0].Replace('(','')
+    }
+    return ,@($simplifiedNames | Sort-Object)
+}
+
 function Get-CompareParameters
 {
     [CmdletBinding()]
@@ -1178,6 +1161,28 @@ function Get-CompareParameters
             if (-not $ValuesToCheck.OrganizationalUnit)
             {
                 $ValuesToCheck.Remove('OrganizationalUnit') | Out-Null
+            }
+            foreach ($key in $Script:displayNameProperties.Keys)
+            {
+                $key = $key.Replace("Include", "").Replace("WithDisplayNames", "").Replace("WithDisplayName", "")
+                if ($DesiredValues.ContainsKey($key))
+                {
+                    $convertedValues = @()
+                    foreach ($member in $DesiredValues.$key)
+                    {
+                        $guid = [System.Guid]::Empty
+                        if ([System.Guid]::TryParse($member, [ref]$guid))
+                        {
+                            $entry = Get-Recipient -Identity $member
+                            $convertedValues += $entry.PrimarySmtpAddress
+                        }
+                        else
+                        {
+                            $convertedValues += $member
+                        }
+                    }
+                    $DesiredValues.$key = $convertedValues
+                }
             }
             return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
         }

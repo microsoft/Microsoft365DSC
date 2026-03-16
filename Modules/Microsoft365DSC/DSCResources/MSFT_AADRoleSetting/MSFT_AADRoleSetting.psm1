@@ -240,7 +240,7 @@ function Get-TargetResource
             foreach ($roleDefinition in $allRoleDefinitions)
             {
                 $Script:RoleDefinitions[$roleDefinition.Id] = @{
-                    Id = $roleDefinition.Id
+                    Id          = $roleDefinition.Id
                     DisplayName = $roleDefinition.DisplayName
                 }
             }
@@ -300,7 +300,7 @@ function Get-TargetResource
     if ($null -eq $Script:Policies)
     {
         $Script:Policies = [System.Collections.Generic.Dictionary[string, object]]::new()
-        $allPolicies = Get-MgBetaPolicyRoleManagementPolicy -Filter "scopeId eq '/' and scopeType eq 'DirectoryRole'" -ExpandProperty "rules" -Property "Id,rules"
+        $allPolicies = Get-MgBetaPolicyRoleManagementPolicy -Filter "scopeId eq '/' and scopeType eq 'DirectoryRole'" -ExpandProperty 'rules' -Property 'Id,rules'
         foreach ($policy in $allPolicies)
         {
             $Script:Policies[$policy.Id] = $policy
@@ -1406,7 +1406,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

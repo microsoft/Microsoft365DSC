@@ -285,8 +285,8 @@ function Test-TargetResource
         $excludedProperties += 'OnlinePstnUsages'
     }
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                         -ExcludedProperties $excludedProperties
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        -ExcludedProperties $excludedProperties
     return $result
 }
 
@@ -296,6 +296,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter = "*",
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -339,7 +343,7 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array]$policies = Get-CsOnlineVoiceRoutingPolicy -ErrorAction Stop
+        [array]$policies = Get-CsOnlineVoiceRoutingPolicy -Filter $Filter -ErrorAction Stop
         $dscContent = ''
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($policy in $policies)

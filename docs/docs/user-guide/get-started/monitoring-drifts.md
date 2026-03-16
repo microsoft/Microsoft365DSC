@@ -1,3 +1,5 @@
+# Drift Monitoring
+
 Once a configuration has been applied to a Microsoft 365 tenant using Microsoft365DSC, the local system will perform regular checks to analyze the configuration of the remote tenant against what its desired state should be and detect any configuration drifts. This feature comes from PowerShell DSC out-of-the-box and is not something specific to Microsoft365DSC. By default the DSC engine on the system where the configuration was applied from will check for configuration drifts every 15 minutes.
 
 ## Microsoft365DSC Event log
@@ -13,7 +15,7 @@ If a drift in configuration is detected, Microsoft365DSC will log it in Event Vi
 
 Just like for any DSC module, you can also configure the DSC engine to automatically attempt to automatically fix a detected drift and bring the tenant back into its desired state (**ApplyAndAutocorrect**). This is referred to as the DSC Configuration Mode.
 
-To learn more about how you can configure the DSC engine to automatically fix a detected drift, please refer to <a href="https://docs.microsoft.com/en-us/powershell/dsc/managing-nodes/metaconfig?view=dsc-1.1">Configuring the Local Configuration Manager</a>.
+To learn more about how you can configure the DSC engine to automatically fix a detected drift, please refer to [Configuring the Local Configuration Manager](https://docs.microsoft.com/en-us/powershell/dsc/managing-nodes/metaconfig?view=dsc-1.1).
 
 <figure markdown>
   ![Local Configuration Manager Configuration Mode](../../Images/LCMConfig.png)

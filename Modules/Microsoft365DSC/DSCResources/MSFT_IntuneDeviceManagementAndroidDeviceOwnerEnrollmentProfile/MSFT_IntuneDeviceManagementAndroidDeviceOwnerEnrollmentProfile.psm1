@@ -28,11 +28,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet( 'corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
+        [ValidateSet('corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
         $EnrollmentMode,
 
         [Parameter()]
-        [ValidateSet( 'default', 'corporateOwnedDedicatedDeviceWithAzureADSharedMode', 'deviceStaging')]
+        [ValidateSet('default', 'corporateOwnedDedicatedDeviceWithAzureADSharedMode', 'deviceStaging')]
         $EnrollmentTokenType,
 
         [Parameter()]
@@ -57,7 +57,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet( 'none', 'wpa', 'wep' )]
+        [ValidateSet('none', 'wpa', 'wep' )]
         $WifiSecurityType,
 
         [Parameter()]
@@ -65,8 +65,8 @@ function Get-TargetResource
         $WifiSsid,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -148,27 +148,27 @@ function Get-TargetResource
         }
 
         $results = @{
-            Id                        = $androidDeviceOwnerEnrollmentProfile.Id
-            DisplayName               = $androidDeviceOwnerEnrollmentProfile.DisplayName
-            AccountId                 = $androidDeviceOwnerEnrollmentProfile.AccountId
-            ConfigureWifi             = $androidDeviceOwnerEnrollmentProfile.ConfigureWifi
-            Description               = $androidDeviceOwnerEnrollmentProfile.Description
-            EnrollmentMode            = $androidDeviceOwnerEnrollmentProfile.EnrollmentMode.ToString()
-            EnrollmentTokenType       = $androidDeviceOwnerEnrollmentProfile.EnrollmentTokenType.ToString()
-            IsTeamsDeviceProfile      = $androidDeviceOwnerEnrollmentProfile.IsTeamsDeviceProfile
-            RoleScopeTagIds           = $androidDeviceOwnerEnrollmentProfile.RoleScopeTagIds
-            TokenExpirationDateTime   = $androidDeviceOwnerEnrollmentProfile.TokenExpirationDateTime.ToString()
-            WifiHidden                = $androidDeviceOwnerEnrollmentProfile.WifiHidden
-            WifiPassword              = $androidDeviceOwnerEnrollmentProfile.WifiPassword
-            WifiSecurityType          = $androidDeviceOwnerEnrollmentProfile.WifiSecurityType.ToString()
-            WifiSsid                  = $androidDeviceOwnerEnrollmentProfile.WifiSsid
-            Ensure                    = 'Present'
-            Credential                = $Credential
-            ApplicationId             = $ApplicationId
-            TenantId                  = $TenantId
-            CertificateThumbprint     = $CertificateThumbprint
-            ManagedIdentity           = $ManagedIdentity.IsPresent
-            AccessTokens              = $AccessTokens
+            Id                      = $androidDeviceOwnerEnrollmentProfile.Id
+            DisplayName             = $androidDeviceOwnerEnrollmentProfile.DisplayName
+            AccountId               = $androidDeviceOwnerEnrollmentProfile.AccountId
+            ConfigureWifi           = $androidDeviceOwnerEnrollmentProfile.ConfigureWifi
+            Description             = $androidDeviceOwnerEnrollmentProfile.Description
+            EnrollmentMode          = $androidDeviceOwnerEnrollmentProfile.EnrollmentMode.ToString()
+            EnrollmentTokenType     = $androidDeviceOwnerEnrollmentProfile.EnrollmentTokenType.ToString()
+            IsTeamsDeviceProfile    = $androidDeviceOwnerEnrollmentProfile.IsTeamsDeviceProfile
+            RoleScopeTagIds         = $androidDeviceOwnerEnrollmentProfile.RoleScopeTagIds
+            TokenExpirationDateTime = $androidDeviceOwnerEnrollmentProfile.TokenExpirationDateTime.ToString()
+            WifiHidden              = $androidDeviceOwnerEnrollmentProfile.WifiHidden
+            WifiPassword            = $androidDeviceOwnerEnrollmentProfile.WifiPassword
+            WifiSecurityType        = $androidDeviceOwnerEnrollmentProfile.WifiSecurityType.ToString()
+            WifiSsid                = $androidDeviceOwnerEnrollmentProfile.WifiSsid
+            Ensure                  = 'Present'
+            Credential              = $Credential
+            ApplicationId           = $ApplicationId
+            TenantId                = $TenantId
+            CertificateThumbprint   = $CertificateThumbprint
+            ManagedIdentity         = $ManagedIdentity.IsPresent
+            AccessTokens            = $AccessTokens
         }
 
         return $results
@@ -212,11 +212,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet( 'corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
+        [ValidateSet('corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
         $EnrollmentMode,
 
         [Parameter()]
-        [ValidateSet( 'default', 'corporateOwnedDedicatedDeviceWithAzureADSharedMode', 'deviceStaging')]
+        [ValidateSet('default', 'corporateOwnedDedicatedDeviceWithAzureADSharedMode', 'deviceStaging')]
         $EnrollmentTokenType,
 
         [Parameter()]
@@ -241,7 +241,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet( 'none', 'wpa', 'wep' )]
+        [ValidateSet('none', 'wpa', 'wep' )]
         $WifiSecurityType,
 
         [Parameter()]
@@ -249,8 +249,8 @@ function Set-TargetResource
         $WifiSsid,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -344,11 +344,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet( 'corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
+        [ValidateSet('corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
         $EnrollmentMode,
 
         [Parameter()]
-        [ValidateSet( 'default', 'corporateOwnedDedicatedDeviceWithAzureADSharedMode', 'deviceStaging')]
+        [ValidateSet('default', 'corporateOwnedDedicatedDeviceWithAzureADSharedMode', 'deviceStaging')]
         $EnrollmentTokenType,
 
         [Parameter()]
@@ -373,7 +373,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet( 'none', 'wpa', 'wep' )]
+        [ValidateSet('none', 'wpa', 'wep' )]
         $WifiSecurityType,
 
         [Parameter()]
@@ -381,8 +381,8 @@ function Test-TargetResource
         $WifiSsid,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Present', 'Absent')]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -420,7 +420,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -430,6 +430,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -477,7 +481,10 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile -ErrorAction Stop
+        # Exclude profiles with Microsoft internal enrollment mode (EnrollmentMode 5) from export
+        # as it cannot be managed. Example is "Default enrollment profile for personally-owned work profile devices"
+        [array] $Script:exportedInstances = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
+            -ErrorAction Stop | Where-Object EnrollmentMode -NE 5
 
         $i = 1
         $dscContent = ''

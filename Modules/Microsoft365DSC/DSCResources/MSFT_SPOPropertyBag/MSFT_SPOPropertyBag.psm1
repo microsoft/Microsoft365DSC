@@ -322,7 +322,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -450,7 +450,7 @@ function Export-TargetResource
                     }
 
                     $Script:exportedInstance = @{
-                        Key = $property.Key
+                        Key   = $property.Key
                         Value = $property.Value
                     }
                     $Results = Get-TargetResource @Params

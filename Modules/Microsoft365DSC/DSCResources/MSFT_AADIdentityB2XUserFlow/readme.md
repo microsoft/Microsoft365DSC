@@ -1,4 +1,3 @@
-
 # AADIdentityB2XUserFlow
 
 ## Description

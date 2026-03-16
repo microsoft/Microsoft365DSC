@@ -19,8 +19,8 @@ function Get-TargetResource
         $Id,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -51,6 +51,8 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting configuration for the Azure AD Identity Governance Program with Id {$Id} and DisplayName {$DisplayName}"
 
     try
     {
@@ -93,7 +95,7 @@ function Get-TargetResource
 
                     if ($null -ne $getValue -and $getValue.Count -gt 1)
                     {
-                        Throw "Multiple AAD Identity Governance Programs with the Displayname $($DisplayName) exist in the tenant."
+                        throw "Multiple AAD Identity Governance Programs with the Displayname $($DisplayName) exist in the tenant."
                     }
                 }
             }
@@ -156,8 +158,8 @@ function Set-TargetResource
         $Id,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -253,8 +255,8 @@ function Test-TargetResource
         $Id,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -296,7 +298,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

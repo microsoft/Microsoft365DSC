@@ -214,57 +214,57 @@ function Get-MgServicePrincipalOwner
         [String]
         $ServicePrincipalId,
 
-   	    [Parameter()]
-		[String[]]
-		$ExpandProperty,
+           [Parameter()]
+        [String[]]
+        $ExpandProperty,
 
-   	    [Parameter()]
-		[String]
-		$Filter,
+           [Parameter()]
+        [String]
+        $Filter,
 
-   	    [Parameter()]
-		[String[]]
-		$Property,
+           [Parameter()]
+        [String[]]
+        $Property,
 
-   	    [Parameter()]
-		[String]
-		$Search,
+           [Parameter()]
+        [String]
+        $Search,
 
-   	    [Parameter()]
-		[Int32]
-		$Skip,
+           [Parameter()]
+        [Int32]
+        $Skip,
 
-   	    [Parameter()]
-		[String[]]
-		$Sort,
+           [Parameter()]
+        [String[]]
+        $Sort,
 
-   	    [Parameter()]
-		[Int32]
-		$Top,
+           [Parameter()]
+        [Int32]
+        $Top,
 
-   	    [Parameter()]
-		[String]
-		$ConsistencyLevel,
+           [Parameter()]
+        [String]
+        $ConsistencyLevel,
 
-   	    [Parameter()]
-		[String]
-		$ResponseHeadersVariable,
+           [Parameter()]
+        [String]
+        $ResponseHeadersVariable,
 
-   	    [Parameter()]
-		[hashtable]
-		$Headers,
+           [Parameter()]
+        [hashtable]
+        $Headers,
 
-   	    [Parameter()]
-		[Int32]
-		$PageSize,
+           [Parameter()]
+        [Int32]
+        $PageSize,
 
         [Parameter()]
         [switch]
         $All,
 
         [Parameter()]
-		[String]
-		$CountVariable
+        [String]
+        $CountVariable
     )
 }
 

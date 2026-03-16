@@ -172,6 +172,14 @@
       "HasCustomComparison": true,
       "Description": "Excludes properties: WindowsMobileRestriction"
     },
+    "IntuneDeviceEnrollmentScopeConfigurationMam": {
+      "HasCustomComparison": true,
+      "Description": "Uses PostProcessing scriptblock"
+    },
+    "IntuneDeviceEnrollmentScopeConfigurationMdm": {
+      "HasCustomComparison": true,
+      "Description": "Uses PostProcessing scriptblock"
+    },
     "IntuneDeviceRemediation": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: IsGlobalScript; Uses PostProcessing scriptblock"

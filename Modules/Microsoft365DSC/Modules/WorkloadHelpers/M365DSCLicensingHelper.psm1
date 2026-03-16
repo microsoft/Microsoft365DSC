@@ -27,11 +27,11 @@ function Invoke-M365DSCLicensingWebRequest
     }
 
     $response = Invoke-WebRequest -Method $Method `
-                                  -Uri $Uri `
-                                  -Headers $headers `
-                                  -Body $bodyValue `
-                                  -ContentType 'application/json' `
-                                  -UseBasicParsing
+        -Uri $Uri `
+        -Headers $headers `
+        -Body $bodyValue `
+        -ContentType 'application/json' `
+        -UseBasicParsing
     $result = ConvertFrom-Json $response.Content
     return $result
 }

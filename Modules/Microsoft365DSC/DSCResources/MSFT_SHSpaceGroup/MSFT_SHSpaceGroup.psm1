@@ -50,29 +50,30 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting SHSpaceGroup configuration for Space: $SpaceName, Group: $GroupName"
 
-    $null = New-M365DSCConnection -Workload 'EngageHub' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
+        $null = New-M365DSCConnection -Workload 'EngageHub' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
         Write-Verbose -Message "Retrieving space by name {$SpaceName}"
-        $spacesUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + "/spaces"
+        $spacesUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + '/spaces'
         $response = Invoke-M365DSCServicesHubWebRequest -Uri $spacesUri -Method GET
-        $space = $response.value | Where-Object -FilterScript {$_.name -eq $SpaceName}
+        $space = $response.value | Where-Object -FilterScript { $_.name -eq $SpaceName }
 
         if ($space.Length -gt 1)
         {
@@ -83,9 +84,9 @@ function Get-TargetResource
             return $nullResult
         }
 
-        $groupsUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + "/spaces/" + $space.spaceId + "/groups"
+        $groupsUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + '/spaces/' + $space.spaceId + '/groups'
         $response = Invoke-M365DSCServicesHubWebRequest -Uri $groupsUri -Method GET
-        $instance = $response.value | Where-Object -FilterScript {$_.groupName -eq $GroupName}
+        $instance = $response.value | Where-Object -FilterScript { $_.groupName -eq $GroupName }
 
         if ($instance.Length -gt 1)
         {
@@ -184,22 +185,21 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     Write-Verbose -Message "Retrieving space by name {$SpaceName}"
-    $spacesUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + "/spaces"
+    $spacesUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + '/spaces'
     $response = Invoke-M365DSCServicesHubWebRequest -Uri $spacesUri -Method GET
-    $space = $response.value | Where-Object -FilterScript {$_.name -eq $SpaceName}
+    $space = $response.value | Where-Object -FilterScript { $_.name -eq $SpaceName }
 
     if ($currentInstance.Ensure -eq 'Present')
     {
-        $groupsUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + "/spaces/" + $space.spaceId + "/groups"
+        $groupsUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + '/spaces/' + $space.spaceId + '/groups'
         $response = Invoke-M365DSCServicesHubWebRequest -Uri $groupsUri -Method GET
-        $group = $response.value | Where-Object -FilterScript {$_.groupName -eq $GroupName}
+        $group = $response.value | Where-Object -FilterScript { $_.groupName -eq $GroupName }
     }
 
     # Retrieve Group ID from Microsoft Graph
-    Write-Verbose -Message "Authenticating to Microsoft Graph"
+    Write-Verbose -Message 'Authenticating to Microsoft Graph'
     $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -227,33 +227,33 @@ function Set-TargetResource
             GroupId     = $groupId
         }
 
-        $uri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + "/spaces/" + $space.spaceId + "/groups"
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + '/spaces/' + $space.spaceId + '/groups'
         Write-Verbose -Message "POST request to {$uri}`r`n$(ConvertTo-Json $body -Depth 5)"
         Invoke-M365DSCServicesHubWebRequest -Uri $uri `
-                                            -Method POST `
-                                            -Body $body
+            -Method POST `
+            -Body $body
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating group {$GroupName} with Roles {$($Roles -join ',')}"
         $body = @{
-            roles = $Roles;
+            roles = $Roles
         }
 
-        $uri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + "/spaces/" + $space.spaceId + "/groups/" + $group.groupId
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + '/spaces/' + $space.spaceId + '/groups/' + $group.groupId
         Write-Verbose -Message "PATCH request to {$uri}`r`n$(ConvertTo-Json $body -Depth 5)"
         Invoke-M365DSCServicesHubWebRequest -Uri $uri `
-                                            -Method PATCH `
-                                            -Body $body
+            -Method PATCH `
+            -Body $body
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing group {$GroupName}"
-        $uri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + "/spaces/" + $space.spaceId + "/groups/" + $group.groupId
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + '/spaces/' + $space.spaceId + '/groups/' + $group.groupId
         Invoke-M365DSCServicesHubWebRequest -Uri $uri `
-                                            -Method DELETE
+            -Method DELETE
     }
 }
 
@@ -315,7 +315,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -373,7 +373,7 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
 
-        $spacesUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + "/spaces"
+        $spacesUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + '/spaces'
         $response = Invoke-M365DSCServicesHubWebRequest -Uri $spacesUri -Method GET
         $spaces = $response.value
 
@@ -393,7 +393,7 @@ function Export-TargetResource
             $displayedKey = $space.name
             Write-M365DSCHost -Message "    |---[$j/$($spaces.Count)] $displayedKey" -DeferWrite
 
-            $groupsUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + "/spaces/" + $space.spaceId + "/groups"
+            $groupsUri = (Get-MSCloudLoginConnectionProfile -Workload EngageHub).APIUrl + '/spaces/' + $space.spaceId + '/groups'
             $response = Invoke-M365DSCServicesHubWebRequest -Uri $groupsUri -Method GET
             $groups = $response.value
 

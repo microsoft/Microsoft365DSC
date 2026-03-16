@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
 
 ## Description

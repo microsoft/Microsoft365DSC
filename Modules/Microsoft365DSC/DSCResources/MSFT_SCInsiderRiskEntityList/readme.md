@@ -1,4 +1,3 @@
-
 # SCInsiderRiskEntityList
 
 ## Description

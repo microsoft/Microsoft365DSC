@@ -161,8 +161,8 @@ function Get-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -280,11 +280,11 @@ function Get-TargetResource
         foreach ($actionConfiguration in $devicePolicy.ScheduledActionsForRule.ScheduledActionConfigurations)
         {
             $scheduledAction = [ordered]@{
-                ActionType    = [string]$actionConfiguration.ActionType
+                ActionType       = [string]$actionConfiguration.ActionType
                 GracePeriodHours = $actionConfiguration.GracePeriodHours
             }
             if ($null -ne $actionConfiguration.NotificationMessageCCList -and `
-                $actionConfiguration.NotificationMessageCCList.Count -gt 0)
+                    $actionConfiguration.NotificationMessageCCList.Count -gt 0)
             {
                 $groups = @()
                 foreach ($group in $actionConfiguration.NotificationMessageCCList)
@@ -294,7 +294,7 @@ function Get-TargetResource
                 $scheduledAction.Add('NotificationMessageCCList', $groups)
             }
             if ($null -ne $actionConfiguration.NotificationTemplateId -and `
-                $actionConfiguration.NotificationTemplateId -ne '00000000-0000-0000-0000-000000000000')
+                    $actionConfiguration.NotificationTemplateId -ne '00000000-0000-0000-0000-000000000000')
             {
                 $notificationTemplate = Get-MgBetaDeviceManagementNotificationMessageTemplate `
                     -NotificationMessageTemplateId $actionConfiguration.NotificationTemplateId `
@@ -538,8 +538,8 @@ function Set-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -616,14 +616,14 @@ function Set-TargetResource
     }
     $complexScheduledActionsForRule = @(
         @{
-            ruleName      = "PasswordRequired"
+            ruleName                      = 'PasswordRequired'
             scheduledActionConfigurations = @()
         }
     )
     foreach ($scheduledAction in $BoundParameters.ScheduledActionsForRule)
     {
         $actionConfiguration = @{
-            actionType = $scheduledAction.ActionType
+            actionType       = $scheduledAction.ActionType
             gracePeriodHours = $scheduledAction.GracePeriodHours
         }
 
@@ -871,8 +871,8 @@ function Test-TargetResource
         $Assignments,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -914,7 +914,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

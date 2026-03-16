@@ -1,4 +1,3 @@
-
 # IntuneWifiConfigurationPolicyIOS
 
 ## Description

@@ -1,3 +1,5 @@
+# Cloning Tenants
+
 This feature of Microsoft365DSC is not a true standalone feature. It is a combination of existing features to unlock a new scenario for users.
 
 ## Clone = Export/Deploy
@@ -19,7 +21,7 @@ Let's assume you are trying to clone the configuration of Tenant A onto Tenant B
 
 **IMPORTANT:** The specified credential should **NOT** have Multi-Factor Authentication enabled!!
 
-```PowerShell
+```powershell
 Install-Module Microsoft365Dsc
 
 Update-M365DSCDependencies
@@ -37,7 +39,7 @@ Then open the M365TenantConfig.ps1 file and replace all instances of tenant spec
 
 > **NOTE:** Our goal is to save all tenant specific information to just the ConfigurationData.psd1 file during export. Unfortunately, at the moment there are a couple of instances where this isn't implemented consistently and tenant specific information is also written in the M365TenantConfig.ps1 file.
 
-```PowerShell
+```powershell
 $TargetCredential = Get-Credential
 
 Update-M365DSCAllowedGraphScopes -ResourceNameList @("AADGroupsNamingPolicy") -Type Update

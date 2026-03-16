@@ -243,7 +243,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -300,7 +300,7 @@ function Export-TargetResource
     try
     {
         [array]$getValue = Get-MgUser -Filter "userType eq 'member'" -All -ErrorAction Stop | Where-Object -FilterScript {
-            $null -ne $_.Id -and $_.UserPrincipalName -notlike "*#EXT#*"
+            $null -ne $_.Id -and $_.UserPrincipalName -notlike '*#EXT#*'
         }
 
         $i = 1

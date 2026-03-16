@@ -1,4 +1,3 @@
-
 # AADAuthenticationMethodPolicyQRCodeImage
 
 ## Description

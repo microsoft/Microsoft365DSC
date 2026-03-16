@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationSecureAssessmentPolicyWindows10
 
 ## Description

@@ -994,8 +994,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -1062,7 +1062,7 @@ function Get-TargetResource
             {
                 Write-Verbose -Message "Could not find an Intune Device Configuration Endpoint Protection Policy for Windows10 with Id {$Id}"
 
-                if (-Not [string]::IsNullOrEmpty($DisplayName))
+                if (-not [string]::IsNullOrEmpty($DisplayName))
                 {
                     $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                         -All `
@@ -3665,8 +3665,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -4801,8 +4801,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -4844,7 +4844,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -4970,7 +4970,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphbitLockerFixedDrivePolicy' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.BitLockerFixedDrivePolicy = $complexTypeStringResult
                 }
@@ -4984,7 +4984,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.BitLockerRemovableDrivePolicy `
                     -CIMInstanceName 'MicrosoftGraphbitLockerRemovableDrivePolicy'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.BitLockerRemovableDrivePolicy = $complexTypeStringResult
                 }
@@ -5012,7 +5012,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphbitLockerSystemDrivePolicy' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.BitLockerSystemDrivePolicy = $complexTypeStringResult
                 }
@@ -5026,7 +5026,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.DefenderDetectedMalwareActions `
                     -CIMInstanceName 'MicrosoftGraphdefenderDetectedMalwareActions'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.DefenderDetectedMalwareActions = $complexTypeStringResult
                 }
@@ -5040,7 +5040,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.FirewallProfileDomain `
                     -CIMInstanceName 'MicrosoftGraphwindowsFirewallNetworkProfile'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.FirewallProfileDomain = $complexTypeStringResult
                 }
@@ -5054,7 +5054,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.FirewallProfilePrivate `
                     -CIMInstanceName 'MicrosoftGraphwindowsFirewallNetworkProfile'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.FirewallProfilePrivate = $complexTypeStringResult
                 }
@@ -5068,7 +5068,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.FirewallProfilePublic `
                     -CIMInstanceName 'MicrosoftGraphwindowsFirewallNetworkProfile'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.FirewallProfilePublic = $complexTypeStringResult
                 }
@@ -5082,7 +5082,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.FirewallRules `
                     -CIMInstanceName 'MicrosoftGraphwindowsFirewallRule'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.FirewallRules = $complexTypeStringResult
                 }
@@ -5110,7 +5110,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsAccessCredentialManagerAsTrustedCaller = $complexTypeStringResult
                 }
@@ -5138,7 +5138,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsActAsPartOfTheOperatingSystem = $complexTypeStringResult
                 }
@@ -5166,7 +5166,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsAllowAccessFromNetwork = $complexTypeStringResult
                 }
@@ -5194,7 +5194,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsBackupData = $complexTypeStringResult
                 }
@@ -5222,7 +5222,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsBlockAccessFromNetwork = $complexTypeStringResult
                 }
@@ -5250,7 +5250,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsChangeSystemTime = $complexTypeStringResult
                 }
@@ -5278,7 +5278,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsCreateGlobalObjects = $complexTypeStringResult
                 }
@@ -5306,7 +5306,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsCreatePageFile = $complexTypeStringResult
                 }
@@ -5334,7 +5334,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsCreatePermanentSharedObjects = $complexTypeStringResult
                 }
@@ -5362,7 +5362,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsCreateSymbolicLinks = $complexTypeStringResult
                 }
@@ -5390,7 +5390,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsCreateToken = $complexTypeStringResult
                 }
@@ -5418,7 +5418,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsDebugPrograms = $complexTypeStringResult
                 }
@@ -5446,7 +5446,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsDelegation = $complexTypeStringResult
                 }
@@ -5474,7 +5474,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsDenyLocalLogOn = $complexTypeStringResult
                 }
@@ -5502,7 +5502,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsGenerateSecurityAudits = $complexTypeStringResult
                 }
@@ -5530,7 +5530,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsImpersonateClient = $complexTypeStringResult
                 }
@@ -5558,7 +5558,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsIncreaseSchedulingPriority = $complexTypeStringResult
                 }
@@ -5586,7 +5586,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsLoadUnloadDrivers = $complexTypeStringResult
                 }
@@ -5614,7 +5614,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsLocalLogOn = $complexTypeStringResult
                 }
@@ -5642,7 +5642,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsLockMemory = $complexTypeStringResult
                 }
@@ -5670,7 +5670,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsManageAuditingAndSecurityLogs = $complexTypeStringResult
                 }
@@ -5698,7 +5698,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsManageVolumes = $complexTypeStringResult
                 }
@@ -5726,7 +5726,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsModifyFirmwareEnvironment = $complexTypeStringResult
                 }
@@ -5754,7 +5754,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsModifyObjectLabels = $complexTypeStringResult
                 }
@@ -5782,7 +5782,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsProfileSingleProcess = $complexTypeStringResult
                 }
@@ -5810,7 +5810,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsRemoteDesktopServicesLogOn = $complexTypeStringResult
                 }
@@ -5838,7 +5838,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsRemoteShutdown = $complexTypeStringResult
                 }
@@ -5866,7 +5866,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsRestoreData = $complexTypeStringResult
                 }
@@ -5894,7 +5894,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsTakeOwnership = $complexTypeStringResult
                 }
@@ -5921,15 +5921,15 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('BitLockerFixedDrivePolicy', 'BitLockerRemovableDrivePolicy', 'BitLockerSystemDrivePolicy', 'DefenderDetectedMalwareActions',
-                    'FirewallProfileDomain', 'FirewallProfilePrivate', 'FirewallProfilePublic', 'FirewallRules',
-                    'UserRightsAccessCredentialManagerAsTrustedCaller', 'UserRightsActAsPartOfTheOperatingSystem', 'UserRightsAllowAccessFromNetwork',
-                    'UserRightsBackupData', 'UserRightsBlockAccessFromNetwork', 'UserRightsChangeSystemTime', 'UserRightsCreateGlobalObjects',
-                    'UserRightsCreatePageFile', 'UserRightsCreatePermanentSharedObjects', 'UserRightsCreateSymbolicLinks', 'UserRightsCreateToken',
-                    'UserRightsDebugPrograms', 'UserRightsDelegation', 'UserRightsDenyLocalLogOn', 'UserRightsGenerateSecurityAudits',
-                    'UserRightsImpersonateClient', 'UserRightsIncreaseSchedulingPriority', 'UserRightsLoadUnloadDrivers', 'UserRightsLocalLogOn',
-                    'UserRightsLockMemory', 'UserRightsManageAuditingAndSecurityLogs', 'UserRightsManageVolumes', 'UserRightsModifyFirmwareEnvironment',
-                    'UserRightsModifyObjectLabels', 'UserRightsProfileSingleProcess', 'UserRightsRemoteDesktopServicesLogOn', 'UserRightsRemoteShutdown',
-                    'UserRightsRestoreData', 'UserRightsTakeOwnership', 'Assignments')
+                'FirewallProfileDomain', 'FirewallProfilePrivate', 'FirewallProfilePublic', 'FirewallRules',
+                'UserRightsAccessCredentialManagerAsTrustedCaller', 'UserRightsActAsPartOfTheOperatingSystem', 'UserRightsAllowAccessFromNetwork',
+                'UserRightsBackupData', 'UserRightsBlockAccessFromNetwork', 'UserRightsChangeSystemTime', 'UserRightsCreateGlobalObjects',
+                'UserRightsCreatePageFile', 'UserRightsCreatePermanentSharedObjects', 'UserRightsCreateSymbolicLinks', 'UserRightsCreateToken',
+                'UserRightsDebugPrograms', 'UserRightsDelegation', 'UserRightsDenyLocalLogOn', 'UserRightsGenerateSecurityAudits',
+                'UserRightsImpersonateClient', 'UserRightsIncreaseSchedulingPriority', 'UserRightsLoadUnloadDrivers', 'UserRightsLocalLogOn',
+                'UserRightsLockMemory', 'UserRightsManageAuditingAndSecurityLogs', 'UserRightsManageVolumes', 'UserRightsModifyFirmwareEnvironment',
+                'UserRightsModifyObjectLabels', 'UserRightsProfileSingleProcess', 'UserRightsRemoteDesktopServicesLogOn', 'UserRightsRemoteShutdown',
+                'UserRightsRestoreData', 'UserRightsTakeOwnership', 'Assignments')
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

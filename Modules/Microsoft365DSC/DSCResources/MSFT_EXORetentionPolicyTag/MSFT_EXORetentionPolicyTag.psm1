@@ -229,7 +229,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating new retention policy tag {$Identity}"
         $setParameters.Add('Name', $Identity)
-        $setParameters.Remove("Identity") | Out-Null
+        $setParameters.Remove('Identity') | Out-Null
         New-RetentionPolicyTag @SetParameters
     }
     # UPDATE
@@ -325,7 +325,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

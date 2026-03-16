@@ -1,20 +1,20 @@
 Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneMobileAppsLobAppWindows10'
 $Script:FileTypeToPropertyMap = @{
-    Appx = @{
+    Appx       = @{
         ApplicableArchitectures = @('x64')
-        ApplicableDeviceTypes = @('desktop')
+        ApplicableDeviceTypes   = @('desktop')
     }
     AppxBundle = @{
         ApplicableArchitectures = @('x86', 'x64', 'arm')
-        ApplicableDeviceTypes = @('desktop')
+        ApplicableDeviceTypes   = @('desktop')
     }
-    Msix = @{
+    Msix       = @{
         ApplicableArchitectures = @('x64')
-        ApplicableDeviceTypes = @('desktop', 'mobile', 'holographic', 'team')
+        ApplicableDeviceTypes   = @('desktop', 'mobile', 'holographic', 'team')
     }
     MsixBundle = @{
         ApplicableArchitectures = @('x86', 'x64')
-        ApplicableDeviceTypes = @('desktop', 'mobile', 'holographic', 'team')
+        ApplicableDeviceTypes   = @('desktop', 'mobile', 'holographic', 'team')
     }
 }
 
@@ -87,8 +87,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -126,8 +126,7 @@ function Get-TargetResource
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
@@ -202,27 +201,27 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Categories              = $complexCategories
-            FileName                = $getValue.AdditionalProperties.fileName
-            Description             = $getValue.Description
-            Developer               = $getValue.Developer
-            DisplayName             = $getValue.DisplayName
-            InformationUrl          = $getValue.InformationUrl
-            IsFeatured              = $getValue.IsFeatured
-            LargeIcon               = $complexLargeIcon
-            Notes                   = $getValue.Notes
-            Owner                   = $getValue.Owner
-            PrivacyInformationUrl   = $getValue.PrivacyInformationUrl
-            Publisher               = $getValue.Publisher
-            RoleScopeTagIds         = $getValue.RoleScopeTagIds
-            Id                      = $getValue.Id
-            Ensure                  = 'Present'
-            Credential              = $Credential
-            ApplicationId           = $ApplicationId
-            TenantId                = $TenantId
-            ApplicationSecret       = $ApplicationSecret
-            CertificateThumbprint   = $CertificateThumbprint
-            ManagedIdentity         = $ManagedIdentity.IsPresent
+            Categories            = $complexCategories
+            FileName              = $getValue.AdditionalProperties.fileName
+            Description           = $getValue.Description
+            Developer             = $getValue.Developer
+            DisplayName           = $getValue.DisplayName
+            InformationUrl        = $getValue.InformationUrl
+            IsFeatured            = $getValue.IsFeatured
+            LargeIcon             = $complexLargeIcon
+            Notes                 = $getValue.Notes
+            Owner                 = $getValue.Owner
+            PrivacyInformationUrl = $getValue.PrivacyInformationUrl
+            Publisher             = $getValue.Publisher
+            RoleScopeTagIds       = $getValue.RoleScopeTagIds
+            Id                    = $getValue.Id
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
 
@@ -316,8 +315,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -371,11 +370,11 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Mobile Apps Lob App for Windows10 with DisplayName {$DisplayName}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         if (-not $boundParameters.ContainsKey('FileName') -or [System.String]::IsNullOrEmpty($boundParameters.FileName))
         {
-            throw "FileName is required to create an Intune Mobile Apps Lob App for Windows10."
+            throw 'FileName is required to create an Intune Mobile Apps Lob App for Windows10.'
         }
 
         $createParameters = ([Hashtable]$boundParameters).Clone()
@@ -392,14 +391,14 @@ function Set-TargetResource
         }
         #region resource generator code
         $fileExtension = $FileName.Split('.')[-1]
-        $createParameters.Add("@odata.type", "#microsoft.graph.windowsUniversalAppX")
-        $createParameters.Add('applicableArchitectures', $Script:FileTypeToPropertyMap[$fileExtension].ApplicableArchitectures -join ",")
-        $createParameters.Add('applicableDeviceTypes', $Script:FileTypeToPropertyMap[$fileExtension].ApplicableDeviceTypes -join ",")
-        $createParameters.Add('minimumSupportedOperatingSystem', @{v10_0 = $true})
+        $createParameters.Add('@odata.type', '#microsoft.graph.windowsUniversalAppX')
+        $createParameters.Add('applicableArchitectures', $Script:FileTypeToPropertyMap[$fileExtension].ApplicableArchitectures -join ',')
+        $createParameters.Add('applicableDeviceTypes', $Script:FileTypeToPropertyMap[$fileExtension].ApplicableDeviceTypes -join ',')
+        $createParameters.Add('minimumSupportedOperatingSystem', @{v10_0 = $true })
         $createParameters.Add('identityName', 'Sample')
         $createParameters.Add('identityPublisherHash', 'SamplePublisherHash')
         $createParameters.Add('identityVersion', '0.0.1')
-        if ($fileExtension -like "Msix*")
+        if ($fileExtension -like 'Msix*')
         {
             $createParameters.Add('isMsix', $true)
         }
@@ -407,7 +406,7 @@ function Set-TargetResource
         {
             $createParameters.Add('isMsix', $false)
         }
-        if ($fileExtension -like "*Bundle")
+        if ($fileExtension -like '*Bundle')
         {
             $createParameters.Add('isBundle', $true)
         }
@@ -415,9 +414,9 @@ function Set-TargetResource
         {
             $createParameters.Add('isBundle', $false)
         }
-        $policy = Invoke-MgGraphRequest -Method POST -Uri "/beta/deviceAppManagement/mobileApps" -Body ($createParameters | ConvertTo-Json -Depth 10)
+        $policy = Invoke-MgGraphRequest -Method POST -Uri '/beta/deviceAppManagement/mobileApps' -Body ($createParameters | ConvertTo-Json -Depth 10)
 
-        Invoke-M365DSCIntuneMobileAppInitialUpload -AppId $policy.Id -OdataType "#microsoft.graph.windowsUniversalAppX" -FileExtension $fileExtension
+        Invoke-M365DSCIntuneMobileAppInitialUpload -AppId $policy.Id -OdataType '#microsoft.graph.windowsUniversalAppX' -FileExtension $fileExtension
 
         if ($PSBoundParameters.ContainsKey('Categories'))
         {
@@ -436,7 +435,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Mobile Apps Lob App for Windows10 with Id {$($currentInstance.Id)}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
@@ -453,7 +452,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $updateParameters.Add("@odata.type", "#microsoft.graph.windowsUniversalAppX")
+        $updateParameters.Add('@odata.type', '#microsoft.graph.windowsUniversalAppX')
         Invoke-MgGraphRequest -Method PATCH -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)" -Body ($updateParameters | ConvertTo-Json -Depth 10)
 
         if ($PSBoundParameters.ContainsKey('Categories'))
@@ -545,8 +544,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -588,7 +587,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -735,9 +734,9 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'AssignmentSettings'
+                        Name            = 'AssignmentSettings'
                         CIMInstanceName = 'DeviceManagementAppxMobileAppAssignmentSettings'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `

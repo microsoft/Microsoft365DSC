@@ -36,14 +36,14 @@ function New-M365DSCSchemaDefinition
 
                 foreach ($propertyMatch in $propertyMatches)
                 {
-                    $propertyKeyOrWrite = $propertyMatch.Groups["propertykeyorwrite"].Value
-                    $propertyDescription = $propertyMatch.Groups["description"].Value
-                    $embeddedInstanceType = $propertyMatch.Groups["embeddedinstancetype"].Value
-                    $propertyType = $propertyMatch.Groups["propertytype"].Value
-                    $propertyName = $propertyMatch.Groups["propertyname"].Value
-                    $isArray = $propertyMatch.Groups["isarray"].Success
-                    $valueMap = $propertyMatch.Groups["valuemap"].Value
-                    $values = $propertyMatch.Groups["values"].Value
+                    $propertyKeyOrWrite = $propertyMatch.Groups['propertykeyorwrite'].Value
+                    $propertyDescription = $propertyMatch.Groups['description'].Value
+                    $embeddedInstanceType = $propertyMatch.Groups['embeddedinstancetype'].Value
+                    $propertyType = $propertyMatch.Groups['propertytype'].Value
+                    $propertyName = $propertyMatch.Groups['propertyname'].Value
+                    $isArray = $propertyMatch.Groups['isarray'].Success
+                    $valueMap = $propertyMatch.Groups['valuemap'].Value
+                    $values = $propertyMatch.Groups['values'].Value
 
                     if ($embeddedInstanceType)
                     {
@@ -85,8 +85,8 @@ function New-M365DSCSchemaDefinition
                 }
 
                 $classInfoList += [ordered] @{
-                    ClassName  = $className
-                    Parameters = $propertyInfoList
+                    ClassName   = $className
+                    Parameters  = $propertyInfoList
                     Description = $resourceDescription
                 }
             }

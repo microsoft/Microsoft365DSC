@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationKioskPolicyWindows10
 
 ## Description

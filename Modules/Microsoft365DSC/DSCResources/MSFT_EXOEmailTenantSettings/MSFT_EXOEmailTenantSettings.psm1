@@ -7,8 +7,8 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -91,7 +91,7 @@ function Get-TargetResource
             $EmailTenantSettings = Get-EmailTenantSettings -ErrorAction SilentlyContinue
             if ($null -eq $EmailTenantSettings)
             {
-                Write-Verbose -Message "Failed to find Email Tenant Settings"
+                Write-Verbose -Message 'Failed to find Email Tenant Settings'
                 return $nullReturn
             }
         }
@@ -139,8 +139,8 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -237,8 +237,8 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -304,7 +304,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -373,7 +373,7 @@ function Export-TargetResource
         $dscContent = ''
         Write-M365DSCHost -Message "`r`n" -DeferWrite
 
-        Write-M365DSCHost -Message  "    |---[1/1] $($EmailTenantSettings.Identity)" -DeferWrite
+        Write-M365DSCHost -Message "    |---[1/1] $($EmailTenantSettings.Identity)" -DeferWrite
 
         $Params = @{
             IsSingleInstance      = 'Yes'

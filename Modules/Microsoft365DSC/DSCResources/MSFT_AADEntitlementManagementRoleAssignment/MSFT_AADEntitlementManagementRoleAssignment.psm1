@@ -29,8 +29,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -106,7 +106,7 @@ function Get-TargetResource
                 {
                     [array]$Script:AllRoleDefinitions = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -All
                     $Script:AllRoleDefinitions += @{
-                        Id = 'e65cf63f-9cc2-4b48-8871-cb667e9d90fb'
+                        Id          = 'e65cf63f-9cc2-4b48-8871-cb667e9d90fb'
                         DisplayName = 'Connected organization administrator'
                     }
                 }
@@ -114,7 +114,7 @@ function Get-TargetResource
                 Write-Verbose -Message "Getting role assignment for Principal {$Principal}"
                 $getValue = $Script:AllRoleAssignments | Where-Object {
                     ($_.Principal.AdditionalProperties.displayName -eq $Principal -or $_.Principal.AdditionalProperties.userPrincipalName -eq $Principal -or $_.Principal.Id -eq $Principal) `
-                     -and ($_.RoleDefinitionId -eq $($Script:AllRoleDefinitions | Where-Object { $_.DisplayName -eq $RoleDefinition }).Id)
+                        -and ($_.RoleDefinitionId -eq $($Script:AllRoleDefinitions | Where-Object { $_.DisplayName -eq $RoleDefinition }).Id)
                 }
             }
         }
@@ -206,8 +206,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -258,19 +258,19 @@ function Set-TargetResource
 
     $batchRequests = @(
         @{
-            id = 'user'
+            id     = 'user'
             method = 'GET'
-            url = "/users/$($Principal)&`$select=id,userPrincipalName,displayName"
+            url    = "/users/$($Principal)&`$select=id,userPrincipalName,displayName"
         }
         @{
-            id = 'group'
+            id     = 'group'
             method = 'GET'
-            url = "/groups?`$filter=displayName eq '$($Principal -replace "'", "''")'&`$select=id,displayName"
+            url    = "/groups?`$filter=displayName eq '$($Principal -replace "'", "''")'&`$select=id,displayName"
         }
         @{
-            id = 'servicePrincipal'
+            id     = 'servicePrincipal'
             method = 'GET'
-            url = "/servicePrincipals?`$filter=displayName eq '$($Principal -replace "'", "''")'&`$select=id,displayName"
+            url    = "/servicePrincipals?`$filter=displayName eq '$($Principal -replace "'", "''")'&`$select=id,displayName"
         }
     )
     $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests
@@ -286,7 +286,6 @@ function Set-TargetResource
     }
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-    $userInfo = Get-MgUser -UserId $Principal
 
     $roleInfo = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -Filter "DisplayName eq '$($RoleDefinition -replace "'", "''")'"
     $setParameters.Add('PrincipalId', $objectId)
@@ -338,8 +337,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -381,7 +380,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -391,6 +390,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -437,11 +440,11 @@ function Export-TargetResource
 
     try
     {
-
         #region resource generator code
         [array]$getValue = Get-MgBetaRoleManagementEntitlementManagementRoleAssignment `
-            -ExpandProperty 'Principal' `
             -All `
+            -ExpandProperty 'Principal' `
+            -Filter $Filter `
             -ErrorAction Stop
 
         #endregion
@@ -466,7 +469,7 @@ function Export-TargetResource
             {
                 [array]$Script:AllRoleDefinitions = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -All
                 $Script:AllRoleDefinitions += @{
-                    Id = 'e65cf63f-9cc2-4b48-8871-cb667e9d90fb'
+                    Id          = 'e65cf63f-9cc2-4b48-8871-cb667e9d90fb'
                     DisplayName = 'Connected organization administrator'
                 }
             }

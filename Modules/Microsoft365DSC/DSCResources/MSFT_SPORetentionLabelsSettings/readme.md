@@ -1,4 +1,3 @@
-
 # SPORetentionLabelsSettings
 
 ## Description

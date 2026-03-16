@@ -1,4 +1,3 @@
-
 # IntuneSecurityBaselineHoloLens2Standard
 
 ## Description

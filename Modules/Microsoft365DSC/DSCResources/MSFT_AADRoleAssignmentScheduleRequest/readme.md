@@ -1,4 +1,3 @@
-
 # AADRoleAssignmentScheduleRequest
 
 ## Description

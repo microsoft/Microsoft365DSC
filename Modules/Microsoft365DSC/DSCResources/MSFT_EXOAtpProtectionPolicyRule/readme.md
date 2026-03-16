@@ -1,4 +1,3 @@
-
 # EXOATPProtectionPolicyRule
 
 ## Description

@@ -1,4 +1,3 @@
-
 # IntuneDeviceCategory
 
 ## Description

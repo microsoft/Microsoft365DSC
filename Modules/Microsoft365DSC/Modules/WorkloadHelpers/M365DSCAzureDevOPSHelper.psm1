@@ -21,7 +21,7 @@ function Invoke-M365DSCAzureDevOPSWebRequest
     )
 
     $headers = @{
-        Authorization = (Get-MSCloudLoginConnectionProfile -Workload AzureDevOPS).AccessToken
+        Authorization  = (Get-MSCloudLoginConnectionProfile -Workload AzureDevOPS).AccessToken
         'Content-Type' = $ContentType
     }
 

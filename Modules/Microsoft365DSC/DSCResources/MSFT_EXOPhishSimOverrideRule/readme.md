@@ -1,4 +1,3 @@
-
 # EXOPhishSimOverrideRule
 
 ## Description

@@ -20,7 +20,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [validateset('Public', 'HiddenMembership')]
+        [ValidateSet('Public', 'HiddenMembership')]
         [System.String]
         $Visibility,
 
@@ -29,7 +29,7 @@ function Get-TargetResource
         $IsMemberManagementRestricted,
 
         [Parameter()]
-        [validateset('Assigned', 'Dynamic')]
+        [ValidateSet('Assigned', 'Dynamic')]
         [System.String]
         $MembershipType,
 
@@ -38,7 +38,7 @@ function Get-TargetResource
         $MembershipRule,
 
         [Parameter()]
-        [validateset('Paused', 'On')]
+        [ValidateSet('Paused', 'On')]
         [System.String]
         $MembershipRuleProcessingState,
 
@@ -52,8 +52,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -119,7 +119,7 @@ function Get-TargetResource
             if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($DisplayName))
             {
                 Write-Verbose -Message "Could not find an Azure AD Administrative Unit by Id, trying by DisplayName {$DisplayName}"
-                if (-Not [string]::IsNullOrEmpty($DisplayName))
+                if (-not [string]::IsNullOrEmpty($DisplayName))
                 {
                     $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction Stop
                 }
@@ -214,10 +214,10 @@ function Get-TargetResource
         foreach ($auScopedRoleMemberId in ($auScopedRoleMembers.RoleMemberInfo.Id | Select-Object -Unique))
         {
             $scopedRoleMemberRequests.Add(@{
-                id = $auScopedRoleMemberId
-                method = 'GET'
-                url = "/directoryObjects/$($auScopedRoleMemberId)?`$select=id"
-            })
+                    id     = $auScopedRoleMemberId
+                    method = 'GET'
+                    url    = "/directoryObjects/$($auScopedRoleMemberId)?`$select=id"
+                })
         }
         if ($null -eq $Script:DirectoryRoles)
         {
@@ -305,7 +305,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [validateset('Public', 'HiddenMembership')]
+        [ValidateSet('Public', 'HiddenMembership')]
         [System.String]
         $Visibility,
 
@@ -314,7 +314,7 @@ function Set-TargetResource
         $IsMemberManagementRestricted,
 
         [Parameter()]
-        [validateset('Assigned', 'Dynamic')]
+        [ValidateSet('Assigned', 'Dynamic')]
         [System.String]
         $MembershipType,
 
@@ -323,7 +323,7 @@ function Set-TargetResource
         $MembershipRule,
 
         [Parameter()]
-        [validateset('Paused', 'On')]
+        [ValidateSet('Paused', 'On')]
         [System.String]
         $MembershipRuleProcessingState,
 
@@ -337,8 +337,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -805,7 +805,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [validateset('Public', 'HiddenMembership')]
+        [ValidateSet('Public', 'HiddenMembership')]
         [System.String]
         $Visibility,
 
@@ -814,7 +814,7 @@ function Test-TargetResource
         $IsMemberManagementRestricted,
 
         [Parameter()]
-        [validateset('Assigned', 'Dynamic')]
+        [ValidateSet('Assigned', 'Dynamic')]
         [System.String]
         $MembershipType,
 
@@ -823,7 +823,7 @@ function Test-TargetResource
         $MembershipRule,
 
         [Parameter()]
-        [validateset('Paused', 'On')]
+        [ValidateSet('Paused', 'On')]
         [System.String]
         $MembershipRuleProcessingState,
 
@@ -837,8 +837,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -881,8 +881,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

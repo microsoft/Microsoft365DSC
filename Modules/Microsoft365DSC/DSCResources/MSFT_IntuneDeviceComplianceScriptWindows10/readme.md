@@ -1,4 +1,3 @@
-
 # IntuneDeviceComplianceScriptWindows10
 
 ## Description

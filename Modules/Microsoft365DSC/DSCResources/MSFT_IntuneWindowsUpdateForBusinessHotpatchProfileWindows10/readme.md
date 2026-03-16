@@ -1,4 +1,3 @@
-
 # IntuneWindowsUpdateForBusinessHotpatchProfileWindows10
 
 ## Description

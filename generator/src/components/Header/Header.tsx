@@ -44,23 +44,23 @@ const HeaderComponent: React.FunctionComponent<IHeaderProps> = (props: IHeaderPr
     <Stack horizontal verticalAlign="center" grow={0} styles={headerStackStyles} className={headerStyles}>
       <Stack horizontal grow={1} verticalAlign="center">
         <a
-          href={process.env.REACT_APP_ROOT_SITE_URL}
-          title={process.env.REACT_APP_ROOT_SITE_NAME}
-          aria-label={process.env.REACT_APP_ROOT_SITE_NAME}
+          href={import.meta.env.VITE_ROOT_SITE_URL}
+          title={import.meta.env.VITE_ROOT_SITE_NAME}
+          aria-label={import.meta.env.VITE_ROOT_SITE_NAME}
           className={microsoftLogo}
           target="_blank"
           rel="noreferrer"
         >
-          <img src="/img/Microsoft365DSC.png" alt={process.env.REACT_APP_SITE_NAME} className={microsoftLogo} />
+          <img src="/img/Microsoft365DSC.png" alt={import.meta.env.VITE_SITE_NAME} className={microsoftLogo} />
         </a>
         |
         <Link
           href={'#Home'}
-          title={process.env.REACT_APP_SITE_NAME}
-          aria-label={process.env.REACT_APP_SITE_NAME}
+          title={import.meta.env.VITE_SITE_NAME}
+          aria-label={import.meta.env.VITE_SITE_NAME}
           styles={pipeFabricStyles}
         >
-          {process.env.REACT_APP_SITE_DESCRIPTION}
+          {import.meta.env.VITE_SITE_DESCRIPTION}
         </Link>
       </Stack>
       <PrimaryButton text="Generate" onClick={props.onGenerate} />

@@ -83,8 +83,8 @@ function Get-TargetResource
 
     try
     {
-         if (-not $Script:exportedInstance -or $Script:exportedInstance.Action -ne $Action)
-         {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Action -ne $Action)
+        {
             $null = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
                 -InboundParameters $PSBoundParameters
 
@@ -487,7 +487,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

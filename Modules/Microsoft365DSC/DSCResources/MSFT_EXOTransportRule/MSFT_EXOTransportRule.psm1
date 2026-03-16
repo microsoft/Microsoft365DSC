@@ -1723,7 +1723,7 @@ function Set-TargetResource
         {
             if (-not $SetTransportRuleParams.ContainsKey('HeaderContainsMessageHeader'))
             {
-                $SetTransportRuleParams.Add("HeaderContainsMessageHeader", $null)
+                $SetTransportRuleParams.Add('HeaderContainsMessageHeader', $null)
             }
             else
             {
@@ -1732,7 +1732,7 @@ function Set-TargetResource
 
             if (-not $SetTransportRuleParams.ContainsKey('HeaderContainsWords'))
             {
-                $SetTransportRuleParams.Add("HeaderContainsWords", @())
+                $SetTransportRuleParams.Add('HeaderContainsWords', @())
             }
             else
             {
@@ -1749,7 +1749,7 @@ function Set-TargetResource
 
             if (-not $SetTransportRuleParams.ContainsKey('HeaderMatchesMessageHeader'))
             {
-                $SetTransportRuleParams.Add("HeaderMatchesMessageHeader", $null)
+                $SetTransportRuleParams.Add('HeaderMatchesMessageHeader', $null)
             }
             else
             {
@@ -1758,7 +1758,7 @@ function Set-TargetResource
 
             if (-not $SetTransportRuleParams.ContainsKey('HeaderMatchesPatterns'))
             {
-                $SetTransportRuleParams.Add("HeaderMatchesPatterns", @())
+                $SetTransportRuleParams.Add('HeaderMatchesPatterns', @())
             }
             else
             {
@@ -1769,7 +1769,7 @@ function Set-TargetResource
         {
             if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderContainsMessageHeader'))
             {
-                $SetTransportRuleParams.Add("ExceptIfHeaderContainsMessageHeader", $null)
+                $SetTransportRuleParams.Add('ExceptIfHeaderContainsMessageHeader', $null)
             }
             else
             {
@@ -1778,7 +1778,7 @@ function Set-TargetResource
 
             if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderContainsWords'))
             {
-                $SetTransportRuleParams.Add("ExceptIfHeaderContainsWords", @())
+                $SetTransportRuleParams.Add('ExceptIfHeaderContainsWords', @())
             }
             else
             {
@@ -1789,7 +1789,7 @@ function Set-TargetResource
         {
             if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderMatchesMessageHeader'))
             {
-                $SetTransportRuleParams.Add("ExceptIfHeaderMatchesMessageHeader", $null)
+                $SetTransportRuleParams.Add('ExceptIfHeaderMatchesMessageHeader', $null)
             }
             else
             {
@@ -1798,7 +1798,7 @@ function Set-TargetResource
 
             if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderMatchesPatterns'))
             {
-                $SetTransportRuleParams.Add("ExceptIfHeaderMatchesPatterns", @())
+                $SetTransportRuleParams.Add('ExceptIfHeaderMatchesPatterns', @())
             }
             else
             {
@@ -2548,7 +2548,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

@@ -254,7 +254,14 @@ function Get-TargetResource
                 $currentPolicy = $currentPolicy.Split(':')[1]
             }
 
-            $useB2BInvitesToAddExternalUsersValue = if ($policy.UseB2BInvitesToAddExternalUsers) { 'Enabled' } else { 'Disabled' }
+            if ($policy.UseB2BInvitesToAddExternalUsers)
+            {
+                $useB2BInvitesToAddExternalUsersValue = 'Enabled'
+            }
+            else
+            {
+                $useB2BInvitesToAddExternalUsersValue = 'Disabled'
+            }
             return @{
                 Identity                                      = $currentPolicy
                 AllowChatWithGroup                            = $policy.AllowChatWithGroup
@@ -547,7 +554,14 @@ function Set-TargetResource
     # TODO: Review during next breaking change for updated documentation - Refactor if necessary
     if ($SetParams.ContainsKey('UseB2BInvitesToAddExternalUsers'))
     {
-        $SetParams.UseB2BInvitesToAddExternalUsers = if ($UseB2BInvitesToAddExternalUsers -eq 'Enabled') { $true } else { $false }
+        if ($UseB2BInvitesToAddExternalUsers -eq 'Enabled')
+        {
+           $SetParams.UseB2BInvitesToAddExternalUsers = $true
+        }
+        else
+        {
+            $SetParams.UseB2BInvitesToAddExternalUsers = $false
+        }
     }
 
     if ($curPolicy.Ensure -eq 'Absent' -and 'Present' -eq $Ensure )
@@ -783,7 +797,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -793,6 +807,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter = "*",
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -836,7 +854,7 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array]$policies = Get-CsTeamsMessagingPolicy -ErrorAction Stop
+        [array]$policies = Get-CsTeamsMessagingPolicy -Filter $Filter -ErrorAction Stop
         $dscContent = ''
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($policy in $policies)

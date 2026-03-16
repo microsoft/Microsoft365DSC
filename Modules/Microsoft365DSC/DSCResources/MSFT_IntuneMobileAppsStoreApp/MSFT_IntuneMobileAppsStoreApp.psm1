@@ -88,8 +88,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -276,7 +276,7 @@ function Get-TargetResource
         {
             if ($null -ne $assignment.assignmentSettings -and $null -ne $assignment.assignmentSettings.vpnConfigurationId)
             {
-                $vpnConfiguration = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $assignment.assignmentSettings.vpnConfigurationId -Property "DisplayName" -ErrorAction SilentlyContinue
+                $vpnConfiguration = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $assignment.assignmentSettings.vpnConfigurationId -Property 'DisplayName' -ErrorAction SilentlyContinue
                 if ($null -ne $vpnConfiguration)
                 {
                     $assignment.assignmentSettings.vpnConfigurationId = $vpnConfiguration.DisplayName
@@ -384,8 +384,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -421,12 +421,12 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey('ApplicableDeviceType') -and $PSBoundParameters.TargetPlatform -ne 'iOS')
     {
-        throw "ApplicableDeviceType is only applicable for iOS Store Apps."
+        throw 'ApplicableDeviceType is only applicable for iOS Store Apps.'
     }
 
     if ($PSBoundParameters.ContainsKey('BundleId') -and $PSBoundParameters.TargetPlatform -ne 'iOS')
     {
-        throw "BundleId is only applicable for iOS Store Apps."
+        throw 'BundleId is only applicable for iOS Store Apps.'
     }
 
     if ($PSBoundParameters.ContainsKey('MinimumSupportedOperatingSystem'))
@@ -466,7 +466,7 @@ function Set-TargetResource
             if (-not [System.Guid]::TryParse($assignment.assignmentSettings.vpnConfigurationId, [ref]$guid))
             {
                 $vpnConfiguration = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "displayName eq '$($assignment.assignmentSettings.vpnConfigurationId)'" | Where-Object -FilterScript {
-                    $_.AdditionalProperties.'@odata.type' -like "#microsoft.graph.*VpnConfiguration"
+                    $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.*VpnConfiguration'
                 }
                 if ($null -eq $vpnConfiguration)
                 {
@@ -484,7 +484,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Mobile Apps Store App with DisplayName {$DisplayName}"
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $createParameters = ([Hashtable]$boundParameters).Clone()
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
@@ -499,8 +499,8 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $createParameters.Add("@odata.type", "#microsoft.graph.$($TargetPlatform)StoreApp")
-        $policy = Invoke-MgGraphRequest -Method POST -Uri "/beta/deviceAppManagement/mobileApps" -Body ($createParameters | ConvertTo-Json -Depth 10)
+        $createParameters.Add('@odata.type', "#microsoft.graph.$($TargetPlatform)StoreApp")
+        $policy = Invoke-MgGraphRequest -Method POST -Uri '/beta/deviceAppManagement/mobileApps' -Body ($createParameters | ConvertTo-Json -Depth 10)
 
         if ($PSBoundParameters.ContainsKey('Categories'))
         {
@@ -520,7 +520,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the Intune Mobile Apps Store App with Id {$($currentInstance.Id)}"
         $boundParameters.Remove('AppStoreUrl') | Out-Null
-        $boundParameters.Remove("Assignments") | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
@@ -537,7 +537,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $updateParameters.Add("@odata.type", "#microsoft.graph.$($TargetPlatform)StoreApp")
+        $updateParameters.Add('@odata.type', "#microsoft.graph.$($TargetPlatform)StoreApp")
         Invoke-MgGraphRequest -Method PATCH -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)" -Body ($updateParameters | ConvertTo-Json -Depth 10)
 
         if ($PSBoundParameters.ContainsKey('Categories'))
@@ -646,8 +646,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -681,12 +681,12 @@ function Test-TargetResource
 
     if ($PSBoundParameters.ContainsKey('ApplicableDeviceType') -and $PSBoundParameters.TargetPlatform -ne 'iOS')
     {
-        throw "ApplicableDeviceType is only applicable for iOS Store Apps."
+        throw 'ApplicableDeviceType is only applicable for iOS Store Apps.'
     }
 
     if ($PSBoundParameters.ContainsKey('BundleId') -and $PSBoundParameters.TargetPlatform -ne 'iOS')
     {
-        throw "BundleId is only applicable for iOS Store Apps."
+        throw 'BundleId is only applicable for iOS Store Apps.'
     }
 
     if ($PSBoundParameters.ContainsKey('MinimumSupportedOperatingSystem'))
@@ -715,8 +715,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -892,9 +892,9 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'AssignmentSettings'
+                        Name            = 'AssignmentSettings'
                         CIMInstanceName = 'DeviceManagementStoreMobileAppAssignmentSettings'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `

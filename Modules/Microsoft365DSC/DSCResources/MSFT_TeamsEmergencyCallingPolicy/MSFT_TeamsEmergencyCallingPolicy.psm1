@@ -117,7 +117,7 @@ function Get-TargetResource
             }
             if ($null -ne $notification.NotificationGroup)
             {
-                $complexExtendedNotification.Add('NotificationGroup', $notification.NotificationGroup.Split(";"))
+                $complexExtendedNotification.Add('NotificationGroup', $notification.NotificationGroup.Split(';'))
             }
             if ($null -ne $notification.NotificationDialOutNumber)
             {
@@ -130,13 +130,19 @@ function Get-TargetResource
             $complexExtendedNotifications += $complexExtendedNotification
         }
 
+        $externalLocationLookupModeValue = $null
+        if ($null -ne $policy.ExternalLocationLookupMode)
+        {
+            $externalLocationLookupModeValue = $policy.ExternalLocationLookupMode.ToString()
+        }
+
         Write-Verbose -Message "Found Teams Emergency Calling Policy {$Identity}"
         $result = @{
             Identity                           = $Identity
             Description                        = $policy.Description
             EnhancedEmergencyServiceDisclaimer = $policy.EnhancedEmergencyServiceDisclaimer
             ExtendedNotifications              = $complexExtendedNotifications
-            ExternalLocationLookupMode         = $policy.ExternalLocationLookupMode
+            ExternalLocationLookupMode         = $externalLocationLookupModeValue
             NotificationDialOutNumber          = $policy.NotificationDialOutNumber
             NotificationGroup                  = $policy.NotificationGroup
             NotificationMode                   = [String]$policy.NotificationMode
@@ -278,7 +284,7 @@ function Set-TargetResource
             $SetParameters.ExtendedNotifications = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $SetParameters.ExtendedNotifications
             for ($i = 0; $i -lt $SetParameters.ExtendedNotifications.Count; $i++)
             {
-                $SetParameters.ExtendedNotifications[$i].NotificationGroup -join ";"
+                $SetParameters.ExtendedNotifications[$i].NotificationGroup -join ';'
             }
         }
     }
@@ -383,7 +389,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -393,6 +399,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter = "*",
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -436,7 +446,7 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array]$policies = Get-CsTeamsEmergencyCallingPolicy -ErrorAction Stop
+        [array]$policies = Get-CsTeamsEmergencyCallingPolicy -Filter $Filter -ErrorAction Stop
         $dscContent = ''
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($policy in $policies)

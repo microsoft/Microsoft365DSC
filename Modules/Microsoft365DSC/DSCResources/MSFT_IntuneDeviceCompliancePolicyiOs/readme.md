@@ -1,4 +1,3 @@
-
 # IntuneDeviceCompliancePolicyiOs
 
 ## Description

@@ -547,7 +547,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -607,7 +607,7 @@ function Export-TargetResource
     try
     {
         [array]$places = Get-Place -ResultSize 'Unlimited' -ErrorAction Stop | `
-            Where-Object -FilterScript { $_.PlaceType -ne 'RoomList'}
+                Where-Object -FilterScript { $_.PlaceType -ne 'RoomList' }
         $dscContent = ''
 
         if ($places.Length -eq 0)

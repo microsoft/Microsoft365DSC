@@ -1,4 +1,3 @@
-
 # SentinelSetting
 
 ## Description

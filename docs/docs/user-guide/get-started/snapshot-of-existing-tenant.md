@@ -1,5 +1,7 @@
+# Snapshot of an Existing Tenant
+
 The first thing that most folks using Microsoft365DSC will want to do is take a snapshot of an existing tenant they have access to and are familiar with.
-As soon as you install the Microsoft365DSC module on a system, it will automatically get access to run the <a href="../../cmdlets/Export-M365DSCConfiguration/" target="_blank">Export-M365DSCConfiguration</a> PowerShell cmdlet which is the main command for initiating a snapshot of an existing configuration.
+As soon as you install the Microsoft365DSC module on a system, it will automatically get access to run the [Export-M365DSCConfiguration](../cmdlets/Export-M365DSCConfiguration.md) PowerShell cmdlet which is the main command for initiating a snapshot of an existing configuration.
 
 In previous versions of the module, simply running the above cmdlet would automatically launch a Graphical User Interface that would allow you to pick and choose the components you wanted to capture the configuration for as part of your snapshot and initiate the capture process. Current versions of the module have moved to an unattended process by default, meaning that running the cmdlet will expect additional parameters by default and will then attempt to initiate the snapshot process automatically without further human interaction.
 
@@ -7,7 +9,8 @@ Initiating the snapshot process via the **Export-M365DSCConfiguration** cmdlet w
 
 ## Web Based User Interface
 
-While the default process has changed with recent versions of the module, you can still use a newly revamped, web-based User Interface to help you build the PowerShell command to execute based on the components you wish to capture. To launch this new web interface, simply use the **-LaunchWebUI** switch when calling the Export-M365DSCConfiguration cmdlet. This will automatically launch a new web browser interface and navigate you to <a href="https://export.microsoft365dsc.com" target="_blank">https://export.microsoft365dsc.com</a>
+While the default process has changed with recent versions of the module, you can still use a newly revamped, web-based User Interface to help you build the PowerShell command to execute based on the components you wish to capture. To launch this new web interface, simply use the **-LaunchWebUI** switch when calling the Export-M365DSCConfiguration cmdlet. This will automatically launch a new web browser interface and navigate you to <https://export.microsoft365dsc.com/>
+
 <figure markdown>
   ![Screenshot of the Microsoft365DSC Export site](../../Images/ExportGUI.png)
   <figcaption>The Microsoft365DSC Export generator</figcaption>
@@ -36,7 +39,7 @@ As mentioned above, Microsoft365DSC now defaults to an unattended capture proces
 
 You can always pass in the credentials as a variable, which will bypass the credential prompt and automatically initiate the export process when calling the cmdlet. E.g.
 
-```PowerShell
+```powershell
 $creds = Get-Credential
 Export-M365DSCConfiguration -Credential $creds
 ```
@@ -94,9 +97,9 @@ The Microsoft365DSC tenant configuration snapshot feature offers several options
 
 ### LaunchWebUI
 
-As mentioned above, the moment this switch is present when calling the **Export-M365DSCConfiguration** cmdlet it will launch new browser window and navigate to the export user interface at https://export.microsoft365dsc.com.
+As mentioned above, the moment this switch is present when calling the **Export-M365DSCConfiguration** cmdlet it will launch new browser window and navigate to the export user interface at <https://export.microsoft365dsc.com/>.
 
-```PowerShell
+```powershell
 Export-M365DSCConfiguration -LaunchWebUI
 ```
 
@@ -135,7 +138,7 @@ Omitting to specify this parameter will name the resulting file as M365TenantCon
 
 This allows you to specify a filter at the resource level to reduce the overall instances that are being extracted. As an example, if you are only interested in extracting Azure AD Groups that have their display name start with the word 'Microsoft', you could specify the following filters:
 
-```
+```powershell
 $Filters = @{
     AADGroup = "startsWith(displayName, 'Microsoft')"
 }
@@ -158,8 +161,8 @@ This parameter allows users to specify whether or not comments should be added a
 
 This parameter allows users to specify what set of components they wish to capture as part of their snapshot process. By default, Microsoft365DSC will exclude some components from the capture process either because these are likely to take a very long time to export (e.g. SPOPropertyBag) or that they are more related to data than actual configuration settings (e.g. Planner Tasks, SPOUserProfileProperty, etc.). Available modes are:
 
-- Default (Only configuration objects)
-- Full (Configuration and data objects)
+* Default (Only configuration objects)
+* Full (Configuration and data objects)
 
 Omitting this parameter will default to the **Default** mode.
 To keep track of what resources are available in what mode, Microsoft365DSC defines a function `Get-M365DSCResourcesByExportMode`, with which you can determine what resources are in the default or full mode. If you want the diff between the two, run `Get-M365DSCResourcesByExportMode -Mode 'Full' -ExcludeConfigurationResources`. This will return the resources that are in the full but not the default mode.
@@ -179,23 +182,23 @@ This parameter allows you to specify the location where the resulting file will 
 
 This parameter accepts an array containing the names of various workloads you wish to capture the components for as part of your snapshot process.  Users need to specify the acronym of the workloads, which can be any of:
 
-- **AAD** – Azure Active Directory
-- **ADO** – Azure DevOps
-- **AZURE** – Azure resources
-- **Commerce** – MS Commerce
-- **Defender** – Defender Portal
-- **EXO** – Exchange Online
-- **Fabric** – Fabric
-- **Intune** – Intune
-- **O365** – Office 365 administration
-- **OD** – OneDrive
-- **Planner** – Planner
-- **PP** – Power Platform
-- **SC** – Security and Compliance
-- **Sentinel** – Sentinel
-- **SH** – Services Hub
-- **SPO** – SharePoint Online
-- **Teams** – Microsoft Teams
+* **AAD** – Azure Active Directory
+* **ADO** – Azure DevOps
+* **AZURE** – Azure resources
+* **Commerce** – MS Commerce
+* **Defender** – Defender Portal
+* **EXO** – Exchange Online
+* **Fabric** – Fabric
+* **Intune** – Intune
+* **O365** – Office 365 administration
+* **OD** – OneDrive
+* **Planner** – Planner
+* **PP** – Power Platform
+* **SC** – Security and Compliance
+* **Sentinel** – Sentinel
+* **SH** – Services Hub
+* **SPO** – SharePoint Online
+* **Teams** – Microsoft Teams
 
 <figure markdown>
   ![Example of specifying an export based on workload](../../Images/ExportOnWorkload.png)

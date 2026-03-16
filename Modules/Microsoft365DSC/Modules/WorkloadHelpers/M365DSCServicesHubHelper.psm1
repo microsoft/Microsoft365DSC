@@ -29,11 +29,11 @@ function Invoke-M365DSCServicesHubWebRequest
     try
     {
         $response = Invoke-WebRequest -Method $Method `
-                                      -Uri $Uri `
-                                      -Headers $headers `
-                                      -Body $bodyValue `
-                                      -ContentType 'application/json; charset=utf-8' `
-                                      -UseBasicParsing
+            -Uri $Uri `
+            -Headers $headers `
+            -Body $bodyValue `
+            -ContentType 'application/json; charset=utf-8' `
+            -UseBasicParsing
     }
     catch
     {

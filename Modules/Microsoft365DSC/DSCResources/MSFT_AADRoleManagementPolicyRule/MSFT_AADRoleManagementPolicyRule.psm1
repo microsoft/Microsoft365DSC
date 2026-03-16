@@ -71,6 +71,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration for the Azure AD Role Management Policy Rule with Id {$Id} and Role DisplayName {$RoleDisplayName}"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
@@ -468,7 +470,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -541,7 +543,7 @@ function Export-TargetResource
             $rules = Get-MgBetaPolicyRoleManagementPolicyRule `
                 -UnifiedRoleManagementPolicyId $policyId
 
-            Write-M365DSCHost -Message  "    |---[$j/$($roles.Count)] $($role.displayName)"
+            Write-M365DSCHost -Message "    |---[$j/$($roles.Count)] $($role.displayName)"
             $i = 1
             foreach ($rule in $rules)
             {

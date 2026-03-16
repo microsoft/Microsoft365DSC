@@ -207,8 +207,8 @@ function Test-TargetResource
         # Ensure the referenced resource supports ManagedIdentity before adding the parameter.
         try
         {
-            $exportFunctionInfo = (Get-Command -Module "MSFT_$ResourceTypeName") | Where-Object -FilterScript {$_.Name -eq 'Export-TargetResource'}
-            if ($exportFunctionInfo.Parameters.Name -Contains 'ManagedIdentity')
+            $exportFunctionInfo = (Get-Command -Module "MSFT_$ResourceTypeName") | Where-Object -FilterScript { $_.Name -eq 'Export-TargetResource' }
+            if ($exportFunctionInfo.Parameters.Name -contains 'ManagedIdentity')
             {
                 $params.Add('ManagedIdentity', $PSBoundParameters.ManagedIdentity)
             }
@@ -430,4 +430,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-

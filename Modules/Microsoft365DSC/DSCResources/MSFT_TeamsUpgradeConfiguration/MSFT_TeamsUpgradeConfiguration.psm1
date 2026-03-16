@@ -7,8 +7,8 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -45,7 +45,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message 'Checking the Teams Upgrade Configuration'
+    Write-Verbose -Message 'Getting configuration for the Teams Upgrade Configuration'
 
     try
     {
@@ -63,10 +63,6 @@ function Get-TargetResource
             -Parameters $PSBoundParameters
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
-
-        $nullReturn = @{
-            IsSingleInstance = 'Yes'
-        }
 
         $settings = Get-CsTeamsUpgradeConfiguration -ErrorAction Stop
         return @{
@@ -99,8 +95,8 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -169,8 +165,8 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -217,7 +213,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

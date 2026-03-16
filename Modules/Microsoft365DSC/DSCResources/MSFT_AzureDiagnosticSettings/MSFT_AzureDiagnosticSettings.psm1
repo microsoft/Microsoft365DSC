@@ -88,7 +88,7 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $response = Invoke-AzRest -Uri 'https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings?api-version=2017-04-01-preview' `
+            $response = Invoke-AzRest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings?api-version=2017-04-01-preview" `
                 -Method Get
             $instances = (ConvertFrom-Json $response.Content).value
             $instance = $instances | Where-Object -FilterScript { $_.name -eq $Name }
@@ -269,7 +269,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Updating diagnostic setting {$Name}"
         }
-        $null = Invoke-AzRest -Uri "https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
+        $null = Invoke-AzRest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
             -Method PUT `
             -Payload $payload
     }
@@ -277,7 +277,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing diagnostic setting {$Name}"
-        $null = Invoke-AzRest -Uri "https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
+        $null = Invoke-AzRest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
             -Method DELETE
     }
 }
@@ -356,7 +356,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -413,7 +413,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $response = Invoke-AzRest -Uri 'https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings?api-version=2017-04-01-preview' `
+        $response = Invoke-AzRest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings?api-version=2017-04-01-preview" `
             -Method Get
         [array] $Script:exportedInstances = (ConvertFrom-Json $response.Content).value
         $i = 1

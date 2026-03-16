@@ -1,4 +1,3 @@
-
 # IntuneDeviceComplianceNotificationMessageTemplate
 
 ## Description

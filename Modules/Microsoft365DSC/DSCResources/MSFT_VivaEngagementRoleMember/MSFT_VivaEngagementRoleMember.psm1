@@ -60,10 +60,9 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-            $nullResult = $PSBoundParameters
-            $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/employeeExperience/roles"
-            $roles = Invoke-MgGraphRequest -uri $uri -Method GET
-            $roleInstance = $roles.value | Where-Object -FilterScript {$_.displayName -eq $role}
+            $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/employeeExperience/roles'
+            $roles = Invoke-MgGraphRequest -Uri $uri -Method GET
+            $roleInstance = $roles.value | Where-Object -FilterScript { $_.displayName -eq $role }
 
             if ([System.String]::IsNullOrEmpty($roleInstance))
             {
@@ -76,7 +75,7 @@ function Get-TargetResource
         }
 
         $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/employeeExperience/roles/$($roleInstance.id)/members"
-        $idsOfMembers = Invoke-MgGraphRequest -uri $uri -Method GET
+        $idsOfMembers = Invoke-MgGraphRequest -Uri $uri -Method GET
 
         $membersValue = @()
         foreach ($memberId in $idsOfMembers.value)
@@ -163,9 +162,9 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/employeeExperience/roles"
-    $roles = Invoke-MgGraphRequest -uri $uri -Method GET
-    $roleInstance = $roles.value | Where-Object -FilterScript {$_.displayName -eq $role}
+    $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/employeeExperience/roles'
+    $roles = Invoke-MgGraphRequest -Uri $uri -Method GET
+    $roleInstance = $roles.value | Where-Object -FilterScript { $_.displayName -eq $role }
 
     $membersDiff = Compare-Object -ReferenceObject $currentInstance.Members -DifferenceObject $Members
 
@@ -179,16 +178,16 @@ function Set-TargetResource
                 Write-Verbose -Message "Adding user {$($member.InputObject)} to role {$Role}"
                 $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/employeeExperience/roles/$($roleInstance.id)/members"
                 $body = @{
-                    "user@odata.bind"= (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/users('" + $userInfo.Id + "')"
+                    'user@odata.bind' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/users('" + $userInfo.Id + "')"
                 }
                 Write-Verbose -Message "POST request to $uri with:`r`n$(ConvertTo-Json $body -Depth 10)"
-                Invoke-MgGraphRequest -uri $uri -Method POST -Body $body
+                Invoke-MgGraphRequest -Uri $uri -Method POST -Body $body
             }
             else
             {
                 Write-Verbose -Message "Removing user {$($member.InputObject)} from role {$Role}"
                 $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/employeeExperience/roles/$($roleInstance.id)/members/$($userInfo.Id)"
-                Invoke-MgGraphRequest -uri $uri -Method DELETE
+                Invoke-MgGraphRequest -Uri $uri -Method DELETE
             }
         }
         else
@@ -247,7 +246,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -304,7 +303,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/employeeExperience/roles"
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/employeeExperience/roles'
 
         [array]$roles = (Invoke-MgGraphRequest -Uri $uri -Method Get -ErrorAction Stop).value
 

@@ -20,7 +20,7 @@ function Get-TargetResource
         $ExpirationDate,
 
         [Parameter()]
-        [ValidateSet('AdvancedDelivery', 'Tenant')]
+        [ValidateSet('AdvancedDelivery', 'Submission', 'Tenant')]
         [System.String]
         $ListSubType,
 
@@ -183,7 +183,7 @@ function Set-TargetResource
         $ExpirationDate,
 
         [Parameter()]
-        [ValidateSet('AdvancedDelivery', 'Tenant')]
+        [ValidateSet('AdvancedDelivery', 'Submission', 'Tenant')]
         [System.String]
         $ListSubType,
 
@@ -357,7 +357,7 @@ function Test-TargetResource
         $ExpirationDate,
 
         [Parameter()]
-        [ValidateSet('AdvancedDelivery', 'Tenant')]
+        [ValidateSet('AdvancedDelivery', 'Submission', 'Tenant')]
         [System.String]
         $ListSubType,
 
@@ -431,8 +431,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 

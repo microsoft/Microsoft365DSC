@@ -1,4 +1,3 @@
-
 # AADAuthenticationMethodPolicySoftware
 
 ## Description

@@ -59,11 +59,13 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting configuration of AAD Token Lifetime Policy with DisplayName {$DisplayName}"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            Write-Verbose -Message 'Getting configuration of AzureAD Token Lifetime Policy'
             $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
 
@@ -83,7 +85,7 @@ function Get-TargetResource
             $nullReturn.Ensure = 'Absent'
             try
             {
-                if (-Not [System.String]::IsNullOrEMpty($Id))
+                if (-not [System.String]::IsNullOrEMpty($Id))
                 {
                     $Policy = Get-MgBetaPolicyTokenLifetimePolicy -TokenLifetimePolicyId $Id -ErrorAction SilentlyContinue
                 }
@@ -318,7 +320,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

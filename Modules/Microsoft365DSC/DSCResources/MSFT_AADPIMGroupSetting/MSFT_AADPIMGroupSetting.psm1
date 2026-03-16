@@ -236,10 +236,10 @@ function Get-TargetResource
         #endregion
 
         $Policy = $null
-        if([System.String]::IsNullOrEmpty($GroupId))
+        if ([System.String]::IsNullOrEmpty($GroupId))
         {
-            Write-Verbose "GroupID was NULL, looking up group"
-            $Filter = "DisplayName eq '" + $($DisplayName -replace "'", "''")  + "'"
+            Write-Verbose 'GroupID was NULL, looking up group'
+            $Filter = "DisplayName eq '" + $($DisplayName -replace "'", "''") + "'"
             $GroupId = (Get-MgGroup -Filter $Filter).Id
         }
         if ($Id -notmatch '^Group_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}_(owner|member)$')
@@ -267,7 +267,7 @@ function Get-TargetResource
 
     if ($null -eq $Policy.policy.rules)
     {
-        Write-Verbose "No Policy Rules found, returning null"
+        Write-Verbose 'No Policy Rules found, returning null'
         return $nullReturn
     }
 
@@ -696,13 +696,14 @@ function Set-TargetResource
     #endregion
     $Policy = $null
 
-    if([System.String]::IsNullOrEmpty($GroupId))
+    if ([System.String]::IsNullOrEmpty($GroupId))
     {
         $Filter = "DisplayName eq '" + $DisplayName + "'"
         $GroupId = (Get-MgGroup -Filter $Filter).Id
     }
 
-    if ($Id -notmatch '^Group_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}_(owner|member)$') {
+    if ($Id -notmatch '^Group_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}_(owner|member)$')
+    {
         $Policy = Get-MgPolicyRoleManagementPolicyAssignment `
             -All `
             -Filter "scopeId eq '$groupId' and scopeType eq 'Group' and roleDefinitionId eq '$RoleDefinitionId'" `
@@ -1435,7 +1436,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -1493,7 +1494,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($filter -notlike "*DynamicMembership*")
+    if ($filter -notlike '*DynamicMembership*')
     {
         if (-not [string]::IsNullOrEmpty($filter))
         {
@@ -1503,13 +1504,13 @@ function Export-TargetResource
     }
 
     $ExportParameters = @{
-        Filter      = $Filter
-        All         = [switch]$true
-        Property    = "displayname,Id"
-        CountVariable = "CountVar"
-        ConsistencyLevel = "eventual"
-        ErrorAction = 'Stop'
-        Sort        = 'displayname'
+        Filter           = $Filter
+        All              = [switch]$true
+        Property         = 'displayname,Id'
+        CountVariable    = 'CountVar'
+        ConsistencyLevel = 'eventual'
+        ErrorAction      = 'Stop'
+        Sort             = 'displayname'
     }
 
     try
@@ -1547,7 +1548,7 @@ function Export-TargetResource
         {
             $getValue = $response.body.value
             $group = $Script:exportedGroups | Where-Object -FilterScript { $_.Id -eq $response.id }
-            Write-M365DSCHost -Message  "    |---[$j/$($Script:exportedGroups.Count)] $($group.DisplayName)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$j/$($Script:exportedGroups.Count)] $($group.DisplayName)" -DeferWrite
 
             $i = 1
 

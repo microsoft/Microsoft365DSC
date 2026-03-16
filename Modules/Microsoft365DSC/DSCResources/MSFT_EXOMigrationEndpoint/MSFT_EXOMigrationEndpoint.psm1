@@ -347,8 +347,8 @@ function Set-TargetResource
         # Removing mailbox permission parameter as this is valid only for outlook anywhere migration
         $setParams.Remove('MailboxPermission') | Out-Null
         $newParams.Remove('MailboxPermission') | Out-Null
-        $newParams.Remove("AcceptUntrustedCertificates") | Out-Null
-        $setParams.Remove("AcceptUntrustedCertificates") | Out-Null
+        $newParams.Remove('AcceptUntrustedCertificates') | Out-Null
+        $setParams.Remove('AcceptUntrustedCertificates') | Out-Null
 
         # adding skip verification switch to skip verifying
         # that the remote server is reachable when creating a migration endpoint.
@@ -500,7 +500,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

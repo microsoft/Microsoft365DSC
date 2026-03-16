@@ -173,7 +173,7 @@ function Compare-M365DSCResourceState
             $source = $DesiredValues.$key
             $target = $CurrentValues.$key
             $parameterDefinition = $resourcePropertyLookup[$key]
-            if ($null -ne $source -and ($source.GetType().Name -like '*CimInstance*' -or $parameterDefinition.CIMType -like "MSFT_*"))
+            if ($null -ne $source -and ($source.GetType().Name -like '*CimInstance*' -or $parameterDefinition.CIMType -like 'MSFT_*'))
             {
                 Write-Verbose -Message "Comparing complex object property $key of resource $ResourceName"
                 $CIMProperty = $parameterDefinition

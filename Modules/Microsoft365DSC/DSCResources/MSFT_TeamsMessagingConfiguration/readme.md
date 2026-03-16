@@ -1,4 +1,3 @@
-
 # TeamsMessagingConfiguration
 
 ## Description

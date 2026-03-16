@@ -53,8 +53,8 @@ function Get-TargetResource
         $TicketInfo,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -85,6 +85,8 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting configuration of the AAD Role Assignment Schedule Request with Principal {$Principal}, RoleDefinition {$RoleDefinition}, PrincipalType {$PrincipalType} and DirectoryScopeId {$DirectoryScopeId}"
 
     try
     {
@@ -162,91 +164,63 @@ function Get-TargetResource
             return $nullResult
         }
 
-        Write-Verbose -Message 'Found Principal'
-        $RoleDefinitionId = $Script:RoleDefinitions.GetEnumerator() | Where-Object { $_.Value.DisplayName -eq $RoleDefinition } | Select-Object -ExpandProperty Key
-        Write-Verbose -Message "Retrieved role definition {$RoleDefinition} with ID {$RoleDefinitionId}"
+        Write-Verbose -Message "Found Principal {$PrincipalValue}"
+        $roleDefinitionId = $Script:RoleDefinitions.GetEnumerator() | Where-Object { $_.Value.DisplayName -eq $RoleDefinition } | Select-Object -ExpandProperty Key
+        Write-Verbose -Message "Retrieved role definition {$RoleDefinition} with ID {$roleDefinitionId}"
 
         if ($null -eq $schedule)
         {
-            Write-Verbose -Message "Retrieving the request by PrincipalId {$($PrincipalInstance.Id)}, RoleDefinitionId {$($RoleDefinitionId)} and DirectoryScopeId {$($DirectoryScopeId)}"
+            Write-Verbose -Message "Retrieving the request by PrincipalId {$($PrincipalInstance.Id)}, RoleDefinitionId {$($roleDefinitionId)} and DirectoryScopeId {$($DirectoryScopeId)}"
             [array]$requests = $Script:AllSchedules | Where-Object -FilterScript {
                 $_.PrincipalId -eq $PrincipalInstance.Id -and
-                $_.RoleDefinitionId -eq $RoleDefinitionId -and
+                $_.RoleDefinitionId -eq $roleDefinitionId -and
                 $_.DirectoryScopeId -eq $DirectoryScopeId
             }
+
             if ($requests.Count -eq 0)
             {
-                # We need to make sure we're not ending up here because the role is a custom role (which has a different id).
-                # We start by retrieving all schedules for the given principal.
-                [array]$schedulesForPrincipal = $Script:AllSchedules | Where-Object -FilterScript {
-                    $_.PrincipalId -eq $PrincipalInstance.Id -and
-                    $_.DirectoryScopeId -eq $DirectoryScopeId
-                }
-
-                # Loop through the role associated with each schedule to check and see if we have a match on the name.
-                $schedule = $null
-                foreach ($foundSchedule in $schedulesForPrincipal)
+                # Lookup in Graph - can be the case if a role was created in this configuration run
+                Write-Verbose -Message "No cached schedules found, fetching with principalId, roleDefinitionId and directoryScopeId"
+                $requests = Get-MgBetaRoleManagementDirectoryRoleAssignmentSchedule -Filter "principalId eq '$($PrincipalInstance.Id)' and roleDefinitionId eq '$($roleDefinitionId)' and directoryScopeId eq '$($DirectoryScopeId)'" -ErrorAction SilentlyContinue
+                if ($requests.Count -eq 0)
                 {
-                    $scheduleRoleId = $foundSchedule.RoleDefinitionId
-                    $roleEntry = $Script:RoleDefinitions[$scheduleRoleId]
+                    # We need to make sure we're not ending up here because the role is a custom role (which has a different id).
+                    Write-Verbose -Message "No schedules found, testing for custom role definitions"
+                    $roleEntry = $Script:RoleDefinitions[$roleDefinitionId]
                     if ($null -eq $roleEntry)
                     {
-                        $roleEntry = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $scheduleRoleId
+                        $roleEntry = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $roleDefinitionId
                     }
                     if ($roleEntry.DisplayName -eq $RoleDefinition)
                     {
-                        $RoleDefinitionId = $roleEntry.Id
-                        if (-not $Script:RoleDefinitions.ContainsKey($scheduleRoleId))
+                        $roleDefinitionId = $roleEntry.Id
+                        if (-not $Script:RoleDefinitions.ContainsKey($roleDefinitionId))
                         {
-                            $Script:RoleDefinitions.Add($scheduleRoleId, $roleEntry)
+                            $Script:RoleDefinitions.Add($roleDefinitionId, $roleEntry)
                         }
-                        $schedule = $foundSchedule
-                        break
+                        # The TemplateId is the id of the custom role definition
+                        Write-Verbose -Message "Fetching schedules for custom role definition with RoleDefinitionId {$roleDefinitionId}"
+                        $requests = Get-MgBetaRoleManagementDirectoryRoleAssignmentSchedule -Filter "principalId eq '$($PrincipalInstance.Id)' and roleDefinition/TemplateId eq '$($roleDefinitionId)' and directoryScopeId eq '$($DirectoryScopeId)'" -ErrorAction SilentlyContinue
+                        if ($requests.Count -eq 0)
+                        {
+                            Write-Verbose -Message "No schedules found for custom role definition"
+                            return $nullResult
+                        }
                     }
                 }
-
-                if ($null -eq $schedule)
+                else
                 {
-                    return $nullResult
+                    Write-Verbose -Message "Adding schedule to cache"
+                    $Script:AllSchedules += $requests[0]
                 }
             }
             else
             {
-                $request = $requests[0]
+                $schedule = $requests[0]
             }
-        }
-
-        if ($null -eq $schedule)
-        {
-            $schedule = $Script:AllSchedules | Where-Object -FilterScript {
-                $_.PrincipalId -eq $request.PrincipalId -and
-                $_.RoleDefinitionId -eq $RoleDefinitionId
-            }
-        }
-        if ($null -eq $schedule)
-        {
-            foreach ($instance in $schedules)
-            {
-                $roleDefinitionInfo = $Script:RoleDefinitions[$instance.RoleDefinitionId]
-                if ($null -ne $roleDefinitionInfo -and $RoleDefinitionInfo.DisplayName -eq $RoleDefinition)
-                {
-                    $schedule = $instance
-                    break
-                }
-            }
-        }
-
-        if ($null -eq $schedule)
-        {
-            if ($null -eq $schedule)
-            {
-                Write-Verbose -Message "Could not retrieve the schedule for {$($request.PrincipalId)} & RoleDefinitionId {$RoleDefinitionId}"
-            }
-            return $nullResult
         }
 
         $ScheduleInfoValue = @{}
-
         if ($null -ne $schedule.ScheduleInfo.Expiration)
         {
             $expirationValue = [ordered]@{
@@ -378,8 +352,8 @@ function Set-TargetResource
         $TicketInfo,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -460,18 +434,22 @@ function Set-TargetResource
 
     if ($null -eq $PrincipalIdValue)
     {
-        throw "Couldn't find Principal {$PrincipalId} of type {$PrincipalType}"
+        throw "Couldn't find Principal with Name {$Principal} of type {$PrincipalType}"
     }
     elseif ($PrincipalIdValue.Length -gt 1)
     {
-        throw "Multiple Principal with ID {$PrincipalId} of type {$PrincipalType} were found. Cannot create schedule."
+        throw "Multiple Principal with Name {$Principal} of type {$PrincipalType} were found. Cannot create schedule."
     }
 
     $ParametersOps.Add('PrincipalId', $PrincipalIdValue[0])
     $ParametersOps.Remove('Principal') | Out-Null
 
-    $RoleDefinitionIdValue = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($RoleDefinition -replace "'", "''")'").Id
-    $ParametersOps.Add('RoleDefinitionId', $RoleDefinitionIdValue)
+    $roleDefinitionIdValue = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($RoleDefinition -replace "'", "''")'").Id
+    if ([System.String]::IsNullOrEmpty($roleDefinitionIdValue))
+    {
+        throw "Couldn't find Role Definition {$RoleDefinition}"
+    }
+    $ParametersOps.Add('RoleDefinitionId', $roleDefinitionIdValue)
     $ParametersOps.Remove('RoleDefinition') | Out-Null
 
     if ($null -ne $ScheduleInfo)
@@ -551,6 +529,13 @@ function Set-TargetResource
         $ParametersOps.Remove('Id') | Out-Null
         $ParametersOps.Action = 'AdminRemove'
         New-MgBetaRoleManagementDirectoryRoleAssignmentScheduleRequest @ParametersOps
+        if ($Script:AllSchedules.Count -gt 0)
+        {
+            # Remove the instance from the cached list to avoid re-processing
+            $Script:AllSchedules = $Script:AllSchedules | Where-Object {
+                $_.RoleDefinition -ne $RoleDefinition -and $_.Principal -ne $Principal -and $_.PrincipalType -ne $PrincipalType -and $_.DirectoryScopeId -ne $DirectoryScopeId
+            }
+        }
     }
 }
 
@@ -607,8 +592,8 @@ function Test-TargetResource
         $TicketInfo,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]

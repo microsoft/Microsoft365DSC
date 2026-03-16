@@ -1,4 +1,3 @@
-
 # IntuneDeviceConfigurationTrustedCertificatePolicyWindows10
 
 ## Description

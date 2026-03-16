@@ -1,4 +1,3 @@
-
 # IntuneDiskEncryptionMacOS
 
 ## Description

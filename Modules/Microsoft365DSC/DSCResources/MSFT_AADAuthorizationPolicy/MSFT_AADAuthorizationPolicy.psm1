@@ -7,8 +7,8 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -32,8 +32,8 @@ function Get-TargetResource
         $AllowEmailVerifiedUsersToJoinOrganization,
 
         [Parameter()]
+        [ValidateSet('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         [System.String]
-        [validateset('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         $AllowInvitesFrom,
 
         [Parameter()]
@@ -69,7 +69,7 @@ function Get-TargetResource
         $PermissionGrantPolicyIdsAssignedToDefaultUserRole,
 
         [Parameter()]
-        [validateset('User', 'Guest', 'RestrictedGuest')]
+        [ValidateSet('User', 'Guest', 'RestrictedGuest')]
         [System.String]
         $GuestUserRole,
 
@@ -176,8 +176,8 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -201,8 +201,8 @@ function Set-TargetResource
         $AllowEmailVerifiedUsersToJoinOrganization,
 
         [Parameter()]
+        [ValidateSet('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         [System.String]
-        [validateset('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         $AllowInvitesFrom,
 
         [Parameter()]
@@ -238,7 +238,7 @@ function Set-TargetResource
         $PermissionGrantPolicyIdsAssignedToDefaultUserRole,
 
         [Parameter()]
-        [validateset('User', 'Guest', 'RestrictedGuest')]
+        [ValidateSet('User', 'Guest', 'RestrictedGuest')]
         [System.String]
         $GuestUserRole,
 
@@ -314,8 +314,8 @@ function Set-TargetResource
 
         if (($desiredParam -is [System.Array] -and (Compare-Object -ReferenceObject $desiredParam -DifferenceObject $currentParam)) -or
             ($desiredParam -isnot [System.Array] -and $desiredParam -ne $currentParam) -or
-           ($null -eq $desiredParam -and $null -ne $currentParam) -or
-           ($null -ne $desiredParam -and $null -eq $currentParam))
+            ($null -eq $desiredParam -and $null -ne $currentParam) -or
+            ($null -ne $desiredParam -and $null -eq $currentParam))
         {
             if ($param.ToLower() -match 'defaultuserrole')
             {
@@ -385,8 +385,8 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -410,8 +410,8 @@ function Test-TargetResource
         $AllowEmailVerifiedUsersToJoinOrganization,
 
         [Parameter()]
+        [ValidateSet('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         [System.String]
-        [validateset('None', 'AdminsAndGuestInviters', 'AdminsGuestInvitersAndAllMembers', 'Everyone')]
         $AllowInvitesFrom,
 
         [Parameter()]
@@ -447,7 +447,7 @@ function Test-TargetResource
         $PermissionGrantPolicyIdsAssignedToDefaultUserRole,
 
         [Parameter()]
-        [validateset('User', 'Guest', 'RestrictedGuest')]
+        [ValidateSet('User', 'Guest', 'RestrictedGuest')]
         [System.String]$GuestUserRole,
 
         #generic
@@ -495,7 +495,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -650,7 +650,7 @@ function Get-GuestUserRoleIdFromName
     [OutputType([System.string])]
     param(
         [parameter()]
-        [validateset('User', 'Guest', 'RestrictedGuest')]
+        [ValidateSet('User', 'Guest', 'RestrictedGuest')]
         [String]
         $GuestUserRole
     )

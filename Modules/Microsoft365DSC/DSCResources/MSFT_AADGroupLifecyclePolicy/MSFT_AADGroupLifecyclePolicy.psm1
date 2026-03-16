@@ -7,8 +7,8 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter(Mandatory = $true)]
@@ -58,24 +58,24 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
-
     Write-Verbose -Message 'Getting configuration of AzureAD Groups Lifecycle Policy'
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     try
     {
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
         $nullReturn = $PSBoundParameters
         $nullReturn.Ensure = 'Absent'
 
@@ -135,8 +135,8 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter(Mandatory = $true)]
@@ -202,16 +202,6 @@ function Set-TargetResource
 
     $null = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
-    try
-    {
-        $policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        return
-    }
-
     $currentPolicy = Get-TargetResource @PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
@@ -260,8 +250,8 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter(Mandatory = $true)]
@@ -321,7 +311,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -374,8 +364,6 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $organization = ''
-    $principal = '' # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
     try
     {
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -383,44 +371,7 @@ function Export-TargetResource
             $Global:M365DSCExportResourceInstancesCount++
         }
 
-        if ($ConnectionMode -eq 'ServicePrincipalWithThumbprint')
-        {
-            $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-                -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-        }
-        elseif ($ConnectionMode -eq 'ServicePrincipalWithSecret')
-        {
-            $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-                -TenantId $TenantId -ApplicationSecret $ApplicationSecret
-        }
-        elseif ($ConnectionMode -eq 'ManagedIdentity')
-        {
-            $organization = $TenantId
-        }
-        else
-        {
-            if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
-            {
-                $organization = $Credential.UserName.Split('@')[1]
-            }
-        }
-        if ($organization.IndexOf('.') -gt 0)
-        {
-            $principal = $organization.Split('.')[0]
-        }
-
-        try
-        {
-            $Policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
-        }
-        catch
-        {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-            return ''
-        }
-
         $dscContent = ''
-
         $Params = @{
             Credential                  = $Credential
             IsSingleInstance            = 'Yes'

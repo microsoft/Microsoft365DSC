@@ -7,8 +7,8 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -40,7 +40,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message 'Checking the Teams Org Wide App Settings'
+    Write-Verbose -Message 'Getting configuration for the Teams Org Wide App Settings'
 
     try
     {
@@ -88,8 +88,8 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -144,8 +144,9 @@ function Set-TargetResource
     }
     else
     {
-        $SetParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-        Set-CsTeamsSettingsCustomApp @SetParameters
+        $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+        $setParameters.Remove('IsSingleInstance') | Out-Null
+        Set-CsTeamsSettingsCustomApp @setParameters
     }
 }
 
@@ -156,8 +157,8 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Yes')]
+        [System.String]
         $IsSingleInstance,
 
         [Parameter()]
@@ -199,7 +200,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

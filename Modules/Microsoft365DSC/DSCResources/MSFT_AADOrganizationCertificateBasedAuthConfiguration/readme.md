@@ -1,4 +1,3 @@
-
 # AADOrganizationCertificateBasedAuthConfiguration
 
 ## Description

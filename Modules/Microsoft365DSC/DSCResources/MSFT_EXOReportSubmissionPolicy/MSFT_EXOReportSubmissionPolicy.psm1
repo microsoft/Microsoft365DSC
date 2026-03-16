@@ -190,45 +190,45 @@ function Get-TargetResource
             $ReportSubmissionPolicy = $Script:exportedInstance
         }
 
-        Write-Verbose -Message "Found ReportSubmissionPolicy"
+        Write-Verbose -Message 'Found ReportSubmissionPolicy'
 
         $result = @{
-            IsSingleInstance                 = 'Yes'
-            DisableQuarantineReportingOption = $ReportSubmissionPolicy.DisableQuarantineReportingOption
-            EnableCustomNotificationSender   = $ReportSubmissionPolicy.EnableCustomNotificationSender
-            EnableOrganizationBranding       = $ReportSubmissionPolicy.EnableOrganizationBranding
-            EnableReportToMicrosoft          = $ReportSubmissionPolicy.EnableReportToMicrosoft
-            EnableThirdPartyAddress          = $ReportSubmissionPolicy.EnableThirdPartyAddress
-            EnableUserEmailNotification      = $ReportSubmissionPolicy.EnableUserEmailNotification
-            JunkReviewResultMessage          = $ReportSubmissionPolicy.JunkReviewResultMessage
-            NotJunkReviewResultMessage       = $ReportSubmissionPolicy.NotJunkReviewResultMessage
-            NotificationFooterMessage        = $ReportSubmissionPolicy.NotificationFooterMessage
-            NotificationSenderAddress        = $ReportSubmissionPolicy.NotificationSenderAddress
-            PhishingReviewResultMessage      = $ReportSubmissionPolicy.PhishingReviewResultMessage
-            PostSubmitMessage                = $ReportSubmissionPolicy.PostSubmitMessage
-            PostSubmitMessageEnabled         = $ReportSubmissionPolicy.PostSubmitMessageEnabled
-            PostSubmitMessageTitle           = $ReportSubmissionPolicy.PostSubmitMessageTitle
-            PreSubmitMessage                 = $ReportSubmissionPolicy.PreSubmitMessage
-            PreSubmitMessageEnabled          = $ReportSubmissionPolicy.PreSubmitMessageEnabled
-            PreSubmitMessageTitle            = $ReportSubmissionPolicy.PreSubmitMessageTitle
-            ReportJunkAddresses              = $ReportSubmissionPolicy.ReportJunkAddresses
-            ReportJunkToCustomizedAddress    = $ReportSubmissionPolicy.ReportJunkToCustomizedAddress
-            ReportNotJunkAddresses           = $ReportSubmissionPolicy.ReportNotJunkAddresses
-            ReportNotJunkToCustomizedAddress = $ReportSubmissionPolicy.ReportNotJunkToCustomizedAddress
-            ReportPhishAddresses             = $ReportSubmissionPolicy.ReportPhishAddresses
-            ReportPhishToCustomizedAddress   = $ReportSubmissionPolicy.ReportPhishToCustomizedAddress
-            ThirdPartyReportAddresses        = $ReportSubmissionPolicy.ThirdPartyReportAddresses
-            ReportChatMessageEnabled         = $ReportSubmissionPolicy.ReportChatMessageEnabled
+            IsSingleInstance                            = 'Yes'
+            DisableQuarantineReportingOption            = $ReportSubmissionPolicy.DisableQuarantineReportingOption
+            EnableCustomNotificationSender              = $ReportSubmissionPolicy.EnableCustomNotificationSender
+            EnableOrganizationBranding                  = $ReportSubmissionPolicy.EnableOrganizationBranding
+            EnableReportToMicrosoft                     = $ReportSubmissionPolicy.EnableReportToMicrosoft
+            EnableThirdPartyAddress                     = $ReportSubmissionPolicy.EnableThirdPartyAddress
+            EnableUserEmailNotification                 = $ReportSubmissionPolicy.EnableUserEmailNotification
+            JunkReviewResultMessage                     = $ReportSubmissionPolicy.JunkReviewResultMessage
+            NotJunkReviewResultMessage                  = $ReportSubmissionPolicy.NotJunkReviewResultMessage
+            NotificationFooterMessage                   = $ReportSubmissionPolicy.NotificationFooterMessage
+            NotificationSenderAddress                   = $ReportSubmissionPolicy.NotificationSenderAddress
+            PhishingReviewResultMessage                 = $ReportSubmissionPolicy.PhishingReviewResultMessage
+            PostSubmitMessage                           = $ReportSubmissionPolicy.PostSubmitMessage
+            PostSubmitMessageEnabled                    = $ReportSubmissionPolicy.PostSubmitMessageEnabled
+            PostSubmitMessageTitle                      = $ReportSubmissionPolicy.PostSubmitMessageTitle
+            PreSubmitMessage                            = $ReportSubmissionPolicy.PreSubmitMessage
+            PreSubmitMessageEnabled                     = $ReportSubmissionPolicy.PreSubmitMessageEnabled
+            PreSubmitMessageTitle                       = $ReportSubmissionPolicy.PreSubmitMessageTitle
+            ReportJunkAddresses                         = $ReportSubmissionPolicy.ReportJunkAddresses
+            ReportJunkToCustomizedAddress               = $ReportSubmissionPolicy.ReportJunkToCustomizedAddress
+            ReportNotJunkAddresses                      = $ReportSubmissionPolicy.ReportNotJunkAddresses
+            ReportNotJunkToCustomizedAddress            = $ReportSubmissionPolicy.ReportNotJunkToCustomizedAddress
+            ReportPhishAddresses                        = $ReportSubmissionPolicy.ReportPhishAddresses
+            ReportPhishToCustomizedAddress              = $ReportSubmissionPolicy.ReportPhishToCustomizedAddress
+            ThirdPartyReportAddresses                   = $ReportSubmissionPolicy.ThirdPartyReportAddresses
+            ReportChatMessageEnabled                    = $ReportSubmissionPolicy.ReportChatMessageEnabled
             ReportChatMessageToCustomizedAddressEnabled = $ReportSubmissionPolicy.ReportChatMessageToCustomizedAddressEnabled
-            Credential                       = $Credential
-            Ensure                           = 'Present'
-            ApplicationId                    = $ApplicationId
-            CertificateThumbprint            = $CertificateThumbprint
-            CertificatePath                  = $CertificatePath
-            CertificatePassword              = $CertificatePassword
-            ManagedIdentity                  = $ManagedIdentity.IsPresent
-            TenantId                         = $TenantId
-            AccessTokens                     = $AccessTokens
+            Credential                                  = $Credential
+            Ensure                                      = 'Present'
+            ApplicationId                               = $ApplicationId
+            CertificateThumbprint                       = $CertificateThumbprint
+            CertificatePath                             = $CertificatePath
+            CertificatePassword                         = $CertificatePassword
+            ManagedIdentity                             = $ManagedIdentity.IsPresent
+            TenantId                                    = $TenantId
+            AccessTokens                                = $AccessTokens
         }
 
         return $result
@@ -598,7 +598,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

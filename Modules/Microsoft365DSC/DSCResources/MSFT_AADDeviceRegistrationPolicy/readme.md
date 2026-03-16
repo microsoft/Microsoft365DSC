@@ -1,4 +1,3 @@
-
 # AADDeviceRegistrationPolicy
 
 ## Description

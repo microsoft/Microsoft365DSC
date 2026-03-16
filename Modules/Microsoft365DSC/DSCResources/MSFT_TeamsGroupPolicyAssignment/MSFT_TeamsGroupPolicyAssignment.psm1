@@ -59,29 +59,29 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of the Teams Group Policy Assignment for Group: $GroupDisplayName"
 
-    $null = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
+        $null = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = 'Absent'
+
         Write-Verbose -Message "Getting Group with Id {$GroupId}"
         if ($GroupId -match '\b[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}\b' -and $GroupId -ne '00000000-0000-0000-0000-000000000000')
         {
-            $Group = Find-CsGroup -SearchQuery $GroupId -ExactMatchOnly $true -ErrorAction SilentlyContinue
+            $Group = Find-CsGroup -SearchQuery $GroupId -ExactMatchOnly $true -ErrorAction Stop
         }
         else
         {
@@ -90,7 +90,7 @@ function Get-TargetResource
         if ($null -eq $Group)
         {
             Write-Verbose -Message "Could not find Group with Id {$GroupId}, searching with DisplayName {$GroupDisplayName}"
-            $Group = Find-CsGroup -SearchQuery $GroupDisplayName -ExactMatchOnly $true -ErrorAction SilentlyContinue
+            $Group = Find-CsGroup -SearchQuery $GroupDisplayName -ExactMatchOnly $true -ErrorAction Stop
 
             if ($null -eq $Group)
             {
@@ -111,13 +111,19 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Getting GroupPolicyAssignment with PolicyType {$PolicyType} for Group {$($Group.DisplayName)}"
-        $AllGroupPolicyAssignment = Get-CsGroupPolicyAssignment -ErrorAction SilentlyContinue
-        $GroupPolicyAssignment = $AllGroupPolicyAssignment | Where-Object{$_.GroupId -eq $Group.Id -and $_.PolicyType -eq $PolicyType}
+        $AllGroupPolicyAssignment = Get-CsGroupPolicyAssignment -ErrorAction Stop
+        $GroupPolicyAssignment = $AllGroupPolicyAssignment | Where-Object { $_.GroupId -eq $Group.Id -and $_.PolicyType -eq $PolicyType }
         if ($null -eq $GroupPolicyAssignment)
         {
             Write-Verbose -Message "GroupPolicyAssignment not found for Group {$GroupDisplayName}"
             $nullReturn.GroupId = $Group.Id
             return $nullReturn
+        }
+
+        $priorityValue = $null
+        if ($null -ne $GroupPolicyAssignment.Priority)
+        {
+            $priorityValue = $GroupPolicyAssignment.Priority.ToString()
         }
 
         $Message = "Found GroupPolicyAssignment with PolicyType {$($GroupPolicyAssignment.PolicyType)}, " + `
@@ -128,7 +134,7 @@ function Get-TargetResource
             GroupDisplayName      = $Group.DisplayName
             PolicyType            = $GroupPolicyAssignment.PolicyType
             PolicyName            = $GroupPolicyAssignment.PolicyName
-            Priority              = if ($null -ne $GroupPolicyAssignment.Priority) { $GroupPolicyAssignment.Priority.ToString() } else { $null }
+            Priority              = $priorityValue
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -336,8 +342,8 @@ function Test-TargetResource
 
     $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                             -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
-                                             @compareParameters
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -419,7 +425,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message  "    |---[$j/$($instances.Length)] GroupPolicyAssignment {$($Group.DisplayName)-$($item.PolicyType)}" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$j/$($instances.Length)] GroupPolicyAssignment {$($Group.DisplayName)-$($item.PolicyType)}" -DeferWrite
             $results = @{
                 GroupDisplayName      = $Group.DisplayName
                 GroupId               = $item.GroupId

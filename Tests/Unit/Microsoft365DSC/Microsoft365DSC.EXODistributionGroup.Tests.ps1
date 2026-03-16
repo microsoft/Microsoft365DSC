@@ -52,10 +52,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BypassNestedModerationEnabled      = $False
                     DisplayName                        = 'My Demo DG'
                     HiddenGroupMembershipEnabled       = $True
-                    ManagedBy                          = @('john.smith@contoso.com')
+                    ManagedByWithDisplayName           = @('john.smith@contoso.com')
                     MemberDepartRestriction            = 'Open'
                     MemberJoinRestriction              = 'Closed'
-                    ModeratedBy                        = @('john.smith@contoso.com')
+                    ModeratedByWithDisplayNames        = @('john.smith@contoso.com')
                     ModerationEnabled                  = $False
                     Identity                           = 'DemoDG'
                     Name                               = 'DemoDG'
