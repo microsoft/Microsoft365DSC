@@ -78,13 +78,13 @@ function Get-TargetResource
 
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $uri = "https://management.azure.com$($InvoiceSectionId)/billingSubscriptions/$($Id)?api-version=2024-04-01"
+                $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$($InvoiceSectionId.Trim('/'))/billingSubscriptions/$($Id)?api-version=2024-04-01"
                 $response = Invoke-AzRest -Uri $uri -Method Get
                 $instance = (ConvertFrom-Json $response.Content).value
             }
             elseif ($null -eq $instance -and -not [System.String]::IsNullOrEmpty($DisplayName))
             {
-                $uri = "https://management.azure.com$($InvoiceSectionId)/billingSubscriptions?api-version=2024-04-01"
+                $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$($InvoiceSectionId.Trim('/'))/billingSubscriptions?api-version=2024-04-01"
                 $response = Invoke-AzRest -Uri $uri -Method Get
                 $instances = (ConvertFrom-Json $response.Content).value
                 $instance = $instances | Where-Object -FilterScript { $_.properties.displayName -eq $DisplayName }
@@ -205,7 +205,7 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $uri = "https://management.azure.com/providers/Microsoft.Subscription/aliases/$((New-Guid).ToString())?api-version=2021-10-01"
+        $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/Microsoft.Subscription/aliases/$((New-Guid).ToString())?api-version=2021-10-01"
         $params = @{
             properties = @{
                 billingScope = $InvoiceSectionId
@@ -236,7 +236,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Deleting subscription {$Name}"
-        $uri = "https://management.azure.com/subscriptions/$($currentInstance.Id)/providers/Microsoft.Subscription/cancel?api-version=2019-03-01-preview&ImmediateDelete=true"
+        $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)subscriptions/$($currentInstance.Id)/providers/Microsoft.Subscription/cancel?api-version=2019-03-01-preview&ImmediateDelete=true"
         $response = Invoke-AzRest -Uri $uri -Method POST
         Write-Verbose -Message "Response:`r`n$($response.Content)"
     }
@@ -362,7 +362,7 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
 
-        $uri = 'https://management.azure.com/providers/Microsoft.Billing/billingaccounts/?api-version=2020-05-01'
+        $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/Microsoft.Billing/billingaccounts/?api-version=2020-05-01"
         $response = Invoke-AzRest -Uri $uri -Method Get
         $billingAccounts = (ConvertFrom-Json $response.Content).value
 
@@ -374,13 +374,13 @@ function Export-TargetResource
 
         foreach ($billingAccount in $billingAccounts)
         {
-            $uri = "https://management.azure.com/providers/Microsoft.Billing/billingaccounts/$($billingAccount.Name)/billingprofiles/?api-version=2020-05-01"
+            $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/Microsoft.Billing/billingaccounts/$($billingAccount.Name)/billingprofiles/?api-version=2020-05-01"
             $response = Invoke-AzRest -Uri $uri -Method Get
             $billingProfiles = (ConvertFrom-Json $response.Content).value
 
             foreach ($billingProfile in $billingProfiles)
             {
-                $uri = "https://management.azure.com/providers/Microsoft.Billing/billingAccounts/$($billingAccount.name)/billingProfiles/$($billingProfile.name)/billingSubscriptions?api-version=2024-04-01"
+                $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/Microsoft.Billing/billingAccounts/$($billingAccount.name)/billingProfiles/$($billingProfile.name)/billingSubscriptions?api-version=2024-04-01"
                 $response = Invoke-AzRest -Uri $uri -Method Get
                 $subscriptions = (ConvertFrom-Json $response.Content).value
                 [array] $Script:exportedInstances += $subscriptions

@@ -34,7 +34,26 @@ class MSFT_AADCrossTenantAccessPolicyInboundTrust
     [Write, Description("Specifies whether MFA from external Azure AD organizations is trusted.")] Boolean IsMfaAccepted;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("AADCrossTenantAccessPolicyConfigurationPartner")]
+[ClassVersion("1.0.0")]
+class MSFT_AADCrossTenantGroupSyncInbound
+{
+    [Write, Description("Defines whether group objects should be synchronized from the partner tenant. false stops any current group synchronization from the source tenant to the target tenant. This property has no impact on existing groups that were synchronized.")] Boolean IsSyncAllowed;
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_AADCrossTenantUserSyncInbound
+{
+    [Write, Description("Defines whether user objects should be synchronized from the partner tenant. false causes any current user synchronization from the source tenant to the target tenant to stop. This property has no impact on existing users who have already been synchronized.")] Boolean IsSyncAllowed;
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_AADCrossTenantIdentitySyncPolicyPartner
+{
+    [Write, Description("Defines whether groups can be synchronized from a partner tenant. Key."), EmbeddedInstance("MSFT_AADCrossTenantGroupSyncInbound")] String GroupSyncInbound;
+    [Write, Description("Specifies whether you want to automatically trust Outbound invitations."), EmbeddedInstance("MSFT_AADCrossTenantUserSyncInbound")] String UserSyncInbound;
+};
+
+[ClassVersion("1.0.0.1"), FriendlyName("AADCrossTenantAccessPolicyConfigurationPartner")]
 class MSFT_AADCrossTenantAccessPolicyConfigurationPartner : OMI_BaseResource
 {
     [Key, Description("The tenant identifier for the partner Azure Active Directory (Azure AD) organization.")] String PartnerTenantId;
@@ -43,6 +62,7 @@ class MSFT_AADCrossTenantAccessPolicyConfigurationPartner : OMI_BaseResource
     [Write, Description("Defines your partner-specific configuration for users from other organizations accessing your resources via Azure AD B2B direct connect."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BDirectConnectInbound;
     [Write, Description("Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B direct connect."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BDirectConnectOutbound;
     [Write, Description("Determines the partner-specific configuration for accepting trust claims from other tenant invitations."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings")] String AutomaticUserConsentSettings;
+    [Write, Description("Defines the identity synchronization settings."), EmbeddedInstance("MSFT_AADCrossTenantIdentitySyncPolicyPartner")] String IdentitySynchronization;
     [Write, Description("Determines the partner-specific configuration for trusting other Conditional Access claims from external Azure AD organizations."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyInboundTrust")] String InboundTrust;
     [Write, Description("Specify if the policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

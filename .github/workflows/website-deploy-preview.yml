@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: website-build
-          path: ${{ github.workspace }}/generator/build
+          path: ${{ github.workspace }}/generator/dist
 
   deploy_preview:
     if: github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/Dev'

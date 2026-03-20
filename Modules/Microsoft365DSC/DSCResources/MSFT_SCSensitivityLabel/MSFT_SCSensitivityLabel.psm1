@@ -1737,7 +1737,7 @@ function Convert-JSONToLocaleSettings
     foreach ($localeSetting in $localeSettings)
     {
         $result = [ordered]@{
-            localeKey = $localeSetting.LocaleKey
+            LocaleKey = $localeSetting.LocaleKey
         }
         foreach ($setting in $localeSetting.Settings)
         {
@@ -1804,7 +1804,7 @@ function Convert-CIMToAdvancedSettings
         $AdvancedSettings
     )
 
-    $entry = [ordered]@{}
+    $entry = [PSCustomObject]@{}
     foreach ($obj in $AdvancedSettings)
     {
         $settingsValues = ''
@@ -1813,7 +1813,7 @@ function Convert-CIMToAdvancedSettings
             $settingsValues += $objVal
             $settingsValues += ','
         }
-        $entry[$obj.Key] = $settingsValues.Substring(0, ($settingsValues.Length - 1))
+        $entry | Add-Member -MemberType NoteProperty -Name $obj.Key -Value $settingsValues.Substring(0, ($settingsValues.Length - 1)) -Force
     }
 
     return $entry

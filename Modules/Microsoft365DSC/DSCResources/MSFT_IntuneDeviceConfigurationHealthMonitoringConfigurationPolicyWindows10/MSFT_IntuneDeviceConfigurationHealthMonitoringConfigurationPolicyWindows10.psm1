@@ -287,36 +287,17 @@ function Set-TargetResource
         Write-Verbose -Message "Creating an Intune Device Configuration Health Monitoring Configuration Policy for Windows10 with DisplayName {$DisplayName}"
         $boundParameters.Remove('Assignments') | Out-Null
 
-        $CreateParameters = ([Hashtable]$boundParameters).Clone()
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Remove('Id') | Out-Null
+        $createParameters = ([Hashtable]$boundParameters).Clone()
+        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
+        $createParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$CreateParameters).Clone()).Keys
-        foreach ($key in $keys)
+        if ($createParameters.ContainsKey('configDeviceHealthMonitoringScope'))
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-        }
-        if ($CreateParameters.ContainsKey('ConfigDeviceHealthMonitoringScope'))
-        {
-            $CreateParameters['configDeviceHealthMonitoringScope'] = ($CreateParameters['ConfigDeviceHealthMonitoringScope'] -join ',')
-            $CreateParameters.Remove('ConfigDeviceHealthMonitoringScope') | Out-Null
-        }
-        if ($CreateParameters.ContainsKey('AllowDeviceHealthMonitoring'))
-        {
-            $CreateParameters['allowDeviceHealthMonitoring'] = $CreateParameters['AllowDeviceHealthMonitoring']
-            $CreateParameters.Remove('AllowDeviceHealthMonitoring') | Out-Null
-        }
-        if ($CreateParameters.ContainsKey('ConfigDeviceHealthMonitoringCustomScope'))
-        {
-            $CreateParameters['configDeviceHealthMonitoringCustomScope'] = $CreateParameters['ConfigDeviceHealthMonitoringCustomScope']
-            $CreateParameters.Remove('ConfigDeviceHealthMonitoringCustomScope') | Out-Null
+            $createParameters['configDeviceHealthMonitoringScope'] = ($createParameters['configDeviceHealthMonitoringScope'] -join ',')
         }
         #region resource generator code
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.windowsHealthMonitoringConfiguration')
-        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $createParameters.Add('@odata.type', '#microsoft.graph.windowsHealthMonitoringConfiguration')
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $createParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
@@ -334,37 +315,18 @@ function Set-TargetResource
 
         $UpdateParameters = ([Hashtable]$boundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
         $UpdateParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
-        foreach ($key in $keys)
+        if ($UpdateParameters.ContainsKey('configDeviceHealthMonitoringScope'))
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-        }
-        if ($UpdateParameters.ContainsKey('ConfigDeviceHealthMonitoringScope'))
-        {
-            $UpdateParameters['configDeviceHealthMonitoringScope'] = ($UpdateParameters['ConfigDeviceHealthMonitoringScope'] -join ',')
-            $UpdateParameters.Remove('ConfigDeviceHealthMonitoringScope') | Out-Null
-        }
-        if ($UpdateParameters.ContainsKey('AllowDeviceHealthMonitoring'))
-        {
-            $UpdateParameters['allowDeviceHealthMonitoring'] = $UpdateParameters['AllowDeviceHealthMonitoring']
-            $UpdateParameters.Remove('AllowDeviceHealthMonitoring') | Out-Null
-        }
-        if ($UpdateParameters.ContainsKey('ConfigDeviceHealthMonitoringCustomScope'))
-        {
-            $UpdateParameters['configDeviceHealthMonitoringCustomScope'] = $UpdateParameters['ConfigDeviceHealthMonitoringCustomScope']
-            $UpdateParameters.Remove('ConfigDeviceHealthMonitoringCustomScope') | Out-Null
+            $UpdateParameters['configDeviceHealthMonitoringScope'] = ($UpdateParameters['configDeviceHealthMonitoringScope'] -join ',')
         }
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.windowsHealthMonitoringConfiguration')
         Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
+
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.id `

@@ -50,6 +50,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             enforcementType = "allow"
                             isEnforced = $True
                         }
+                        PasskeyProfiles = @(
+                            @{
+                                AttestationEnforcement = "registrationOnly"
+                                Id = "00000000-0000-0000-0000-000000000001"
+                                KeyRestrictions = @{
+                                    AaGuids = @(
+                                        "90a3ccdf-635c-4729-a248-9b709135078f"
+                                        "de1e552d-db1d-4423-a619-566b625cdc84"
+                                    )
+                                    EnforcementType = "block"
+                                    IsEnforced = $True
+                                }
+                                Name = "Default passkey profile"
+                                PasskeyTypes = "deviceBound"
+                            }
+                        )
                     }
                     ExcludeTargets = @(
                         @{
@@ -104,6 +120,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         enforcementType = "allow"
                         isEnforced = $True
                     } -ClientOnly)
+                    PasskeyProfiles = @(
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyFido2PasskeyProfile -Property @{
+                            AttestationEnforcement = "registrationOnly"
+                            Id = "00000000-0000-0000-0000-000000000001"
+                            KeyRestrictions = (New-CimInstance -ClassName MSFT_MicrosoftGraphfido2KeyRestrictions -Property @{
+                                AaGuids = @(
+                                    "90a3ccdf-635c-4729-a248-9b709135078f"
+                                    "de1e552d-db1d-4423-a619-566b625cdc84"
+                                )
+                                EnforcementType = "block"
+                                IsEnforced = $True
+                            } -ClientOnly)
+                            Name = "Default passkey profile"
+                            PasskeyTypes = "deviceBound"
+                        } -ClientOnly)
+                    )
                     State = "enabled"
                     Ensure = "Present"
                     Credential = $Credential;

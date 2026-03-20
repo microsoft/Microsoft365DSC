@@ -28,6 +28,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
+        $IdentitySynchronization,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $InboundTrust,
 
         [Parameter()]
@@ -93,6 +97,7 @@ function Get-TargetResource
             $nullResult.Ensure = 'Absent'
 
             $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId `
+                -ExpandProperty "IdentitySynchronization" `
                 -ErrorAction SilentlyContinue
 
             if ($null -eq $getValue)
@@ -107,19 +112,23 @@ function Get-TargetResource
         }
 
         $B2BCollaborationInboundValue = $null
-        if ($null -ne $getValue.B2BCollaborationInbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BCollaborationInbound) -eq $false)
+        if ($null -ne $getValue.B2BCollaborationInbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BCollaborationInbound) -eq $false `
+            -and $getValue.B2BCollaborationInbound.Keys.Count -gt 0)
         {
             $B2BCollaborationInboundValue = $getValue.B2BCollaborationInbound
         }
-        if ($null -ne $getValue.B2BCollaborationOutbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BCollaborationOutbound) -eq $false)
+        if ($null -ne $getValue.B2BCollaborationOutbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BCollaborationOutbound) -eq $false `
+            -and $getValue.B2BCollaborationOutbound.Keys.Count -gt 0)
         {
             $B2BCollaborationOutboundValue = $getValue.B2BCollaborationOutbound
         }
-        if ($null -ne $getValue.B2BDirectConnectInbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BDirectConnectInbound) -eq $false)
+        if ($null -ne $getValue.B2BDirectConnectInbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BDirectConnectInbound) -eq $false `
+            -and $getValue.B2BDirectConnectInbound.Keys.Count -gt 0)
         {
             $B2BDirectConnectInboundValue = $getValue.B2BDirectConnectInbound
         }
-        if ($null -ne $getValue.B2BDirectConnectOutbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BDirectConnectOutbound) -eq $false)
+        if ($null -ne $getValue.B2BDirectConnectOutbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BDirectConnectOutbound) -eq $false `
+            -and $getValue.B2BDirectConnectOutbound.Keys.Count -gt 0)
         {
             $B2BDirectConnectOutboundValue = $getValue.B2BDirectConnectOutbound
         }
@@ -131,6 +140,17 @@ function Get-TargetResource
         {
             $InboundTrustValue = $getValue.InboundTrust
         }
+        if ($null -ne $getValue.IdentitySynchronization)
+        {
+            $IdentitySynchronizationValue = [ordered]@{
+                GroupSyncInbound = @{
+                    IsSyncAllowed = $getValue.IdentitySynchronization.GroupSyncInbound.IsSyncAllowed
+                }
+                UserSyncInbound = @{
+                    IsSyncAllowed = $getValue.IdentitySynchronization.UserSyncInbound.IsSyncAllowed
+                }
+            }
+        }
         $results = @{
             PartnerTenantId              = $getValue.TenantId
             B2BCollaborationInbound      = $B2BCollaborationInboundValue
@@ -138,6 +158,7 @@ function Get-TargetResource
             B2BDirectConnectInbound      = $B2BDirectConnectInboundValue
             B2BDirectConnectOutbound     = $B2BDirectConnectOutboundValue
             AutomaticUserConsentSettings = $AutomaticUserConsentSettingsValue
+            IdentitySynchronization      = $IdentitySynchronizationValue
             InboundTrust                 = $InboundTrustValue
             Ensure                       = 'Present'
             Credential                   = $Credential
@@ -190,7 +211,12 @@ function Set-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
+        $IdentitySynchronization,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AutomaticUserConsentSettings,
+
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $InboundTrust,
@@ -244,7 +270,6 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $OperationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($null -ne $OperationParams.B2BCollaborationInbound)
@@ -274,6 +299,10 @@ function Set-TargetResource
     if ($null -ne $OperationParams.InboundTrust)
     {
         $OperationParams.InboundTrust = (Get-M365DSCAADCrossTenantAccessPolicyInboundTrust -Setting $OperationParams.InboundTrust)
+    }
+    if ($null -ne $OperationParams.IdentitySynchronization)
+    {
+        $OperationParams.IdentitySynchronization = (Get-M365DSCAADCrossTenantAccessPolicyIdentitySynchronization -Setting $OperationParams.IdentitySynchronization)
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -323,6 +352,10 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $B2BDirectConnectOutbound,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $IdentitySynchronization,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -439,6 +472,7 @@ function Export-TargetResource
         [array]$getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner `
             -All `
             -Filter $Filter `
+            -ExpandProperty "IdentitySynchronization" `
             -ErrorAction Stop
 
         $i = 1
@@ -507,17 +541,9 @@ function Export-TargetResource
 
             if ($null -ne $Results.AutomaticUserConsentSettings)
             {
-                $complexMapping = @(
-                    @{
-                        Name            = 'AutomaticUserConsentSettings'
-                        CimInstanceName = 'AADCrossTenantAccessPolicyAutomaticUserConsentSettings'
-                        IsRequired      = $False
-                    }
-                )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.AutomaticUserConsentSettings `
-                    -CIMInstanceName 'AADCrossTenantAccessPolicyAutomaticUserConsentSettings' `
-                    -ComplexTypeMapping $complexMapping
+                    -CIMInstanceName 'AADCrossTenantAccessPolicyAutomaticUserConsentSettings'
 
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
@@ -648,17 +674,9 @@ function Export-TargetResource
 
             if ($null -ne $Results.InboundTrust)
             {
-                $complexMapping = @(
-                    @{
-                        Name            = 'InboundTrust'
-                        CimInstanceName = 'AADCrossTenantAccessPolicyInboundTrust'
-                        IsRequired      = $False
-                    }
-                )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.InboundTrust `
-                    -CIMInstanceName 'AADCrossTenantAccessPolicyInboundTrust' `
-                    -ComplexTypeMapping $complexMapping
+                    -CIMInstanceName 'AADCrossTenantAccessPolicyInboundTrust'
 
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
@@ -670,12 +688,46 @@ function Export-TargetResource
                 }
             }
 
+            if ($null -ne $Results.IdentitySynchronization)
+            {
+                $complexMapping = @(
+                    @{
+                        Name            = 'IdentitySynchronization'
+                        CimInstanceName = 'AADCrossTenantIdentitySyncPolicyPartner'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'GroupSyncInbound'
+                        CimInstanceName = 'AADCrossTenantGroupSyncInbound'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'UserSyncInbound'
+                        CimInstanceName = 'AADCrossTenantUserSyncInbound'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.IdentitySynchronization `
+                    -CIMInstanceName 'AADCrossTenantIdentitySyncPolicyPartner' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.IdentitySynchronization = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('IdentitySynchronization') | Out-Null
+                }
+            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('B2BCollaborationInbound', 'B2BCollaborationOutbound', 'B2BDirectConnectInbound', 'B2BDirectConnectOutbound', 'InboundTrust', 'AutomaticUserConsentSettings')
+                -NoEscape @('B2BCollaborationInbound', 'B2BCollaborationOutbound', 'B2BDirectConnectInbound', 'B2BDirectConnectOutbound', 'InboundTrust', 'AutomaticUserConsentSettings', 'IdentitySynchronization')
 
             # Fix OrganizationName variable in CIMInstance
             $currentDSCBlock = $currentDSCBlock.Replace('@$OrganizationName''', "@' + `$OrganizationName")
@@ -859,6 +911,26 @@ function Get-M365DSCAADCrossTenantAccessPolicyInboundTrust
     }
 
     return $result
+}
+
+function Get-M365DSCAADCrossTenantAccessPolicyIdentitySynchronization
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $Setting
+    )
+
+    @{
+        groupSyncInbound = @{
+            isSyncAllowed = $Setting.GroupSyncInbound.IsSyncAllowed
+        }
+        userSyncInbound = @{
+            isSyncAllowed = $Setting.UserSyncInbound.IsSyncAllowed
+        }
+    }
 }
 
 function Test-M365DSCB2BIsDefault

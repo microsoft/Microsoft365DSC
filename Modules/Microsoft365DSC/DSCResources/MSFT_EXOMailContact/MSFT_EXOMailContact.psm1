@@ -1,4 +1,10 @@
 Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOMailContact'
+$Script:NewParameters = @('Alias', 'DisplayName', 'ExternalEmailAddress', 'FirstName', 'Initials', 'LastName', 'MacAttachmentFormat', 'MessageBodyFormat', 'MessageFormat', 'ModeratedBy', 'ModerationEnabled', 'Name', 'OrganizationalUnit', 'SendModerationNotifications', 'UsePreferMessageFormat')
+$Script:SetParameters = @('AcceptMessagesOnlyFrom', 'AcceptMessagesOnlyFromDLMembers', 'AcceptMessagesOnlyFromSendersOrMembers', 'Alias', 'BypassModerationFromSendersOrMembers', 'CustomAttribute1', 'CustomAttribute10', 'CustomAttribute11', 'CustomAttribute12', 'CustomAttribute13', 'CustomAttribute14',
+                          'CustomAttribute15', 'CustomAttribute2', 'CustomAttribute3', 'CustomAttribute4', 'CustomAttribute5', 'CustomAttribute6', 'CustomAttribute7', 'CustomAttribute8', 'CustomAttribute9', 'DisplayName', 'EmailAddresses', 'ExtensionCustomAttribute1', 'ExtensionCustomAttribute2',
+                          'ExtensionCustomAttribute3', 'ExtensionCustomAttribute4', 'ExtensionCustomAttribute5', 'ExternalEmailAddress', 'ForceUpgrade', 'GrantSendOnBehalfTo', 'HiddenFromAddressListsEnabled', 'Identity', 'MacAttachmentFormat', 'MailTip', 'MailTipTranslations', 'MessageBodyFormat',
+                          'MessageFormat', 'ModeratedBy', 'ModerationEnabled', 'Name', 'RejectMessagesFrom', 'RejectMessagesFromDLMembers', 'RejectMessagesFromSendersOrMembers', 'RequireSenderAuthenticationEnabled', 'SendModerationNotifications', 'SimpleDisplayName', 'UseMapiRichTextFormat',
+                          'UsePreferMessageFormat', 'UserCertificate', 'UserSMimeCertificate', 'WindowsEmailAddress')
 
 function Get-TargetResource
 {
@@ -497,37 +503,50 @@ function Set-TargetResource
     #endregion
 
     # Mail Contact doesn't exist but it should
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters.Remove('Name') | Out-Null
     if ($Ensure -eq 'Present' -and $currentContact.Ensure -eq 'Absent')
     {
-        $parameters = Sync-M365DSCParameter -Command (Get-Command -Name New-MailContact) -Parameters $PSBoundParameters
         Write-Verbose -Message "The Mail Contact '$($Name)' does not exist but it should. Creating Mail Contact."
-
-        try
+        $createParameters = @{}
+        $updateParameters = @{}
+        foreach ($param in $Script:NewParameters)
         {
-            New-MailContact @parameters -ErrorAction Stop
-
-            $parameters = Sync-M365DSCParameter -Command (Get-Command -Name Set-MailContact) -Parameters $PSBoundParameters
-            $parameters.Identity = $Name
-            Set-MailContact @parameters -ErrorAction Stop
+            if (-not $createParameters.ContainsKey($param) -and $boundParameters.ContainsKey($param))
+            {
+                $createParameters.Add($param, $PSBoundParameters[$param])
+            }
         }
-        catch
+        foreach ($param in $Script:SetParameters)
         {
-            Write-Error -ErrorRecord $_
+            if (-not $updateParameters.ContainsKey($param) -and $boundParameters.ContainsKey($param))
+            {
+                $updateParameters.Add($param, $PSBoundParameters[$param])
+            }
         }
-    }
-    # Mail Contact exists but shouldn't
-    elseif ($Ensure -eq 'Absent' -and $currentContact.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Mail Contact'$($Name)' exists but shouldn't. Removing Mail Contact."
-        Remove-MailContact -Identity $Name -Confirm:$false
+        $updateParameters.Add('Identity', $Name)
+
+        New-MailContact @createParameters -ErrorAction Stop
+        Set-MailContact @updateParameters -ErrorAction Stop
     }
     elseif ($Ensure -eq 'Present' -and $currentContact.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Mail Contact '$($Name)' already exists. Updating settings"
-        $parameters = Sync-M365DSCParameter -Command (Get-Command -Name Set-MailContact) -Parameters $PSBoundParameters
-        Write-Verbose -Message "Updating Mail Contact '$($Name)' with values: $(Convert-M365DscHashtableToString -Hashtable $parameters)"
-        $parameters.Identity = $Name
-        Set-MailContact @parameters
+        $updateParameters = @{}
+        foreach ($param in $Script:SetParameters)
+        {
+            if ($updateParameters.ContainsKey($param) -and $boundParameters.ContainsKey($param))
+            {
+                $updateParameters.Add($param, $PSBoundParameters[$param])
+            }
+        }
+        $updateParameters.Add('Identity', $Name)
+        Set-MailContact @updateParameters
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentContact.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Mail Contact'$($Name)' exists but shouldn't. Removing Mail Contact."
+        Remove-MailContact -Identity $Name -Confirm:$false
     }
 }
 

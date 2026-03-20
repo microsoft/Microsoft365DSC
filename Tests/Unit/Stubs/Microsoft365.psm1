@@ -73,6 +73,33 @@ function Get-AzSubscription
         $SubscriptionName
     )
 }
+function Get-AzManagementGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GroupName,
+
+        [Parameter()]
+        [switch]
+        $Expand,
+
+        [Parameter()]
+        [switch]
+        $Recurse
+    )
+}
+
+function Get-AzTenant
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId
+    )
+}
 
 function Get-AzSecurityPricing
 {

@@ -632,13 +632,27 @@ function New-DscMofResourceWikiPage
                     $null = $permissionsContent.AppendLine()
                     $null = $permissionsContent.AppendLine('#### Roles')
                     $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine("* $($settingsJson.permissions.exchange.requiredroles -join ', ')")
+                    $null = $permissionsContent.AppendLine('* **Read**')
+                    $null = $permissionsContent.AppendLine("* $($settingsJson.permissions.exchange.requiredroles.read -join ', ')")
+                    $null = $permissionsContent.AppendLine('* **Update**')
+                    $null = $permissionsContent.AppendLine("* $($settingsJson.permissions.exchange.requiredroles.update -join ', ')")
                     $null = $permissionsContent.AppendLine()
                     $null = $permissionsContent.AppendLine('#### Role Groups')
                     $null = $permissionsContent.AppendLine()
-                    if ($settingsJson.permissions.exchange.requiredrolegroups.Count -ne 0)
+                    $null = $permissionsContent.AppendLine('* **Read**')
+                    if ($settingsJson.permissions.exchange.requiredrolegroups.read.Count -ne 0)
                     {
-                        $roleGroups = $settingsJson.permissions.exchange.requiredrolegroups -join ', '
+                        $roleGroups = $settingsJson.permissions.exchange.requiredrolegroups.read -join ', '
+                    }
+                    else
+                    {
+                        $roleGroups = 'None'
+                    }
+                    $null = $permissionsContent.AppendLine("* $roleGroups")
+                    $null = $permissionsContent.AppendLine('* **Update**')
+                    if ($settingsJson.permissions.exchange.requiredrolegroups.update.Count -ne 0)
+                    {
+                        $roleGroups = $settingsJson.permissions.exchange.requiredrolegroups.update -join ', '
                     }
                     else
                     {

@@ -975,7 +975,7 @@ function Convert-CIMToAdvancedSettings
         $AdvancedSettings
     )
 
-    $entry = [ordered]@{}
+    $entry = [PSCustomObject]@{}
     foreach ($obj in $AdvancedSettings)
     {
         $settingsValues = ''
@@ -1006,7 +1006,7 @@ function Convert-CIMToAdvancedSettings
                 $settingsValues += ','
             }
         }
-        $entry[$obj.Key] = $settingsValues.TrimEnd(',')
+        $entry | Add-Member -MemberType NoteProperty -Name $obj.Key -Value $settingsValues.TrimEnd(',') -Force
     }
 
     return $entry

@@ -130,13 +130,19 @@ function Get-TargetResource
             $complexExtendedNotifications += $complexExtendedNotification
         }
 
+        $externalLocationLookupModeValue = $null
+        if ($null -ne $policy.ExternalLocationLookupMode)
+        {
+            $externalLocationLookupModeValue = $policy.ExternalLocationLookupMode.ToString()
+        }
+
         Write-Verbose -Message "Found Teams Emergency Calling Policy {$Identity}"
         $result = @{
             Identity                           = $Identity
             Description                        = $policy.Description
             EnhancedEmergencyServiceDisclaimer = $policy.EnhancedEmergencyServiceDisclaimer
             ExtendedNotifications              = $complexExtendedNotifications
-            ExternalLocationLookupMode         = $policy.ExternalLocationLookupMode
+            ExternalLocationLookupMode         = $externalLocationLookupModeValue
             NotificationDialOutNumber          = $policy.NotificationDialOutNumber
             NotificationGroup                  = $policy.NotificationGroup
             NotificationMode                   = [String]$policy.NotificationMode

@@ -84,7 +84,7 @@ function Get-TargetResource
             return $nullResult
         }
 
-        $uri = "https://management.azure.com/$($resourceGroupInstance.ResourceId)/providers/Microsoft.VerifiedId/authorities/$($VerifiedIdAuthorityId)?api-version=2024-01-26-preview"
+        $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$($resourceGroupInstance.ResourceId)/providers/Microsoft.VerifiedId/authorities/$($VerifiedIdAuthorityId)?api-version=2024-01-26-preview"
         $response = Invoke-AzRest -Uri $uri -Method Get
         $authorities = ConvertFrom-Json $response.Content
 
@@ -196,14 +196,14 @@ function Set-TargetResource
     if ($FaceCheckEnabled)
     {
         Write-Verbose -Message "Enabling FaceCheck on Verified ID Authority {$($VerifiedIDAuthorityId)}"
-        $uri = "https://management.azure.com/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/providers/Microsoft.VerifiedId/authorities/$($VerifiedIdAuthorityId)?api-version=2024-01-26-preview"
+        $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/providers/Microsoft.VerifiedId/authorities/$($VerifiedIdAuthorityId)?api-version=2024-01-26-preview"
         $payload = '{"location": "' + $VerifiedIdAuthorityLocation + '"}'
         $response = Invoke-AzRest -Uri $uri -Method Put -Payload $payload
     }
     else
     {
         Write-Verbose -Message "Disabling FaceCheck on Verified ID Authority {$($VerifiedIDAuthorityId)}"
-        $uri = "https://management.azure.com/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/providers/Microsoft.VerifiedId/authorities/$($VerifiedIdAuthorityId)?api-version=2024-01-26-preview"
+        $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/providers/Microsoft.VerifiedId/authorities/$($VerifiedIdAuthorityId)?api-version=2024-01-26-preview"
         $payload = '{"location": null}'
         $response = Invoke-AzRest -Uri $uri -Method DELETE
     }
@@ -373,7 +373,7 @@ function Export-TargetResource
             $i = 1
             foreach ($authority in $authorities.value)
             {
-                $uri = "https://management.azure.com/$($resourceGroup.ResourceId)/providers/Microsoft.VerifiedId/authorities/$($authority.id)?api-version=2024-01-26-preview"
+                $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$($resourceGroup.ResourceId)/providers/Microsoft.VerifiedId/authorities/$($authority.id)?api-version=2024-01-26-preview"
                 $response = Invoke-AzRest -Uri $uri -Method Get
 
                 $Global:M365DSCExportResourceInstancesCount++

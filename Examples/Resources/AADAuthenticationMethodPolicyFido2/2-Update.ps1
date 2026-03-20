@@ -47,11 +47,41 @@ Configuration Example
             );
             IsAttestationEnforced            = $False;
             IsSelfServiceRegistrationAllowed = $True;
-            KeyRestrictions                  = MSFT_MicrosoftGraphfido2KeyRestrictions{
+            KeyRestrictions                  = MSFT_MicrosoftGraphFido2KeyRestrictions{
                 IsEnforced = $False
                 EnforcementType = 'block'
                 AaGuids = @()
             };
+            PasskeyProfiles                  = @(
+                MSFT_AADAuthenticationMethodPolicyFido2PasskeyProfile{
+                    AttestationEnforcement = "registrationOnly"
+                    Id = "00000000-0000-0000-0000-000000000001"
+                    KeyRestrictions = MSFT_MicrosoftGraphFido2KeyRestrictions{
+                        AaGuids = @(
+                            "90a3ccdf-635c-4729-a248-9b709135078f"
+                            "de1e552d-db1d-4423-a619-566b625cdc84"
+                        )
+                        EnforcementType = "block"
+                        IsEnforced = $True
+                    }
+                    Name = "Default passkey profile"
+                    PasskeyTypes = "deviceBound"
+                }
+                MSFT_AADAuthenticationMethodPolicyFido2PasskeyProfile{
+                    AttestationEnforcement = "disabled"
+                    Id = "cdd85462-0de2-4642-99f8-3f6d70fa5125"
+                    KeyRestrictions = MSFT_MicrosoftGraphFido2KeyRestrictions{
+                        AaGuids = @(
+                            "de1e552d-db1d-4423-a619-566b625cdc84"
+                            "90a3ccdf-635c-4729-a248-9b709135078f"
+                        )
+                        EnforcementType = "block"
+                        IsEnforced = $True
+                    }
+                    Name = "SWCProfile"
+                    PasskeyTypes = "deviceBound"
+                }
+            );
             State                            = "enabled"; # Updated Property
         }
     }
