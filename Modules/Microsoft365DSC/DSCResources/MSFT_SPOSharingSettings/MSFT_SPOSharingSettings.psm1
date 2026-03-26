@@ -176,7 +176,7 @@ function Get-TargetResource
         }
 
         # Local filtering because server side filtering intermittently fails
-        $MySite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -notmatch '^RedirectSite#' }
+        $MySite = Get-PnPTenantSite -Filter "Url -like '*.my.sharepoint.com'" | Where-Object { $_.Template -notmatch '^RedirectSite#' } | Select-Object -First 1
 
         if ($null -ne $MySite)
         {
@@ -497,7 +497,7 @@ function Set-TargetResource
     Set-PnPTenant @CurrentParameters | Out-Null
     if ($SetMySharingCapability)
     {
-        $mysite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -notmatch '^RedirectSite#' }
+        $mysite = Get-PnPTenantSite -Filter "Url -like '*.my.sharepoint.com'" | Where-Object { $_.Template -notmatch '^RedirectSite#' } | Select-Object -First 1
         Set-PnPTenantSite -Identity $mysite.Url -SharingCapability $MySiteSharingCapability
     }
 }
