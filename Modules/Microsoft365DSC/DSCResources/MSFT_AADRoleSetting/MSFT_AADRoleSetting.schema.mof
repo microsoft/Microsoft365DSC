@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AADRoleSetting")]
+[ClassVersion("1.0.0.1"), FriendlyName("AADRoleSetting")]
 class MSFT_AADRoleSetting : OMI_BaseResource
 {
     [Key, Description("RuleDefinition DisplayName")] String DisplayName;
