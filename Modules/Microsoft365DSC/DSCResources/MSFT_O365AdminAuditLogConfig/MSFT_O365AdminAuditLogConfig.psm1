@@ -81,7 +81,17 @@ function Get-TargetResource
         }
         else
         {
-            if ($GetResults.UnifiedAuditLogIngestionEnabled)
+            $auditLogValue = $GetResults.UnifiedAuditLogIngestionEnabled
+            if ($auditLogValue -is [bool])
+            {
+                $isEnabled = $auditLogValue
+            }
+            else
+            {
+                $isEnabled = [System.Convert]::ToBoolean($auditLogValue)
+            }
+
+            if ($isEnabled)
             {
                 $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
             }
@@ -336,8 +346,18 @@ function Export-TargetResource
     try
     {
         $O365AdminAuditLogConfig = Get-AdminAuditLogConfig -ErrorAction Stop
+        $auditLogValue = $O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled
+        if ($auditLogValue -is [bool])
+        {
+            $isEnabled = $auditLogValue
+        }
+        else
+        {
+            $isEnabled = [System.Convert]::ToBoolean($auditLogValue)
+        }
+
         $value = 'Disabled'
-        if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+        if ($isEnabled)
         {
             $value = 'Enabled'
         }

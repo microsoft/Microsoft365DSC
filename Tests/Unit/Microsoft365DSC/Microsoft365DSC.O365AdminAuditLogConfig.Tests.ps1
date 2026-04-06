@@ -156,7 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-AdminAuditLogConfig -MockWith {
                     return @{
-                        UnifiedAuditLogIngestionEnabled = 'Enabled'
+                        UnifiedAuditLogIngestionEnabled = $true
                     }
                 }
             }
