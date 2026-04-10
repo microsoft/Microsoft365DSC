@@ -46,14 +46,13 @@ namespace Microsoft365DSC.Cache
         }
 
         /// <summary>
-        /// Loads the SchemaDefinition.json file from <paramref name="filePath"/>,
+        /// Loads the schema from a list of objects,
         /// deserializes it into a list of <see cref="Hashtable"/> trees, and caches
         /// the result. Subsequent calls are no-ops unless <paramref name="force"/>
         /// is <c>true</c>.
         /// </summary>
         /// <param name="schema">List of schema objects to cache.</param>
-        /// <param name="force">When <c>true</c>, reloads even if already cached.</param>
-        public static void LoadSchema(List<object> schema, bool force = false)
+        public static void LoadSchema(List<object> schema)
         {
             List<object> newSchema = [];
             foreach (object entry in schema)
