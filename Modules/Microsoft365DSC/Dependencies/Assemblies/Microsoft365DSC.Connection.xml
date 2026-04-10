@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft365DSC.Connection</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft365DSC.Connection.ConnectionHelper">
+            <summary>
+            Provides methods for determining the most secure authentication type
+            supported by Microsoft365DSC resources.
+            </summary>
+        </member>
+        <member name="M:Microsoft365DSC.Connection.ConnectionHelper.GetComponentsWithMostSecureAuthenticationType(System.String,System.String[],System.String[])">
+            <summary>
+            Gets all resources that support the specified authentication method and
+            determines the most secure authentication method supported by each resource.
+            </summary>
+            <param name="dscResourcesPath">
+            The path to the DSCResources folder containing the .psm1 resource modules.
+            </param>
+            <param name="authenticationMethods">
+            The authentication methods to evaluate, in order of preference:
+            ApplicationWithSecret, CertificateThumbprint, CertificatePath, Credentials,
+            CredentialsWithTenantId, CredentialsWithApplicationId, ManagedIdentity, AccessTokens.
+            </param>
+            <param name="resources">
+            The resource names to evaluate (without MSFT_ prefix and .psm1 extension).
+            </param>
+            <returns>
+            A list of Hashtable objects, each containing 'Resource' (string) and 'AuthMethod' (string).
+            </returns>
+        </member>
+        <member name="M:Microsoft365DSC.Connection.ConnectionHelper.DetermineMostSecureAuthMethod(System.Collections.Generic.HashSet{System.String},System.Collections.Generic.HashSet{System.String},System.String)">
+            <summary>
+            Determines the most secure authentication method for a resource based on
+            the authentication methods requested and the parameters the resource supports.
+            The priority order matches the original PowerShell elseif chain.
+            </summary>
+        </member>
+    </members>
+</doc>

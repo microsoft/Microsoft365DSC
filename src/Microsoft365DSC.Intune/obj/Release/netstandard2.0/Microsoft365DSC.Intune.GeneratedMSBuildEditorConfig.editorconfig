@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = Microsoft365DSC.Intune
+build_property.ProjectDir = C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

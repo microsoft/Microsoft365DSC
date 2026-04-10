@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft365DSC.Utilities</name>
+    </assembly>
+    <members>
+        <member name="M:Microsoft365DSC.Utilities.Utilities.UpdateSpecialCharacters(System.String)">
+            <summary>
+            Method to update special characters in strings.
+            This method handles the conversion of special characters similar to Update-M365DSCSpecialCharacters.
+            This function updates special characters in a string to be escaped in a DSC configuration.
+            The function replaces the following characters:
+                - 0x201C = “
+                - 0x201D = ”
+                - 0x201E = „
+            </summary>
+            <param name="input">The input string to process</param>
+            <returns>The processed string with special characters updated</returns>
+        </member>
+    </members>
+</doc>

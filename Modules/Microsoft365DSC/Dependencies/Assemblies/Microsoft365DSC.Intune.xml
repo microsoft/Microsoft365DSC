@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft365DSC.Intune</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft365DSC.Intune.SettingDefinitionInfo">
+            <summary>
+            Internal representation of a Microsoft Graph DeviceManagementConfigurationSettingDefinition.
+            Avoids a direct dependency on the Microsoft.Graph SDK types.
+            </summary>
+        </member>
+        <member name="P:Microsoft365DSC.Intune.SettingDefinitionInfo.DependentOnParentSettingIds">
+            <summary>
+            Flattened list of unique parentSettingId values from AdditionalProperties.dependentOn[].parentSettingId.
+            </summary>
+        </member>
+        <member name="P:Microsoft365DSC.Intune.SettingDefinitionInfo.OptionsDependentOnParentSettingIds">
+            <summary>
+            Flattened list of unique parentSettingId values from AdditionalProperties.options[].dependentOn[].parentSettingId.
+            </summary>
+        </member>
+        <member name="T:Microsoft365DSC.Intune.SettingDefinitionMapper">
+            <summary>
+            Maps Microsoft Graph DeviceManagementConfigurationSettingDefinition objects (passed as PSObject or Hashtable)
+            to the internal <see cref="T:Microsoft365DSC.Intune.SettingDefinitionInfo"/> representation.
+            </summary>
+        </member>
+        <member name="M:Microsoft365DSC.Intune.SettingDefinitionMapper.FromGraphObject(System.Object)">
+            <summary>
+            Maps a single Graph SettingDefinition (typically a PSObject or Hashtable) to <see cref="T:Microsoft365DSC.Intune.SettingDefinitionInfo"/>.
+            Extracts Id, Name, OffsetUri, and the parentSettingId collections from AdditionalProperties.
+            Uses reflection to access properties, avoiding a compile-time dependency on the Graph SDK or Microsoft.CSharp.
+            </summary>
+        </member>
+        <member name="M:Microsoft365DSC.Intune.SettingDefinitionMapper.FromGraphObjects(System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+            Maps a collection of Graph SettingDefinition objects to a list of <see cref="T:Microsoft365DSC.Intune.SettingDefinitionInfo"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft365DSC.Intune.SettingDefinitionMapper.ExtractParentSettingIds(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
+            <summary>
+            Extracts parentSettingId values from additionalProperties["dependentOn"][].parentSettingId.
+            </summary>
+        </member>
+        <member name="M:Microsoft365DSC.Intune.SettingDefinitionMapper.ExtractOptionsParentSettingIds(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Extracts parentSettingId values from additionalProperties["options"][].dependentOn[].parentSettingId.
+            </summary>
+        </member>
+        <member name="T:Microsoft365DSC.Intune.SettingsCatalogHelper">
+             <summary>
+             C# port of the PowerShell module M365DSCIntuneSettingsCatalogUtil.
+             Provides deterministic setting name resolution for Intune Settings Catalog definitions.
+            
+             Each method maps 1:1 to its PowerShell counterpart. Deviations are documented inline.
+             </summary>
+        </member>
+        <member name="F:Microsoft365DSC.Intune.SettingsCatalogHelper.NameSimplificationRules">
+             <summary>
+             Name simplification rules applied when the setting name was disambiguated (settingsWithSameName.Count > 1).
+             Each entry is (wildcardPrefix, wildcardSuffix, searchString, replacementString).
+            
+             Corresponds to the "switch -wildcard" block in the PowerShell Get-SettingsCatalogSettingName.
+            
+             Optimization note: The PowerShell version uses a switch with -Wildcard patterns that are evaluated
+             sequentially. Here we use a data-driven approach with a list of tuples, which is equivalent but
+             more maintainable - adding a new simplification rule requires only one line instead of a new
+             switch case block.
+             </summary>
+        </member>
+        <member name="M:Microsoft365DSC.Intune.SettingsCatalogHelper.GetSettingName(System.Object,System.Collections.Generic.List{System.Object})">
+            <summary>
+            Port of Get-SettingsCatalogSettingName.
+            Resolves a unique, human-readable setting name for a given setting definition.
+            </summary>
+        </member>
+        <member name="M:Microsoft365DSC.Intune.SettingsCatalogHelper.GetParentSettingDefinition(Microsoft365DSC.Intune.SettingDefinitionInfo,System.Collections.Generic.List{Microsoft365DSC.Intune.SettingDefinitionInfo})">
+            <summary>
+            Port of Get-ParentSettingDefinition.
+            Finds the parent setting by looking up the first unique parentSettingId
+            from either dependentOn or options.dependentOn.
+            </summary>
+        </member>
+        <member name="M:Microsoft365DSC.Intune.SettingsCatalogHelper.GetUniqueNameFromMultipleMatches(Microsoft365DSC.Intune.SettingDefinitionInfo,System.String,System.Collections.Generic.List{Microsoft365DSC.Intune.SettingDefinitionInfo})">
+            <summary>
+            Port of Get-UniqueSettingDefinitionNameFromMultipleMatches.
+            Iteratively traverses up the OffsetUri to find a unique prefix for the setting name.
+            </summary>
+        </member>
+        <member name="M:Microsoft365DSC.Intune.SettingsCatalogHelper.GetSettingDefinitionNameFromOffsetUri(System.String,System.String,System.Int32)">
+             <summary>
+             Port of Get-SettingDefinitionNameFromOffsetUri.
+             Traverses up the OffsetUri segments to find a distinguishing prefix for the setting name.
+            
+             Optimization note: Instead of PowerShell array slicing ($arr[0..($arr.Length - 1 - $Skip)])
+             which creates new arrays at each step, we use a List and track the effective length via an
+             integer index. The algorithm is otherwise identical.
+             </summary>
+        </member>
+        <member name="M:Microsoft365DSC.Intune.SettingsCatalogHelper.ApplyNameSimplification(System.String)">
+             <summary>
+             Applies the name simplification rules that correspond to the PowerShell switch -wildcard block.
+            
+             Important behavioral note: The PowerShell switch -Wildcard does NOT break after the first match -
+             all matching cases are executed sequentially. This C# implementation replicates that behavior by
+             iterating through ALL rules and applying every match. This matters for names that could match
+             multiple rules (e.g., a name containing both a prefix pattern and a contains pattern like '~SmartScreen_').
+             </summary>
+        </member>
+    </members>
+</doc>

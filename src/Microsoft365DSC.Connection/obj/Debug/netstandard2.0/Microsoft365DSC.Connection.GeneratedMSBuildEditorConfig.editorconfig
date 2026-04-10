@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = Microsoft365DSC.Connection
+build_property.ProjectDir = c:\GitHub\Microsoft365DSC\src\Microsoft365DSC.Connection\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "c7ga9AZua+o=",
+  "success": true,
+  "projectFilePath": "C:\\github\\Microsoft365DSC\\src\\Microsoft365DSC.Utilities\\Microsoft365DSC.Utilities.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\nicharl\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\nicharl\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\nicharl\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\nicharl\\.nuget\\packages\\powershellstandard.library\\5.1.1\\powershellstandard.library.5.1.1.nupkg.sha512",
+    "C:\\Users\\nicharl\\.nuget\\packages\\system.codedom\\10.0.1\\system.codedom.10.0.1.nupkg.sha512",
+    "C:\\Users\\nicharl\\.nuget\\packages\\system.management\\10.0.1\\system.management.10.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

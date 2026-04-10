@@ -1,0 +1,13 @@
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\bin\Release\netstandard2.0\Microsoft365DSC.Intune.deps.json
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\bin\Release\netstandard2.0\Microsoft365DSC.Intune.dll
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\bin\Release\netstandard2.0\Microsoft365DSC.Intune.pdb
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\bin\Release\netstandard2.0\Microsoft365DSC.Intune.xml
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\obj\Release\netstandard2.0\Microsoft365DSC.Intune.csproj.AssemblyReference.cache
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\obj\Release\netstandard2.0\Microsoft365DSC.Intune.GeneratedMSBuildEditorConfig.editorconfig
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\obj\Release\netstandard2.0\Microsoft365DSC.Intune.AssemblyInfoInputs.cache
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\obj\Release\netstandard2.0\Microsoft365DSC.Intune.AssemblyInfo.cs
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\obj\Release\netstandard2.0\Microsoft365DSC.Intune.csproj.CoreCompileInputs.cache
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\obj\Release\netstandard2.0\Microsoft365DSC.Intune.sourcelink.json
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\obj\Release\netstandard2.0\Microsoft365DSC.Intune.dll
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\obj\Release\netstandard2.0\Microsoft365DSC.Intune.xml
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Intune\obj\Release\netstandard2.0\Microsoft365DSC.Intune.pdb

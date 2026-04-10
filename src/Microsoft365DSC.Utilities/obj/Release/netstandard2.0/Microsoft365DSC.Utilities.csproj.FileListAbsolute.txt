@@ -1,0 +1,17 @@
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\bin\Release\netstandard2.0\Microsoft365DSC.Utilities.deps.json
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\bin\Release\netstandard2.0\Microsoft365DSC.Utilities.dll
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\bin\Release\netstandard2.0\Microsoft365DSC.Utilities.pdb
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\bin\Release\netstandard2.0\Microsoft365DSC.Utilities.xml
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\bin\Release\netstandard2.0\Microsoft365DSC.Cache.dll
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\bin\Release\netstandard2.0\Microsoft365DSC.Cache.pdb
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\bin\Release\netstandard2.0\Microsoft365DSC.Cache.xml
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\obj\Release\netstandard2.0\Microsoft365DSC.Utilities.csproj.AssemblyReference.cache
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\obj\Release\netstandard2.0\Microsoft365DSC.Utilities.GeneratedMSBuildEditorConfig.editorconfig
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\obj\Release\netstandard2.0\Microsoft365DSC.Utilities.AssemblyInfoInputs.cache
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\obj\Release\netstandard2.0\Microsoft365DSC.Utilities.AssemblyInfo.cs
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\obj\Release\netstandard2.0\Microsoft365DSC.Utilities.csproj.CoreCompileInputs.cache
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\obj\Release\netstandard2.0\Microsoft365DSC.Utilities.sourcelink.json
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\obj\Release\netstandard2.0\Microsof.C5E98EF1.Up2Date
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\obj\Release\netstandard2.0\Microsoft365DSC.Utilities.dll
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\obj\Release\netstandard2.0\Microsoft365DSC.Utilities.xml
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Utilities\obj\Release\netstandard2.0\Microsoft365DSC.Utilities.pdb

@@ -1,0 +1,13 @@
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\bin\Release\netstandard2.0\Microsoft365DSC.Cache.deps.json
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\bin\Release\netstandard2.0\Microsoft365DSC.Cache.dll
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\bin\Release\netstandard2.0\Microsoft365DSC.Cache.pdb
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\bin\Release\netstandard2.0\Microsoft365DSC.Cache.xml
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\obj\Release\netstandard2.0\Microsoft365DSC.Cache.csproj.AssemblyReference.cache
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\obj\Release\netstandard2.0\Microsoft365DSC.Cache.GeneratedMSBuildEditorConfig.editorconfig
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\obj\Release\netstandard2.0\Microsoft365DSC.Cache.AssemblyInfoInputs.cache
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\obj\Release\netstandard2.0\Microsoft365DSC.Cache.AssemblyInfo.cs
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\obj\Release\netstandard2.0\Microsoft365DSC.Cache.csproj.CoreCompileInputs.cache
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\obj\Release\netstandard2.0\Microsoft365DSC.Cache.sourcelink.json
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\obj\Release\netstandard2.0\Microsoft365DSC.Cache.dll
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\obj\Release\netstandard2.0\Microsoft365DSC.Cache.xml
+C:\github\Microsoft365DSC\src\Microsoft365DSC.Cache\obj\Release\netstandard2.0\Microsoft365DSC.Cache.pdb

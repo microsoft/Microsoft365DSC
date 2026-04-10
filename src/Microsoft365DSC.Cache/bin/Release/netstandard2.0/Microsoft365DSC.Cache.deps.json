@@ -1,0 +1,97 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.0/",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.0": {},
+    ".NETStandard,Version=v2.0/": {
+      "Microsoft365DSC.Cache/1.0.0": {
+        "dependencies": {
+          "NETStandard.Library": "2.0.3",
+          "PowerShellStandard.Library": "5.1.1",
+          "System.Management": "10.0.1"
+        },
+        "runtime": {
+          "Microsoft365DSC.Cache.dll": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/1.1.0": {},
+      "NETStandard.Library/2.0.3": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
+        }
+      },
+      "PowerShellStandard.Library/5.1.1": {
+        "runtime": {
+          "lib/netstandard2.0/System.Management.Automation.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "5.1.1.0"
+          }
+        }
+      },
+      "System.CodeDom/10.0.1": {
+        "runtime": {
+          "lib/netstandard2.0/System.CodeDom.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.125.57005"
+          }
+        }
+      },
+      "System.Management/10.0.1": {
+        "dependencies": {
+          "System.CodeDom": "10.0.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Management.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.125.57005"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft365DSC.Cache/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.NETCore.Platforms/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
+      "path": "microsoft.netcore.platforms/1.1.0",
+      "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
+    },
+    "NETStandard.Library/2.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+      "path": "netstandard.library/2.0.3",
+      "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
+    },
+    "PowerShellStandard.Library/5.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-e31xJjG+Kjbv6YF3Yq6D4Dl3or8v7LrNF41k3CXrWozW6hR1zcOe5KYuZJaGSiAgLnwP8wcW+I3+IWEzMPZKXQ==",
+      "path": "powershellstandard.library/5.1.1",
+      "hashPath": "powershellstandard.library.5.1.1.nupkg.sha512"
+    },
+    "System.CodeDom/10.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-owy+NlWSBRNLZO8CZ7IguuaPHHiAivjstTciM7YlXyDDqBY26FMl3F9Nw04n8Dog1JaxFlZiEIEXKPaigRmkNg==",
+      "path": "system.codedom/10.0.1",
+      "hashPath": "system.codedom.10.0.1.nupkg.sha512"
+    },
+    "System.Management/10.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/mywt9LtfYM+QbnIPPqdES/qWWU3tkorSDHPX99KYhCTtxdjGFmLcz7QwpAAeBKU0o+rZzEcpKZlrtEr1Xq39g==",
+      "path": "system.management/10.0.1",
+      "hashPath": "system.management.10.0.1.nupkg.sha512"
+    }
+  }
+}
