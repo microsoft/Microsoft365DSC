@@ -1,9 +1,0 @@
-[ClassVersion("1.0.0.0"), FriendlyName("SPOPropertyBag")]
-class MSFT_SPOPropertyBag : OMI_BaseResource
-{
-    [Key, Description("Url of the site where to configure the PropertyBag property.")] String Url;
-    [Key, Description("Key that should be configured.")] String Key;
-    [Key, Description("Value of the assigned key.")] String Value;
-    [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
-};

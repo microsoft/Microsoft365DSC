@@ -1,0 +1,71 @@
+{
+  "resourceName": "AADGroupEligibilityScheduleSettings",
+  "description": "This resource configures an Azure AD Group Eligibility Schedule Settings.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "RoleManagementPolicy.Read.Directory"
+          }
+        ],
+        "update": [
+          {
+            "name": "RoleManagementPolicy.ReadWrite.Directory"
+          },
+          {
+            "name": "RoleManagementPolicy.ReadWrite.AzureADGroup"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "RoleManagementPolicy.Read.Directory"
+          }
+        ],
+        "update": [
+          {
+            "name": "RoleManagementPolicy.ReadWrite.Directory"
+          },
+          {
+            "name": "RoleManagementPolicy.ReadWrite.AzureADGroup"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyRoleManagementPolicyAssignment",
+        "Get-MgBetaPolicyRoleManagementPolicyRule",
+        "Update-MgBetaPolicyRoleManagementPolicyRule"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}

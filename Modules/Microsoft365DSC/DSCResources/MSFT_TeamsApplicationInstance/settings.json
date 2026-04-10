@@ -1,0 +1,31 @@
+{
+  "resourceName": "TeamsApplicationInstance",
+  "description": "Manages Teams Resource Accounts.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    }
+  },
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration"
+}

@@ -1,0 +1,83 @@
+{
+  "resourceName": "IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10",
+  "description": "This resource configures an Intune Device Configuration Administrative Template Policy for Windows10.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement",
+    "Microsoft.Graph.Groups",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementAssignmentFilter",
+        "Get-MgBetaDeviceManagementGroupPolicyConfiguration",
+        "Get-MgBetaDeviceManagementGroupPolicyConfigurationAssignment",
+        "Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValue",
+        "Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition",
+        "Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue",
+        "New-MgBetaDeviceManagementGroupPolicyConfiguration",
+        "Remove-MgBetaDeviceManagementGroupPolicyConfiguration",
+        "Update-MgBetaDeviceManagementGroupPolicyConfiguration"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}

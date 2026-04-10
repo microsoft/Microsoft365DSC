@@ -6,9 +6,7 @@
             "request": "launch",
             "name": "Run current unit test",
             "script": "${file}",
-            "args": [
-                "${workspaceRoot}/Tests/Unit/Stubs/Office365.psm1"
-            ],
+            "args": [],
             "cwd": "${file}",
             "createTemporaryIntegratedConsole": true
         },
@@ -16,11 +14,26 @@
             "type": "PowerShell",
             "request": "launch",
             "name": "Get current unit test code overage",
-            "script": "${workspaceRoot}/.vscode/GetTestCoverage.ps1",
+            "script": "${workspaceRoot}/Tests/Scripts/Get-TestCoverage.ps1",
             "args": [
-                "${file}",
-                "${workspaceRoot}/Tests/Unit/Stubs/Office365.psm1"
+                "${file}"
             ],
+            "createTemporaryIntegratedConsole": true
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Run all QA tests",
+            "script": "Import-Module '${workspaceRoot}/Tests/TestHarness.psm1'; $QaResults = Invoke-QualityChecksHarness ",
+            "args": [],
+            "createTemporaryIntegratedConsole": true
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Run all Unit Tests",
+            "script": "Import-Module '${workspaceRoot}/Tests/TestHarness.psm1'; $UnitResults = Invoke-TestHarness",
+            "args": [],
             "createTemporaryIntegratedConsole": true
         }
     ]

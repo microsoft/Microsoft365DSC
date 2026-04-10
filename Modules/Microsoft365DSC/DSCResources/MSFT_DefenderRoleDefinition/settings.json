@@ -1,0 +1,30 @@
+﻿{
+    "resourceName": "DefenderRoleDefinition",
+    "description": "Manages custom roles in Defender.",
+    "roles": {
+        "read": [
+        ],
+        "update": [
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "RoleManagement.Read.Defender"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "RoleManagement.ReadWrite.Defender"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,73 @@
+name: Generate Resources & Deploy GitHub Pages
+on:
+  push:
+    branches:
+      - Master
+      - Dev
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  GenerateResource:
+    runs-on: windows-latest
+
+    # Only run in main repo
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Import Module & Generate Documentation
+        shell: pwsh
+        run: |
+          Import-Module -Name "./Modules/Microsoft365DSC"
+          Update-M365DSCResourceDocumentationPage -SourcePath ./Modules/Microsoft365DSC
+          New-M365DSCCmdletDocumentation
+
+      - name: Upload documentation as artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: docs-generation
+          path: ./docs  # the folder containing the mkdocs.yml and generated docs
+
+  deploy:
+    needs: GenerateResource
+    runs-on: ubuntu-latest
+
+    # Only run in main repo
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - run: |
+          pip install mkdocs-material
+          pip install mkdocs-include-dir-to-nav
+
+      - name: Download generated docs
+        uses: actions/download-artifact@v7
+        with:
+          name: docs-generation
+          path: ./docs
+
+      - name: Build site
+        working-directory: ./docs
+        run: mkdocs build --site-dir ../site
+
+      - name: Upload built site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

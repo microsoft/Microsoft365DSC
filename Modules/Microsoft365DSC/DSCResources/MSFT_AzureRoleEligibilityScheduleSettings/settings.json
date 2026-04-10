@@ -1,0 +1,72 @@
+{
+  "resourceName": "AzureRoleEligibilityScheduleSettings",
+  "description": "Configures Azure PIM (Privileged Identity Management) role eligibility schedule settings for Management Groups, Subscriptions, and Resource Groups.",
+  "roles": {
+    "read": [
+      "User Access Administrator",
+      "Owner"
+    ],
+    "update": [
+      "User Access Administrator",
+      "Owner"
+    ]
+  },
+  "permissions": {
+    "Azure Service Management": {
+      "delegated": {
+        "read": [
+          {
+            "name": "user_impersonation"
+          }
+        ],
+        "update": [
+          {
+            "name": "user_impersonation"
+          }
+        ]
+      },
+      "application": {
+       "read": [
+          "User Access Administrator",
+          "Owner"
+        ],
+        "update": [
+          "User Access Administrator",
+          "Owner"
+        ]
+      }
+    },
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": []
+      },
+      "application": {
+        "read": [
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": []
+      }
+    }
+  },
+  "requiredModules": [
+    "Az.Accounts",
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DirectoryObjects",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users"
+  ],
+  "mode": "Configuration"
+}

@@ -1,0 +1,880 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOAntiPhishPolicy'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        [System.String]
+        $AuthenticationFailAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableFirstContactSafetyTips = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarUsersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSpoofIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedUserProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnauthenticatedSender = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableViaTag = $false,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSenders = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $HonorDmarcPolicy,
+
+        [Parameter()]
+        [ValidateSet('Automatic', 'Manual', 'Off')]
+        [System.String]
+        $ImpersonationProtectionState = 'Automatic',
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $MailboxIntelligenceProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $MailboxIntelligenceProtectionActionRecipients = @(),
+
+        [Parameter()]
+        [System.String]
+        $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [ValidateSet(1, 2, 3, 4)]
+        [System.Int32]
+        $PhishThresholdLevel = 1,
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedDomainProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainsToProtect = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetedDomainQuarantineTag,
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUserActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedUserProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUsersToProtect = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Quarantine', 'Reject')]
+        $DmarcRejectAction,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration of AntiPhishPolicy for $Identity"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
+        {
+
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $AntiPhishPolicy = Get-AntiPhishPolicy -Identity $Identity -ErrorAction SilentlyContinue
+            if ($null -eq $AntiPhishPolicy)
+            {
+                Write-Verbose -Message "AntiPhishPolicy $($Identity) does not exist."
+                return $nullReturn
+            }
+        }
+        else
+        {
+            $AntiPhishPolicy = $Script:exportedInstance
+        }
+
+        $PhishThresholdLevelValue = $AntiPhishPolicy.PhishThresholdLevel
+        if ([System.String]::IsNullOrEmpty($PhishThresholdLevelValue))
+        {
+            $PhishThresholdLevelValue = 1
+        }
+
+        $TargetedUserProtectionActionValue = $AntiPhishPolicy.TargetedUserProtectionAction
+        if ([System.String]::IsNullOrEmpty($TargetedUserProtectionActionValue))
+        {
+            $TargetedUserProtectionActionValue = 'NoAction'
+        }
+
+        $TargetedDomainProtectionActionValue = $AntiPhishPolicy.TargetedDomainProtectionAction
+        if ([System.String]::IsNullOrEmpty($TargetedDomainProtectionActionValue))
+        {
+            $TargetedDomainProtectionActionValue = 'NoAction'
+        }
+
+        Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"
+
+        $result = @{
+            Identity                                      = $Identity
+            AdminDisplayName                              = $AntiPhishPolicy.AdminDisplayName
+            AuthenticationFailAction                      = $AntiPhishPolicy.AuthenticationFailAction
+            Enabled                                       = $AntiPhishPolicy.Enabled
+            EnableFirstContactSafetyTips                  = $AntiPhishPolicy.EnableFirstContactSafetyTips
+            EnableMailboxIntelligence                     = $AntiPhishPolicy.EnableMailboxIntelligence
+            EnableMailboxIntelligenceProtection           = $AntiPhishPolicy.EnableMailboxIntelligenceProtection
+            EnableOrganizationDomainsProtection           = $AntiPhishPolicy.EnableOrganizationDomainsProtection
+            EnableSimilarDomainsSafetyTips                = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
+            EnableSimilarUsersSafetyTips                  = $AntiPhishPolicy.EnableSimilarUsersSafetyTips
+            EnableSpoofIntelligence                       = $AntiPhishPolicy.EnableSpoofIntelligence
+            EnableTargetedDomainsProtection               = $AntiPhishPolicy.EnableTargetedDomainsProtection
+            EnableTargetedUserProtection                  = $AntiPhishPolicy.EnableTargetedUserProtection
+            EnableUnauthenticatedSender                   = $AntiPhishPolicy.EnableUnauthenticatedSender
+            EnableUnusualCharactersSafetyTips             = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
+            EnableViaTag                                  = $AntiPhishPolicy.EnableViaTag
+            ExcludedDomains                               = $AntiPhishPolicy.ExcludedDomains
+            ExcludedSenders                               = $AntiPhishPolicy.ExcludedSenders
+            HonorDmarcPolicy                              = $AntiPhishPolicy.HonorDmarcPolicy
+            ImpersonationProtectionState                  = $AntiPhishPolicy.ImpersonationProtectionState
+            MailboxIntelligenceProtectionAction           = $AntiPhishPolicy.MailboxIntelligenceProtectionAction
+            MailboxIntelligenceProtectionActionRecipients = $AntiPhishPolicy.MailboxIntelligenceProtectionActionRecipients
+            MailboxIntelligenceQuarantineTag              = $AntiPhishPolicy.MailboxIntelligenceQuarantineTag
+            SpoofQuarantineTag                            = $AntiPhishPolicy.SpoofQuarantineTag
+            MakeDefault                                   = $AntiPhishPolicy.IsDefault
+            PhishThresholdLevel                           = $PhishThresholdLevelValue
+            TargetedDomainActionRecipients                = $AntiPhishPolicy.TargetedDomainActionRecipients
+            TargetedDomainProtectionAction                = $TargetedDomainProtectionActionValue
+            TargetedDomainsToProtect                      = $AntiPhishPolicy.TargetedDomainsToProtect
+            TargetedDomainQuarantineTag                   = $AntiPhishPolicy.TargetedDomainQuarantineTag
+            TargetedUserActionRecipients                  = $AntiPhishPolicy.TargetedUserActionRecipients
+            TargetedUserProtectionAction                  = $TargetedUserProtectionActionValue
+            TargetedUsersToProtect                        = $AntiPhishPolicy.TargetedUsersToProtect
+            TargetedUserQuarantineTag                     = $AntiPhishPolicy.TargetedUserQuarantineTag
+            DmarcQuarantineAction                         = $AntiPhishPolicy.DmarcQuarantineAction
+            DmarcRejectAction                             = $AntiPhishPolicy.DmarcRejectAction
+            Credential                                    = $Credential
+            Ensure                                        = 'Present'
+            ApplicationId                                 = $ApplicationId
+            CertificateThumbprint                         = $CertificateThumbprint
+            CertificatePath                               = $CertificatePath
+            CertificatePassword                           = $CertificatePassword
+            ManagedIdentity                               = $ManagedIdentity.IsPresent
+            TenantId                                      = $TenantId
+            AccessTokens                                  = $AccessTokens
+        }
+
+        return $result
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        [System.String]
+        $AuthenticationFailAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableFirstContactSafetyTips = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarUsersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSpoofIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedUserProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnauthenticatedSender = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableViaTag = $false,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSenders = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $HonorDmarcPolicy,
+
+        [Parameter()]
+        [ValidateSet('Automatic', 'Manual', 'Off')]
+        [System.String]
+        $ImpersonationProtectionState = 'Automatic',
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $MailboxIntelligenceProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $MailboxIntelligenceProtectionActionRecipients = @(),
+
+        [Parameter()]
+        [System.String]
+        $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [ValidateSet(1, 2, 3, 4)]
+        [System.Int32]
+        $PhishThresholdLevel = 1,
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedDomainProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainsToProtect = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetedDomainQuarantineTag,
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUserActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedUserProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUsersToProtect = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Quarantine', 'Reject')]
+        $DmarcRejectAction,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating new instance of AntiPhish Policy {$Identity}"
+        $createParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+        $createParams.Remove('Ensure') | Out-Null
+        $createParams.Add('Name', $Identity)
+        $createParams.Remove('Identity') | Out-Null
+        New-AntiPhishPolicy @createParams
+    }
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating existing AntiPhishPolicy {$Identity}"
+        $UpdateParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+        $UpdateParams.Remove('Ensure') | Out-Null
+        Set-AntiphishPolicy @UpdateParams
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing AntiPhishPolicy $($Identity)"
+        Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false -Force
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        [System.String]
+        $AuthenticationFailAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableFirstContactSafetyTips = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarUsersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSpoofIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedUserProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnauthenticatedSender = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableViaTag = $false,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSenders = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $HonorDmarcPolicy,
+
+        [Parameter()]
+        [ValidateSet('Automatic', 'Manual', 'Off')]
+        [System.String]
+        $ImpersonationProtectionState = 'Automatic',
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $MailboxIntelligenceProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $MailboxIntelligenceProtectionActionRecipients = @(),
+
+        [Parameter()]
+        [System.String]
+        $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [ValidateSet(1, 2, 3, 4)]
+        [System.Int32]
+        $PhishThresholdLevel = 1,
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedDomainProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainsToProtect = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetedDomainQuarantineTag,
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUserActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedUserProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUsersToProtect = @(),
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Quarantine', 'Reject')]
+        $DmarcRejectAction,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        [array]$AntiPhishPolicies = Get-AntiPhishPolicy -ErrorAction Stop
+        $dscContent = ''
+        $i = 1
+
+        if ($AntiphishPolicies.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($Policy in $AntiPhishPolicies)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            Write-M365DSCHost -Message "    |---[$i/$($AntiphishPolicies.Length)] $($Policy.Identity)" -DeferWrite
+
+            $Params = @{
+                Identity              = $Policy.Identity
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
+            }
+            $Script:exportedInstance = $Policy
+            $Results = Get-TargetResource @Params
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
+
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+            $i++
+        }
+        return $dscContent
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+Export-ModuleMember -Function *-TargetResource

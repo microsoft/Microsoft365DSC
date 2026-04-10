@@ -1,0 +1,55 @@
+{
+  "resourceName": "O365SearchAndIntelligenceConfigurations",
+  "description": "This resource configures the Search And Intelligence configuration settings.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [
+          {
+            "name": "PeopleSettings.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "PeopleSettings.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+    "Microsoft.Graph.Groups"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgBetaOrganizationSettingItemInsight",
+        "Get-MgBetaOrganizationSettingPersonInsight",
+        "Update-MgBetaOrganizationSettingItemInsight",
+        "Update-MgBetaOrganizationSettingPersonInsight"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}

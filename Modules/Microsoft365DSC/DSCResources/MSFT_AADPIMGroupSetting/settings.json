@@ -1,0 +1,110 @@
+{
+  "resourceName": "AADPIMGroupSetting",
+  "description": "This resource configures an PIM Group.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Privileged Role Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "AuthenticationContext.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "RoleManagementPolicy.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "RoleManagementPolicy.ReadWrite.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "RoleManagementPolicy.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "RoleManagementPolicy.ReadWrite.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Identity.SignIns",
+    "Microsoft.Graph.Users"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference",
+        "Update-MgBetaPolicyRoleManagementPolicyRule"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgPolicyRoleManagementPolicyAssignment"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
+}

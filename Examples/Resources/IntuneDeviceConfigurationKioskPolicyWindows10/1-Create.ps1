@@ -1,0 +1,77 @@
+<#
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+#>
+
+Configuration Example
+{
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationKioskPolicyWindows10 'Example'
+        {
+            Assignments                         = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            );
+            DisplayName                         = "kiosk";
+            EdgeKioskEnablePublicBrowsing       = $False;
+            Ensure                              = "Present";
+            KioskBrowserBlockedUrlExceptions    = @();
+            KioskBrowserBlockedURLs             = @();
+            KioskBrowserDefaultUrl              = "http://bing.com";
+            KioskBrowserEnableEndSessionButton  = $False;
+            KioskBrowserEnableHomeButton        = $True;
+            KioskBrowserEnableNavigationButtons = $False;
+            KioskProfiles                       = @(
+                MSFT_MicrosoftGraphwindowsKioskProfile{
+                    UserAccountsConfiguration = @(
+                        MSFT_MicrosoftGraphWindowsKioskUser{
+                            odataType = '#microsoft.graph.windowsKioskAutologon'
+                        }
+                    )
+                    ProfileName = 'profile'
+                    AppConfiguration = MSFT_MicrosoftGraphWindowsKioskAppConfiguration{
+                        Win32App = MSFT_MicrosoftGraphWindowsKioskWin32App{
+                            EdgeNoFirstRun = $True
+                            EdgeKiosk = 'https://domain.com'
+                            ClassicAppPath = 'msedge.exe'
+                            AutoLaunch = $False
+                            StartLayoutTileSize = 'hidden'
+                            AppType = 'unknown'
+                            EdgeKioskType = 'publicBrowsing'
+                            odataType = '#microsoft.graph.windowsKioskWin32App'
+                        }
+                        odataType = '#microsoft.graph.windowsKioskSingleWin32App'
+                    }
+                }
+            );
+            WindowsKioskForceUpdateSchedule     = MSFT_MicrosoftGraphwindowsKioskForceUpdateSchedule{
+                RunImmediatelyIfAfterStartDateTime = $False
+                StartDateTime = '2023-04-15T23:00:00.0000000+00:00'
+                DayofMonth = 1
+                Recurrence = 'daily'
+                DayofWeek = 'sunday'
+            };
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
+        }
+    }
+}

@@ -1,0 +1,51 @@
+{
+  "resourceName": "IntuneDerivedCredential",
+  "description": "Use this resource to create new navigation property to derivedCredentials for device Management in Intune.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementDerivedCredential",
+        "New-MgBetaDeviceManagementDerivedCredential",
+        "Remove-MgBetaDeviceManagementDerivedCredential"
+      ]
+    }
+  ]
+}

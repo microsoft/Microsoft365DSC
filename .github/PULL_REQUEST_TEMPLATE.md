@@ -1,18 +1,3 @@
-<!--
-    Thanks for submitting a Pull Request (PR) to this project.
-    Your contribution to this project is greatly appreciated!
-
-    Please make sure you have read the [Contribution Guidelines](https://github.com/PowerShell/SharePointDsc/wiki/Contributing%20to%20SharePointDsc).
-
-    Please prefix the PR title with the resource name,
-    e.g. 'ResourceName: My short description'.
-    If this is a breaking change, then also prefix the PR title
-    with 'BREAKING CHANGE:',
-    e.g. 'BREAKING CHANGE: ResourceName: My short description'.
-
-    You may remove this comment block, and the other comment blocks, but please
-    keep the headers and the task list.
--->
 #### Pull Request (PR) description
 <!--
     Replace this comment block with a description of your PR.
@@ -26,3 +11,23 @@
     - Fixes #123
     - Fixes #124
 -->
+
+#### Task list
+
+<!--
+    To aid community reviewers in reviewing and merging your PR, please take the time to run
+    through the below checklist and make sure your PR has everything updated as required.
+
+    Change to [x] for each task in the task list that applies to your PR. For those task that
+    don't apply to you PR, leave those as is.
+-->
+
+- [ ] Added an entry to the change log under the Unreleased section of the file CHANGELOG.md.
+      Entry should say what was changed and how that affects users (if applicable), and
+      reference the issue being resolved (if applicable).
+- [ ] Resource parameter descriptions added/updated in the schema.mof.
+- [ ] Resource documentation added/updated in README.md.
+- [ ] Resource settings.json file contains all required permissions.
+- [ ] Examples appropriately added/updated.
+- [ ] Unit tests added/updated.
+- [ ] New/changed code adheres to [DSC Community Style Guidelines](https://dsccommunity.org/styleguidelines).

@@ -1,0 +1,46 @@
+{
+  "resourceName": "AADVerifiedIdAuthority",
+  "description": "This resource configures an Azure AD Verified Identity Authority.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Authentication Policy Administrator"
+    ]
+  },
+  "permissions": {
+    "Verifiable Credentials Service Admin": {
+      "delegated": {
+        "read": [
+          {
+            "name": "full_access"
+          }
+        ],
+        "update": [
+          {
+            "name": "full_access"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "VerifiableCredential.Authority.Read"
+          }
+        ],
+        "update": [
+          {
+            "name": "VerifiableCredential.Authority.ReadWrite"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration"
+}

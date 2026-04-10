@@ -1,9 +1,0 @@
-[ClassVersion("1.0.0.0"), FriendlyName("SPOHomeSite")]
-class MSFT_SPOHomeSite : OMI_BaseResource
-{
-    [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
-    [Write, Description("The URL of the home site collection")] string Url;
-    [Write, Description("Present ensures the site collection is registered as home site, absent ensures it is unregistered"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
-    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-};
-

@@ -1,0 +1,62 @@
+{
+  "resourceName": "AADIdentityGovernanceLifecycleWorkflowCustomTaskExtension",
+  "description": "Configures custom extensions for Lifecycle workflows in Entra id.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "LifecycleWorkflows.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "LifecycleWorkflows.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "LifecycleWorkflows.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "LifecycleWorkflows.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.Governance"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgApplication"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaIdentityGovernanceLifecycleWorkflowCustomTaskExtension",
+        "New-MgBetaIdentityGovernanceLifecycleWorkflowCustomTaskExtension",
+        "Remove-MgBetaIdentityGovernanceLifecycleWorkflowCustomTaskExtension",
+        "Update-MgBetaIdentityGovernanceLifecycleWorkflowCustomTaskExtension"
+      ]
+    }
+  ]
+}

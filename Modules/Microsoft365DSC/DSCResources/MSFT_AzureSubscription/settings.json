@@ -1,0 +1,32 @@
+{
+  "resourceName": "AzureSubscription",
+  "description": "This resource controls the properties of an Azure subscription.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "Azure Service Management": {
+      "delegated": {
+        "read": [
+          {
+            "name": "user_impersonation"
+          }
+        ],
+        "update": [
+          {
+            "name": "user_impersonation"
+          }
+        ]
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    }
+  },
+  "requiredModules": [
+    "Az.Accounts"
+  ],
+  "mode": "Data"
+}

@@ -1,0 +1,47 @@
+{
+  "resourceName": "IntuneAlertRuleWindows365",
+  "description": "This resource configures an Intune Alert Rule Windows365.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "read": [
+          {
+            "name": "CloudPC.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "CloudPC.ReadWrite.All"
+          }
+        ]
+      },
+      "delegated": {
+        "read": [
+          {
+            "name": "CloudPC.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "CloudPC.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementMonitoringAlertRule",
+        "New-MgBetaDeviceManagementMonitoringAlertRule",
+        "Update-MgBetaDeviceManagementMonitoringAlertRule"
+      ]
+    }
+  ]
+}

@@ -1,9 +1,0 @@
-[ClassVersion("1.0.0.0"), FriendlyName("SPOSiteDesignRights")]
-class MSFT_SPOSiteDesignRights : OMI_BaseResource
-{
-    [Key, Description("The title of the site design")] string SiteDesignTitle;
-    [Key, Description("Rights to grant user principals on site design rights."), ValueMap{"View","None"}, Values{"View","None"}] string Rights;
-    [Write, Description("List of user principals with seperated by commas to site design rights.")] string UserPrincipals[];
-    [Write, Description("Used to add or remove list of users from site design rights."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Office365 Tenant Admin."), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-};

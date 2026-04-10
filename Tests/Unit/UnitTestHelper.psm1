@@ -1,4 +1,4 @@
-function New-O365DscUnitTestHelper
+function New-M365DscUnitTestHelper
 {
     [CmdletBinding()]
     param(
@@ -24,9 +24,9 @@ function New-O365DscUnitTestHelper
     )
 
     $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath "..\..\" -Resolve
-    $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Office365Dsc"
+    $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Microsoft365DSC"
 
-    $mainModule = Join-Path -Path $moduleRoot -ChildPath "Office365DSC.psd1"
+    $mainModule = Join-Path -Path $moduleRoot -ChildPath "Microsoft365DSC.psd1"
     Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue
     Import-Module -Name $mainModule -Global
 
@@ -45,14 +45,15 @@ function New-O365DscUnitTestHelper
         $moduleToLoad = Join-Path -Path $moduleRoot -ChildPath $modulePath
     }
 
-    Import-Module -Name $moduleToLoad -Global
+    $Global:IsTestEnvironment = $true
+
+    Import-Module -Name $moduleToLoad -Global -Force
 
     $initScript = @"
             Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue
-            Import-Module -Name "$StubModule" -WarningAction SilentlyContinue
+            Import-Module -Name "$StubModule" -WarningAction SilentlyContinue -Global
             Import-Module -Name "$GenericStubModule" -WarningAction SilentlyContinue
             Import-Module -Name "$moduleToLoad"
-
 "@
 
     return @{
@@ -62,9 +63,7 @@ function New-O365DscUnitTestHelper
         InitializeScript = [ScriptBlock]::Create($initScript)
         RepoRoot = $repoRoot
         CleanupScript = [ScriptBlock]::Create(@"
-
             `$global:DSCMachineStatus = 0
-
 "@)
     }
 }

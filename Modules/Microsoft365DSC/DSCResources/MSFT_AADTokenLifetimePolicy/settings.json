@@ -1,0 +1,58 @@
+{
+  "resourceName": "AADTokenLifetimePolicy",
+  "description": "This resource configures the Azure AD Token Lifetime Policies.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Application Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Policy.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.ApplicationConfiguration"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.ApplicationConfiguration"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyTokenLifetimePolicy",
+        "New-MgBetaPolicyTokenLifetimePolicy",
+        "Remove-MgBetaPolicyTokenLifetimePolicy",
+        "Update-MgBetaPolicyTokenLifetimePolicy"
+      ]
+    }
+  ]
+}

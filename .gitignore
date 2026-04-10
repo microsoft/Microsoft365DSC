@@ -4,12 +4,25 @@
 .vs
 .psproj
 .sln
-Modules/Office365Dsc/DscResource.Tests
-Modules/Office365Dsc/DscResource.Tests/*
+Modules/Microsoft365DSC/Dependencies/Assemblies/*.dll
+Modules/Microsoft365DSC/Dependencies/Assemblies/*.pdb
+Modules/Microsoft365DSC/Dependencies/Assemblies/*.xml
+Modules/Microsoft365DSC/DscResource.Tests
+Modules/Microsoft365DSC/DscResource.Tests/*
 node_modules
 node_modules/*
 markdownissues.txt
 start-unittests.ps1
 TestDSCresource.ps1
-Modules/Office365DSC/DSCResources/MSFT_EXOMalwareFilterPolicy/Set-MalwareFilterPolicy.txt
+Modules/Microsoft365DSC/DSCResources/MSFT_EXOMalwareFilterPolicy/Set-MalwareFilterPolicy.txt
+docker/Extract.ps1
+docker/Monitor.ps1
+Modules/start-extraction.ps1
+Modules/Microsoft365DSC/DSCResources/MSFT_EXOAvailabilityAddressSpace/Add-AvailabilityAddressSpace-parameterset.txt
+*.log
+DscResource.Tests/*
+CodeCov.xml
+site
 
+# generated docs
+docs/site

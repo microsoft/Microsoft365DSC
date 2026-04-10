@@ -1,0 +1,80 @@
+{
+  "resourceName": "IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined",
+  "description": "This resource configures an Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Enrollment",
+    "Microsoft.Graph.Groups"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementAssignmentFilter"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement.Enrollment",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile",
+        "Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment",
+        "New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile",
+        "New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment",
+        "Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile",
+        "Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment",
+        "Update-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}

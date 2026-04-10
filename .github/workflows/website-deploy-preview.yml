@@ -1,0 +1,58 @@
+name: Build & Deploy to Preview
+on: [push]
+
+jobs:
+  build:
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC' && github.event.ref == 'refs/heads/Dev'
+    runs-on: ubuntu-latest
+    environment:
+      name: PREVIEW
+    name: Build
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "24"
+      - name: Generate workloads and resources
+        shell: pwsh
+        run: pwsh -command ".\$GITHUB_WORKSPACE\generator\scripts\Build-Workloads.ps1 -Force"
+      - name: Install packages
+        run: |
+          cd ${GITHUB_WORKSPACE}/generator
+          npm install --force
+      - name: Build generator
+        run: |
+          cd ${GITHUB_WORKSPACE}/generator
+          npm run build
+        env:
+          REACT_APP_SITE_DESCRIPTION: ${{ secrets.REACT_APP_SITE_DESCRIPTION }}
+          REACT_APP_INSTRUMENTATION_KEY: ${{ secrets.REACT_APP_INSTRUMENTATION_KEY }}
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: website-build
+          path: ${{ github.workspace }}/generator/dist
+
+  deploy_preview:
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC' && github.event.ref == 'refs/heads/Dev'
+    runs-on: ubuntu-latest
+    environment:
+      name: PREVIEW
+    name: Deploy to Preview
+    needs: build
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: website-build
+      - name: Deploy to Preview Azure Static Web App
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: ""
+          output_location: ""
+          skip_app_build: true

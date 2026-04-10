@@ -1,0 +1,38 @@
+{
+  "resourceName": "SentinelWatchlist",
+  "description": "Configures watchlists in Azure Sentinel.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "Azure Service Management": {
+      "delegated": {
+        "read": [
+          {
+            "name": "user_impersonation"
+          }
+        ],
+        "update": [
+          {
+            "name": "user_impersonation"
+          }
+        ]
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    },
+    "azure": {
+      "requiredRoles": [
+        "Microsoft Sentinel Reader",
+        "Microsoft Sentinel Contributor"
+      ]
+    }
+  },
+  "requiredModules": [
+    "Az.Resources"
+  ],
+  "mode": "Data"
+}

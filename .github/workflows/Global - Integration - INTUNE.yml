@@ -1,0 +1,51 @@
+name: Global - Integration - INTUNE
+on: [push]
+
+jobs:
+  Integration-Global-INTUNE:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    permissions: write-all
+
+    # Only when run from the main repo
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+      - name: Copy Microsoft365DSC
+        shell: powershell
+        run: |
+          winrm quickconfig -force
+          $source = "./Modules/Microsoft365DSC/"
+          $destination = "C:\Program Files\WindowsPowerShell\Modules"
+          Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
+          Update-M365DSCDependencies
+      - name: Configure Environment
+        shell: powershell
+        run: |
+          Set-ExecutionPolicy Unrestricted -Force
+          Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
+          Set-M365DSCTelemetryOption -Enabled $false
+          Set-Item -Path WSMan:\localhost\MaxEnvelopeSizekb -Value 1000000
+      - name: Generate {Create} Integration Tests from Examples
+        shell: powershell
+        run: |
+          Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
+          New-M365DSCIntegrationTest -Workload INTUNE -Step '1-Create'
+      - name: Generate {Update} Integration Tests from Examples
+        shell: powershell
+        run: |
+          Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
+          New-M365DSCIntegrationTest -Workload INTUNE -Step '2-Update'
+      - name: Generate {Remove} Integration Tests from Examples
+        shell: powershell
+        run: |
+          Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
+          New-M365DSCIntegrationTest -Workload INTUNE -Step '3-Remove'
+      - name: Execute {Create} Integration Tests
+        shell: powershell
+        run: |
+            .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.INTUNE.Create.Tests.ps1 -ApplicationID ${{ secrets.RUNNERAPPID }} -TenantId ${{ secrets.RUNNERTENANTID }} -CertificateThumbprint ${{ secrets.RUNNERCERTIFICATETHUMBPRINT }}

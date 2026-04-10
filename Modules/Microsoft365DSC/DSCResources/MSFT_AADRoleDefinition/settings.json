@@ -1,0 +1,58 @@
+{
+  "resourceName": "AADRoleDefinition",
+  "description": "This resource configures an Azure Active Directory role definition. To configure custom roles you require an Azure AD Premium P1 license. The account used to configure role definitions based on this resource needs either to be a 'Global Administrator' or a 'Privileged role administrator'.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Privileged Role Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "RoleManagement.Read.Directory"
+          }
+        ],
+        "update": [
+          {
+            "name": "RoleManagement.ReadWrite.Directory"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "RoleManagement.Read.Directory"
+          }
+        ],
+        "update": [
+          {
+            "name": "RoleManagement.ReadWrite.Directory"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.Governance"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaRoleManagementDirectoryRoleDefinition",
+        "New-MgBetaRoleManagementDirectoryRoleDefinition",
+        "Remove-MgBetaRoleManagementDirectoryRoleDefinition",
+        "Update-MgBetaRoleManagementDirectoryRoleDefinition"
+      ]
+    }
+  ]
+}

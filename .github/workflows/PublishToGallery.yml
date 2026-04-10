@@ -1,0 +1,45 @@
+name: Publish to PowerShell Gallery
+
+on:
+  push:
+    branches:
+      - Master
+
+jobs:
+  PublishToGallery:
+    runs-on: windows-latest
+
+    # Only when run from the main repo
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        shell: powershell
+        run: |
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+          $manifest = Import-PowerShellDataFile "./Modules/Microsoft365DSC/Microsoft365DSC.psd1"
+          $dependencies = $manifest.RequiredModules
+          foreach ($dependency in $dependencies)
+          {
+              Write-Verbose -Message "Installing Module {$($dependency.ModuleName)} Version {$($dependency.RequiredVersion)}"
+              Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers -Verbose
+              try
+              {
+                  Import-Module $dependency.ModuleName -Force
+              }
+              catch
+              {
+                  Write-Verbose -Message $_
+              }
+          }
+      - name: Build Dll Files
+        shell: pwsh
+        run: |
+          & ./Utilities/Build-DllFiles.ps1 -Configuration Release
+      - name: Publish
+        shell: powershell
+        env:
+          PUBLIC_NUGETAPIKEY: ${{ secrets.NugetAPIKey }}
+        run: |
+          Publish-Module -Path "./Modules/Microsoft365DSC/" -NugetAPIKey $env:PUBLIC_NUGETAPIKEY

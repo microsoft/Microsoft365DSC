@@ -1,0 +1,46 @@
+{
+  "resourceName": "TeamsUser",
+  "description": "",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "Team.ReadBasic.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "Team.ReadBasic.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Data"
+}

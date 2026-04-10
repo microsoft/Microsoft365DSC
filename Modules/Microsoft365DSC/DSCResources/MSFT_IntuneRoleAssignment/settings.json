@@ -1,0 +1,80 @@
+{
+  "resourceName": "IntuneRoleAssignment",
+  "description": "This resource configures an Intune Role Assignment.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementRBAC.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementRBAC.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementRBAC.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementRBAC.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Administration",
+    "Microsoft.Graph.DeviceManagement.Administration",
+    "Microsoft.Graph.Groups",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement.Administration",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementRoleAssignment",
+        "New-MgBetaDeviceManagementRoleAssignment",
+        "Remove-MgBetaDeviceManagementRoleAssignment",
+        "Update-MgBetaDeviceManagementRoleAssignment"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.DeviceManagement.Administration",
+      "cmdlets": [
+        "Get-MgDeviceManagementRoleDefinition",
+        "Get-MgDeviceManagementRoleDefinitionRoleAssignment"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}

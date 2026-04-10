@@ -1,0 +1,120 @@
+<#
+.SYNOPSIS
+    This module contains the comparison logic for M365DSC.
+    Delegates to the C# ResourceComparer for all type normalization,
+    primary-key alignment, and drift detection.
+#>
+
+Initialize-M365DSCDllLoader -ErrorAction SilentlyContinue
+$Script:IsPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
+
+function Compare-M365DSCResourceState
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ResourceName,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $DesiredValues,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $CurrentValues,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedProperties,
+
+        [Parameter()]
+        [System.String[]]
+        $IncludedProperties,
+
+        [Parameter()]
+        [System.Func[Hashtable, Hashtable, Hashtable, [Object[]], Tuple[Hashtable, Hashtable, Hashtable]]]
+        $PostProcessing,
+
+        [Parameter()]
+        [System.Object[]]
+        $PostProcessingArgs = @()
+    )
+
+    $Global:AllDrifts = @{
+        DriftInfo     = @()
+        CurrentValues = @{}
+        DesiredValues = @{}
+    }
+    $Global:PotentialDrifts = @()
+
+    # Load the schema once via the C# CacheManager (avoids boxing on every call).
+    $currentPath = $PSScriptRoot
+    if (-not [Microsoft365DSC.Cache.CacheManager]::IsSchemaLoaded)
+    {
+        $schemaPath = Join-Path -Path $currentPath -ChildPath '..\SchemaDefinition.json'
+        $schemaContent = [System.IO.File]::ReadAllText($schemaPath) | ConvertFrom-Json
+        [Microsoft365DSC.Cache.CacheManager]::LoadSchema($schemaContent)
+    }
+
+    # Apply custom post-processing callback if specified.
+    # PostProcessing is a PowerShell Func delegate, so it must be called here (before entering C#).
+    $ValuesToCheck = $DesiredValues.Clone()
+    if ($null -ne $PostProcessing)
+    {
+        Write-Verbose -Message "Applying custom post-processing to CurrentValues and ValuesToCheck for resource $ResourceName"
+        try
+        {
+            $result = $PostProcessing.Invoke($DesiredValues, $CurrentValues, $ValuesToCheck, $PostProcessingArgs)
+            if ($null -ne $result -and $result.Item1 -is [Hashtable] -and $result.Item2 -is [Hashtable] -and $result.Item3 -is [Hashtable])
+            {
+                $DesiredValues = $result.Item1
+                $CurrentValues = $result.Item2
+                $ValuesToCheck = $result.Item3
+            }
+            else
+            {
+                Write-Warning -Message "PostProcessing function did not return a valid tuple for resource $ResourceName. Using original values."
+            }
+        }
+        catch
+        {
+            Write-Warning -Message "Error occurred during post-processing for resource $ResourceName`: $_"
+        }
+    }
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $DesiredValues)"
+
+    # Delegate the entire comparison to C#.
+    # ResourceComparer handles: schema lookup, key/credential exclusion, Ensure handling,
+    # CimInstance/PSObject normalization (via ObjectNormalizer), primary-key alignment,
+    # complex object comparison, and simple property comparison.
+    $compareResult = [Microsoft365DSC.Compare.ResourceComparer]::Compare(
+        $DesiredValues,
+        $CurrentValues,
+        $ValuesToCheck,
+        [Microsoft365DSC.Cache.CacheManager]::Schema,
+        $ResourceName,
+        $ExcludedProperties,
+        $IncludedProperties
+    )
+
+    # Populate the global drift state from the C# result for downstream consumers
+    # (event logging, telemetry, drift reporting).
+    $testTargetResource = $compareResult.TestResult
+    foreach ($drift in $compareResult.DriftInfo)
+    {
+        $Global:AllDrifts.DriftInfo += @{
+            PropertyName = $drift['PropertyName']
+            CurrentValue = $drift['CurrentValue']
+            DesiredValue = $drift['DesiredValue']
+        }
+    }
+
+    return $testTargetResource
+}
+
+Export-ModuleMember -Function Compare-M365DSCResourceState

@@ -1,0 +1,60 @@
+{
+  "resourceName": "AADAuthenticationRequirement",
+  "description": "This resource configures Azure AD Authentication MFA Requirements for a user.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "UserAuthenticationMethod.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "UserAuthenticationMethod.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "UserAuthenticationMethod.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "UserAuthenticationMethod.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
+}

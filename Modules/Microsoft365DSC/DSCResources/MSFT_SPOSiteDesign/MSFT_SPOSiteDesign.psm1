@@ -1,0 +1,532 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SPOSiteDesign'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String[]]
+        $SiteScriptNames,
+
+        [Parameter()]
+        [ValidateSet('CommunicationSite', 'TeamSite', 'GrouplessTeamSite')]
+        [System.String]
+        $WebTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageAltText,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.UInt32]
+        $Version,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Title -ne $Title)
+        {
+            $null = New-M365DSCConnection -Workload 'PNP' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            Write-Verbose -Message "Getting Site Design for $Title"
+            $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
+        }
+        else
+        {
+            $siteDesign = $Script:exportedInstance
+        }
+
+        if ($null -eq $siteDesign)
+        {
+            Write-Verbose -Message "No Site Design found for $Title"
+            return $nullReturn
+        }
+
+        $scriptTitles = @()
+        foreach ($scriptId in $siteDesign.SiteScriptIds)
+        {
+            $siteScript = Get-PnPSiteScript -Identity $scriptId -ErrorAction SilentlyContinue
+
+            if ($null -ne $siteScript)
+            {
+                $scriptTitles += $siteScript.Title
+            }
+        }
+        ## Todo need to see if we can get this somehow from PNP module instead of hard coded in script
+        ## https://github.com/SharePoint/PnP-PowerShell/blob/master/Commands/Enums/SiteWebTemplate.cs
+        $webtemp = $null
+        if ($siteDesign.WebTemplate -eq '64')
+        {
+            $webtemp = 'TeamSite'
+        }
+        elseif ($siteDesign.WebTemplate -eq '1')
+        {
+            $webtemp = 'GrouplessTeamSite'
+        }
+        else
+        {
+            $webtemp = 'CommunicationSite'
+        }
+
+        return @{
+            Title                 = $siteDesign.Title
+            SiteScriptNames       = $scriptTitles
+            WebTemplate           = $webtemp
+            IsDefault             = $siteDesign.IsDefault
+            Description           = $siteDesign.Description
+            PreviewImageAltText   = $siteDesign.PreviewImageAltText
+            PreviewImageUrl       = $siteDesign.PreviewImageUrl
+            Version               = $siteDesign.Version
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
+        }
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [ValidateSet('CommunicationSite', 'TeamSite', 'GrouplessTeamSite')]
+        [System.String]
+        $WebTemplate,
+
+        [Parameter()]
+        [System.String[]]
+        $SiteScriptNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageAltText,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.UInt32]
+        $Version,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $curSiteDesign = Get-TargetResource @PSBoundParameters
+
+    # Get list of site script names
+    $scriptIds = @()
+    foreach ($siteScriptName in $SiteScriptNames)
+    {
+        $siteScript = Get-PnPSiteScript | Where-Object -FilterScript { $_.Title -eq $siteScriptName }
+        $scriptIds += $siteScript.Id
+    }
+
+    $CurrentParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $CurrentParameters.Remove('SiteScriptNames') | Out-Null
+    $CurrentParameters.Add('SiteScriptIds', $scriptIds)
+
+    if ($curSiteDesign.Ensure -eq 'Absent' -and 'Present' -eq $Ensure )
+    {
+        $CurrentParameters.Remove('Version')
+        Write-Verbose -Message "Adding new site design $Title"
+        Add-PnPSiteDesign @CurrentParameters
+    }
+    elseif (($curSiteDesign.Ensure -eq 'Present' -and 'Present' -eq $Ensure))
+    {
+        $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
+        if ($null -ne $siteDesign)
+        {
+            Write-Verbose -Message "Updating current site design $Title"
+            Set-PnPSiteDesign -Identity $siteDesign.Id @CurrentParameters
+        }
+    }
+    elseif (($Ensure -eq 'Absent' -and $curSiteDesign.Ensure -eq 'Present'))
+    {
+        $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
+        if ($null -ne $siteDesign)
+        {
+            Write-Verbose -Message "Removing site design $Title"
+            Remove-PnPSiteDesign -Identity $siteDesign.Id -Force
+        }
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [ValidateSet('CommunicationSite', 'TeamSite', 'GrouplessTeamSite')]
+        [System.String]
+        $WebTemplate,
+
+        [Parameter()]
+        [System.String[]]
+        $SiteScriptNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageAltText,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.UInt32]
+        $Version,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    try
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $dscContent = ''
+        $i = 1
+        [array]$designs = Get-PnPSiteDesign -ErrorAction Stop
+
+        if ($designs.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+
+        foreach ($design in $designs)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            Write-M365DSCHost -Message "    |---[$i/$($designs.Length)] $($design.Title)" -DeferWrite
+            $Params = @{
+                Title                 = $design.Title
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                Credential            = $Credential
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $design
+            $Results = Get-TargetResource @Params
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
+
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+Export-ModuleMember -Function *-TargetResource

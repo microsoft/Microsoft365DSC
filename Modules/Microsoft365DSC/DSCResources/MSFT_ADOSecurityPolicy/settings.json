@@ -1,0 +1,30 @@
+{
+  "resourceName": "ADOSecurityPolicy",
+  "description": "Configures Azure DevOPS Security Policies.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "Azure DevOps": {
+      "delegated": {
+        "read": [
+          {
+            "name": "user_impersonation"
+          }
+        ],
+        "update": [
+          {
+            "name": "user_impersonation"
+          }
+        ]
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    }
+  },
+  "requiredModules": [],
+  "mode": "Data"
+}
