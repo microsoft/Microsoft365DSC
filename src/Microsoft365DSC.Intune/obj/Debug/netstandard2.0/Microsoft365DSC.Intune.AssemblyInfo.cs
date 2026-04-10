@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Performance-optimized C# library for Microsoft365DSC Intune configuration operati" +
     "ons")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f396237fccdf7b40d649bc5fa04eee68394e391")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6365f62b767fc9660a7c6e50018599795c8670ef")]
 [assembly: System.Reflection.AssemblyProductAttribute("Microsoft365DSC Intune")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Microsoft365DSC.Intune")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

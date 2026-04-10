@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright © Microsoft365DSC")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Performance-optimized C# utilities for Microsoft365DSC configuration operations")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+87f1eaec86a5bc9392f5e8be0e18275fbb10f3e0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6365f62b767fc9660a7c6e50018599795c8670ef")]
 [assembly: System.Reflection.AssemblyProductAttribute("Microsoft365DSC Utilities")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Microsoft365DSC.Utilities")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
