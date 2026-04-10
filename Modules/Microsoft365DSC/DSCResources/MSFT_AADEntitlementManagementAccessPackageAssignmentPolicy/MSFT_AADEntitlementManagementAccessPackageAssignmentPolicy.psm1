@@ -293,7 +293,7 @@ function Get-TargetResource
         #endregion
 
         #region Format Questions
-        $formattedQuestions = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.Questions
+        [array]$formattedQuestions = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.Questions
         foreach ($question in $formattedQuestions)
         {
             if (-not $question.ContainsKey('odataType'))

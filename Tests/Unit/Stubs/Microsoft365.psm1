@@ -2314,7 +2314,7 @@ function Get-ActiveSyncDevice
     )
 }
 
-function Get-ActiveSyncMailboxPolicy
+function Get-MobileDeviceMailboxPolicy
 {
     [CmdletBinding()]
     param(
@@ -5294,7 +5294,7 @@ function New-ActiveSyncDeviceAccessRule
     )
 }
 
-function New-ActiveSyncMailboxPolicy
+function New-MobileDeviceMailboxPolicy
 {
     [CmdletBinding()]
     param(
@@ -5332,7 +5332,7 @@ function New-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $DevicePasswordEnabled,
+        $PasswordEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -5340,7 +5340,7 @@ function New-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Int32]
-        $DevicePasswordHistory,
+        $PasswordHistory,
 
         [Parameter()]
         [System.Boolean]
@@ -5352,7 +5352,7 @@ function New-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Int32]
-        $MinDevicePasswordComplexCharacters,
+        $MinPasswordComplexCharacters,
 
         [Parameter()]
         [System.Object]
@@ -5364,7 +5364,7 @@ function New-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $DevicePasswordExpiration,
+        $PasswordExpiration,
 
         [Parameter()]
         [System.Boolean]
@@ -5376,7 +5376,7 @@ function New-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $MaxDevicePasswordFailedAttempts,
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.Boolean]
@@ -5432,11 +5432,11 @@ function New-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $MaxInactivityTimeDeviceLock,
+        $MaxInactivityTimeLock,
 
         [Parameter()]
         [System.Boolean]
-        $AlphanumericDevicePasswordRequired,
+        $AlphanumericPasswordRequired,
 
         [Parameter()]
         [System.Boolean]
@@ -5460,7 +5460,7 @@ function New-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $AllowSimpleDevicePassword,
+        $AllowSimplePassword,
 
         [Parameter()]
         [System.Boolean]
@@ -5512,7 +5512,7 @@ function New-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $MinDevicePasswordLength,
+        $MinPasswordLength,
 
         [Parameter()]
         [System.Boolean]
@@ -9658,7 +9658,7 @@ function Remove-ActiveSyncDevice
     )
 }
 
-function Remove-ActiveSyncMailboxPolicy
+function Remove-MobileDeviceMailboxPolicy
 {
     [CmdletBinding()]
     param(
@@ -10612,7 +10612,7 @@ function Set-ActiveSyncDeviceAccessRule
     )
 }
 
-function Set-ActiveSyncMailboxPolicy
+function Set-MobileDeviceMailboxPolicy
 {
     [CmdletBinding()]
     param(
@@ -10650,7 +10650,7 @@ function Set-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $DevicePasswordEnabled,
+        $PasswordEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -10658,7 +10658,7 @@ function Set-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Int32]
-        $DevicePasswordHistory,
+        $PasswordHistory,
 
         [Parameter()]
         [System.Boolean]
@@ -10670,7 +10670,7 @@ function Set-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Int32]
-        $MinDevicePasswordComplexCharacters,
+        $MinPasswordComplexCharacters,
 
         [Parameter()]
         [System.Object]
@@ -10682,7 +10682,7 @@ function Set-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $DevicePasswordExpiration,
+        $PasswordExpiration,
 
         [Parameter()]
         [System.Boolean]
@@ -10694,7 +10694,7 @@ function Set-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $MaxDevicePasswordFailedAttempts,
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.Boolean]
@@ -10750,11 +10750,11 @@ function Set-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $MaxInactivityTimeDeviceLock,
+        $MaxInactivityTimeLock,
 
         [Parameter()]
         [System.Boolean]
-        $AlphanumericDevicePasswordRequired,
+        $AlphanumericPasswordRequired,
 
         [Parameter()]
         [System.Boolean]
@@ -10778,7 +10778,7 @@ function Set-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $AllowSimpleDevicePassword,
+        $AllowSimplePassword,
 
         [Parameter()]
         [System.Boolean]
@@ -10834,7 +10834,7 @@ function Set-ActiveSyncMailboxPolicy
 
         [Parameter()]
         [System.Object]
-        $MinDevicePasswordLength,
+        $MinPasswordLength,
 
         [Parameter()]
         [System.Boolean]
@@ -40995,6 +40995,91 @@ function Get-MgBetaDomain
         $HttpPipelineAppend
     )
 }
+function Get-MgBetaDomainFederationConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DomainId,
+
+        [Parameter()]
+        [System.String]
+        $InternalDomainFederationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function Get-MgBetaOrganization
 {
     [CmdletBinding()]
@@ -41679,6 +41764,59 @@ function New-MgBetaDomain
         $HttpPipelineAppend
     )
 }
+function New-MgBetaDomainFederationConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DomainId,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function New-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
@@ -42165,6 +42303,59 @@ function Remove-MgBetaDevice
         [Parameter()]
         [PSObject]
         $HttpPipelineAppend
+    )
+}
+function Remove-MgBetaDomainFederationConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DomainId,
+
+        [Parameter()]
+        [System.String]
+        $InternalDomainFederationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru
     )
 }
 function Remove-MgBetaAdministrativeUnit
@@ -42983,6 +43174,63 @@ function Update-MgBetaDomain
         [Parameter()]
         [PSObject]
         $HttpPipelineAppend
+    )
+}
+function Update-MgBetaDomainFederationConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DomainId,
+
+        [Parameter()]
+        [System.String]
+        $InternalDomainFederationId,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
     )
 }
 function Update-MgBetaAdministrativeUnit
@@ -72606,10 +72854,6 @@ function New-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.Boolean]
-        $AllowCarbonSummary,
-
-        [Parameter()]
-        [System.Boolean]
         $AllowLocalRecording,
 
         [Parameter()]
@@ -74693,10 +74937,6 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.String]
         $WatermarkForCameraVideoPattern,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCarbonSummary,
 
         [Parameter()]
         [System.Boolean]

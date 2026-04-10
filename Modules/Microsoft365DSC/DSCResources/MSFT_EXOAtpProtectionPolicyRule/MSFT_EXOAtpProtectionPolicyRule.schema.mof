@@ -14,7 +14,6 @@ class MSFT_EXOAtpProtectionPolicyRule : OMI_BaseResource
     [Write, Description("Specifies the existing Safe Links policy that's associated with the preset security policy.")] String SafeLinksPolicy;
     [Write, Description("Specifies a condition that looks for recipients in messages. You can use any value that uniquely identifies the recipient.")] String SentTo[];
     [Write, Description("Specifies a condition that looks for messages sent to members of distribution groups, dynamic distribution groups, or mail-enabled security groups. ")] String SentToMemberOf[];
-
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Present", "Absent"}, Values{"Present", "Absent"}] string Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

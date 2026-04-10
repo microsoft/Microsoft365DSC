@@ -94,9 +94,9 @@ function Get-TargetResource
         Write-Verbose -Message "Found ATP Built-In Protection Rule with Identity $($instance.Identity)"
         $results = @{
             Identity                  = $instance.Identity
-            ExceptIfRecipientDomainIs = [Array]$instance.ExceptIfRecipientDomainIs
-            ExceptIfSentTo            = [Array]$instance.ExceptIfSentTo
-            ExceptIfSentToMemberOf    = [Array]$instance.ExceptIfSentToMemberOf
+            ExceptIfRecipientDomainIs = [System.String[]]$instance.ExceptIfRecipientDomainIs
+            ExceptIfSentTo            = [System.String[]]$instance.ExceptIfSentTo
+            ExceptIfSentToMemberOf    = [System.String[]]$instance.ExceptIfSentToMemberOf
             Ensure                    = 'Present'
             Credential                = $Credential
             ApplicationId             = $ApplicationId

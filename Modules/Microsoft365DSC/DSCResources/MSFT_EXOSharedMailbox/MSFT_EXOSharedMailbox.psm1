@@ -31,6 +31,14 @@ function Get-TargetResource
         $AuditEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $MessageCopyForSendOnBehalfEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageCopyForSentAsEnabled,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -127,34 +135,35 @@ function Get-TargetResource
         }
 
         #region EmailAddresses
-        $CurrentEmailAddresses = @()
-
-        foreach ($email in $mailbox.EmailAddresses)
+        $CurrentEmailAddresses = $mailbox.EmailAddresses | Foreach-Object { $_.Split(':') } | Where-Object { $_ -ne 'smtp' }
+        if (-not [System.String]::IsNullOrEmpty($PrimarySMTPAddress))
         {
-            $emailValue = $email.Split(':')[1]
-            if ($emailValue -and $emailValue -ne $mailbox.PrimarySMTPAddress)
-            {
-                $CurrentEmailAddresses += $emailValue
-            }
+            $CurrentEmailAddresses = $CurrentEmailAddresses | Where-Object { $_ -ne $PrimarySMTPAddress }
+        }
+        else
+        {
+            $CurrentEmailAddresses = $CurrentEmailAddresses | Where-Object { $_ -ne $mailbox.PrimarySMTPAddress }
         }
         #endregion
 
         $result = @{
-            DisplayName           = $DisplayName
-            Identity              = $mailbox.Identity
-            PrimarySMTPAddress    = $mailbox.PrimarySMTPAddress.ToString()
-            Alias                 = $mailbox.Alias
-            AuditEnabled          = $mailbox.AuditEnabled
-            EmailAddresses        = $CurrentEmailAddresses
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePath       = $CertificatePath
-            CertificatePassword   = $CertificatePassword
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            TenantId              = $TenantId
-            AccessTokens          = $AccessTokens
+            DisplayName                       = $DisplayName
+            Identity                          = $mailbox.Identity
+            PrimarySMTPAddress                = $mailbox.PrimarySMTPAddress.ToString()
+            Alias                             = $mailbox.Alias
+            AuditEnabled                      = $mailbox.AuditEnabled
+            EmailAddresses                    = Get-M365DSCArrayFromProperty -PropertyValue $CurrentEmailAddresses -ElementType ([System.String])
+            MessageCopyForSendOnBehalfEnabled = $mailbox.MessageCopyForSendOnBehalfEnabled
+            MessageCopyForSentAsEnabled       = $mailbox.MessageCopyForSentAsEnabled
+            Ensure                            = 'Present'
+            Credential                        = $Credential
+            ApplicationId                     = $ApplicationId
+            CertificateThumbprint             = $CertificateThumbprint
+            CertificatePath                   = $CertificatePath
+            CertificatePassword               = $CertificatePassword
+            ManagedIdentity                   = $ManagedIdentity.IsPresent
+            TenantId                          = $TenantId
+            AccessTokens                      = $AccessTokens
         }
 
         Write-Verbose -Message "Found an existing instance of Shared Mailbox '$($DisplayName)'"
@@ -200,6 +209,14 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AuditEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageCopyForSendOnBehalfEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageCopyForSentAsEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -264,31 +281,56 @@ function Set-TargetResource
     }
     #endregion
 
-    $CurrentParameters = $PSBoundParameters
-
     # CASE: Mailbox doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentMailbox.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Shared Mailbox '$($DisplayName)' does not exist but it should. Creating it."
-        $emails = ''
-        foreach ($secondaryAlias in $EmailAddresses)
-        {
-            $emails += $secondaryAlias + ','
-        }
-        $emails += $PrimarySMTPAddress
-        $proxyAddresses = $emails -split ','
-        $CurrentParameters.EmailAddresses = $proxyAddresses
+
         $NewMailBoxParameters = @{
             Name               = $DisplayName
-            PrimarySMTPAddress = $PrimarySMTPAddress
             Shared             = $true
         }
-        if ($Alias)
+
+        if ($PSBoundParameters.ContainsKey("Alias"))
         {
             $NewMailBoxParameters.Add('Alias', $Alias)
         }
+
+        if ($PSBoundParameters.ContainsKey("PrimarySMTPAddress"))
+        {
+            $NewMailBoxParameters.Add('PrimarySMTPAddress', $PrimarySMTPAddress)
+        }
+
         New-MailBox @NewMailBoxParameters
-        Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $EmailAddresses }
+
+        if ($PSBoundParameters.ContainsKey("AuditEnabled") -or $PSBoundParameters.ContainsKey("EmailAddresses") -or $PSBoundParameters.ContainsKey("MessageCopyForSendOnBehalfEnabled") -or $PSBoundParameters.ContainsKey("MessageCopyForSentAsEnabled"))
+        {
+            $SetParameters = @{
+                Identity = $DisplayName
+            }
+
+            if ($PSBoundParameters.ContainsKey("AuditEnabled"))
+            {
+                $SetParameters.Add("AuditEnabled", $AuditEnabled)
+            }
+
+            if ($PSBoundParameters.ContainsKey("EmailAddresses"))
+            {
+                $SetParameters.Add("EmailAddresses", @{ add = $EmailAddresses })
+            }
+
+            if ($PSBoundParameters.ContainsKey("MessageCopyForSendOnBehalfEnabled"))
+            {
+                $SetParameters.Add("MessageCopyForSendOnBehalfEnabled", $MessageCopyForSendOnBehalfEnabled)
+            }
+
+            if ($PSBoundParameters.ContainsKey("MessageCopyForSentAsEnabled"))
+            {
+                $SetParameters.Add("MessageCopyForSentAsEnabled", $MessageCopyForSentAsEnabled)
+            }
+
+            Set-Mailbox @SetParameters
+        }
     }
     # CASE: Mailbox exists but it shouldn't;
     elseif ($Ensure -eq 'Absent' -and $currentMailbox.Ensure -eq 'Present')
@@ -299,62 +341,104 @@ function Set-TargetResource
     # CASE: Mailbox exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq 'Present' -and $currentMailbox.Ensure -eq 'Present')
     {
-        # CASE: EmailAddresses need to be updated
         Write-Verbose -Message "Shared Mailbox '$($DisplayName)' already exists, but needs updating."
-        $current = $currentMailbox.EmailAddresses
-        $desired = $EmailAddresses
-        $diff = Compare-Object -ReferenceObject $current -DifferenceObject $desired
-        if ($diff)
+
+        if ($PSBoundParameters.ContainsKey("PrimarySMTPAddress"))
         {
-            # Add EmailAddresses
-            Write-Verbose -Message "Updating the list of EmailAddresses for the Shared Mailbox '$($DisplayName)'"
-            $emails = ''
-            $emailAddressesToAdd = $diff | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
-            if ($null -ne $emailAddressesToAdd)
+            if ($currentMailbox.PrimarySMTPAddress -ne $PrimarySMTPAddress)
             {
-                $emailsToAdd = ''
-                foreach ($secondaryAlias in $emailAddressesToAdd)
-                {
-                    $emailsToAdd += $secondaryAlias.InputObject + ','
-                }
-                $emailsToAdd += $PrimarySMTPAddress
-                $proxyAddresses = $emailsToAdd -split ','
-
-                Write-Verbose -Message "Adding the following EmailAddresses: $emailsToAdd"
-                Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $proxyAddresses }
-            }
-            # Remove EmailAddresses
-            $emailAddressesToRemove = $diff | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }
-            if ($null -ne $emailAddressesToRemove)
-            {
-                $emailsToRemoved = ''
-                foreach ($secondaryAlias in $emailAddressesToRemove)
-                {
-                    $emailsToRemoved += $secondaryAlias.InputObject + ','
-                }
-                $emailsToRemoved += $PrimarySMTPAddress
-                $proxyAddresses = $emailsToRemoved -split ','
-
-                Write-Verbose -Message "Removing the following EmailAddresses: $emailsToRemoved"
-                Set-Mailbox -Identity $DisplayName -EmailAddresses @{remove = $proxyAddresses }
+                Write-Verbose -Message "Updating PrimarySMTPAddress for the Shared Mailbox '$($DisplayName)' from $($currentMailbox.PrimarySMTPAddress) to $PrimarySMTPAddress"
+                Set-Mailbox -Identity $DisplayName -WindowsEmailAddress $PrimarySMTPAddress -MicrosoftOnlineServicesID $PrimarySMTPAddress
             }
         }
-        $current = $currentMailbox.Alias
-        $desired = $Alias
-        $diff = Compare-Object -ReferenceObject $current -DifferenceObject $desired
-        if ($diff)
-        {
-            Write-Verbose -Message "Updating Alias for the Shared Mailbox '$($DisplayName)'"
-            Set-Mailbox -Identity $DisplayName -Alias $Alias
+
+        $SetParameters = @{
+            Identity = $DisplayName
         }
-        $current = $currentMailbox.PrimarySMTPAddress
-        $desired = $PrimarySMTPAddress
-        $diff = Compare-Object -ReferenceObject $current -DifferenceObject $desired
-        if ($diff)
+
+        if ($PSBoundParameters.ContainsKey("Alias"))
         {
-            Write-Verbose -Message "Updating PrimarySmtpAddress for the Shared Mailbox from $($mailbox.PrimarySMTPAddress) to $PrimarySMTPAddress"
-            Set-Mailbox -Identity $mailbox.guid.guid -WindowsEmailAddress $PrimarySMTPAddress
+            if ($currentMailbox.Alias -ne $Alias)
+            {
+                Write-Verbose -Message "Updating Alias for the Shared Mailbox '$($DisplayName)' from $($currentMailbox.Alias) to $Alias"
+                $SetParameters.Add("Alias", $Alias)
+            }
         }
+
+        if ($PSBoundParameters.ContainsKey("AuditEnabled"))
+        {
+            if ($AuditEnabled -ne $currentMailbox.AuditEnabled)
+            {
+                Write-Verbose -Message "AuditEnabled for Shared Mailbox '$($DisplayName)' needs to be updated from $($currentMailbox.AuditEnabled) to $AuditEnabled"
+                $SetParameters.Add("AuditEnabled", $AuditEnabled)
+            }
+        }
+
+        # CASE: EmailAddresses need to be updated
+        if ($PSBoundParameters.ContainsKey("EmailAddresses"))
+        {
+            $current = $currentMailbox.EmailAddresses
+            $desired = $EmailAddresses
+
+            $emailAddressesToAdd = $desired | Where-Object { $_ -notin $current } | Sort-Object -Unique
+            if ($null -ne $PrimarySMTPAddress)
+            {
+                $emailAddressesToAdd = $emailAddressesToAdd | Where-Object { $_ -ne $PrimarySMTPAddress }
+            }
+            else
+            {
+                $emailAddressesToAdd = $emailAddressesToAdd | Where-Object { $_ -ne $currentMailbox.PrimarySMTPAddress }
+            }
+
+            $emailAddressesToRemove = $current | Where-Object { $_ -notin $desired } | Sort-Object -Unique
+            if ($null -ne $PrimarySMTPAddress)
+            {
+                $emailAddressesToRemove = $emailAddressesToRemove | Where-Object { $_ -ne $PrimarySMTPAddress }
+            }
+            else
+            {
+                $emailAddressesToRemove = $emailAddressesToRemove | Where-Object { $_ -ne $currentMailbox.PrimarySMTPAddress }
+            }
+
+            if ($null -ne $emailAddressesToAdd -or $null -ne $emailAddressesToRemove)
+            {
+                $SetParameters.Add("EmailAddresses", @{})
+
+                # Add EmailAddresses
+                Write-Verbose -Message "Updating the list of EmailAddresses for the Shared Mailbox '$($DisplayName)'"
+                if ($null -ne $emailAddressesToAdd)
+                {
+                    Write-Verbose -Message "Adding the following EmailAddresses: $($emailAddressesToAdd | Out-String)"
+                    $SetParameters.EmailAddresses.Add("add", $emailAddressesToAdd)
+                }
+                # Remove EmailAddresses
+                if ($null -ne $emailAddressesToRemove)
+                {
+                    Write-Verbose -Message "Removing the following EmailAddresses: $($emailAddressesToRemove | Out-String)"
+                    $SetParameters.EmailAddresses.Add("remove", $emailAddressesToRemove)
+                }
+            }
+        }
+
+        if ($PSBoundParameters.ContainsKey("MessageCopyForSendOnBehalfEnabled"))
+        {
+            if ($currentMailbox.MessageCopyForSendOnBehalfEnabled -ne $MessageCopyForSendOnBehalfEnabled)
+            {
+                Write-Verbose -Message "Updating MessageCopyForSendOnBehalfEnabled for the Shared Mailbox '$($DisplayName)' from $($currentMailbox.MessageCopyForSendOnBehalfEnabled) to $MessageCopyForSendOnBehalfEnabled"
+                $SetParameters.Add("MessageCopyForSendOnBehalfEnabled", $MessageCopyForSendOnBehalfEnabled)
+            }
+        }
+
+        if ($PSBoundParameters.ContainsKey("MessageCopyForSentAsEnabled"))
+        {
+            if ($currentMailbox.MessageCopyForSentAsEnabled -ne $MessageCopyForSentAsEnabled)
+            {
+                Write-Verbose -Message "Updating MessageCopyForSentAsEnabled for the Shared Mailbox '$($DisplayName)' from $($currentMailbox.MessageCopyForSentAsEnabled) to $MessageCopyForSentAsEnabled"
+                $SetParameters.Add("MessageCopyForSentAsEnabled", $MessageCopyForSentAsEnabled)
+            }
+        }
+
+        Set-Mailbox @SetParameters
     }
 }
 
@@ -387,6 +471,14 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AuditEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageCopyForSendOnBehalfEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MessageCopyForSentAsEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

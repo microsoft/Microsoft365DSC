@@ -24,7 +24,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
             # Mock Write-M365DSCHost to hide output during the tests
@@ -33,8 +33,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
 
+            function MSFT_AADConditionalAccessPolicy\Export-TargetResource
+            {
+            }
+
             Mock -CommandName MSFT_AADConditionalAccessPolicy\Export-TargetResource -MockWith {
-                return "AADConditionalAccessPolicy 'FakeItem1'{`r`n    DisplayName='test';State = 'Enabled'`r`n}`r`nAADConditionalAccessPolicy 'FakeItem2'{`r`n    DisplayName='test';State = 'Disabled'`r`n}"
+                return @"
+                AADConditionalAccessPolicy 'FakeItem1'
+                {
+                    DisplayName ='test';
+                    State = 'Enabled';
+                }
+                AADConditionalAccessPolicy 'FakeItem2'
+                {
+                    DisplayName ='test';
+                    State = 'Disabled';
+                }
+"@
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {

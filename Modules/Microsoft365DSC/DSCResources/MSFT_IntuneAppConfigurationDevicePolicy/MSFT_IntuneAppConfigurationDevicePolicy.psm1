@@ -381,7 +381,6 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $platform = 'android'
     if ($BoundParameters.ContainsKey('EncodedSettingXml') -or $BoundParameters.ContainsKey('Settings'))
@@ -429,14 +428,6 @@ function Set-TargetResource
             $CreateParameters.Add('@odata.type', '#microsoft.graph.iosMobileAppConfiguration')
         }
 
-        $keys = (([Hashtable]$CreateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-        }
         #region resource generator code
         $policy = New-MgBetaDeviceAppManagementMobileAppConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -468,16 +459,8 @@ function Set-TargetResource
             $UpdateParameters.Add('@odata.type', '#microsoft.graph.iosMobileAppConfiguration')
         }
 
-        $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-        }
         #region resource generator code
-        Update-MgBetaDeviceAppManagementMobileAppConfiguration  `
+        Update-MgBetaDeviceAppManagementMobileAppConfiguration `
             -ManagedDeviceMobileAppConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
 

@@ -341,15 +341,6 @@ function Set-TargetResource
     $updateParameters = ([Hashtable]$boundParameters).Clone()
     $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
 
-    $keys = (([Hashtable]$updateParameters).Clone()).Keys
-    foreach ($key in $keys)
-    {
-        if ($null -ne $updateParameters.$key -and $updateParameters.$key.GetType().Name -like '*CimInstance*')
-        {
-            $updateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.DeviceEnrollmentConfigurationId
-        }
-    }
-
     #region resource generator code
     $updateParameters.Add('@odata.type', '#microsoft.graph.deviceEnrollmentWindowsHelloForBusinessConfiguration')
     $policy = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration | Where-Object -FilterScript {

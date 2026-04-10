@@ -5,6 +5,7 @@ class MSFT_MicrosoftGraphRequestSchedule
     [Write, Description("The frequency of the  eligible or active assignment. This property is currently unsupported in PIM."), EmbeddedInstance("MSFT_MicrosoftGraphPatternedRecurrence1")] String Recurrence;
     [Write, Description("When the  eligible or active assignment becomes active.")] String StartDateTime;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphExpirationPattern
 {
@@ -12,12 +13,14 @@ class MSFT_MicrosoftGraphExpirationPattern
     [Write, Description("Timestamp of date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z.")] String EndDateTime;
     [Write, Description("The requestor's desired expiration pattern type. The possible values are: notSpecified, noExpiration, afterDateTime, afterDuration."), ValueMap{"notSpecified","noExpiration","afterDateTime","afterDuration"}, Values{"notSpecified","noExpiration","afterDateTime","afterDuration"}] String Type;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphPatternedRecurrence1
 {
     [Write, Description("The frequency of an event.  For access reviews: Do not specify this property for a one-time access review.  Only interval, dayOfMonth, and type (weekly, absoluteMonthly) properties of recurrencePattern are supported."), EmbeddedInstance("MSFT_MicrosoftGraphRecurrencePattern1")] String Pattern;
     [Write, Description("The duration of an event."), EmbeddedInstance("MSFT_MicrosoftGraphRecurrenceRange1")] String Range;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphRecurrencePattern1
 {
@@ -29,6 +32,7 @@ class MSFT_MicrosoftGraphRecurrencePattern1
     [Write, Description("The month in which the event occurs.  This is a number from 1 to 12.")] UInt32 Month;
     [Write, Description("The recurrence pattern type: daily, weekly, absoluteMonthly, relativeMonthly, absoluteYearly, relativeYearly. Required. For more information, see values of type property."), ValueMap{"daily","weekly","absoluteMonthly","relativeMonthly","absoluteYearly","relativeYearly"}, Values{"daily","weekly","absoluteMonthly","relativeMonthly","absoluteYearly","relativeYearly"}] String Type;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphRecurrenceRange1
 {

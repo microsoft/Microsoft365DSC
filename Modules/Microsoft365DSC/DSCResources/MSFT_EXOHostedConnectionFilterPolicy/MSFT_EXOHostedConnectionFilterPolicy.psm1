@@ -237,7 +237,7 @@ function Set-TargetResource
         $HostedConnectionFilterPolicyParams.Remove('RuleScope') | Out-Null
     }
 
-    if (('Present' -eq $Ensure ) -and $CurrentInstance.Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $CurrentInstance.Ensure -eq 'Absent')
     {
         $HostedConnectionFilterPolicyParams += @{
             Name = $HostedConnectionFilterPolicyParams.Identity
@@ -256,7 +256,7 @@ function Set-TargetResource
 
         Write-Verbose -Message "With Parameters: $(Convert-M365DscHashtableToString -Hashtable $HostedConnectionFilterPolicyParams)"
     }
-    elseif (('Present' -eq $Ensure ) -and $CurrentInstance.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $CurrentInstance.Ensure -eq 'Present')
     {
         if ($PSBoundParameters.MakeDefault)
         {
@@ -267,7 +267,7 @@ function Set-TargetResource
             Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
         }
     }
-    elseif (('Absent' -eq $Ensure ) -and $CurrentInstance.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $CurrentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing HostedConnectionFilterPolicy $($Identity)"
         Remove-HostedConnectionFilterPolicy -Identity $Identity -Confirm:$false

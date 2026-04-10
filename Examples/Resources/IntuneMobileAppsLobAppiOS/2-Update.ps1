@@ -30,7 +30,7 @@ Configuration Example
             };
             ApplicationId                   = $ApplicationId;
             Assignments                     = @(
-                MSFT_DeviceManagementMobileAppAssignment {
+                MSFT_DeviceManagementLobAppiOSAssignment{
                     groupDisplayName = 'All devices'
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'

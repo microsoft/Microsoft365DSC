@@ -522,7 +522,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message "    |---[$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
+            Write-M365DSCHost -Message "    |---[$i/$($sites.Length)] SPOSite groups for {$($site.Url)}" -DeferWrite
             $siteGroups = $null
             try
             {
@@ -538,6 +538,15 @@ function Export-TargetResource
             }
 
             $j = 1
+            if ($siteGroups.Length -eq 0)
+            {
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+                continue
+            }
+            else
+            {
+                Write-M365DSCHost -Message "`r`n" -DeferWrite
+            }
             foreach ($siteGroup in $siteGroups)
             {
                 Write-M365DSCHost -Message "        |---[$j/$($siteGroups.Length)] $($siteGroup.Title)" -DeferWrite

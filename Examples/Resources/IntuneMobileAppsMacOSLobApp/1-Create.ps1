@@ -39,7 +39,7 @@ Configuration Example
             PrivacyInformationUrl = "";
             Publisher             = "Contoso";
             Assignments          = @(
-                MSFT_DeviceManagementMobileAppAssignment{
+                MSFT_DeviceManagementMacOSLobAppAssignment{
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.groupAssignmentTarget'
                     groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'

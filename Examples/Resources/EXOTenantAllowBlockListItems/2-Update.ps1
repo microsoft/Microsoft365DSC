@@ -33,7 +33,6 @@ Configuration Example
             ListSubType           = "Tenant";
             ListType              = "Sender";
             Notes                 = "Test block with updated notes";
-            SubmissionID          = "Non-Submission";
             Value                 = "example.com";
         }
     }

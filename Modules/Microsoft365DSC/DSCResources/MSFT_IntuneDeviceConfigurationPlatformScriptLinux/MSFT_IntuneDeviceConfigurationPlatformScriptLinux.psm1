@@ -528,10 +528,7 @@ function Export-TargetResource
         [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
             -Filter $Filter `
             -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.TemplateReference.TemplateId -eq $policyTemplateID
-            }
+            -ErrorAction Stop
         #endregion
 
         $i = 1

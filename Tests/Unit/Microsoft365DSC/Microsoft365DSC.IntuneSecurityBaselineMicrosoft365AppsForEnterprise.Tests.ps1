@@ -319,6 +319,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
+            Mock -ModuleName M365DSCIntuneUtil -CommandName Get-MgGroup -MockWith {
+                return @{
+                    Id = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                    DisplayName = 'Exclude'
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -356,15 +363,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
                     DeviceSettings = [CimInstance](
                         New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings -Property @{
-                            L_ProtectionFromZoneElevation = '1'
-                            L_grooveexe98 = '1'
-                            L_excelexe99 = '1'
-                            L_mspubexe100 = '1'
+                            L_ProtectionFromZoneElevation = 1
+                            L_grooveexe98 = 1
+                            L_excelexe99 = 1
+                            L_mspubexe100 = 1
                         } -ClientOnly
                     )
                     Id = "12345-12345-12345-12345-12345"
@@ -372,8 +380,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleScopeTagIds = @("FakeStringValue")
                     UserSettings = [CimInstance](
                         New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings -Property @{
-                            L_Word2003BinaryDocumentsAndTemplates = '1'
-                            L_Word2003BinaryDocumentsAndTemplatesDropID = '2'
+                            L_Word2003BinaryDocumentsAndTemplates = 1
+                            L_Word2003BinaryDocumentsAndTemplatesDropID = 2
                         } -ClientOnly
                     )
                     Ensure = "Present"
@@ -404,15 +412,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
                     DeviceSettings = [CimInstance](
                         New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings -Property @{
-                            L_ProtectionFromZoneElevation = '1'
-                            L_grooveexe98 = '1'
-                            L_excelexe99 = '1'
-                            L_mspubexe100 = '1'
+                            L_ProtectionFromZoneElevation = 1
+                            L_grooveexe98 = 1
+                            L_excelexe99 = 1
+                            L_mspubexe100 = 1
                         } -ClientOnly
                     )
                     Id = "12345-12345-12345-12345-12345"
@@ -420,8 +429,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleScopeTagIds = @("FakeStringValue")
                     UserSettings = [CimInstance](
                         New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings -Property @{
-                            L_Word2003BinaryDocumentsAndTemplates = '1'
-                            L_Word2003BinaryDocumentsAndTemplatesDropID = '2'
+                            L_Word2003BinaryDocumentsAndTemplates = 1
+                            L_Word2003BinaryDocumentsAndTemplatesDropID = 2
                         } -ClientOnly
                     )
                     Ensure = "Absent"
@@ -450,15 +459,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
                     DeviceSettings = [CimInstance](
                         New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings -Property @{
-                            L_ProtectionFromZoneElevation = '1'
-                            L_grooveexe98 = '1'
-                            L_excelexe99 = '1'
-                            L_mspubexe100 = '1'
+                            L_ProtectionFromZoneElevation = 1
+                            L_grooveexe98 = 1
+                            L_excelexe99 = 1
+                            L_mspubexe100 = 1
                         } -ClientOnly
                     )
                     Id = "12345-12345-12345-12345-12345"
@@ -466,15 +476,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleScopeTagIds = @("FakeStringValue")
                     UserSettings = [CimInstance](
                         New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings -Property @{
-                            L_Word2003BinaryDocumentsAndTemplates = '1'
-                            L_Word2003BinaryDocumentsAndTemplatesDropID = '2'
+                            L_Word2003BinaryDocumentsAndTemplates = 1
+                            L_Word2003BinaryDocumentsAndTemplatesDropID = 2
                         } -ClientOnly
                     )
                     Ensure = "Present"
                     Credential = $Credential
                 }
             }
-
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
@@ -489,15 +498,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
                     DeviceSettings = [CimInstance](
                         New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings -Property @{
-                            L_ProtectionFromZoneElevation = '1'
-                            L_grooveexe98 = '1'
-                            L_excelexe99 = '1'
-                            L_mspubexe100 = '0' # Drift
+                            L_ProtectionFromZoneElevation = 1
+                            L_grooveexe98 = 1
+                            L_excelexe99 = 1
+                            L_mspubexe100 = 0 # Drift
                         } -ClientOnly
                     )
                     Id = "12345-12345-12345-12345-12345"
@@ -505,8 +515,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleScopeTagIds = @("FakeStringValue")
                     UserSettings = [CimInstance](
                         New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings -Property @{
-                            L_Word2003BinaryDocumentsAndTemplates = '1'
-                            L_Word2003BinaryDocumentsAndTemplatesDropID = '2'
+                            L_Word2003BinaryDocumentsAndTemplates = 1
+                            L_Word2003BinaryDocumentsAndTemplatesDropID = 2
                         } -ClientOnly
                     )
                     Ensure = "Present"

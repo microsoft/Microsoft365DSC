@@ -6,11 +6,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
         [Parameter()]
         [System.String]
         $LogoURL,
@@ -78,6 +73,11 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $ClientMediaPortRangeEnabled,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -126,7 +126,7 @@ function Get-TargetResource
         $config = Get-CsTeamsMeetingConfiguration -ErrorAction Stop
 
         return @{
-            Identity                               = $Identity
+            IsSingleInstance                        = 'Yes'
             LogoURL                                = $config.LogoURL
             LegalURL                               = $config.LegalURL
             HelpURL                                = $config.HelpURL
@@ -168,11 +168,6 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
         [Parameter()]
         [System.String]
         $LogoURL,
@@ -240,6 +235,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $ClientMediaPortRangeEnabled,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -284,6 +284,8 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $SetParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $SetParams.Add('Identity', 'Global')
+    $SetParams.Remove('IsSingleInstance') | Out-Null
     Set-CsTeamsMeetingConfiguration @SetParams
 }
 
@@ -293,11 +295,6 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
         [Parameter()]
         [System.String]
         $LogoURL,
@@ -365,6 +362,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $ClientMediaPortRangeEnabled,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -455,7 +457,7 @@ function Export-TargetResource
     {
         $dscContent = ''
         $params = @{
-            Identity              = 'Global'
+            IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId

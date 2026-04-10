@@ -688,7 +688,7 @@ function Set-TargetResource
         $HostedContentFilterPolicyParams.IntraOrgFilterState = 'HighConfidencePhish'
     }
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy))
+    if ($Ensure -eq 'Present' -and $null -eq $HostedContentFilterPolicy)
     {
         $HostedContentFilterPolicyParams += @{
             Name = $HostedContentFilterPolicyParams.Identity
@@ -703,7 +703,7 @@ function Set-TargetResource
             Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
         }
     }
-    elseif (('Present' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy))
+    elseif ($Ensure -eq 'Present' -and $null -ne $HostedContentFilterPolicy)
     {
         Write-Verbose -Message "Setting HostedContentFilterPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $HostedContentFilterPolicyParams)."
         if ($PSBoundParameters.MakeDefault)
@@ -717,7 +717,7 @@ function Set-TargetResource
             Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -Confirm:$false
         }
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy))
+    elseif ($Ensure -eq 'Absent' -and $null -ne $HostedContentFilterPolicy)
     {
         Write-Verbose -Message "Removing HostedContentFilterPolicy $($Identity) "
         Remove-HostedContentFilterPolicy -Identity $Identity -Confirm:$false

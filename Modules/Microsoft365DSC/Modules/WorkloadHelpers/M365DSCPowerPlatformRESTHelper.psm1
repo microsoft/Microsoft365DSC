@@ -1,6 +1,6 @@
 function Invoke-M365DSCPowerPlatformRESTWebRequest
 {
-    [OutputType([PSCustomObject])]
+    [OutputType([System.Collections.Hashtable])]
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]

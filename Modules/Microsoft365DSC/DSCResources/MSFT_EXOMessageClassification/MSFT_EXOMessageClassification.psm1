@@ -258,18 +258,18 @@ function Set-TargetResource
     $MessageClassification = Get-MessageClassification -Identity $Identity -ErrorAction SilentlyContinue
     $messageClassificationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $MessageClassification))
+    if ($Ensure -eq 'Present' -and $null -eq $MessageClassification)
     {
         $messageClassificationParams.Remove('Identity') | Out-Null
         Write-Verbose -Message "Creating Message Classification policy  $($Identity)."
         New-MessageClassification @messageClassificationParams
     }
-    elseif (('Present' -eq $Ensure) -and ($null -ne $MessageClassification))
+    elseif ($Ensure -eq 'Present' -and $null -ne $MessageClassification)
     {
         Write-Verbose -Message "Setting Message Classification policy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $messageClassificationParams)"
         Set-MessageClassification @messageClassificationParams -Confirm:$false
     }
-    elseif (('Absent' -eq $Ensure) -and ($null -ne $MessageClassification))
+    elseif ($Ensure -eq 'Absent' -and $null -ne $MessageClassification)
     {
         Write-Verbose -Message "Removing Message Classification policy $($Identity)"
         Remove-MessageClassification -Identity $Identity -Confirm:$false

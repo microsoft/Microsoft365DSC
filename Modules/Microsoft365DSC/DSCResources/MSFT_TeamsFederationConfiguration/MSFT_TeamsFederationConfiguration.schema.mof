@@ -1,7 +1,7 @@
-[ClassVersion("1.0.0.2"), FriendlyName("TeamsFederationConfiguration")]
+[ClassVersion("1.0.0.3"), FriendlyName("TeamsFederationConfiguration")]
 class MSFT_TeamsFederationConfiguration : OMI_BaseResource
 {
-    [Key, Description("The only valid input is Global - the tenant wide configuration"), ValueMap{"Global"}, Values{"Global"}] string Identity;
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("When set to True users will be potentially allowed to communicate with users from other domains.")] Boolean AllowFederatedUsers;
     [Write, Description("List of federated domains to allow.")] String AllowedDomains[];
     [Write, Description("List of federated domains to block.")] String BlockedDomains[];

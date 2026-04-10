@@ -237,7 +237,7 @@ function Set-TargetResource
     $DataEncryptionPolicy = $DataEncryptionPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $DataEncryptionPolicyParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $DataEncryptionPolicy))
+    if ($Ensure -eq 'Present' -and $null -eq $DataEncryptionPolicy)
     {
         Write-Verbose -Message "Creating Data encryption policy $($Identity)."
         $DataEncryptionPolicyParams.Remove('Identity') | Out-Null
@@ -246,7 +246,7 @@ function Set-TargetResource
         New-DataEncryptionPolicy @DataEncryptionPolicyParams
         Write-Verbose -Message 'Data encryption policy created successfully.'
     }
-    elseif (('Present' -eq $Ensure ) -and ($null -ne $DataEncryptionPolicy))
+    elseif ($Ensure -eq 'Present' -and $null -ne $DataEncryptionPolicy)
     {
         $DataEncryptionPolicyParams.Remove('AzureKeyIDs') | Out-Null
         $verboseMessage = "Setting Data encryption policy $($Identity) with values:" + `

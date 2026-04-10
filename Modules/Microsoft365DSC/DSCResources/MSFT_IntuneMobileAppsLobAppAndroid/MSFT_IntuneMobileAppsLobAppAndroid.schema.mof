@@ -42,10 +42,10 @@ class MSFT_DeviceManagementMimeContent
     [Write, Description("The Base64 encoded string content.")] String Value;
 };
 
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_DeviceManagementMobileAppCategory
 {
-    [Key, Description("The name of the app category.")] String DisplayName;
+    [Required, Description("The name of the app category.")] String DisplayName;
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
 };
 

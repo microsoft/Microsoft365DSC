@@ -117,20 +117,12 @@ function Get-TargetResource
         $complexExcludeTarget = [ordered]@{}
         if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            try
+            $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id
+            if ($null -eq $myExcludeTargetsDisplayName)
             {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -ErrorAction Stop
-                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                continue
             }
-            catch
-            {
-                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id) specified in excludeTarget. Skipping group!"
-                New-M365DSCLogEntry -Message $message `
-                    -Exception $_ `
-                    -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $TenantId `
-                    -Credential $Credential
-            }
+            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName)
         }
         else
         {
@@ -159,20 +151,12 @@ function Get-TargetResource
         $complexIncludeTarget = [ordered]@{}
         if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            try
+            $myIncludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id
+            if ($null -eq $myIncludeTargetsDisplayName)
             {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -ErrorAction Stop
-                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                continue
             }
-            catch
-            {
-                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id) specified in includeTarget. Skipping group!"
-                New-M365DSCLogEntry -Message $message `
-                    -Exception $_ `
-                    -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $TenantId `
-                    -Credential $Credential
-            }
+            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName)
         }
         else
         {
@@ -215,20 +199,12 @@ function Get-TargetResource
         $complexExcludeTarget = [ordered]@{}
         if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            try
+            $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id
+            if ($null -eq $myExcludeTargetsDisplayName)
             {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -ErrorAction Stop
-                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                continue
             }
-            catch
-            {
-                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id) specified in excludeTarget. Skipping group!"
-                New-M365DSCLogEntry -Message $message `
-                    -Exception $_ `
-                    -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $TenantId `
-                    -Credential $Credential
-            }
+            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName)
         }
         else
         {
@@ -256,20 +232,12 @@ function Get-TargetResource
         $complexIncludeTarget = [ordered]@{}
         if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            try
+            $myIncludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id
+            if ($null -eq $myIncludeTargetsDisplayName)
             {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -ErrorAction Stop
-                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                continue
             }
-            catch
-            {
-                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id) specified in includeTarget. Skipping group!"
-                New-M365DSCLogEntry -Message $message `
-                    -Exception $_ `
-                    -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $TenantId `
-                    -Credential $Credential
-            }
+            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName)
         }
         else
         {
@@ -312,20 +280,12 @@ function Get-TargetResource
         $complexExcludeTarget = [ordered]@{}
         if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            try
+            $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id
+            if ($null -eq $myExcludeTargetsDisplayName)
             {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -ErrorAction Stop
-                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                continue
             }
-            catch
-            {
-                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id) specified in excludeTarget. Skipping group!"
-                New-M365DSCLogEntry -Message $message `
-                    -Exception $_ `
-                    -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $TenantId `
-                    -Credential $Credential
-            }
+            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName)
         }
         else
         {
@@ -355,20 +315,12 @@ function Get-TargetResource
         $complexIncludeTarget = [ordered]@{}
         if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            try
+            $myIncludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id
+            if ($null -eq $myIncludeTargetsDisplayName)
             {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -ErrorAction Stop
-                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                continue
             }
-            catch
-            {
-                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id) specified in includeTarget. Skipping group!"
-                New-M365DSCLogEntry -Message $message `
-                    -Exception $_ `
-                    -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $TenantId `
-                    -Credential $Credential
-            }
+            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName)
         }
         else
         {
@@ -408,17 +360,17 @@ function Get-TargetResource
         $complexFeatureSettings.Add('DisplayLocationInformationRequiredState', $complexDisplayLocationInformationRequiredState)
 
         $complexExcludeTargets = @()
-        foreach ($currentExcludeTargets in $getValue.excludeTargets)
+        foreach ($currentExcludeTargets in $getValue.ExcludeTargets)
         {
             $myExcludeTargets = [ordered]@{}
             if ($currentExcludeTargets.id -ne 'all_users')
             {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id -ErrorAction SilentlyContinue
-
-                if ($null -ne $myExcludeTargetsDisplayName)
+                $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $currentExcludeTargets.id
+                if ($null -eq $myExcludeTargetsDisplayName)
                 {
-                    $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                    continue
                 }
+                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName)
             }
             else
             {
@@ -443,11 +395,12 @@ function Get-TargetResource
             $myIncludeTargets = [ordered]@{}
             if ($currentIncludeTargets.id -ne 'all_users')
             {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id -ErrorAction SilentlyContinue
-                if ($null -ne $myIncludeTargetsDisplayName)
+                $myIncludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $currentIncludeTargets.id
+                if ($null -eq $myIncludeTargetsDisplayName)
                 {
-                    $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                    continue
                 }
+                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName)
             }
             else
             {
@@ -595,98 +548,22 @@ function Set-TargetResource
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
         $UpdateParameters.Remove('Id') | Out-Null
 
         # replace group Displayname with group id
-        if ($UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -and `
-                $UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
-            $UpdateParameters.featureSettings.ContainsKey('companionAppAllowedState'))
-        {
-            Write-Verbose -Message 'Retrieving companionAppAllowedState include target'
-            $Filter = "DisplayName eq '$($UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -replace "'", "''")'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.ForEach('id', $groupid)
-        }
-        if ($UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -and `
-                $UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
-            $UpdateParameters.featureSettings.ContainsKey('companionAppAllowedState'))
-        {
-            Write-Verbose -Message 'Retrieving companionAppAllowedState include target'
-            $Filter = "DisplayName eq '$($UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -replace "'", "''")'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.ForEach('id', $groupid)
-        }
-        if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -and `
-                $UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
-            $UpdateParameters.featureSettings.ContainsKey('displayAppInformationRequiredState'))
-        {
-            Write-Verbose -Message 'Retrieving displayAppInformationRequiredState include target'
-            $Filter = "DisplayName eq '$($UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -replace "'", "''")'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.ForEach('id', $groupid)
-        }
-        if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -and `
-                $UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
-            $UpdateParameters.featureSettings.ContainsKey('displayAppInformationRequiredState'))
-        {
-            Write-Verbose -Message 'Retrieving displayAppInformationRequiredState exclude target'
-            $Filter = "DisplayName eq '$($UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -replace "'", "''")'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.ForEach('id', $groupid)
-        }
-        if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -and `
-                $UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
-            $UpdateParameters.featureSettings.ContainsKey('displayLocationInformationRequiredState'))
-        {
-            Write-Verbose -Message 'Retrieving displayLocationInformationRequiredState include target'
-            $Filter = "DisplayName eq '$($UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -replace "'", "''")'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.ForEach('id', $groupid)
-        }
-        if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -and `
-                $UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
-            $UpdateParameters.featureSettings.ContainsKey('displayLocationInformationRequiredState'))
-        {
-            Write-Verbose -Message 'Retrieving displayLocationInformationRequiredState exclude target'
-            $Filter = "DisplayName eq '$($UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -replace "'", "''")'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.ForEach('id', $groupid)
-        }
+        Update-M365DSCAuthenticationTargets -Targets $UpdateParameters.featureSettings.companionAppAllowedState.includeTarget
+        Update-M365DSCAuthenticationTargets -Targets $UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget
+        Update-M365DSCAuthenticationTargets -Targets $UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget
+        Update-M365DSCAuthenticationTargets -Targets $UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget
+        Update-M365DSCAuthenticationTargets -Targets $UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget
+        Update-M365DSCAuthenticationTargets -Targets $UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget
+        Update-M365DSCAuthenticationTargets -Targets $UpdateParameters.ExcludeTargets
+        Update-M365DSCAuthenticationTargets -Targets $UpdateParameters.IncludeTargets
 
-        $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-            if ($key -eq 'IncludeTargets' -or $key -eq 'ExcludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key)
-                {
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "DisplayName eq '$($entry.id -replace "'", "''")'" | Out-String
-                        $group = Get-MgGroup -Filter $Filter
-                        if ($null -ne $group)
-                        {
-                            $UpdateParameters.$key[$i].ForEach('id', $group.id.ToString())
-                        }
-                        else
-                        {
-                            Write-Verbose -Message "Couldn't find group with DisplayName {$($entry.id)}"
-                        }
-                    }
-                    $i++
-                }
-            }
-        }
         #region resource generator code
         Write-Verbose -Message "Parameters:`r`n$(ConvertTo-Json $UpdateParameters -Depth 10)"
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration')
-        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
+        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         #endregion

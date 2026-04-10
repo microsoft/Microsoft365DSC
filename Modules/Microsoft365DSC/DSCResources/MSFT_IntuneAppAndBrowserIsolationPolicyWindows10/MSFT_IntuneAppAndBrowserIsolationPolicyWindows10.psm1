@@ -24,18 +24,18 @@ function Get-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $AllowWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $ClipboardSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $SaveFilesToHost,
 
         [Parameter()]
@@ -44,33 +44,33 @@ function Get-TargetResource
         $InstallWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3')]
-        [System.String]
+        [ValidateSet(1, 2, 3)]
+        [System.Int32]
         $ClipboardFileType,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowPersistence,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowVirtualGPU,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '4', '8')]
+        [ValidateSet(0, 1, 2, 4, 8)]
         [System.Int32[]]
         $PrintingSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowCameraMicrophoneRedirection,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AuditApplicationGuard,
 
         [Parameter()]
@@ -284,18 +284,18 @@ function Set-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $AllowWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $ClipboardSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $SaveFilesToHost,
 
         [Parameter()]
@@ -304,33 +304,33 @@ function Set-TargetResource
         $InstallWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3')]
-        [System.String]
+        [ValidateSet(1, 2, 3)]
+        [System.Int32]
         $ClipboardFileType,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowPersistence,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowVirtualGPU,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '4', '8')]
+        [ValidateSet(0, 1, 2, 4, 8)]
         [System.Int32[]]
         $PrintingSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowCameraMicrophoneRedirection,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AuditApplicationGuard,
 
         [Parameter()]
@@ -375,6 +375,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
@@ -422,7 +423,6 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $templateReferenceId = '9f667e40-8f3c-4f88-80d8-457f16906315_1'
@@ -521,18 +521,18 @@ function Test-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $AllowWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $ClipboardSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $SaveFilesToHost,
 
         [Parameter()]
@@ -541,33 +541,33 @@ function Test-TargetResource
         $InstallWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3')]
-        [System.String]
+        [ValidateSet(1, 2, 3)]
+        [System.Int32]
         $ClipboardFileType,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowPersistence,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowVirtualGPU,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '4', '8')]
+        [ValidateSet(0, 1, 2, 4, 8)]
         [System.Int32[]]
         $PrintingSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowCameraMicrophoneRedirection,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AuditApplicationGuard,
 
         [Parameter()]
@@ -721,13 +721,19 @@ function Export-TargetResource
     {
         #region resource generator code
         $policyTemplateID = '9f667e40-8f3c-4f88-80d8-457f16906315_1'
+        $baseFilter = "templateReference/templateId eq '$policyTemplateID'"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($Filter) and ($baseFilter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
         [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
             -Filter $Filter `
             -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-            $_.TemplateReference.TemplateId -eq $policyTemplateID
-        }
+            -ErrorAction Stop
         #endregion
 
         $i = 1

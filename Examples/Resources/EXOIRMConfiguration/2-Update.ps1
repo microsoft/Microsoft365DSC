@@ -31,6 +31,7 @@ Configuration Example
             DecryptAttachmentForEncryptOnly            = $True
             EDiscoverySuperUserEnabled                 = $True
             EnablePdfEncryption                        = $True
+            EnablePortalTrackingLogs                   = $True
             InternalLicensingEnabled                   = $True
             JournalReportDecryptionEnabled             = $True
             RejectIfRecipientHasNoRights               = $True

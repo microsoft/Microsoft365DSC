@@ -1,8 +1,7 @@
-
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphNetworkaccessPolicyLink
 {
-    [Write, Description("Policy Name. Required")] String Name;
+    [Required, Description("Policy Name. Required")] String Name;
     [Write, Description("Policy Link Id")] String PolicyLinkId;
     [Write, Description("status")] String state;
 };

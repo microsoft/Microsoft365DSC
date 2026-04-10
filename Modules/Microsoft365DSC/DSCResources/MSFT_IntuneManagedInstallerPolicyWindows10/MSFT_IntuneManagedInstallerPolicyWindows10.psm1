@@ -341,7 +341,7 @@ function Set-TargetResource
         $updateParameters = ([Hashtable]$boundParameters).Clone()
 
         #region resource generator code
-        Update-MgBetaDeviceManagementDeviceHealthScript  `
+        Update-MgBetaDeviceManagementDeviceHealthScript `
             -DeviceHealthScriptId $currentInstance.Id `
             -BodyParameter $updateParameters
 

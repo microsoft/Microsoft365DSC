@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures Exchange Online distribution groups.
+This resource configures Exchange Online distribution groups and mail-enabled security groups.

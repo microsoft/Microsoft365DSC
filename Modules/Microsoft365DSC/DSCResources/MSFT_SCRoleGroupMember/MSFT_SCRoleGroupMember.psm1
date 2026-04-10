@@ -92,15 +92,17 @@ function Get-TargetResource
         }
 
         # Get RoleGroup Members if RoleGroup exists.
-        $roleGroupMembers = Get-RoleGroupMember -Identity $Name | Select-Object Name
-
-        if ($roleGroupMembers.Length -eq 0)
+        $roleGroupMembers = Get-RoleGroupMember -Identity $Name | Select-Object -Property @("Alias", "Name")
+        $roleGroupMembersValue = @()
+        foreach ($member in $roleGroupMembers)
         {
-            $roleGroupMembersValue = @()
-        }
-        else
-        {
-            $roleGroupMembersValue = $roleGroupMembers.Name
+            # To ensure uniqueness for members, use Alias if it is an email address, otherwise use Name
+            if ($member.Alias.Contains("@"))
+            {
+                $roleGroupMembersValue += $member.Alias
+                continue
+            }
+            $roleGroupMembersValue += $member.Name
         }
 
         $result = @{

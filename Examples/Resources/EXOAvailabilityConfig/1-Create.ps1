@@ -25,8 +25,10 @@ Configuration Example
     {
         EXOAvailabilityConfig 'ConfigureAvailabilityConfig'
         {
-            OrgWideAccount       = "adelev@$TenantId"
-            Ensure               = "Present"
+            IsSingleInstance      = "Yes"
+            AllowedTenantIds      = @()
+            OrgWideAccount        = "adelev@$TenantId"
+            Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint

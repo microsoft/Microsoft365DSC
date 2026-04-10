@@ -1,8 +1,8 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_AADAdminConsentRequestPolicyReviewer
 {
     [Write, Description("Type of reviewwer. Can be User, Group or Role")] String ReviewerType;
-    [Write, Description("Identifier for the reviewer instance.")] String ReviewerId;
+    [Required, Description("Identifier for the reviewer instance.")] String ReviewerId;
     [Write, Description("Associated query.")] String QueryRoot;
 };
 
@@ -15,7 +15,6 @@ class MSFT_AADAdminConsentRequestPolicy : OMI_BaseResource
     [Write, Description("Specifies whether reviewers will receive reminder emails.")] Boolean RemindersEnabled;
     [Write, Description("Specifies the duration the request is active before it automatically expires if no decision is applied.")] UInt32 RequestDurationInDays;
     [Write, Description("The list of reviewers for the admin consent."), EmbeddedInstance("MSFT_AADAdminConsentRequestPolicyReviewer")] String Reviewers[];
-
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;

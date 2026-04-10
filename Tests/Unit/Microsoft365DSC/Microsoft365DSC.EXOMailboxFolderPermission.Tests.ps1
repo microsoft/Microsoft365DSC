@@ -103,14 +103,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity          = 'FakeStringValue1'
-                    UserPermissions     = @(
-                        (New-CimInstance -ClassName MSFT_EXOMailboxFolderUserPermission -Property @{
-                            User     = 'User'
-                            AccessRights = @('Editor')
-                            SharingPermissionFlags = 'Delegate'
-                        } -ClientOnly)
-                    )
-                    Ensure              = 'Absent'
+                    UserPermissions     = @()
+                    Ensure              = 'Present'
                     Credential          = $Credential;
                 }
             }
@@ -123,7 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MailboxFolderPermission -Exactly 0
+                Should -Invoke -CommandName Remove-MailboxFolderPermission -Exactly 1
             }
         }
 

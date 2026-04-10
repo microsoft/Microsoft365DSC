@@ -192,7 +192,7 @@ function Set-TargetResource
 
     $CurrentCase = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentCase.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentCase.Ensure -eq 'Absent')
     {
         $CreationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $CreationParams.Remove('Status')
@@ -207,7 +207,7 @@ function Set-TargetResource
         }
     }
     # Compliance Case exists and it should. Update it.
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentCase.Ensure -eq 'Present')
     {
         # The only real value we can update is the description;
         if ($CurrentCase.Description -ne $Description)
@@ -228,7 +228,7 @@ function Set-TargetResource
         }
     }
     # Compliance Case exists but it shouldn't. Remove it.
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentCase.Ensure -eq 'Present')
     {
         Remove-ComplianceCase -Identity $Name -Confirm:$false
     }

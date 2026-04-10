@@ -47,7 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ConnectorActionConfigurations =
                         (New-CimInstance -ClassName 'MSFT_PPDLPPolicyConnectorConfigurationsAction' -Property @{
-                            actionRules = (New-CimInstance -ClassName 'MSFT_PPDLPPolicyConnectorConfigurationsActionRules' -Property @{
+                            actionRules = [CimInstance[]]@(New-CimInstance -ClassName 'MSFT_PPDLPPolicyConnectorConfigurationsActionRules' -Property @{
                                     actionId = 'CreateInvitation'
                                     behavior = 'Block'
                                 } -ClientOnly)
@@ -134,7 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ConnectorActionConfigurations =
                         (New-CimInstance -ClassName 'MSFT_PPDLPPolicyConnectorConfigurationsAction' -Property @{
-                            actionRules = (New-CimInstance -ClassName 'MSFT_PPDLPPolicyConnectorConfigurationsActionRules' -Property @{
+                            actionRules = [CimInstance[]]@(New-CimInstance -ClassName 'MSFT_PPDLPPolicyConnectorConfigurationsActionRules' -Property @{
                                     actionId = 'CreateInvitation'
                                     behavior = 'Block'
                                 } -ClientOnly)
@@ -211,7 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ConnectorActionConfigurations =
                         (New-CimInstance -ClassName 'MSFT_PPDLPPolicyConnectorConfigurationsAction' -Property @{
-                            actionRules = (New-CimInstance -ClassName 'MSFT_PPDLPPolicyConnectorConfigurationsActionRules' -Property @{
+                            actionRules = [CimInstance[]]@(New-CimInstance -ClassName 'MSFT_PPDLPPolicyConnectorConfigurationsActionRules' -Property @{
                                     actionId = 'CreateInvitation'
                                     behavior = 'Block'
                                 } -ClientOnly)

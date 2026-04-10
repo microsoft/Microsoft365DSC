@@ -104,34 +104,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SettingInstanceTemplateReference = @{
                             SettingInstanceTemplateId = '3aeb9145-2c02-4086-8886-44dbe09c2f62'
                         }
-                        AdditionalProperties             = @(
-                            @{
-                                '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @(
+                        AdditionalProperties             = @{
+                            '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @(
                                     @{
-                                        children = @(
-                                            @{
-                                                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'device_vendor_msft_bitlocker_identificationfield_identificationfield'
-                                                simpleSettingValue  = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                    value = 'Field'
-                                                }
-                                            },
-                                            @{
-                                                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'device_vendor_msft_bitlocker_identificationfield_secidentificationfield'
-                                                simpleSettingValue  = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                    value = 'SecField'
-                                                }
-                                            }
-                                        )
-                                        value = 'device_vendor_msft_bitlocker_identificationfield_1'
+                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                        settingDefinitionId = 'device_vendor_msft_bitlocker_identificationfield_identificationfield'
+                                        simpleSettingValue  = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'Field'
+                                        }
+                                    },
+                                    @{
+                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                        settingDefinitionId = 'device_vendor_msft_bitlocker_identificationfield_secidentificationfield'
+                                        simpleSettingValue  = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'SecField'
+                                        }
                                     }
                                 )
+                                value = 'device_vendor_msft_bitlocker_identificationfield_1'
                             }
-                        )
+                        }
                     }
                     AdditionalProperties = @{}
                 }
@@ -145,12 +141,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        AdditionalProperties                       = @{
+                            '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                        }
                     }
                 })
             }

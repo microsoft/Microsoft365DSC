@@ -300,11 +300,8 @@ function Start-M365DSCConfigurationExtract
         }
 
         Write-Verbose -Message 'Based on provided parameters, retrieving the most secure authentication method to use.'
-        $moduleConfiguration = Get-M365DSCModuleConfiguration
-        Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $true
         $allSupportedResourcesWithMostSecureAuthMethod = Get-M365DSCComponentsWithMostSecureAuthenticationType -AuthenticationMethod $AuthMethods `
             -Resources $selectedResources
-        Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $moduleConfiguration.skipModuleDependencyValidation
 
         try
         {
@@ -724,14 +721,6 @@ function Start-M365DSCConfigurationExtract
 
             if ($using:ComponentsToSkip -notcontains $resourceName)
             {
-                if ($PSVersionTable.PSEdition -eq 'Core')
-                {
-                    $module = Get-Module PSDesiredStateConfiguration
-                    if ($null -eq $module)
-                    {
-                        Import-Module -Name 'PSDesiredStateConfiguration' -Global -Prefix 'Pwsh' -RequiredVersion 2.0.7
-                    }
-                }
                 $counter = ($using:synchronizedHashtable).ResourceCounter++
                 Write-M365DSCHost -Message "[$counter/$($using:ResourcesToExport.Length)] Extracting [" -DeferWrite
                 Write-M365DSCHost -Message $resourceName -ForegroundColor Green -DeferWrite

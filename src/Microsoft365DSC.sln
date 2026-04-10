@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft365DSC.Compare", "Microsoft365DSC.Compare\Microsoft365DSC.Compare.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft365DSC.Converter", "Microsoft365DSC.Converter\Microsoft365DSC.Converter.csproj", "{12BBA5E1-820F-48BC-BE28-836B3F35FDA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft365DSC.Utilities", "Microsoft365DSC.Utilities\Microsoft365DSC.Utilities.csproj", "{584604FF-426D-44A2-B510-0EC3B90CE9EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft365DSC.Connection", "Microsoft365DSC.Connection\Microsoft365DSC.Connection.csproj", "{5F417C95-E24E-4CD4-BC9E-2C39D5AE115E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft365DSC.Intune", "Microsoft365DSC.Intune\Microsoft365DSC.Intune.csproj", "{438CE330-0E88-4DA3-B32E-1EBBC562E8D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft365DSC.Cache", "Microsoft365DSC.Cache\Microsoft365DSC.Cache.csproj", "{B72F417B-88D1-4B40-B8F6-2EFC88095ABB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12BBA5E1-820F-48BC-BE28-836B3F35FDA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12BBA5E1-820F-48BC-BE28-836B3F35FDA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12BBA5E1-820F-48BC-BE28-836B3F35FDA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12BBA5E1-820F-48BC-BE28-836B3F35FDA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{584604FF-426D-44A2-B510-0EC3B90CE9EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{584604FF-426D-44A2-B510-0EC3B90CE9EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{584604FF-426D-44A2-B510-0EC3B90CE9EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{584604FF-426D-44A2-B510-0EC3B90CE9EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F417C95-E24E-4CD4-BC9E-2C39D5AE115E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F417C95-E24E-4CD4-BC9E-2C39D5AE115E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F417C95-E24E-4CD4-BC9E-2C39D5AE115E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F417C95-E24E-4CD4-BC9E-2C39D5AE115E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{438CE330-0E88-4DA3-B32E-1EBBC562E8D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{438CE330-0E88-4DA3-B32E-1EBBC562E8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{438CE330-0E88-4DA3-B32E-1EBBC562E8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{438CE330-0E88-4DA3-B32E-1EBBC562E8D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B72F417B-88D1-4B40-B8F6-2EFC88095ABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B72F417B-88D1-4B40-B8F6-2EFC88095ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B72F417B-88D1-4B40-B8F6-2EFC88095ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B72F417B-88D1-4B40-B8F6-2EFC88095ABB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC9502AE-B6E0-43B9-83B1-87EA2C4C441D}
+	EndGlobalSection
+EndGlobal

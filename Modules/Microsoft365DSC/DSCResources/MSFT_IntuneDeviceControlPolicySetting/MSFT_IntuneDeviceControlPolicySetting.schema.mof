@@ -14,7 +14,7 @@ class MSFT_ReusableStorageDeviceControlPolicySetting
     [Write, Description("The combination of Vendor and Product ID. Example is '0000_1111.")] String VID_PID;
 };
 
-[ClassVersion("1.0.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_ReusablePrinterDeviceControlPolicySetting
 {
     [Write, Description("The Friendly Name of the device. Example is 'Generic Printer'.")] String FriendlyNameId;

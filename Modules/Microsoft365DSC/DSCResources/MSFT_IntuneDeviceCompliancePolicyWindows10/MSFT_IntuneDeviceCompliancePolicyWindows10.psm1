@@ -286,7 +286,7 @@ function Get-TargetResource
             if ($null -ne $actionConfiguration.NotificationMessageCCList -and `
                     $actionConfiguration.NotificationMessageCCList.Count -gt 0)
             {
-                $groups = @()
+                [System.String[]]$groups = @()
                 foreach ($group in $actionConfiguration.NotificationMessageCCList)
                 {
                     $groups += Get-MgGroup -GroupId $group -ErrorAction SilentlyContinue | Select-Object -ExpandProperty DisplayName

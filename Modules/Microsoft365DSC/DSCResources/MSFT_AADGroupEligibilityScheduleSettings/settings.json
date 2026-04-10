@@ -12,6 +12,9 @@
         "update": [
           {
             "name": "RoleManagementPolicy.ReadWrite.Directory"
+          },
+          {
+            "name": "RoleManagementPolicy.ReadWrite.AzureADGroup"
           }
         ]
       },
@@ -24,6 +27,9 @@
         "update": [
           {
             "name": "RoleManagementPolicy.ReadWrite.Directory"
+          },
+          {
+            "name": "RoleManagementPolicy.ReadWrite.AzureADGroup"
           }
         ]
       }

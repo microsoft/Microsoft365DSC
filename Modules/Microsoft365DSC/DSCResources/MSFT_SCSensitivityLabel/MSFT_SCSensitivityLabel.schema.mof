@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_SCSLSensitiveInformationType
 {
     [Required, Description("Name of the Sensitive Information Type")] String name;
@@ -7,12 +7,14 @@ class MSFT_SCSLSensitiveInformationType
     [Write, Description("Minimum Count value for the Sensitive Information")] String mincount;
     [Write, Description("Maximum Count value for the Sensitive Information")] String maxcount;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_SCSLTrainableClassifiers
 {
     [Required, Description("Name of the Trainable Classifier")] String name;
     [Write, Description("Id of the Trainable Classifier")] String id;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_SCSLSensitiveInformationGroup
 {
@@ -21,6 +23,7 @@ class MSFT_SCSLSensitiveInformationGroup
     [Required, Description("Name of the group")] String Name;
     [Required, Description("How to process the Sensitive Information Types and Trainable Classifiers"),ValueMap{"And","Or"}, Values{"And","Or"}] String Operator;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_SCSLAutoLabelingSettings
 {
@@ -29,18 +32,21 @@ class MSFT_SCSLAutoLabelingSettings
     [Write, Description("Display this message to users when the label is applied")] String PolicyTip;
     [Required, Description("Specifies what to do when content matches the conditions"),ValueMap{"Automatic","Recommend"}, Values{"Automatic","Recommend"}] String AutoApplyType;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_SCLabelSetting
 {
-    [Write, Description("Advanced settings key.")] String Key;
+    [Required, Description("Advanced settings key.")] String Key;
     [Write, Description("Advanced settings value.")] String Value[];
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_SCLabelLocaleSettings
 {
-    [Write, Description("Name of the Local key.")] String localeKey;
-    [Write, Description("The locale settings display names."),EmbeddedInstance("MSFT_SCLabelSetting")] String LabelSettings[];
+    [Required, Description("Name of the Local key.")] String LocaleKey;
+    [Write, Description("The locale settings display names."), EmbeddedInstance("MSFT_SCLabelSetting")] String LabelSettings[];
 };
+
 [ClassVersion("1.0.0.0"), FriendlyName("SCSensitivityLabel")]
 class MSFT_SCSensitivityLabel : OMI_BaseResource
 {

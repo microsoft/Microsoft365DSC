@@ -282,17 +282,17 @@ function Set-TargetResource
     {
         $OMEConfigurationParams.Remove('ExternalMailExpiryInDays') | Out-Null
     }
-    if (('Present' -eq $Ensure ) -and ($null -eq $OMEConfiguration))
+    if ($Ensure -eq 'Present' -and $null -eq $OMEConfiguration)
     {
         Write-Verbose -Message "Creating OME Configuration $($Identity)."
         New-OMEConfiguration @OMEConfigurationParams
     }
-    elseif (('Present' -eq $Ensure ) -and ($null -ne $OMEConfiguration))
+    elseif ($Ensure -eq 'Present' -and $null -ne $OMEConfiguration)
     {
         Write-Verbose -Message "Setting OME Configuration $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $OMEConfigurationParams)"
         Set-OMEConfiguration @OMEConfigurationParams -Confirm:$false
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $OMEConfiguration))
+    elseif ($Ensure -eq 'Absent' -and $null -ne $OMEConfiguration)
     {
         Write-Verbose -Message "Removing OME Configuration $($Identity)"
         Remove-OMEConfiguration -Identity $Identity -Confirm:$false

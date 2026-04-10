@@ -274,8 +274,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -394,4 +396,40 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            if ($null -ne $DesiredValues.SignOutAfter -and $null -ne $CurrentValues.SignOutAfter)
+            {
+                $desiredTimeSpan = [System.TimeSpan]::Parse($DesiredValues.SignOutAfter)
+                $currentTimeSpan = [System.TimeSpan]::Parse($CurrentValues.SignOutAfter)
+                $delta = [System.TimeSpan]::FromSeconds(30)
+                if ([System.TimeSpan]::Compare($desiredTimeSpan, $currentTimeSpan) -ne 0 -and [System.TimeSpan]::Compare(($desiredTimeSpan - $currentTimeSpan).Duration(), $delta) -le 0)
+                {
+                    Write-Verbose -Message "Difference between Desired and Current SignOutAfter is less than or equal to 30 seconds. Desired: $desiredTimeSpan, Current: $currentTimeSpan. Treating as equal."
+                    $ValuesToCheck.Remove('SignOutAfter') | Out-Null
+                }
+            }
+            if ($null -ne $DesiredValues.WarnAfter -and $null -ne $CurrentValues.WarnAfter)
+            {
+                $desiredTimeSpan = [System.TimeSpan]::Parse($DesiredValues.WarnAfter)
+                $currentTimeSpan = [System.TimeSpan]::Parse($CurrentValues.WarnAfter)
+                $delta = [System.TimeSpan]::FromSeconds(30)
+                if ([System.TimeSpan]::Compare($desiredTimeSpan, $currentTimeSpan) -ne 0 -and [System.TimeSpan]::Compare(($desiredTimeSpan - $currentTimeSpan).Duration(), $delta) -le 0)
+                {
+                    Write-Verbose -Message "Difference between Desired and Current WarnAfter is less than or equal to 30 seconds. Desired: $desiredTimeSpan, Current: $currentTimeSpan. Treating as equal."
+                    $ValuesToCheck.Remove('WarnAfter') | Out-Null
+                }
+            }
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

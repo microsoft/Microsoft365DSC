@@ -171,7 +171,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('all', 'androidAOSP', 'androidDeviceAdministrator', 'androidDedicatedAndFullyManagedCorporateOwnedWorkProfile', 'chromeOS', 'androidPersonallyOwnedWorkProfile', 'ios', 'macOS', 'windows', 'windowsHolographic', 'unknownFutureValue', 'visionOS', 'tvOS')]
+        [ValidateSet('all', 'androidAOSP', 'androidDeviceAdministrator', 'androidDedicatedAndFullyManagedCorporateOwnedWorkProfile', 'chromeOS', 'androidPersonallyOwnedWorkProfile', 'ios', 'macOS', 'windows', 'windowsHolographic', 'visionOS', 'tvOS')]
         [System.String]
         $DeviceCleanupRulePlatformType,
 
@@ -237,8 +237,7 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -249,14 +248,6 @@ function Set-TargetResource
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
         $createParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$createParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $createParameters.$key -and $createParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $createParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
-            }
-        }
         #region resource generator code
         $createParameters.Add('@odata.type', '#microsoft.graph.ManagedDeviceCleanupRule')
         $policy = New-MgBetaDeviceManagementManagedDeviceCleanupRule -BodyParameter $createParameters
@@ -268,17 +259,7 @@ function Set-TargetResource
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
-
         $updateParameters.Remove('Id') | Out-Null
-
-        $keys = (([Hashtable]$updateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $pdateParameters.$key -and $updateParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $updateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.ManagedDeviceCleanupRuleId
-            }
-        }
 
         #region resource generator code
         $updateParameters.Add('@odata.type', '#microsoft.graph.ManagedDeviceCleanupRule')
@@ -309,7 +290,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('all', 'androidAOSP', 'androidDeviceAdministrator', 'androidDedicatedAndFullyManagedCorporateOwnedWorkProfile', 'chromeOS', 'androidPersonallyOwnedWorkProfile', 'ios', 'macOS', 'windows', 'windowsHolographic', 'unknownFutureValue', 'visionOS', 'tvOS')]
+        [ValidateSet('all', 'androidAOSP', 'androidDeviceAdministrator', 'androidDedicatedAndFullyManagedCorporateOwnedWorkProfile', 'chromeOS', 'androidPersonallyOwnedWorkProfile', 'ios', 'macOS', 'windows', 'windowsHolographic', 'visionOS', 'tvOS')]
         [System.String]
         $DeviceCleanupRulePlatformType,
 

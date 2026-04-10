@@ -20,15 +20,15 @@ class MSFT_AADApplicationOnPremisesPublishingSegment
 [ClassVersion("1.0.0")]
 class MSFT_AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos
 {
-        [Write, Description("The Internal Application SPN of the application server. This SPN needs to be in the list of services to which the connector can present delegated credentials.")] String kerberosServicePrincipalName;
-        [Write, Description("The Delegated Login Identity for the connector to use on behalf of your users. For more information, see Working with different on-premises and cloud identities . Possible values are: userPrincipalName, onPremisesUserPrincipalName, userPrincipalUsername, onPremisesUserPrincipalUsername, onPremisesSAMAccountName.")] String kerberosSignOnMappingAttributeType;
+    [Write, Description("The Internal Application SPN of the application server. This SPN needs to be in the list of services to which the connector can present delegated credentials.")] String kerberosServicePrincipalName;
+    [Write, Description("The Delegated Login Identity for the connector to use on behalf of your users. For more information, see Working with different on-premises and cloud identities . Possible values are: userPrincipalName, onPremisesUserPrincipalName, userPrincipalUsername, onPremisesUserPrincipalUsername, onPremisesSAMAccountName.")] String kerberosSignOnMappingAttributeType;
 };
 
 [ClassVersion("1.0.0")]
 class MSFT_AADApplicationOnPremisesPublishingSingleSignOnSetting
 {
-        [Write, Description("The preferred single-sign on mode for the application. Possible values are: none, onPremisesKerberos, aadHeaderBased,pingHeaderBased, oAuthToken.")] String singleSignOnMode;
-        [Write, Description("The Kerberos Constrained Delegation settings for applications that use Integrated Window Authentication."), EmbeddedInstance("MSFT_AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos")] String kerberosSignOnSettings;
+    [Write, Description("The preferred single-sign on mode for the application. Possible values are: none, onPremisesKerberos, aadHeaderBased,pingHeaderBased, oAuthToken.")] String singleSignOnMode;
+    [Write, Description("The Kerberos Constrained Delegation settings for applications that use Integrated Window Authentication."), EmbeddedInstance("MSFT_AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos")] String kerberosSignOnSettings;
 };
 
 [ClassVersion("1.0.0")]
@@ -50,12 +50,12 @@ class MSFT_AADApplicationOnPremisesPublishing
     [Write, Description("Represents the single sign-on configuration for the on-premises application."), EmbeddedInstance("MSFT_AADApplicationOnPremisesPublishingSingleSignOnSetting")] String singleSignOnSettings;
 };
 
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_AADApplicationPermission
 {
-    [Write, Description("Name of the requested permission.")] String Name;
-    [Write, Description("Name of the API from which the permission comes from.")] String SourceAPI;
-    [Write, Description("Type of permission."), ValueMap{"AppOnly", "Delegated"}, Values{"AppOnly", "Delegated"}] String Type;
+    [Required, Description("Name of the requested permission.")] String Name;
+    [Required, Description("Name of the API from which the permission comes from.")] String SourceAPI;
+    [Required, Description("Type of permission."), ValueMap{"AppOnly", "Delegated"}, Values{"AppOnly", "Delegated"}] String Type;
     [Write, Description("Represented whether or not the Admin consent been granted on the app.")] Boolean AdminConsentGranted;
 };
 
@@ -67,33 +67,32 @@ class MSFT_MicrosoftGraphOptionalClaims
     [Write, Description("The optional claims returned in the SAML token."), EmbeddedInstance("MSFT_MicrosoftGraphOptionalClaim")] String Saml2Token[];
 };
 
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphOptionalClaim
 {
     [Write, Description("If the value is true, the claim specified by the client is necessary to ensure a smooth authorization experience for the specific task requested by the end user. The default value is false.")] Boolean Essential;
-    [Write, Description("The name of the optional claim.")] String Name;
+    [Required, Description("The name of the optional claim.")] String Name;
     [Write, Description("The source (directory object) of the claim. There are predefined claims and user-defined claims from extension properties. If the source value is null, the claim is a predefined optional claim. If the source value is user, the value in the name property is the extension property from the user object.")] String Source;
 };
 
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphPreAuthorizedApplication
 {
-    [Write, Description("The unique identifier for the client application.")] String AppId;
-    [Write, Description("The unique identifier for the scopes the client application is granted.")] String PermissionIds[];
+    [Required, Description("The unique identifier for the client application.")] String AppId;
+    [Required, Description("The unique identifier for the scopes the client application is granted.")] String PermissionIds[];
 };
 
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphApiOauth2PermissionScopes
 {
     [Write, Description("A description of the delegated permissions, intended to be read by an administrator granting the permission on behalf of all users. This text appears in tenant-wide admin consent experiences.")] String adminConsentDescription;
     [Write, Description("The permission's title, intended to be read by an administrator granting the permission on behalf of all users.")] String adminConsentDisplayName;
     [Write, Description("A description of the delegated permissions, intended to be read by a user granting the permission on their own behalf. This text appears in consent experiences where the user is consenting only on behalf of themselves.")] String userConsentDescription;
     [Write, Description("A title for the permission, intended to be read by a user granting the permission on their own behalf. This text appears in consent experiences where the user is consenting only on behalf of themselves.")] String userConsentDisplayName;
-    [Write, Description("Specifies the value to include in the scp (scope) claim in access tokens. Must not exceed 120 characters in length.")] String value;
+    [Required, Description("Specifies the value to include in the scp (scope) claim in access tokens. Must not exceed 120 characters in length.")] String value;
     [Write, Description("When you create or update a permission, this property must be set to true (which is the default). To delete a permission, this property must first be set to false. At that point, in a subsequent call, the permission may be removed.")] Boolean isEnabled;
     [Write, Description("The possible values are: User and Admin. Specifies whether this delegated permission should be considered safe for non-admin users to consent to on behalf of themselves, or whether an administrator consent should always be required.")] String type;
     [Write, Description("Unique delegated permission identifier inside the collection of delegated permissions defined for a resource application.")] String id;
-
 };
 
 [ClassVersion("1.0.0")]
@@ -101,7 +100,6 @@ class MSFT_MicrosoftGraphApiApplication
 {
     [Write, Description("Lists the client applications that are preauthorized with the specified delegated permissions to access this application's APIs. Users aren't required to consent to any preauthorized application (for the permissions specified). However, any other permissions not listed in preAuthorizedApplications (requested through incremental consent for example) will require user consent."), EmbeddedInstance("MSFT_MicrosoftGraphPreAuthorizedApplication")] String PreAuthorizedApplications[];
     [Write, Description("List of associated API scopes."), EmbeddedInstance("MSFT_MicrosoftGraphAPIOauth2PermissionScopes")] String Oauth2PermissionScopes[];
-
 };
 
 [ClassVersion("1.0.0.1")]
@@ -134,16 +132,16 @@ class MSFT_MicrosoftGraphPasswordCredential
     [Write, Description("The date and time at which the password becomes valid. The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z. Optional.")] String StartDateTime;
 };
 
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.2")]
 class MSFT_MicrosoftGraphAppRole
 {
-    [Write, Description("Specifies whether this app role can be assigned to users and groups (by setting to 'User'), to other application's (by setting to 'Application', or both (by setting to 'User', 'Application'). App roles supporting assignment to other applications' service principals are also known as application permissions. The 'Application' value is only supported for app roles defined on application entities.")] String AllowedMemberTypes[];
+    [Write, Description("Specifies whether this app role can be assigned to users and groups (by setting to 'User'), to other application's (by setting to 'Application', or both (by setting to 'User', 'Application')). App roles supporting assignment to other applications' service principals are also known as application permissions. The 'Application' value is only supported for app roles defined on application entities.")] String AllowedMemberTypes[];
     [Write, Description("The description for the app role. This is displayed when the app role is being assigned and, if the app role functions as an application permission, during  consent experiences.")] String Description;
     [Write, Description("Display name for the permission that appears in the app role assignment and consent experiences.")] String DisplayName;
     [Write, Description("Unique role identifier inside the appRoles collection. When creating a new app role, a new GUID identifier must be provided.")] String Id;
     [Write, Description("When creating or updating an app role, this must be set to true (which is the default). To delete a role, this must first be set to false.  At that point, in a subsequent call, this role may be removed.")] Boolean IsEnabled;
     [Write, Description("Specifies if the app role is defined on the application object or on the servicePrincipal entity. Must not be included in any POST or PATCH requests. Read-only.")] String Origin;
-    [Write, Description("Specifies the value to include in the roles claim in ID tokens and access tokens authenticating an assigned user or service principal. Must not exceed 120 characters in length. Allowed characters are : ! # $ % & ' ( ) * + , - . / :   =       + _    } , and characters in the ranges 0-9, A-Z and a-z. Any other character, including the space character, aren't allowed. May not begin with ..")] String Value;
+    [Required, Description("Specifies the value to include in the roles claim in ID tokens and access tokens authenticating an assigned user or service principal. Must not exceed 120 characters in length. Allowed characters are : ! # $ % & ' ( ) * + , - . / :   =       + _    } , and characters in the ranges 0-9, A-Z and a-z. Any other character, including the space character, aren't allowed. May not begin with ..")] String Value;
 };
 
 [ClassVersion("1.0.0")]

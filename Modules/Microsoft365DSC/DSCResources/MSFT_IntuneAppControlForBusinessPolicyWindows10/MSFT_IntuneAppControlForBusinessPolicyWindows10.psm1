@@ -282,8 +282,7 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $templateReferenceId = '4321b946-b76b-4450-8afd-769c08b16ffc_1'
     $platforms = 'windows10'
@@ -513,13 +512,19 @@ function Export-TargetResource
     {
         #region resource generator code
         $policyTemplateID = '4321b946-b76b-4450-8afd-769c08b16ffc_1'
+        $baseFilter = "templateReference/templateId eq '$policyTemplateID'"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($Filter) and ($baseFilter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
         [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
             -Filter $Filter `
             -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.TemplateReference.TemplateId -eq $policyTemplateID
-            }
+            -ErrorAction Stop
         #endregion
 
         $i = 1

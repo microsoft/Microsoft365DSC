@@ -104,7 +104,7 @@ function Get-TargetResource
             if ($null -eq $getValue)
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
+                    -FilterScript {
                         $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileTrustedRootCertificate' `
                     }
             }
@@ -276,17 +276,7 @@ function Set-TargetResource
             $AdditionalProperties['trustedRootCertificate'] = [Convert]::FromBase64String($AdditionalProperties['trustedRootCertificate'])
             Write-Verbose 'trustedRootCertificate converted to bytes.'
         }
-
         $CreateParameters.Remove('Id') | Out-Null
-
-        foreach ($key in ($CreateParameters.Clone()).Keys)
-        {
-            if ($CreateParameters[$key].GetType().Fullname -like '*CimInstance*')
-            {
-                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
-            }
-        }
-
         $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
 
         #region resource generator code
@@ -323,16 +313,7 @@ function Set-TargetResource
             $AdditionalProperties['trustedRootCertificate'] = [Convert]::FromBase64String($AdditionalProperties['trustedRootCertificate'])
             Write-Verbose 'trustedRootCertificate converted to bytes.'
         }
-
         $UpdateParameters.Remove('Id') | Out-Null
-
-        foreach ($key in ($UpdateParameters.Clone()).Keys)
-        {
-            if ($UpdateParameters[$key].GetType().Fullname -like '*CimInstance*')
-            {
-                $UpdateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
-            }
-        }
         $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
 
         #region resource generator code
@@ -497,8 +478,8 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileTrustedRootCertificate'  `
+            -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileTrustedRootCertificate' `
         }
         #endregion
 

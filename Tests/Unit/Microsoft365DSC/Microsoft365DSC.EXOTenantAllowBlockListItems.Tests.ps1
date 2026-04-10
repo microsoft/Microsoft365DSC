@@ -121,7 +121,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ListType = "Url";
                     Value = "example.com";
                     Ensure = 'Present'
-                    SubmissionID = "FakeStringValue";
                     Notes = "FakeStringValue";
                     Credential = $Credential;
                 }
@@ -140,7 +139,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Value = "example.com";
                     Ensure = 'Present';
                     Notes = "FakeStringValueDrift Drift"; # Drift
-                    SubmissionID = "FakeStringValue";
                     Credential = $Credential;
                 }
             }
@@ -156,23 +154,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Set-TenantAllowBlockListItems -Exactly 1
-            }
-        }
-
-        Context -Name 'Disallowed Updates' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Action = "Block";
-                    ListType = "Url";
-                    Value = "example.com";
-                    Ensure = 'Present'
-                    SubmissionID = "SubmissionID"
-                    Credential = $Credential;
-                }
-            }
-            It 'Should throw if SubmissionID is changed' {
-                $testParams['SubmissionID'] = "SubmissionID 2"
-                { Set-TargetResource @testParams } | Should -Throw
             }
         }
 

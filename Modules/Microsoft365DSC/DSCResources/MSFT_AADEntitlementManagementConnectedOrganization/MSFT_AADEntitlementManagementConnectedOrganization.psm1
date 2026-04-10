@@ -428,14 +428,6 @@ function Set-TargetResource
         $CreateParameters.Remove('ExternalSponsors') | Out-Null
         $CreateParameters.Remove('InternalSponsors') | Out-Null
 
-        $keys = (([Hashtable]$CreateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-        }
         Write-Verbose -Message "Create Parameters: $(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
         $TenantIdValue = $CreateParameters.IdentitySources.TenantId
         $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/tenantRelationships/microsoft.graph.findTenantInformationByTenantId(tenantId='$TenantIdValue')"
@@ -480,16 +472,6 @@ function Set-TargetResource
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('ExternalSponsors') | Out-Null
         $UpdateParameters.Remove('InternalSponsors') | Out-Null
-
-
-        $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-        }
 
         Update-MgBetaEntitlementManagementConnectedOrganization -BodyParameter $UpdateParameters `
             -ConnectedOrganizationId $currentInstance.Id

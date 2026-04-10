@@ -19,7 +19,7 @@ function Get-TargetResource
         $HelpUrl,
 
         [Parameter()]
-        [ValidateSet('intercede', 'entrustData', 'purebred')]
+        [ValidateSet('intercede', 'entrustDataCard', 'purebred', 'xTec')]
         [System.String]
         $Issuer,
 
@@ -172,7 +172,7 @@ function Set-TargetResource
         $HelpUrl,
 
         [Parameter()]
-        [ValidateSet('intercede', 'entrustData', 'purebred')]
+        [ValidateSet('intercede', 'entrustDataCard', 'purebred', 'xTec')]
         [System.String]
         $Issuer,
 
@@ -277,7 +277,7 @@ function Test-TargetResource
         $HelpUrl,
 
         [Parameter()]
-        [ValidateSet('intercede', 'entrustData', 'purebred')]
+        [ValidateSet('intercede', 'entrustDataCard', 'purebred', 'xTec')]
         [System.String]
         $Issuer,
 

@@ -35,25 +35,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName New-ActiveSyncMailboxPolicy -MockWith {
+            Mock -CommandName New-MobileDeviceMailboxPolicy -MockWith {
                 return $null
             }
 
-            Mock -CommandName Set-ActiveSyncMailboxPolicy -MockWith {
+            Mock -CommandName Set-MobileDeviceMailboxPolicy -MockWith {
                 return $null
             }
 
-            Mock -CommandName Remove-ActiveSyncMailboxPolicy -MockWith {
+            Mock -CommandName Remove-MobileDeviceMailboxPolicy -MockWith {
                 return $null
             }
 
-            Mock -CommandName Get-ActiveSyncMailboxPolicy -MockWith {
+            Mock -CommandName Get-MobileDeviceMailboxPolicy -MockWith {
                 return @{
                     Identity                    = 'FakeStringValue'
                     Name                        = 'FakeStringValue'
                     AllowHTMLEmail              = $true
                     ApprovedApplicationList     = @('FakeStringValue1', 'FakeStringValue2')
-                    DevicePasswordHistory       = 5
+                    PasswordHistory       = 5
                 }
             }
 
@@ -72,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                Mock -CommandName Get-ActiveSyncMailboxPolicy -MockWith {
+                Mock -CommandName Get-MobileDeviceMailboxPolicy -MockWith {
                     return $null
                 }
             }
@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-ActiveSyncMailboxPolicy -Exactly 1
+                Should -Invoke -CommandName New-MobileDeviceMailboxPolicy -Exactly 1
             }
         }
 
@@ -106,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-ActiveSyncMailboxPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MobileDeviceMailboxPolicy -Exactly 1
             }
         }
 
@@ -118,7 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name                        = 'FakeStringValue'
                     AllowHTMLEmail              = $true
                     ApprovedApplicationList     = @('FakeStringValue1', 'FakeStringValue2')
-                    DevicePasswordHistory       = 5
+                    PasswordHistory       = 5
                     Credential                  = $Credential;
                 }
             }
@@ -136,7 +136,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name                        = 'FakeStringValue'
                     AllowHTMLEmail              = $true
                     ApprovedApplicationList     = @('FakeStringValue1') # Drift
-                    DevicePasswordHistory       = 5
+                    PasswordHistory       = 5
                     Credential                  = $Credential;
                 }
             }
@@ -151,7 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-ActiveSyncMailboxPolicy -Exactly 1
+                Should -Invoke -CommandName Set-MobileDeviceMailboxPolicy -Exactly 1
             }
         }
 

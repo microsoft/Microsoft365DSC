@@ -71,7 +71,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AppleIdentifier         = "Apple ID";
                     Certificate             = "Test cert";
-                    Id                      = "66f4ec83-754f-4a59-a73d-e3182cc636a5";
                     DataSharingConsetGranted = $True;
                     Ensure                  = 'Present';
                     Credential              = $Credential;
@@ -103,7 +102,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AppleIdentifier             = "Apple ID";
                     Certificate                 = "Test cert";
-                    Id                          = "66f4ec83-754f-4a59-a73d-e3182cc636a5";
                     DataSharingConsetGranted    = $True;
                     Ensure          = 'Absent'
                     Credential      = $Credential
@@ -127,7 +125,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AppleIdentifier             = "Apple ID";
                     Certificate                 = "Test cert";
-                    Id                          = "66f4ec83-754f-4a59-a73d-e3182cc636a5";
                     DataSharingConsetGranted    = $True;
                     Ensure                  = 'Present'
                     Credential              = $Credential
@@ -144,7 +141,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AppleIdentifier          = "Apple ID";
                     Certificate              = "Patched cert"; # Updated property
-                    Id                       = "66f4ec83-754f-4a59-a73d-e3182cc636a5";
                     DataSharingConsetGranted = $True;
                     Ensure                   = 'Present'
                     Credential               = $Credential

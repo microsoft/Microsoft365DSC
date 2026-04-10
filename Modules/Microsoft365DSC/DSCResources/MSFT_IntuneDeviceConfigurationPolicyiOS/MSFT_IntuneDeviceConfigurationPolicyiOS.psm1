@@ -850,7 +850,7 @@ function Get-TargetResource
             if (-not $getValue)
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
+                    -FilterScript {
                         $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' `
                 }
             }
@@ -2033,23 +2033,6 @@ function Set-TargetResource
         $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
-        $CreateParameters.Remove('Verbose') | Out-Null
-
-        foreach ($key in ($CreateParameters.Clone()).Keys)
-        {
-            if ($CreateParameters[$key].GetType().Fullname -like '*CimInstance*')
-            {
-                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
-            }
-
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
-                $keyValue = $CreateParameters.$key
-                $CreateParameters.Remove($key) | Out-Null
-                $CreateParameters.Add($keyName, $keyValue) | Out-Null
-            }
-        }
         $CreateParameters.Add('@odata.type', '#microsoft.graph.iosGeneralDeviceConfiguration')
 
         #region resource generator code
@@ -2071,25 +2054,7 @@ function Set-TargetResource
 
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
         $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Remove('Verbose') | Out-Null
-
-        foreach ($key in (($UpdateParameters.Clone()).Keys | Sort-Object))
-        {
-            if ($UpdateParameters.$key.GetType().Fullname -like '*CimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
-                $keyValue = $UpdateParameters.$key
-                $UpdateParameters.Remove($key)
-                $UpdateParameters.Add($keyName, $keyValue)
-            }
-        }
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.iosGeneralDeviceConfiguration')
 
         #region resource generator code
@@ -3001,8 +2966,8 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration'  `
+            -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' `
         }
         #endregion
 

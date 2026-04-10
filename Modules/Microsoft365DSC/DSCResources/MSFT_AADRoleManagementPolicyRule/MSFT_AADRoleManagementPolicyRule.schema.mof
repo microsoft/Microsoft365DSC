@@ -1,4 +1,3 @@
-
 [ClassVersion("1.0.0.0")]
 class MSFT_AADRoleManagementPolicyExpirationRule
 {
@@ -22,10 +21,10 @@ class MSFT_AADRoleManagementPolicyEnablementRule
     [Write, Description("List of enabled rules.")] String enabledRules[];
 };
 
-[ClassVersion("1.0.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_AADRoleManagementPolicySubjectSet
 {
-    [Write, Description("The type of the subject set.")] String odataType;
+    [Required, Description("The type of the subject set.")] String odataType;
 };
 
 [ClassVersion("1.0.0.0")]

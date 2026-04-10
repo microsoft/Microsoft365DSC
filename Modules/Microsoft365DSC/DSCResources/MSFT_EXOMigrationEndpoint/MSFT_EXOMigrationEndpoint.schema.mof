@@ -19,7 +19,6 @@ class MSFT_EXOMigrationEndpoint : OMI_BaseResource
     [Write, Description("The security level for the migration endpoint."), ValueMap{"None", "Tls", "Ssl"}, Values{"None", "Tls", "Ssl"}] String Security;
     [Write, Description("The legacy distinguished name of the source mailbox.")] String SourceMailboxLegacyDN;
     [Write, Description("Specifies whether to use AutoDiscover.")] Boolean UseAutoDiscover;
-
     [Write, Description("Specifies if the migration endpoint should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

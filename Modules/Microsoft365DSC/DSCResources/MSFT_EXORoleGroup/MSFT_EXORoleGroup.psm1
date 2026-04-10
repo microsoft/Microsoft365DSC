@@ -85,7 +85,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $RoleGroup = Get-RoleGroup -Identity $Name -ErrorAction SilentlyContinue
+            $RoleGroup = Get-RoleGroup -Filter "Name -eq '$Name'" -ErrorAction SilentlyContinue
             if ($null -eq $RoleGroup)
             {
                 Write-Verbose -Message "Role Group $($Name) does not exist."
@@ -485,7 +485,7 @@ function Export-TargetResource
         }
         [array] $Script:exportedInstances = $roleGroups
 
-        $dscContent = [System.Text.StringBuilder]::New()
+        $dscContent = [System.Text.StringBuilder]::new()
 
         if ($Script:exportedInstances.Length -eq 0)
         {

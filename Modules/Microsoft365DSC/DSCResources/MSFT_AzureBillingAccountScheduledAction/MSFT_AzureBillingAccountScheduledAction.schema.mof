@@ -28,7 +28,6 @@ class MSFT_AzureBillingAccountScheduledAction : OMI_BaseResource
     [Write, Description("Notification properties based on scheduled action kind."), EmbeddedInstance("MSFT_AzureBillingAccountScheduledActionNotification")] String  Notification;
     [Write, Description("Email address of the point of contact that should get the unsubscribe requests and notification emails.")] String  NotificationEmail;
     [Write, Description("Schedule of the scheduled action."), EmbeddedInstance("MSFT_AzureBillingAccountScheduledActionSchedule")] String  Schedule;
-
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Absent","Present"}, Values{"Absent","Present"}] string Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

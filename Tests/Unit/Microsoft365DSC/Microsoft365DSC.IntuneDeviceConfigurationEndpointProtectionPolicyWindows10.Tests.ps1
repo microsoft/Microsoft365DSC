@@ -953,7 +953,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             localAddressRanges = @("FakeStringValue")
                             action = "notConfigured"
                             description = "FakeStringValue"
-                            interfaceTypes = "notConfigured"
+                            interfaceTypes = @("notConfigured")
                             remotePortRanges = @("FakeStringValue")
                             displayName = "FakeStringValue"
                             filePath = "FakeStringValue"
@@ -1599,7 +1599,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             localAddressRanges = @("FakeStringValue")
                             action = "notConfigured"
                             description = "FakeStringValue"
-                            interfaceTypes = "notConfigured"
+                            interfaceTypes = @("notConfigured")
                             remotePortRanges = @("FakeStringValue")
                             displayName = "FakeStringValue"
                             filePath = "FakeStringValue"
@@ -2243,7 +2243,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             localAddressRanges = @("FakeStringValue")
                             action = "notConfigured"
                             description = "FakeStringValue"
-                            interfaceTypes = "notConfigured"
+                            interfaceTypes = @("notConfigured")
                             remotePortRanges = @("FakeStringValue")
                             displayName = "FakeStringValue"
                             filePath = "FakeStringValue"
@@ -2879,7 +2879,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             localAddressRanges = @("FakeStringValue")
                             action = "notConfigured"
                             description = "FakeStringValue"
-                            interfaceTypes = "notConfigured"
+                            interfaceTypes = @("notConfigured")
                             remotePortRanges = @("FakeStringValue")
                             displayName = "FakeStringValue"
                             filePath = "FakeStringValue"

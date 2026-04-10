@@ -166,7 +166,7 @@ function Get-TargetResource
         $TentativePendingApproval,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -526,7 +526,7 @@ function Set-TargetResource
         $TentativePendingApproval,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -774,7 +774,7 @@ function Test-TargetResource
         $TentativePendingApproval,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 

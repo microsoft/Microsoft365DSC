@@ -145,25 +145,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'MailboxAutoReplyConfiguration removal.' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Ensure     = 'Absent'
-                    Credential = $Credential
-                    Identity   = 'TestMailboxAutoReplyConfiguration'
-                }
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-MailboxAutoReplyConfiguration -Exactly 1
-            }
-        }
-
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true

@@ -5,22 +5,25 @@ class MSFT_MicrosoftGraphFido2KeyRestrictions
     [Write, Description("Enforcement type. Possible values are: allow, block."), ValueMap{"allow","block","unknownFutureValue"}, Values{"allow","block","unknownFutureValue"}] String EnforcementType;
     [Write, Description("Determines if the configured key enforcement is enabled.")] Boolean IsEnforced;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_AADAuthenticationMethodPolicyFido2ExcludeTarget
 {
-    [Write, Description("The object identifier of an Azure AD group.")] String Id;
-    [Write, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
+    [Key, Description("The object identifier of an Azure AD group.")] String Id;
+    [Key, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"group","unknownFutureValue"}, Values{"group","unknownFutureValue"}] String TargetType;
     [Write, Description("Determines if registration is required for the authentication method.")] Boolean IsRegistrationRequired;
     [Write, Description("Collection of allowed passkey profile IDs for this target.")] String AllowedPasskeyProfiles[];
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_AADAuthenticationMethodPolicyFido2IncludeTarget
 {
-    [Write, Description("The object identifier of an Azure AD group.")] String Id;
-    [Write, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
+    [Key, Description("The object identifier of an Azure AD group.")] String Id;
+    [Key, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"group","unknownFutureValue"}, Values{"group","unknownFutureValue"}] String TargetType;
     [Write, Description("Determines if registration is required for the authentication method.")] Boolean IsRegistrationRequired;
     [Write, Description("Collection of allowed passkey profile IDs for this target.")] String AllowedPasskeyProfiles[];
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_AADAuthenticationMethodPolicyFido2PasskeyProfile
 {

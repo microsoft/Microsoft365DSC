@@ -129,7 +129,7 @@ function New-M365DSCLogEntry
         $LogContent += "`r`n`r`n"
 
         # Write the error content into the log file;
-        $LogFileName = Join-Path -Path (Get-Location).Path -ChildPath $LogFileName
+        $LogFileName = Join-Path -Path $env:TEMP -ChildPath $LogFileName
         $LogFileName = $LogFileName.Replace('\', '/')
         $LogContent | Out-File $LogFileName -Append
         Write-M365DSCHost -Message "Error Log created at {file://$LogFileName}" -ForegroundColor Red

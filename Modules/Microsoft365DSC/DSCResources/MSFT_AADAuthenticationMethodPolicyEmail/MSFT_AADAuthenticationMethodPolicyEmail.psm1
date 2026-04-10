@@ -113,21 +113,12 @@ function Get-TargetResource
             $myExcludeTargets = [ordered]@{}
             if ($currentExcludeTargets.id -ne 'all_users')
             {
-                try
+                $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $currentExcludeTargets.id
+                if ($null -eq $myExcludeTargetsDisplayName)
                 {
-                    $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id
-                    $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
-                }
-                catch
-                {
-                    $message = "Could not find a group with id $($currentExcludeTargets.id) specified in ExcludeTargets. Skipping group!"
-                    New-M365DSCLogEntry -Message $message `
-                        -Exception $_ `
-                        -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $TenantId `
-                        -Credential $Credential
                     continue
                 }
+                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName)
             }
             else
             {
@@ -159,21 +150,12 @@ function Get-TargetResource
             $myincludeTargets = [ordered]@{}
             if ($currentIncludeTargets.id -ne 'all_users')
             {
-                try
+                $myincludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $currentIncludeTargets.id
+                if ($null -eq $myIncludeTargetsDisplayName)
                 {
-                    $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id
-                    $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
-                }
-                catch
-                {
-                    $message = "Could not find a group with id $($currentIncludeTargets.id) specified in IncludeTargets. Skipping group!"
-                    New-M365DSCLogEntry -Message $message `
-                        -Exception $_ `
-                        -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $TenantId `
-                        -Credential $Credential
                     continue
                 }
+                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName)
             }
             else
             {
@@ -316,48 +298,14 @@ function Set-TargetResource
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
         $UpdateParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-            if ($key -eq 'IncludeTargets')
-            {
-                Write-Verbose -Message 'Processing IncludeTargets'
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key)
-                {
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "DisplayName eq '$($entry.id -replace "'", "''")'" | Out-String
-                        $UpdateParameters.$key[$i].ForEach('id', (Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-            if ($key -eq 'ExcludeTargets')
-            {
-                Write-Verbose -Message 'Processing ExcludeTargets'
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key)
-                {
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "DisplayName eq '$($entry.id -replace "'", "''")'" | Out-String
-                        $UpdateParameters.$key[$i].ForEach('id', (Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-        }
+        Update-M365DSCAuthenticationTargets -Targets $UpdateParameters.ExcludeTargets
+        Update-M365DSCAuthenticationTargets -Targets $UpdateParameters.IncludeTargets
+
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.emailAuthenticationMethodConfiguration')
-        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
+        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         #endregion

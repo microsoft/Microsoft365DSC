@@ -71,8 +71,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 @{
                                     actionType = 'Notification'
                                     gracePeriodHours = 0
-                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
-                                    notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000001'
+                                    notificationMessageCCList = @('00000000-0000-0000-0000-000000000001','00000000-0000-0000-0000-000000000002')
                                 }
                             )
                             }
@@ -106,6 +106,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         securityRequiredAndroidSafetyNetEvaluationType     = 'hardwareBacked'
                     }
                 }
+            }
+
+            Mock -CommandName Get-MgBetaDeviceManagementNotificationMessageTemplate -MockWith {
+                return @(
+                    @{
+                        Id = '00000000-0000-0000-0000-000000000001'
+                        DisplayName = 'Test Template 1'
+                    }
+                )
+            }
+
+            Mock -CommandName Get-MgGroup -MockWith {
+                return @(
+                    @{
+                        Id = '00000000-0000-0000-0000-000000000001'
+                        DisplayName = 'Test Group 1'
+                    }
+                    @{
+                        Id = '00000000-0000-0000-0000-000000000002'
+                        DisplayName = 'Test Group 2'
+                    }
+                )
             }
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -MockWith {
@@ -158,29 +180,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         -Property @{
                             actionType = 'block'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                         } -ClientOnly)
                         (New-CimInstance `
                         -ClassName MSFT_scheduledActionConfigurations `
                         -Property @{
                             actionType = 'pushNotification'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                         } -ClientOnly)
                         (New-CimInstance `
                         -ClassName MSFT_scheduledActionConfigurations `
                         -Property @{
                             actionType = 'remoteLock'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                         } -ClientOnly)
                         (New-CimInstance `
                         -ClassName MSFT_scheduledActionConfigurations `
                         -Property @{
                             actionType = 'Notification'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
-                            notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                            notificationTemplateId = 'Test Template 1'
+                            notificationMessageCCList = @('Test Group 1','Test Group 2')
                         } -ClientOnly)
                     )
                 }
@@ -241,29 +260,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         -Property @{
                             actionType = 'block'
                             gracePeriodHours = 1 # Updated property
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                         } -ClientOnly)
                         (New-CimInstance `
                         -ClassName MSFT_scheduledActionConfigurations `
                         -Property @{
                             actionType = 'pushNotification'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                         } -ClientOnly)
                         (New-CimInstance `
                         -ClassName MSFT_scheduledActionConfigurations `
                         -Property @{
                             actionType = 'remoteLock'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                         } -ClientOnly)
                         (New-CimInstance `
                         -ClassName MSFT_scheduledActionConfigurations `
                         -Property @{
                             actionType = 'Notification'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
-                            notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                            notificationTemplateId = 'Test Template 1'
+                            notificationMessageCCList = @('Test Group 1','Test Group 2')
                         } -ClientOnly)
                     )
                 }
@@ -320,29 +336,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         -Property @{
                             actionType = 'block'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                         } -ClientOnly)
                         (New-CimInstance `
                         -ClassName MSFT_scheduledActionConfigurations `
                         -Property @{
                             actionType = 'pushNotification'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                         } -ClientOnly)
                         (New-CimInstance `
                         -ClassName MSFT_scheduledActionConfigurations `
                         -Property @{
                             actionType = 'remoteLock'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                         } -ClientOnly)
                         (New-CimInstance `
                         -ClassName MSFT_scheduledActionConfigurations `
                         -Property @{
                             actionType = 'Notification'
                             gracePeriodHours = 0
-                            notificationTemplateId = '00000000-0000-0000-0000-000000000000'
-                            notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                            notificationTemplateId = 'Test Template 1'
+                            notificationMessageCCList = @('Test Group 1','Test Group 2')
                         } -ClientOnly)
                     )
                 }

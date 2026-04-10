@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0")]
 class MSFT_TeamsEmergencyCallingExtendedNotification
 {
-    [Key, Description("The emergency dial string.")] String EmergencyDialString;
+    [Required, Description("The emergency dial string.")] String EmergencyDialString;
     [Write, Description("The email recipients of the notifications.")] String NotificationGroup[];
     [Write, Description("The additional number to call when contacting an emergency number.")] String NotificationDialOutNumber;
     [Write, Description("The notification mode for the additional number. Possible values: ConferenceMuted - Join the emergency call muted. ConferenceUnMuted - Join the emergency call unmuted. NotificationOnly - Only receive a notification for an emergency call."), ValueMap{"ConferenceMuted", "ConferenceUnMuted", "NotificationOnly"}, Values{"ConferenceMuted", "ConferenceUnMuted", "NotificationOnly"}] String NotificationMode;

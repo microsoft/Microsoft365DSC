@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName("PPTenantSettings")]
+[ClassVersion("1.0.0.1"), FriendlyName("PPTenantSettings")]
 class MSFT_PPTenantSettings : OMI_BaseResource
 {
     [Key, Description("Should be set to yes"),ValueMap{"Yes"},Values{"Yes"}] string IsSingleInstance;
@@ -15,10 +15,9 @@ class MSFT_PPTenantSettings : OMI_BaseResource
     [Write, Description("Restrict all developer environments to be created by tenant admins, Power Platform admins, or Dynamics 365 service admins. Default is false.")] Boolean DisableDeveloperEnvironmentCreationByNonAdminUsers;
     [Write, Description("TBD")] Boolean EnvironmentRoutingAllMakers;
     [Write, Description("Enables the Default Environment routing feature that creates personal, developer environments for new makers. Default value is false.")] Boolean EnableDefaultEnvironmentRouting;
-    [Write, Description("When this setting is true, admins can view and manage desktop flow action groups in DLP policies in the Power Platform admin center. Default value is false.")] String EnableDesktopFlowDataPolicyManagement;
+    [Write, Description("When this setting is true, admins can view and manage desktop flow action groups in DLP policies in the Power Platform admin center. Default value is false.")] Boolean EnableDesktopFlowDataPolicyManagement;
     [Write, Description("Allow users to collect telemetry data about their app in Azure Application Insights. Setting this to False blocks the transmission of this data.")] Boolean EnableCanvasAppInsights;
     [Write, Description("Allow people to create a canvas app based on a Figma file. Default value is false.")] Boolean DisableCreateFromFigma;
-
     [Write, Description("This is a legacy setting that is no longer used by the platform. Default value is false.")] Boolean DisableBillingPolicyCreationByNonAdminUsers;
     [Write, Description("This setting isn't currently used by the platform but might be used in the future.")] UInt32 StorageCapacityConsumptionWarningThreshold;
     [Write, Description("Ability to allow tenant, Power Platform, or Dynamics 365 admins to grant permissions to an environment administrator to view the Capacity summary tab. Default value is false.")] Boolean EnableTenantCapacityReportForEnvironmentAdmins;
@@ -31,7 +30,6 @@ class MSFT_PPTenantSettings : OMI_BaseResource
     [Write, Description("This setting isn't currently used by the platform but might be used in the future.")] Boolean EnableOpenAiBotPublishing;
     [Write, Description("TBD")] Boolean DisableAiPrompts;
     [Write, Description("When using Copilot in Power Apps, allow users to share their prompts, questions, and requests with Microsoft. Default value is true.")] Boolean DisableCopilotFeedbackMetadata;
-
     [Write, Description("Ability to allow Microsoft to read Power Automate Copilot AI feature customer data (inputs and outputs) and provide improved models. Default value is false.")] Boolean EnableModelDataSharing;
     [Write, Description("Ability to disable data logging and remove all data logged for Power Automate Copilot AI feature customer data (inputs and outputs). Default value is false.")] Boolean DisableDataLogging;
     [Write, Description("This setting is reserved for future use. No enforcement is driven by this setting at the current time.")] String PowerCatalogAudienceSetting;

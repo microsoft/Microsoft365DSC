@@ -7,10 +7,6 @@ function Get-TargetResource
     param
     (
         #region Intune params
-        [Parameter()]
-        [System.String]
-        $Id,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $AppleIdentifier,
@@ -58,7 +54,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of the Intune Apple Push Notification Certificate with Id {$Id}."
+    Write-Verbose -Message "Getting configuration of the Intune Apple Push Notification Certificate with Id {$AppleIdentifier}."
 
     try
     {
@@ -87,7 +83,7 @@ function Get-TargetResource
 
             if ($null -eq $instance)
             {
-                Write-Verbose -Message "No Intune Apple MDM Push Notification Certificate with Id {$Id}."
+                Write-Verbose -Message "No Intune Apple MDM Push Notification Certificate with Id {$AppleIdentifier}."
                 return $nullResult
             }
         }
@@ -97,7 +93,6 @@ function Get-TargetResource
         }
 
         $results = @{
-            Id                    = $instance.Id
             AppleIdentifier       = $instance.AppleIdentifier
             Ensure                = 'Present'
             Credential            = $Credential
@@ -142,10 +137,6 @@ function Set-TargetResource
     param
     (
         #region Intune params
-        [Parameter()]
-        [System.String]
-        $Id,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $AppleIdentifier,
@@ -208,7 +199,6 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $SetParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-    $SetParameters.Remove('Id') | Out-Null
     $SetParameters.Remove('DataSharingConsetGranted') | Out-Null
 
     # CREATE
@@ -258,10 +248,6 @@ function Test-TargetResource
     param
     (
         #region Intune params
-        [Parameter()]
-        [System.String]
-        $Id,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $AppleIdentifier,
@@ -394,7 +380,6 @@ function Export-TargetResource
             Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
 
             $Params = @{
-                Id                    = $config.Id
                 AppleIdentifier       = $config.AppleIdentifier
                 Certificate           = $config.Certificate
                 Ensure                = 'Present'

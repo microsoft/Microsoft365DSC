@@ -6,9 +6,18 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $OrgWideAccount,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedTenantIds,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -48,11 +57,11 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of Availability Config for account $OrgWideAccount"
+    Write-Verbose -Message "Getting configuration of Availability Config"
 
     try
     {
-        if (-not $Script:exportedInstance -or $Script:exportedInstance.OrgWideAccount -ne $OrgWideAccount)
+        if (-not $Script:exportedInstance)
         {
             $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
                 -InboundParameters $PSBoundParameters
@@ -72,27 +81,35 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $AvailabilityConfigs = Get-AvailabilityConfig -ErrorAction SilentlyContinue
-            if ($null -ne $AvailabilityConfigs -and $null -ne $AvailabilityConfigs.OrgWideAccount)
+            $availabilityConfig = Get-AvailabilityConfig -ErrorAction Stop
+            if ($null -eq $availabilityConfig)
             {
-                $user = Get-User -Identity $OrgWideAccount -ErrorAction SilentlyContinue
-                $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -match $user.Id })
-            }
-            if ($null -eq $AvailabilityConfig)
-            {
-                Write-Verbose -Message "Availability config for [$($OrgWideAccount)] does not exist."
+                Write-Verbose -Message "Availability config does not exist."
                 return $nullReturn
             }
         }
         else
         {
-            $AvailabilityConfig = $Script:exportedInstance
+            $availabilityConfig = $Script:exportedInstance
         }
 
-        Write-Verbose -Message "Found Availability Config for $($OrgWideAccount)"
+        Write-Verbose -Message "Found Availability Config"
+
+        $guid = [System.Guid]::Empty
+        $OrgWideAccount = $availabilityConfig.OrgWideAccount
+        if ($null -ne $availabilityConfig -and -not [System.String]::IsNullOrEmpty($OrgWideAccount) -and [System.Guid]::TryParse($OrgWideAccount, [ref]$guid))
+        {
+            $user = Get-User -Identity $OrgWideAccount -ErrorAction SilentlyContinue
+            if ($null -ne $user)
+            {
+                $OrgWideAccount = $user.UserPrincipalName
+            }
+        }
 
         $result = @{
             OrgWideAccount        = $OrgWideAccount
+            AllowedTenantIds      = [System.String[]]$availabilityConfig.AllowedTenantIds
+            IsSingleInstance      = 'Yes'
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -123,9 +140,18 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $OrgWideAccount,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedTenantIds,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -165,7 +191,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of Availability Config for account $OrgWideAccount"
+    Write-Verbose -Message "Setting configuration of Availability Config"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -178,30 +204,31 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Setting configuration of Availability Config for account $OrgWideAccount"
+    Write-Verbose -Message "Setting configuration of Availability Config"
 
     $currentAvailabilityConfig = Get-TargetResource @PSBoundParameters
 
-    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    $currentParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $currentParameters.Remove('IsSingleInstance') | Out-Null
+    if ($currentParameters.OrgWideAccount -eq '' -or $currentParameters.OrgWideAccount -eq 'NotConfigured')
+    {
+        $currentParameters.OrgWideAccount = $null
+    }
 
-    # CASE: Availability Config doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentAvailabilityConfig.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Availability Config '$($OrgWideAccount)' does not exist but it should. Create it."
-        New-AvailabilityConfig -OrgWideAccount $OrgWideAccount
+        Write-Verbose -Message "Availability Config does not exist but it should. Create it."
+        New-AvailabilityConfig @currentParameters -Confirm:$false
     }
-    # CASE: Availability Config exists but it shouldn't;
     elseif ($Ensure -eq 'Absent' -and $currentAvailabilityConfig.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Availability Config '$($OrgWideAccount)' exists but it shouldn't. Remove it."
+        Write-Verbose -Message "Availability Config exists but it shouldn't. Remove it."
         Remove-AvailabilityConfig -Confirm:$false
     }
-    # CASE: Availability Config exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq 'Present' -and $currentAvailabilityConfig.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Availability Config '$($OrgWideAccount)' already exists, but needs updating."
-        Set-AvailabilityConfig -OrgWideAccount $OrgWideAccount -Confirm:$false
+        Write-Verbose -Message "Availability Config already exists, but needs updating."
+        Set-AvailabilityConfig @currentParameters -Confirm:$false
     }
 }
 
@@ -211,9 +238,18 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $OrgWideAccount,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedTenantIds,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -262,8 +298,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -341,14 +379,8 @@ function Export-TargetResource
             return ''
         }
 
-        $OrgWideValue = 'NotConfigured'
-        if ($null -ne $AvailabilityConfig.OrgWideAccount)
-        {
-            $user = Get-User -Identity $AvailabilityConfig.OrgWideAccount.ToString()
-            $OrgWideValue = $user.UserPrincipalName
-        }
         $Params = @{
-            OrgWideAccount        = $OrgWideValue
+            IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -384,4 +416,23 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            if ($DesiredValues.OrgWideAccount -eq 'NotConfigured')
+            {
+                Write-Verbose -Message "OrgWideAccount is set to 'NotConfigured' in DesiredValues. Updating it to an empty string for comparison."
+                $DesiredValues.OrgWideAccount = ''
+            }
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

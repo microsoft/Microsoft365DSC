@@ -145,6 +145,7 @@ function Get-TargetResource
             $myPrincipalScopes.Add('Query', $currentPrincipalScopes.query)
             $myPrincipalScopes.Add('QueryRoot', $currentPrincipalScopes.queryRoot)
             $myPrincipalScopes.Add('QueryType', $currentPrincipalScopes.queryType)
+            $myPrincipalScopes.Add('ScopeType', $currentPrincipalScopes.scopeType)
             if ($null -ne $currentPrincipalScopes.'@odata.type')
             {
                 $myPrincipalScopes.Add('odataType', $currentPrincipalScopes.'@odata.type'.ToString())
@@ -162,6 +163,9 @@ function Get-TargetResource
             $myResourceScopes.Add('Query', $currentResourceScopes.query)
             $myResourceScopes.Add('QueryRoot', $currentResourceScopes.queryRoot)
             $myResourceScopes.Add('QueryType', $currentResourceScopes.queryType)
+            $myResourceScopes.Add('DisplayName', $currentResourceScopes.displayName)
+            $myResourceScopes.Add('ResourceScopeId', $currentResourceScopes.resourceId)
+            $myResourceScopes.Add('ScopeType', $currentResourceScopes.scopeType)
             if ($null -ne $currentResourceScopes.'@odata.type')
             {
                 $myResourceScopes.Add('odataType', $currentResourceScopes.'@odata.type'.ToString())
@@ -172,7 +176,6 @@ function Get-TargetResource
             }
         }
         $complexScope.Add('ResourceScopes', $complexResourceScopes)
-
 
         if ($null -ne $getValue.Scope.AdditionalProperties.'@odata.type')
         {
@@ -363,6 +366,7 @@ function Get-TargetResource
                 }
                 $myFallbackReviewer = [ordered]@{}
                 $myFallbackReviewer.Add('DisplayName', $currentQuery.body.displayName)
+                $myFallbackReviewer.Add('ScopeType', $currentFallbackReviewer.AdditionalProperties.scopeType)
                 $myFallbackReviewer.Add('Type', $reviewerType)
                 $complexFallbackReviewers += $myFallbackReviewer
             }
@@ -371,7 +375,7 @@ function Get-TargetResource
         $complexReviewers = @()
         $allQueries = $getValue.Reviewers.Query
         $batchRequests = @()
-        foreach ($query in $allQueries)
+        foreach ($query in $($allQueries | Where-Object { $_ -notlike "*manager*" -and -not [System.String]::IsNullOrEmpty($_) }))
         {
             if ($query -like '*manager*')
             {
@@ -413,6 +417,7 @@ function Get-TargetResource
             }
             $myReviewer = [ordered]@{}
             $myReviewer.Add('DisplayName', $currentQuery.body.displayName)
+            $myReviewer.Add('ScopeType', $currentReviewer.AdditionalProperties.scopeType)
             $myReviewer.Add('Type', $reviewerType)
             $complexReviewers += $myReviewer
         }
@@ -603,7 +608,7 @@ function Set-TargetResource
         $batchRequests = @()
         foreach ($currentReviewer in $Reviewers)
         {
-            if ($currentReviewer.Type -eq 'Manager')
+            if ($currentReviewer.Type -eq 'Manager' -or $currentReviewer.ScopeType -in @('Manager', 'ResourceOwner'))
             {
                 continue
             }
@@ -702,6 +707,14 @@ function Set-TargetResource
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
         $createParameters.Remove('Id') | Out-Null
 
+        foreach ($scope in $createParameters.ScopeValue.ResourceScopes)
+        {
+            if ($scope.ContainsKey('ResourceScopeId'))
+            {
+                $scope.Add('ResourceId', $scope.ResourceScopeId)
+                $scope.Remove('ResourceScopeId') | Out-Null
+            }
+        }
         $createParameters.Add('Scope', $createParameters.ScopeValue)
         $createParameters.Remove('ScopeValue') | Out-Null
 
@@ -731,14 +744,6 @@ function Set-TargetResource
             }
         }
 
-        $keys = (([Hashtable]$createParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $createParameters.$key -and $createParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $createParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
-            }
-        }
         $createParameters.Add('@odata.type', '#microsoft.graph.AccessReviewScheduleDefinition')
         Write-Verbose -Message "Creating an Azure AD Access Review Definition with: $(ConvertTo-Json $createParameters -Depth 10)"
         $policy = New-MgBetaIdentityGovernanceAccessReviewDefinition -BodyParameter $createParameters
@@ -755,6 +760,14 @@ function Set-TargetResource
 
         $createParameters.Remove('Id') | Out-Null
 
+        foreach ($scope in $createParameters.ScopeValue.ResourceScopes)
+        {
+            if ($scope.ContainsKey('ResourceScopeId'))
+            {
+                $scope.Add('ResourceId', $scope.ResourceScopeId)
+                $scope.Remove('ResourceScopeId') | Out-Null
+            }
+        }
         $createParameters.Add('Scope', $createParameters.ScopeValue)
         $createParameters.Remove('ScopeValue') | Out-Null
 
@@ -789,14 +802,6 @@ function Set-TargetResource
             Write-Verbose -Message "Priting Values: $(Convert-M365DscHashtableToString -Hashtable $hashtable)"
         }
 
-        $keys = (([Hashtable]$createParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $createParameters.$key -and $createParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $createParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
-            }
-        }
         #region resource generator code
         $createParameters.Add('@odata.type', '#microsoft.graph.AccessReviewScheduleDefinition')
         Write-Verbose -Message "Creating an Azure AD Access Review Definition with: $(ConvertTo-Json $createParameters -Depth 10)"
@@ -812,21 +817,19 @@ function Set-TargetResource
 
         $updateParameters.Remove('Id') | Out-Null
 
+        foreach ($scope in $updateParameters.ScopeValue.ResourceScopes)
+        {
+            if ($scope.ContainsKey('ResourceScopeId'))
+            {
+                $scope.Add('ResourceId', $scope.ResourceScopeId)
+                $scope.Remove('ResourceScopeId') | Out-Null
+            }
+        }
         $updateParameters.Add('Scope', $updateParameters.ScopeValue)
         $updateParameters.Remove('ScopeValue') | Out-Null
 
         $updateParameters.Add('Settings', $updateParameters.SettingsValue)
         $updateParameters.Remove('SettingsValue') | Out-Null
-
-
-        $keys = (([Hashtable]$updateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $updateParameters.$key -and $updateParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $updateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.AccessReviewScheduleDefinitionId
-            }
-        }
 
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.AccessReviewScheduleDefinition')
@@ -1052,12 +1055,12 @@ function Export-TargetResource
                     }
                     @{
                         Name            = 'PrincipalScopes'
-                        CimInstanceName = 'MicrosoftGraphAccessReviewScope'
+                        CimInstanceName = 'MicrosoftGraphAccessReviewPrincipalScope'
                         IsRequired      = $False
                     }
                     @{
                         Name            = 'ResourceScopes'
-                        CimInstanceName = 'MicrosoftGraphAccessReviewScope'
+                        CimInstanceName = 'MicrosoftGraphAccessReviewResourceScope'
                         IsRequired      = $False
                     }
                 )

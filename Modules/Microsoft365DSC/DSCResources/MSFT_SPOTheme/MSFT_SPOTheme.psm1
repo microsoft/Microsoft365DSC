@@ -97,7 +97,7 @@ function Get-TargetResource
             Write-Verbose -Message "The specified theme doesn't exist."
             return $nullReturn
         }
-        $convertedPalette = Convert-ExistingThemePaletteToHashTable -Palette ([System.Collections.Hashtable]$theme.Palette)
+        $convertedPalette = Convert-ExistingThemePaletteToArray -Palette ([System.Collections.Hashtable]$theme.Palette)
 
         return @{
             Name                  = $theme.Name
@@ -204,11 +204,16 @@ function Set-TargetResource
     if ($Ensure -eq 'Present')
     {
         Write-Verbose 'Converting Received Palette Values into Hashtable'
-        $HashPalette = Convert-NewThemePaletteToHashTable -Palette $Palette
+        $convertedPalettes = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Palette
+        $hashPalette = @{}
+        foreach ($convertedPalette in $convertedPalettes)
+        {
+            $hashPalette.Add($convertedPalette.Property, $convertedPalette.Value)
+        }
         $AddParameters = @{
             Identity   = $Name
             IsInverted = $IsInverted
-            Palette    = $HashPalette
+            Palette    = $hashPalette
         }
 
         try
@@ -420,14 +425,8 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             if ($null -ne $Results.Palette)
             {
-                $formatted = $Results.Palette.GetEnumerator() | ForEach-Object {
-                    [ordered]@{
-                        Property = $_.Key
-                        Value    = $_.Value
-                    }
-                }
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $formatted `
+                    -ComplexObject $Results.Palette `
                     -CIMInstanceName 'MSFT_SPOThemePaletteProperty' `
                     -IsArray
 
@@ -466,39 +465,25 @@ function Export-TargetResource
     }
 }
 
-function Convert-ExistingThemePaletteToHashTable
+function Convert-ExistingThemePaletteToArray
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([System.Collections.Hashtable[]])]
     param(
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
         $Palette
     )
-    $themeHash = [ordered]@{}
+
+    $themes = @()
     foreach ($entry in $Palette.GetEnumerator())
     {
-        $themeHash[$entry.Key] = $entry.Value
+        $themes += [ordered]@{
+            Property = $entry.Key
+            Value    = $entry.Value
+        }
     }
-    return $themeHash
-}
-
-function Convert-NewThemePaletteToHashTable
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Palette
-    )
-
-    $results = @{ }
-    foreach ($entry in $Palette)
-    {
-        $results.Add($entry.Property, $entry.Value)
-    }
-    return $results
+    return $themes
 }
 
 Export-ModuleMember -Function *-TargetResource

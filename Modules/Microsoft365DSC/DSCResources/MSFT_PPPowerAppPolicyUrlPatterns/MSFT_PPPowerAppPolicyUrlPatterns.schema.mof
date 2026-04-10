@@ -11,8 +11,7 @@ class MSFT_PPPowerAppPolicyUrlPatterns : OMI_BaseResource
 {
     [Key, Description("The policy name identifier.")] String PolicyName;
     [Key, Description("The tenant identifier.")] String PPTenantId;
-    [Write, Description("Set of custom connector pattern rules associated with the policy."), EmbeddedInstance("MSFT_PPPowerAPpPolicyUrlPatternsRule")] String RuleSet[];
-
+    [Write, Description("Set of custom connector pattern rules associated with the policy."), EmbeddedInstance("MSFT_PPPowerAppPolicyUrlPatternsRule")] String RuleSet[];
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Absent","Present"}, Values{"Absent","Present"}] string Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

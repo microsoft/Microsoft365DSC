@@ -115,7 +115,7 @@ function Get-TargetResource
 
         $result = @{
             Identity              = $userInfo
-            AccessRights          = [Array]$permission.AccessRights.Replace(' ', '').Split(',')
+            AccessRights          = [System.String[]]$permission.AccessRights.Replace(' ', '').Split(',')
             InheritanceType       = $permission.InheritanceType
             Owner                 = $permission.Owner
             User                  = $permission.User
@@ -420,7 +420,7 @@ function Export-TargetResource
                 Write-M365DSCHost -Message "        |---[$j/$($permissions.Count)] $($permission.Identity)" -DeferWrite
                 $Params = @{
                     Identity              = $mailbox.UserPrincipalName
-                    AccessRights          = [Array]$permission.AccessRights.Replace(' ', '').Replace('SendAs,', '').Split(',') # ignore SendAs permissions since they are not supported by *-MailboxPermission cmdlets
+                    AccessRights          = [System.String[]]$permission.AccessRights.Replace(' ', '').Replace('SendAs,', '').Split(',') # ignore SendAs permissions since they are not supported by *-MailboxPermission cmdlets
                     InheritanceType       = $permission.InheritanceType
                     User                  = $permission.User
                     Credential            = $Credential

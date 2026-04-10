@@ -23,6 +23,7 @@ function Get-TargetResource
         $ActivationReqJustification,
 
         [Parameter(Mandatory = $true)]
+        [ValidateSet('owner', 'member')]
         [System.String]
         $RoleDefinitionId,
 
@@ -68,11 +69,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqMFA,
+        $EligibilityAssignmentReqMFA,
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqJustification,
+        $EligibilityAssignmentReqJustification,
 
         [Parameter()]
         [System.Boolean]
@@ -276,33 +277,33 @@ function Get-TargetResource
 
     if ($Script:ExportMode)
     {
-        $ActivationMaxDuration = ($role | Where-Object { $_.Id -eq 'Expiration_EndUser_Assignment' }).maximumDuration
-        $ActivationReqJustification = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).enabledRules) -contains 'Justification'
-        $ActivationReqTicket = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).enabledRules) -contains 'Ticketing'
-        $ActivationReqMFA = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).enabledRules) -contains 'MultiFactorAuthentication'
-        $AuthenticationContext = ($role | Where-Object { $_.Id -eq 'AuthenticationContext_EndUser_Assignment' })
-        $ApprovaltoActivate = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).setting.isApprovalRequired)
-        $ActivateApprovers = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).setting.approvalStages.primaryApprovers.id)
+        $ActivationMaxDurationValue = ($role | Where-Object { $_.Id -eq 'Expiration_EndUser_Assignment' }).maximumDuration
+        $ActivationReqJustificationValue = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).enabledRules) -contains 'Justification'
+        $ActivationReqTicketValue = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).enabledRules) -contains 'Ticketing'
+        $ActivationReqMFAValue = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).enabledRules) -contains 'MultiFactorAuthentication'
+        $AuthenticationContextValue = ($role | Where-Object { $_.Id -eq 'AuthenticationContext_EndUser_Assignment' })
+        $ApprovaltoActivateValue = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).setting.isApprovalRequired)
+        $ActivateApproversValue = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).setting.approvalStages.primaryApprovers.id)
     }
     else
     {
-        $ActivationMaxDuration = ($role | Where-Object { $_.Id -eq 'Expiration_EndUser_Assignment' }).AdditionalProperties.maximumDuration
-        $ActivationReqJustification = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'Justification'
-        $ActivationReqTicket = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'Ticketing'
-        $ActivationReqMFA = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
-        $AuthenticationContext = ($role | Where-Object { $_.Id -eq 'AuthenticationContext_EndUser_Assignment' }).AdditionalProperties
-        $ApprovaltoActivate = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).AdditionalProperties.setting.isApprovalRequired)
-        [array]$ActivateApprovers = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).AdditionalProperties.setting.approvalStages.primaryApprovers)
+        $ActivationMaxDurationValue = ($role | Where-Object { $_.Id -eq 'Expiration_EndUser_Assignment' }).AdditionalProperties.maximumDuration
+        $ActivationReqJustificationValue = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'Justification'
+        $ActivationReqTicketValue = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'Ticketing'
+        $ActivationReqMFAValue = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
+        $AuthenticationContextValue = ($role | Where-Object { $_.Id -eq 'AuthenticationContext_EndUser_Assignment' }).AdditionalProperties
+        $ApprovaltoActivateValue = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).AdditionalProperties.setting.isApprovalRequired)
+        [array]$ActivateApproversValue = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).AdditionalProperties.setting.approvalStages.primaryApprovers)
     }
-    $AuthenticationContextRequired = $AuthenticationContext.isEnabled
-    if ($AuthenticationContextRequired)
+    $AuthenticationContextRequiredValue = $AuthenticationContextValue.isEnabled
+    if ($AuthenticationContextRequiredValue)
     {
-        $AuthenticationContextId = $AuthenticationContext.claimValue
-        $AuthenticationContextName = (Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference -AuthenticationContextClassReferenceId $AuthenticationContextId).DisplayName
+        $AuthenticationContextIdValue = $AuthenticationContextValue.claimValue
+        $AuthenticationContextNameValue = (Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference -AuthenticationContextClassReferenceId $AuthenticationContextIdValue).DisplayName
     }
 
     [string[]]$ActivateApprover = @()
-    foreach ($Item in $ActivateApprovers.id)
+    foreach ($Item in $ActivateApproversValue.id)
     {
         try
         {
@@ -325,73 +326,73 @@ function Get-TargetResource
 
     if ($Script:ExportMode)
     {
-        $PermanentEligibleAssignmentisExpirationRequired = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Eligibility' }).isExpirationRequired
-        $ExpireEligibleAssignment = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Eligibility' }).maximumDuration
-        $PermanentActiveAssignmentisExpirationRequired = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Assignment' }).isExpirationRequired
-        $ExpireActiveAssignment = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Assignment' }).maximumDuration
-        $AssignmentReqMFA = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Assignment' }).enabledRules) -contains 'MultiFactorAuthentication'
-        $AssignmentReqJustification = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Assignment' }).enabledRules) -contains 'Justification'
-        $ElegibilityAssignmentReqMFA = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).enabledRules) -contains 'MultiFactorAuthentication'
-        $ElegibilityAssignmentReqJustification = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).enabledRules) -contains 'Justification'
-        $EligibleAlertNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).isDefaultRecipientsEnabled
-        [string[]]$EligibleAlertNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).notificationRecipients
-        $EligibleAlertNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).notificationLevel) -contains ('Critical')
-        $EligibleAssigneeNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).isDefaultRecipientsEnabled
-        [string[]]$EligibleAssigneeNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).notificationRecipients
-        $EligibleAssigneeNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).notificationLevel) -contains ('Critical')
-        $EligibleApproveNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).isDefaultRecipientsEnabled
-        [string[]]$EligibleApproveNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).notificationRecipients
-        $EligibleApproveNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).notificationLevel) -contains ('Critical')
-        $ActiveAlertNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).isDefaultRecipientsEnabled
-        [string[]]$ActiveAlertNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).notificationRecipients
-        $ActiveAlertNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).notificationLevel) -contains ('Critical')
-        $ActiveAssigneeNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).isDefaultRecipientsEnabled
-        [string[]]$ActiveAssigneeNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).notificationRecipients
-        $ActiveAssigneeNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).notificationLevel) -contains ('Critical')
-        $ActiveApproveNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).isDefaultRecipientsEnabled
-        [string[]]$ActiveApproveNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).notificationRecipients
-        $ActiveApproveNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).notificationLevel) -contains ('Critical')
-        $EligibleAssignmentAlertNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).isDefaultRecipientsEnabled
-        [string[]]$EligibleAssignmentAlertNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).notificationRecipients
-        $EligibleAssignmentAlertNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).notificationLevel) -contains ('Critical')
-        $EligibleAssignmentAssigneeNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).isDefaultRecipientsEnabled
-        [string[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).notificationRecipients
-        $EligibleAssignmentAssigneeNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).notificationLevel) -contains ('Critical')
+        $PermanentEligibleAssignmentisExpirationRequiredValue = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Eligibility' }).isExpirationRequired
+        $ExpireEligibleAssignmentValue = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Eligibility' }).maximumDuration
+        $PermanentActiveAssignmentisExpirationRequiredValue = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Assignment' }).isExpirationRequired
+        $ExpireActiveAssignmentValue = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Assignment' }).maximumDuration
+        $AssignmentReqMFAValue = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Assignment' }).enabledRules) -contains 'MultiFactorAuthentication'
+        $AssignmentReqJustificationValue = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Assignment' }).enabledRules) -contains 'Justification'
+        $EligibilityAssignmentReqMFAValue = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).enabledRules) -contains 'MultiFactorAuthentication'
+        $EligibilityAssignmentReqJustificationValue = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).enabledRules) -contains 'Justification'
+        $EligibleAlertNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).isDefaultRecipientsEnabled
+        [string[]]$EligibleAlertNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).notificationRecipients
+        $EligibleAlertNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).notificationLevel) -contains ('Critical')
+        $EligibleAssigneeNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).isDefaultRecipientsEnabled
+        [string[]]$EligibleAssigneeNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).notificationRecipients
+        $EligibleAssigneeNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).notificationLevel) -contains ('Critical')
+        $EligibleApproveNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).isDefaultRecipientsEnabled
+        [string[]]$EligibleApproveNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).notificationRecipients
+        $EligibleApproveNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).notificationLevel) -contains ('Critical')
+        $ActiveAlertNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).isDefaultRecipientsEnabled
+        [string[]]$ActiveAlertNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).notificationRecipients
+        $ActiveAlertNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).notificationLevel) -contains ('Critical')
+        $ActiveAssigneeNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).isDefaultRecipientsEnabled
+        [string[]]$ActiveAssigneeNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).notificationRecipients
+        $ActiveAssigneeNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).notificationLevel) -contains ('Critical')
+        $ActiveApproveNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).isDefaultRecipientsEnabled
+        [string[]]$ActiveApproveNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).notificationRecipients
+        $ActiveApproveNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).notificationLevel) -contains ('Critical')
+        $EligibleAssignmentAlertNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).isDefaultRecipientsEnabled
+        [string[]]$EligibleAssignmentAlertNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).notificationRecipients
+        $EligibleAssignmentAlertNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).notificationLevel) -contains ('Critical')
+        $EligibleAssignmentAssigneeNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).isDefaultRecipientsEnabled
+        [string[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).notificationRecipients
+        $EligibleAssignmentAssigneeNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).notificationLevel) -contains ('Critical')
     }
     else
     {
-        $PermanentEligibleAssignmentisExpirationRequired = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Eligibility' }).AdditionalProperties.isExpirationRequired
-        $ExpireEligibleAssignment = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Eligibility' }).AdditionalProperties.maximumDuration
-        $PermanentActiveAssignmentisExpirationRequired = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Assignment' }).AdditionalProperties.isExpirationRequired
-        $ExpireActiveAssignment = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Assignment' }).AdditionalProperties.maximumDuration
-        $AssignmentReqMFA = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Assignment' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
-        $AssignmentReqJustification = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Assignment' }).AdditionalProperties.enabledRules) -contains 'Justification'
-        $ElegibilityAssignmentReqMFA = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
-        $ElegibilityAssignmentReqJustification = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).AdditionalProperties.enabledRules) -contains 'Justification'
-        $EligibleAlertNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).AdditionalProperties.isDefaultRecipientsEnabled
-        [string[]]$EligibleAlertNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).AdditionalProperties.notificationRecipients
-        $EligibleAlertNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).AdditionalProperties.notificationLevel) -contains ('Critical')
-        $EligibleAssigneeNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).AdditionalProperties.isDefaultRecipientsEnabled
-        [string[]]$EligibleAssigneeNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).AdditionalProperties.notificationRecipients
-        $EligibleAssigneeNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).AdditionalProperties.notificationLevel) -contains ('Critical')
-        $EligibleApproveNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).AdditionalProperties.isDefaultRecipientsEnabled
-        [string[]]$EligibleApproveNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).AdditionalProperties.notificationRecipients
-        $EligibleApproveNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).AdditionalProperties.notificationLevel) -contains ('Critical')
-        $ActiveAlertNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).AdditionalProperties.isDefaultRecipientsEnabled
-        [string[]]$ActiveAlertNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).AdditionalProperties.notificationRecipients
-        $ActiveAlertNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).AdditionalProperties.notificationLevel) -contains ('Critical')
-        $ActiveAssigneeNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).AdditionalProperties.isDefaultRecipientsEnabled
-        [string[]]$ActiveAssigneeNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).AdditionalProperties.notificationRecipients
-        $ActiveAssigneeNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).AdditionalProperties.notificationLevel) -contains ('Critical')
-        $ActiveApproveNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).AdditionalProperties.isDefaultRecipientsEnabled
-        [string[]]$ActiveApproveNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).AdditionalProperties.notificationRecipients
-        $ActiveApproveNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).AdditionalProperties.notificationLevel) -contains ('Critical')
-        $EligibleAssignmentAlertNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).AdditionalProperties.isDefaultRecipientsEnabled
-        [string[]]$EligibleAssignmentAlertNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).AdditionalProperties.notificationRecipients
-        $EligibleAssignmentAlertNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).AdditionalProperties.notificationLevel) -contains ('Critical')
-        $EligibleAssignmentAssigneeNotificationDefaultRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).AdditionalProperties.isDefaultRecipientsEnabled
-        [string[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipient = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).AdditionalProperties.notificationRecipients
-        $EligibleAssignmentAssigneeNotificationOnlyCritical = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).AdditionalProperties.notificationLevel) -contains ('Critical')
+        $PermanentEligibleAssignmentisExpirationRequiredValue = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Eligibility' }).AdditionalProperties.isExpirationRequired
+        $ExpireEligibleAssignmentValue = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Eligibility' }).AdditionalProperties.maximumDuration
+        $PermanentActiveAssignmentisExpirationRequiredValue = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Assignment' }).AdditionalProperties.isExpirationRequired
+        $ExpireActiveAssignmentValue = ($role | Where-Object { $_.Id -eq 'Expiration_Admin_Assignment' }).AdditionalProperties.maximumDuration
+        $AssignmentReqMFAValue = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Assignment' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
+        $AssignmentReqJustificationValue = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Assignment' }).AdditionalProperties.enabledRules) -contains 'Justification'
+        $EligibilityAssignmentReqMFAValue = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
+        $EligibilityAssignmentReqJustificationValue = (($role | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).AdditionalProperties.enabledRules) -contains 'Justification'
+        $EligibleAlertNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).AdditionalProperties.isDefaultRecipientsEnabled
+        [string[]]$EligibleAlertNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).AdditionalProperties.notificationRecipients
+        $EligibleAlertNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).AdditionalProperties.notificationLevel) -contains ('Critical')
+        $EligibleAssigneeNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).AdditionalProperties.isDefaultRecipientsEnabled
+        [string[]]$EligibleAssigneeNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).AdditionalProperties.notificationRecipients
+        $EligibleAssigneeNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Eligibility' }).AdditionalProperties.notificationLevel) -contains ('Critical')
+        $EligibleApproveNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).AdditionalProperties.isDefaultRecipientsEnabled
+        [string[]]$EligibleApproveNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).AdditionalProperties.notificationRecipients
+        $EligibleApproveNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Eligibility' }).AdditionalProperties.notificationLevel) -contains ('Critical')
+        $ActiveAlertNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).AdditionalProperties.isDefaultRecipientsEnabled
+        [string[]]$ActiveAlertNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).AdditionalProperties.notificationRecipients
+        $ActiveAlertNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Assignment' }).AdditionalProperties.notificationLevel) -contains ('Critical')
+        $ActiveAssigneeNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).AdditionalProperties.isDefaultRecipientsEnabled
+        [string[]]$ActiveAssigneeNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).AdditionalProperties.notificationRecipients
+        $ActiveAssigneeNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_Admin_Assignment' }).AdditionalProperties.notificationLevel) -contains ('Critical')
+        $ActiveApproveNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).AdditionalProperties.isDefaultRecipientsEnabled
+        [string[]]$ActiveApproveNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).AdditionalProperties.notificationRecipients
+        $ActiveApproveNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Approver_Admin_Assignment' }).AdditionalProperties.notificationLevel) -contains ('Critical')
+        $EligibleAssignmentAlertNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).AdditionalProperties.isDefaultRecipientsEnabled
+        [string[]]$EligibleAssignmentAlertNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).AdditionalProperties.notificationRecipients
+        $EligibleAssignmentAlertNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Admin_EndUser_Assignment' }).AdditionalProperties.notificationLevel) -contains ('Critical')
+        $EligibleAssignmentAssigneeNotificationDefaultRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).AdditionalProperties.isDefaultRecipientsEnabled
+        [string[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipientValue = ($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).AdditionalProperties.notificationRecipients
+        $EligibleAssignmentAssigneeNotificationOnlyCriticalValue = (($role | Where-Object { $_.Id -eq 'Notification_Requestor_EndUser_Assignment' }).AdditionalProperties.notificationLevel) -contains ('Critical')
     }
 
     try
@@ -401,47 +402,47 @@ function Get-TargetResource
             Id                                                        = $Id
             DisplayName                                               = $DisplayName
             RoleDefinitionId                                          = $RoleDefinitionId
-            ActivationMaxDuration                                     = $ActivationMaxDuration
-            ActivationReqJustification                                = $ActivationReqJustification
-            ActivationReqTicket                                       = $ActivationReqTicket
-            ActivationReqMFA                                          = $ActivationReqMFA
-            ApprovaltoActivate                                        = $ApprovaltoActivate
+            ActivationMaxDuration                                     = $ActivationMaxDurationValue
+            ActivationReqJustification                                = $ActivationReqJustificationValue
+            ActivationReqTicket                                       = $ActivationReqTicketValue
+            ActivationReqMFA                                          = $ActivationReqMFAValue
+            ApprovaltoActivate                                        = $ApprovaltoActivateValue
             ActivateApprover                                          = [System.String[]]$ActivateApprover
-            PermanentEligibleAssignmentisExpirationRequired           = $PermanentEligibleAssignmentisExpirationRequired
-            ExpireEligibleAssignment                                  = $ExpireEligibleAssignment
-            PermanentActiveAssignmentisExpirationRequired             = $PermanentActiveAssignmentisExpirationRequired
-            ExpireActiveAssignment                                    = $ExpireActiveAssignment
-            AssignmentReqMFA                                          = $AssignmentReqMFA
-            AssignmentReqJustification                                = $AssignmentReqJustification
-            ElegibilityAssignmentReqMFA                               = $ElegibilityAssignmentReqMFA
-            ElegibilityAssignmentReqJustification                     = $ElegibilityAssignmentReqJustification
-            EligibleAlertNotificationDefaultRecipient                 = $EligibleAlertNotificationDefaultRecipient
-            EligibleAlertNotificationAdditionalRecipient              = [System.String[]]$EligibleAlertNotificationAdditionalRecipient
-            EligibleAlertNotificationOnlyCritical                     = $EligibleAlertNotificationOnlyCritical
-            EligibleAssigneeNotificationDefaultRecipient              = $EligibleAssigneeNotificationDefaultRecipient
-            EligibleAssigneeNotificationAdditionalRecipient           = [System.String[]]$EligibleAssigneeNotificationAdditionalRecipient
-            EligibleAssigneeNotificationOnlyCritical                  = $EligibleAssigneeNotificationOnlyCritical
-            EligibleApproveNotificationDefaultRecipient               = $EligibleApproveNotificationDefaultRecipient
-            EligibleApproveNotificationAdditionalRecipient            = [System.String[]]$EligibleApproveNotificationAdditionalRecipient
-            EligibleApproveNotificationOnlyCritical                   = $EligibleApproveNotificationOnlyCritical
-            ActiveAlertNotificationDefaultRecipient                   = $ActiveAlertNotificationDefaultRecipient
-            ActiveAlertNotificationAdditionalRecipient                = [System.String[]]$ActiveAlertNotificationAdditionalRecipient
-            ActiveAlertNotificationOnlyCritical                       = $ActiveAlertNotificationOnlyCritical
-            ActiveAssigneeNotificationDefaultRecipient                = $ActiveAssigneeNotificationDefaultRecipient
-            ActiveAssigneeNotificationAdditionalRecipient             = [System.String[]]$ActiveAssigneeNotificationAdditionalRecipient
-            ActiveAssigneeNotificationOnlyCritical                    = $ActiveAssigneeNotificationOnlyCritical
-            ActiveApproveNotificationDefaultRecipient                 = $ActiveApproveNotificationDefaultRecipient
-            ActiveApproveNotificationAdditionalRecipient              = [System.String[]]$ActiveApproveNotificationAdditionalRecipient
-            ActiveApproveNotificationOnlyCritical                     = $ActiveApproveNotificationOnlyCritical
-            EligibleAssignmentAlertNotificationDefaultRecipient       = $EligibleAssignmentAlertNotificationDefaultRecipient
-            EligibleAssignmentAlertNotificationAdditionalRecipient    = [System.String[]]$EligibleAssignmentAlertNotificationAdditionalRecipient
-            EligibleAssignmentAlertNotificationOnlyCritical           = $EligibleAssignmentAlertNotificationOnlyCritical
-            EligibleAssignmentAssigneeNotificationDefaultRecipient    = $EligibleAssignmentAssigneeNotificationDefaultRecipient
-            EligibleAssignmentAssigneeNotificationAdditionalRecipient = [System.String[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipient
-            EligibleAssignmentAssigneeNotificationOnlyCritical        = $EligibleAssignmentAssigneeNotificationOnlyCritical
-            AuthenticationContextRequired                             = $AuthenticationContextRequired
-            AuthenticationContextId                                   = $AuthenticationContextId
-            AuthenticationContextName                                 = $AuthenticationContextName
+            PermanentEligibleAssignmentisExpirationRequired           = $PermanentEligibleAssignmentisExpirationRequiredValue
+            ExpireEligibleAssignment                                  = $ExpireEligibleAssignmentValue
+            PermanentActiveAssignmentisExpirationRequired             = $PermanentActiveAssignmentisExpirationRequiredValue
+            ExpireActiveAssignment                                    = $ExpireActiveAssignmentValue
+            AssignmentReqMFA                                          = $AssignmentReqMFAValue
+            AssignmentReqJustification                                = $AssignmentReqJustificationValue
+            EligibilityAssignmentReqMFA                               = $EligibilityAssignmentReqMFAValue
+            EligibilityAssignmentReqJustification                     = $EligibilityAssignmentReqJustificationValue
+            EligibleAlertNotificationDefaultRecipient                 = $EligibleAlertNotificationDefaultRecipientValue
+            EligibleAlertNotificationAdditionalRecipient              = [System.String[]]$EligibleAlertNotificationAdditionalRecipientValue
+            EligibleAlertNotificationOnlyCritical                     = $EligibleAlertNotificationOnlyCriticalValue
+            EligibleAssigneeNotificationDefaultRecipient              = $EligibleAssigneeNotificationDefaultRecipientValue
+            EligibleAssigneeNotificationAdditionalRecipient           = [System.String[]]$EligibleAssigneeNotificationAdditionalRecipientValue
+            EligibleAssigneeNotificationOnlyCritical                  = $EligibleAssigneeNotificationOnlyCriticalValue
+            EligibleApproveNotificationDefaultRecipient               = $EligibleApproveNotificationDefaultRecipientValue
+            EligibleApproveNotificationAdditionalRecipient            = [System.String[]]$EligibleApproveNotificationAdditionalRecipientValue
+            EligibleApproveNotificationOnlyCritical                   = $EligibleApproveNotificationOnlyCriticalValue
+            ActiveAlertNotificationDefaultRecipient                   = $ActiveAlertNotificationDefaultRecipientValue
+            ActiveAlertNotificationAdditionalRecipient                = [System.String[]]$ActiveAlertNotificationAdditionalRecipientValue
+            ActiveAlertNotificationOnlyCritical                       = $ActiveAlertNotificationOnlyCriticalValue
+            ActiveAssigneeNotificationDefaultRecipient                = $ActiveAssigneeNotificationDefaultRecipientValue
+            ActiveAssigneeNotificationAdditionalRecipient             = [System.String[]]$ActiveAssigneeNotificationAdditionalRecipientValue
+            ActiveAssigneeNotificationOnlyCritical                    = $ActiveAssigneeNotificationOnlyCriticalValue
+            ActiveApproveNotificationDefaultRecipient                 = $ActiveApproveNotificationDefaultRecipientValue
+            ActiveApproveNotificationAdditionalRecipient              = [System.String[]]$ActiveApproveNotificationAdditionalRecipientValue
+            ActiveApproveNotificationOnlyCritical                     = $ActiveApproveNotificationOnlyCriticalValue
+            EligibleAssignmentAlertNotificationDefaultRecipient       = $EligibleAssignmentAlertNotificationDefaultRecipientValue
+            EligibleAssignmentAlertNotificationAdditionalRecipient    = [System.String[]]$EligibleAssignmentAlertNotificationAdditionalRecipientValue
+            EligibleAssignmentAlertNotificationOnlyCritical           = $EligibleAssignmentAlertNotificationOnlyCriticalValue
+            EligibleAssignmentAssigneeNotificationDefaultRecipient    = $EligibleAssignmentAssigneeNotificationDefaultRecipientValue
+            EligibleAssignmentAssigneeNotificationAdditionalRecipient = [System.String[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipientValue
+            EligibleAssignmentAssigneeNotificationOnlyCritical        = $EligibleAssignmentAssigneeNotificationOnlyCriticalValue
+            AuthenticationContextRequired                             = $AuthenticationContextRequiredValue
+            AuthenticationContextId                                   = $AuthenticationContextIdValue
+            AuthenticationContextName                                 = $AuthenticationContextNameValue
             Ensure                                                    = 'Present'
             ApplicationId                                             = $ApplicationId
             TenantId                                                  = $TenantId
@@ -483,6 +484,7 @@ function Set-TargetResource
         $ActivationMaxDuration,
 
         [Parameter(Mandatory = $true)]
+        [ValidateSet('owner', 'member')]
         [System.String]
         $RoleDefinitionId,
 
@@ -532,11 +534,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqMFA,
+        $EligibilityAssignmentReqMFA,
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqJustification,
+        $EligibilityAssignmentReqJustification,
 
         [Parameter()]
         [System.Boolean]
@@ -1152,16 +1154,16 @@ function Set-TargetResource
         }
         elseif ($role.id -match 'Enablement_Admin_Eligibility')
         {
-            if ($PSBoundParameters.ContainsKey('ElegibilityAssignmentReqJustification') `
-                    -and $PSBoundParameters.ContainsKey('ElegibilityAssignmentReqMFA'))
+            if ($PSBoundParameters.ContainsKey('EligibilityAssignmentReqJustification') `
+                    -and $PSBoundParameters.ContainsKey('EligibilityAssignmentReqMFA'))
             {
-                Write-Verbose -Message 'Handle Assignment: Require Azure Multi-Factor Authentication on elegibility / Require justification on elegibility'
+                Write-Verbose -Message 'Handle Assignment: Require Azure Multi-Factor Authentication on eligibility / Require justification on eligibility'
                 [String[]]$enabledrules = @()
-                if ($ElegibilityAssignmentReqJustification)
+                if ($EligibilityAssignmentReqJustification)
                 {
                     $enabledrules += 'Justification'
                 }
-                if ($ElegibilityAssignmentReqMFA)
+                if ($EligibilityAssignmentReqMFA)
                 {
                     $enabledrules += 'MultiFactorAuthentication'
                 }
@@ -1229,6 +1231,7 @@ function Test-TargetResource
         $ActivationMaxDuration,
 
         [Parameter(Mandatory = $true)]
+        [ValidateSet('owner', 'member')]
         [System.String]
         $RoleDefinitionId,
 
@@ -1278,11 +1281,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqMFA,
+        $EligibilityAssignmentReqMFA,
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqJustification,
+        $EligibilityAssignmentReqJustification,
 
         [Parameter()]
         [System.Boolean]
@@ -1541,13 +1544,13 @@ function Export-TargetResource
             }
         }
 
-        $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests
+        $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests -AsList
 
         $dscContent = ''
-        foreach ($response in $batchResponses)
+        foreach ($group in $Script:exportedGroups)
         {
+            $response = $batchResponses.Where({ $_.id -eq $group.Id })
             $getValue = $response.body.value
-            $group = $Script:exportedGroups | Where-Object -FilterScript { $_.Id -eq $response.id }
             Write-M365DSCHost -Message "    |---[$j/$($Script:exportedGroups.Count)] $($group.DisplayName)" -DeferWrite
 
             $i = 1

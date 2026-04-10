@@ -416,6 +416,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 )
             }
 
+            Mock -ModuleName M365DSCIntuneUtil -CommandName Get-MgGroup -MockWith {
+                return @{
+                    Id = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                    DisplayName = 'Exclude'
+                }
+            }
+
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
 
@@ -447,6 +454,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "FakeStringValue"
@@ -485,6 +493,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "FakeStringValue"
@@ -522,6 +531,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "FakeStringValue"
@@ -550,6 +560,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "FakeStringValue"

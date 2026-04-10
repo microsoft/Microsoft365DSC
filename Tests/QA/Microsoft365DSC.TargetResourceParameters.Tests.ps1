@@ -67,11 +67,13 @@ BeforeAll {
             foreach ($property in $currentCimClass.CimClassProperties)
             {
                 $attributes += @{
+                    IsMandatory      = $true -eq $property.Qualifiers.Where( { $_.Name -eq 'Key' -or $_.Name -eq 'Required' }).Value
                     Name             = $property.Name
                     DataType         = $property.CimType
                     IsArray          = $property.CimType -gt 16
                     Description      = $property.Qualifiers.Where( { $_.Name -eq 'Description' }).Value
                     EmbeddedInstance = $property.Qualifiers.Where( { $_.Name -eq 'EmbeddedInstance' }).Value
+                    ValueMap         = $property.Qualifiers.Where( { $_.Name -eq 'ValueMap' }).Value
                 }
             }
 
@@ -84,10 +86,10 @@ BeforeAll {
         }
     }
 
-    function Get-FunctionParameterNames
+    function Get-FunctionParameter
     {
         [CmdletBinding()]
-        [OutputType([System.String[]])]
+        [OutputType([System.Collections.Hashtable[]])]
         param(
             [Parameter(Mandatory = $true)]
             [System.String]
@@ -114,11 +116,42 @@ BeforeAll {
         {
             foreach ($p in $f.Body.ParamBlock.Parameters)
             {
-                $parameters += $p.Name.VariablePath.UserPath
+                $attributes = $p.Attributes | Where-Object { $_ -is [System.Management.Automation.Language.AttributeAst] }
+                $mandatoryAttribute = $attributes | Where-Object { $_.TypeName.Name -eq 'Parameter' } | ForEach-Object { $_.NamedArguments } | Where-Object { $_.ArgumentName -eq 'Mandatory' }
+                $validateSetAttribute = $attributes | Where-Object { $_.TypeName.Name -eq 'ValidateSet' }
+                $validateRangeAttribute = $attributes | Where-Object { $_.TypeName.Name -eq 'ValidateRange' }
+
+                $isMandatory = $false
+                $validateSet = $null
+                if ($null -ne $mandatoryAttribute)
+                {
+                    $isMandatory = $mandatoryAttribute.Argument.VariablePath.UserPath -eq 'true'
+                }
+                if ($null -ne $validateSetAttribute -or $null -ne $validateRangeAttribute)
+                {
+                    if ($null -eq $validateSetAttribute)
+                    {
+                        $lowerBoundary = $validateRangeAttribute.PositionalArguments[0].Value
+                        $upperBoundary = $validateRangeAttribute.PositionalArguments[1].Value
+                        if (($upperBoundary - $lowerBoundary) -lt 20)
+                        {
+                            $validateSet = ([System.Linq.Enumerable]::Range($lowerBoundary, $upperBoundary - $lowerBoundary + 1) | ForEach-Object { $_.ToString() })
+                        }
+                    }
+                    else
+                    {
+                        $validateSet = $validateSetAttribute.PositionalArguments.Value
+                    }
+                }
+                $parameters += @{
+                    Name = $p.Name.VariablePath.UserPath
+                    IsMandatory = $isMandatory
+                    ValidateSet = $validateSet
+                }
             }
         }
 
-        return ($parameters | Select-Object -Unique)
+        ,$parameters
     }
 }
 
@@ -133,6 +166,7 @@ Describe -Name "Validate TargetResource function parameters match schema for '<R
             }
 
             # Collect schema property names across classes
+            $schemaProperties = $mofSchemas | ForEach-Object { $_.Attributes } | ForEach-Object { $_ }
             $schemaPropertyNames = $mofSchemas | ForEach-Object { $_.Attributes } | ForEach-Object { $_.Name } | Select-Object -Unique
 
             # Functions to check
@@ -148,9 +182,9 @@ Describe -Name "Validate TargetResource function parameters match schema for '<R
         It 'All declared function parameters should be part of the resource schema or an allowed exception' {
             foreach ($func in $functionsToCheck)
             {
-                $params = Get-FunctionParameterNames -FilePath $psm1File -FunctionName $func
+                $params = Get-FunctionParameter -FilePath $psm1File -FunctionName $func
 
-                foreach ($p in $params)
+                foreach ($p in $params.Name)
                 {
                     # Skip common PowerShell parameters and empty names
                     if ([System.String]::IsNullOrEmpty($p)) { continue }
@@ -166,12 +200,50 @@ Describe -Name "Validate TargetResource function parameters match schema for '<R
         It 'All declared schema properties should be part of all of the TargetResource functions' {
             foreach ($func in $functionsToCheck)
             {
-                $params = Get-FunctionParameterNames -FilePath $psm1File -FunctionName $func
+                $params = Get-FunctionParameter -FilePath $psm1File -FunctionName $func
                 foreach ($property in $schemaPropertyNames)
                 {
-                    $inParams = $params -contains $property
+                    $inParams = $params.Name -contains $property
 
                     $inParams | Should -BeTrue -Because "Schema property '$property' is defined as a parameter for function '$func' in resource $ResourceName"
+                }
+            }
+        }
+
+        It 'All declared function parameters should match their required type in the resource schema' {
+            foreach ($func in $functionsToCheck)
+            {
+                $params = Get-FunctionParameter -FilePath $psm1File -FunctionName $func
+
+                foreach ($property in $schemaProperties)
+                {
+                    $matchingParam = $params | Where-Object { $_.Name -eq $property.Name }
+                    if ($matchingParam.Count -eq 0) { continue }
+
+                    # For simplicity, we will just check if the parameter is mandatory when the schema property is required
+                    if ($property.IsMandatory)
+                    {
+                        $matchingParam.IsMandatory | Should -BeTrue -Because "Parameter '$($matchingParam.Name)' in function '$func' for resource $ResourceName should be mandatory as defined in the schema"
+                    }
+                }
+            }
+        }
+
+        It 'All declared function parameters with ValidateSet should match the set in the resource schema' {
+            foreach ($func in $functionsToCheck)
+            {
+                $params = Get-FunctionParameter -FilePath $psm1File -FunctionName $func
+
+                foreach ($property in $schemaProperties)
+                {
+                    $matchingParam = $params | Where-Object { $_.Name -eq $property.Name }
+                    if ($matchingParam.Count -eq 0) { continue }
+
+                    if ($property.ValueMap)
+                    {
+                        $matchingParam.ValidateSet | Should -Not -BeNullOrEmpty -Because "Parameter '$($matchingParam.Name)' in function '$func' for resource $ResourceName should have a ValidateSet as defined in the schema"
+                        ($matchingParam.ValidateSet -as [string[]] | Sort-Object) | Should -Be ($property.ValueMap | Sort-Object) -Because "Parameter '$($matchingParam.Name)' in function '$func' for resource $ResourceName should have a ValidateSet that matches the ValueMap defined in the schema"
+                    }
                 }
             }
         }

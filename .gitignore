@@ -4,6 +4,9 @@
 .vs
 .psproj
 .sln
+Modules/Microsoft365DSC/Dependencies/Assemblies/*.dll
+Modules/Microsoft365DSC/Dependencies/Assemblies/*.pdb
+Modules/Microsoft365DSC/Dependencies/Assemblies/*.xml
 Modules/Microsoft365DSC/DscResource.Tests
 Modules/Microsoft365DSC/DscResource.Tests/*
 node_modules

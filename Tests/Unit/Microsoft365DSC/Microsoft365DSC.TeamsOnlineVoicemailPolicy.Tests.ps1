@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableTranscriptionProfanityMasking = $False
                     EnableTranscriptionTranslation      = $True
                     Identity                            = 'TestPolicy'
-                    MaximumRecordingLength              = '00:10:00'
+                    MaximumRecordingLength              = [timespan]'00:10:00'
                     ShareData                           = 'Defer'
                 }
             }
@@ -76,7 +76,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableTranscriptionTranslation      = $True
                     Ensure                              = 'Present'
                     Identity                            = 'TestPolicy'
-                    MaximumRecordingLength              = '00:10:00'
+                    MaximumRecordingLength              = 600
                     ShareData                           = 'Defer'
                 }
 
@@ -109,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableTranscriptionTranslation      = $True
                     Ensure                              = 'Present'
                     Identity                            = 'TestPolicy'
-                    MaximumRecordingLength              = '00:05:00' # Drift
+                    MaximumRecordingLength              = 300 # Drift
                     ShareData                           = 'Defer'
                 }
             }
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableTranscriptionTranslation      = $True
                     Ensure                              = 'Present'
                     Identity                            = 'TestPolicy'
-                    MaximumRecordingLength              = '00:10:00'
+                    MaximumRecordingLength              = 600
                     ShareData                           = 'Defer'
                 }
             }
@@ -163,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableTranscriptionTranslation      = $True
                     Ensure                              = 'Absent'
                     Identity                            = 'TestPolicy'
-                    MaximumRecordingLength              = '00:10:00'
+                    MaximumRecordingLength              = 600
                     ShareData                           = 'Defer'
                 }
             }

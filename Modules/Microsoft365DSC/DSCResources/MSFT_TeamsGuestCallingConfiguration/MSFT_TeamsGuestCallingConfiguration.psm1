@@ -7,13 +7,13 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $AllowPrivateCalling,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -62,8 +62,8 @@ function Get-TargetResource
         $config = Get-CsTeamsGuestCallingConfiguration -ErrorAction Stop
 
         $result = @{
-            Identity              = $config.Identity
             AllowPrivateCalling   = $config.AllowPrivateCalling
+            IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -91,13 +91,13 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $AllowPrivateCalling,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -140,6 +140,8 @@ function Set-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $SetParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $SetParams.Add('Identity', 'Global')
+    $SetParams.Remove('IsSingleInstance') | Out-Null
 
     if ($AllowPrivateCalling -ne $CurrentValues.AllowPrivateCalling)
     {
@@ -154,13 +156,13 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $AllowPrivateCalling,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -251,7 +253,7 @@ function Export-TargetResource
     {
         $dscContent = ''
         $params = @{
-            Identity              = 'Global'
+            IsSingleInstance      = 'Yes'
             AllowPrivateCalling   = $true
             Credential            = $Credential
             ApplicationId         = $ApplicationId

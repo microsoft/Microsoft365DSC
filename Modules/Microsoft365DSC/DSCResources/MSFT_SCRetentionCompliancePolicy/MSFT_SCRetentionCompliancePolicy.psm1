@@ -801,14 +801,14 @@ function Set-TargetResource
             }
         }
     }
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentPolicy.Ensure -eq 'Absent')
     {
         $CreationParams.Add('Name', $Name)
         $CreationParams.Remove('Identity') | Out-Null
         Write-Verbose -Message "Creating new Retention Compliance Policy $Name with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         New-RetentionCompliancePolicy @CreationParams
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentPolicy.Ensure -eq 'Present')
     {
         # Remove Teams specific parameters
         $CreationParams.Remove('TeamsChatLocationException') | Out-Null
@@ -846,7 +846,7 @@ function Set-TargetResource
             $retries++
         }
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentPolicy.Ensure -eq 'Present')
     {
         # If the Policy exists and it shouldn't, simply remove it;
         Remove-RetentionCompliancePolicy -Identity $Name

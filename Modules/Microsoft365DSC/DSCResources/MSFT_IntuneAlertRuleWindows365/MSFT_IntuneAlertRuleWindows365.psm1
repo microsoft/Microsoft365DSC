@@ -275,15 +275,6 @@ function Set-TargetResource
     $updateParameters = ([Hashtable]$boundParameters).Clone()
     $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
 
-    $keys = (([Hashtable]$updateParameters).Clone()).Keys
-    foreach ($key in $keys)
-    {
-        if ($null -ne $updateParameters.$key -and $updateParameters.$key.GetType().Name -like '*CimInstance*')
-        {
-            $updateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.$key
-        }
-    }
-
     #region resource generator code
     if ($Script:currentAlertRule.Id -eq '00000000-0000-0000-0000-000000000000')
     {

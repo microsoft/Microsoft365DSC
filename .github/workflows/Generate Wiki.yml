@@ -6,7 +6,7 @@ jobs:
     runs-on: windows-latest
 
     # Only when run from the main repo
-    if: github.repository == 'microsoft/Microsoft365DSC'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
 
     steps:
       - uses: actions/checkout@v4

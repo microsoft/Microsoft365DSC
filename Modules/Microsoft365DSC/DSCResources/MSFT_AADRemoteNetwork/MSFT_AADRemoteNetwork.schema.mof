@@ -28,10 +28,10 @@ class MSFT_AADRemoteNetworkDeviceLinkTunnelConfiguration
     [Write, Description("ODataType")] String ODataType;
 };
 
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_AADRemoteNetworkDeviceLink
 {
-    [Write, Description("Name of the Device Link")] String Name;
+	[Required, Description("Name of the Device Link")] String Name;
     [Write, Description("IP Address")] String IPAddress;
     [Write, Description("Bandwidth Capacity in Mbps")] String BandwidthCapacityInMbps;
     [Write, Description("Device Vendor")] String DeviceVendor;

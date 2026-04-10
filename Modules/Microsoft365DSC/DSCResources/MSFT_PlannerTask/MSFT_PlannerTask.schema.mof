@@ -5,12 +5,14 @@ class MSFT_PlannerTaskAttachment
     [Write, Description("Uri of the link to the attachment.")] String Uri;
     [Write, Description("Type of attachment."), ValueMap{"PowerPoint", "Word", "Excel", "Other"}, Values{"PowerPoint", "Word", "Excel", "Other"}] String Type;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_PlannerTaskChecklistItem
 {
     [Write, Description("Title of the checklist item.")] String Title;
     [Write, Description("True if the item is completed, false otherwise.")] String Completed;
 };
+
 [ClassVersion("1.0.0.0"), FriendlyName("PlannerTask")]
 class MSFT_PlannerTask : OMI_BaseResource
 {
@@ -36,4 +38,3 @@ class MSFT_PlannerTask : OMI_BaseResource
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };
-

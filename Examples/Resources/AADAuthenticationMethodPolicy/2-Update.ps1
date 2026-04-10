@@ -24,10 +24,6 @@ Configuration Example
     {
         AADAuthenticationMethodPolicy "AADAuthenticationMethodPolicy-Authentication Methods Policy"
         {
-            DisplayName             = "Authentication Methods Policy";
-            Ensure                  = "Present";
-            Id                      = "authenticationMethodsPolicy";
-            PolicyVersion           = "1.5";
             RegistrationEnforcement = MSFT_MicrosoftGraphregistrationEnforcement{
                 AuthenticationMethodsRegistrationCampaign = MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign{
                     SnoozeDurationInDays = (Get-Random -Minimum 1 -Maximum 14)
@@ -49,6 +45,7 @@ Configuration Example
                 }
                 State = 'default'
             };
+            IsSingleInstance      = 'Yes'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint

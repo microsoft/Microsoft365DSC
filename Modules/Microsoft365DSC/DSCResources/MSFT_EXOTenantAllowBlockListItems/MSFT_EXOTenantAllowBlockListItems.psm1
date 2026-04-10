@@ -25,6 +25,7 @@ function Get-TargetResource
         $ListSubType,
 
         [Parameter(Mandatory = $true)]
+        [ValidateSet('FileHash', 'Sender', 'Url')]
         [System.String]
         $ListType,
 
@@ -35,10 +36,6 @@ function Get-TargetResource
         [Parameter()]
         [System.UInt32]
         $RemoveAfter,
-
-        [Parameter()]
-        [System.String]
-        $SubmissionID,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -86,7 +83,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance -or $Script:exportedInstance.Action -ne $Action -or $Script:exportedInstance.Value -ne $Value -or $Script:exportedInstance.ListType -ne $ListType)
+        if (-not $Script:exportedInstance -or ($Script:exportedInstance.Value -ne $Value -or $Script:exportedInstance.ListType -ne $ListType))
         {
             $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
                 -InboundParameters $PSBoundParameters
@@ -107,14 +104,9 @@ function Get-TargetResource
             $nullResult.Ensure = 'Absent'
             $nullResult.ListType = $ListType
 
-            $getParams = @{ ListType = $ListType; Entry = $Value; }
-            if ($Action -eq 'Allow')
-            {
-                $getParams.Allow = $true
-            }
-            elseif ($Action -eq 'Block')
-            {
-                $getParams.Block = $true
+            $getParams = @{
+                ListType = $ListType
+                Entry = $Value
             }
             $instance = Get-TenantAllowBlockListItems @getParams -ErrorAction SilentlyContinue
             if ($null -eq $instance)
@@ -131,14 +123,13 @@ function Get-TargetResource
         Write-Verbose -Message "Found an EXO Tenant Allow/Block List Item with Action {$Action}, Value {$Value}, and ListType {$ListType}"
 
         $results = @{
-            Action                = $Action
+            Action                = $instance.Action
             Value                 = $instance.Value
             ExpirationDate        = $instance.ExpirationDate
             ListSubType           = $instance.ListSubType
             ListType              = $ListType
             Notes                 = $instance.Notes
             RemoveAfter           = $instance.RemoveAfter
-            SubmissionID          = $instance.SubmissionID
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -188,6 +179,7 @@ function Set-TargetResource
         $ListSubType,
 
         [Parameter(Mandatory = $true)]
+        [ValidateSet('FileHash', 'Sender', 'Url')]
         [System.String]
         $ListType,
 
@@ -198,10 +190,6 @@ function Set-TargetResource
         [Parameter()]
         [System.UInt32]
         $RemoveAfter,
-
-        [Parameter()]
-        [System.String]
-        $SubmissionID,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -271,7 +259,6 @@ function Set-TargetResource
     {
         $CreateParameters = ([Hashtable]$BoundParameters).Clone()
 
-        $CreateParameters.Remove('Verbose') | Out-Null
         $CreateParameters.Remove('Value') | Out-Null
         $CreateParameters.Add('Entries', @($Value)) | Out-Null
         if ($Action -eq 'Allow')
@@ -284,16 +271,6 @@ function Set-TargetResource
         }
         $CreateParameters.Remove('Action') | Out-Null
 
-        $keys = $CreateParameters.Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-                $CreateParameters.Remove($key) | Out-Null
-                $CreateParameters.Add($keyName, $keyValue)
-            }
-        }
         Write-Verbose -Message "Creating {$Value} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
         New-TenantAllowBlockListItems @CreateParameters | Out-Null
     }
@@ -301,28 +278,10 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating {$Value}"
 
-        if ($currentInstance.SubmissionID -ne $SubmissionID)
-        {
-            throw 'SubmissionID can not be changed'
-        }
-
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
-        $UpdateParameters.Remove('Verbose') | Out-Null
         $UpdateParameters.Remove('Value') | Out-Null
-        $UpdateParameters.Remove('SubmissionID') | Out-Null #SubmissionID can not be changed
         $UpdateParameters.Add('Entries', @($Value)) | Out-Null
         $UpdateParameters.Remove('Action') | Out-Null
-
-        $keys = $UpdateParameters.Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-                $UpdateParameters.Remove($key) | Out-Null
-                $UpdateParameters.Add($keyName, $keyValue)
-            }
-        }
 
         Set-TenantAllowBlockListItems @UpdateParameters | Out-Null
     }
@@ -349,6 +308,7 @@ function Test-TargetResource
         $Value,
 
         [Parameter(Mandatory = $true)]
+        [ValidateSet('FileHash', 'Sender', 'Url')]
         [System.String]
         $ListType,
 
@@ -368,10 +328,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Int32]
         $RemoveAfter,
-
-        [Parameter()]
-        [System.String]
-        $SubmissionID,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

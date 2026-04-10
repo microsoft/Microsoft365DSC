@@ -37,7 +37,7 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration",
+  "mode": "Data",
   "commands": [
     {
       "module": "Microsoft.Graph.Authentication",

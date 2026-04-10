@@ -214,28 +214,32 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Intune Android Device Owner Device Compliance Policy with displayName {$DisplayName}"
 
-        #scheduledActionsForRule needs processing before we can interact with it
-        $psCustomObject = $devicePolicy.ScheduledActionsForRule | ConvertTo-Json -Depth 10 | ConvertFrom-Json
-        $scheduledActionsForRuleHashTable = @{}
-        $psCustomObject.PsObject.Properties | ForEach-Object {
-            $scheduledActionsForRuleHashTable[$_.Name] = $_.Value
-
-        }
-        $hashtable = @{}
         $complexScheduledActionsForRule = @()
-        $scheduledActionsForRuleHashTable.ScheduledActionConfigurations.PsObject.Properties | ForEach-Object {
-            if ($_.Value -match 'ActionType')
-            {
-                foreach ($item in $_.Value)
-                {
-                    $hashtable = @{}
-                    $hashtable.Add('actionType', $item.ActionType)
-                    $hashtable.Add('gracePeriodHours', $item.GracePeriodHours)
-                    $hashtable.Add('notificationMessageCcList', ([Array]$item.NotificationMessageCcList -split ' ') )
-                    $hashtable.Add('notificationTemplateId', $item.NotificationTemplateId)
-                    $complexScheduledActionsForRule += $hashtable
-                }
+        foreach ($actionConfiguration in $devicePolicy.ScheduledActionsForRule.ScheduledActionConfigurations)
+        {
+            $scheduledAction = [ordered]@{
+                ActionType       = [string]$actionConfiguration.ActionType
+                GracePeriodHours = $actionConfiguration.GracePeriodHours
             }
+            if ($null -ne $actionConfiguration.NotificationMessageCCList -and `
+                    $actionConfiguration.NotificationMessageCCList.Count -gt 0)
+            {
+                [System.String[]]$groups = @()
+                foreach ($group in $actionConfiguration.NotificationMessageCCList)
+                {
+                    $groups += Get-MgGroup -GroupId $group -ErrorAction SilentlyContinue | Select-Object -ExpandProperty DisplayName
+                }
+                $scheduledAction.Add('NotificationMessageCCList', $groups)
+            }
+            if ($null -ne $actionConfiguration.NotificationTemplateId -and `
+                    $actionConfiguration.NotificationTemplateId -ne '00000000-0000-0000-0000-000000000000')
+            {
+                $notificationTemplate = Get-MgBetaDeviceManagementNotificationMessageTemplate `
+                    -NotificationMessageTemplateId $actionConfiguration.NotificationTemplateId `
+                    -ErrorAction SilentlyContinue
+                $scheduledAction.Add('NotificationTemplateId', $notificationTemplate.DisplayName)
+            }
+            $complexScheduledActionsForRule += $scheduledAction
         }
 
         $results = @{
@@ -485,17 +489,51 @@ function Set-TargetResource
     $currentDeviceAndroidPolicy = Get-TargetResource @PSBoundParameters
     $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    #reconstruct scheduled action configurations for use with New/Update-MgBetaDeviceManagementDeviceCompliancePolicy
-    $hashtable = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.ScheduledActionsForRule
-    $scheduledActionConfigurations = @()
-    $scheduledActionConfigurations += $hashtable
-    $PSBoundParameters.Remove('ScheduledActionsForRule') | Out-Null
-
-    $myScheduledActionsForRule = @{
-        '@odata.type'                 = '#microsoft.graph.deviceComplianceScheduledActionForRule'
-        ruleName                      = '' #this is always blank and can't be set in GUI
-        scheduledActionConfigurations = $scheduledActionConfigurations
+    $notificationTemplates = Get-MgBetaDeviceManagementNotificationMessageTemplate -All | Where-Object -FilterScript {
+        $_.Id -ne '8ca486fc-bee8-4ef2-983b-21e8908d11b8' # Exclude the second, unused default template
     }
+    $complexScheduledActionsForRule = @(
+        @{
+            ruleName                      = 'PasswordRequired'
+            scheduledActionConfigurations = @()
+        }
+    )
+    foreach ($scheduledAction in $boundParameters.ScheduledActionsForRule)
+    {
+        $actionConfiguration = @{
+            actionType       = $scheduledAction.ActionType
+            gracePeriodHours = $scheduledAction.GracePeriodHours
+        }
+
+        $ccList = @()
+        if ($null -ne $scheduledAction.NotificationMessageCCList)
+        {
+            foreach ($group in $scheduledAction.NotificationMessageCCList)
+            {
+                $groupObject = Get-MgGroup -Filter "displayName eq '$group'" -ErrorAction SilentlyContinue
+                if ($null -eq $groupObject)
+                {
+                    throw "The referenced Intune Group with DisplayName {$group} was not found for NotificationMessageCCList"
+                }
+                $ccList += $groupObject.Id
+            }
+        }
+        $actionConfiguration.notificationMessageCCList = $ccList
+
+        $template = [System.Guid]::Empty
+        if (-not [string]::IsNullOrEmpty($scheduledAction.NotificationTemplateId))
+        {
+            $template = $notificationTemplates | Where-Object -FilterScript { $_.DisplayName -eq $scheduledAction.NotificationTemplateId }
+            if ($null -eq $template)
+            {
+                throw "The referenced Intune Notification Template with DisplayName {$($scheduledAction.NotificationTemplateId)} was not found"
+            }
+            $template = $template.Id
+        }
+        $actionConfiguration.notificationTemplateId = [string]$template
+        $complexScheduledActionsForRule[0].scheduledActionConfigurations += $actionConfiguration
+    }
+    $boundParameters.Remove('ScheduledActionsForRule') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Absent')
     {
@@ -507,8 +545,8 @@ function Set-TargetResource
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyAndroidDeviceOwnerAdditionalProperties -Properties ([System.Collections.Hashtable]$boundParameters)
         $policy = New-MgBetaDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
             -Description $Description `
-            -AdditionalProperties $AdditionalProperties `
-            -ScheduledActionsForRule $myScheduledActionsForRule
+            -AdditionalProperties $AdditionalProperties `complexScheduledActionsForRule `
+            -ScheduledActionsForRule $complexScheduledActionsForRule
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -544,7 +582,7 @@ function Set-TargetResource
         #handle ScheduledActionsForRule separately with Invoke-MgGraphRequest
         $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceCompliancePolicies/$($configDeviceAndroidPolicy.Id)/scheduleActionsForRules"
         $mgGraphScheduledActionForRules = @{
-            deviceComplianceScheduledActionForRules = @( $myScheduledActionsForRule )
+            deviceComplianceScheduledActionForRules = $complexScheduledActionsForRule
         }
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $($mgGraphScheduledActionForRules | ConvertTo-Json -Depth 10)
 

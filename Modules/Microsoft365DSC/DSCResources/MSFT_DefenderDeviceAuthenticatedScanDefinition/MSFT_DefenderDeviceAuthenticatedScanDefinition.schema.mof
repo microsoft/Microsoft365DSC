@@ -34,7 +34,6 @@ class MSFT_DefenderDeviceAuthenticatedScanDefinition : OMI_BaseResource
     [Write, Description("Type of scan.")] String ScanType;
     [Write, Description("Information about the associated scan agent."), EmbeddedInstance("MSFT_DefenderDeviceAuthenticatedScanDefinitionScanAgent")] String ScannerAgent;
     [Write, Description("Authentication parameters."), EmbeddedInstance("MSFT_DefenderDeviceAuthenticatedScanDefinitionAuthenticationParams")] String ScanAuthenticationParams;
-
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Absent","Present"}, Values{"Absent","Present"}] string Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

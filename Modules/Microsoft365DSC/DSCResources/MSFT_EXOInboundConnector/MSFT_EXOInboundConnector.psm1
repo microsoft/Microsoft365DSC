@@ -334,19 +334,19 @@ function Set-TargetResource
     $InboundConnector = $InboundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $InboundConnectorParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $InboundConnector))
+    if ($Ensure -eq 'Present' -and $null -eq $InboundConnector)
     {
         Write-Verbose -Message "Creating InboundConnector $($Identity)."
         $InboundConnectorParams.Add('Name', $Identity)
         $InboundConnectorParams.Remove('Identity') | Out-Null
         New-InboundConnector @InboundConnectorParams
     }
-    elseif (('Present' -eq $Ensure ) -and ($null -ne $InboundConnector))
+    elseif ($Ensure -eq 'Present' -and $null -ne $InboundConnector)
     {
         Write-Verbose -Message "Setting InboundConnector $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $InboundConnectorParams)"
         Set-InboundConnector @InboundConnectorParams -Confirm:$false
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $InboundConnector))
+    elseif ($Ensure -eq 'Absent' -and $null -ne $InboundConnector)
     {
         Write-Verbose -Message "Removing InboundConnector $($Identity)"
         Remove-InboundConnector -Identity $Identity -Confirm:$false

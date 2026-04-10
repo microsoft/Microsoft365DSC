@@ -41,7 +41,6 @@ Configuration Example
             KioskBrowserEnableNavigationButtons = $False;
             KioskProfiles                       = @(
                 MSFT_MicrosoftGraphwindowsKioskProfile{
-                    ProfileId = '17f9e980-3435-4bd5-a7a1-ca3c06d0bf2c'
                     UserAccountsConfiguration = @(
                         MSFT_MicrosoftGraphWindowsKioskUser{
                             odataType = '#microsoft.graph.windowsKioskAutologon'
@@ -57,6 +56,7 @@ Configuration Example
                             StartLayoutTileSize = 'hidden'
                             AppType = 'unknown'
                             EdgeKioskType = 'publicBrowsing'
+                            odataType = '#microsoft.graph.windowsKioskWin32App'
                         }
                         odataType = '#microsoft.graph.windowsKioskSingleWin32App'
                     }

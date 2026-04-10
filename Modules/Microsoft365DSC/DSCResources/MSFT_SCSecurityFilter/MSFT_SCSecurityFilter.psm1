@@ -273,7 +273,7 @@ function Set-TargetResource
 
     $CurrentFilter = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentFilter.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentFilter.Ensure -eq 'Absent')
     {
         Write-Verbose "Creating new Security Filter '$FilterName'."
 
@@ -288,7 +288,7 @@ function Set-TargetResource
             Write-Warning "New-ComplianceSecurityFilter is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentFilter.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentFilter.Ensure -eq 'Present')
     {
         Write-Verbose "Updating existing Security Filter '$FilterName'."
 
@@ -303,7 +303,7 @@ function Set-TargetResource
             Write-Warning "Set-ComplianceSecurityFilter is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentFilter.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentFilter.Ensure -eq 'Present')
     {
         # If the filter exists and it shouldn't, simply remove it;Need to force deletion
         Write-Verbose -Message "Deleting Security Filter $FilterName."

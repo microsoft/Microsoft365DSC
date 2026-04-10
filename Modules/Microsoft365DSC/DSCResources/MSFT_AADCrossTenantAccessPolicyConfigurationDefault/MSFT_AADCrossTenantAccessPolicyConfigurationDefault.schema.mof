@@ -1,8 +1,8 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_AADCrossTenantAccessPolicyTarget
 {
-    [Write, Description("The unique identifier of the user, group, or application; one of the following keywords: AllUsers and AllApplications; or for targets that are applications, you may use reserved values.")] String Target;
-    [Write, Description("The type of resource that you want to target. The possible values are: user, group, application, unknownFutureValue."), ValueMap{"user","group","application","unknownFutureValue"}, Values{"user","group","application","unknownFutureValue"}] String TargetType;
+    [Required, Description("The unique identifier of the user, group, or application; one of the following keywords: AllUsers and AllApplications; or for targets that are applications, you may use reserved values.")] String Target;
+    [Required, Description("The type of resource that you want to target. The possible values are: user, group, application, unknownFutureValue."), ValueMap{"user","group","application","unknownFutureValue"}, Values{"user","group","application","unknownFutureValue"}] String TargetType;
 };
 
 [ClassVersion("1.0.0")]

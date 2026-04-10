@@ -389,7 +389,7 @@ function Set-TargetResource
             }
         }
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentAction.Ensure -eq 'Present')
     {
         $currentAction = Get-CurrentAction -Action $Action -SearchName $SearchName
 

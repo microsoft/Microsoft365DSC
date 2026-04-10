@@ -86,6 +86,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 })
             }
 
+            Mock -ModuleName M365DSCIntuneUtil -CommandName Get-MgGroup -MockWith {
+                return @{
+                    Id = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                    DisplayName = 'Exclude'
+                }
+            }
+
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
 
@@ -96,9 +103,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            dataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "Description"
@@ -134,9 +142,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            dataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "Description"
@@ -170,9 +179,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            dataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "Description"
@@ -198,9 +208,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            dataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "Description"

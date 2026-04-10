@@ -1,12 +1,11 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_AADIdentityAPIConnectionCertificate
 {
     [Write, Description("Pkcs12Value of the certificate as a secure string in Base64 encoding"), EmbeddedInstance("MSFT_Credential")] String Pkcs12Value;
-    [Write, Description("Thumbprint of the certificate in Base64 encoding")] String Thumbprint;
+    [Required, Description("Thumbprint of the certificate in Base64 encoding")] String Thumbprint;
     [Write, Description("Password of the certificate as a secure string"), EmbeddedInstance("MSFT_Credential")] String Password;
     [Write, Description("Tells if the certificate is in use or not")] Boolean IsActive;
 };
-
 
 [ClassVersion("1.0.0.0"), FriendlyName("AADIdentityAPIConnector")]
 class MSFT_AADIdentityAPIConnector : OMI_BaseResource

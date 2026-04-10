@@ -236,7 +236,7 @@ function Set-TargetResource
     $SafeAttachmentPolicyParams.Remove('TenantId') | Out-Null
 
     $SafeAttachmentPolicy = Get-SafeAttachmentPolicy -Identity $Identity -ErrorAction SilentlyContinue
-    if ('Present' -eq $Ensure )
+    if ($Ensure -eq 'Present')
     {
         $StopProcessingPolicy = $false
         if ($Redirect -eq $true)
@@ -323,7 +323,7 @@ function Set-TargetResource
             }
         }
     }
-    elseif (('Absent' -eq $Ensure) -and ($SafeAttachmentPolicy))
+    elseif ($Ensure -eq 'Absent' -and $null -ne $SafeAttachmentPolicy)
     {
         Write-Verbose -Message "Removing SafeAttachmentPolicy $($Identity) "
         Remove-SafeAttachmentPolicy -Identity $Identity -Confirm:$false -Force

@@ -22,6 +22,7 @@ function New-M365DscUnitTestHelper
         [System.String]
         $GenericStubModule
     )
+
     $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath "..\..\" -Resolve
     $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Microsoft365DSC"
 

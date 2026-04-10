@@ -314,7 +314,7 @@ function Get-TargetResource
         }
 
         $groupTypeValue = 'Distribution'
-        if (([Array]$distributionGroup.GroupType.Replace(' ', '').Split(',')).Contains('SecurityEnabled'))
+        if (([System.String[]]$distributionGroup.GroupType.Replace(' ', '').Split(',')).Contains('SecurityEnabled'))
         {
             $groupTypeValue = 'Security'
         }
@@ -367,7 +367,7 @@ function Get-TargetResource
             CustomAttribute13                      = $distributionGroup.CustomAttribute13
             CustomAttribute14                      = $distributionGroup.CustomAttribute14
             CustomAttribute15                      = $distributionGroup.CustomAttribute15
-            EmailAddresses                         = [Array]$distributionGroup.EmailAddresses
+            EmailAddresses                         = [System.String[]]$distributionGroup.EmailAddresses
             GrantSendOnBehalfTo                    = $grantSendOnBehalfToValue
             HiddenFromAddressListsEnabled          = [Boolean]$distributionGroup.HiddenFromAddressListsEnabled
             SendOofMessageToOriginatorEnabled      = [Boolean]$distributionGroup.SendOofMessageToOriginatorEnabled

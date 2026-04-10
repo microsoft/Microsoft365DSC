@@ -109,11 +109,21 @@ function Get-TargetResource
             $B2BCollaborationInboundValue = [ordered]@{
                 Applications   = [ordered]@{
                     AccessType = $getValue.B2BCollaborationInbound.Applications.AccessType
-                    Targets    = [System.Array]$getValue.B2BCollaborationInbound.Applications.Targets
+                    Targets    = Get-M365DSCArrayFromProperty -Property ($getValue.B2BCollaborationInbound.Applications.Targets | ForEach-Object {
+                        [ordered]@{
+                            Target     = $_.Target
+                            TargetType = $_.TargetType
+                        }
+                    }) -ElementType ([System.Object])
                 }
                 UsersAndGroups = [ordered]@{
                     AccessType = $getValue.B2BCollaborationInbound.UsersAndGroups.AccessType
-                    Targets    = [System.Array] $getValue.B2BCollaborationInbound.UsersAndGroups.Targets
+                    Targets    = Get-M365DSCArrayFromProperty -Property ($getValue.B2BCollaborationInbound.UsersAndGroups.Targets | ForEach-Object {
+                        [ordered]@{
+                            Target     = $_.Target
+                            TargetType = $_.TargetType
+                        }
+                    }) -ElementType ([System.Object])
                 }
             }
 
@@ -158,11 +168,21 @@ function Get-TargetResource
             $B2BCollaborationOutboundValue = [ordered]@{
                 Applications   = [ordered]@{
                     AccessType = $getValue.B2BCollaborationOutbound.Applications.AccessType
-                    Targets    = [System.Array] $getValue.B2BCollaborationOutbound.Applications.Targets
+                    Targets    = Get-M365DSCArrayFromProperty -Property ($getValue.B2BCollaborationOutbound.Applications.Targets | ForEach-Object {
+                        [ordered]@{
+                            Target     = $_.Target
+                            TargetType = $_.TargetType
+                        }
+                    }) -ElementType ([System.Object])
                 }
                 UsersAndGroups = [ordered]@{
                     AccessType = $getValue.B2BCollaborationOutbound.UsersAndGroups.AccessType
-                    Targets    = [System.Array] $getValue.B2BCollaborationOutbound.UsersAndGroups.Targets
+                    Targets    = Get-M365DSCArrayFromProperty -Property ($getValue.B2BCollaborationOutbound.UsersAndGroups.Targets | ForEach-Object {
+                        [ordered]@{
+                            Target     = $_.Target
+                            TargetType = $_.TargetType
+                        }
+                    }) -ElementType ([System.Object])
                 }
             }
 
@@ -207,11 +227,21 @@ function Get-TargetResource
             $B2BDirectConnectInboundValue = [ordered]@{
                 Applications   = [ordered]@{
                     AccessType = $getValue.B2BDirectConnectInbound.Applications.AccessType
-                    Targets    = [System.Array] $getValue.B2BDirectConnectInbound.Applications.Targets
+                    Targets    = Get-M365DSCArrayFromProperty -Property ($getValue.B2BDirectConnectInbound.Applications.Targets | ForEach-Object {
+                        [ordered]@{
+                            Target     = $_.Target
+                            TargetType = $_.TargetType
+                        }
+                    }) -ElementType ([System.Object])
                 }
                 UsersAndGroups = [ordered]@{
                     AccessType = $getValue.B2BDirectConnectInbound.UsersAndGroups.AccessType
-                    Targets    = [System.Array] $getValue.B2BDirectConnectInbound.UsersAndGroups.Targets
+                    Targets    = Get-M365DSCArrayFromProperty -Property ($getValue.B2BDirectConnectInbound.UsersAndGroups.Targets | ForEach-Object {
+                        [ordered]@{
+                            Target     = $_.Target
+                            TargetType = $_.TargetType
+                        }
+                    }) -ElementType ([System.Object])
                 }
             }
         }
@@ -220,11 +250,21 @@ function Get-TargetResource
             $B2BDirectConnectOutboundValue = [ordered]@{
                 Applications   = [ordered]@{
                     AccessType = $getValue.B2BDirectConnectOutbound.Applications.AccessType
-                    Targets    = [System.Array] $getValue.B2BDirectConnectOutbound.Applications.Targets
+                    Targets    = Get-M365DSCArrayFromProperty -Property ($getValue.B2BDirectConnectOutbound.Applications.Targets | ForEach-Object {
+                        [ordered]@{
+                            Target     = $_.Target
+                            TargetType = $_.TargetType
+                        }
+                    }) -ElementType ([System.Object])
                 }
                 UsersAndGroups = [ordered]@{
                     AccessType = $getValue.B2BDirectConnectOutbound.UsersAndGroups.AccessType
-                    Targets    = [System.Array] $getValue.B2BDirectConnectOutbound.UsersAndGroups.Targets
+                    Targets    = Get-M365DSCArrayFromProperty -Property ($getValue.B2BDirectConnectOutbound.UsersAndGroups.Targets | ForEach-Object {
+                        [ordered]@{
+                            Target     = $_.Target
+                            TargetType = $_.TargetType
+                        }
+                    }) -ElementType ([System.Object])
                 }
             }
             # Convert users back to UPN
@@ -283,7 +323,12 @@ function Get-TargetResource
             $tenantRestrictionsValue = [ordered]@{
                 Applications = [ordered]@{
                     AccessType = $getValue.TenantRestrictions.Applications.AccessType
-                    Targets    = [System.Array] $getValue.TenantRestrictions.Applications.Targets
+                    Targets    = Get-M365DSCArrayFromProperty -Property ($getValue.TenantRestrictions.Applications.Targets | ForEach-Object {
+                        [ordered]@{
+                            Target     = $_.Target
+                            TargetType = $_.TargetType
+                        }
+                    }) -ElementType ([System.Object])
                 }
                 <# Not yet supported
                 Devices = [ordered]@{
@@ -293,7 +338,12 @@ function Get-TargetResource
                 #>
                 UsersAndGroups = [ordered]@{
                     AccessType = $getValue.TenantRestrictions.UsersAndGroups.AccessType
-                    Targets    = [System.Array] $getValue.TenantRestrictions.UsersAndGroups.Targets
+                    Targets    = Get-M365DSCArrayFromProperty -Property ($getValue.TenantRestrictions.UsersAndGroups.Targets | ForEach-Object {
+                        [ordered]@{
+                            Target     = $_.Target
+                            TargetType = $_.TargetType
+                        }
+                    }) -ElementType ([System.Object])
                 }
             }
         }

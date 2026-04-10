@@ -6,11 +6,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $AllowBox,
@@ -72,6 +67,11 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $RestrictedSenderList = $null,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -123,7 +123,6 @@ function Get-TargetResource
         $config = Get-CsTeamsClientConfiguration -ErrorAction Stop
 
         $result = @{
-            Identity                         = $config.Identity
             AllowBox                         = $config.AllowBox
             AllowDropBox                     = $config.AllowDropBox
             AllowEgnyte                      = $config.AllowEgnyte
@@ -139,6 +138,7 @@ function Get-TargetResource
             ContentPin                       = $config.ContentPin
             ResourceAccountContentAccess     = $config.ResourceAccountContentAccess
             RestrictedSenderList             = $config.RestrictedSenderList
+            IsSingleInstance                 = 'Yes'
             Credential                       = $Credential
             ApplicationId                    = $ApplicationId
             TenantId                         = $TenantId
@@ -169,11 +169,6 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $AllowBox,
@@ -235,6 +230,11 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $RestrictedSenderList = $null,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -290,6 +290,9 @@ function Set-TargetResource
         $tempValue = $SetParams['RestrictedSenderList'] -join ';'
         $SetParams.RestrictedSenderList = $tempValue
     }
+
+    $SetParams.Remove('IsSingleInstance') | Out-Null
+    $SetParams.Add('Identity', 'Global')
     Set-CsTeamsClientConfiguration @SetParams
 }
 
@@ -299,11 +302,6 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $AllowBox,
@@ -365,6 +363,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $RestrictedSenderList = $null,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -461,7 +464,7 @@ function Export-TargetResource
     {
         $dscContent = ''
         $params = @{
-            Identity              = 'Global'
+            IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId

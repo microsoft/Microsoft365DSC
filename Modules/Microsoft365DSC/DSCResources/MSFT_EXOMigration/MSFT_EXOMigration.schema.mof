@@ -15,7 +15,6 @@ class MSFT_EXOMigration : OMI_BaseResource
     [Write, Description("Migration Users states the list of the users/mailboxes that are part of a migration batch that are to be migrated.")] String MigrationUsers[];
     [Write, Description("The SourceEndpoint parameter specifies the migration endpoint to use for the source of the migration batch.")] String SourceEndpoint;
     [Write, Description("The TargetDeliveryDomain parameter specifies the FQDN of the external email address created in the source forest for the mail-enabled user when the migration batch is complete.")] String TargetDeliveryDomain;
-
     [Write, Description("Specifies if the migration endpoint should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

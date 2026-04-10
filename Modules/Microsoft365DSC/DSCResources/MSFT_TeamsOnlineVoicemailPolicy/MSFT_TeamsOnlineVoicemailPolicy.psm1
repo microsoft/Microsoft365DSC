@@ -130,7 +130,7 @@ function Get-TargetResource
             EnableTranscription                 = $policy.EnableTranscription
             EnableTranscriptionProfanityMasking = $policy.EnableTranscriptionProfanityMasking
             EnableTranscriptionTranslation      = $policy.EnableTranscriptionTranslation
-            MaximumRecordingLength              = $policy.MaximumRecordingLength
+            MaximumRecordingLength              = $policy.MaximumRecordingLength.TotalSeconds
             PostambleAudioFile                  = $policy.PostambleAudioFile
             PreambleAudioFile                   = $policy.PreambleAudioFile
             PreamblePostambleMandatory          = $policy.PreamblePostambleMandatory

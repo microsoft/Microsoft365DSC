@@ -30,10 +30,10 @@ Configuration Example
             EnforcementLevel                       = 'encryptAndAuditOnly'
             EnterpriseDomain                       = 'domain.com' # Updated Property
             EnterpriseIPRanges                     = @(
-                MSFT_MicrosoftGraphwindowsInformationProtectionIPRangeCollection {
+                MSFT_MicrosoftGraphWindowsInformationProtectionIPRangeCollection{
                     DisplayName = 'ipv4 range'
                     Ranges      = @(
-                        MSFT_MicrosoftGraphIpRange {
+                        MSFT_MicrosoftGraphIpRange{
                             UpperAddress = '1.1.1.3'
                             LowerAddress = '1.1.1.1'
                             odataType    = '#microsoft.graph.iPv4Range'

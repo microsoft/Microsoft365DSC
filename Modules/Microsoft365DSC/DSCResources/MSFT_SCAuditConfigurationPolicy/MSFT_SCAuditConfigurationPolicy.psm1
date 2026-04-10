@@ -179,16 +179,16 @@ function Set-TargetResource
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentPolicy.Ensure -eq 'Absent')
     {
         $CreationParams = @{Workload = $Workload }
         New-AuditConfigurationPolicy @CreationParams
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose "SCAuditConfigurationPolicy already exists for Workload {$Workload}"
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentPolicy.Ensure -eq 'Present')
     {
         # If the Policy exists and it shouldn't, simply remove it;
         Write-Verbose "Removing SCAuditConfigurationPolicy for Workload {$Workload}"

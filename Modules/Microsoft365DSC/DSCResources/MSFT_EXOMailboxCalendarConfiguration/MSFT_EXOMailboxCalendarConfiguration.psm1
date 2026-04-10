@@ -230,6 +230,9 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
+        # The cmdlet will show the warning "Events from Email parameters of this cmdlet are deprecated. Use Get-EventsFromEmailConfiguration instead."
+        # However, the new cmdlet does not work and throws an Internal Server Error exception
+        # Keep using Get-MailboxCalendarConfiguration for now
         $config = Get-MailboxCalendarConfiguration -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $config)
@@ -277,7 +280,7 @@ function Get-TargetResource
             UseBrightCalendarColorThemeInOwa         = $config.UseBrightCalendarColorThemeInOwa
             WeatherEnabled                           = $config.WeatherEnabled
             WeatherLocationBookmark                  = $config.WeatherLocationBookmark
-            WeatherLocations                         = [Array]$config.WeatherLocations
+            WeatherLocations                         = [System.String[]]$config.WeatherLocations
             WeatherUnit                              = $config.WeatherUnit
             WeekStartDay                             = $config.WeekStartDay
             WorkDays                                 = $config.WorkDays

@@ -82,7 +82,7 @@ function Get-TargetResource
             $nullReturn.Ensure = 'Absent'
 
             $homeSiteUrl = Get-PnPHomeSite -ErrorAction Stop
-            if ([string]::IsNullOrEmpty($homeSiteUrl))
+            if ([System.String]::IsNullOrEmpty($homeSiteUrl))
             {
                 Write-Verbose -Message 'There is no Home Site Collection set.'
                 return $nullReturn
@@ -350,12 +350,17 @@ function Export-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
+        $Script:exportedInstance = Get-PnPHomeSite -ErrorAction Stop
+        if ([System.String]::IsNullOrEmpty($Script:exportedInstance))
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+            return ''
+        }
+
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
             $Global:M365DSCExportResourceInstancesCount++
         }
-
-        $Script:exportedInstance = Get-PnPHomeSite -ErrorAction Stop
 
         $Params = @{
             IsSingleInstance      = 'Yes'

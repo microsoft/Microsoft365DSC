@@ -150,6 +150,14 @@ function Get-TargetResource
                     IsSyncAllowed = $getValue.IdentitySynchronization.UserSyncInbound.IsSyncAllowed
                 }
             }
+            if ($null -eq $getValue.IdentitySynchronization.GroupSyncInbound.IsSyncAllowed)
+            {
+                $IdentitySynchronizationValue.Remove('GroupSyncInbound') | Out-Null
+            }            
+            if ($null -eq $getValue.IdentitySynchronization.UserSyncInbound.IsSyncAllowed)
+            {
+                $IdentitySynchronizationValue.Remove('UserSyncInbound') | Out-Null
+            }
         }
         $results = @{
             PartnerTenantId              = $getValue.TenantId
@@ -693,7 +701,7 @@ function Export-TargetResource
                 $complexMapping = @(
                     @{
                         Name            = 'IdentitySynchronization'
-                        CimInstanceName = 'AADCrossTenantIdentitySyncPolicyPartner'
+                        CimInstanceName = 'AADCrossTenantIdentitySyncPolicyPartnerInbound'
                         IsRequired      = $False
                     },
                     @{
@@ -709,7 +717,7 @@ function Export-TargetResource
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.IdentitySynchronization `
-                    -CIMInstanceName 'AADCrossTenantIdentitySyncPolicyPartner' `
+                    -CIMInstanceName 'AADCrossTenantIdentitySyncPolicyPartnerInbound' `
                     -ComplexTypeMapping $complexMapping
 
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))

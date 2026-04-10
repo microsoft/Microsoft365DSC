@@ -48,7 +48,6 @@ nav:
           - 'Get-M365DSCAllResources': 'user-guide/cmdlets/Get-M365DSCAllResources.md'
           - 'Get-M365DSCCompiledPermissionList': 'user-guide/cmdlets/Get-M365DSCCompiledPermissionList.md'
           - 'Get-M365DSCConfigurationConflict': 'user-guide/cmdlets/Get-M365DSCConfigurationConflict.md'
-          - 'Get-M365DSCConnectedWorkloadList': 'user-guide/cmdlets/Get-M365DSCConnectedWorkloadList.md'
           - 'Get-M365DSCLoggingOption': 'user-guide/cmdlets/Get-M365DSCLoggingOption.md'
           - 'Get-M365DSCNotificationEndpointRegistration': 'user-guide/cmdlets/Get-M365DSCNotificationEndpointRegistration.md'
           - 'Get-M365DSCTelemetryOption': 'user-guide/cmdlets/Get-M365DSCTelemetryOption.md'

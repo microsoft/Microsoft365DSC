@@ -1,84 +1,84 @@
 Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SCSensitivityLabel'
 
 $allTrainableClassifiers = @(
-    [PSCustomObject]@{ Name = 'Actuary reports'; Id = 'b27df2ee-fd14-4ce9-b02f-4070a5d68132' }
-    [PSCustomObject]@{ Name = 'Agreements'; Id = '7f12e403-5335-4da8-a91e-6c2210b7a2b1' }
-    [PSCustomObject]@{ Name = 'Asset Management'; Id = '716fb550-90cd-493b-b29b-ceed41ee8a6f' }
-    [PSCustomObject]@{ Name = 'Bank statement'; Id = 'f426bd16-e42e-4397-824b-f17dedc5bb1c' }
-    [PSCustomObject]@{ Name = 'Budget'; Id = '6f207592-f71e-4b4f-8c07-ebc4bd4965b9' }
-    [PSCustomObject]@{ Name = 'Business Context'; Id = '08b772df-bf93-457f-be23-b5cbf02005fd' }
-    [PSCustomObject]@{ Name = 'Business plan'; Id = '693f8221-ae4e-4612-80f5-746efee167c3' }
-    [PSCustomObject]@{ Name = 'Completion Certificates'; Id = 'b2580781-286b-4ad2-ab47-84e84ff331e5' }
-    [PSCustomObject]@{ Name = 'Compliance policies'; Id = 'fdad8089-651b-4877-8b66-be105b2e57da' }
-    [PSCustomObject]@{ Name = 'Construction specifications'; Id = 'bfde18ef-b4b9-4f30-9965-ef8d00861a2c' }
-    [PSCustomObject]@{ Name = 'Control System and SCADA files'; Id = '59f1f471-687d-453b-a73e-0b0e9f350812' }
-    [PSCustomObject]@{ Name = 'Corporate Sabotage'; Id = 'd88960c3-6101-43d9-9250-8c43c71d638a' }
-    [PSCustomObject]@{ Name = 'Credit Report'; Id = '07ce7d30-690a-4a1c-a331-8df9c944f1ab' }
-    [PSCustomObject]@{ Name = 'Customer Complaints'; Id = '8137d8fc-fb7a-40db-9009-284f962fde96' }
-    [PSCustomObject]@{ Name = 'Customer Files'; Id = 'fdff9df2-03ba-4372-be97-82c0d2515118' }
-    [PSCustomObject]@{ Name = 'Discrimination'; Id = 'a65c4ab6-a155-11eb-921c-6c0b84aa8ea5' }
-    [PSCustomObject]@{ Name = 'Employee disciplinary action files'; Id = '769d56c1-e737-4fc1-8673-8c99bbe24a07' }
-    [PSCustomObject]@{ Name = 'Employee Insurance files'; Id = 'fa982a9f-9454-4885-a2bf-94a155df2f33' }
-    [PSCustomObject]@{ Name = 'Employee Pension Records'; Id = 'f9ae0bbc-a1e0-4b7e-a96a-eb60b26b4434' }
-    [PSCustomObject]@{ Name = 'Employee Stocks and Financial Bond Records'; Id = 'a67b2b59-c5f0-4c66-a6c4-ca6973adfd94' }
-    [PSCustomObject]@{ Name = 'Employment Agreement'; Id = '2a2baab7-b82c-4166-bbe4-55f9d3fd1129' }
-    [PSCustomObject]@{ Name = 'Enterprise Risk Management'; Id = 'eed09aae-6f32-47c7-9c99-9d17bad48783' }
-    [PSCustomObject]@{ Name = 'Environmental permits and clearances'; Id = '1b7d3e51-0ecf-41bd-9794-966c94a889ba' }
-    [PSCustomObject]@{ Name = 'Facility Permits'; Id = '914c5379-9d05-47cb-98f0-f5a2be059b5a' }
-    [PSCustomObject]@{ Name = 'factory Incident Investigation reports'; Id = '86186144-d507-4603-bac7-50b56ba05c70' }
-    [PSCustomObject]@{ Name = 'Finance'; Id = '1771481d-a337-4dbf-8e64-af8da0cc3ee9' }
-    [PSCustomObject]@{ Name = 'Finance policies and procedures'; Id = '6556c5eb-0819-4618-ba2e-59925925655e' }
-    [PSCustomObject]@{ Name = 'Financial Audit Reports'; Id = 'b04b2a4e-22f8-4024-8adc-e2caaad1c2e2' }
-    [PSCustomObject]@{ Name = 'Financial statement'; Id = 'c31bfef9-8045-4a35-88a3-74b8681615c2' }
-    [PSCustomObject]@{ Name = 'Freight Documents'; Id = '785917ed-db01-43c7-8153-8a6fc393efa3' }
-    [PSCustomObject]@{ Name = 'Garnishment'; Id = '65e827c3-f8e8-4bc8-b08c-c31e3132b832' }
-    [PSCustomObject]@{ Name = 'Gifts \u0026 entertainment'; Id = '3b3d817a-9190-465b-af2d-9e856f894059' }
-    [PSCustomObject]@{ Name = 'Health/Medical forms'; Id = '7cc60f30-9e96-4d51-b26f-3d7a9df56338' }
-    [PSCustomObject]@{ Name = 'Healthcare'; Id = 'dcbada08-65bf-4561-b140-25d8fee4d143' }
-    [PSCustomObject]@{ Name = 'HR'; Id = '11631f87-7ffe-4052-b173-abda16b231f3' }
-    [PSCustomObject]@{ Name = 'Invoice'; Id = 'bf7df7c3-fce4-4ffd-ab90-26f6463f3a00' }
-    [PSCustomObject]@{ Name = 'IP'; Id = '495fad07-d6e4-4da4-9c64-5b9b109a5f59' }
-    [PSCustomObject]@{ Name = 'IT'; Id = '77a140be-c29f-4155-9dc4-c3e247e47560' }
-    [PSCustomObject]@{ Name = 'IT Infra and Network Security Documents'; Id = 'bc55de38-cb72-43e6-952f-8422f584f229' }
-    [PSCustomObject]@{ Name = 'Lease Deeds'; Id = '841f54ad-3e31-4ddd-aea0-e7f0cd6b3d18' }
-    [PSCustomObject]@{ Name = 'Legal Affairs'; Id = 'ba38aa0f-8c86-4c73-87db-95147a0f4420' }
-    [PSCustomObject]@{ Name = 'Legal Agreements'; Id = 'bee9cefb-88bd-410f-ab3e-67cab21cef46' }
-    [PSCustomObject]@{ Name = 'Letter of Credits'; Id = 'fd85acd5-59dd-49b2-a4c3-df7075885a82' }
-    [PSCustomObject]@{ Name = 'License agreement'; Id = 'b399eb17-c9c4-4205-951b-43f38eb8dffe' }
-    [PSCustomObject]@{ Name = 'Loan agreements and offer letters'; Id = '5771fa57-34a1-48b3-93df-778b304daa54' }
-    [PSCustomObject]@{ Name = 'M&A Files'; Id = 'eeffbf7c-fd04-40ef-a156-b37bf61832f7' }
-    [PSCustomObject]@{ Name = 'Manufacturing batch records'; Id = '834b2353-509a-4605-b4f1-fc2172a0d97c' }
-    [PSCustomObject]@{ Name = 'Marketing Collaterals'; Id = 'fcaa6d2a-601c-4bdc-947e-af1178a646ac' }
-    [PSCustomObject]@{ Name = 'Meeting notes'; Id = 'e7ff9a9e-4689-4192-b927-e6c6bdf099fc' }
-    [PSCustomObject]@{ Name = 'Money laundering'; Id = 'adbbb20e-b175-46e7-8ba2-cf3f3179d0ed' }
-    [PSCustomObject]@{ Name = 'MoU Files (Memorandum of understanding)'; Id = 'cb37c277-4b88-49c6-81fb-2eeca8c52bb9' }
-    [PSCustomObject]@{ Name = 'Network Design files'; Id = '12587d70-9596-4c21-b09f-f1abe9d6ca13' }
-    [PSCustomObject]@{ Name = 'Non disclosure agreement'; Id = '8dfd10db-0c72-4be4-a4f2-f615fe7aeb1c' }
-    [PSCustomObject]@{ Name = 'OSHA records'; Id = 'b11b771e-7dd1-4434-873a-d648a16e969e' }
-    [PSCustomObject]@{ Name = 'Paystub'; Id = '31c11384-2d64-4635-9335-018295c64268' }
-    [PSCustomObject]@{ Name = 'Personal Financial Information'; Id = '6901c616-5857-432f-b3da-f5234fa1d342' }
-    [PSCustomObject]@{ Name = 'Procurement'; Id = '8fa64a47-6e77-4b4c-91a5-0f67525cebf5' }
-    [PSCustomObject]@{ Name = 'Profanity'; Id = '4b0aa61d-37dc-4596-a1f1-fc5a5b21d56b' }
-    [PSCustomObject]@{ Name = 'Project documents'; Id = 'e062df90-816c-47ca-8913-db647510d3b5' }
-    [PSCustomObject]@{ Name = 'Quality assurance files'; Id = '97b1e0d3-7788-4dd4-bb18-48ea77796743' }
-    [PSCustomObject]@{ Name = 'Quotation'; Id = '3882e681-c437-42d8-ac75-1f9b7481fe13' }
-    [PSCustomObject]@{ Name = 'Regulatory Collusion'; Id = '911b7815-6883-4022-a882-9cbe9462f114' }
-    [PSCustomObject]@{ Name = 'Resume'; Id = '14b2da41-0427-47e9-a11b-c924e1d05689' }
-    [PSCustomObject]@{ Name = 'Safety Records'; Id = '938fb100-5b1f-4bbb-aba7-73d9c89d086f' }
-    [PSCustomObject]@{ Name = 'Sales and revenue'; Id = '9d6b864d-28c6-4be3-a9d0-cd40434a847f' }
-    [PSCustomObject]@{ Name = 'Software Product Development Files'; Id = '813aa6d8-0727-48d8-acb7-06e1819ee339' }
-    [PSCustomObject]@{ Name = 'Source code'; Id = '8aef6743-61aa-44b9-9ae5-3bb3d77df535' }
-    [PSCustomObject]@{ Name = 'Standard Operating Procedures and Manuals'; Id = '32f23ad4-2ca1-4495-8048-8dc567891644' }
-    [PSCustomObject]@{ Name = 'Statement of Accounts'; Id = 'fe3676a6-0f5d-4990-bb46-9b2b31d7746a' }
-    [PSCustomObject]@{ Name = 'Statement of Work'; Id = '611c95f9-b1ef-4253-8b36-d8ae19d02fb0' }
-    [PSCustomObject]@{ Name = 'Stock manipulation'; Id = '1140cd79-ad87-4043-a562-c768acacc6ba' }
-    [PSCustomObject]@{ Name = 'Strategic planning documents'; Id = '9332b317-2ca4-413a-b983-92a1bd88c6f3' }
-    [PSCustomObject]@{ Name = 'Targeted Harassment'; Id = 'a02ddb8e-3c93-44ac-87c1-2f682b1cb78e' }
-    [PSCustomObject]@{ Name = 'Tax'; Id = '9722b51a-f920-4a81-8390-b188a0692840' }
-    [PSCustomObject]@{ Name = 'Threat'; Id = 'ef2edb64-6982-4648-b0ad-c0d8a861501b' }
-    [PSCustomObject]@{ Name = 'Unauthorized disclosure'; Id = '839aecf8-c67b-4270-8aaf-378127b23b7f' }
-    [PSCustomObject]@{ Name = 'Wire transfer'; Id = '05fc5ed0-58ef-4306-b65c-11b0a43895c2' }
-    [PSCustomObject]@{ Name = 'Work Schedules'; Id = '25bb9d2d-a5b5-45b1-882e-b2581a183873' }
+    @{ Name = 'Actuary reports'; Id = 'b27df2ee-fd14-4ce9-b02f-4070a5d68132' }
+    @{ Name = 'Agreements'; Id = '7f12e403-5335-4da8-a91e-6c2210b7a2b1' }
+    @{ Name = 'Asset Management'; Id = '716fb550-90cd-493b-b29b-ceed41ee8a6f' }
+    @{ Name = 'Bank statement'; Id = 'f426bd16-e42e-4397-824b-f17dedc5bb1c' }
+    @{ Name = 'Budget'; Id = '6f207592-f71e-4b4f-8c07-ebc4bd4965b9' }
+    @{ Name = 'Business Context'; Id = '08b772df-bf93-457f-be23-b5cbf02005fd' }
+    @{ Name = 'Business plan'; Id = '693f8221-ae4e-4612-80f5-746efee167c3' }
+    @{ Name = 'Completion Certificates'; Id = 'b2580781-286b-4ad2-ab47-84e84ff331e5' }
+    @{ Name = 'Compliance policies'; Id = 'fdad8089-651b-4877-8b66-be105b2e57da' }
+    @{ Name = 'Construction specifications'; Id = 'bfde18ef-b4b9-4f30-9965-ef8d00861a2c' }
+    @{ Name = 'Control System and SCADA files'; Id = '59f1f471-687d-453b-a73e-0b0e9f350812' }
+    @{ Name = 'Corporate Sabotage'; Id = 'd88960c3-6101-43d9-9250-8c43c71d638a' }
+    @{ Name = 'Credit Report'; Id = '07ce7d30-690a-4a1c-a331-8df9c944f1ab' }
+    @{ Name = 'Customer Complaints'; Id = '8137d8fc-fb7a-40db-9009-284f962fde96' }
+    @{ Name = 'Customer Files'; Id = 'fdff9df2-03ba-4372-be97-82c0d2515118' }
+    @{ Name = 'Discrimination'; Id = 'a65c4ab6-a155-11eb-921c-6c0b84aa8ea5' }
+    @{ Name = 'Employee disciplinary action files'; Id = '769d56c1-e737-4fc1-8673-8c99bbe24a07' }
+    @{ Name = 'Employee Insurance files'; Id = 'fa982a9f-9454-4885-a2bf-94a155df2f33' }
+    @{ Name = 'Employee Pension Records'; Id = 'f9ae0bbc-a1e0-4b7e-a96a-eb60b26b4434' }
+    @{ Name = 'Employee Stocks and Financial Bond Records'; Id = 'a67b2b59-c5f0-4c66-a6c4-ca6973adfd94' }
+    @{ Name = 'Employment Agreement'; Id = '2a2baab7-b82c-4166-bbe4-55f9d3fd1129' }
+    @{ Name = 'Enterprise Risk Management'; Id = 'eed09aae-6f32-47c7-9c99-9d17bad48783' }
+    @{ Name = 'Environmental permits and clearances'; Id = '1b7d3e51-0ecf-41bd-9794-966c94a889ba' }
+    @{ Name = 'Facility Permits'; Id = '914c5379-9d05-47cb-98f0-f5a2be059b5a' }
+    @{ Name = 'factory Incident Investigation reports'; Id = '86186144-d507-4603-bac7-50b56ba05c70' }
+    @{ Name = 'Finance'; Id = '1771481d-a337-4dbf-8e64-af8da0cc3ee9' }
+    @{ Name = 'Finance policies and procedures'; Id = '6556c5eb-0819-4618-ba2e-59925925655e' }
+    @{ Name = 'Financial Audit Reports'; Id = 'b04b2a4e-22f8-4024-8adc-e2caaad1c2e2' }
+    @{ Name = 'Financial statement'; Id = 'c31bfef9-8045-4a35-88a3-74b8681615c2' }
+    @{ Name = 'Freight Documents'; Id = '785917ed-db01-43c7-8153-8a6fc393efa3' }
+    @{ Name = 'Garnishment'; Id = '65e827c3-f8e8-4bc8-b08c-c31e3132b832' }
+    @{ Name = 'Gifts \u0026 entertainment'; Id = '3b3d817a-9190-465b-af2d-9e856f894059' }
+    @{ Name = 'Health/Medical forms'; Id = '7cc60f30-9e96-4d51-b26f-3d7a9df56338' }
+    @{ Name = 'Healthcare'; Id = 'dcbada08-65bf-4561-b140-25d8fee4d143' }
+    @{ Name = 'HR'; Id = '11631f87-7ffe-4052-b173-abda16b231f3' }
+    @{ Name = 'Invoice'; Id = 'bf7df7c3-fce4-4ffd-ab90-26f6463f3a00' }
+    @{ Name = 'IP'; Id = '495fad07-d6e4-4da4-9c64-5b9b109a5f59' }
+    @{ Name = 'IT'; Id = '77a140be-c29f-4155-9dc4-c3e247e47560' }
+    @{ Name = 'IT Infra and Network Security Documents'; Id = 'bc55de38-cb72-43e6-952f-8422f584f229' }
+    @{ Name = 'Lease Deeds'; Id = '841f54ad-3e31-4ddd-aea0-e7f0cd6b3d18' }
+    @{ Name = 'Legal Affairs'; Id = 'ba38aa0f-8c86-4c73-87db-95147a0f4420' }
+    @{ Name = 'Legal Agreements'; Id = 'bee9cefb-88bd-410f-ab3e-67cab21cef46' }
+    @{ Name = 'Letter of Credits'; Id = 'fd85acd5-59dd-49b2-a4c3-df7075885a82' }
+    @{ Name = 'License agreement'; Id = 'b399eb17-c9c4-4205-951b-43f38eb8dffe' }
+    @{ Name = 'Loan agreements and offer letters'; Id = '5771fa57-34a1-48b3-93df-778b304daa54' }
+    @{ Name = 'M&A Files'; Id = 'eeffbf7c-fd04-40ef-a156-b37bf61832f7' }
+    @{ Name = 'Manufacturing batch records'; Id = '834b2353-509a-4605-b4f1-fc2172a0d97c' }
+    @{ Name = 'Marketing Collaterals'; Id = 'fcaa6d2a-601c-4bdc-947e-af1178a646ac' }
+    @{ Name = 'Meeting notes'; Id = 'e7ff9a9e-4689-4192-b927-e6c6bdf099fc' }
+    @{ Name = 'Money laundering'; Id = 'adbbb20e-b175-46e7-8ba2-cf3f3179d0ed' }
+    @{ Name = 'MoU Files (Memorandum of understanding)'; Id = 'cb37c277-4b88-49c6-81fb-2eeca8c52bb9' }
+    @{ Name = 'Network Design files'; Id = '12587d70-9596-4c21-b09f-f1abe9d6ca13' }
+    @{ Name = 'Non disclosure agreement'; Id = '8dfd10db-0c72-4be4-a4f2-f615fe7aeb1c' }
+    @{ Name = 'OSHA records'; Id = 'b11b771e-7dd1-4434-873a-d648a16e969e' }
+    @{ Name = 'Paystub'; Id = '31c11384-2d64-4635-9335-018295c64268' }
+    @{ Name = 'Personal Financial Information'; Id = '6901c616-5857-432f-b3da-f5234fa1d342' }
+    @{ Name = 'Procurement'; Id = '8fa64a47-6e77-4b4c-91a5-0f67525cebf5' }
+    @{ Name = 'Profanity'; Id = '4b0aa61d-37dc-4596-a1f1-fc5a5b21d56b' }
+    @{ Name = 'Project documents'; Id = 'e062df90-816c-47ca-8913-db647510d3b5' }
+    @{ Name = 'Quality assurance files'; Id = '97b1e0d3-7788-4dd4-bb18-48ea77796743' }
+    @{ Name = 'Quotation'; Id = '3882e681-c437-42d8-ac75-1f9b7481fe13' }
+    @{ Name = 'Regulatory Collusion'; Id = '911b7815-6883-4022-a882-9cbe9462f114' }
+    @{ Name = 'Resume'; Id = '14b2da41-0427-47e9-a11b-c924e1d05689' }
+    @{ Name = 'Safety Records'; Id = '938fb100-5b1f-4bbb-aba7-73d9c89d086f' }
+    @{ Name = 'Sales and revenue'; Id = '9d6b864d-28c6-4be3-a9d0-cd40434a847f' }
+    @{ Name = 'Software Product Development Files'; Id = '813aa6d8-0727-48d8-acb7-06e1819ee339' }
+    @{ Name = 'Source code'; Id = '8aef6743-61aa-44b9-9ae5-3bb3d77df535' }
+    @{ Name = 'Standard Operating Procedures and Manuals'; Id = '32f23ad4-2ca1-4495-8048-8dc567891644' }
+    @{ Name = 'Statement of Accounts'; Id = 'fe3676a6-0f5d-4990-bb46-9b2b31d7746a' }
+    @{ Name = 'Statement of Work'; Id = '611c95f9-b1ef-4253-8b36-d8ae19d02fb0' }
+    @{ Name = 'Stock manipulation'; Id = '1140cd79-ad87-4043-a562-c768acacc6ba' }
+    @{ Name = 'Strategic planning documents'; Id = '9332b317-2ca4-413a-b983-92a1bd88c6f3' }
+    @{ Name = 'Targeted Harassment'; Id = 'a02ddb8e-3c93-44ac-87c1-2f682b1cb78e' }
+    @{ Name = 'Tax'; Id = '9722b51a-f920-4a81-8390-b188a0692840' }
+    @{ Name = 'Threat'; Id = 'ef2edb64-6982-4648-b0ad-c0d8a861501b' }
+    @{ Name = 'Unauthorized disclosure'; Id = '839aecf8-c67b-4270-8aaf-378127b23b7f' }
+    @{ Name = 'Wire transfer'; Id = '05fc5ed0-58ef-4306-b65c-11b0a43895c2' }
+    @{ Name = 'Work Schedules'; Id = '25bb9d2d-a5b5-45b1-882e-b2581a183873' }
 )
 
 function Get-TargetResource
@@ -225,6 +225,7 @@ function Get-TargetResource
         $EncryptionPromptUser,
 
         [Parameter()]
+        [ValidateSet('Template', 'RemoveProtection', 'UserDefined')]
         [System.String]
         $EncryptionProtectionType,
 
@@ -861,6 +862,7 @@ function Set-TargetResource
         $EncryptionPromptUser,
 
         [Parameter()]
+        [ValidateSet('Template', 'RemoveProtection', 'UserDefined')]
         [System.String]
         $EncryptionProtectionType,
 
@@ -1104,7 +1106,7 @@ function Set-TargetResource
         Write-Verbose 'Completed generating required JSON string for AutoLabelingSettings'
     }
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
+    if ($Ensure -eq 'Present' -and $label.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Label {$Name} doesn't already exist, creating it from the Set-TargetResource function."
         $CreationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
@@ -1159,7 +1161,7 @@ function Set-TargetResource
             throw $_
         }
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
+    elseif ($Ensure -eq 'Present' -and $label.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Label {$Name} already exist, updating it from the Set-TargetResource function."
         $SetParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
@@ -1213,7 +1215,7 @@ function Set-TargetResource
             throw $_
         }
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $label.Ensure -eq 'Present')
     {
         # If the label exists and it shouldn't, simply remove it;Need to force deletoion
         Write-Verbose -Message "Deleting Sensitivity label $Name."
@@ -1380,6 +1382,7 @@ function Test-TargetResource
         $EncryptionPromptUser,
 
         [Parameter()]
+        [ValidateSet('Template', 'RemoveProtection', 'UserDefined')]
         [System.String]
         $EncryptionProtectionType,
 
@@ -1849,13 +1852,13 @@ function Convert-CIMToLocaleSettings
     [OutputType([System.Collections.ArrayList])]
     param
     (
-        [parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $localeSettings
+        $LocaleSettings
     )
 
     $entry = [System.Collections.ArrayList]@()
-    foreach ($localset in $localeSettings)
+    foreach ($localset in $LocaleSettings)
     {
         $localeEntries = [ordered]@{
             localeKey = $localset.LocaleKey

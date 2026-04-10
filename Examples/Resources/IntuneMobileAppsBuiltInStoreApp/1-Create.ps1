@@ -60,7 +60,7 @@ Configuration Example
                 V15_0 = $False
             };
             Assignments          = @(
-                MSFT_DeviceManagementMobileAppAssignment {
+                MSFT_DeviceManagementBuiltInStoreAppAssignment{
                     groupDisplayName = 'All devices'
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'

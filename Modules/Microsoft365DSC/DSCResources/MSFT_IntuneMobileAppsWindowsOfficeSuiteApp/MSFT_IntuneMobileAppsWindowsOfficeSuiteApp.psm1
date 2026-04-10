@@ -470,14 +470,6 @@ function Set-TargetResource
         $CreateParameters.Add('Developer', 'Microsoft')
         $CreateParameters.Add('Owner', 'Microsoft')
 
-        foreach ($key in ($CreateParameters.Clone()).Keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-        }
-
         $CreateParameters.Add('@odata.type', '#microsoft.graph.officeSuiteApp')
         $app = New-MgBetaDeviceAppManagementMobileApp -BodyParameter $CreateParameters
 
@@ -520,14 +512,6 @@ function Set-TargetResource
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Categories') | Out-Null
         $UpdateParameters.Remove('OfficePlatformArchitecture') | Out-Null
-
-        foreach ($key in ($UpdateParameters.Clone()).Keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-        }
 
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.officeSuiteApp')
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -BodyParameter $UpdateParameters

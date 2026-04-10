@@ -866,7 +866,7 @@ function Set-TargetResource
         $PSBoundParameters.AdvancedRule = $newAdvancedRule | ConvertTo-Json -Depth 32 | Format-Json
     }
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentRule.Ensure -eq 'Absent')
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} doesn't exists but need to. Creating Rule."
         $CreationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
@@ -924,7 +924,7 @@ function Set-TargetResource
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         New-DLPComplianceRule @CreationParams -Confirm:$false
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentRule.Ensure -eq 'Present')
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} already exists and needs to get updated. Updating Rule."
         $UpdateParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
@@ -987,7 +987,7 @@ function Set-TargetResource
         Write-Verbose "Updating Rule with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
         Set-DLPComplianceRule @UpdateParams -Confirm:$false
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentRule.Ensure -eq 'Present')
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} already exists but shouldn't. Deleting Rule."
         Remove-DLPComplianceRule -Identity $CurrentRule.Name -Confirm:$false
@@ -1329,9 +1329,6 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of DLPComplianceRule for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
     $ValuesToCheck = $PSBoundParameters
 
     #region Test Sensitive Information Type

@@ -168,16 +168,16 @@ function Set-TargetResource
 
     $Current = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $Current.Ensure))
+    if ($Ensure -eq 'Present' -and $Current.Ensure -eq 'Absent')
     {
         $CreationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         New-FilePlanPropertyDepartment @CreationParams
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
+    elseif ($Ensure -eq 'Present' -and $Current.Ensure -eq 'Present')
     {
         # Do Nothing
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $Current.Ensure -eq 'Present')
     {
         try
         {

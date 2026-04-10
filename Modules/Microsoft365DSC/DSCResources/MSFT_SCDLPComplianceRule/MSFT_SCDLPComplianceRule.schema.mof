@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_SCDLPSensitiveInformation
 {
     [Required, Description("Name of the Sensitive Information Content")] String name;
@@ -9,14 +9,16 @@ class MSFT_SCDLPSensitiveInformation
     [Write, Description("Minimum Count value for the Sensitive Information")] String mincount;
     [Write, Description("Maximum Count value for the Sensitive Information")] String maxcount;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_SCDLPLabel
 {
     [Required, Description("Name of the Sensitive Label")] String name;
     [Write, Description("Id of the Sensitive Information label")] String id;
     [Write, Description("Type of the Sensitive Information label")] String type;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.1")]
 class MSFT_SCDLPContainsSensitiveInformationGroup
 {
     [Write, Description("Sensitive Information Content Types"),EmbeddedInstance("MSFT_SCDLPSensitiveInformation")] String SensitiveInformation[];
@@ -24,6 +26,7 @@ class MSFT_SCDLPContainsSensitiveInformationGroup
     [Required, Description("Name of the group")] String Name;
     [Required, Description("Operator"),ValueMap{"And","Or"}, Values{"And","Or"}] String Operator;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_SCDLPContainsSensitiveInformation
 {
@@ -31,6 +34,7 @@ class MSFT_SCDLPContainsSensitiveInformation
     [Write, Description("Groups of sensitive information types."),EmbeddedInstance("MSFT_SCDLPContainsSensitiveInformationGroup")] String Groups[];
     [Write, Description("Operator"),ValueMap{"And","Or"}, Values{"And","Or"}] String Operator;
 };
+
 [ClassVersion("1.0.0.0"), FriendlyName("SCDLPComplianceRule")]
 class MSFT_SCDLPComplianceRule : OMI_BaseResource
 {

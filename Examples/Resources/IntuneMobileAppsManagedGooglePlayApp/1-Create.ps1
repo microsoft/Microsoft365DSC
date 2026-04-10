@@ -29,7 +29,7 @@ Configuration Example
             RoleScopeTagIds       = @("0");
             Ensure                = "Present";
             Assignments           = @(
-                MSFT_DeviceManagementMobileAppAssignment {
+                MSFT_DeviceManagementManagedGooglePlayMobileAppAssignment{
                     groupDisplayName = 'All devices'
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'

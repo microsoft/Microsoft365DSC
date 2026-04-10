@@ -233,19 +233,19 @@ function Set-TargetResource
     {
         $IntraOrganizationConnectorParams.TargetSharingEpr = $null
     }
-    if (('Present' -eq $Ensure ) -and ($null -eq $IntraOrganizationConnector))
+    if ($Ensure -eq 'Present' -and $null -eq $IntraOrganizationConnector)
     {
         Write-Verbose -Message "Creating IntraOrganizationConnector $($Identity) with:`r`n $(ConvertTo-Json $IntraOrganizationConnectorParams -Depth 10)"
         $IntraOrganizationConnectorParams.Add('Name', $Identity)
         $IntraOrganizationConnectorParams.Remove('Identity') | Out-Null
         New-IntraOrganizationConnector @IntraOrganizationConnectorParams
     }
-    elseif (('Present' -eq $Ensure ) -and ($null -ne $IntraOrganizationConnector))
+    elseif ($Ensure -eq 'Present' -and $null -ne $IntraOrganizationConnector)
     {
         Write-Verbose -Message "Setting IntraOrganizationConnector $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $IntraOrganizationConnectorParams)"
         Set-IntraOrganizationConnector @IntraOrganizationConnectorParams -Confirm:$false
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $IntraOrganizationConnector))
+    elseif ($Ensure -eq 'Absent' -and $null -ne $IntraOrganizationConnector)
     {
         Write-Verbose -Message "Removing IntraOrganizationConnector $($Identity)"
         Remove-IntraOrganizationConnector -Identity $Identity -Confirm:$false

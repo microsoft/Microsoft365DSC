@@ -399,14 +399,6 @@ function Set-TargetResource
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$CreateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-        }
         $memberSpecification = $null
         if ($CreateParameters.MembershipType -ne 'Dynamic' -and $CreateParameters.Members.Count -gt 0)
         {
@@ -581,17 +573,7 @@ function Set-TargetResource
 
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
         $UpdateParameters.Remove('Id') | Out-Null
-
-        $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-        }
 
         $requestedMembers = $UpdateParameters.Members
         $UpdateParameters.Remove('Members') | Out-Null
@@ -610,12 +592,12 @@ function Set-TargetResource
                 $currentMembers = @()
                 foreach ($member in $backCurrentMembers)
                 {
-                    $currentMembers += [pscustomobject]@{Type = $member.Type; Identity = $member.Identity }
+                    $currentMembers += @{Type = $member.Type; Identity = $member.Identity }
                 }
                 $desiredMembers = @()
                 foreach ($member in $requestedMembers)
                 {
-                    $desiredMembers += [pscustomobject]@{Type = $member.Type; Identity = $member.Identity }
+                    $desiredMembers += @{Type = $member.Type; Identity = $member.Identity }
                 }
                 $membersDiff = Compare-Object -ReferenceObject $currentMembers -DifferenceObject $desiredMembers -Property Identity, Type
                 foreach ($diff in $membersDiff)
@@ -685,7 +667,7 @@ function Set-TargetResource
             $compareCurrentScopedRoleMembersValue = @()
             foreach ($roleMember in $currentScopedRoleMembersValue)
             {
-                $compareCurrentScopedRoleMembersValue += [pscustomobject]@{
+                $compareCurrentScopedRoleMembersValue += @{
                     RoleName = $roleMember.RoleName
                     Identity = $roleMember.RoleMemberInfo.Identity
                     Type     = $roleMember.RoleMemberInfo.Type
@@ -694,7 +676,7 @@ function Set-TargetResource
             $compareDesiredScopedRoleMembersValue = @()
             foreach ($roleMember in $desiredScopedRoleMembersValue)
             {
-                $compareDesiredScopedRoleMembersValue += [pscustomobject]@{
+                $compareDesiredScopedRoleMembersValue += @{
                     RoleName = $roleMember.RoleName
                     Identity = $roleMember.RoleMemberInfo.Identity
                     Type     = $roleMember.RoleMemberInfo.Type

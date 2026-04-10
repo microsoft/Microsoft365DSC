@@ -66,7 +66,7 @@ Configuration Example
             CertificateThumbprint   = $CertificateThumbprint;
             Description             = "Default tenant policy that enforces app management restrictions on applications and service principals. To apply policy to targeted resources, create a new policy under appManagementPolicies collection.";
             DisplayName             = "Default app management tenant policy";
-            Ensure                  = "Present";
+            IsSingleInstance        = 'Yes';
             IsEnabled               = $True;
             TenantId                = $TenantId;
         }

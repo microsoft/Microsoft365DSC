@@ -106,4 +106,4 @@ The cmdlet responsible for this is `Update-M365DSCResourceDocumentationPage` and
 Telemetry rules:
 
 - Telemetry must never include PII. Use `Format-M365DSCTelemetryParameters` to normalize events.
-- Telemetry helper functions live in `Modules/Microsoft365DSC/Modules/M365DSCUtil` — prefer those helpers instead of ad-hoc telemetry code.
+- Telemetry helper functions live in `Modules/Microsoft365DSC/Modules/M365DSCUtil` - prefer those helpers instead of ad-hoc telemetry code.

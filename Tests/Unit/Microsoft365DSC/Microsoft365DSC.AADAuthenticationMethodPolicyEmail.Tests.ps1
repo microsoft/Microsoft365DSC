@@ -53,7 +53,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     Id = "Email"
                     State = "enabled"
-
                 }
             }
 
@@ -61,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName Get-MgGroup -MockWith {
+            Mock -CommandName Get-MgGroup -ModuleName M365DSCUtil -MockWith {
                 return @{
                     Id = "00000000-0000-0000-0000-000000000000"
                     DisplayName = "Fakegroup"

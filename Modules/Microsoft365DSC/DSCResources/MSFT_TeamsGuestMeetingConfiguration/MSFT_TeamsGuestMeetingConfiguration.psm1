@@ -6,11 +6,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $AllowIPVideo,
@@ -32,6 +27,11 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTranscription,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -80,12 +80,12 @@ function Get-TargetResource
         $config = Get-CsTeamsGuestMeetingConfiguration -ErrorAction Stop
 
         $result = @{
-            Identity                = $config.Identity
             AllowIPVideo            = $config.AllowIPVideo
             LiveCaptionsEnabledType = $config.LiveCaptionsEnabledType
             ScreenSharingMode       = $config.ScreenSharingMode
             AllowMeetNow            = $config.AllowMeetNow
             AllowTranscription      = $config.AllowTranscription
+            IsSingleInstance        = 'Yes'
             Credential              = $Credential
             ApplicationId           = $ApplicationId
             TenantId                = $TenantId
@@ -112,11 +112,6 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $AllowIPVideo,
@@ -138,6 +133,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTranscription,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -182,6 +182,8 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $SetParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $SetParams.Add('Identity', 'Global')
+    $SetParams.Remove('IsSingleInstance') | Out-Null
     Set-CsTeamsGuestMeetingConfiguration @SetParams
 }
 
@@ -191,11 +193,6 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Global')]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $AllowIPVideo,
@@ -217,6 +214,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTranscription,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -307,7 +309,7 @@ function Export-TargetResource
     {
         $dscContent = ''
         $params = @{
-            Identity              = 'Global'
+            IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId

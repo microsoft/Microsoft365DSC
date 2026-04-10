@@ -1,15 +1,14 @@
-
-[ClassVersion("1.0.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_IntuneAlertRuleNotificationChannelReceiver
 {
-    [Write, Description("The email address of the receiver.")] String ContactInformation;
+    [Required, Description("The email address of the receiver.")] String ContactInformation;
     [Write, Description("The locale of the email."), ValueMap{"en-us","cs-cz","de-de","es-es","fr-fr","hu-hu","it-it","ja-jp","ko-kr","nl-nl","pl-pl","pt-br","pt-pt","ru-ru","sv-se","tr-tr","zh-cn","zh-tw"}, Values{"en-us","cs-cz","de-de","es-es","fr-fr","hu-hu","it-it","ja-jp","ko-kr","nl-nl","pl-pl","pt-br","pt-pt","ru-ru","sv-se","tr-tr","zh-cn","zh-tw"}] String Locale;
 };
 
-[ClassVersion("1.0.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_IntuneAlertRuleNotificationChannel
 {
-    [Write, Description("The notification channel type."), ValueMap{"portal","email"}, Values{"portal","email"}] String NotificationChannelType;
+    [Required, Description("The notification channel type."), ValueMap{"portal","email"}, Values{"portal","email"}] String NotificationChannelType;
     [Write, Description("The receivers of the notification. Only applicable if the NotificationChannelType is 'email'."), EmbeddedInstance("MSFT_IntuneAlertRuleNotificationChannelReceiver")] String NotificationReceivers[];
 };
 
@@ -17,7 +16,7 @@ class MSFT_IntuneAlertRuleNotificationChannel
 class MSFT_IntuneAlertRuleCondition
 {
     [Write, Description("The built-in aggregation method for the rule condition. The possible values are: count, percentage, affectedCloudPcCount, affectedCloudPcPercentage, durationInMinutes."), ValueMap{"count","percentage","affectedCloudPcCount","affectedCloudPcPercentage","durationInMinutes"}, Values{"count","percentage","affectedCloudPcCount","affectedCloudPcPercentage","durationInMinutes"}] String Aggregation;
-    [Write, Description("The property that the rule condition monitors. Possible values are: provisionFailures, imageUploadFailures, azureNetworkConnectionCheckFailures, cloudPcInGracePeriod, frontlineInsufficientLicenses, cloudPcConnectionErrors, cloudPcHostHealthCheckFailures, cloudPcZoneOutage, unknownFutureValue, frontlineBufferUsageDuration, frontlineBufferUsageThreshold, cloudPcUserSettingsPersistenceUsageThreshold, cloudPcDeprovisionedThreshold, cloudPcReserveDeprovisionFailedThreshold."), ValueMap{"provisionFailures","imageUploadFailures","azureNetworkConnectionCheckFailures","cloudPcInGracePeriod","frontlineInsufficientLicenses","cloudPcConnectionErrors","cloudPcHostHealthCheckFailures","cloudPcZoneOutage","unknownFutureValue","frontlineBufferUsageDuration","frontlineBufferUsageThreshold","cloudPcUserSettingsPersistenceUsageThreshold","cloudPcDeprovisionedThreshold","cloudPcReserveDeprovisionFailedThreshold"}, Values{"provisionFailures","imageUploadFailures","azureNetworkConnectionCheckFailures","cloudPcInGracePeriod","frontlineInsufficientLicenses","cloudPcConnectionErrors","cloudPcHostHealthCheckFailures","cloudPcZoneOutage","unknownFutureValue","frontlineBufferUsageDuration","frontlineBufferUsageThreshold","cloudPcUserSettingsPersistenceUsageThreshold","cloudPcDeprovisionedThreshold","cloudPcReserveDeprovisionFailedThreshold"}] String ConditionCategory;
+    [Required, Description("The property that the rule condition monitors. Possible values are: provisionFailures, imageUploadFailures, azureNetworkConnectionCheckFailures, cloudPcInGracePeriod, frontlineInsufficientLicenses, cloudPcConnectionErrors, cloudPcHostHealthCheckFailures, cloudPcZoneOutage, unknownFutureValue, frontlineBufferUsageDuration, frontlineBufferUsageThreshold, cloudPcUserSettingsPersistenceUsageThreshold, cloudPcDeprovisionedThreshold, cloudPcReserveDeprovisionFailedThreshold."), ValueMap{"provisionFailures","imageUploadFailures","azureNetworkConnectionCheckFailures","cloudPcInGracePeriod","frontlineInsufficientLicenses","cloudPcConnectionErrors","cloudPcHostHealthCheckFailures","cloudPcZoneOutage","unknownFutureValue","frontlineBufferUsageDuration","frontlineBufferUsageThreshold","cloudPcUserSettingsPersistenceUsageThreshold","cloudPcDeprovisionedThreshold","cloudPcReserveDeprovisionFailedThreshold"}, Values{"provisionFailures","imageUploadFailures","azureNetworkConnectionCheckFailures","cloudPcInGracePeriod","frontlineInsufficientLicenses","cloudPcConnectionErrors","cloudPcHostHealthCheckFailures","cloudPcZoneOutage","unknownFutureValue","frontlineBufferUsageDuration","frontlineBufferUsageThreshold","cloudPcUserSettingsPersistenceUsageThreshold","cloudPcDeprovisionedThreshold","cloudPcReserveDeprovisionFailedThreshold"}] String ConditionCategory;
     [Write, Description("The built-in operator for the rule condition. The possible values are: greaterOrEqual, equal, greater, less, lessOrEqual, notEqual."), ValueMap{"greaterOrEqual","greater","equal","less","lessOrEqual"}, Values{"greaterOrEqual","greater","equal","less","lessOrEqual"}] String Operator;
     [Write, Description("The relationship type. Possible values are: and, or."), ValueMap{"and","or"}, Values{"and","or"}] String RelationshipType;
     [Write, Description("The threshold value of the alert condition. The threshold value can be a number in string form or string like 'WestUS'.")] String ThresholdValue;

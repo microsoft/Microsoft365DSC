@@ -64,11 +64,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqMFA,
+        $EligibilityAssignmentReqMFA,
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqJustification,
+        $EligibilityAssignmentReqJustification,
 
         [Parameter()]
         [System.Boolean]
@@ -351,8 +351,8 @@ function Get-TargetResource
     $ExpireActiveAssignment = ($rule | Where-Object { $_.Id -eq 'Expiration_Admin_Assignment' }).AdditionalProperties.maximumDuration
     $AssignmentReqMFA = (($rule | Where-Object { $_.Id -eq 'Enablement_Admin_Assignment' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
     $AssignmentReqJustification = (($rule | Where-Object { $_.Id -eq 'Enablement_Admin_Assignment' }).AdditionalProperties.enabledRules) -contains 'Justification'
-    $ElegibilityAssignmentReqMFA = (($rule | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
-    $ElegibilityAssignmentReqJustification = (($rule | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).AdditionalProperties.enabledRules) -contains 'Justification'
+    $EligibilityAssignmentReqMFA = (($rule | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
+    $EligibilityAssignmentReqJustification = (($rule | Where-Object { $_.Id -eq 'Enablement_Admin_Eligibility' }).AdditionalProperties.enabledRules) -contains 'Justification'
     $EligibleAlertNotificationDefaultRecipient = ($rule | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).AdditionalProperties.isDefaultRecipientsEnabled
     [string[]]$EligibleAlertNotificationAdditionalRecipient = ($rule | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).AdditionalProperties.notificationRecipients
     $EligibleAlertNotificationOnlyCritical = (($rule | Where-Object { $_.Id -eq 'Notification_Admin_Admin_Eligibility' }).AdditionalProperties.notificationLevel) -contains ('Critical')
@@ -396,8 +396,8 @@ function Get-TargetResource
             ExpireActiveAssignment                                    = $ExpireActiveAssignment
             AssignmentReqMFA                                          = $AssignmentReqMFA
             AssignmentReqJustification                                = $AssignmentReqJustification
-            ElegibilityAssignmentReqMFA                               = $ElegibilityAssignmentReqMFA
-            ElegibilityAssignmentReqJustification                     = $ElegibilityAssignmentReqJustification
+            EligibilityAssignmentReqMFA                               = $EligibilityAssignmentReqMFA
+            EligibilityAssignmentReqJustification                     = $EligibilityAssignmentReqJustification
             EligibleAlertNotificationDefaultRecipient                 = $EligibleAlertNotificationDefaultRecipient
             EligibleAlertNotificationAdditionalRecipient              = [System.String[]]$EligibleAlertNotificationAdditionalRecipient
             EligibleAlertNotificationOnlyCritical                     = $EligibleAlertNotificationOnlyCritical
@@ -511,11 +511,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqMFA,
+        $EligibilityAssignmentReqMFA,
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqJustification,
+        $EligibilityAssignmentReqJustification,
 
         [Parameter()]
         [System.Boolean]
@@ -1125,16 +1125,16 @@ function Set-TargetResource
 
         elseif ($role.id -match 'Enablement_Admin_Eligibility')
         {
-            if ($PSBoundParameters.ContainsKey('ElegibilityAssignmentReqJustification') `
-                    -and $PSBoundParameters.ContainsKey('ElegibilityAssignmentReqMFA'))
+            if ($PSBoundParameters.ContainsKey('EligibilityAssignmentReqJustification') `
+                    -and $PSBoundParameters.ContainsKey('EligibilityAssignmentReqMFA'))
             {
-                Write-Verbose -Message 'Handle Assignment: Require Azure Multi-Factor Authentication on elegibility / Require justification on elegibility'
+                Write-Verbose -Message 'Handle Assignment: Require Azure Multi-Factor Authentication on eligibility / Require justification on eligibility'
                 [String[]]$enabledrules = @()
-                if ($ElegibilityAssignmentReqJustification)
+                if ($EligibilityAssignmentReqJustification)
                 {
                     $enabledrules += 'Justification'
                 }
-                if ($ElegibilityAssignmentReqMFA)
+                if ($EligibilityAssignmentReqMFA)
                 {
                     $enabledrules += 'MultiFactorAuthentication'
                 }
@@ -1248,11 +1248,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqMFA,
+        $EligibilityAssignmentReqMFA,
 
         [Parameter()]
         [System.Boolean]
-        $ElegibilityAssignmentReqJustification,
+        $EligibilityAssignmentReqJustification,
 
         [Parameter()]
         [System.Boolean]

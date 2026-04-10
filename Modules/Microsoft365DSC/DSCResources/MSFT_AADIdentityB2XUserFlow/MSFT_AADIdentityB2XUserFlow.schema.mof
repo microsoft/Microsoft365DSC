@@ -5,10 +5,10 @@ class MSFT_MicrosoftGraphUserFlowApiConnectorConfiguration
     [Write, Description("The name of the connector used for post attribute collection step.")] String postAttributeCollectionConnectorName;
 };
 
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphuserFlowUserAttributeAssignmentUserAttributeValues
 {
-    [Write, Description("The display name of the property displayed to the end user in the user flow.")] String Name;
+    [Required, Description("The display name of the property displayed to the end user in the user flow.")] String Name;
     [Write, Description("The value that is set when this item is selected.")] String Value;
     [Write, Description("Used to set the value as the default.")] Boolean IsDefault;
 };

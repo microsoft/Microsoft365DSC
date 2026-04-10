@@ -132,7 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-Ciminstance -className MSFT_ADOPermission -Property @{
                             NamespaceId = '5a27515b-ccd7-42c9-84f1-54c998f03866'
                             DisplayName = 'Edit identity information'
-                            Bit         = '2'
+                            Bit         = 2
                             Token       = 'f6492b10-7ae8-4641-8208-ff5c364a6154\dbe6034e-8fbe-4d6e-a7f3-07a7e70816c9'
                         } -ClientOnly)
                     );
@@ -156,7 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-Ciminstance -className MSFT_ADOPermission -Property @{
                             NamespaceId = '5a27515b-ccd7-42c9-84f1-54c998f03866'
                             DisplayName = 'Edit identity information'
-                            Bit         = '8' # Drift
+                            Bit         = 8 # Drift
                             Token       = 'f6492b10-7ae8-4641-8208-ff5c364a6154\dbe6034e-8fbe-4d6e-a7f3-07a7e70816c9'
                         } -ClientOnly)
                     );

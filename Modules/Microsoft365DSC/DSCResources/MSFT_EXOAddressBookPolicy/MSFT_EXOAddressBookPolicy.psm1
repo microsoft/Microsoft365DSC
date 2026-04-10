@@ -104,7 +104,7 @@ function Get-TargetResource
         Write-Verbose -Message "Found Address Book Policy $($Name)"
         $result = @{
             Name                  = $AddressBookPolicy.Name
-            AddressLists          = $AddressBookPolicy.AddressLists
+            AddressLists          = [System.String[]]$AddressBookPolicy.AddressLists
             GlobalAddressList     = $AddressBookPolicy.GlobalAddressList
             OfflineAddressBook    = $AddressBookPolicy.OfflineAddressBook
             RoomList              = $AddressBookPolicy.RoomList

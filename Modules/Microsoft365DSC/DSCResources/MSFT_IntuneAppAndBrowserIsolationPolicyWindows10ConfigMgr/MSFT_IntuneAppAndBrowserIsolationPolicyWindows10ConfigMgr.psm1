@@ -24,18 +24,18 @@ function Get-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $AllowWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $ClipboardSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $SaveFilesToHost,
 
         [Parameter()]
@@ -44,33 +44,33 @@ function Get-TargetResource
         $InstallWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3')]
-        [System.String]
+        [ValidateSet(1, 2, 3)]
+        [System.Int32]
         $ClipboardFileType,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowPersistence,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowVirtualGPU,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '4', '8')]
+        [ValidateSet(0, 1, 2, 4, 8)]
         [System.Int32[]]
         $PrintingSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowCameraMicrophoneRedirection,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AuditApplicationGuard,
 
         [Parameter()]
@@ -102,13 +102,13 @@ function Get-TargetResource
         $NeutralResources,
 
         [Parameter()]
-        [ValidateSet('1', '0')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $EnterpriseProxyServersAreAuthoritative,
 
         [Parameter()]
-        [ValidateSet('1', '0')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $EnterpriseIPRangesAreAuthoritative,
 
         [Parameter()]
@@ -279,18 +279,18 @@ function Set-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $AllowWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $ClipboardSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $SaveFilesToHost,
 
         [Parameter()]
@@ -299,33 +299,33 @@ function Set-TargetResource
         $InstallWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3')]
-        [System.String]
+        [ValidateSet(1, 2, 3)]
+        [System.Int32]
         $ClipboardFileType,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowPersistence,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowVirtualGPU,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '4', '8')]
+        [ValidateSet(0, 1, 2, 4, 8)]
         [System.Int32[]]
         $PrintingSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowCameraMicrophoneRedirection,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AuditApplicationGuard,
 
         [Parameter()]
@@ -357,19 +357,20 @@ function Set-TargetResource
         $NeutralResources,
 
         [Parameter()]
-        [ValidateSet('1', '0')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $EnterpriseProxyServersAreAuthoritative,
 
         [Parameter()]
-        [ValidateSet('1', '0')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $EnterpriseIPRangesAreAuthoritative,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
@@ -417,7 +418,6 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $templateReferenceId = 'e373ebb7-c1c5-4ffb-9ce0-698f1834fd9d_1'
@@ -516,18 +516,18 @@ function Test-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $AllowWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '3')]
-        [System.String]
+        [ValidateSet(0, 1, 2, 3)]
+        [System.Int32]
         $ClipboardSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $SaveFilesToHost,
 
         [Parameter()]
@@ -536,33 +536,33 @@ function Test-TargetResource
         $InstallWindowsDefenderApplicationGuard,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3')]
-        [System.String]
+        [ValidateSet(1, 2, 3)]
+        [System.Int32]
         $ClipboardFileType,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowPersistence,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowVirtualGPU,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2', '4', '8')]
+        [ValidateSet(0, 1, 2, 4, 8)]
         [System.Int32[]]
         $PrintingSettings,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AllowCameraMicrophoneRedirection,
 
         [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $AuditApplicationGuard,
 
         [Parameter()]
@@ -594,13 +594,13 @@ function Test-TargetResource
         $NeutralResources,
 
         [Parameter()]
-        [ValidateSet('1', '0')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $EnterpriseProxyServersAreAuthoritative,
 
         [Parameter()]
-        [ValidateSet('1', '0')]
-        [System.String]
+        [ValidateSet(0, 1)]
+        [System.Int32]
         $EnterpriseIPRangesAreAuthoritative,
 
         [Parameter()]
@@ -716,13 +716,19 @@ function Export-TargetResource
     {
         #region resource generator code
         $policyTemplateID = 'e373ebb7-c1c5-4ffb-9ce0-698f1834fd9d_1'
+        $baseFilter = "templateReference/templateId eq '$policyTemplateID'"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($Filter) and ($baseFilter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
         [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
             -Filter $Filter `
             -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-            $_.TemplateReference.TemplateId -eq $policyTemplateID
-        }
+            -ErrorAction Stop
         #endregion
 
         $i = 1

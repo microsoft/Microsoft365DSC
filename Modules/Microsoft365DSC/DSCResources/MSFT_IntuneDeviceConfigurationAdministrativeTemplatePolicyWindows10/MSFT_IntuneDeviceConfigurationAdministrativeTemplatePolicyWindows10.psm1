@@ -372,22 +372,6 @@ function Set-TargetResource
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('DefinitionValues') | Out-Null
 
-        $keys = (([Hashtable]$CreateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                if ($key -eq 'DefinitionValues')
-                {
-                    #Removing Key Definition because it is Read-Only
-                    foreach ($definitionValue in ($CreateParameters.$key).DefinitionValues)
-                    {
-                        $definitionValue.Remove('Definition')
-                    }
-                }
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-        }
         #region resource generator code
         $policy = New-MgBetaDeviceManagementGroupPolicyConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -439,22 +423,13 @@ function Set-TargetResource
 
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters -KeyMapping $keyToRename
-
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('DefinitionValues') | Out-Null
 
-        $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-        }
         #region resource generator code
         #Update Core policy
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.GroupPolicyConfiguration')
-        Update-MgBetaDeviceManagementGroupPolicyConfiguration  `
+        Update-MgBetaDeviceManagementGroupPolicyConfiguration `
             -GroupPolicyConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
 

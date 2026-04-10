@@ -1,7 +1,7 @@
-[ClassVersion("1.0.0.1"), FriendlyName("TeamsMeetingConfiguration")]
+[ClassVersion("1.0.0.2"), FriendlyName("TeamsMeetingConfiguration")]
 class MSFT_TeamsMeetingConfiguration : OMI_BaseResource
 {
-    [Key, Description("The only valid input is Global - the tenant wide configuration"), ValueMap{"Global"}, Values{"Global"}] string Identity;
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("URL to a logo image. This would be included in the meeting invite. Please ensure this URL is publicly accessible for invites that go beyond your federation boundaries.")] String LogoURL;
     [Write, Description("URL to a website containing legal information and meeting disclaimers. This would be included in the meeting invite. Please ensure this URL is publicly accessible for invites that go beyond your federation boundaries.")] String LegalURL;
     [Write, Description("URL to a website where users can obtain assistance on joining the meeting.This would be included in the meeting invite. Please ensure this URL is publicly accessible for invites that go beyond your federation boundaries.")] String HelpURL;

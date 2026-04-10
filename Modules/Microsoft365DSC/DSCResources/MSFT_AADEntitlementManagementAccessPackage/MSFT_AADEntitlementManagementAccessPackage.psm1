@@ -647,7 +647,7 @@ function Set-TargetResource
                         #write-verbose -message ($params|convertTo-json -depth 20)
 
                         Remove-MgBetaEntitlementManagementAccessPackageResourceRoleScope `
-                            -AccessPackageId $currentInstance.Id  `
+                            -AccessPackageId $currentInstance.Id `
                             -AccessPackageResourceRoleScopeId $currentRole.Id
 
                         New-MgBetaEntitlementManagementAccessPackageResourceRoleScope `
@@ -672,7 +672,7 @@ function Set-TargetResource
             Write-Verbose -Message "Removing RoleScope with originId {$originId} from access package {$($currentInstance.Id)}"
 
             Remove-MgBetaEntitlementManagementAccessPackageResourceRoleScope `
-                -AccessPackageId $currentInstance.Id  `
+                -AccessPackageId $currentInstance.Id `
                 -AccessPackageResourceRoleScopeId $currentRoleScope.Id
         }
         #endregion

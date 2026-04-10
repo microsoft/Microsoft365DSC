@@ -11,6 +11,7 @@ function Get-TargetResource
         $DomainName,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled', 'Unknown')]
         [System.String]
         $DnssecFeatureStatus,
 
@@ -101,6 +102,7 @@ function Set-TargetResource
         $DomainName,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled', 'Unknown')]
         [System.String]
         $DnssecFeatureStatus,
 
@@ -170,6 +172,7 @@ function Test-TargetResource
         $DomainName,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled', 'Unknown')]
         [System.String]
         $DnssecFeatureStatus,
 

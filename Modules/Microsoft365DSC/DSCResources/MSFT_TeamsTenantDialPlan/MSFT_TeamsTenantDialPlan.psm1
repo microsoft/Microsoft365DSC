@@ -566,7 +566,7 @@ function Get-M365DSCVoiceNormalizationRulesDifference
 function Get-M365DSCNormalizationRules
 {
     [CmdletBinding()]
-    [OutputType([PSCustomObject])]
+    [OutputType([System.Collections.Hashtable[]])]
     param
     (
         [Parameter(Mandatory = $true)]

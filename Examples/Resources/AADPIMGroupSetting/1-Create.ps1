@@ -44,8 +44,8 @@ Configuration Example
             AuthenticationContextId                                   = "";
             AuthenticationContextRequired                             = $false;
             DisplayName                                               = "test-group";
-            ElegibilityAssignmentReqJustification                     = $False;
-            ElegibilityAssignmentReqMFA                               = $False;
+            EligibilityAssignmentReqJustification                     = $False;
+            EligibilityAssignmentReqMFA                               = $False;
             EligibleAlertNotificationAdditionalRecipient              = @();
             EligibleAlertNotificationDefaultRecipient                 = $True;
             EligibleAlertNotificationOnlyCritical                     = $False;

@@ -352,18 +352,6 @@ function Set-TargetResource
         $resource.Remove('Id') | Out-Null
         $resource.Remove('CatalogId') | Out-Null
 
-        #Preparing embedded Cim Instances
-        $keys = (([Hashtable]$resource).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            $keyValue = $resource.$key
-            if ($null -ne $resource.$key -and $resource.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $resource.$key
-                $resource.$key = $keyValue
-            }
-        }
-
         $mapping = @{
             odataType    = '@odata.type'
             questionText = 'text'
@@ -402,18 +390,6 @@ function Set-TargetResource
         $resource.Remove('CatalogId') | Out-Null
         $resource.Remove('Verbose') | Out-Null
 
-        #Preparing embedded Cim Instances
-        $keys = (([Hashtable]$resource).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            $keyValue = $resource.$key
-            if ($null -ne $resource.$key -and $resource.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $resource.$key
-                $resource.$key = $keyValue
-            }
-        }
-
         $mapping = @{
             odataType    = '@odata.type'
             questionText = 'text'
@@ -442,18 +418,6 @@ function Set-TargetResource
         $resource.Remove('Id') | Out-Null
         $resource.Remove('CatalogId') | Out-Null
         $resource.Remove('Verbose') | Out-Null
-
-        #Preparing embedded Cim Instances
-        $keys = (([Hashtable]$resource).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            $keyValue = $resource.$key
-            if ($null -ne $resource.$key -and $resource.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $resource.$key
-                $resource.$key = $keyValue
-            }
-        }
 
         $mapping = @{
             odataType    = '@odata.type'

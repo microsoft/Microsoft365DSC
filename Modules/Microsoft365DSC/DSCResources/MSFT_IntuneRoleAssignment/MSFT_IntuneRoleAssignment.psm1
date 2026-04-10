@@ -577,9 +577,9 @@ function Export-TargetResource
     {
         [array]$getValue = Get-MgBetaDeviceManagementRoleAssignment -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceAndAppManagementRoleAssignment'  `
-        }
+            -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceAndAppManagementRoleAssignment' `
+            }
 
         if (-not $getValue)
         {

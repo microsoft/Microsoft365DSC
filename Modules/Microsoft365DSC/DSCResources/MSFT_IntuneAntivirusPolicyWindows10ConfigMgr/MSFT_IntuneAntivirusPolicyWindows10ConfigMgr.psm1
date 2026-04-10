@@ -659,8 +659,7 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $boundParameters.Remove('RandomizeScheduleTaskTimes') | Out-Null
 
     $templateReferenceId = '804339ad-1553-4478-a742-138fb5807418_1'

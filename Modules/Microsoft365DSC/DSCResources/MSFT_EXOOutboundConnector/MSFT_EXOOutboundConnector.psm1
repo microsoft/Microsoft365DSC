@@ -338,7 +338,7 @@ function Set-TargetResource
     $OutBoundConnector = $OutBoundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $OutBoundConnectorParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $OutBoundConnector))
+    if ($Ensure -eq 'Present' -and $null -eq $OutBoundConnector)
     {
         Write-Verbose -Message "Creating OutBoundConnector $($Identity)."
         $OutBoundConnectorParams.Add('Name', $Identity)
@@ -352,12 +352,12 @@ function Set-TargetResource
             Set-OutboundConnector -Identity $Identity -ValidationRecipients $ValidationRecipients -Confirm:$false
         }
     }
-    elseif (('Present' -eq $Ensure ) -and ($null -ne $OutBoundConnector))
+    elseif ($Ensure -eq 'Present' -and $null -ne $OutBoundConnector)
     {
         Write-Verbose -Message "Setting OutBoundConnector $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $OutBoundConnectorParams)"
         Set-OutBoundConnector @OutBoundConnectorParams -Confirm:$false
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $OutBoundConnector))
+    elseif ($Ensure -eq 'Absent' -and $null -ne $OutBoundConnector)
     {
         Write-Verbose -Message "Removing OutBoundConnector $($Identity)"
         Remove-OutBoundConnector -Identity $Identity -Confirm:$false

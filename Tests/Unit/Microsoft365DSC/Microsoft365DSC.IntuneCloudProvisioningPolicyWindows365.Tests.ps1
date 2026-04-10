@@ -55,7 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             id = "12345-12345-12345-12345-12345"
                             target = @{
                                 '@odata.type' = '#microsoft.graph.cloudPcManagementGroupAssignmentTarget'
-                                groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
+                                groupId = "42a638ec-2bf2-47a8-8f5f-176ce2124b7b"
                             }
                         }
                     )

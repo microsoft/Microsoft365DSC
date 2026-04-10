@@ -279,14 +279,14 @@ function Set-TargetResource
     $SafeAttachmentRule = $SafeAttachmentRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $SafeAttachmentRuleParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if (('Present' -eq $Ensure ) -and (-not $SafeAttachmentRule))
+    if ($Ensure -eq 'Present' -and $null -eq $SafeAttachmentRule)
     {
         $SafeAttachmentRuleParams.Add('Name', $SafeAttachmentRuleParams.Identity)
         $SafeAttachmentRuleParams.Remove('Identity') | Out-Null
         $SafeAttachmentRuleParams.Remove('MakeDefault') | Out-Null
         New-SafeAttachmentRule @SafeAttachmentRuleParams -Confirm:$false
     }
-    elseif (('Present' -eq $Ensure ) -and ($SafeAttachmentRule))
+    elseif ($Ensure -eq 'Present' -and $null -ne $SafeAttachmentRule)
     {
         if ($SafeAttachmentRuleParams.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State))
         {
@@ -310,7 +310,7 @@ function Set-TargetResource
             Set-SafeAttachmentRule @SafeAttachmentRuleParams -Confirm:$false
         }
     }
-    elseif (('Absent' -eq $Ensure ) -and ($SafeAttachmentRule))
+    elseif ($Ensure -eq 'Absent' -and $null -ne $SafeAttachmentRule)
     {
         Write-Verbose -Message "Removing SafeAttachmentRule $($Identity)"
         Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false

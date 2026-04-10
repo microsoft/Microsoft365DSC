@@ -163,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SiteGroups                              = @(
                         (New-CimInstance -ClassName MSFT_PolicyConfigDLPSiteGroups -Property @{
                             Name      = 'Whatever'
-                            Addresses = (New-CimInstance -ClassName MSFT_PolicyConfigSiteGroupAddress -Property @{
+                            Addresses = [CimInstance[]]@(New-CimInstance -ClassName MSFT_PolicyConfigSiteGroupAddress -Property @{
                                     MatchType    = 'UrlMatch'
                                     Url          = 'Karakette.com'
                                     AddressLower = ''

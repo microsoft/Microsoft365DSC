@@ -46,6 +46,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DecryptAttachmentForEncryptOnly            = $False
                     EDiscoverySuperUserEnabled                 = $True
                     EnablePdfEncryption                        = $False
+                    EnablePortalTrackingLogs                   = $True
                     Identity                                   = 'Test Config'
                     InternalLicensingEnabled                   = $True
                     JournalReportDecryptionEnabled             = $True
@@ -81,6 +82,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DecryptAttachmentForEncryptOnly            = $False
                     EDiscoverySuperUserEnabled                 = $True
                     EnablePdfEncryption                        = $true # Drift
+                    EnablePortalTrackingLogs                   = $True
                     Ensure                                     = 'Present'
                     InternalLicensingEnabled                   = $True
                     JournalReportDecryptionEnabled             = $True
@@ -114,6 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DecryptAttachmentForEncryptOnly            = $False
                     EDiscoverySuperUserEnabled                 = $True
                     EnablePdfEncryption                        = $False
+                    EnablePortalTrackingLogs                   = $True
                     Ensure                                     = 'Present'
                     InternalLicensingEnabled                   = $True
                     JournalReportDecryptionEnabled             = $True

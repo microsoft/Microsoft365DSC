@@ -78,7 +78,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -Command Get-RoleGroupMember -parameterFilter { $name -eq 'Contoso Role Group'}  -MockWith {
-                    [PSCustomObject]@{Name = 'Group1'}
+                    [PSCustomObject]@{
+                        Name = 'Group1'
+                        Alias = '00000000-0000-0000-0000-000000000000'
+                    }
                 }
             }
 
@@ -96,7 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Name        = 'Contoso Role Group'
-                    Members     = 'Group1', 'User1', 'User3'
+                    Members     = 'Group1', 'User1@contoso.com', 'User3@contoso.com'
                     Description = 'This is the Contoso Role Group'
                     Ensure      = 'Present'
                     Credential  = $Credential
@@ -110,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -Command Get-RoleGroupMember -parameterFilter { $name -eq 'Contoso Role Group'}  -MockWith {
-                    [PSCustomObject]@{Name = 'Group1' }, [PSCustomObject]@{Name = 'User1' }, [PSCustomObject]@{Name = 'User2' }, [PSCustomObject]@{Name = 'User3' }
+                    [PSCustomObject]@{Name = 'Group1'; Alias = "00000000-0000-0000-0000-000000000000" }, [PSCustomObject]@{Name = 'User1'; Alias = "User1@contoso.com" }, [PSCustomObject]@{Name = 'User2'; Alias = "User2@contoso.com" }, [PSCustomObject]@{Name = 'User3'; Alias = "User3@contoso.com" }
                 }
             }
 
@@ -157,7 +160,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Name        = 'Contoso Role Group'
-                    Members     = 'Group1', 'User1', 'User2'
+                    Members     = 'Group1', 'User1@contoso.com', 'User2@contoso.com'
                     Description = 'This is the Contoso Role Group'
                     Ensure      = 'Present'
                     Credential  = $Credential
@@ -173,9 +176,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-RoleGroupMember -MockWith {
                     return @(
-                        [PSCustomObject]@{Name = 'Group1' },
-                        [PSCustomObject]@{Name = 'User1' },
-                        [PSCustomObject]@{Name = 'User2' }
+                        [PSCustomObject]@{Name = 'Group1'; Alias = "00000000-0000-0000-0000-000000000000" },
+                        [PSCustomObject]@{Name = 'User1'; Alias = "User1@contoso.com" },
+                        [PSCustomObject]@{Name = 'User2'; Alias = "User2@contoso.com" }
                     )
                 }
             }
@@ -193,12 +196,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                $RoleGroup = @{
-                    Name = 'Contoso Role Group'
-                    Members     = 'Group1', 'User1', 'User2'
-                    Description = 'This is the Contoso Role Group'
-                }
-
                 Mock -CommandName Get-RoleGroup -MockWith {
                     return @{
                         Name        = 'Contoso Role Group'
@@ -206,8 +203,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = 'This is the Contoso Role Group'
                     }
                 }
+
                 Mock -Command Get-RoleGroupMember -parameterFilter { $name -eq 'Contoso Role Group'}  -MockWith {
-                    [PSCustomObject]@{Name = 'Group1' }, [PSCustomObject]@{Name = 'User1' }, [PSCustomObject]@{Name = 'User2' }
+                    [PSCustomObject]@{Name = 'Group1'; Alias = "00000000-0000-0000-0000-000000000000" }, [PSCustomObject]@{Name = 'User1'; Alias = "User1@contoso.com" }, [PSCustomObject]@{Name = 'User2'; Alias = "User2@contoso.com" }
                 }
             }
 
@@ -215,7 +213,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }
-            # Remove the unnecessary closing brace
         }
     }
 }

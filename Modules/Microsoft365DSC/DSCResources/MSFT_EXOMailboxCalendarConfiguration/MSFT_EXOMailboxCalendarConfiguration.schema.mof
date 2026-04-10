@@ -8,7 +8,6 @@ class MSFT_EXOMailboxCalendarConfiguration: OMI_BaseResource
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
-
     [Key, Description("Specifies the mailbox identity.")] String Identity;
     [Write, Description("Enables or disables agenda mail introduction.")] Boolean AgendaMailIntroductionEnabled;
     [Write, Description("Automatically declines meeting requests when the user is busy.")] Boolean AutoDeclineWhenBusy;

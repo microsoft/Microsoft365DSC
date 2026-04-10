@@ -99,7 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName         = "MyPolicy"
                     Description         = "MyDescription"
                     IsEnabled           = $true
-                    Ensure              = 'Present'
+                    IsSingleInstance    = 'Yes'
                     Credential          = $Credential;
                 }
             }
@@ -112,16 +112,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Get-TargetResource returns ApplicationRestrictions with maxLifetime converted to ISO 8601" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName         = "MyPolicy"
-                    Description         = "MyDescription"
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    DisplayName      = "MyPolicy"
+                    Description      = "MyDescription"
+                    IsSingleInstance = 'Yes'
+                    Credential       = $Credential;
                 }
             }
 
             It 'Should return maxLifetime in ISO 8601 format from the Get method' {
                 $result = Get-TargetResource @testParams
-                $result.Ensure | Should -Be 'Present'
+                $result.IsSingleInstance | Should -Be 'Yes'
                 $result.ApplicationRestrictions.passwordCredentials | Should -HaveCount 4
                 $lifetimeCred = $result.ApplicationRestrictions.passwordCredentials | Where-Object { $_.restrictionType -eq 'passwordLifetime' }
                 $lifetimeCred | Should -Not -BeNullOrEmpty
@@ -135,6 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName         = "MyPolicy"
                     Description         = "MyDescription"
                     IsEnabled           = $true
+                    IsSingleInstance    = 'Yes'
                     ApplicationRestrictions          = (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictions -Property @{
                         passwordCredentials = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
@@ -161,13 +162,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             } -ClientOnly);
                         )
                     } -ClientOnly);
-                    Ensure              = 'Present'
                     Credential          = $Credential;
                 }
             }
 
             It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+                (Get-TargetResource @testParams).IsSingleInstance | Should -Be 'Yes'
             }
 
             It 'Should return false from the Test method' {
@@ -202,7 +202,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             } -ClientOnly);
                         )
                     } -ClientOnly);
-                    Ensure              = 'Present'
+                    IsSingleInstance = 'Yes'
                     Credential          = $Credential;
                 }
 
@@ -239,7 +239,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Values from the Get method' {
                 $result = Get-TargetResource @testParams
-                $result.Ensure | Should -Be 'Present'
+                $result.IsSingleInstance | Should -Be 'Yes'
                 $result.ApplicationRestrictions.keyCredentials | Should -HaveCount 2
                 $trustedCACred = $result.ApplicationRestrictions.keyCredentials | Where-Object { $_.restrictionType -eq 'trustedCertificateAuthority' }
                 $trustedCACred | Should -Not -BeNullOrEmpty
@@ -266,7 +266,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             } -ClientOnly);
                         )
                     } -ClientOnly);
-                    Ensure              = 'Present'
+                    IsSingleInstance    = 'Yes'
                     Credential          = $Credential;
                 }
 
@@ -291,7 +291,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Values from the Get method' {
                 $result = Get-TargetResource @testParams
-                $result.Ensure | Should -Be 'Present'
+                $result.IsSingleInstance | Should -Be 'Yes'
                 $result.ServicePrincipalRestrictions.passwordCredentials | Should -HaveCount 1
             }
 

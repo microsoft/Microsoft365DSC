@@ -1,7 +1,7 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphCertificateAuthority
 {
-    [Write, Description("Required. The base64 encoded string representing the public certificate.")] String Certificate;
+    [Required, Description("Required. The base64 encoded string representing the public certificate.")] String Certificate;
     [Write, Description("The URL of the certificate revocation list.")] String CertificateRevocationListUrl;
     [Write, Description("The URL contains the list of all revoked certificates since the last time a full certificate revocaton list was created.")] String DeltaCertificateRevocationListUrl;
     [Write, Description("Required. true if the trusted certificate is a root authority, false if the trusted certificate is an intermediate authority.")] Boolean IsRootAuthority;

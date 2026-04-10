@@ -89,7 +89,7 @@ function Get-TargetResource
             $customBlockedWordsListValue = @()
             if (-not [System.String]::IsNullOrEmpty($valueBlockedWords.Value))
             {
-                foreach ($word in $valueBlockedWords.Value.Split(','))
+                foreach ($word in $valueBlockedWords.Value.Split(',') | Where-Object -FilterScript { -not [System.String]::IsNullOrEmpty($_) })
                 {
                     $customBlockedWordsListValue += $word
                 }

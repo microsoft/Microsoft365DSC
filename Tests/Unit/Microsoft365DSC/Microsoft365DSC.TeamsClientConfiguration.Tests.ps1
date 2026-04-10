@@ -50,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowShareFile                   = $True
                     AllowSkypeBusinessInterop        = $True
                     ContentPin                       = 'RequiredOutsideScheduleMeeting'
-                    Identity                         = 'Global'
+                    IsSingleInstance                 = 'Yes'
                     ResourceAccountContentAccess     = 'NoAccess'
                     RestrictedSenderList             = @('john.smith@contoso.com')
                 }
@@ -82,7 +82,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowSkypeBusinessInterop        = $True
                     ContentPin                       = 'RequiredOutsideScheduleMeeting'
                     Credential                       = $Credential
-                    Identity                         = 'Global'
+                    IsSingleInstance                 = 'Yes'
                     ResourceAccountContentAccess     = 'NoAccess'
                     RestrictedSenderList             = @('john.smith@contoso.com')
                 }
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowSkypeBusinessInterop        = $True
                     ContentPin                       = 'RequiredOutsideScheduleMeeting'
                     Credential                       = $Credential
-                    Identity                         = 'Global'
+                    IsSingleInstance                 = 'Yes'
                     ResourceAccountContentAccess     = 'NoAccess'
                     RestrictedSenderList             = @('john.smith@contoso.com', 'test@contoso.com')
                 }

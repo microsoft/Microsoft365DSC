@@ -204,7 +204,7 @@ function Set-TargetResource
 
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentRule.Ensure -eq 'Absent')
     {
         $CreationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
@@ -212,7 +212,7 @@ function Set-TargetResource
         New-CaseHoldRule @CreationParams
     }
     # Compliance Case exists and it should. Update it.
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentRule.Ensure -eq 'Present')
     {
         $UpdateParams = @{
             Identity          = $Name
@@ -224,7 +224,7 @@ function Set-TargetResource
         Set-CaseHoldRule @UpdateParams
     }
     # Compliance Case exists but it shouldn't. Remove it.
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentRule.Ensure -eq 'Present')
     {
         Remove-CaseHoldRule -Identity $Name -Confirm:$false
     }

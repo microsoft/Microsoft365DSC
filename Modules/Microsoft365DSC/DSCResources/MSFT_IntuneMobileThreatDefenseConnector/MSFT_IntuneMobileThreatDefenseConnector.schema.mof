@@ -3,7 +3,6 @@ class MSFT_IntuneMobileThreatDefenseConnector : OMI_BaseResource
 {
     [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("The DisplayName of the Mobile Threat Defense Connector partner. NOTE: Hard coded for convenience, not returned by the Graph API.")] String DisplayName;
-
     [Write, Description("When TRUE, indicates the Mobile Threat Defense partner may collect metadata about installed applications from Intune for IOS devices. When FALSE, indicates the Mobile Threat Defense partner may not collect metadata about installed applications from Intune for IOS devices. Default value is FALSE.")] Boolean AllowPartnerToCollectIosApplicationMetadata;
     [Write, Description("When TRUE, indicates the Mobile Threat Defense partner may collect metadata about personally installed applications from Intune for IOS devices. When FALSE, indicates the Mobile Threat Defense partner may not collect metadata about personally installed applications from Intune for IOS devices. Default value is FALSE.")] Boolean AllowPartnerToCollectIosPersonalApplicationMetadata;
     [Write, Description("For Android, set whether Intune must receive data from the Mobile Threat Defense partner prior to marking a device compliant.")] Boolean AndroidDeviceBlockedOnMissingPartnerData;
@@ -19,7 +18,6 @@ class MSFT_IntuneMobileThreatDefenseConnector : OMI_BaseResource
     [Write, Description("Get or set whether to block devices on the enabled platforms that do not meet the minimum version requirements of the Mobile Threat Defense partner.")] Boolean PartnerUnsupportedOSVersionBlocked;
     [Write, Description("When TRUE, indicates that Intune must receive data from the Mobile Threat Defense partner prior to marking a device compliant for Windows. When FALSE, indicates that Intune may make a device compliant without receiving data from the Mobile Threat Defense partner for Windows. Default value is FALSE.")] Boolean WindowsDeviceBlockedOnMissingPartnerData;
     [Write, Description("When TRUE, indicates that data from the Mobile Threat Defense partner can be used during compliance evaluations for Windows. When FALSE, it indicates that data from the Mobile Threat Defense partner should not be used during compliance evaluations for Windows. Default value is FALSE.")] Boolean WindowsEnabled;
-
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Present", "Absent"}, Values{"Present", "Absent"}] string Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

@@ -13,10 +13,14 @@ function Invoke-TestHarness
 
         [Parameter()]
         [Switch]
-        $IgnoreCodeCoverage
+        $IgnoreCodeCoverage,
+
+        [Parameter()]
+        [System.String]
+        $ModuleDirectory = (Join-Path -Path $PSScriptRoot -ChildPath '..\Modules\Microsoft365DSC' -Resolve)
     )
 
-    $sw = [System.Diagnostics.StopWatch]::startnew()
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
     $MaximumFunctionCount = 32767
     Write-Host -Object 'Running all Microsoft365DSC Unit Tests'
@@ -24,7 +28,7 @@ function Invoke-TestHarness
     $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
 
     $oldModPath = $env:PSModulePath
-    $env:PSModulePath = $env:PSModulePath + [System.IO.Path]::PathSeparator + (Join-Path -Path $repoDir -ChildPath 'Modules\Microsoft365DSC')
+    $env:PSModulePath = $env:PSModulePath + [System.IO.Path]::PathSeparator + $ModuleDirectory
 
     $testCoverageFiles = @()
     if ($IgnoreCodeCoverage.IsPresent -eq $false)
@@ -38,7 +42,6 @@ function Invoke-TestHarness
     }
 
     Import-Module -Name "$repoDir/Modules/Microsoft365DSC/Microsoft365DSC.psd1"
-    Import-Module -Name PSDesiredStateConfiguration -Global -Prefix 'Pwsh' -Force
     $testsToRun = @()
 
     # Run Unit Tests
@@ -111,7 +114,7 @@ function Invoke-TestHarness
     {
         $Configuration.CodeCoverage.Enabled = $true
         $Configuration.CodeCoverage.Path = $testCoverageFiles
-        $Configuration.CodeCoverage.OutputPath = 'CodeCov.xml'
+        $Configuration.CodeCoverage.OutputPath = 'coverage.xml'
         $Configuration.CodeCoverage.OutputFormat = 'JaCoCo'
         $Configuration.CodeCoverage.UseBreakpoints = $false
     }

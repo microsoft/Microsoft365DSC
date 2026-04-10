@@ -82,7 +82,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableQoS                   = $False
                     Credential                  = $Credential
                     HelpURL                     = $null
-                    Identity                    = 'Global'
+                    IsSingleInstance            = 'Yes'
                     LegalURL                    = $null
                     LogoURL                     = $null
                 }
@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableQoS                   = $False
                     Credential                  = $Credential
                     HelpURL                     = $null
-                    Identity                    = 'Global'
+                    IsSingleInstance            = 'Yes'
                     LegalURL                    = $null
                     LogoURL                     = $null
                 }

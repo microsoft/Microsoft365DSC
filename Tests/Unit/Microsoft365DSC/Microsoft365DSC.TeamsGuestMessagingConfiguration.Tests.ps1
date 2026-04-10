@@ -73,7 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowUserDeleteMessage = $False
                     AllowUserEditMessage   = $True
                     GiphyRatingType        = 'Moderate'
-                    Identity               = 'Global'
+                    IsSingleInstance       = 'Yes'
                     Credential             = $Credential
                 }
             }
@@ -98,7 +98,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowUserDeleteMessage = $True; #Drifted
                     AllowUserEditMessage   = $True
                     GiphyRatingType        = 'Moderate'
-                    Identity               = 'Global'
+                    IsSingleInstance       = 'Yes'
                     Credential             = $Credential
                 }
             }

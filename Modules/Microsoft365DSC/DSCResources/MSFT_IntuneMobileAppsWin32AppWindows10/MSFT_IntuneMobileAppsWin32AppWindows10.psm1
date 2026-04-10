@@ -68,6 +68,7 @@ function Get-TargetResource
         $UninstallCommandLine,
 
         [Parameter()]
+        [ValidateSet('none', 'x86', 'x64', 'arm64')]
         [System.String[]]
         $AllowedArchitectures,
 
@@ -318,9 +319,15 @@ function Get-TargetResource
         }
         #endregion
 
+        [System.String[]]$allowedArchitecturesValue = @()
+        foreach ($arch in ($getValue.AdditionalProperties.allowedArchitectures -split ',' | Where-Object { -not [System.String]::IsNullOrEmpty($_) }))
+        {
+            $allowedArchitecturesValue += $arch
+        }
+
         $results = @{
             #region resource generator code
-            AllowedArchitectures           = $getValue.AdditionalProperties.allowedArchitectures -split ','
+            AllowedArchitectures           = $allowedArchitecturesValue
             Categories                     = $complexCategories
             Description                    = $getValue.Description
             Developer                      = $getValue.Developer
@@ -447,6 +454,7 @@ function Set-TargetResource
         $UninstallCommandLine,
 
         [Parameter()]
+        [ValidateSet('none', 'x86', 'x64', 'arm64')]
         [System.String[]]
         $AllowedArchitectures,
 
@@ -556,8 +564,7 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $boundParameters.Remove('Categories') | Out-Null
 
     if ($boundParameters.ContainsKey('AllowedArchitectures'))
@@ -592,49 +599,38 @@ function Set-TargetResource
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
         $createParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$createParameters).Clone()).Keys
-        $allRules = @()
-        foreach ($key in $keys)
+        if ($createParameters.ContainsKey('Rules'))
         {
-            if ($null -ne $createParameters.$key -and $PSBoundParameters.$key.GetType().Name -like '*CimInstance*')
+            $rulesToProcess = @()
+            $rulesToProcess = $createParameters.Rules
+
+            foreach ($rule in $rulesToProcess)
             {
-                $createParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
-
-                if ($key -eq 'Rules')
+                $odataType = $rule.'@odata.type'
+                $rule.'@odata.type' = "#microsoft.graph.win32LobApp$($odataType)Rule"
+                switch ($odataType)
                 {
-                    $rulesToProcess = @()
-                    $rulesToProcess = $createParameters.$key
-
-                    foreach ($rule in $rulesToProcess)
+                    'FileSystem'
                     {
-                        $odataType = $rule.'@odata.type'
-                        $rule.'@odata.type' = "#microsoft.graph.win32LobApp$($odataType)Rule"
-                        switch ($odataType)
-                        {
-                            'FileSystem'
-                            {
-                                $rule.Add('operationType', $rule.fileSystemOperationType)
-                                $rule.Remove('fileSystemOperationType') | Out-Null
-                            }
-                            'Registry'
-                            {
-                                $rule.Add('operationType', $rule.registryOperationType)
-                                $rule.Remove('registryOperationType') | Out-Null
-                            }
-                            'PowerShellScript'
-                            {
-                                $rule.Add('scriptContent', [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($rule.script)))
-                                $rule.Remove('script') | Out-Null
-                                $rule.Add('operationType', $rule.powerShellScriptOperationType)
-                                $rule.Remove('powerShellScriptOperationType') | Out-Null
-                            }
-                        }
+                        $rule.Add('operationType', $rule.fileSystemOperationType)
+                        $rule.Remove('fileSystemOperationType') | Out-Null
                     }
-
-                    $createParameters.$key = $rulesToProcess
-                    $allRules += $rulesToProcess
+                    'Registry'
+                    {
+                        $rule.Add('operationType', $rule.registryOperationType)
+                        $rule.Remove('registryOperationType') | Out-Null
+                    }
+                    'PowerShellScript'
+                    {
+                        $rule.Add('scriptContent', [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($rule.script)))
+                        $rule.Remove('script') | Out-Null
+                        $rule.Add('operationType', $rule.powerShellScriptOperationType)
+                        $rule.Remove('powerShellScriptOperationType') | Out-Null
+                    }
                 }
             }
+
+            $createParameters.Rules = $rulesToProcess
         }
         #region resource generator code
         $createParameters.Add('@odata.type', '#microsoft.graph.win32LobApp')
@@ -663,52 +659,40 @@ function Set-TargetResource
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
-
         $updateParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$updateParameters).Clone()).Keys
-        $allRules = @()
-        foreach ($key in $keys)
+        if ($updateParameters.ContainsKey('Rules'))
         {
-            if ($null -ne $updateParameters.$key -and $PSBoundParameters.$key.GetType().Name -like '*CimInstance*')
+            $rulesToProcess = @()
+            $rulesToProcess = $updateParameters.Rules
+
+            foreach ($rule in $rulesToProcess)
             {
-                $updateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.$key
-
-                if ($key -eq 'Rules')
+                $odataType = $rule.'@odata.type'
+                $rule.'@odata.type' = "#microsoft.graph.win32LobApp$($odataType)Rule"
+                switch ($odataType)
                 {
-                    $rulesToProcess = @()
-                    $rulesToProcess = $updateParameters.$key
-
-                    foreach ($rule in $rulesToProcess)
+                    'FileSystem'
                     {
-                        $odataType = $rule.'@odata.type'
-                        $rule.'@odata.type' = "#microsoft.graph.win32LobApp$($odataType)Rule"
-                        switch ($odataType)
-                        {
-                            'FileSystem'
-                            {
-                                $rule.Add('operationType', $rule.fileSystemOperationType)
-                                $rule.Remove('fileSystemOperationType') | Out-Null
-                            }
-                            'Registry'
-                            {
-                                $rule.Add('operationType', $rule.registryOperationType)
-                                $rule.Remove('registryOperationType') | Out-Null
-                            }
-                            'PowerShellScript'
-                            {
-                                $rule.Add('scriptContent', [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($rule.script)))
-                                $rule.Remove('script') | Out-Null
-                                $rule.Add('operationType', $rule.powerShellScriptOperationType)
-                                $rule.Remove('powerShellScriptOperationType') | Out-Null
-                            }
-                        }
+                        $rule.Add('operationType', $rule.fileSystemOperationType)
+                        $rule.Remove('fileSystemOperationType') | Out-Null
                     }
-
-                    $updateParameters.$key = $rulesToProcess
-                    $allRules += $rulesToProcess
+                    'Registry'
+                    {
+                        $rule.Add('operationType', $rule.registryOperationType)
+                        $rule.Remove('registryOperationType') | Out-Null
+                    }
+                    'PowerShellScript'
+                    {
+                        $rule.Add('scriptContent', [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($rule.script)))
+                        $rule.Remove('script') | Out-Null
+                        $rule.Add('operationType', $rule.powerShellScriptOperationType)
+                        $rule.Remove('powerShellScriptOperationType') | Out-Null
+                    }
                 }
             }
+
+            $updateParameters.Rules = $rulesToProcess
         }
 
         #region resource generator code
@@ -803,6 +787,7 @@ function Test-TargetResource
         $UninstallCommandLine,
 
         [Parameter()]
+        [ValidateSet('none', 'x86', 'x64', 'arm64')]
         [System.String[]]
         $AllowedArchitectures,
 

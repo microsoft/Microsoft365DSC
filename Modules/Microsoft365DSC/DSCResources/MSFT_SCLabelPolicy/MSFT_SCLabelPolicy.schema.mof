@@ -1,7 +1,7 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_SCLabelSetting
 {
-    [Write, Description("Advanced settings key.")] String Key;
+    [Required, Description("Advanced settings key.")] String Key;
     [Write, Description("Advanced settings value.")] String Value[];
 };
 

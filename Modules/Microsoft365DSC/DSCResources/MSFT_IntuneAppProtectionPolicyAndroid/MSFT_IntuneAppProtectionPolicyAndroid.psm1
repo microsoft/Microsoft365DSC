@@ -192,10 +192,12 @@ function Get-TargetResource
         $PeriodOnlineBeforeAccessCheck,
 
         [Parameter()]
+        [ValidateSet('allApps', 'managedApps', 'none')]
         [System.String]
         $AllowedInboundDataTransferSources,
 
         [Parameter()]
+        [ValidateSet('allApps', 'managedApps', 'none')]
         [System.String]
         $AllowedOutboundDataTransferDestinations,
 
@@ -204,6 +206,7 @@ function Get-TargetResource
         $OrganizationalCredentialsRequired,
 
         [Parameter()]
+        [ValidateSet('allApps', 'managedAppsWithPasteIn', 'managedApps', 'blocked')]
         [System.String]
         $AllowedOutboundClipboardSharingLevel,
 
@@ -248,6 +251,7 @@ function Get-TargetResource
         $MinimumPinLength,
 
         [Parameter()]
+        [ValidateSet('numeric', 'alphanumericAndSymbol')]
         [System.String]
         $PinCharacterSet,
 
@@ -766,10 +770,12 @@ function Set-TargetResource
         $PeriodOnlineBeforeAccessCheck,
 
         [Parameter()]
+        [ValidateSet('allApps', 'managedApps', 'none')]
         [System.String]
         $AllowedInboundDataTransferSources,
 
         [Parameter()]
+        [ValidateSet('allApps', 'managedApps', 'none')]
         [System.String]
         $AllowedOutboundDataTransferDestinations,
 
@@ -778,6 +784,7 @@ function Set-TargetResource
         $OrganizationalCredentialsRequired,
 
         [Parameter()]
+        [ValidateSet('allApps', 'managedAppsWithPasteIn', 'managedApps', 'blocked')]
         [System.String]
         $AllowedOutboundClipboardSharingLevel,
 
@@ -822,6 +829,7 @@ function Set-TargetResource
         $MinimumPinLength,
 
         [Parameter()]
+        [ValidateSet('numeric', 'alphanumericAndSymbol')]
         [System.String]
         $PinCharacterSet,
 
@@ -1264,10 +1272,12 @@ function Test-TargetResource
         $PeriodOnlineBeforeAccessCheck,
 
         [Parameter()]
+        [ValidateSet('allApps', 'managedApps', 'none')]
         [System.String]
         $AllowedInboundDataTransferSources,
 
         [Parameter()]
+        [ValidateSet('allApps', 'managedApps', 'none')]
         [System.String]
         $AllowedOutboundDataTransferDestinations,
 
@@ -1276,6 +1286,7 @@ function Test-TargetResource
         $OrganizationalCredentialsRequired,
 
         [Parameter()]
+        [ValidateSet('allApps', 'managedAppsWithPasteIn', 'managedApps', 'blocked')]
         [System.String]
         $AllowedOutboundClipboardSharingLevel,
 
@@ -1320,6 +1331,7 @@ function Test-TargetResource
         $MinimumPinLength,
 
         [Parameter()]
+        [ValidateSet('numeric', 'alphanumericAndSymbol')]
         [System.String]
         $PinCharacterSet,
 

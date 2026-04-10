@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-latest
 
     # Only run in main repo
-    if: github.repository == 'microsoft/Microsoft365DSC'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
 
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Only run in main repo
-    if: github.repository == 'microsoft/Microsoft365DSC'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
 
     environment:
       name: github-pages

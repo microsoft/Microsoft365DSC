@@ -21,10 +21,10 @@ class MSFT_AADRoleManagementPolicyEnablementRule
     [Write, Description("List of enabled rules.")] String enabledRules[];
 };
 
-[ClassVersion("1.0.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_AADRoleManagementPolicySubjectSet
 {
-    [Write, Description("The type of the subject set.")] String odataType;
+    [Required, Description("The type of the subject set.")] String odataType;
 };
 
 [ClassVersion("1.0.0.0")]
@@ -60,7 +60,6 @@ class MSFT_AADRoleManagementPolicyAuthenticationContextRule
     [Write, Description("Indicates if the authentication context rule is enabled.")] Boolean isEnabled;
     [Write, Description("Claim value associated with the rule.")] String claimValue;
 };
-
 
 [ClassVersion("1.0.0.0"), FriendlyName("AADGroupEligibilityScheduleSettings")]
 class MSFT_AADGroupEligibilityScheduleSettings : OMI_BaseResource

@@ -246,7 +246,7 @@ function Set-TargetResource
         }
         Set-PnPPropertyBagValue @CreationParams
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentPolicy.Ensure -eq 'Present')
     {
         Remove-PnPPropertyBagValue -Key $Key
     }
@@ -402,7 +402,7 @@ function Export-TargetResource
         foreach ($site in $sites)
         {
             $siteUrl = $site.Url
-            Write-M365DSCHost -Message "    [$i/$($sites.Length)] $($siteUrl)"
+            Write-M365DSCHost -Message "    [$i/$($sites.Length)] $($siteUrl)" -DeferWrite
             try
             {
                 $null = New-M365DSCConnection -Workload 'PnP' `
@@ -426,6 +426,16 @@ function Export-TargetResource
             {
                 $properties = Get-PnPPropertyBag
                 $j = 1
+
+                if ($properties.Length -eq 0)
+                {
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+                    continue
+                }
+                else
+                {
+                    Write-M365DSCHost -Message "`r`n" -DeferWrite
+                }
                 foreach ($property in $properties)
                 {
                     if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -433,7 +443,7 @@ function Export-TargetResource
                         $Global:M365DSCExportResourceInstancesCount++
                     }
 
-                    Write-M365DSCHost -Message "        |---  [$j/$($properties.Length)] $($property.Key)" -DeferWrite
+                    Write-M365DSCHost -Message "        |---[$j/$($properties.Length)] $($property.Key)" -DeferWrite
                     $Params = @{
                         Url                   = $siteUrl
                         Key                   = $property.Key

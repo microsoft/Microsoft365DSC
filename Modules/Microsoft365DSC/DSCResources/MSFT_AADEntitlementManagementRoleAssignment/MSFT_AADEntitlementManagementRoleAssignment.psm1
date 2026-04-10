@@ -15,7 +15,7 @@ function Get-TargetResource
         [System.String]
         $Principal,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $RoleDefinition,
 
@@ -192,7 +192,7 @@ function Set-TargetResource
         [System.String]
         $Principal,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $RoleDefinition,
 
@@ -323,7 +323,7 @@ function Test-TargetResource
         [System.String]
         $Principal,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $RoleDefinition,
 

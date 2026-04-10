@@ -1,13 +1,14 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphMember
 {
-    [Write, Description("Identity of member. For users, specify a UserPrincipalName. For groups, devices and serviceprincipals, specify DisplayName")] String Identity;
-    [Write, Description("Specify User, Group or Device to interpret the identity for Members. Specify User, Group or ServicePrincipal for ScopedRoleMembers."), ValueMap{"User", "Group", "Device", "ServicePrincipal"}, Values{"User", "Group", "Device", "ServicePrincipal"}] String Type;
+    [Required, Description("Identity of member. For users, specify a UserPrincipalName. For groups, devices and serviceprincipals, specify DisplayName")] String Identity;
+    [Required, Description("Specify User, Group or Device to interpret the identity for Members. Specify User, Group or ServicePrincipal for ScopedRoleMembers."), ValueMap{"User", "Group", "Device", "ServicePrincipal"}, Values{"User", "Group", "Device", "ServicePrincipal"}] String Type;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphScopedRoleMembership
 {
-    [Write, Description("Name of the Azure AD Role that is assigned. See https://learn.microsoft.com/en-us/azure/active-directory/roles/admin-units-assign-roles#roles-that-can-be-assigned-with-administrative-unit-scope")] String RoleName;
+    [Required, Description("Name of the Azure AD Role that is assigned. See https://learn.microsoft.com/en-us/azure/active-directory/roles/admin-units-assign-roles#roles-that-can-be-assigned-with-administrative-unit-scope")] String RoleName;
     [Write, Description("Member that is assigned the scoped role. Note: Any groups must be role-enabled"), EmbeddedInstance("MSFT_MicrosoftGraphMember")] String RoleMemberInfo;
 };
 

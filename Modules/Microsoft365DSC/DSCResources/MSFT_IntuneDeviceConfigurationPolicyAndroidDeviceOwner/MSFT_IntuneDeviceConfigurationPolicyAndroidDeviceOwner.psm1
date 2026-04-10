@@ -656,7 +656,7 @@ function Get-TargetResource
             if (-not $getValue)
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
+                    -FilterScript {
                         $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' `
                 }
             }
@@ -1668,11 +1668,6 @@ function Set-TargetResource
                 }
             }
 
-            if ($CreateParameters[$key].GetType().Fullname -like '*CimInstance*')
-            {
-                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
-            }
-
             if ($key -ne '@odata.type')
             {
                 $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
@@ -1719,11 +1714,6 @@ function Set-TargetResource
                 {
                     $UpdateParameters.$key.Add('localizedMessages', @())
                 }
-            }
-
-            if ($UpdateParameters.$key.GetType().Fullname -like '*CimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
 
             if ($key -ne '@odata.type')

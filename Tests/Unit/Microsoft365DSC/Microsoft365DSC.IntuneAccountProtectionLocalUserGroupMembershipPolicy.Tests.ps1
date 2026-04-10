@@ -408,6 +408,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
 
+            Mock -ModuleName M365DSCIntuneUtil -CommandName Get-MgGroup -MockWith {
+                return @{
+                    Id = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                    DisplayName = 'Exclude'
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -427,6 +434,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             DeviceAndAppManagementAssignmentFilterType = 'none'
                             GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Credential    = $Credential
@@ -471,6 +479,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             DeviceAndAppManagementAssignmentFilterType = 'none'
                             GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Credential    = $Credential
@@ -516,6 +525,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             DeviceAndAppManagementAssignmentFilterType = 'none'
                             GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     AccessGroup = [CimInstance[]]@(
@@ -542,6 +552,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             DeviceAndAppManagementAssignmentFilterType = 'none'
                             GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     AccessGroup = [CimInstance[]]@(

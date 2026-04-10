@@ -44,10 +44,6 @@ function Get-TargetResource
         $AllowBreakoutRooms,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowCarbonSummary,
-
-        [Parameter()]
         [System.String]
         [ValidateSet('EnabledUserOverride', 'DisabledUserOverride', 'Disabled')]
         $AllowCartCaptionsScheduling,
@@ -523,7 +519,6 @@ function Get-TargetResource
             AllowAnonymousUsersToStartMeeting           = $policy.AllowAnonymousUsersToStartMeeting
             AllowAvatarsInGallery                       = $policy.AllowAvatarsInGallery
             AllowBreakoutRooms                          = $policy.AllowBreakoutRooms
-            AllowCarbonSummary                          = $policy.AllowCarbonSummary
             AllowCartCaptionsScheduling                 = $policy.AllowCartCaptionsScheduling
             AllowChannelMeetingScheduling               = $policy.AllowChannelMeetingScheduling
             AllowCloudRecording                         = $policy.AllowCloudRecording
@@ -673,10 +668,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowBreakoutRooms,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCarbonSummary,
 
         [Parameter()]
         [System.String]
@@ -1162,6 +1153,7 @@ function Set-TargetResource
         if ($SetParameters.AllowCloudRecording -eq $false )
         {
             $SetParameters.Remove('AllowRecordingStorageOutsideRegion')
+            $SetParameters.Remove('RecordingStorageMode')
         }
         Set-CsTeamsMeetingPolicy @SetParameters
     }
@@ -1214,10 +1206,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowBreakoutRooms,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCarbonSummary,
 
         [Parameter()]
         [System.String]
@@ -1663,6 +1651,12 @@ function Test-TargetResource
     if ($AllowCloudRecording -eq $false -and $PSBoundParameters.ContainsKey('AllowRecordingStorageOutsideRegion'))
     {
         $excludedProperties += 'AllowCloudRecording'
+    }
+    elseif ($AllowCloudRecording -eq $false)
+    {
+        # AllowRecordingStorageOutsideRegion and RecordingStorageMode only work if AllowCloudRecording is set to True
+        $excludedProperties += 'AllowRecordingStorageOutsideRegion'
+        $excludeProperties += 'RecordingStorageMode'
     }
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `

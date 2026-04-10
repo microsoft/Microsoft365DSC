@@ -7,7 +7,6 @@ class MSFT_AADVerifiedIdAuthorityKeyVaultMetadata
     [Write, Description("Resource URL of the Key Vault.")] String ResourceUrl;
 };
 
-
 [ClassVersion("1.0.0.0"), FriendlyName("AADVerifiedIdAuthority")]
 class MSFT_AADVerifiedIdAuthority : OMI_BaseResource
 {
@@ -25,4 +24,3 @@ class MSFT_AADVerifiedIdAuthority : OMI_BaseResource
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };
-

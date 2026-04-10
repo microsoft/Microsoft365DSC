@@ -35,7 +35,7 @@ Configuration Example
                 }
 
                 MSFT_MicrosoftGraphNetworkAccessForwardingPolicyRule {
-                    Name           = 'Custom policy internet rule'
+                    Name           = 'Custom policy internet rule 2'
                     ActionValue    = 'bypass'
                     RuleType       = 'ipAddress'
                     Protocol       = 'tcp'
@@ -44,7 +44,7 @@ Configuration Example
                 }
 
                 MSFT_MicrosoftGraphNetworkAccessForwardingPolicyRule {
-                    Name           = 'Custom policy internet rule'
+                    Name           = 'Custom policy internet rule 3'
                     ActionValue    = 'bypass'
                     RuleType       = 'ipSubnet'
                     Protocol       = 'tcp'

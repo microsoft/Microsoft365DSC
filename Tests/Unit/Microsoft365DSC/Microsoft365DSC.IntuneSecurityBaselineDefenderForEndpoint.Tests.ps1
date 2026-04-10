@@ -72,9 +72,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 OffsetUri = '/Config/Defender/AttackSurfaceReductionRules'
                                 AdditionalProperties = @{
                                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options=@(
+                                    options = @(
                                         @{
-                                            name ='off'
+                                            name = 'off'
                                             dependentOn = @(
                                                 @{
                                                     dependentOn = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
@@ -82,6 +82,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                 }
                                             )
                                             itemId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts_off'
+                                            optionValue = @{
+                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                                value = '5BEB7EFE-FD9A-4556-801D-275E5FFC04CC=6'
+                                            }
                                         }
                                     )
 
@@ -93,9 +97,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 OffsetUri = '/Config/Defender/AttackSurfaceReductionRules'
                                 AdditionalProperties = @{
                                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options=@(
+                                    options = @(
                                         @{
-                                            name ='Warn'
+                                            name = 'Warn'
                                             dependentOn = @(
                                                 @{
                                                     dependentOn = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
@@ -103,6 +107,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                 }
                                             )
                                             itemId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_warn'
+                                            optionValue = @{
+                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                                value = '92E97FA1-2EDF-4476-BDD6-9DD0B4DDDC7B=6'
+                                            }
                                         }
                                     )
                                 }
@@ -164,7 +172,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 OffsetUri = '/Config/Defender/AllowRealtimeMonitoring'
                                 AdditionalProperties = @{
                                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options=@(
+                                    options = @(
                                         @{
                                             name ='Allowed. Turns on and runs the real-time monitoring service.'
                                             itemId = 'device_vendor_msft_policy_config_defender_allowrealtimemonitoring_1'
@@ -237,6 +245,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
+            Mock -ModuleName M365DSCIntuneUtil -CommandName Get-MgGroup -MockWith {
+                return @{
+                    Id = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                    DisplayName = 'Exclude'
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -274,6 +289,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
@@ -316,6 +332,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            GroupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
@@ -356,6 +373,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
@@ -388,6 +406,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
@@ -400,7 +419,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "My Test"
                     RoleScopeTagIds = @("FakeStringValue")
                     userSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneSecurityBaselineDefenderForEndpoint -Property @{
-                        DisableSafetyFilterOverrideForAppRepUnknown = 0
+                        DisableSafetyFilterOverrideForAppRepUnknown = 0 # Drift
                     } -ClientOnly)
                     Ensure = "Present"
                     Credential = $Credential;

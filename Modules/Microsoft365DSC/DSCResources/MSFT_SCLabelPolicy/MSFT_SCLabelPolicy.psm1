@@ -383,7 +383,7 @@ function Set-TargetResource
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose "Creating new Sensitivity label policy '$Name'."
 
@@ -451,7 +451,7 @@ function Set-TargetResource
             Write-Warning "Set-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose "Updating existing Sensitivity label policy '$Name'."
 
@@ -513,7 +513,7 @@ function Set-TargetResource
             Write-Warning "Set-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
         }
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentPolicy.Ensure -eq 'Present')
     {
         # If the label exists and it shouldn't, simply remove it;Need to force deletoion
         Write-Verbose -Message "Deleting Sensitivity label policy $Name."

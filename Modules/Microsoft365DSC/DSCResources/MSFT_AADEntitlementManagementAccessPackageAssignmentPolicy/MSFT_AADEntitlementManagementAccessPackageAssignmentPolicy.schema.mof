@@ -12,6 +12,7 @@ class MSFT_MicrosoftGraphassignmentreviewsettings
     [Write, Description("If the reviewerType is Reviewers, this collection specifies the users who will be reviewers, either by ID or as members of a group, using a collection of singleUser and groupMembers."), EmbeddedInstance("MSFT_MicrosoftGraphuserset")] String Reviewers[];
     [Write, Description("When the first review should start.")] String StartDateTime;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphuserset
 {
@@ -20,6 +21,7 @@ class MSFT_MicrosoftGraphuserset
     [Write, Description("Indicates whether the resource is a backup fallback approver.")] Boolean IsBackup;
     [Write, Description("The hierarchical level of the manager with respect to the requestor. For example, the direct manager of a requestor would have a managerLevel of 1, while the manager of the requestor's manager would have a managerLevel of 2. Default value for managerLevel is 1. Possible values for this property range from 1 to 2.")] UInt32 ManagerLevel;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphaccesspackagequestion
 {
@@ -65,6 +67,7 @@ class MSFT_MicrosoftGraphapprovalsettings
     [Write, Description("Indicates whether approval is required for a user to extend their assignment.")] Boolean IsApprovalRequiredForExtension;
     [Write, Description("Indicates whether the requestor is required to supply a justification in their request.")] Boolean IsRequestorJustificationRequired;
 };
+
 [ClassVersion("1.0.1")]
 class MSFT_MicrosoftGraphapprovalstage1
 {
@@ -76,6 +79,7 @@ class MSFT_MicrosoftGraphapprovalstage1
     [Write, Description("The users who will be asked to approve requests. A collection of singleUser, groupMembers, requestorManager, internalSponsors and externalSponsors. When creating or updating a policy, include at least one userSet in this collection."), EmbeddedInstance("MSFT_MicrosoftGraphuserset")] String PrimaryApprovers[];
     [Write, Description("If escalation is enabled and the primary approvers do not respond before the escalation time, the escalationApprovers are the users who will be asked to approve requests. This can be a collection of singleUser, groupMembers, requestorManager, internalSponsors and externalSponsors. When creating or updating a policy, if there are no escalation approvers, or escalation approvers are not required for the stage, the value of this property should be an empty collection."), EmbeddedInstance("MSFT_MicrosoftGraphuserset")] String EscalationApprovers[];
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphrequestorsettings
 {
@@ -83,6 +87,7 @@ class MSFT_MicrosoftGraphrequestorsettings
     [Write, Description("The users who are allowed to request on this policy, which can be singleUser, groupMembers, and connectedOrganizationMembers."), EmbeddedInstance("MSFT_MicrosoftGraphuserset")] String AllowedRequestors[];
     [Write, Description("Who can request."), ValueMap{"NoSubjects","SpecificDirectorySubjects","SpecificConnectedOrganizationSubjects","AllConfiguredConnectedOrganizationSubjects","AllExistingConnectedOrganizationSubjects","AllExistingDirectoryMemberUsers","AllExistingDirectorySubjects","AllExternalSubjects"}, Values{"NoSubjects","SpecificDirectorySubjects","SpecificConnectedOrganizationSubjects","AllConfiguredConnectedOrganizationSubjects","AllExistingConnectedOrganizationSubjects","AllExistingDirectoryMemberUsers","AllExistingDirectorySubjects","AllExternalSubjects"}] String ScopeType;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphcustomextensionhandler
 {
@@ -90,6 +95,7 @@ class MSFT_MicrosoftGraphcustomextensionhandler
     [Write, Description("Indicates the stage of the access package assignment request workflow when the access package custom extension runs."), ValueMap{"assignmentRequestCreated","assignmentRequestApproved","assignmentRequestGranted","assignmentRequestRemoved","assignmentFourteenDaysBeforeExpiration","assignmentOneDayBeforeExpiration","unknownFutureValue"}, Values{"assignmentRequestCreated","assignmentRequestApproved","assignmentRequestGranted","assignmentRequestRemoved","assignmentFourteenDaysBeforeExpiration","assignmentOneDayBeforeExpiration","unknownFutureValue"}] String Stage;
     [Write, Description("Identifier of the stage.")] String Id;
 };
+
 [ClassVersion("1.0.0.0"), FriendlyName("AADEntitlementManagementAccessPackageAssignmentPolicy")]
 class MSFT_AADEntitlementManagementAccessPackageAssignmentPolicy : OMI_BaseResource
 {

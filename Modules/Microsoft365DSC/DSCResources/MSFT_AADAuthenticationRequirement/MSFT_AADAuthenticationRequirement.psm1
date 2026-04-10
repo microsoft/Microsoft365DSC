@@ -65,16 +65,13 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-            $nullResult = $PSBoundParameters
-
             $getValue = $null
             $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/users/$UserPrincipalName/authentication/requirements"
             $getValue = Invoke-MgGraphRequest -Method Get -Uri $url
 
             if ($null -eq $getValue)
             {
-                Write-Verbose -Message "Could not find an Azure AD Authentication Requirement for user with UPN {$UserPrincipalName}"
-                return $nullResult
+                throw "Could not find an Azure AD Authentication Requirement for user with UPN {$UserPrincipalName}"
             }
         }
         else
@@ -339,7 +336,7 @@ function Export-TargetResource
             }
 
             $Script:exportedInstance = $config
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

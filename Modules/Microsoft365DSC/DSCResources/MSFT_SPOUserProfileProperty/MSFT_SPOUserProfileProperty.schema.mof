@@ -1,9 +1,10 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_SPOUserProfilePropertyInstance
 {
-    [Write, Description("Name of the User Profile Property.")] String Key;
+    [Required, Description("Name of the User Profile Property.")] String Key;
     [Write, Description("Value of the User Profile Property.")] String Value;
 };
+
 [ClassVersion("1.0.0.0"), FriendlyName("SPOUserProfileProperty")]
 class MSFT_SPOUserProfileProperty : OMI_BaseResource
 {

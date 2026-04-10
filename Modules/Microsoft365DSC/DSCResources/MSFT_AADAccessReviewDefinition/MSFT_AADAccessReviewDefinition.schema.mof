@@ -1,12 +1,32 @@
 [ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphAccessReviewPrincipalScope
+{
+    [Write, Description("The query representing what will be reviewed in an access review.")] String Query;
+    [Write, Description("In the scenario where reviewers need to be specified dynamically, this property is used to indicate the relative source of the query. This property is only required if a relative query is specified. For example, ./manager.")] String QueryRoot;
+    [Write, Description("Indicates the type of query. Types include MicrosoftGraph and ARM.")] String QueryType;
+    [Required, Description("The type of the entity."), ValueMap{"#microsoft.graph.accessReviewPrincipalScope","#microsoft.graph.accessReviewQueryScope"}, Values{"#microsoft.graph.accessReviewPrincipalScope","#microsoft.graph.accessReviewQueryScope"}] String odataType;
+    [Write, Description("The type of users to include in the review. The possible values are: allUsers, guestUsers, inactiveUsers, inactiveGuestUsers."), ValueMap{"allUsers","guestUsers","inactiveUsers","inactiveGuestUsers"}, Values{"allUsers","guestUsers","inactiveUsers","inactiveGuestUsers"}] String scopeType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphAccessReviewResourceScope
+{
+    [Write, Description("The query representing what will be reviewed in an access review.")] String Query;
+    [Write, Description("In the scenario where reviewers need to be specified dynamically, this property is used to indicate the relative source of the query. This property is only required if a relative query is specified. For example, ./manager.")] String QueryRoot;
+    [Write, Description("Indicates the type of query. Types include MicrosoftGraph and ARM.")] String QueryType;
+    [Required, Description("The type of the entity."), ValueMap{"#microsoft.graph.accessReviewResourceScope","#microsoft.graph.accessReviewQueryScope"}, Values{"#microsoft.graph.accessReviewResourceScope","#microsoft.graph.accessReviewQueryScope"}] String odataType;
+    [Write, Description("The display name of the resource.")] String displayName;
+    [Write, Description("The identifier of the resource.")] String resourceScopeId;
+    [Write, Description("The type of users to include in the review. The possible values are: group, catalog, servicePrincipal, directoryRole, accessPackageAssignmentPolicy."), ValueMap{"group","catalog","servicePrincipal","directoryRole","accessPackageAssignmentPolicy"}, Values{"group","catalog","servicePrincipal","directoryRole","accessPackageAssignmentPolicy"}] String scopeType;
+};
+[ClassVersion("1.0.1")]
 class MSFT_MicrosoftGraphAccessReviewScope
 {
     [Write, Description("The query representing what will be reviewed in an access review.")] String Query;
     [Write, Description("In the scenario where reviewers need to be specified dynamically, this property is used to indicate the relative source of the query. This property is only required if a relative query is specified. For example, ./manager.")] String QueryRoot;
     [Write, Description("Indicates the type of query. Types include MicrosoftGraph and ARM.")] String QueryType;
-    [Write, Description("Defines the scopes of the principals for which access to resources are reviewed in the access review."), EmbeddedInstance("MSFT_MicrosoftGraphAccessReviewScope")] String PrincipalScopes[];
-    [Write, Description("Defines the scopes of the resources for which access is reviewed."), EmbeddedInstance("MSFT_MicrosoftGraphAccessReviewScope")] String ResourceScopes[];
-    [Write, Description("The type of the entity."), ValueMap{"#microsoft.graph.accessReviewQueryScope","#microsoft.graph.accessReviewReviewerScope","#microsoft.graph.principalResourceMembershipsScope","#microsoft.graph.accessReviewInactiveUsersQueryScope"}, Values{"#microsoft.graph.accessReviewQueryScope","#microsoft.graph.accessReviewReviewerScope","#microsoft.graph.principalResourceMembershipsScope","#microsoft.graph.accessReviewInactiveUsersQueryScope"}] String odataType;
+    [Write, Description("Defines the scopes of the principals for which access to resources are reviewed in the access review."), EmbeddedInstance("MSFT_MicrosoftGraphAccessReviewPrincipalScope")] String PrincipalScopes[];
+    [Write, Description("Defines the scopes of the resources for which access is reviewed."), EmbeddedInstance("MSFT_MicrosoftGraphAccessReviewResourceScope")] String ResourceScopes[];
+    [Required, Description("The type of the entity."), ValueMap{"#microsoft.graph.accessReviewQueryScope","#microsoft.graph.accessReviewReviewerScope","#microsoft.graph.principalResourceMembershipsScope","#microsoft.graph.accessReviewInactiveUsersQueryScope"}, Values{"#microsoft.graph.accessReviewQueryScope","#microsoft.graph.accessReviewReviewerScope","#microsoft.graph.principalResourceMembershipsScope","#microsoft.graph.accessReviewInactiveUsersQueryScope"}] String odataType;
 };
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphAccessReviewScheduleSettings
@@ -74,11 +94,12 @@ class MSFT_MicrosoftGraphAccessReviewStageSettings
     [Required, Description("Indicates whether showing recommendations to reviewers is enabled. Required. NOTE: The value of this property overrides the corresponding setting on the accessReviewScheduleDefinition object.")] Boolean RecommendationsEnabled;
     [Write, Description("Unique identifier of the accessReviewStageSettings. The stageId is used in dependsOn property to indicate the stage relationship. Required.")] String StageId;
 };
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.1")]
 class MSFT_AADAccessReviewDefinitionReviewer
 {
     [Write, Description("Indicates the display name of the current reviewer, either of a group or of a user.")] String DisplayName;
-    [Write, Description("Indicates the type of reviewer. Possible values: Manager, Owner, User, Group"), ValueMap{"Manager", "Owner", "User", "Group"}, Values{"Manager", "Owner", "User", "Group"}] String Type;
+    [Required, Description("Indicates the type of reviewer. Possible values: Manager, Owner, User, Group"), ValueMap{"Manager", "Owner", "User", "Group"}, Values{"Manager", "Owner", "User", "Group"}] String Type;
+    [Write, Description("Indicates the type of reviewer. Possible values: User, Group, Self, Manager, Sponsor, ResourceOwner, ManagerOrSponsor"), ValueMap{"User", "Group", "Self", "Manager", "Sponsor", "ResourceOwner", "ManagerOrSponsor"}, Values{"User", "Group", "Self", "Manager", "Sponsor", "ResourceOwner", "ManagerOrSponsor"}] String ScopeType;
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("AADAccessReviewDefinition")]

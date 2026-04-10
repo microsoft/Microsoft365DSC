@@ -41,6 +41,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowGooglePushNotifications,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowHTMLEmail,
 
         [Parameter()]
@@ -50,6 +54,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowIrDA,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMicrosoftPushNotifications,
 
         [Parameter()]
         [System.Boolean]
@@ -69,7 +77,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowSimpleDevicePassword,
+        $AllowSimplePassword,
 
         [Parameter()]
         [System.String]
@@ -101,7 +109,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AlphanumericDevicePasswordRequired,
+        $AlphanumericPasswordRequired,
 
         [Parameter()]
         [System.String[]]
@@ -117,15 +125,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $DevicePasswordEnabled,
+        $PasswordEnabled,
 
         [Parameter()]
         [System.String]
-        $DevicePasswordExpiration,
+        $PasswordExpiration,
 
         [Parameter()]
         [System.Int32]
-        $DevicePasswordHistory,
+        $PasswordHistory,
 
         [Parameter()]
         [System.String]
@@ -154,7 +162,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $MaxDevicePasswordFailedAttempts,
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.String]
@@ -171,15 +179,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $MaxInactivityTimeDeviceLock,
+        $MaxInactivityTimeLock,
 
         [Parameter()]
         [System.Int32]
-        $MinDevicePasswordComplexCharacters,
+        $MinPasswordComplexCharacters,
 
         [Parameter()]
         [System.Int32]
-        $MinDevicePasswordLength,
+        $MinPasswordLength,
 
         [Parameter()]
         [System.Boolean]
@@ -281,7 +289,7 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $instance = Get-ActiveSyncMailboxPolicy -Identity $Identity -ErrorAction SilentlyContinue
+            $instance = Get-MobileDeviceMailboxPolicy -Identity $Identity -ErrorAction SilentlyContinue
 
             if ($null -eq $instance)
             {
@@ -306,14 +314,16 @@ function Get-TargetResource
             AllowConsumerEmail                       = [System.Boolean]$instance.AllowConsumerEmail
             AllowDesktopSync                         = [System.Boolean]$instance.AllowDesktopSync
             AllowExternalDeviceManagement            = [System.Boolean]$instance.AllowExternalDeviceManagement
+            AllowGooglePushNotifications             = [System.Boolean]$instance.AllowGooglePushNotifications
             AllowHTMLEmail                           = [System.Boolean]$instance.AllowHTMLEmail
             AllowInternetSharing                     = [System.Boolean]$instance.AllowInternetSharing
             AllowIrDA                                = [System.Boolean]$instance.AllowIrDA
+            AllowMicrosoftPushNotifications          = [System.Boolean]$instance.AllowMicrosoftPushNotifications
             AllowMobileOTAUpdate                     = [System.Boolean]$instance.AllowMobileOTAUpdate
             AllowNonProvisionableDevices             = [System.Boolean]$instance.AllowNonProvisionableDevices
             AllowPOPIMAPEmail                        = [System.Boolean]$instance.AllowPOPIMAPEmail
             AllowRemoteDesktop                       = [System.Boolean]$instance.AllowRemoteDesktop
-            AllowSimpleDevicePassword                = [System.Boolean]$instance.AllowSimpleDevicePassword
+            AllowSimplePassword                      = [System.Boolean]$instance.AllowSimplePassword
             AllowSMIMEEncryptionAlgorithmNegotiation = [System.String]$instance.AllowSMIMEEncryptionAlgorithmNegotiation
             AllowSMIMESoftCerts                      = [System.Boolean]$instance.AllowSMIMESoftCerts
             AllowStorageCard                         = [System.Boolean]$instance.AllowStorageCard
@@ -321,26 +331,26 @@ function Get-TargetResource
             AllowUnsignedApplications                = [System.Boolean]$instance.AllowUnsignedApplications
             AllowUnsignedInstallationPackages        = [System.Boolean]$instance.AllowUnsignedInstallationPackages
             AllowWiFi                                = [System.Boolean]$instance.AllowWiFi
-            AlphanumericDevicePasswordRequired       = [System.Boolean]$instance.AlphanumericDevicePasswordRequired
+            AlphanumericPasswordRequired             = [System.Boolean]$instance.AlphanumericPasswordRequired
             ApprovedApplicationList                  = [System.String[]]$instance.ApprovedApplicationList
             AttachmentsEnabled                       = [System.Boolean]$instance.AttachmentsEnabled
             DeviceEncryptionEnabled                  = [System.Boolean]$instance.DeviceEncryptionEnabled
-            DevicePasswordEnabled                    = [System.Boolean]$instance.DevicePasswordEnabled
-            DevicePasswordExpiration                 = [System.String]$instance.DevicePasswordExpiration
-            DevicePasswordHistory                    = [System.Int32]$instance.DevicePasswordHistory
+            PasswordEnabled                          = [System.Boolean]$instance.PasswordEnabled
+            PasswordExpiration                       = [System.String]$instance.PasswordExpiration
+            PasswordHistory                          = [System.Int32]$instance.PasswordHistory
             DevicePolicyRefreshInterval              = [System.String]$instance.DevicePolicyRefreshInterval
             IrmEnabled                               = [System.Boolean]$instance.IrmEnabled
             IsDefault                                = [System.Boolean]$instance.IsDefault
             IsDefaultPolicy                          = [System.Boolean]$instance.IsDefaultPolicy
             MaxAttachmentSize                        = [System.String]$instance.MaxAttachmentSize
             MaxCalendarAgeFilter                     = [System.String]$instance.MaxCalendarAgeFilter
-            MaxDevicePasswordFailedAttempts          = [System.String]$instance.MaxDevicePasswordFailedAttempts
+            MaxPasswordFailedAttempts                = [System.String]$instance.MaxPasswordFailedAttempts
             MaxEmailAgeFilter                        = [System.String]$instance.MaxEmailAgeFilter
             MaxEmailBodyTruncationSize               = [System.String]$instance.MaxEmailBodyTruncationSize
             MaxEmailHTMLBodyTruncationSize           = [System.String]$instance.MaxEmailHTMLBodyTruncationSize
-            MaxInactivityTimeDeviceLock              = [System.String]$instance.MaxInactivityTimeDeviceLock
-            MinDevicePasswordComplexCharacters       = [System.Int32]$instance.MinDevicePasswordComplexCharacters
-            MinDevicePasswordLength                  = [System.Int32]$instance.MinDevicePasswordLength
+            MaxInactivityTimeLock                    = [System.String]$instance.MaxInactivityTimeLock
+            MinPasswordComplexCharacters             = [System.Int32]$instance.MinPasswordComplexCharacters
+            MinPasswordLength                        = [System.Int32]$instance.MinPasswordLength
             PasswordRecoveryEnabled                  = [System.Boolean]$instance.PasswordRecoveryEnabled
             RequireDeviceEncryption                  = [System.Boolean]$instance.RequireDeviceEncryption
             RequireEncryptedSMIMEMessages            = [System.Boolean]$instance.RequireEncryptedSMIMEMessages
@@ -414,6 +424,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowGooglePushNotifications,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowHTMLEmail,
 
         [Parameter()]
@@ -423,6 +437,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowIrDA,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMicrosoftPushNotifications,
 
         [Parameter()]
         [System.Boolean]
@@ -442,7 +460,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowSimpleDevicePassword,
+        $AllowSimplePassword,
 
         [Parameter()]
         [System.String]
@@ -474,7 +492,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AlphanumericDevicePasswordRequired,
+        $AlphanumericPasswordRequired,
 
         [Parameter()]
         [System.String[]]
@@ -490,15 +508,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $DevicePasswordEnabled,
+        $PasswordEnabled,
 
         [Parameter()]
         [System.String]
-        $DevicePasswordExpiration,
+        $PasswordExpiration,
 
         [Parameter()]
         [System.Int32]
-        $DevicePasswordHistory,
+        $PasswordHistory,
 
         [Parameter()]
         [System.String]
@@ -527,7 +545,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $MaxDevicePasswordFailedAttempts,
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.String]
@@ -544,15 +562,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $MaxInactivityTimeDeviceLock,
+        $MaxInactivityTimeLock,
 
         [Parameter()]
         [System.Int32]
-        $MinDevicePasswordComplexCharacters,
+        $MinPasswordComplexCharacters,
 
         [Parameter()]
         [System.Int32]
-        $MinDevicePasswordLength,
+        $MinPasswordLength,
 
         [Parameter()]
         [System.Boolean]
@@ -654,17 +672,17 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         $setParameters.Remove('Identity')
-        New-ActiveSyncMailboxPolicy @SetParameters
+        New-MobileDeviceMailboxPolicy @SetParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Set-ActiveSyncMailboxPolicy @SetParameters
+        Set-MobileDeviceMailboxPolicy @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Remove-ActiveSyncMailboxPolicy -Identity $Identity
+        Remove-MobileDeviceMailboxPolicy -Identity $Identity
     }
 }
 
@@ -709,6 +727,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowGooglePushNotifications,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowHTMLEmail,
 
         [Parameter()]
@@ -718,6 +740,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowIrDA,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMicrosoftPushNotifications,
 
         [Parameter()]
         [System.Boolean]
@@ -737,7 +763,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowSimpleDevicePassword,
+        $AllowSimplePassword,
 
         [Parameter()]
         [System.String]
@@ -769,7 +795,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AlphanumericDevicePasswordRequired,
+        $AlphanumericPasswordRequired,
 
         [Parameter()]
         [System.String[]]
@@ -785,15 +811,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $DevicePasswordEnabled,
+        $PasswordEnabled,
 
         [Parameter()]
         [System.String]
-        $DevicePasswordExpiration,
+        $PasswordExpiration,
 
         [Parameter()]
         [System.Int32]
-        $DevicePasswordHistory,
+        $PasswordHistory,
 
         [Parameter()]
         [System.String]
@@ -822,7 +848,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $MaxDevicePasswordFailedAttempts,
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.String]
@@ -839,15 +865,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $MaxInactivityTimeDeviceLock,
+        $MaxInactivityTimeLock,
 
         [Parameter()]
         [System.Int32]
-        $MinDevicePasswordComplexCharacters,
+        $MinPasswordComplexCharacters,
 
         [Parameter()]
         [System.Int32]
-        $MinDevicePasswordLength,
+        $MinPasswordLength,
 
         [Parameter()]
         [System.Boolean]
@@ -992,7 +1018,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-ActiveSyncMailboxPolicy -ErrorAction Stop
+        [array]$policies = Get-MobileDeviceMailboxPolicy -ErrorAction Stop
 
         $i = 1
         $dscContent = ''

@@ -32,7 +32,7 @@ function Get-TargetResource
         $Extensions,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -82,9 +82,6 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-            $nullResult = $PSBoundParameters
-            $nullResult.Ensure = 'Absent'
-
             if ([System.String]::IsNullOrEmpty($subscriptionId))
             {
                 $subscription = Get-AzSubscription -SubscriptionName $SubscriptionName
@@ -111,7 +108,7 @@ function Get-TargetResource
 
         if ($null -eq $instance)
         {
-            return $nullResult
+            throw "No Microsoft Defender for Cloud subscription plan found for SubscriptionId $SubscriptionId and PlanName $PlanName"
         }
 
         $results = @{
@@ -174,7 +171,7 @@ function Set-TargetResource
         $Extensions,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -219,28 +216,14 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    # CREATE
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    Set-AzContext -Subscription $currentInstance.SubscriptionId -ErrorAction Stop
+    if ($Extensions)
     {
-        throw "It's not possible to create Microsoft Defender for Cloud bundles"
+        Set-AzSecurityPricing -Name $PlanName -PricingTier $PricingTier -SubPlan $SubPlanName -Extension $Extensions -ErrorAction Stop
     }
-    # UPDATE
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    else
     {
-        Set-AzContext -Subscription $currentInstance.SubscriptionId -ErrorAction Stop
-        if ($Extensions)
-        {
-            Set-AzSecurityPricing -Name $PlanName -PricingTier $PricingTier -SubPlan $SubPlanName -Extension $Extensions -ErrorAction Stop
-        }
-        else
-        {
-            Set-AzSecurityPricing -Name $PlanName -PricingTier $PricingTier -SubPlan $SubPlanName -ErrorAction Stop
-        }
-    }
-    # REMOVE
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        throw "It's not possible to delete Microsoft Defender for Cloud bundles"
+        Set-AzSecurityPricing -Name $PlanName -PricingTier $PricingTier -SubPlan $SubPlanName -ErrorAction Stop
     }
 }
 
@@ -276,7 +259,7 @@ function Test-TargetResource
         $Extensions,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 

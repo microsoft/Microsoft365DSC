@@ -231,7 +231,7 @@ function Get-TargetResource
         # If the Members and GroupAsMembers parameters are not specified, do not attempt to retrieve them as part of the Get-TargetResource.
         if ($Group.MembershipRuleProcessingState -ne 'On' -and (($PSBoundParameters.ContainsKey('Members') -and $Members.Count -gt 0) -or ($PSBoundParameters.ContainsKey('GroupAsMembers') -and $GroupAsMembers.Count -gt 0)))
         {
-            # Members            
+            # Members
             $groupMembers = $Group.Members
             if ($Group.Members.Count -eq 20 -or $Script:requireGroupMemberFetching -eq $true)
             {
@@ -1004,8 +1004,6 @@ function Set-TargetResource
                     elseif ($diff.SideIndicator -eq '<=')
                     {
                         Write-Verbose -Message "Removing AAD group {$($currentGroup.DisplayName)} from Directory Role {$($role.DisplayName)}"
-                        Write-Verbose "GroupId = $($currentGroup.Id)"
-                        Write-Verbose "RoleDefinitionId = $($role.Id)"
                         $roleAssignment = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "PrincipalId eq '$($currentGroup.Id)' and RoleDefinitionId eq '$($role.Id)'"
                         Remove-MgBetaRoleManagementDirectoryRoleAssignment -UnifiedRoleAssignmentId $roleAssignment.Id
                     }
@@ -1365,7 +1363,7 @@ function Export-TargetResource
 function Get-M365DSCAzureADGroupLicenses
 {
     [CmdletBinding()]
-    [OutputType([PSCustomObject])]
+    [OutputType([System.Collections.Hashtable[]])]
     param(
         [Parameter(Mandatory = $true)]
         $AssignedLicenses

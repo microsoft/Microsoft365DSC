@@ -1,9 +1,35 @@
-<#
-.Description
-This function gets the Application Insights key to be used for storing telemetry
+$Script:TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
+            [System.EnvironmentVariableTarget]::Machine)
 
-.Functionality
-Internal, Hidden
+<#
+.DESCRIPTION
+    This function tests if telemetry is enabled for M365DSC.
+
+.FUNCTIONALITY
+    Internal
+#>
+function Test-IsM365DSCTelemetryEnabled
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param()
+
+    if ($null -eq $Script:TelemetryEnabled -or $Script:TelemetryEnabled -eq $true)
+    {
+        return $true
+    }
+    else
+    {
+        return $false
+    }
+}
+
+<#
+.DESCRIPTION
+    This function gets the Application Insights key to be used for storing telemetry
+
+.FUNCTIONALITY
+    Internal, Hidden
 #>
 function Get-M365DSCApplicationInsightsTelemetryClient
 {
@@ -64,11 +90,11 @@ function Set-M365DSCLCMConfiguration
 }
 
 <#
-.Description
-This function sends telemetry information to Application Insights
+.DESCRIPTION
+    This function sends telemetry information to Application Insights
 
-.Functionality
-Internal
+.FUNCTIONALITY
+    Internal
 #>
 function Add-M365DSCTelemetryEvent
 {
@@ -87,10 +113,7 @@ function Add-M365DSCTelemetryEvent
         $Metrics
     )
 
-    $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
-            [System.EnvironmentVariableTarget]::Machine)
-
-    if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
+    if ($null -eq $Script:TelemetryEnabled -or $Script:TelemetryEnabled -eq $true)
     {
         if ($Type -eq 'DriftEvaluation')
         {
@@ -653,5 +676,6 @@ Export-ModuleMember -Function @(
     'Format-M365DSCTelemetryParameters',
     'Get-M365DSCTelemetryOption',
     'Set-M365DSCTelemetryOption',
-    'Set-M365DSCLCMConfiguration'
+    'Set-M365DSCLCMConfiguration',
+    'Test-IsM365DSCTelemetryEnabled'
 )

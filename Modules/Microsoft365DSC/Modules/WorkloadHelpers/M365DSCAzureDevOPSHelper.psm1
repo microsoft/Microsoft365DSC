@@ -1,6 +1,6 @@
 function Invoke-M365DSCAzureDevOPSWebRequest
 {
-    [OutputType([PSCustomObject])]
+    [OutputType([System.Collections.Hashtable])]
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]

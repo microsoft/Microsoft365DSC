@@ -15,23 +15,23 @@ function Get-TargetResource
         $Policy,
 
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Exchange', 'SharePoint', 'OneDriveForBusiness', 'Applications', 'Azure', 'AWS', 'PowerBI')]
+        [System.String]
         $Workload,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
+        [System.String]
         $AccessScope,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $AnyOfRecipientAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $AnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
@@ -59,18 +59,18 @@ function Get-TargetResource
         $DocumentIsUnsupported,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
+        [System.String]
         $ExceptIfAccessScope,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfAnyOfRecipientAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfAnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
@@ -94,13 +94,13 @@ function Get-TargetResource
         $ExceptIfFrom,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfFromAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfFromAddressMatchesPatterns,
 
         [Parameter()]
@@ -136,18 +136,18 @@ function Get-TargetResource
         $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfSubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $FromAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $FromAddressMatchesPatterns,
 
         [Parameter()]
@@ -163,13 +163,13 @@ function Get-TargetResource
         $RecipientDomainIs,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('None', 'Low', 'Medium', 'High')]
+        [System.String]
         $ReportSeverityLevel,
 
         [Parameter()]
+        [ValidateSet('Ignore', 'RetryThenBlock', '')]
         [System.String]
-        [ValidateSet('Ignore', 'RetryThenBlock', $null)]
         $RuleErrorAction,
 
         [Parameter()]
@@ -400,23 +400,23 @@ function Set-TargetResource
         $Policy,
 
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Exchange', 'SharePoint', 'OneDriveForBusiness', 'Applications', 'Azure', 'AWS', 'PowerBI')]
+        [System.String]
         $Workload,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
+        [System.String]
         $AccessScope,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $AnyOfRecipientAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $AnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
@@ -444,18 +444,18 @@ function Set-TargetResource
         $DocumentIsUnsupported,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
+        [System.String]
         $ExceptIfAccessScope,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfAnyOfRecipientAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfAnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
@@ -479,13 +479,13 @@ function Set-TargetResource
         $ExceptIfFrom,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfFromAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfFromAddressMatchesPatterns,
 
         [Parameter()]
@@ -521,18 +521,18 @@ function Set-TargetResource
         $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfSubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $FromAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $FromAddressMatchesPatterns,
 
         [Parameter()]
@@ -548,13 +548,13 @@ function Set-TargetResource
         $RecipientDomainIs,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('None', 'Low', 'Medium', 'High')]
+        [System.String]
         $ReportSeverityLevel,
 
         [Parameter()]
+        [ValidateSet('Ignore', 'RetryThenBlock', '')]
         [System.String]
-        [ValidateSet('Ignore', 'RetryThenBlock', $null)]
         $RuleErrorAction,
 
         [Parameter()]
@@ -630,10 +630,14 @@ function Set-TargetResource
         $HeaderMatchesPatternsValue = @{}
         $HeaderMatchesPatternsValue.Add($HeaderMatchesPatterns.Name, $HeaderMatchesPatterns.Values)
     }
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentRule.Ensure -eq 'Absent')
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} doesn't exists but need to. Creating Rule."
         $CreationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+        if ([System.String]::IsNullOrEmpty($CreationParams.RuleErrorAction))
+        {
+            $CreationParams.RuleErrorAction = $null
+        }
         if ($null -ne $CreationParams.ContentContainsSensitiveInformation)
         {
             $value = @()
@@ -683,10 +687,14 @@ function Set-TargetResource
         Write-Verbose -Message "Flipping the parent policy back to Mode $currentMode while we create the rule"
         Set-AutoSensitivityLabelPolicy -Identity $Policy -Mode $currentMode
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentRule.Ensure -eq 'Present')
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} already exists and needs to. Updating Rule."
         $UpdateParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+        if ([System.String]::IsNullOrEmpty($UpdateParams.RuleErrorAction))
+        {
+            $UpdateParams.RuleErrorAction = $null
+        }
 
         if ($null -ne $UpdateParams.ContentContainsSensitiveInformation)
         {
@@ -735,13 +743,12 @@ function Set-TargetResource
         {
             $UpdateParams.HeaderMatchesPatterns = $HeaderMatchesPatternsValue
         }
-        Write-Verbose "Updating Rule with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
         Set-AutoSensitivityLabelRule @UpdateParams
 
         Write-Verbose -Message "Flipping the parent policy to Mode back to $currentMode while we create the rule"
         Set-AutoSensitivityLabelPolicy -Identity $Policy -Mode $currentMode
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentRule.Ensure -eq 'Present')
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} already exists but shouldn't. Deleting Rule."
         Remove-AutoSensitivityLabelRule -Identity $CurrentRule.Name -Confirm:$false
@@ -763,23 +770,23 @@ function Test-TargetResource
         $Policy,
 
         [Parameter(Mandatory = $true)]
-        [System.String]
         [ValidateSet('Exchange', 'SharePoint', 'OneDriveForBusiness', 'Applications', 'Azure', 'AWS', 'PowerBI')]
+        [System.String]
         $Workload,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
+        [System.String]
         $AccessScope,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $AnyOfRecipientAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $AnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
@@ -807,18 +814,18 @@ function Test-TargetResource
         $DocumentIsUnsupported,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
+        [System.String]
         $ExceptIfAccessScope,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfAnyOfRecipientAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfAnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
@@ -842,13 +849,13 @@ function Test-TargetResource
         $ExceptIfFrom,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfFromAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfFromAddressMatchesPatterns,
 
         [Parameter()]
@@ -884,18 +891,18 @@ function Test-TargetResource
         $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $ExceptIfSubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $FromAddressContainsWords,
 
         [Parameter()]
-        [System.String]
         [ValidateLength(0, 128)]
+        [System.String]
         $FromAddressMatchesPatterns,
 
         [Parameter()]
@@ -911,13 +918,13 @@ function Test-TargetResource
         $RecipientDomainIs,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('None', 'Low', 'Medium', 'High')]
+        [System.String]
         $ReportSeverityLevel,
 
         [Parameter()]
+        [ValidateSet('Ignore', 'RetryThenBlock', '')]
         [System.String]
-        [ValidateSet('Ignore', 'RetryThenBlock', $null)]
         $RuleErrorAction,
 
         [Parameter()]
@@ -986,9 +993,6 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of AutoSensitivityLabelRule for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
     $ValuesToCheck = $PSBoundParameters
 
     #region Test Sensitive Information Type

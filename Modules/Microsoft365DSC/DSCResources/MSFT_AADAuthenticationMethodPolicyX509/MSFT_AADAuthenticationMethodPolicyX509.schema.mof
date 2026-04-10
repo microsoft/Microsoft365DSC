@@ -4,32 +4,36 @@ class MSFT_MicrosoftGraphX509CertificateAuthenticationModeConfiguration
     [Write, Description("Rules are configured in addition to the authentication mode to bind a specific x509CertificateRuleType to an x509CertificateAuthenticationMode. For example, bind the policyOID with identifier 1.32.132.343 to x509CertificateMultiFactor authentication mode."), EmbeddedInstance("MSFT_MicrosoftGraphX509CertificateRule")] String Rules[];
     [Write, Description("The type of strong authentication mode. The possible values are: x509CertificateSingleFactor, x509CertificateMultiFactor, unknownFutureValue."), ValueMap{"x509CertificateSingleFactor","x509CertificateMultiFactor","unknownFutureValue"}, Values{"x509CertificateSingleFactor","x509CertificateMultiFactor","unknownFutureValue"}] String X509CertificateAuthenticationDefaultMode;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphX509CertificateRule
 {
-    [Write, Description("The identifier of the X.509 certificate. Required.")] String Identifier;
-    [Write, Description("The type of strong authentication mode. The possible values are: x509CertificateSingleFactor, x509CertificateMultiFactor, unknownFutureValue. Required."), ValueMap{"x509CertificateSingleFactor","x509CertificateMultiFactor","unknownFutureValue"}, Values{"x509CertificateSingleFactor","x509CertificateMultiFactor","unknownFutureValue"}] String X509CertificateAuthenticationMode;
+    [Key, Description("The identifier of the X.509 certificate. Required.")] String Identifier;
+    [Required, Description("The type of strong authentication mode. The possible values are: x509CertificateSingleFactor, x509CertificateMultiFactor, unknownFutureValue. Required."), ValueMap{"x509CertificateSingleFactor","x509CertificateMultiFactor","unknownFutureValue"}, Values{"x509CertificateSingleFactor","x509CertificateMultiFactor","unknownFutureValue"}] String X509CertificateAuthenticationMode;
     [Write, Description("The type of the X.509 certificate mode configuration rule. The possible values are: issuerSubject, policyOID, unknownFutureValue. Required."), ValueMap{"issuerSubject","policyOID","unknownFutureValue"}, Values{"issuerSubject","policyOID","unknownFutureValue"}] String X509CertificateRuleType;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphX509CertificateUserBinding
 {
     [Write, Description("The priority of the binding. Azure AD uses the binding with the highest priority. This value must be a non-negative integer and unique in the collection of objects in the certificateUserBindings property of an x509CertificateAuthenticationMethodConfiguration object. Required")] UInt32 Priority;
-    [Write, Description("Defines the Azure AD user property of the user object to use for the binding. The possible values are: userPrincipalName, onPremisesUserPrincipalName, email. Required.")] String UserProperty;
+    [Required, Description("Defines the Azure AD user property of the user object to use for the binding. The possible values are: userPrincipalName, onPremisesUserPrincipalName, email. Required.")] String UserProperty;
     [Write, Description("The field on the X.509 certificate to use for the binding. The possible values are: PrincipalName, RFC822Name.")] String X509CertificateField;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget
 {
-    [Write, Description("The object identifier of an Azure AD group.")] String Id;
-    [Write, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"group","unknownFutureValue"}, Values{"group","unknownFutureValue"}] String TargetType;
+    [Key, Description("The object identifier of an Azure AD group.")] String Id;
+    [Key, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"group","unknownFutureValue"}, Values{"group","unknownFutureValue"}] String TargetType;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_AADAuthenticationMethodPolicyX509IncludeTarget
 {
-    [Write, Description("The object identifier of an Azure AD group.")] String Id;
+    [Key, Description("The object identifier of an Azure AD group.")] String Id;
     [Write, Description("Determines if the user is enforced to register the authentication method.")] Boolean isRegistrationRequired;
-    [Write, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"group","unknownFutureValue"}, Values{"group","unknownFutureValue"}] String TargetType;
+    [Key, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"group","unknownFutureValue"}, Values{"group","unknownFutureValue"}] String TargetType;
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("AADAuthenticationMethodPolicyX509")]

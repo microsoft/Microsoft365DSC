@@ -529,7 +529,7 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new instance of AntiPhish Policy {$Identity}"
         $createParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
@@ -538,14 +538,14 @@ function Set-TargetResource
         $createParams.Remove('Identity') | Out-Null
         New-AntiPhishPolicy @createParams
     }
-    elseif (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AntiPhishPolicy {$Identity}"
         $UpdateParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParams.Remove('Ensure') | Out-Null
         Set-AntiphishPolicy @UpdateParams
     }
-    elseif (('Absent' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AntiPhishPolicy $($Identity)"
         Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false -Force

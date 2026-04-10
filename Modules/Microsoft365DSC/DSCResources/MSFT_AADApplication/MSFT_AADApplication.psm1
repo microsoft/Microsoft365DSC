@@ -275,8 +275,25 @@ function Get-TargetResource
         foreach ($currentPreAuthorizedApplications in $AADApp.api.preAuthorizedApplications)
         {
             $myPreAuthorizedApplications = [ordered]@{}
-            $myPreAuthorizedApplications.Add('AppId', $currentPreAuthorizedApplications.appId)
-            $myPreAuthorizedApplications.Add('PermissionIds', $currentPreAuthorizedApplications.permissionIds)
+            $servicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($currentPreAuthorizedApplications.appId)'" -Property "displayName"
+            if ($null -eq $servicePrincipal)
+            {
+                Write-Warning -Message "Could not find service principal with AppId {$($currentPreAuthorizedApplications.appId)} for pre-authorized application. DisplayName will not be included in the configuration."
+                continue
+            }
+            $myPreAuthorizedApplications.Add('AppId', $servicePrincipal.displayName)
+            $permissionIds = @()
+            foreach ($permissionId in $currentPreAuthorizedApplications.PermissionIds)
+            {
+                $permission = $AADApp.Api.Oauth2PermissionScopes | Where-Object -FilterScript { $_.Id -eq $permissionId }
+                if ($null -eq $permission)
+                {
+                    Write-Warning -Message "Could not find existing permission with ID {$permissionId} in the application for pre-authorized application. DisplayName will not be included in the configuration."
+                    continue
+                }
+                $permissionIds += $permission.Value
+            }
+            $myPreAuthorizedApplications.Add('PermissionIds', $permissionIds)
             if ($myPreAuthorizedApplications.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexPreAuthorizedApplications += $myPreAuthorizedApplications
@@ -844,9 +861,32 @@ function Set-TargetResource
 
         foreach ($preAuthApp in $currentParameters.Api.PreAuthorizedApplications)
         {
+            if ($preAuthApp.AppId -notmatch "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+            {
+                $servicePrincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$($preAuthApp.AppId)'" -Property "appId"
+                if ($null -eq $servicePrincipal)
+                {
+                    throw "Could not find service principal with DisplayName {$($preAuthApp.AppId)} for pre-authorized application. Please make sure the app exists and the DisplayName is correct."
+                }
+                $preAuthApp.AppId = $servicePrincipal.appId
+            }
             $PreAuthorizedApplicationsValue += @{
-                appId                  = $currentParameters.Api.PreAuthorizedApplications.AppId
-                delegatedPermissionIds = $currentParameters.Api.PreAuthorizedApplications.PermissionIds
+                appId                  = $preAuthApp.AppId
+                delegatedPermissionIds = $preAuthApp.PermissionIds | Foreach-Object {
+                    if ($_ -match "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+                    {
+                        $_
+                    }
+                    else
+                    {
+                        $permission = $currentAADApp.Api.Oauth2PermissionScopes | Where-Object -FilterScript { $_.Value -eq $_ }
+                        if ($null -eq $permission)
+                        {
+                            throw "Could not find existing permission with DisplayName {$_.Value} in the application for pre-authorized application. Please make sure the permission exists and the DisplayName is correct."
+                        }
+                        $permission.Id
+                    }
+                }
             }
         }
         $apiValue.Add('PreAuthorizedApplications', $PreAuthorizedApplicationsValue)
@@ -1914,7 +1954,7 @@ function Export-TargetResource
 function Get-M365DSCAzureADAppPermissions
 {
     [CmdletBinding()]
-    [OutputType([PSCustomObject])]
+    [OutputType([System.Collections.Hashtable[]])]
     param
     (
         [Parameter(Mandatory = $true)]

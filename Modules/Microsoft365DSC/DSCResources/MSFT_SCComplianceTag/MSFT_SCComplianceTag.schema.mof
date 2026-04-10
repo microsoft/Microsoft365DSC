@@ -8,6 +8,7 @@ class MSFT_SCFilePlanProperty
     [Write, Description("File plan reference id. Can get a list by running Get-FilePlanPropertyReferenceId.")] String FilePlanPropertyReferenceId;
     [Write, Description("File plan subcategory. Can get a list by running Get-FilePlanPropertySubCategory.")] String FilePlanPropertySubCategory;
 };
+
 [ClassVersion("1.0.0.0"), FriendlyName("SCComplianceTag")]
 class MSFT_SCComplianceTag : OMI_BaseResource
 {

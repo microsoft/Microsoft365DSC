@@ -1,7 +1,7 @@
-[ClassVersion("1.0.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_TeamsComplianceRecordingApplication
 {
-    [Write, Description("A name that uniquely identifies the application instance of the policy-based recording application.")] String Id;
+    [Required, Description("A name that uniquely identifies the application instance of the policy-based recording application.")] String Id;
     [Write, Description("Determines the other policy-based recording applications to pair with this application to achieve application resiliency. Can only have one paired application.")] String ComplianceRecordingPairedApplications[];
     [Write, Description("Indicates whether the policy-based recording application must be in the meeting before the user is allowed to join the meeting.")] Boolean RequiredBeforeMeetingJoin;
     [Write, Description("Indicates whether the policy-based recording application must be in the call before the call is allowed to establish.")] Boolean RequiredBeforeCallEstablishment;

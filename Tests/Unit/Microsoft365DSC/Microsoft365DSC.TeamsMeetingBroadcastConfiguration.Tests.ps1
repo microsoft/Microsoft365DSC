@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowSdnProviderForBroadcastMeeting = $True
-                    Identity                            = 'Global'
+                    IsSingleInstance                    = 'Yes'
                     SdnApiTemplateUrl                   = 'https://api.contosoprovider.com/v1/Template'
                     SdnApiToken                         = $ConfigurationData.Settings.SdnApiToken
                     SdnLicenseId                        = '123456-123456-123456-123456'
@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowSdnProviderForBroadcastMeeting = $True
-                    Identity                            = 'Global'
+                    IsSingleInstance                    = 'Yes'
                     SdnApiTemplateUrl                   = 'https://api.contosoprovider.com/v1/Template'
                     SdnApiToken                         = $ConfigurationData.Settings.SdnApiToken
                     SdnLicenseId                        = '123456-111111-111111-123456'; #Variant

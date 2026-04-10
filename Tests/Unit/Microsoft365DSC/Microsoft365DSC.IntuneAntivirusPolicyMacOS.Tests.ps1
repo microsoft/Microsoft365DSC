@@ -561,6 +561,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
+            Mock -ModuleName M365DSCIntuneUtil -CommandName Get-MgGroup -MockWith {
+                return @{
+                    Id = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                    DisplayName = 'Exclude'
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -598,6 +605,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
@@ -650,6 +658,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
@@ -662,7 +671,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions -Property @{
                             Exclusions_item_name = 'Test'
-                            ThreatTypeSettings_item_key = 'excludedFileName'
+                            Exclusions_item_type = 'excludedFileName'
                         } -ClientOnly)
                     );
                     Id = "12345-12345-12345-12345-12345"
@@ -700,6 +709,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
@@ -712,7 +722,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions -Property @{
                             Exclusions_item_name = 'Test'
-                            ThreatTypeSettings_item_key = 'excludedFileName'
+                            Exclusions_item_type = 'excludedFileName'
                         } -ClientOnly)
                     );
                     Id = "12345-12345-12345-12345-12345"
@@ -742,6 +752,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Description = "My Test"
@@ -754,7 +765,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions -Property @{
                             Exclusions_item_name = 'Test'
-                            ThreatTypeSettings_item_key = 'excludedFileName'
+                            Exclusions_item_type = 'excludedFileName'
                         } -ClientOnly)
                     );
                     Id = "12345-12345-12345-12345-12345"

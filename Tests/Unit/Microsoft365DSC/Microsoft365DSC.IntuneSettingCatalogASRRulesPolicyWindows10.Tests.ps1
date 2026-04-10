@@ -197,71 +197,69 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
                             }
-                            AdditionalProperties             = @(
-                                @{
-                                    '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                    groupSettingCollectionValue = @(
-                                        @{
-                                            children = @(
-                                                @{
-                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-                                                    choiceSettingValue  = @{
-                                                        children = @(
-                                                            @{
-                                                                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                                                                settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_perruleexclusions'
-                                                                simpleSettingCollectionValue = @(
-                                                                    @{
-                                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                        value = 'Adobe Reader Exclusion'
-                                                                    }
-                                                                )
-                                                            }
-                                                        )
-                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_audit'
-                                                    }
-                                                },
-                                                @{
-                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                                    choiceSettingValue  = @{
-                                                        children = @(
-                                                            @{
-                                                                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                                                                settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_perruleexclusions'
-                                                                simpleSettingCollectionValue = @(
-                                                                    @{
-                                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                        value = 'Win32 API Calls Exclusion'
-                                                                    }
-                                                                )
-                                                            }
-                                                        )
-                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_block'
-                                                    }
-                                                },
-                                                @{
-                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-                                                    choiceSettingValue  = @{
-                                                        children = @()
-                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem_warn'
-                                                    }
-                                                },
-                                                @{
-                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-                                                    choiceSettingValue  = @{
-                                                        children = @()
-                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses_warn'
-                                                    }
+                            AdditionalProperties             = @{
+                                '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                                groupSettingCollectionValue = @(
+                                    @{
+                                        children = @(
+                                            @{
+                                                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
+                                                choiceSettingValue  = @{
+                                                    children = @(
+                                                        @{
+                                                            '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
+                                                            settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_perruleexclusions'
+                                                            simpleSettingCollectionValue = @(
+                                                                @{
+                                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                                    value = 'Adobe Reader Exclusion'
+                                                                }
+                                                            )
+                                                        }
+                                                    )
+                                                    value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_audit'
                                                 }
-                                            )
-                                        }
-                                    )
-                                }
-                            )
+                                            },
+                                            @{
+                                                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
+                                                choiceSettingValue  = @{
+                                                    children = @(
+                                                        @{
+                                                            '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
+                                                            settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_perruleexclusions'
+                                                            simpleSettingCollectionValue = @(
+                                                                @{
+                                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                                    value = 'Win32 API Calls Exclusion'
+                                                                }
+                                                            )
+                                                        }
+                                                    )
+                                                    value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_block'
+                                                }
+                                            },
+                                            @{
+                                                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
+                                                choiceSettingValue  = @{
+                                                    children = @()
+                                                    value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem_warn'
+                                                }
+                                            },
+                                            @{
+                                                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
+                                                choiceSettingValue  = @{
+                                                    children = @()
+                                                    value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses_warn'
+                                                }
+                                            }
+                                        )
+                                    }
+                                )
+                            }
                         }
                         AdditionalProperties = @{}
                     }
@@ -285,6 +283,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 })
             }
+
+            Mock -ModuleName M365DSCIntuneUtil -CommandName Get-MgGroup -MockWith {
+                return @{
+                    Id = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                    DisplayName = 'Exclude'
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -304,6 +310,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     BlockAdobeReaderFromCreatingChildProcesses                          = 'audit'
@@ -346,6 +353,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     BlockAdobeReaderFromCreatingChildProcesses                          = 'audit'
@@ -384,6 +392,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     BlockAdobeReaderFromCreatingChildProcesses                          = 'audit'
@@ -413,6 +422,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                             deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     BlockAdobeReaderFromCreatingChildProcesses                          = 'audit'

@@ -38,7 +38,7 @@ function Get-TargetResource
         $SharedCalendarSyncStartDate,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -184,7 +184,7 @@ function Set-TargetResource
         $SharedCalendarSyncStartDate,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -287,7 +287,7 @@ function Test-TargetResource
         $SharedCalendarSyncStartDate,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 

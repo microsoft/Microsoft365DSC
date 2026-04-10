@@ -66,7 +66,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowFederatedUsers       = $True
                     AllowTeamsConsumer        = $False
                     AllowTeamsConsumerInbound = $False
-                    Identity                  = 'Global'
+                    IsSingleInstance          = 'Yes'
                     Credential                = $Credential
                 }
             }
@@ -86,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowFederatedUsers       = $True
                     AllowTeamsConsumer        = $True
                     AllowTeamsConsumerInbound = $True
-                    Identity                  = 'Global'
+                    IsSingleInstance          = 'Yes'
                     Credential                = $Credential
                 }
             }

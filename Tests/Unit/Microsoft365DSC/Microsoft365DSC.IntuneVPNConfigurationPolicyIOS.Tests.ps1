@@ -99,10 +99,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 appId                           = 'FakeStringValue'
                             }
                         )
-                        safariDomains                           = @{}
-                        associatedDomains                       = @{}
-                        excludedDomains                         = @{}
-                        excludeList                             = @{}
+                        safariDomains                           = @()
+                        associatedDomains                       = @()
+                        excludedDomains                         = @()
+                        excludeList                             = @()
                     }
                 }
             }
@@ -149,10 +149,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             address                            = 'vpn.test.com'
                         } -ClientOnly)
                     )
-                    safariDomains                              = @{}
-                    associatedDomains                          = @{}
-                    excludedDomains                            = @{}
-                    excludeList                                = @{}
+                    safariDomains                             = @()
+                    associatedDomains                         = @()
+                    excludedDomains                           = @()
+                    excludeList                               = @()
                     customData                                 = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -247,10 +247,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             address                           = 'vpn.test.com'
                         } -ClientOnly)
                     )
-                    safariDomains                             = @{}
-                    associatedDomains                         = @{}
-                    excludedDomains                           = @{}
-                    excludeList                               = @{}
+                    safariDomains                             = @()
+                    associatedDomains                         = @()
+                    excludedDomains                           = @()
+                    excludeList                               = @()
                     customData                                = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -382,10 +382,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             appId                           = 'FakeStringValue'
                         } -ClientOnly)
                     )
-                    safariDomains                           = @{}
-                    associatedDomains                       = @{}
-                    excludedDomains                         = @{}
-                    excludeList                             = @{}
+                    safariDomains                             = @()
+                    associatedDomains                         = @()
+                    excludedDomains                           = @()
+                    excludeList                               = @()
                     Ensure                                  = 'Present'
                     Credential                              = $Credential
                 }

@@ -48,7 +48,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AvailabilityConfig -MockWith {
                 return @{
-                    OrgWideAccount = 'johndoe'
+                    OrgWideAccount   = 'johndoe'
+                    AllowedTenantIds = @()
                 }
             }
 
@@ -75,9 +76,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'AvailabilityConfig should exist. OrgWideAccount is missing. Test should fail.' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    OrgWideAccount = 'johndoe'
-                    Ensure         = 'Present'
-                    Credential     = $Credential
+                    IsSingleInstance = 'Yes'
+                    AllowedTenantIds = @()
+                    OrgWideAccount   = 'johndoe'
+                    Ensure           = 'Present'
+                    Credential       = $Credential
                 }
 
                 Mock -CommandName Get-AvailabilityConfig -MockWith {
@@ -102,9 +105,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AvailabilityConfig doesn't exist." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    OrgWideAccount = 'johndoe'
-                    Ensure         = 'Absent'
-                    Credential     = $Credential
+                    IsSingleInstance = 'Yes'
+                    AllowedTenantIds = @()
+                    OrgWideAccount   = 'johndoe'
+                    Ensure           = 'Absent'
+                    Credential       = $Credential
                 }
 
                 Mock -CommandName Get-AvailabilityConfig -MockWith {
@@ -120,9 +125,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'AvailabilityConfig should exist. AvailabilityConfig exists. Test should pass.' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    OrgWideAccount = 'johndoe'
-                    Ensure         = 'Present'
-                    Credential     = $Credential
+                    OrgWideAccount   = 'johndoe'
+                    AllowedTenantIds = @()
+                    IsSingleInstance = 'Yes'
+                    Ensure           = 'Present'
+                    Credential       = $Credential
                 }
             }
 

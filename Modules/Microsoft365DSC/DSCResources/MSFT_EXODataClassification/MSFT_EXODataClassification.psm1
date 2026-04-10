@@ -15,7 +15,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Collections.ArrayList]
+        [System.String[]]
         $Fingerprints,
 
         [Parameter()]
@@ -113,7 +113,7 @@ function Get-TargetResource
             $DataClassification = $Script:exportedInstance
         }
 
-        $currentDefaultCultureName = ([system.globalization.cultureinfo]$DataClassification.DefaultCulture).Name
+        $currentDefaultCultureName = ([System.Globalization.CultureInfo]$DataClassification.DefaultCulture).Name
         $DataClassificationLocale = $currentDefaultCultureName
         $DataClassificationIsDefault = $false
         if (([String]::IsNullOrEmpty($Locale)) -or ($Locale -eq $currentDefaultCultureName))
@@ -124,7 +124,7 @@ function Get-TargetResource
         $result = @{
             Identity              = $Identity
             Description           = $DataClassification.Description
-            Fingerprints          = $DataClassification.Fingerprints
+            Fingerprints          = [System.String[]]$DataClassification.Fingerprints
             IsDefault             = $DataClassificationIsDefault
             Locale                = $DataClassificationLocale
             Name                  = $DataClassification.Name
@@ -168,7 +168,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Collections.ArrayList]
+        [System.String[]]
         $Fingerprints,
 
         [Parameter()]
@@ -238,11 +238,11 @@ function Set-TargetResource
     $DataClassification = Get-DataClassification -Identity $Identity -ErrorAction SilentlyContinue
     $DataClassificationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $DataClassification))
+    if ($Ensure -eq 'Present' -and $null -eq $DataClassification)
     {
         Write-Verbose -Message 'Data Classification in Exchange Online are now deprecated in favor of Sensitive Information Types in Purview.'
     }
-    elseif (('Present' -eq $Ensure ) -and ($null -ne $DataClassification))
+    elseif ($Ensure -eq 'Present' -and $null -ne $DataClassification)
     {
         $verboseMessage = "Setting Data classification policy $($Identity) with values:" + `
             " $(Convert-M365DscHashtableToString -Hashtable $DataClassificationParams)"
@@ -259,7 +259,7 @@ function Set-TargetResource
         Set-DataClassification @DataClassificationParams -IsDefault:$IsDefault -Confirm:$false
         Write-Verbose -Message 'Data classification policy updated successfully.'
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $DataClassification))
+    elseif ($Ensure -eq 'Absent' -and $null -ne $DataClassification)
     {
         Write-Verbose -Message "Removing Data classification policy $($Identity)"
         Remove-DataClassification -Identity $Identity -Confirm:$false
@@ -282,7 +282,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Collections.ArrayList]
+        [System.String[]]
         $Fingerprints,
 
         [Parameter()]

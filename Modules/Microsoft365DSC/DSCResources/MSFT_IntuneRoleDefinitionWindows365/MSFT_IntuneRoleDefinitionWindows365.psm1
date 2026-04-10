@@ -27,8 +27,8 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -190,8 +190,8 @@ function Set-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -245,16 +245,9 @@ function Set-TargetResource
         Write-Verbose -Message "Creating an Intune Role Definition Windows365 with DisplayName {$DisplayName}"
 
         $createParameters = ([Hashtable]$boundParameters).Clone()
+        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
         $createParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$createParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $createParameters.$key -and $createParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $createParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
-            }
-        }
         #region resource generator code
         $policy = New-MgBetaRoleManagementCloudPcRoleDefinition -BodyParameter $createParameters
         #endregion
@@ -264,21 +257,13 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the Intune Role Definition Windows365 with Id {$($currentInstance.Id)}"
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
+        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
         $updateParameters.Remove('Id') | Out-Null
-
-        $keys = (([Hashtable]$updateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $updateParameters.$key -and $updateParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $updateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.$key
-            }
-        }
 
         #region resource generator code
         Update-MgBetaRoleManagementCloudPcRoleDefinition `
             -UnifiedRoleDefinitionId $currentInstance.Id `
-            -BodyParameter $UpdateParameters
+            -BodyParameter $updateParameters
 
         #endregion
     }
@@ -320,8 +305,8 @@ function Test-TargetResource
         #endregion
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
 
         [Parameter()]

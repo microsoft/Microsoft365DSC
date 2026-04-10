@@ -15,7 +15,7 @@ function Get-TargetResource
         $UserPermissions,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -81,8 +81,7 @@ function Get-TargetResource
             return $nullResult
         }
 
-        [Array]$permissionsObj = @()
-
+        $permissionsObj = @()
         foreach ($mailboxfolderPermission in $instances)
         {
             $currentPermission = @{}
@@ -97,7 +96,7 @@ function Get-TargetResource
 
         $results = @{
             Identity              = $Identity
-            UserPermissions       = [Array]$permissionsObj
+            UserPermissions       = $permissionsObj
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -134,7 +133,7 @@ function Set-TargetResource
         $UserPermissions,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -253,7 +252,7 @@ function Test-TargetResource
         $UserPermissions,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 

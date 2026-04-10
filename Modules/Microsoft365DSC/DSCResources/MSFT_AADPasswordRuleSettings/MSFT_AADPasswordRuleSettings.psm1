@@ -108,6 +108,12 @@ function Get-TargetResource
             $valueLockoutThreshold = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'LockoutThreshold' }
             $valueBannedPasswordList = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'BannedPasswordList' }
 
+            $bannedPasswordListArray = @()
+            # Splitting a null value results in an array with one empty string
+            if ($valueBannedPasswordList.Value.Count -gt 0 -and -not [System.String]::IsNullOrEmpty($valueBannedPasswordList.Value[0]))
+            {
+                $bannedPasswordListArray = $valueBannedPasswordList.Value -split "`t" # list is tab-delimited
+            }
             $result = @{
                 IsSingleInstance                    = 'Yes'
                 BannedPasswordCheckOnPremisesMode   = $valueBannedPasswordCheckOnPremisesMode.Value
@@ -115,7 +121,7 @@ function Get-TargetResource
                 EnableBannedPasswordCheck           = [Boolean]::Parse($valueEnableBannedPasswordCheck.Value)
                 LockoutDurationInSeconds            = $valueLockoutDurationInSeconds.Value
                 LockoutThreshold                    = $valueLockoutThreshold.Value
-                BannedPasswordList                  = $valueBannedPasswordList.Value -split "`t" # list is tab-delimited
+                BannedPasswordList                  = $bannedPasswordListArray
                 Ensure                              = 'Present'
                 ApplicationId                       = $ApplicationId
                 TenantId                            = $TenantId

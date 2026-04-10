@@ -1,10 +1,11 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_TeamsEmergencyNumber
 {
-    [Write, Description("Specifies the emergency phone number.")] String EmergencyDialString;
+    [Required, Description("Specifies the emergency phone number.")] String EmergencyDialString;
     [Write, Description("For each Teams emergency number, you can specify zero or more emergency dial masks. A dial mask is a number that you want to translate into the value of the emergency dial number value when it is dialed.")] String EmergencyDialMask;
     [Write, Description("Specify the online public switched telephone network (PSTN) usage")] String OnlinePSTNUsage;
 };
+
 [ClassVersion("1.0.0.0"), FriendlyName("TeamsEmergencyCallRoutingPolicy")]
 class MSFT_TeamsEmergencyCallRoutingPolicy : OMI_BaseResource
 {

@@ -79,7 +79,7 @@ class MSFT_AADVerifiedIdAuthorityContractVcType {
 
 [ClassVersion("1.0.0.0")]
 class MSFT_AADVerifiedIdAuthorityContractRulesModel {
-   [Write, EmbeddedInstance("MSFT_AADVerifiedIdAuthorityContractAttestations"), Description("Describing supported inputs for the rules.")] String attestations;
+    [Write, EmbeddedInstance("MSFT_AADVerifiedIdAuthorityContractAttestations"), Description("Describing supported inputs for the rules.")] String attestations;
     [Write, Description("This value shows the lifespan of the credential.")] UInt32 validityInterval;
     [Write, EmbeddedInstance("MSFT_AADVerifiedIdAuthorityContractVcType"), Description("Types for this contract.")] String vc;
     [Write, EmbeddedInstance("MSFT_AADVerifiedIdAuthorityContractCustomStatusEndpoint"), Description("Status endpoint to include in the verifiable credential for this contract.")] String customStatusEndpoint;

@@ -573,8 +573,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AssignmentReqMFA                                          = $False
                     CertificateThumbprint                                     = $ConfigurationData.NonNodeData.CertificateThumbprint
                     Displayname                                               = 'FakeGroup'
-                    ElegibilityAssignmentReqJustification                     = $False
-                    ElegibilityAssignmentReqMFA                               = $False
+                    EligibilityAssignmentReqJustification                     = $False
+                    EligibilityAssignmentReqMFA                               = $False
                     EligibleAlertNotificationAdditionalRecipient              = @()
                     EligibleAlertNotificationDefaultRecipient                 = $True
                     EligibleAlertNotificationOnlyCritical                     = $False
@@ -635,8 +635,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AssignmentReqMFA                                          = $False
                     CertificateThumbprint                                     = $ConfigurationData.NonNodeData.CertificateThumbprint
                     Displayname                                               = 'FakeGroup'
-                    ElegibilityAssignmentReqJustification                     = $False
-                    ElegibilityAssignmentReqMFA                               = $False
+                    EligibilityAssignmentReqJustification                     = $False
+                    EligibilityAssignmentReqMFA                               = $False
                     EligibleAlertNotificationAdditionalRecipient              = @()
                     EligibleAlertNotificationDefaultRecipient                 = $True
                     EligibleAlertNotificationOnlyCritical                     = $False

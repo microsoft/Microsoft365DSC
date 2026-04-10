@@ -10,7 +10,7 @@ jobs:
     permissions: write-all
 
     # Only when run from the main repo
-    if: github.repository == 'microsoft/Microsoft365DSC'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -30,6 +30,22 @@ jobs:
             if ($foundPosition -ge 0)
             {
               throw "Resource {$($Resource.Name)} contains hardcoded Graph references."
+            }
+          }
+
+      - name: Ensure resource names are not too long
+        shell: pwsh
+        run: |
+          $resources = Get-ChildItem -Path './Modules/Microsoft365DSC/DSCResources/*.psm1' -Recurse
+          $fixedLength = 107 # Usually between 100-105, taking a bit more
+
+          foreach ($resource in $resources)
+          {
+            $resourceName = $resource.Name.Replace(".psm1", "")
+            $directoryWithFileName = "$resourceName\$resourceName.schema.mof"
+            if ($directoryWithFileName.Length + $fixedLength -gt 255)
+            {
+              throw "Resource {$($resource.Name)} has a name that leads to import errors because the path is too long."
             }
           }
 

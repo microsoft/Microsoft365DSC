@@ -41,11 +41,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UserPrincipalName = 'alexw@contoso.com'
                 }
             }
-            Mock -CommandName Get-MgGroup -MockWith {
+            Mock -CommandName Get-MgGroup -ParameterFilter { $GroupId -eq 'f1eb1a09-c0c2-4df4-9e69-fee01f00db31' } -MockWith {
                 return @{
                     Id          = 'f1eb1a09-c0c2-4df4-9e69-fee01f00db31'
                     DisplayName = 'Group 01'
                 }
+            }
+            Mock -CommandName Get-MgGroup -ParameterFilter { $Filter -eq "DisplayName eq 'Group 01'" } -MockWith {
+                return @(@{
+                    Id          = 'f1eb1a09-c0c2-4df4-9e69-fee01f00db31'
+                    DisplayName = 'Group 01'
+                })
             }
             Mock -CommandName Get-MgDirectoryRoleTemplate -MockWith {
                 return @{
@@ -63,6 +69,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Id          = "00000000-0000-0000-0000-000000000004"
                     DisplayName = "Phishing-resistant MFA"
+                }
+            }
+            Mock -CommandName Get-MgServicePrincipal -ParameterFilter { $Filter -eq "AppId eq '00000012-0000-0000-c000-000000000000'" } -MockWith {
+                return @{
+                    Id          = '00000012-0000-0000-c000-000000000000'
+                    DisplayName = 'Microsoft Rights Management Services'
+                }
+            }
+            Mock -CommandName Get-MgServicePrincipal -ParameterFilter { $Filter -eq "DisplayName eq 'Microsoft Rights Management Services'" } -MockWith {
+                return @{
+                    Id          = '00000012-0000-0000-c000-000000000000'
+                    DisplayName = 'Microsoft Rights Management Services'
                 }
             }
 
@@ -179,7 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CloudAppSecurityType                 = 'MonitorOnly'
                     DisplayName                          = 'Allin'
                     Ensure                               = 'Present'
-                    ExcludeApplications                  = @('00000012-0000-0000-c000-000000000000', 'Office365')
+                    ExcludeApplications                  = @('Microsoft Rights Management Services', 'Office365')
                     ExcludeGroups                        = @('Group 01')
                     ExcludeLocations                     = 'Contoso LAN'
                     ExcludePlatforms                     = @('Windows', 'WindowsPhone', 'MacOS')
@@ -245,7 +263,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CloudAppSecurityType                     = 'MonitorOnly'
                     DisplayName                              = 'Allin'
                     Ensure                                   = 'Present'
-                    ExcludeApplications                      = @('00000012-0000-0000-c000-000000000000', 'Office365')
+                    ExcludeApplications                      = @('Microsoft Rights Management Services', 'Office365')
                     ExcludeGroups                            = @('Group 01')
                     ExcludeLocations                         = 'Contoso LAN'
                     ExcludePlatforms                         = @('Windows', 'WindowsPhone', 'MacOS')
@@ -332,7 +350,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CloudAppSecurityType                     = 'MonitorOnly'
                     DisplayName                              = 'Allin'
                     Ensure                                   = 'Present'
-                    ExcludeApplications                      = @('00000012-0000-0000-c000-000000000000', 'Office365')
+                    ExcludeApplications                      = @('Microsoft Rights Management Services', 'Office365')
                     ExcludeGroups                            = @('Group 01')
                     ExcludeLocations                         = 'Contoso LAN'
                     ExcludePlatforms                         = @('Windows', 'WindowsPhone', 'MacOS')
@@ -389,7 +407,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CloudAppSecurityType                     = 'MonitorOnly'
                     DisplayName                              = 'Allin'
                     Ensure                                   = 'Absent'
-                    ExcludeApplications                      = @('00000012-0000-0000-c000-000000000000', 'Office365')
+                    ExcludeApplications                      = @('Microsoft Rights Management Services', 'Office365')
                     ExcludeGroups                            = @('Group 01')
                     ExcludeLocations                         = 'Contoso LAN'
                     ExcludePlatforms                         = @('Windows', 'WindowsPhone', 'MacOS')

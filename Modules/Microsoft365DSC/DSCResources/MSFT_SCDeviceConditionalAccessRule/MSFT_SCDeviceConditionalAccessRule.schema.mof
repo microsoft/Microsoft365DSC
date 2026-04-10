@@ -52,7 +52,6 @@ class MSFT_SCDeviceConditionalAccessRule : OMI_BaseResource
     [Write, Description("The UserAccountControlStatus parameter specifies how User Account Control messages are presented on devices.")] String UserAccountControlStatus;
     [Write, Description("The WLANEnabled parameter specifies whether Wi-Fi is enabled devices.")] Boolean WLANEnabled;
     [Write, Description("The WorkFoldersSyncUrl parameter specifies the URL that's used to synchronize company data on devices.")] String WorkFoldersSyncUrl;
-
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Absent", "Present"}, Values{"Absent", "Present"}] string Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

@@ -84,7 +84,7 @@ function Get-TargetResource
         }
         if ($null -eq $instance)
         {
-            Write-Verbose -Message 'No instance found.'
+            Write-Verbose -Message "No AAD Cross Tenant Identity Sync Policy Partner for TenantId {$CrossTenantAccessPolicyConfigurationPartnerTenantId} found."
             return $nullResult
         }
 
@@ -100,7 +100,6 @@ function Get-TargetResource
             ManagedIdentity                                     = $ManagedIdentity.IsPresent
             AccessTokens                                        = $AccessTokens
         }
-        Write-Verbose -Message "Found instance:`r`n$($results | ConvertTo-Json -Depth 10)"
         return $results
     }
     catch

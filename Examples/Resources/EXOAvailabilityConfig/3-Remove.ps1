@@ -25,7 +25,7 @@ Configuration Example
     {
         EXOAvailabilityConfig 'ConfigureAvailabilityConfig'
         {
-            OrgWideAccount       = "alexW@$TenantId" # Updated Property
+            IsSingleInstance      = "Yes"
             Ensure               = "Absent"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId

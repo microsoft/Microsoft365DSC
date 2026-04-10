@@ -1094,6 +1094,7 @@ function Export-TargetResource
             AccessTokens          = $AccessTokens
         }
 
+        $Script:exportedInstance = $true
         $Results = Get-TargetResource @Params
         $dscContent = ''
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

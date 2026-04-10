@@ -10,7 +10,7 @@ function Get-TargetResource
         $IsMdmEnrollmentDuringRegistrationDisabled,
 
         [Parameter()]
-        [ValidateSet('none','all','selected','unknownFutureValue')]
+        [ValidateSet('none','all','selected')]
         [System.String]
         $AppliesTo,
 
@@ -136,7 +136,7 @@ function Set-TargetResource
         $IsMdmEnrollmentDuringRegistrationDisabled,
 
         [Parameter()]
-        [ValidateSet('none','all','selected','unknownFutureValue')]
+        [ValidateSet('none','all','selected')]
         [System.String]
         $AppliesTo,
 
@@ -283,7 +283,7 @@ function Test-TargetResource
         $IsMdmEnrollmentDuringRegistrationDisabled,
 
         [Parameter()]
-        [ValidateSet('none','all','selected','unknownFutureValue')]
+        [ValidateSet('none','all','selected')]
         [System.String]
         $AppliesTo,
 

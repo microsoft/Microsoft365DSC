@@ -1,7 +1,7 @@
-[ClassVersion("1.0.0.0"), FriendlyName("TeamsMeetingBroadcastConfiguration")]
+[ClassVersion("1.0.0.1"), FriendlyName("TeamsMeetingBroadcastConfiguration")]
 class MSFT_TeamsMeetingBroadcastConfiguration : OMI_BaseResource
 {
-    [Key, Description("The only valid input is Global - the tenant wide configuration"), ValueMap{"Global"}, Values{"Global"}] string Identity;
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Specifies a URL where broadcast event attendees can find support information or FAQs specific to that event. The URL will be displayed to the attendees during the broadcast.")] String SupportURL;
     [Write, Description("If set to $true, Teams meeting broadcast streams are enabled to take advantage of the network and bandwidth management capabilities of your Software Defined Network (SDN) provider.")] Boolean AllowSdnProviderForBroadcastMeeting;
     [Write, Description("Specifies the Software Defined Network (SDN) provider's name. This parameter is only required if AllowSdnProviderForBroadcastMeeting is set to $true.")] String SdnProviderName;

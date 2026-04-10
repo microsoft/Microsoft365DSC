@@ -412,14 +412,6 @@ function Export-TargetResource
             }
             $Script:exportedInstance = $AADPolicy
             $Results = Get-TargetResource @Params
-            # Fix quotes inside the Definition's JSON;
-            $NewDefinition = @()
-            foreach ($item in $Results.Definition)
-            {
-                $fixedContent = $item.Replace('"', '`"')
-                $NewDefinition += $fixedContent
-            }
-            $results.Definition = $NewDefinition
 
             if ($Results.Ensure -eq 'Present')
             {
@@ -428,7 +420,6 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent = $dscContent.Replace('```"', '`"')
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName

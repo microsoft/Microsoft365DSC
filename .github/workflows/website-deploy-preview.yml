@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   build:
-    if: github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/Dev'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC' && github.event.ref == 'refs/heads/Dev'
     runs-on: ubuntu-latest
     environment:
       name: PREVIEW
@@ -36,7 +36,7 @@ jobs:
           path: ${{ github.workspace }}/generator/dist
 
   deploy_preview:
-    if: github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/Dev'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC' && github.event.ref == 'refs/heads/Dev'
     runs-on: ubuntu-latest
     environment:
       name: PREVIEW

@@ -387,11 +387,11 @@ function Set-TargetResource
 
     $CreationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentAlert.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentAlert.Ensure -eq 'Absent')
     {
         New-ProtectionAlert @CreationParams
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentAlert.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentAlert.Ensure -eq 'Present')
     {
         $CreationParams.Remove('Name') | Out-Null
         $CreationParams.Remove('ThreatType') | Out-Null
@@ -402,7 +402,7 @@ function Set-TargetResource
         Write-Verbose "Updating ProtectionAlert with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         Set-ProtectionAlert @CreationParams
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentAlert.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentAlert.Ensure -eq 'Present')
     {
         # If the Alert exists and it shouldn't, simply remove it;
         $Alert = Get-ProtectionAlert -Identity $Name

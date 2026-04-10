@@ -296,14 +296,14 @@ function Set-TargetResource
 
     $CurrentSearch = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentSearch.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentSearch.Ensure -eq 'Absent')
     {
         $CreationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
         Write-Verbose "Creating new Compliance Search $Name calling the New-ComplianceSearch cmdlet."
         New-ComplianceSearch @CreationParams
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentSearch.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentSearch.Ensure -eq 'Present')
     {
         $SetParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
@@ -313,7 +313,7 @@ function Set-TargetResource
 
         Set-ComplianceSearch @SetParams -Identity $Name
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentSearch.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentSearch.Ensure -eq 'Present')
     {
         # If the Search exists and it shouldn't, simply remove it;
         Remove-ComplianceSearch -Identity $Name -Confirm:$false

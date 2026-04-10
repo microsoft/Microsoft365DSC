@@ -1,7 +1,13 @@
 <#
 .SYNOPSIS
     This module contains the comparison logic for M365DSC.
+    Delegates to the C# ResourceComparer for all type normalization,
+    primary-key alignment, and drift detection.
 #>
+
+Initialize-M365DSCDllLoader -ErrorAction SilentlyContinue
+$Script:IsPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
+
 function Compare-M365DSCResourceState
 {
     [CmdletBinding()]
@@ -44,29 +50,18 @@ function Compare-M365DSCResourceState
     }
     $Global:PotentialDrifts = @()
 
-    # Retrieve the primary keys of the given resource and remove them from the list of values to check.
+    # Load the schema once via the C# CacheManager (avoids boxing on every call).
     $currentPath = $PSScriptRoot
-    if ($null -eq $Script:M365DSCSchema)
+    if (-not [Microsoft365DSC.Cache.CacheManager]::IsSchemaLoaded)
     {
         $schemaPath = Join-Path -Path $currentPath -ChildPath '..\SchemaDefinition.json'
-        $schemaJSON = Get-Content $schemaPath -Raw
-        $Script:M365DSCSchema = ConvertFrom-Json $schemaJSON
-
-        $Script:ResourceDefinitionCache = @{}
-        foreach ($schemaEntry in $Script:M365DSCSchema)
-        {
-            $Script:ResourceDefinitionCache[$schemaEntry.ClassName] = $schemaEntry
-        }
+        $schemaContent = [System.IO.File]::ReadAllText($schemaPath) | ConvertFrom-Json
+        [Microsoft365DSC.Cache.CacheManager]::LoadSchema($schemaContent)
     }
-    $resourceDefinition = $Script:ResourceDefinitionCache["MSFT_$ResourceName"]
-    $resourceKeys = $resourceDefinition.Parameters.Where({ $_.Option -eq 'Key' })
 
-    # Create a cache for resource property lookups to improve performance
-    $Script:ResourcePropertyCache = @{}
-
+    # Apply custom post-processing callback if specified.
+    # PostProcessing is a PowerShell Func delegate, so it must be called here (before entering C#).
     $ValuesToCheck = $DesiredValues.Clone()
-
-    # Apply custom post-processing to CurrentValues and ValuesToCheck if specified
     if ($null -ne $PostProcessing)
     {
         Write-Verbose -Message "Applying custom post-processing to CurrentValues and ValuesToCheck for resource $ResourceName"
@@ -90,180 +85,33 @@ function Compare-M365DSCResourceState
         }
     }
 
-    $null = $ValuesToCheck.Remove('Id')
-    $null = $ValuesToCheck.Remove('Identity')
-
-    # Remove the key parameters from the comparison
-    foreach ($keyToRemove in $resourceKeys)
-    {
-        $null = $ValuesToCheck.Remove($keyToRemove.Name)
-    }
-
-    # Remove PSCredential object from the list of properties to be evaluated
-    $credentialProperties = $resourceDefinition.Parameters.Where({ $_.CIMType -eq 'MSFT_Credential' })
-    foreach ($property in $credentialProperties)
-    {
-        $null = $ValuesToCheck.Remove($property.Name)
-    }
-
-    # Remove the ExcludedProperties from the list of properties to be evaluated
-    foreach ($property in $ExcludedProperties)
-    {
-        $null = $ValuesToCheck.Remove($property)
-    }
-
-    # Add the IncludedProperties to the list of properties to be evaluated
-    foreach ($property in $IncludedProperties)
-    {
-        if ($DesiredValues.ContainsKey($property))
-        {
-            $ValuesToCheck.$property = $DesiredValues.$property
-        }
-    }
-
-    $testTargetResource = $true
-    $skipEvaluation = $false
-    if ($DesiredValues.Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "The resource $ResourceName with $finalString was not found in the tenant."
-        $Global:AllDrifts.DriftInfo += @{
-            PropertyName = 'Ensure'
-            CurrentValue = 'Absent'
-            DesiredValue = 'Present'
-        }
-        $testTargetResource = $false
-        $ExcludedProperties += 'Ensure'
-    }
-    elseif ($DesiredValues.Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "The resource $ResourceName with $finalString should not exist in the tenant."
-        $Global:AllDrifts.DriftInfo += @{
-            PropertyName = 'Ensure'
-            CurrentValue = 'Present'
-            DesiredValue = 'Absent'
-        }
-        $testTargetResource = $false
-        $ExcludedProperties += 'Ensure'
-    }
-    elseif ($DesiredValues.Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "The resource $ResourceName with $finalString does not exist in the tenant as desired."
-        $skipEvaluation = $true
-    }
-
-    $testResult = $true
-    if ($testTargetResource -and -not $skipEvaluation)
-    {
-        # Compare Cim instances
-        # Create property lookup hashtable for this resource type if not already cached
-        if (-not $Script:ResourcePropertyCache.ContainsKey($ResourceName))
-        {
-            $propertyLookup = @{}
-            foreach ($prop in $resourceDefinition.Parameters)
-            {
-                $propertyLookup[$prop.Name] = $prop
-            }
-            $Script:ResourcePropertyCache[$ResourceName] = $propertyLookup
-        }
-        $resourcePropertyLookup = $Script:ResourcePropertyCache[$ResourceName]
-
-        $desiredKeys = $DesiredValues.Clone().Keys
-        foreach ($key in $desiredKeys)
-        {
-            $source = $DesiredValues.$key
-            $target = $CurrentValues.$key
-            $parameterDefinition = $resourcePropertyLookup[$key]
-            if ($null -ne $source -and ($source.GetType().Name -like '*CimInstance*' -or $parameterDefinition.CIMType -like 'MSFT_*'))
-            {
-                Write-Verbose -Message "Comparing complex object property $key of resource $ResourceName"
-                $CIMProperty = $parameterDefinition
-                $CIMName = $CIMProperty.CIMType.Replace('[]', '')
-                $CIMDefinition = $Script:M365DSCSchema.Where({ $_.ClassName -eq $CIMName })
-                # Can potentially be a single PSObject, therefore not using Where()
-                $CIMPrimaryKeys = $CIMDefinition.Parameters | Where-Object { $_.Option -eq 'Required' }
-
-                $targetObjects = @{}
-                if ($source.GetType().Name -in @('CimInstance[]', 'Object[]'))
-                {
-                    $targetObjects = @()
-                }
-
-                # Filter all target objects that match the primary keys of the source object(s)
-                $target = $target | Where-Object -FilterScript {
-                    $match = $true
-                    foreach ($primaryKey in $CIMPrimaryKeys.Name)
-                    {
-                        # Because $source can be an array, we need to check if the
-                        # primary key value exists in any of the source objects
-                        $sourceValue = $source.$primaryKey | Select-Object -Unique
-                        if ($_.$primaryKey -notin @($sourceValue))
-                        {
-                            $match = $false
-                        }
-                    }
-                    return $match
-                }
-
-                foreach ($targetObject in $target)
-                {
-                    foreach ($primaryKey in $CIMPrimaryKeys.Name)
-                    {
-                        if ($primaryKey -notin $IncludedProperties)
-                        {
-                            $targetObject.Remove($primaryKey) | Out-Null
-                        }
-                    }
-
-                    if ($targetObjects -is [array])
-                    {
-                        $targetObjects += $targetObject
-                    }
-                    else
-                    {
-                        $targetObjects = $targetObject
-                    }
-                }
-
-                $testResult = Compare-M365DSCComplexObject `
-                    -Source ($source) `
-                    -Target ($targetObjects) `
-                    -PropertyName $key
-
-                if (-not $testResult)
-                {
-                    Write-Verbose "TestResult returned False for $source"
-                    $testTargetResource = $false
-                }
-
-                $DesiredValues.Remove($key) | Out-Null
-                $ValuesToCheck.Remove($key) | Out-Null
-            }
-        }
-    }
-
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $DesiredValues)"
 
-    $testResult2 = $true
-    if (-not $skipEvaluation)
-    {
-        $testResult2 = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $ResourceName `
-            -DesiredValues $DesiredValues `
-            -ValuesToCheck $ValuesToCheck.Keys `
-            -NoEventMessage `
-            -NoDriftReset `
-            -ExcludedProperties $ExcludedProperties
-    }
+    # Delegate the entire comparison to C#.
+    # ResourceComparer handles: schema lookup, key/credential exclusion, Ensure handling,
+    # CimInstance/PSObject normalization (via ObjectNormalizer), primary-key alignment,
+    # complex object comparison, and simple property comparison.
+    $compareResult = [Microsoft365DSC.Compare.ResourceComparer]::Compare(
+        $DesiredValues,
+        $CurrentValues,
+        $ValuesToCheck,
+        [Microsoft365DSC.Cache.CacheManager]::Schema,
+        $ResourceName,
+        $ExcludedProperties,
+        $IncludedProperties
+    )
 
-    if ($testResult -and -not $testResult2)
+    # Populate the global drift state from the C# result for downstream consumers
+    # (event logging, telemetry, drift reporting).
+    $testTargetResource = $compareResult.TestResult
+    foreach ($drift in $compareResult.DriftInfo)
     {
-        $testResult = $false
-    }
-
-    if (-not $testResult)
-    {
-        $testTargetResource = $false
+        $Global:AllDrifts.DriftInfo += @{
+            PropertyName = $drift['PropertyName']
+            CurrentValue = $drift['CurrentValue']
+            DesiredValue = $drift['DesiredValue']
+        }
     }
 
     return $testTargetResource

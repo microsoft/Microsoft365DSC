@@ -76,7 +76,7 @@ function Get-TargetResource
             throw "Could not retrieve the Forwarding Policy with name: $Name"
         }
 
-        $complexPolicyRules = @(Get-MicrosoftGraphNetworkAccessForwardingPolicyRules -PolicyRules $instance.PolicyRules)
+        $complexPolicyRules = Get-MicrosoftGraphNetworkAccessForwardingPolicyRules -PolicyRules $instance.PolicyRules
 
         $results = @{
             Name                  = $instance.Name
@@ -210,8 +210,7 @@ function Set-TargetResource
                 $testResult = Compare-M365DSCComplexObject `
                     -Source ($currentRuleHashtable) `
                     -Target ($desiredRuleHashtable) `
-                    -PropertyName 'PolicyRules' `
-                    -NoDriftReport
+                    -PropertyName 'PolicyRules'
                 if ($testResult)
                 {
                     Write-Verbose "Updating: $($currentRule.Name), $($currentRule.Id)"
@@ -457,7 +456,7 @@ function Get-MicrosoftGraphNetworkAccessForwardingPolicyRules
     $newPolicyRules = @()
     foreach ($rule in $PolicyRules)
     {
-        $destinations = @()
+        [System.String[]]$destinations = @()
         foreach ($destination in $rule.AdditionalProperties.destinations)
         {
             $destinations += $destination.value
@@ -466,13 +465,13 @@ function Get-MicrosoftGraphNetworkAccessForwardingPolicyRules
             Name         = $rule.Name
             ActionValue  = $rule.AdditionalProperties.action
             RuleType     = $rule.AdditionalProperties.ruleType
-            Ports        = $rule.AdditionalProperties.ports
+            Ports        = [System.Int32[]]$rule.AdditionalProperties.ports
             Protocol     = $rule.AdditionalProperties.protocol
             Destinations = $destinations
         }
     }
 
-    return $newPolicyRules
+    ,$newPolicyRules
 }
 
 

@@ -9,6 +9,7 @@ class MSFT_IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolledPolicyAss
     [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphWindowsInformationProtectionDataRecoveryCertificate
 {
@@ -17,44 +18,49 @@ class MSFT_MicrosoftGraphWindowsInformationProtectionDataRecoveryCertificate
     [Write, Description("Data recovery Certificate expiration datetime")] String ExpirationDateTime;
     [Write, Description("Data recovery Certificate subject name")] String SubjectName;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphWindowsInformationProtectionResourceCollection
 {
-    [Write, Description("Display name")] String DisplayName;
+    [Required, Description("Display name")] String DisplayName;
     [Write, Description("Collection of resources")] String Resources[];
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphWindowsInformationProtectionIPRangeCollection
 {
-    [Write, Description("Display name")] String DisplayName;
+    [Required, Description("Display name")] String DisplayName;
     [Write, Description("Collection of ip ranges"), EmbeddedInstance("MSFT_MicrosoftGraphIpRange")] String Ranges[];
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphIpRange
 {
-    [Write, Description("IPv4 address in CIDR notation. Not nullable.")] String CidrAddress;
-    [Write, Description("Lower address.")] String LowerAddress;
-    [Write, Description("Upper address.")] String UpperAddress;
-    [Write, Description("The type of the entity."), ValueMap{"#microsoft.graph.iPv4CidrRange","#microsoft.graph.iPv6CidrRange","#microsoft.graph.iPv4Range","#microsoft.graph.iPv6Range"}, Values{"#microsoft.graph.iPv4CidrRange","#microsoft.graph.iPv6CidrRange","#microsoft.graph.iPv4Range","#microsoft.graph.iPv6Range"}] String odataType;
+    [Required, Description("Lower address.")] String LowerAddress;
+    [Required, Description("Upper address.")] String UpperAddress;
+    [Required, Description("The type of the entity."), ValueMap{"#microsoft.graph.iPv4Range","#microsoft.graph.iPv6Range"}, Values{"#microsoft.graph.iPv4Range","#microsoft.graph.iPv6Range"}] String odataType;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphWindowsInformationProtectionProxiedDomainCollection
 {
-    [Write, Description("Display name")] String DisplayName;
+    [Required, Description("Display name")] String DisplayName;
     [Write, Description("Collection of proxied domains"), EmbeddedInstance("MSFT_MicrosoftGraphProxiedDomain")] String ProxiedDomains[];
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphProxiedDomain
 {
-    [Write, Description("The IP address or FQDN")] String IpAddressOrFQDN;
+    [Required, Description("The IP address or FQDN")] String IpAddressOrFQDN;
     [Write, Description("Proxy IP or FQDN")] String Proxy;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.1")]
 class MSFT_MicrosoftGraphWindowsInformationProtectionApp
 {
     [Write, Description("If true, app is denied protection or exemption.")] Boolean Denied;
     [Write, Description("The app's description.")] String Description;
-    [Write, Description("App display name.")] String DisplayName;
+    [Required, Description("App display name.")] String DisplayName;
     [Write, Description("The product name.")] String ProductName;
     [Write, Description("The publisher name")] String PublisherName;
     [Write, Description("The binary name.")] String BinaryName;

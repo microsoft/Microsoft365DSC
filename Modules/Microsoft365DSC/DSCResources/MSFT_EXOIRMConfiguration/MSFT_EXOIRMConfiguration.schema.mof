@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName("EXOIRMConfiguration")]
+[ClassVersion("1.0.0.1"), FriendlyName("EXOIRMConfiguration")]
 class MSFT_EXOIRMConfiguration : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
@@ -7,6 +7,7 @@ class MSFT_EXOIRMConfiguration : OMI_BaseResource
     [Write, Description("The DecryptAttachmentForEncryptOnly parameter specifies whether mail recipients have unrestricted rights on the attachment or not for Encrypt-only mails sent using Microsoft Purview Message Encryption.")] Boolean DecryptAttachmentForEncryptOnly;
     [Write, Description("The EDiscoverySuperUserEnabled parameter specifies whether members of the Discovery Management role group can access IRM-protected messages in a discovery mailbox that were returned by a discovery search.")] Boolean EDiscoverySuperUserEnabled;
     [Write, Description("The EnablePdfEncryption parameter specifies whether to enable the encryption of PDF attachments using Microsoft Purview Message Encryption. ")] Boolean EnablePdfEncryption;
+    [Write, Description("The EnablePortalTrackingLogs parameter specifies whether to enable portal message tracking logs.")] Boolean EnablePortalTrackingLogs;
     [Write, Description("The InternalLicensingEnabled parameter specifies whether to enable IRM features for messages that are sent to internal and external recipients.")] Boolean InternalLicensingEnabled;
     [Write, Description("The JournalReportDecryptionEnabled parameter specifies whether to enable journal report decryption.")] Boolean JournalReportDecryptionEnabled;
     [Write, Description("The LicensingLocation parameter specifies the RMS licensing URLs. You can specify multiple URL values separated by commas.")] String LicensingLocation[];

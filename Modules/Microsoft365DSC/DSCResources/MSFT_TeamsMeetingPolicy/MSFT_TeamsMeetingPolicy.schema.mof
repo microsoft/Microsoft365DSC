@@ -1,4 +1,4 @@
-﻿[ClassVersion("1.0.0.2"), FriendlyName("TeamsMeetingPolicy")]
+﻿[ClassVersion("1.0.0.3"), FriendlyName("TeamsMeetingPolicy")]
 class MSFT_TeamsMeetingPolicy : OMI_BaseResource
 {
     [Key, Description("Identity of the Teams Meeting Policy.")] String Identity;
@@ -10,7 +10,6 @@ class MSFT_TeamsMeetingPolicy : OMI_BaseResource
     [Write, Description("Determines whether anonymous users can initiate a meeting. Set this to TRUE to allow anonymous users to initiate a meeting. Set this to FALSE to prohibit them from initiating a meeting.")] Boolean AllowAnonymousUsersToStartMeeting;
     [Write, Description("If admins disable avatars in 2D meetings, then users cannot represent themselves as avatars in the Gallery view. This does not disable avatars in Immersive view.")] Boolean AllowAvatarsInGallery;
     [Write, Description("Determines whether or not meetings created by users with this policy are able to utilize the Breakout Rooms feature.")] Boolean AllowBreakoutRooms;
-    [Write, Description("This setting will enable Tenant Admins to enable/disable the sharing of location data necessary to provide the end of meeting carbon summary screen for either the entire tenant or for a particular user. If set to True the meeting organizer will share their location to the client of the participant to enable the calculation of distance and the resulting carbon.")] Boolean AllowCarbonSummary;
     [Write, Description("Determines whether a user can add a URL for captions from a Communications Access Real-Time Translation (CART) captioner for providing real-time captions in meetings."), ValueMap{"EnabledUserOverride","DisabledUserOverride", "Disabled"}, Values{"EnabledUserOverride","DisabledUserOverride", "Disabled"}] String AllowCartCaptionsScheduling;
     [Write, Description("Determines whether a user can schedule channel meetings. Set this to TRUE to allow a user to schedule channel meetings. Set this to FALSE to prohibit the user from scheduling channel meetings. Note this only restricts from scheduling and not from joining a meeting scheduled by another user.")] Boolean AllowChannelMeetingScheduling;
     [Write, Description("Determines whether cloud recording is allowed in a user's meetings. Set this to TRUE to allow the user to be able to record meetings. Set this to FALSE to prohibit the user from recording meetings.")] Boolean AllowCloudRecording;

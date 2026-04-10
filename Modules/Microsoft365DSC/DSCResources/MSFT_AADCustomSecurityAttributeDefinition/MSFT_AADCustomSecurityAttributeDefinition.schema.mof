@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0")]
 class MSFT_CustomSecurityAttributeAllowedValue
 {
-    [Key, Description("The id of the allowed value. Must be unique in the set of allowed values.")] String ValueId;
+    [Required, Description("The id of the allowed value. Must be unique in the set of allowed values.")] String ValueId;
     [Required, Description("If the allowed value is active.")] Boolean IsActive;
 };
 

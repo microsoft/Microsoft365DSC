@@ -537,7 +537,18 @@ function Export-TargetResource
     {
         # Local user group membership template, family endpointSecurityAccountProtection
         $policyTemplateID = '22968f54-45fa-486c-848e-f8224aa69772_1'
-        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $Filter -All:$true `
+        $baseFilter = "templateReference/templateId eq '$policyTemplateID'"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($Filter) and ($baseFilter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy `
+            -Filter $Filter `
+            -All `
             -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateID }
 
         if ($policies.Length -eq 0)

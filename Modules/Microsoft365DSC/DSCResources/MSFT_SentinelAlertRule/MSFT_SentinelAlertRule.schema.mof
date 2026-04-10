@@ -18,11 +18,11 @@ class MSFT_SentinelAlertRuleEntityMapping
     [Write, Description("List of field mappings."), EmbeddedInstance("MSFT_SentinelAlertRuleEntityMappingFieldMapping")] String fieldMappings[];
 };
 
-[ClassVersion("1.0.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_SentinelAlertRuleEntityMappingFieldMapping
 {
-    [Write, Description("Name of the column")] String columnName;
-    [Write, Description("Identifier of the associated field.")] String  identifier;
+    [Required, Description("Name of the column")] String columnName;
+    [Required, Description("Identifier of the associated field.")] String identifier;
 };
 
 [ClassVersion("1.0.0.0")]
@@ -35,10 +35,10 @@ class MSFT_SentinelAlertRuleAlertDetailsOverride
     [Write, Description("List of additional dynamic properties to override"), EmbeddedInstance("MSFT_SentinelAlertRuleAlertDetailsOverrideAlertDynamicProperty")] String alertDynamicProperties[];
 };
 
-[ClassVersion("1.0.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_SentinelAlertRuleAlertDetailsOverrideAlertDynamicProperty
 {
-    [Write, Description("Dynamic property key.")] String alertProperty;
+    [Required, Description("Dynamic property key.")] String alertProperty;
     [Write, Description("Dynamic property value.")] String alertPropertyValue;
 };
 

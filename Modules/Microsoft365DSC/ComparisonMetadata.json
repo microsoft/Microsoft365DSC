@@ -59,6 +59,10 @@
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
     },
+    "EXOAvailabilityConfig": {
+      "HasCustomComparison": true,
+      "Description": "Uses PostProcessing scriptblock"
+    },
     "EXODistributionGroup": {
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
@@ -152,7 +156,7 @@
       "HasCustomComparison": true,
       "Description": "Excludes properties: ProvisioningType, UserExperienceType"
     },
-    "IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10": {
+    "IntuneDeviceConfigurationDefenderOnboardingPolicyWindows10": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: AdvancedThreatProtectionOnboardingBlob"
     },
@@ -351,6 +355,10 @@
     "SPOApp": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: Path, Publish, Overwrite"
+    },
+    "SPOBrowserIdleSignout": {
+      "HasCustomComparison": true,
+      "Description": "Uses PostProcessing scriptblock"
     },
     "SPOSiteAuditSettings": {
       "HasCustomComparison": true,

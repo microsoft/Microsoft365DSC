@@ -9,12 +9,14 @@ class MSFT_MicrosoftGraphaccesspackageresourceattribute
     [Write, Description("Specifies whether or not an existing attribute value can be edited by the requester.")] Boolean IsEditable;
     [Write, Description("Specifies whether the attribute will remain in the end system after an assignment ends.")] Boolean IsPersistedOnAssignmentRemoval;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphaccesspackageresourceattributedestination
 {
     [Write, Description("Type of the access package resource attribute destination."), ValueMap{"#microsoft.graph.accessPackageUserDirectoryAttributeStore"}, Values{"#microsoft.graph.accessPackageUserDirectoryAttributeStore"}] String odataType;
 
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphaccesspackageresourceattributesource
 {

@@ -24,14 +24,14 @@ class MSFT_IdentityGovernanceWorkflowExecutionConditions
 [ClassVersion("1.0.0")]
 class MSFT_AADIdentityGovernanceTaskArguments
 {
-    [Key, Description("The name of the key")] String Name;
+    [Required, Description("The name of the key")] String Name;
     [Write, Description("The value associated with the key")] String Value;
 };
 
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_AADIdentityGovernanceTask
 {
-    [Write, Description("Specifies the display name of the Workflow Task")] String DisplayName;
+    [Required, Description("Specifies the display name of the Workflow Task")] String DisplayName;
     [Write, Description("Description of the Workflow Task")] String Description;
     [Write, Description("Category of the Workflow Task")] String Category;
     [Write, Description("Indicates if the Workflow Task is enabled or not")] Boolean IsEnabled;
@@ -51,7 +51,6 @@ class MSFT_AADIdentityGovernanceLifecycleWorkflow : OMI_BaseResource
     [Write, Description("Indicates if scheduling is enabled for the Workflow")] Boolean IsSchedulingEnabled;
     [Write, Description("Tasks associated with this workflow"), EmbeddedInstance("MSFT_AADIdentityGovernanceTask")] String Tasks[];
     [Write, Description("ExecutionConditions for this workflow"), EmbeddedInstance("MSFT_IdentityGovernanceWorkflowExecutionConditions")] String ExecutionConditions;
-
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Absent","Present"}, Values{"Absent","Present"}] string Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

@@ -22,7 +22,7 @@
         },
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.21'
+            RequiredVersion = '3.0.0.2'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -130,7 +130,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.1.59"
+            RequiredVersion = "1.1.62"
         },
         @{
             ModuleName      = 'PnP.PowerShell'
@@ -142,15 +142,8 @@
             #DependsOn       = @('Microsoft.Graph.Authentication')
         },
         @{
-            ModuleName      = 'PSDesiredStateConfiguration'
-            RequiredVersion = '2.0.7'
-            PowerShellCore  = $true
-            ExplicitLoading = $true
-            Prefix          = 'Pwsh'
-        },
-        @{
             ModuleName      = 'ReverseDSC'
-            RequiredVersion = '2.0.0.31'
+            RequiredVersion = '2.0.0.34'
         },
         @{
             ModuleName      = 'PSParallelPipeline'

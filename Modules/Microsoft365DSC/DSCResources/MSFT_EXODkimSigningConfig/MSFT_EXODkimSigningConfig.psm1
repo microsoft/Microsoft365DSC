@@ -97,7 +97,7 @@ function Get-TargetResource
 
             $DkimSigningConfig = Get-DkimSigningConfig -Identity $Identity
 
-            if ($null -eq $DkimSigningConfig)
+            if ($null -eq $DkimSigningConfig -or "System.Object" -eq $DkimSigningConfig.ToString())
             {
                 Write-Verbose -Message "DkimSigningConfig $($Identity) does not exist."
                 return $nullReturn

@@ -179,7 +179,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     })
             }
+
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
+
+            Mock -ModuleName M365DSCIntuneUtil -CommandName Get-MgGroup -MockWith {
+                return @{
+                    Id = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                    DisplayName = 'Exclude'
+                }
             }
 
             # Mock Write-M365DSCHost to hide output during the tests
@@ -201,6 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Credential    = $Credential
@@ -239,6 +248,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Credential    = $Credential
@@ -277,8 +287,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            DeviceAndAppManagementAssignmentFilterType = 'none'
+                            groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     ConfigurationBlob = "FakeValue"
@@ -299,6 +310,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Credential  = $Credential

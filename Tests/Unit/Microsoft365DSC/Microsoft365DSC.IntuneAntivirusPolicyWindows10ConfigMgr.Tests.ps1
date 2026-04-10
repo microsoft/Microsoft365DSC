@@ -133,13 +133,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingDefinitionId = 'device_vendor_msft_policy_config_defender_securityintelligencelocation'
                             SettingInstanceTemplateReference = $null
                             AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                                simpleSettingCollectionValue = @(
-                                    @{
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                        value = 'FakeStringValue'
-                                    }
-                                )
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                simpleSettingValue = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                    value = 'FakeStringValue'
+                                }
                             }
                         }
                     },

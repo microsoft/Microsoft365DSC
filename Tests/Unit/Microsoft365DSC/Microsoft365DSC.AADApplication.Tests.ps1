@@ -67,11 +67,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-MgServicePrincipal -MockWith {
-                $servicePrincipal = New-Object PSCustomObject
-                $servicePrincipal | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'Microsoft Graph'
-                $servicePrincipal | Add-Member -MemberType NoteProperty -Name ObjectID -Value '12345-12345-12345-12345-12345'
-                $servicePrincipal | Add-Member -MemberType NoteProperty -Name AppRoles -Value @(@{Value = "User.Read.All";Id="123"})
-                return $servicePrincipal
+                return @{
+                    DisplayName = 'Microsoft Graph'
+                    ObjectID = '12345-12345-12345-12345-12345'
+                    AppRoles = @(@{Value = "User.Read.All";Id="123"})
+                }
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -141,21 +141,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaApplication -MockWith {
-                    $AADApp = New-Object PSCustomObject
-                    $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Homepage -Value 'https://app.contoso.com'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value 'https://app.contoso.com'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name KnownClientApplications -Value ''
-                    $AADApp | Add-Member -MemberType NoteProperty -Name LogoutURL -Value 'https://app.contoso.com/logout'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2RequirePostResponse -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name PublicClient -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name ReplyURLs -Value 'https://app.contoso.com'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name SamlMetadataUrl -Value ''
-                    return $AADApp
+                    return @{
+                        DisplayName = 'App1'
+                        Id = '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                        AvailableToOtherTenants = $false
+                        Description = 'App description'
+                        GroupMembershipClaims = 0
+                        Homepage = 'https://app.contoso.com'
+                        IdentifierUris = 'https://app.contoso.com'
+                        KnownClientApplications = ''
+                        LogoutURL = 'https://app.contoso.com/logout'
+                        Oauth2RequirePostResponse = $false
+                        PublicClient = $false
+                        ReplyURLs = 'https://app.contoso.com'
+                        SamlMetadataUrl = ''
+                    }
                 }
             }
 
@@ -256,23 +256,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Api = New-CimInstance -ClassName MSFT_MicrosoftGraphapiApplication -Property @{
                         PreAuthorizedApplications = [CimInstance[]]@(
                             New-CimInstance -ClassName MSFT_MicrosoftGraphPreAuthorizedApplication  -Property @{
-                                AppId = '12345-12345-12345-12345-12345'
+                                AppId = 'Microsoft Graph'
                                 PermissionIds = @('12345-12345-12345-12345-12345')
                             } -ClientOnly
                         )
-
                     } -ClientOnly
                     Ensure                    = 'Present'
                     Credential                = $Credential
                 }
                 Mock -CommandName Get-MgBetaApplication -MockWith {
-                    $AADApp = New-Object PSCustomObject
-                    $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
-                    $AADApp | Add-Member -MemberType NoteProperty -Name SignInAudience -Value 'AzureADMyOrg'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name OptionalClaims -Value @{
+                    return @{
+                        DisplayName = 'App1'
+                        Id = '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                        Description = 'App description'
+                        GroupMembershipClaims = 0
+                        SignInAudience = 'AzureADMyOrg'
+                        OptionalClaims = @{
                             Saml2Token = @(
                                 @{
                                     Name = 'groups'
@@ -295,66 +294,74 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     Essential = $False
                                 }
                             )
-                    }
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Web -Value @{
-                        HomepageUrl  = 'https://app.contoso.com'
-                        LogoutURL    = 'https://app.contoso.com/logout'
-                        RedirectUris = @('https://app.contoso.com')
-                    }
-                    $AADApp | Add-Member -MemberType NoteProperty -Name AppRoles -Value @(
-                        @{
-                            AllowedMemberTypes = @('Application')
-                            Id = 'Task Reader'
-                            IsEnabled = $True
-                            Origin = 'Application'
-                            Description = 'Readers have ability to read task'
-                            Value = 'Task.Read'
-                            DisplayName = 'Readers'
                         }
-                        @{
-                            AllowedMemberTypes = @('Application')
-                            Id = 'Task Writer'
-                            IsEnabled = $True
-                            Origin = 'Application'
-                            Description = 'Writers have ability to write task'
-                            Value = 'Task.Write'
-                            DisplayName = 'Writers'
+                        Web = @{
+                            HomepageUrl  = 'https://app.contoso.com'
+                            LogoutURL    = 'https://app.contoso.com/logout'
+                            RedirectUris = @('https://app.contoso.com')
                         }
-                    )
-                    $AADApp | Add-Member -MemberType NoteProperty -Name KeyCredentials -Value @(
-                        @{
-                            Usage = 'Verify'
-                            StartDateTime = '2024-09-25T09:13:11.0000000+00:00'
-                            Type = 'AsymmetricX509Cert'
-                            KeyId = 'Key ID'
-                            EndDateTime = '2025-09-25T09:33:11.0000000+00:00'
-                            DisplayName = 'anexas_test_2'
-                        }
-                    )
-                    $AADApp | Add-Member -MemberType NoteProperty -Name PasswordCredentials -Value @{
-                        KeyId = 'keyid'
-                        EndDateTime = '2025-03-15T19:50:29.0310000+00:00'
-                        Hint = 'VsO'
-                        DisplayName = 'Super Secret'
-                        StartDateTime = '2024-09-16T19:50:29.0310000+00:00'
-                    }
-                    $AADApp | Add-Member -MemberType NoteProperty -Name API -Value @{
-                        KnownClientApplications = ''
-                        PreAuthorizedApplications = @(
+                        AppRoles = @(
                             @{
-                                AppId = '12345-12345-12345-12345-12345'
-                                PermissionIds = @('12345-12345-12345-12345-12345')
+                                AllowedMemberTypes = @('Application')
+                                Id = 'Task Reader'
+                                IsEnabled = $True
+                                Origin = 'Application'
+                                Description = 'Readers have ability to read task'
+                                Value = 'Task.Read'
+                                DisplayName = 'Readers'
+                            }
+                            @{
+                                AllowedMemberTypes = @('Application')
+                                Id = 'Task Writer'
+                                IsEnabled = $True
+                                Origin = 'Application'
+                                Description = 'Writers have ability to write task'
+                                Value = 'Task.Write'
+                                DisplayName = 'Writers'
                             }
                         )
+                        KeyCredentials = @(
+                            @{
+                                Usage = 'Verify'
+                                StartDateTime = '2024-09-25T09:13:11.0000000+00:00'
+                                Type = 'AsymmetricX509Cert'
+                                KeyId = 'Key ID'
+                                EndDateTime = '2025-09-25T09:33:11.0000000+00:00'
+                                DisplayName = 'anexas_test_2'
+                            }
+                        )
+                        PasswordCredentials = @(
+                            @{
+                                KeyId = 'keyid'
+                                EndDateTime = '2025-03-15T19:50:29.0310000+00:00'
+                                Hint = 'VsO'
+                                DisplayName = 'Super Secret'
+                                StartDateTime = '2024-09-16T19:50:29.0310000+00:00'
+                            }
+                        )
+                        API = @{
+                            KnownClientApplications = ''
+                            PreAuthorizedApplications = @(
+                                @{
+                                    AppId = '12345-12345-12345-12345-12345'
+                                    PermissionIds = @('12345-12345-12345-12345-12345')
+                                }
+                            )
+                            OAuth2PermissionScopes = @(
+                                @{
+                                    Id = '12345-12345-12345-12345-12345'
+                                    Value = '12345-12345-12345-12345-12345'
+                                }
+                            )
+                        }
+                        IdentifierUris = @('https://app.contoso.com')
+                        Oauth2RequirePostResponse = $false
+                        PublicClient = $false
+                        AuthenticationBehaviors = @{
+                            blockAzureADGraphAccess       = 'false'
+                            removeUnverifiedEmailClaim    = 'true'
+                        }
                     }
-                    $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value 'https://app.contoso.com'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2RequirePostResponse -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name PublicClient -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name AuthenticationBehaviors -Value @{
-                         blockAzureADGraphAccess       = 'false'
-                         removeUnverifiedEmailClaim    = 'true'
-                    }
-                    return $AADApp
                 }
             }
 
@@ -385,20 +392,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaApplication -MockWith {
-                    $AADApp = New-Object PSCustomObject
-                    $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Homepage -Value 'https://app.contoso.com'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value 'https://app.contoso.com'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name KnownClientApplications -Value ''
-                    $AADApp | Add-Member -MemberType NoteProperty -Name LogoutURL -Value 'https://app.contoso.com/logout'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2RequirePostResponse -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name PublicClient -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name ReplyURLs -Value 'https://app.contoso.com'
-                    return $AADApp
+                    return @{
+                        DisplayName = 'App1'
+                        Id = '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                        AvailableToOtherTenants = $false
+                        Description = 'App description'
+                        GroupMembershipClaims = 0
+                        Homepage = 'https://app.contoso.com'
+                        IdentifierUris = 'https://app.contoso.com'
+                        KnownClientApplications = ''
+                        LogoutURL = 'https://app.contoso.com/logout'
+                        Oauth2RequirePostResponse = $false
+                        PublicClient = $false
+                        ReplyURLs = 'https://app.contoso.com'
+                    }
                 }
             }
 
@@ -525,20 +532,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaApplication -MockWith {
-                    $AADApp = New-Object PSCustomObject
-                    $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Homepage -Value 'https://app.contoso.com'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value 'https://app.contoso.com'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name KnownClientApplications -Value ''
-                    $AADApp | Add-Member -MemberType NoteProperty -Name LogoutURL -Value 'https://app.contoso.com/logout'
-                    $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2RequirePostResponse -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name PublicClient -Value $false
-                    $AADApp | Add-Member -MemberType NoteProperty -Name ReplyURLs -Value 'https://app.contoso.com'
-                    return $AADApp
+                    return @{
+                        DisplayName = 'App1'
+                        Id = '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                        AvailableToOtherTenants = $false
+                        Description = 'App description'
+                        GroupMembershipClaims = 0
+                        Homepage = 'https://app.contoso.com'
+                        IdentifierUris = 'https://app.contoso.com'
+                        KnownClientApplications = ''
+                        LogoutURL = 'https://app.contoso.com/logout'
+                        Oauth2RequirePostResponse = $false
+                        PublicClient = $false
+                        ReplyURLs = 'https://app.contoso.com'
+                    }
                 }
             }
 

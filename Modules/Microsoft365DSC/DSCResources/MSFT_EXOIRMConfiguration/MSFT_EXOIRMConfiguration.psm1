@@ -33,6 +33,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnablePortalTrackingLogs,
+
+        [Parameter()]
+        [System.Boolean]
         $InternalLicensingEnabled,
 
         [Parameter()]
@@ -40,7 +44,7 @@ function Get-TargetResource
         $JournalReportDecryptionEnabled,
 
         [Parameter()]
-        [System.Uri[]]
+        [System.String[]]
         $LicensingLocation,
 
         [Parameter()]
@@ -48,7 +52,7 @@ function Get-TargetResource
         $RejectIfRecipientHasNoRights,
 
         [Parameter()]
-        [System.Uri]
+        [System.String]
         $RMSOnlineKeySharingLocation,
 
         [Parameter()]
@@ -159,6 +163,7 @@ function Get-TargetResource
             DecryptAttachmentForEncryptOnly            = $IRMConfiguration.DecryptAttachmentForEncryptOnly
             EDiscoverySuperUserEnabled                 = $IRMConfiguration.EDiscoverySuperUserEnabled
             EnablePdfEncryption                        = $IRMConfiguration.EnablePdfEncryption
+            EnablePortalTrackingLogs                   = $IRMConfiguration.EnablePortalTrackingLogs
             InternalLicensingEnabled                   = $IRMConfiguration.InternalLicensingEnabled
             JournalReportDecryptionEnabled             = $IRMConfiguration.JournalReportDecryptionEnabled
             LicensingLocation                          = $LicensingLocationValue
@@ -226,6 +231,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnablePortalTrackingLogs,
+
+        [Parameter()]
+        [System.Boolean]
         $InternalLicensingEnabled,
 
         [Parameter()]
@@ -233,7 +242,7 @@ function Set-TargetResource
         $JournalReportDecryptionEnabled,
 
         [Parameter()]
-        [System.Uri[]]
+        [System.String[]]
         $LicensingLocation,
 
         [Parameter()]
@@ -241,7 +250,7 @@ function Set-TargetResource
         $RejectIfRecipientHasNoRights,
 
         [Parameter()]
-        [System.Uri]
+        [System.String]
         $RMSOnlineKeySharingLocation,
 
         [Parameter()]
@@ -322,7 +331,7 @@ function Set-TargetResource
     $IRMConfigurationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $IRMConfigurationParams.Remove('IsSingleInstance') | Out-Null
 
-    if (('Present' -eq $Ensure ) -and ($null -ne $IRMConfigurationParams))
+    if ($Ensure -eq 'Present' -and $null -ne $IRMConfigurationParams)
     {
         Write-Verbose -Message "Setting IRM Configuration with values: $(Convert-M365DscHashtableToString -Hashtable $IRMConfigurationParams)"
         Set-IRMConfiguration @IRMConfigurationParams -Confirm:$false
@@ -364,6 +373,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnablePortalTrackingLogs,
+
+        [Parameter()]
+        [System.Boolean]
         $InternalLicensingEnabled,
 
         [Parameter()]
@@ -371,7 +384,7 @@ function Test-TargetResource
         $JournalReportDecryptionEnabled,
 
         [Parameter()]
-        [System.Uri[]]
+        [System.String[]]
         $LicensingLocation,
 
         [Parameter()]
@@ -379,7 +392,7 @@ function Test-TargetResource
         $RejectIfRecipientHasNoRights,
 
         [Parameter()]
-        [System.Uri]
+        [System.String]
         $RMSOnlineKeySharingLocation,
 
         [Parameter()]

@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When settings are correctly set' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                = 'Global'
+                    IsSingleInstance        = 'Yes'
                     AllowIPVideo            = $true
                     LiveCaptionsEnabledType = 'Disabled'
                     ScreenSharingMode       = 'Disabled'
@@ -89,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When settings are NOT correctly set' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                = 'Global'
+                    IsSingleInstance        = 'Yes'
                     AllowIPVideo            = $false # Drifted
                     LiveCaptionsEnabledType = 'Disabled'
                     ScreenSharingMode       = 'Disabled'

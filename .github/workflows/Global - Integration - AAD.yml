@@ -9,7 +9,7 @@ jobs:
     permissions: write-all
 
     # Only when run from the main repo
-    if: github.repository == 'microsoft/Microsoft365DSC'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

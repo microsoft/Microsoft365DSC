@@ -72,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-MgGroup -MockWith {
+            Mock -CommandName Get-MgGroup -ModuleName M365DSCUtil -MockWith {
                 return @{
                     Id = "00000000-0000-0000-0000-000000000001"
                     DisplayName = "Fakegroup"

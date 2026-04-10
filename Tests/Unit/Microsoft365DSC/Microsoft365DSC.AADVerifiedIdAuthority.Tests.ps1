@@ -46,6 +46,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 linkedDomainUrls = @("FakeStringValue")
                                 did = "did:FakeStringValue"
                             }
+                            keyVaultMetadata = @{
+                                subscriptionId = "FakeStringValue"
+                                resourceGroup = "FakeStringValue"
+                                resourceName = "FakeStringValue"
+                                resourceUrl = "FakeStringValue"
+                            }
                         }
                     )
                 }
@@ -63,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Write-Warning -MockWith {
             }
-            $Script:exportedInstances =$null
+            $Script:exportedInstances = $null
             $Script:ExportMode = $false
         }
         # Test contexts

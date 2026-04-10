@@ -406,14 +406,14 @@ function Set-TargetResource
     $QuarantinePolicyParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $QuarantinePolicyParams.Remove('QuarantinePolicyType') | Out-Null
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $QuarantinePolicy))
+    if ($Ensure -eq 'Present' -and $null -eq $QuarantinePolicy)
     {
         Write-Verbose -Message "Creating QuarantinePolicy $($Identity)."
         $QuarantinePolicyParams.Add('Name', $Identity)
         $QuarantinePolicyParams.Remove('Identity') | Out-Null
         New-QuarantinePolicy @QuarantinePolicyParams
     }
-    elseif (('Present' -eq $Ensure ) -and ($null -ne $QuarantinePolicy))
+    elseif ($Ensure -eq 'Present' -and $null -ne $QuarantinePolicy)
     {
         Write-Verbose -Message "Setting QuarantinePolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $QuarantinePolicyParams)"
         if ($QuarantinePolicyType -eq 'GlobalQuarantineTag')
@@ -432,7 +432,7 @@ function Set-TargetResource
             Set-QuarantinePolicy @QuarantinePolicyParams
         }
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $QuarantinePolicy))
+    elseif ($Ensure -eq 'Absent' -and $null -ne $QuarantinePolicy)
     {
         Write-Verbose -Message "Removing QuarantinePolicy $($Identity)"
         Remove-QuarantinePolicy -Identity $Identity

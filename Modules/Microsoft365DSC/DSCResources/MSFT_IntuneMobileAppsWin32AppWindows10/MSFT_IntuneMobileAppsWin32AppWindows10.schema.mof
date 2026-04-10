@@ -61,10 +61,10 @@ class MSFT_DeviceManagementMimeContent
     [Write, Description("The Base64 encoded string content.")] String Value;
 };
 
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_DeviceManagementMobileAppCategory
 {
-    [Key, Description("The name of the app category.")] String DisplayName;
+    [Required, Description("The name of the app category.")] String DisplayName;
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
 };
 
@@ -75,24 +75,19 @@ class MSFT_MicrosoftGraphWin32LobAppRule
     [Required, Description("The type of rule. Possible values are: Detection, Requirement"), ValueMap{"Detection", "Requirement"}, Values{"Detection", "Requirement"}] String RuleType;
     [Write, Description("The operator of the rule. Not applicable for the 'ProductCode' odata type. Possible values are: notConfigured, equal, notEqual, greaterThan, greaterThanOrEqual, lessThan, lessThanOrEqual."), ValueMap{"notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"}] String Operator;
     [Write, Description("The value to compare. Not applicable for the 'ProductCode' odata type.")] String ComparisonValue;
-
     [Write, Description("A value indicating whether to checking 32-bit on 64-bit system. Only applicable for the 'FileSystem' and 'Registry' odata type.")] Boolean Check32BitOn64System;
-
     [Write, Description("The file or folder path to detect Win32 Line of Business (LoB) app. Only applicable for the 'FileSystem' odata type.")] String Path;
     [Write, Description("The file or folder name to detect Win32 Line of Business (LoB) app. Only applicable for the 'FileSystem' odata type.")] String FileOrFolderName;
     [Write, Description("The file system comparison operator type. Only applicable for the 'FileSystem' odata type. Possible values are: notConfigured, exists, modifiedDate, createdDate, version, sizeInMB, doesNotExist, sizeInBytes, appVersion."), ValueMap{"notConfigured", "exists", "modifiedDate", "createdDate", "version", "sizeInMB", "doesNotExist", "sizeInBytes", "appVersion"}, Values{"notConfigured", "exists", "modifiedDate", "createdDate", "version", "sizeInMB", "doesNotExist", "sizeInBytes", "appVersion"}] String FileSystemOperationType;
-
     [Write, Description("The display name for the rule. Do not specify this value if the rule is used for detection.")] String DisplayName;
     [Write, Description("A value indicating whether signature check is enforced. Only Applicable for the 'PowerShellScript' odata type.")] Boolean EnforceSignatureCheck;
     [Write, Description("A value indicating whether this script should run as 32-bit. Only Applicable for the 'PowerShellScript' odata type.")] Boolean RunAs32Bit;
     [Write, Description("Indicates the type of execution context the script runs in. Only Applicable for the 'PowerShellScript' odata type. Possible values are: system, user."), ValueMap{"system", "user"}, Values{"system", "user"}] String RunAsAccount;
     [Write, Description("The PowerShell script. Only Applicable for the 'PowerShellScript' odata type.")] String Script;
     [Write, Description("The comparison operator type for script output. Only Applicable for the 'PowerShellScript' odata type. Possible values are: notConfigured, string, dateTime, integer, float, version, boolean."), ValueMap{"notConfigured", "string", "dateTime", "integer", "float", "version", "boolean"}, Values{"notConfigured", "string", "dateTime", "integer", "float", "version", "boolean"}] String PowerShellScriptOperationType;
-
     [Write, Description("The product code of Win32 Line of Business (LoB) app.")] String ProductCode;
     [Write, Description("The operator for detection. Only applicable for the 'ProductCode' odata typ. Possible values are: notConfigured, equal, notEqual, greaterThan, greaterThanOrEqual, lessThan, lessThanOrEqual."), ValueMap{"notConfigured", "equal", "notEqual", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"}] String ProductVersionOperator;
     [Write, Description("The product version of Win32 Line of Business (LoB) app.")] String ProductVersion;
-
     [Write, Description("The registry key path to detect Win32 Line of Business (LoB) app.")] String KeyPath;
     [Write, Description("The registry value name.")] String ValueName;
     [Write, Description("The registry data comparison operator type. Only applicable for the 'Registry' odata type. Possible values are: notConfigured, exists, doesNotExist, string, integer, version."), ValueMap{"notConfigured", "exists", "doesNotExist", "string", "integer", "version"}, Values{"notConfigured", "exists", "doesNotExist", "string", "integer", "version"}] String RegistryOperationType;
@@ -141,7 +136,6 @@ class MSFT_IntuneMobileAppsWin32AppWindows10 : OMI_BaseResource
     [Write, Description("The publisher of the app.")] String Publisher;
     [Write, Description("The file name of the app. Required for creating the resource.")] String FileName;
     [Write, Description("List of scope tag ids for this mobile app.")] String RoleScopeTagIds[];
-
     [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppCategory")] String Categories[];
     [Write, Description("Indicates the command line to install this app. Used to install the Win32 app. Example: msiexec /i 'Orca.Msi' /qn.")] String InstallCommandLine;
     [Write, Description("Indicates the command line to uninstall this app. Used to uninstall the app. Example: msiexec /x '{85F4CBCB-9BBC-4B50-A7D8-E1106771498D}' /qn.")] String UninstallCommandLine;
@@ -158,7 +152,6 @@ class MSFT_IntuneMobileAppsWin32AppWindows10 : OMI_BaseResource
     [Write, Description("Indicates the value for the minimum supported windows release. Format for Windows 10: <VersionNumber>, e.g. '1709' or '20H2'. For Windows 11: 'Windows11_<VersionNumber>', e.g. 'Windows11_21H2'")] String MinimumSupportedWindowsRelease;
     [Write, Description("Indicates the version displayed in the UX for this app. Used to set the version of the app. Example: 1.0.3.215.")] String DisplayVersion;
     [Write, Description("Indicates whether the uninstall is supported from the company portal for the Win32 app with an available assignment. When TRUE, indicates that uninstall is supported from the company portal for the Windows app (Win32) with an available assignment. When FALSE, indicates that uninstall is not supported for the Windows app (Win32) with an Available assignment.")] Boolean AllowAvailableUninstall;
-
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementWin32MobileAppAssignment")] String Assignments[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

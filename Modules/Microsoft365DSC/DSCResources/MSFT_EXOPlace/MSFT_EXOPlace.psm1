@@ -196,7 +196,7 @@ function Get-TargetResource
             Capacity               = $place.Capacity
             City                   = $place.City
             CountryOrRegion        = $place.CountryOrRegion
-            Desks                  = [Array] $place.Desks
+            Desks                  = [System.String[]] $place.Desks
             DisplayDeviceName      = $place.DisplayDeviceName
             DisplayName            = $place.DisplayName
             Floor                  = $place.Floor

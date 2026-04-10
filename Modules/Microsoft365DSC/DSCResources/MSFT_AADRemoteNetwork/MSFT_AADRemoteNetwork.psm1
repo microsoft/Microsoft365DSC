@@ -225,13 +225,10 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     # creating the device links property
-    $deviceLinksHashtable = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $BoundParameters.DeviceLinks
-    # renames the odataType property to @odata.type
-    $deviceLinksHashtable = Rename-M365DSCCimInstanceParameter -Properties $deviceLinksHashtable
+    $deviceLinksHashtable = Rename-M365DSCCimInstanceParameter -Properties $BoundParameters.DeviceLinks
 
     #creating the forwarding policies list by getting the ids
     $allForwardingProfiles = Get-MgBetaNetworkAccessForwardingProfile

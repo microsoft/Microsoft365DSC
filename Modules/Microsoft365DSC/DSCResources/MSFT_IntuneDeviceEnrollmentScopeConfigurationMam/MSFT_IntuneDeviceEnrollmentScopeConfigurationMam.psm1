@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [ValidateSet('none','all','selected','unknownFutureValue')]
+        [ValidateSet('none','all','selected')]
         [System.String]
         $AppliesTo,
 
@@ -127,7 +127,7 @@ function Set-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [ValidateSet('none','all','selected','unknownFutureValue')]
+        [ValidateSet('none','all','selected')]
         [System.String]
         $AppliesTo,
 
@@ -270,7 +270,7 @@ function Test-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [ValidateSet('none','all','selected','unknownFutureValue')]
+        [ValidateSet('none','all','selected')]
         [System.String]
         $AppliesTo,
 

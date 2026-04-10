@@ -101,6 +101,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -ModuleName M365DSCIntuneUtil -CommandName Get-MgGroup -MockWith {
+                return @{
+                    Id = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                    DisplayName = 'Exclude'
+                }
+            }
+
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
 
@@ -138,6 +145,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance -ClassName MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Credential      = $Credential
@@ -174,6 +182,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance -ClassName MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Credential      = $Credential
@@ -211,6 +220,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance -ClassName MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            groupDisplayName = 'Exclude'
                             deviceAndAppManagementAssignmentFilterType = 'none'
                         } -ClientOnly)
                     )
@@ -230,6 +240,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance -ClassName MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            groupDisplayName = 'Exclude'
                         } -ClientOnly)
                     )
                     Credential  = $Credential

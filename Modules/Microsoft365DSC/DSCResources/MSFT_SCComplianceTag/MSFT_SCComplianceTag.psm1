@@ -266,7 +266,7 @@ function Set-TargetResource
 
     $CurrentTag = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentTag.Ensure))
+    if ($Ensure -eq 'Present' -and $CurrentTag.Ensure -eq 'Absent')
     {
         $CreationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
@@ -280,7 +280,7 @@ function Set-TargetResource
         Write-Verbose "Creating new Compliance Tag $Name calling the New-ComplianceTag cmdlet."
         New-ComplianceTag @CreationParams
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    elseif ($Ensure -eq 'Present' -and $CurrentTag.Ensure -eq 'Present')
     {
         $SetParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
@@ -329,7 +329,7 @@ function Set-TargetResource
         }
         Set-ComplianceTag @SetParams -Identity $Name
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $CurrentTag.Ensure -eq 'Present')
     {
         # If the Rule exists and it shouldn't, simply remove it;
         Remove-ComplianceTag -Identity $Name -Confirm:$false
@@ -558,7 +558,7 @@ function Export-TargetResource
 function Get-SCFilePlanPropertyObject
 {
     [CmdletBinding()]
-    [OutputType([PSCustomObject])]
+    [OutputType([System.Collections.Hashtable])]
     param
     (
         [Parameter()]
@@ -570,7 +570,7 @@ function Get-SCFilePlanPropertyObject
         return $null
     }
 
-    $result = [PSCustomObject]@{
+    $result = @{
         Settings = @(
             @{Key = 'FilePlanPropertyDepartment'; Value = $properties.FilePlanPropertyDepartment },
             @{Key = 'FilePlanPropertyCategory'; Value = $properties.FilePlanPropertyCategory },

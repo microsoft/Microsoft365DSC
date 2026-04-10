@@ -467,7 +467,7 @@ function Export-TargetResource
         catch
         {
             New-M365DSCLogEntry -Message "Couldn't get AvailabilityAddressSpaces" `
-                -Exception $_  `
+                -Exception $_ `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
 

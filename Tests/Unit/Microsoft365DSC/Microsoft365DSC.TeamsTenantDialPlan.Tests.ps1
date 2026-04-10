@@ -114,13 +114,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description        = 'TestDescription'
                     Ensure             = 'Present'
                     NormalizationRules = [CimInstance[]]@(New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
-                            Pattern             = '^00(\d+)$'
+                            Pattern             = '^01(\d+)$' # Drift
                             Description         = 'None'
                             Identity            = 'TestNotExisting'
                             Translation         = '+$1'
                             Priority            = 0
                             IsInternalExtension = $False
-                        } -ClientOnly;) # Drift
+                        } -ClientOnly;
+                    )
                     Credential         = $Credential
                 }
             }
@@ -136,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Updates in the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-CsTenantDialPlan -Exactly 2
+                Should -Invoke -CommandName Set-CsTenantDialPlan -Exactly 4
             }
         }
 

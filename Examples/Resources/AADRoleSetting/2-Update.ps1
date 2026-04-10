@@ -42,8 +42,8 @@ Configuration Example
             AssignmentReqJustification                                = $True;
             AssignmentReqMFA                                          = $False;
             Displayname                                               = "Application Administrator";
-            ElegibilityAssignmentReqJustification                     = $False;
-            ElegibilityAssignmentReqMFA                               = $False;
+            EligibilityAssignmentReqJustification                     = $False;
+            EligibilityAssignmentReqMFA                               = $False;
             EligibleAlertNotificationAdditionalRecipient              = @();
             EligibleAlertNotificationDefaultRecipient                 = $True;
             EligibleAlertNotificationOnlyCritical                     = $False;

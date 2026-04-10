@@ -132,7 +132,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Ports          = @(80, 443)
                             Destinations   = @('www.google.com')
                         } -ClientOnly
-
                         New-CimInstance -ClassName MSFT_MicrosoftGraphNetworkAccessForwardingPolicyRule -Property @{
                             Name           = 'Custom policy internet rule'
                             ActionValue    = 'bypass'
