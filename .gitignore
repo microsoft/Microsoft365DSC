@@ -9,6 +9,7 @@ Modules/Microsoft365DSC/Dependencies/Assemblies/*.pdb
 Modules/Microsoft365DSC/Dependencies/Assemblies/*.xml
 Modules/Microsoft365DSC/DscResource.Tests
 Modules/Microsoft365DSC/DscResource.Tests/*
+Modules/Microsoft365DSC/SchemaDefinition.json
 node_modules
 node_modules/*
 markdownissues.txt
