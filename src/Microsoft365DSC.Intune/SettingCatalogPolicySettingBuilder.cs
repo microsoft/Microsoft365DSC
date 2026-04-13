@@ -504,7 +504,7 @@ namespace Microsoft365DSC.Intune
             var valueResult = SettingValueResolver.Resolve(
                 settingValueType, settingDefinition, allDefinitions, dscParams);
 
-            if (valueResult?.Value is not null)
+            if (valueResult?.Value is not null && !string.IsNullOrEmpty(valueResult.Value.ToString()))
             {
                 choiceSettingValue["value"] = valueResult.Value;
                 // Derive the value @odata.type

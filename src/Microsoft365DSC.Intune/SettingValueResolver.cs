@@ -185,7 +185,8 @@ namespace Microsoft365DSC.Intune
         /// Resolves a ChoiceSetting value by looking up the itemId from the options.
         /// Mirrors the PowerShell logic:
         ///   1. Match by optionValue.value == DSC value
-        ///   2. Fallback: match by itemId == "{definitionId}_{dscValue}"
+        ///   2. Match by option name == DSC value
+        ///   3. Fallback: match by itemId == "{definitionId}_{dscValue}"
         /// </summary>
         private static SettingDSCValueResult ResolveChoiceSettingValue(
             SettingDefinitionInfo settingDefinition,
@@ -198,6 +199,15 @@ namespace Microsoft365DSC.Intune
                 .Where(o => o.OptionValue is not null && string.Equals(o.OptionValue.Value, dscValueStr, StringComparison.OrdinalIgnoreCase))
                 .Select(o => o.ItemId)
                 .FirstOrDefault();
+
+            // Fallback: match by option display name
+            if (string.IsNullOrEmpty(settingValue))
+            {
+                settingValue = settingDefinition.Options
+                    .Where(o => !string.IsNullOrEmpty(o.Name) && string.Equals(o.Name, dscValueStr, StringComparison.OrdinalIgnoreCase))
+                    .Select(o => o.ItemId)
+                    .FirstOrDefault();
+            }
 
             // Fallback: match by itemId pattern
             if (string.IsNullOrEmpty(settingValue))
@@ -238,6 +248,15 @@ namespace Microsoft365DSC.Intune
                     .Where(o => o.OptionValue is not null && string.Equals(o.OptionValue.Value, valueStr, StringComparison.OrdinalIgnoreCase))
                     .Select(o => o.ItemId)
                     .FirstOrDefault();
+
+                // Fallback: match by option display name
+                if (string.IsNullOrEmpty(valueToAdd))
+                {
+                    valueToAdd = settingDefinition.Options
+                        .Where(o => !string.IsNullOrEmpty(o.Name) && string.Equals(o.Name, valueStr, StringComparison.OrdinalIgnoreCase))
+                        .Select(o => o.ItemId)
+                        .FirstOrDefault();
+                }
 
                 // Fallback: match by itemId pattern
                 if (string.IsNullOrEmpty(valueToAdd))

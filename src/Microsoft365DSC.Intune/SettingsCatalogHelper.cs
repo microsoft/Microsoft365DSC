@@ -281,7 +281,8 @@ namespace Microsoft365DSC.Intune
 
                 var opt = new SettingDefinitionOption
                 {
-                    ItemId = TryGetProperty(option, "itemId")
+                    ItemId = TryGetProperty(option, "itemId"),
+                    Name = TryGetProperty(option, "name")
                 };
 
                 // Extract optionValue

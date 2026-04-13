@@ -14,6 +14,11 @@ namespace Microsoft365DSC.Intune
         public string ItemId { get; set; }
 
         /// <summary>
+        /// The display name of the option (e.g., "GROUP").
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// The option value object containing the actual value and its OData type.
         /// </summary>
         public OptionValue OptionValue { get; set; }
