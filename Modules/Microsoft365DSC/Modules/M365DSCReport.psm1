@@ -1892,7 +1892,23 @@ function Initialize-M365DSCReporting
     {
         $params.Add('DscResourceInfo', $DscResourceInfo)
     }
-    $parsedContent = ConvertTo-DSCObject @params
+    try
+    {
+        $parsedContent = ConvertTo-DSCObject @params
+    }
+    catch
+    {
+        if ($PSBoundParameters.ContainsKey('DscResourceInfo'))
+        {
+            Write-Warning -Message "ConvertTo-DSCObject failed while using DscResourceInfo. Retrying without DscResourceInfo. Details: $($_.Exception.Message)"
+            $null = $params.Remove('DscResourceInfo')
+            $parsedContent = ConvertTo-DSCObject @params
+        }
+        else
+        {
+            throw
+        }
+    }
 
     if ($null -eq $parsedContent)
     {
