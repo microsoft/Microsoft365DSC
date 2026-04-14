@@ -144,7 +144,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $PolicyObject = Get-RetentionCompliancePolicy $Name -DistributionDetail -ErrorAction SilentlyContinue
+            $PolicyObject = Invoke-M365DSCCommand -ScriptBlock { Get-RetentionCompliancePolicy -Identity $Name -DistributionDetail -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $PolicyObject)
             {

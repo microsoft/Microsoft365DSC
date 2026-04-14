@@ -77,7 +77,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $Case = Get-ComplianceCase -Identity $Name -ErrorAction SilentlyContinue
+            $Case = Invoke-M365DSCCommand -ScriptBlock { Get-ComplianceCase -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $Case)
             {

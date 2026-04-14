@@ -103,8 +103,8 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $currentAction = Get-CurrentAction -SearchName $SearchName -Action $Action `
-                -ErrorAction Stop
+            $currentAction = Invoke-M365DSCCommand -ScriptBlock { Get-CurrentAction -SearchName $SearchName -Action $Action `
+                -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $currentAction)
             {

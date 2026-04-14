@@ -104,8 +104,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $RuleObject = Get-RetentionComplianceRule -Identity $Name `
-                -ErrorAction SilentlyContinue
+            $RuleObject = Invoke-M365DSCCommand -ScriptBlock { Get-RetentionComplianceRule -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $RuleObject)
             {
@@ -119,7 +118,7 @@ function Get-TargetResource
         }
 
         Write-Verbose "Found existing RetentionComplianceRule $($Name)"
-        $AssociatedPolicy = Get-RetentionCompliancePolicy $RuleObject.Policy
+        $AssociatedPolicy = Invoke-M365DSCCommand -ScriptBlock { Get-RetentionCompliancePolicy -Identity $RuleObject.Policy -ErrorAction Stop }
         $RetentionComplianceActionValue = $null
         if (-not [System.String]::IsNullOrEmpty($ruleObject.RetentionComplianceAction))
         {

@@ -96,6 +96,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should create the policy in the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-CsOnlineVoicemailPolicy -Exactly 1
+                Should -Invoke -CommandName New-CsOnlineVoicemailPolicy -Exactly 1 -ParameterFilter {
+                    $MaximumRecordingLength -eq [TimeSpan]::FromSeconds(600)
+                }
             }
         }
 
@@ -126,6 +129,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Set-CsOnlineVoicemailPolicy -Exactly 1
                 Should -Invoke -CommandName New-CsOnlineVoicemailPolicy -Exactly 0
+                Should -Invoke -CommandName Set-CsOnlineVoicemailPolicy -Exactly 1 -ParameterFilter {
+                    $MaximumRecordingLength -eq [TimeSpan]::FromSeconds(300)
+                }
             }
         }
 

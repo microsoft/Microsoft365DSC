@@ -91,7 +91,7 @@ function Get-TargetResource
         $itemInsightsDisabledForGroupValue = $null
         if (-not [System.String]::IsNullOrEmpty($ItemInsights.DisabledForGroup))
         {
-            $group = Get-MgGroup -GroupId ($ItemInsights.DisabledForGroup)
+            $group = Invoke-M365DSCCommand -ScriptBlock { Get-MgGroup -GroupId ($ItemInsights.DisabledForGroup) }
             $itemInsightsDisabledForGroupValue = $group.DisplayName
         }
 
@@ -102,7 +102,7 @@ function Get-TargetResource
             $PersonInsightsDisabledForGroupValue = $null
             if (-not [System.String]::IsNullOrEmpty($PersonInsights.DisabledForGroup))
             {
-                $group = Get-MgGroup -GroupId ($PersonInsights.DisabledForGroup)
+                $group = Invoke-M365DSCCommand -ScriptBlock { Get-MgGroup -GroupId ($PersonInsights.DisabledForGroup) }
                 $PersonInsightsDisabledForGroupValue = $group.DisplayName
             }
         }
@@ -112,9 +112,13 @@ function Get-TargetResource
             {
                 Write-Warning -Message 'The peopleInsights segment is not available in the selected environment.'
             }
+            else
+            {
+                throw
+            }
         }
 
-        $MeetingInsightsResponse = Get-MeetingInsightsSettings
+        $MeetingInsightsResponse = Invoke-M365DSCCommand -ScriptBlock { Get-MeetingInsightsSettings }
         $MeetingInsightsValue = [Boolean]::Parse($MeetingInsightsResponse.Split(':')[1].Trim())
 
         return @{

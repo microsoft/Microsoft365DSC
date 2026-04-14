@@ -230,7 +230,7 @@ function Get-TargetResource
                 $PSBoundParameters.ContainsKey('AllowPlannerCopilot') -or `
                 $Script:exportedInstance)
         {
-            $PlannerSettings = Get-M365DSCO365OrgSettingsPlannerConfig
+            $PlannerSettings = Invoke-M365DSCCommand -ScriptBlock { Get-M365DSCO365OrgSettingsPlannerConfig } -RetryOnNotFoundError
             if ($null -ne $PlannerSettings)
             {
                 $results += @{
@@ -261,7 +261,9 @@ function Get-TargetResource
                 $PSBoundParameters.ContainsKey('VivaInsightsWebExperience') -or `
                 $Script:exportedInstance)
         {
-            $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig
+            # TODO: Remove verbose information after testing is complete
+            $currentVivaInsightsSettings = Invoke-M365DSCCommand -ScriptBlock { Get-DefaultTenantMyAnalyticsFeatureConfig -Verbose } -RetryOnNotFoundError
+            Write-Verbose -Message "Current Viva Insights Settings: $($currentVivaInsightsSettings | ConvertTo-Json -Depth 5)" -Verbose
             if ($null -ne $currentVivaInsightsSettings)
             {
                 $results += @{
@@ -292,7 +294,7 @@ function Get-TargetResource
         if ($PSBoundParameters.ContainsKey('AdminCenterReportDisplayConcealedNames') -or `
                 $Script:exportedInstance)
         {
-            $AdminCenterReportDisplayConcealedNamesValue = Get-M365DSCOrgSettingsAdminCenterReport
+            $AdminCenterReportDisplayConcealedNamesValue = Invoke-M365DSCCommand -ScriptBlock { Get-M365DSCOrgSettingsAdminCenterReport } -RetryOnNotFoundError
             if ($null -ne $AdminCenterReportDisplayConcealedNamesValue)
             {
                 $results += @{
@@ -307,7 +309,7 @@ function Get-TargetResource
                 $PsBoundParameters.ContainsKey('InstallationOptionsAppsForMac') -or `
                 $Script:exportedInstance)
         {
-            $installationOptions = Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks
+            $installationOptions = Invoke-M365DSCCommand -ScriptBlock { Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks } -RetryOnNotFoundError
             if ($null -ne $installationOptions)
             {
                 $appsForWindowsValue = @()
@@ -345,7 +347,7 @@ function Get-TargetResource
                 $PSBoundParameters.ContainsKey('FormsIsInOrgFormsPhishingScanEnabled') -or `
                 $Script:exportedInstance)
         {
-            $FormsSettings = Get-M365DSCOrgSettingsForms
+            $FormsSettings = Invoke-M365DSCCommand -ScriptBlock { Get-M365DSCOrgSettingsForms } -RetryOnNotFoundError
             if ($null -ne $FormsSettings)
             {
                 $results += @{
@@ -366,7 +368,7 @@ function Get-TargetResource
                 $PSBoundParameters.ContainsKey('DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled') -or `
                 $Script:exportedInstance)
         {
-            $DynamicCustomerVoiceSettings = Get-M365DSCOrgSettingsDynamicsCustomerVoice
+            $DynamicCustomerVoiceSettings = Invoke-M365DSCCommand -ScriptBlock { Get-M365DSCOrgSettingsDynamicsCustomerVoice } -RetryOnNotFoundError
             if ($null -ne $DynamicCustomerVoiceSettings)
             {
                 $results += @{
@@ -382,7 +384,7 @@ function Get-TargetResource
                 $PSBoundParameters.ContainsKey('AppsAndServicesIsAppAndServicesTrialEnabled') -or `
                 $Script:exportedInstance)
         {
-            $AppsAndServicesSettings = Get-M365DSCOrgSettingsAppsAndServices
+            $AppsAndServicesSettings = Invoke-M365DSCCommand -ScriptBlock { Get-M365DSCOrgSettingsAppsAndServices } -RetryOnNotFoundError
             if ($null -ne $AppsAndServicesSettings)
             {
                 $results += @{
@@ -398,7 +400,7 @@ function Get-TargetResource
                 $PSBoundParameters.ContainsKey('ToDoIsExternalShareEnabled') -or `
                 $Script:exportedInstance)
         {
-            $ToDoSettings = Get-M365DSCOrgSettingsToDo
+            $ToDoSettings = Invoke-M365DSCCommand -ScriptBlock { Get-M365DSCOrgSettingsToDo } -RetryOnNotFoundError
             if ($null -ne $ToDoSettings)
             {
                 $results += @{
@@ -614,8 +616,10 @@ function Set-TargetResource
             ($AllowPlannerCopilot -ne $currentValues.AllowPlannerCopilot)))
     {
         Write-Verbose -Message "Updating the Planner Allow Calendar Sharing setting to {$PlannerAllowCalendarSharing}"
-        Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing `
-            -AllowPlannerCopilot $AllowPlannerCopilot
+        Invoke-M365DSCCommand -ScriptBlock {
+            Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing `
+                -AllowPlannerCopilot $AllowPlannerCopilot
+        } -RetryOnNotFoundError
     }
 
     if ($PSBoundParameters.ContainsKey('CortanaEnabled') -and `
@@ -637,28 +641,36 @@ function Set-TargetResource
         ($currentValues.VivaInsightsWebExperience -ne $VivaInsightsWebExperience))
     {
         Write-Verbose -Message 'Updating Viva Insights settings for Web Experience'
-        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Dashboard' -IsEnabled $VivaInsightsWebExperience | Out-Null
+        Invoke-M365DSCCommand -ScriptBlock {
+            Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Dashboard' -IsEnabled $VivaInsightsWebExperience | Out-Null
+        } -RetryOnNotFoundError
     }
 
     if ($PSBoundParameters.ContainsKey('VivaInsightsDigestEmail') -and `
         ($currentValues.VivaInsightsDigestEmail -ne $VivaInsightsDigestEmail))
     {
         Write-Verbose -Message 'Updating Viva Insights settings for Digest Email'
-        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Digest-email' -IsEnabled $VivaInsightsDigestEmail | Out-Null
+        Invoke-M365DSCCommand -ScriptBlock {
+            Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Digest-email' -IsEnabled $VivaInsightsDigestEmail | Out-Null
+        } -RetryOnNotFoundError
     }
 
     if ($PSBoundParameters.ContainsKey('VivaInsightsOutlookAddInAndInlineSuggestions') -and `
         ($currentValues.VivaInsightsOutlookAddInAndInlineSuggestions -ne $VivaInsightsOutlookAddInAndInlineSuggestions))
     {
         Write-Verbose -Message 'Updating Viva Insights settings for Addin and Inline Suggestions'
-        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Add-In' -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions | Out-Null
+        Invoke-M365DSCCommand -ScriptBlock {
+            Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Add-In' -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions | Out-Null
+        } -RetryOnNotFoundError
     }
 
     if ($PSBoundParameters.ContainsKey('VivaInsightsScheduleSendSuggestions') -and `
         ($currentValues.VivaInsightsScheduleSendSuggestions -ne $VivaInsightsScheduleSendSuggestions))
     {
         Write-Verbose -Message 'Updating Viva Insights settings for ScheduleSendSuggestions'
-        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Scheduled-send' -IsEnabled $VivaInsightsScheduleSendSuggestions | Out-Null
+        Invoke-M365DSCCommand -ScriptBlock {
+            Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Scheduled-send' -IsEnabled $VivaInsightsScheduleSendSuggestions | Out-Null
+        } -RetryOnNotFoundError
     }
 
     # Reports Display Names
@@ -667,7 +679,9 @@ function Set-TargetResource
         ($AdminCenterReportDisplayConcealedNames -ne $AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames))
     {
         Write-Verbose -Message "Updating the Admin Center Report Display Concealed Names setting to {$AdminCenterReportDisplayConcealedNames}"
-        Update-M365DSCOrgSettingsAdminCenterReport -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
+        Invoke-M365DSCCommand -ScriptBlock {
+            Update-M365DSCOrgSettingsAdminCenterReport -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
+        } -RetryOnNotFoundError
     }
 
     # Apps Installation
@@ -678,7 +692,7 @@ function Set-TargetResource
     {
         $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
             -InboundParameters $PSBoundParameters
-        $InstallationOptions = Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks
+        $InstallationOptions = Invoke-M365DSCCommand -ScriptBlock { Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks } -RetryOnNotFoundError
         $InstallationOptionsToUpdate = @{
             updateChannel  = ''
             appsForWindows = @{
@@ -730,8 +744,10 @@ function Set-TargetResource
         if ($InstallationOptionsToUpdate.Keys.Count -gt 0)
         {
             Write-Verbose -Message "Updating O365 Installation Options with $(Convert-M365DscHashtableToString -Hashtable $InstallationOptionsToUpdate)"
-            Update-M365DSCOrgSettingsInstallationOptions -Options $InstallationOptionsToUpdate `
-                -AuthenticationOption $ConnectionModeTasks
+            Invoke-M365DSCCommand -ScriptBlock {
+                Update-M365DSCOrgSettingsInstallationOptions -Options $InstallationOptionsToUpdate `
+                    -AuthenticationOption $ConnectionModeTasks
+            } -RetryOnNotFoundError
         }
     }
 
@@ -775,7 +791,9 @@ function Set-TargetResource
     if ($FormsParametersToUpdate.Keys.Count -gt 0)
     {
         Write-Verbose -Message "Updating the Microsoft Forms settings with values:$(Convert-M365DscHashtableToString -Hashtable $FormsParametersToUpdate)"
-        Update-M365DSCOrgSettingsForms -Options $FormsParametersToUpdate
+        Invoke-M365DSCCommand -ScriptBlock {
+            Update-M365DSCOrgSettingsForms -Options $FormsParametersToUpdate
+        } -RetryOnNotFoundError
     }
 
     # Dynamics Customer Voice Settings
@@ -798,7 +816,9 @@ function Set-TargetResource
     if ($DynamicsCustomerVoiceParametersToUpdate.Keys.Count -gt 0)
     {
         Write-Verbose -Message "Updating the Dynamics 365 Customer Voice settings with values:$(Convert-M365DscHashtableToString -Hashtable $DynamicsCustomerVoiceParametersToUpdate)"
-        Update-M365DSCOrgSettingsDynamicsCustomerVoice -Options $DynamicsCustomerVoiceParametersToUpdate
+        Invoke-M365DSCCommand -ScriptBlock {
+            Update-M365DSCOrgSettingsDynamicsCustomerVoice -Options $DynamicsCustomerVoiceParametersToUpdate
+        } -RetryOnNotFoundError
     }
 
     # Apps And Services
@@ -816,7 +836,9 @@ function Set-TargetResource
     if ($AppsAndServicesParametersToUpdate.Keys.Count -gt 0)
     {
         Write-Verbose -Message "Updating the Apps & Settings settings with values:$(Convert-M365DscHashtableToString -Hashtable $AppsAndServicesParametersToUpdate)"
-        Update-M365DSCOrgSettingsAppsAndServices -Options $AppsAndServicesParametersToUpdate
+        Invoke-M365DSCCommand -ScriptBlock {
+            Update-M365DSCOrgSettingsAppsAndServices -Options $AppsAndServicesParametersToUpdate
+        } -RetryOnNotFoundError
     }
 
     # To Do
@@ -839,7 +861,9 @@ function Set-TargetResource
     if ($ToDoParametersToUpdate.Keys.Count -gt 0)
     {
         Write-Verbose -Message "Updating the To Do settings with values:$(Convert-M365DscHashtableToString -Hashtable $ToDoParametersToUpdate)"
-        Update-M365DSCOrgSettingsToDo -Options $ToDoParametersToUpdate
+        Invoke-M365DSCCommand -ScriptBlock {
+            Update-M365DSCOrgSettingsToDo -Options $ToDoParametersToUpdate
+        } -RetryOnNotFoundError
     }
 }
 
@@ -1146,13 +1170,13 @@ function Get-M365DSCO365OrgSettingsPlannerConfig
         else
         {
             Write-Verbose -Message 'Not able to retrieve Office 365 Planner Settings. Please ensure correct permissions have been granted.'
-            New-M365DSCLogEntry -Message 'Error updating Office 365 Planner Settings' `
+            New-M365DSCLogEntry -Message 'Error retrieving Office 365 Planner Settings' `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantId `
                 -Credential $Credential
         }
-        throw $_
+        throw
     }
 }
 
@@ -1212,13 +1236,13 @@ function Get-M365DSCOrgSettingsInstallationOptions
     catch
     {
         Write-Verbose -Message 'Not able to retrieve Office 365 Apps Installation Options. Please ensure correct permissions have been granted.'
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+        New-M365DSCLogEntry -Message 'Error retrieving Office 365 Apps Installation Options' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        throw $_
+        throw
     }
 }
 
@@ -1271,13 +1295,13 @@ function Get-M365DSCOrgSettingsForms
     catch
     {
         Write-Verbose -Message 'Not able to retrieve O365OrgSettings Forms Settings. Please ensure correct permissions have been granted.'
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+        New-M365DSCLogEntry -Message 'Error retrieving O365OrgSettings Forms Settings' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        throw $_
+        throw
     }
 }
 
@@ -1322,13 +1346,13 @@ function Get-M365DSCOrgSettingsDynamicsCustomerVoice
     catch
     {
         Write-Verbose -Message 'Not able to retrieve O365OrgSettings Dynamics Customer Voice Settings. Please ensure correct permissions have been granted.'
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+        New-M365DSCLogEntry -Message 'Error retrieving O365OrgSettings Dynamics Customer Voice Settings' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        throw $_
+        throw
     }
 }
 
@@ -1372,13 +1396,13 @@ function Get-M365DSCOrgSettingsAppsAndServices
     catch
     {
         Write-Verbose -Message 'Not able to retrieve O365OrgSettings Apps and Services Settings. Please ensure correct permissions have been granted.'
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+        New-M365DSCLogEntry -Message 'Error retrieving O365OrgSettings Apps and Services Settings' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        throw $_
+        throw
     }
 }
 
@@ -1421,13 +1445,13 @@ function Get-M365DSCOrgSettingsToDo
     catch
     {
         Write-Verbose -Message 'Not able to retrieve ToDo settings. Please ensure correct permissions have been granted.'
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+        New-M365DSCLogEntry -Message 'Error retrieving O365OrgSettings To Do Settings' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        throw $_
+        throw
     }
 }
 
@@ -1472,13 +1496,13 @@ function Get-M365DSCOrgSettingsAdminCenterReport
     catch
     {
         Write-Verbose -Message 'Not able to retrieve Office 365 Report Settings. Please ensure correct permissions have been granted.'
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+        New-M365DSCLogEntry -Message 'Error retrieving O365OrgSettings Admin Center Report Settings' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        throw $_
+        throw
     }
 }
 

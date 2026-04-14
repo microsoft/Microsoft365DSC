@@ -92,7 +92,7 @@ function Get-TargetResource
         }
 
         # Get RoleGroup Members if RoleGroup exists.
-        $roleGroupMembers = Get-RoleGroupMember -Identity $Name | Select-Object -Property @("Alias", "Name")
+        $roleGroupMembers = Get-RoleGroupMember -Identity $Name -ErrorAction Stop | Select-Object -Property @("Alias", "Name")
         $roleGroupMembersValue = @()
         foreach ($member in $roleGroupMembers)
         {

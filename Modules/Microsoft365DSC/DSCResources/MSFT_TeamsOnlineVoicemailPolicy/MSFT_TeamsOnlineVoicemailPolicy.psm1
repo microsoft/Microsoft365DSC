@@ -27,7 +27,7 @@ function Get-TargetResource
         $EnableTranscriptionTranslation,
 
         [Parameter()]
-        [System.String]
+        [System.Int32]
         $MaximumRecordingLength,
 
         [Parameter()]
@@ -184,7 +184,7 @@ function Set-TargetResource
         $EnableTranscriptionTranslation,
 
         [Parameter()]
-        [System.String]
+        [System.Int32]
         $MaximumRecordingLength,
 
         [Parameter()]
@@ -258,9 +258,11 @@ function Set-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $SetParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    # Convert the MaximumRecordingLength back to a timespan object.
-    $timespan = [TimeSpan]$MaximumRecordingLength
-    $SetParameters.MaximumRecordingLength = $timespan
+    # Convert recording length in seconds to a TimeSpan value expected by Teams cmdlets.
+    if ($PSBoundParameters.ContainsKey('MaximumRecordingLength'))
+    {
+        $SetParameters.MaximumRecordingLength = New-TimeSpan -Seconds $MaximumRecordingLength
+    }
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -306,7 +308,7 @@ function Test-TargetResource
         $EnableTranscriptionTranslation,
 
         [Parameter()]
-        [System.String]
+        [System.Int32]
         $MaximumRecordingLength,
 
         [Parameter()]

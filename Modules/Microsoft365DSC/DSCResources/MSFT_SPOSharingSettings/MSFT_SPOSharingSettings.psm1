@@ -176,7 +176,7 @@ function Get-TargetResource
         }
 
         # Local filtering because server side filtering intermittently fails
-        $MySite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -notmatch '^RedirectSite#' }
+        $MySite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -match '^SPSMSITEHOST#' }
 
         if ($null -ne $MySite)
         {

@@ -85,7 +85,7 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            [array]$instances = @(Get-UnifiedAuditLogRetentionPolicy -ErrorAction SilentlyContinue | Where-Object { $_.Mode -ne 'PendingDeletion' })
+            [array]$instances = @(Invoke-M365DSCCommand -ScriptBlock { Get-UnifiedAuditLogRetentionPolicy -ErrorAction Stop | Where-Object { $_.Mode -ne 'PendingDeletion' } } -SuppressNotFoundError)
             if ($null -eq $instances)
             {
                 return $nullResult

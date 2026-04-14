@@ -36,6 +36,10 @@ function Get-TargetResource
         $AppRoleAssignmentRequired,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ClaimsPolicy,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $CustomSecurityAttributes,
 
@@ -212,6 +216,11 @@ function Get-TargetResource
                 method = 'GET'
                 url    = "/servicePrincipals/$($AADServicePrincipal.Id)/delegatedPermissionClassifications"
             }
+            @{
+                id     = 'claimsPolicy'
+                method = 'GET'
+                url    = "/servicePrincipals/$($AADServicePrincipal.Id)/claimsPolicy"
+            }
         )
         $batchResponse = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests -ErrorAction SilentlyContinue
 
@@ -248,6 +257,15 @@ function Get-TargetResource
             {
                 $ownersValues += $info.UserPrincipalName
             }
+        }
+
+        $claimsPolicyValue = $null
+        $claimsPolicyResponse = ($batchResponse | Where-Object -FilterScript { $_.id -eq 'claimsPolicy' })
+        if ($claimsPolicyResponse -and $claimsPolicyResponse.status -eq 200 -and $claimsPolicyResponse.body)
+        {
+            $claimsPolicyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $claimsPolicyResponse.body
+            $claimsPolicyValue.Remove('Id') | Out-Null
+            $claimsPolicyValue.Remove('@odata.context') | Out-Null
         }
 
         #Managed Identities in AzureGov return exception when pulling delegatedPermissionClassifications
@@ -375,6 +393,7 @@ function Get-TargetResource
             AlternativeNames                   = $alternativeNamesValue
             AccountEnabled                     = [boolean]$AADServicePrincipal.AccountEnabled
             AppRoleAssignmentRequired          = $AADServicePrincipal.AppRoleAssignmentRequired
+            ClaimsPolicy                       = $claimsPolicyValue
             CustomSecurityAttributes           = $complexCustomSecurityAttributes
             DelegatedPermissionClassifications = [Array]$complexDelegatedPermissionClassifications
             ErrorUrl                           = $AADServicePrincipal.ErrorUrl
@@ -446,6 +465,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AppRoleAssignmentRequired,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ClaimsPolicy,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -560,8 +583,14 @@ function Set-TargetResource
 
     $currentAADServicePrincipal = Get-TargetResource @PSBoundParameters
     $currentParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-    $currentParameters.Remove('ObjectID') | Out-Null
+    $currentParameters.Remove('ClaimsPolicy') | Out-Null
+    $currentParameters.Remove('ObjectId') | Out-Null
     $currentParameters.Remove('Owners') | Out-Null
+    $currentParameters.Remove('KeyCredentials') | Out-Null
+    $currentParameters.Remove('PasswordCredentials') | Out-Null
+    $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
+    $AppRoleAssignedToSpecified = $currentParameters.ContainsKey('AppRoleAssignedTo')
+    $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
 
     # update the custom security attributes to be cmdlet comsumable
     if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes.Count -gt 0)
@@ -583,14 +612,9 @@ function Set-TargetResource
         Write-Verbose -Message "Translated to AppId {$($currentParameters.AppId)}"
     }
 
-    $AppRoleAssignedToSpecified = $currentParameters.ContainsKey('AppRoleAssignedTo')
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
     {
-        # removing Delegated permission classifications from this new call, as adding below separately
-        $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
-        $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
-
         Write-Verbose -Message 'Creating new Service Principal'
         Write-Verbose -Message "With Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
         $newSP = New-MgServicePrincipal @currentParameters
@@ -649,16 +673,21 @@ function Set-TargetResource
                     -BodyParameter $bodyParam | Out-Null
             }
         }
+
+        if ($PSBoundParameters.ContainsKey('ClaimsPolicy'))
+        {
+            Write-Verbose -Message 'Adding Claims Policy to the Service Principal'
+            $claimsPolicyBody = Rename-M365DSCCimInstanceParameter -Properties $ClaimsPolicy
+            $null = Invoke-MgGraphRequest -Uri "/beta/servicePrincipals/$($newSP.Id)/claimsPolicy" -Method Put -Body $($claimsPolicyBody | ConvertTo-Json -Depth 20)
+        }
     }
     # ServicePrincipal should exist and will be configured to desired state
     elseif ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message 'Updating existing Service Principal'
+        $currentParameters.Remove("ReplyUrls") | Out-Null
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
-        $AppRoleAssignedToSpecified = $currentParameters.ContainsKey('AppRoleAssignedTo')
-        $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
-        $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
 
         if ($PreferredSingleSignOnMode -eq 'saml')
         {
@@ -677,6 +706,13 @@ function Set-TargetResource
         }
 
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
+
+        if ($PSBoundParameters.ContainsKey('ClaimsPolicy'))
+        {
+            Write-Verbose -Message 'Updating Claims Policy on the Service Principal'
+            $claimsPolicyBody = Rename-M365DSCCimInstanceParameter -Properties $ClaimsPolicy
+            $null = Invoke-MgGraphRequest -Uri "/beta/servicePrincipals/$($currentAADServicePrincipal.ObjectID)/claimsPolicy" -Method Put -Body $($claimsPolicyBody | ConvertTo-Json -Depth 20)
+        }
 
         if ($IdentifierUris)
         {
@@ -869,6 +905,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AppRoleAssignmentRequired,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ClaimsPolicy,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -1091,6 +1131,53 @@ function Export-TargetResource
                         $Results.Remove('AppRoleAssignedTo') | Out-Null
                     }
                 }
+                if ($null -ne $Results.ClaimsPolicy)
+                {
+                    $complexMapping = @(
+                        @{
+                            Name            = 'ClaimsMappingPolicy'
+                            CimInstanceName = 'AADServicePrincipalClaimsMappingPolicy'
+                            IsRequired      = $False
+                        },
+                        @{
+                            Name            = 'claims'
+                            CimInstanceName = 'AADServicePrincipalCustomClaim'
+                            IsRequired      = $False
+                        },
+                        @{
+                            Name            = 'configurations'
+                            CimInstanceName = 'AADServicePrincipalCustomClaimConfiguration'
+                            IsRequired      = $False
+                        },
+                        @{
+                            Name            = 'attribute'
+                            CimInstanceName = 'AADServicePrincipalCustomClaimAttribute'
+                            IsRequired      = $False
+                        },
+                        @{
+                            Name            = 'condition'
+                            CimInstanceName = 'AADServicePrincipalCustomClaimCondition'
+                            IsRequired      = $False
+                        },
+                        @{
+                            Name            = 'transformations'
+                            CimInstanceName = 'AADServicePrincipalCustomClaimTransformation'
+                            IsRequired      = $False
+                        }
+                    )
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.ClaimsPolicy `
+                        -CIMInstanceName 'AADServicePrincipalClaimsPolicy' `
+                        -ComplexTypeMapping $complexMapping
+                    if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.ClaimsPolicy = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('ClaimsPolicy') | Out-Null
+                    }
+                }
                 if ($Results.DelegatedPermissionClassifications.Count -gt 0)
                 {
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1166,7 +1253,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential `
-                    -NoEscape @('AppRoleAssignedTo', 'DelegatedPermissionClassifications', 'KeyCredentials', 'PasswordCredentials', 'CustomSecurityAttributes')
+                    -NoEscape @('AppRoleAssignedTo', 'ClaimsPolicy', 'DelegatedPermissionClassifications', 'KeyCredentials', 'PasswordCredentials', 'CustomSecurityAttributes')
 
                 $dscContent.Append($currentDSCBlock) | Out-Null
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -1302,7 +1389,6 @@ function New-AttributeValue
     return $attributeValue
 }
 
-
 function Get-CustomSecurityAttributes
 {
     [OutputType([System.Array])]
@@ -1351,7 +1437,7 @@ function Get-CompareParameters
     param()
 
     return @{
-        ExcludedProperties = @('ObjectId')
+        ExcludedProperties = @('ObjectId', 'KeyCredentials', 'PasswordCredentials', 'ReplyUrls')
     }
 }
 

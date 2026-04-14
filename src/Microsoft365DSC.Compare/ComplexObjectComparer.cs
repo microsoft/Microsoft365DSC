@@ -103,8 +103,8 @@ namespace Microsoft365DSC.Compare
                         };
                         drifts.Add(driftEntry);
                         result = false;
-                        continue;
                     }
+                    continue;
                 }
 
                 // Handle single complex objects or simple values
@@ -257,8 +257,8 @@ namespace Microsoft365DSC.Compare
                     drifts.Add(new Dictionary<string, object>
                     {
                         { "PropertyName", $"{propName}.{key}" },
-                        { "CurrentValue", targetValue },
-                        { "DesiredValue", sourceValue }
+                        { "CurrentValue", targetValue is null ? "Current value is null" : "Current value is NOT null" },
+                        { "DesiredValue", sourceValue is null ? "Desired value is null" : "Desired value is NOT null" }
                     });
                     result = false;
                     returnResult = false;

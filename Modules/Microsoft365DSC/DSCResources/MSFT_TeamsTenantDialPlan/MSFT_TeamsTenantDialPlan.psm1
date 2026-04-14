@@ -597,7 +597,7 @@ function Get-M365DSCNormalizationRules
         $result += $currentRule
     }
 
-    return $result
+    return ,$result
 }
 
 Export-ModuleMember -Function *-TargetResource

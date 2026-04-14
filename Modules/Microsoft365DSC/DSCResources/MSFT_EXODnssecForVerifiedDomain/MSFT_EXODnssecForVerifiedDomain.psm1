@@ -62,7 +62,7 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.DnssecFeatureStatus = 'Unknown'
 
-        $instance = Get-DnssecStatusForVerifiedDomain -DomainName $DomainName -ErrorAction SilentlyContinue
+        $instance = Invoke-M365DSCCommand -ScriptBlock { Get-DnssecStatusForVerifiedDomain -DomainName $DomainName } -SuppressNotFoundError
         if ('Unknown' -eq $instance.DnssecFeatureStatus.ToString())
         {
             return $nullResult
@@ -146,7 +146,6 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     # Enable

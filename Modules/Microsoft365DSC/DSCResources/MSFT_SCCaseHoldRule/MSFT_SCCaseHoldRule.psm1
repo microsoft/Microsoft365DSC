@@ -83,7 +83,7 @@ function Get-TargetResource
 
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
-            $Rules = Get-CaseHoldRule -Policy $Policy -ErrorAction 'SilentlyContinue'
+            $Rules = Invoke-M365DSCCommand -ScriptBlock { Get-CaseHoldRule -Policy $Policy -ErrorAction Stop } -SuppressNotFoundError
             $Rule = $Rules | Where-Object { $_.Name -eq $Name }
 
             if ($null -eq $Rule)

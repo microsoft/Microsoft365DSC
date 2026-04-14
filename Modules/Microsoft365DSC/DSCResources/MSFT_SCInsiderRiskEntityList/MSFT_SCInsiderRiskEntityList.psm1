@@ -137,7 +137,7 @@ function Get-TargetResource
             $nullResult.Ensure = 'Absent'
         }
 
-        $instance = Get-InsiderRiskEntityList -Identity $Name -ErrorAction Stop
+        $instance = Invoke-M365DSCCommand -ScriptBlock { Get-InsiderRiskEntityList -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
         if ($null -eq $instance)
         {
@@ -244,7 +244,12 @@ function Get-TargetResource
             foreach ($entity in $entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $group = Invoke-M365DSCCommand -ScriptBlock { Get-InsiderRiskEntityList -Identity $entity.GroupId -ErrorAction Stop } -SuppressNotFoundError
+                if ($null -eq $group)
+                {
+                    Write-Warning -Message "Could not find group with id $($entity.GroupId) for excluded keyword group in $Name. Skipping group."
+                    continue
+                }
                 $excludedKeywordGroupValue += $group.Name
             }
         }
@@ -257,7 +262,13 @@ function Get-TargetResource
             foreach ($entity in $entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $group = Invoke-M365DSCCommand -ScriptBlock { Get-InsiderRiskEntityList -Identity $entity.GroupId -ErrorAction Stop } -SuppressNotFoundError
+                if ($null -eq $group)
+                {
+                    Write-Warning -Message "Could not find group with id $($entity.GroupId) for exception keyword group in $Name. Skipping group."
+                    continue
+                }
+
                 $exceptionKeywordGroupValue += $group.Name
             }
         }
@@ -270,7 +281,12 @@ function Get-TargetResource
             foreach ($entity in $entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $group = Invoke-M365DSCCommand -ScriptBlock { Get-InsiderRiskEntityList -Identity $entity.GroupId -ErrorAction Stop } -SuppressNotFoundError
+                if ($null -eq $group)
+                {
+                    Write-Warning -Message "Could not find group with id $($entity.GroupId) for excluded classifier group in $Name. Skipping group."
+                    continue
+                }
                 $excludedClassifierGroupValue += $group.Name
             }
         }
@@ -283,7 +299,13 @@ function Get-TargetResource
             foreach ($entity in $entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $group = Invoke-M365DSCCommand -ScriptBlock { Get-InsiderRiskEntityList -Identity $entity.GroupId -ErrorAction Stop } -SuppressNotFoundError
+                if ($null -eq $group)
+                {
+                    Write-Warning -Message "Could not find group with id $($entity.GroupId) for excluded domain group in $Name. Skipping group."
+                    continue
+                }
+
                 $excludedDomainGroupValue += $group.Name
             }
         }
@@ -296,7 +318,12 @@ function Get-TargetResource
             foreach ($entity in $entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $group = Invoke-M365DSCCommand -ScriptBlock { Get-InsiderRiskEntityList -Identity $entity.GroupId -ErrorAction Stop } -SuppressNotFoundError
+                if ($null -eq $group)
+                {
+                    Write-Warning -Message "Could not find group with id $($entity.GroupId) for excluded file path group in $Name. Skipping group."
+                    continue
+                }
                 $ExcludedFilePathGroupsValue += $group.Name
             }
         }
@@ -309,7 +336,12 @@ function Get-TargetResource
             foreach ($entity in $entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $group = Invoke-M365DSCCommand -ScriptBlock { Get-InsiderRiskEntityList -Identity $entity.GroupId -ErrorAction Stop } -SuppressNotFoundError
+                if ($null -eq $group)
+                {
+                    Write-Warning -Message "Could not find group with id $($entity.GroupId) for excluded site group in $Name. Skipping group."
+                    continue
+                }
                 $excludedSiteGroupValue += $group.Name
             }
         }
@@ -322,7 +354,12 @@ function Get-TargetResource
             foreach ($entity in $entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $group = Invoke-M365DSCCommand -ScriptBlock { Get-InsiderRiskEntityList -Identity $entity.GroupId -ErrorAction Stop } -SuppressNotFoundError
+                if ($null -eq $group)
+                {
+                    Write-Warning -Message "Could not find group with id $($entity.GroupId) for excluded sensitive info type group in $Name. Skipping group."
+                    continue
+                }
                 $excludedSITGroupValue += $group.Name
             }
         }
@@ -335,7 +372,13 @@ function Get-TargetResource
             foreach ($entity in $entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $group = Invoke-M365DSCCommand -ScriptBlock { Get-InsiderRiskEntityList -Identity $entity.GroupId -ErrorAction Stop } -SuppressNotFoundError
+                if ($null -eq $group)
+                {
+                    Write-Warning -Message "Could not find group with id $($entity.GroupId) for excluded file type group in $Name. Skipping group."
+                    continue
+                }
+
                 $excludedFileTypeGroupValue += $group.Name
             }
         }

@@ -30,7 +30,66 @@ class MSFT_AADServicePrincipalAttributeSet
     [Write, Description("List of attribute values."), EmbeddedInstance("MSFT_AADServicePrincipalAttributeValue")] String AttributeValues[];
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("AADServicePrincipal")]
+[ClassVersion("1.0.0.0")]
+class MSFT_AADServicePrincipalTransformationAttribute
+{
+    [Write, Description("This flag is only relevant in the case where the attribute is multivalued. By default, transformations are only applied to the first element in a multi-valued claim, however setting this flag to true ensures the transformation is applied to all values, resulting in a multivalued output.")] Boolean treatAsMultiValue;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_AADServicePrincipalCustomClaimTransformation
+{
+    [Write, Description("The input attribute that provides the source for the transformation. This parameter is required if it's the first or only transformation in the list of transformations to be applied. Subsequent transformations use the output of the prior transformation as input."), EmbeddedInstance("MSFT_AADServicePrincipalTransformationAttribute")] String input;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_AADServicePrincipalCustomClaimCondition
+{
+    [Write, Description("A list of groups (GUIDs) to which the user/application must be a member for this condition to be applied.")] String memberOf[];
+    [Write, Description("The type of user this condition applies to. The possible values are: any, members, allGuests, aadGuests, externalGuests."), ValueMap{"any","members","allGuests","aadGuests","externalGuests"}, Values{"any","members","allGuests","aadGuests","externalGuests"}] String claimConditionUserType;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_AADServicePrincipalCustomClaimAttribute
+{
+    [Required, Description("The type of the entity."), ValueMap{"#microsoft.graph.sourcedAttribute","#microsoft.graph.valueBasedAttribute"}, Values{"#microsoft.graph.sourcedAttribute","#microsoft.graph.valueBasedAttribute"}] String odataType;
+    [Write, Description("The identifier of the attribute on the specified source. Only applicable for sourcedAttribute.")] String id;
+    [Write, Description("A flag that indicates if the name specified is that of an extension attribute. Only applicable for sourcedAttribute.")] Boolean isExtensionAttribute;
+    [Write, Description("The source where the claim is going to retrieve its value. Valid sources include user, application, resource, audience and company. Only applicable for sourcedAttribute.")] String source;
+    [Write, Description("The static value to be used an the attribute. Only applicable for valueBasedAttribute.")] String value;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_AADServicePrincipalCustomClaimConfiguration
+{
+    [Write, Description("The attribute on which we source this property."), EmbeddedInstance("MSFT_AADServicePrincipalCustomClaimAttribute")] String attribute;
+    [Write, Description("The condition, if any, associated with this configuration."), EmbeddedInstance("MSFT_AADServicePrincipalCustomClaimCondition")] String condition;
+    [Write, Description("An ordered list of transformations that are applied in sequence."), EmbeddedInstance("MSFT_AADServicePrincipalCustomClaimTransformation")] String transformations[];
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_AADServicePrincipalCustomClaim
+{
+    [Required, Description("The type of the entity."), ValueMap{"#microsoft.graph.customClaim","#microsoft.graph.samlNameIdClaim"}, Values{"#microsoft.graph.customClaim","#microsoft.graph.samlNameIdClaim"}] String odataType;
+    [Write, Description("One or more configurations that describe how the claim is sourced and under what conditions."), EmbeddedInstance("MSFT_AADServicePrincipalCustomClaimConfiguration")] String configurations[];
+    [Write, Description("The name of the claim to be emitted.")] String name;
+    [Write, Description("An optional namespace to be included as part of the claim name.")] String namespace;
+    [Write, Description("If specified, it sets the nameFormat attribute associated with the claim in the SAML response. The possible values are: unspecified, uri, basic."), ValueMap{"unspecified","uri","basic"}, Values{"unspecified","uri","basic"}] String samlAttributeNameFormat;
+    [Write, Description("List of token formats for which this claim should be emitted. The possible values are: saml,jwt."), ValueMap{"saml","jwt"}, Values{"saml","jwt"}] String tokenFormat[];
+    [Write, Description("Allows to specify the format of the saml nameID claim value. The possible values are: default, unspecified, emailAddress, windowsDomainQualifiedName, persistent, unknownFutureValue. Only applicable to samlNameIdClaim."), ValueMap{"default","unspecified","emailAddress","windowsDomainQualifiedName","persistent"}, Values{"default","unspecified","emailAddress","windowsDomainQualifiedName","persistent"}] String nameIdFormat;
+    [Write, Description("Allows the specification of a service provider name qualifier reflected in the sAML response. The value provided must match one of the service provider names configured for the application and is only applicable for IdP-initiated applications (the sign-on URL should be empty for the IdP-initiated applications), in all other cases this value is ignored. Only applicable to samlNameIdClaim.")] String serviceProviderNameQualifier;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_AADServicePrincipalClaimsPolicy
+{
+    [Write, Description("If specified, it overrides the content of the audience claim for WS-Federation and SAML2 protocols. A custom signing key must be used for audienceOverride to be applied, otherwise, the audienceOverride value is ignored. The value provided must be in the format of an absolute URI.")] String audienceOverride;
+    [Write, Description("Defines which claims are present in the tokens affected by the policy, in addition to the basic claim and the core claim set."), EmbeddedInstance("MSFT_AADServicePrincipalCustomClaim")] String Claims[];
+    [Write, Description("Indicates whether the application ID is added to the claim. It is relevant only for SAML2.0 and if a custom signing key is used. the default value is true. Optional.")] Boolean includeApplicationIdInIssuer;
+    [Write, Description("Determines whether the basic claim set is included in tokens affected by this policy. If set to true, all claims in the basic claim set are emitted in tokens affected by the policy. By default the basic claim set isn't in the tokens unless they're explicitly configured in this policy.")] Boolean includeBasicClaimSet;
+};
+
+[ClassVersion("1.0.0.1"), FriendlyName("AADServicePrincipal")]
 class MSFT_AADServicePrincipal : OMI_BaseResource
 {
     [Key, Description("The unique identifier for the associated application.")] String AppId;
@@ -40,6 +99,7 @@ class MSFT_AADServicePrincipal : OMI_BaseResource
     [Write, Description("The alternative names for this service principal")] String AlternativeNames[];
     [Write, Description("True if the service principal account is enabled; otherwise, false.")] Boolean AccountEnabled;
     [Write, Description("Indicates whether an application role assignment is required.")] Boolean AppRoleAssignmentRequired;
+    [Write, Description("Represents a claims policy that allows application admins to customize the claims emitted in tokens affected by this policy."), EmbeddedInstance("MSFT_AADServicePrincipalClaimsPolicy")] String ClaimsPolicy;
     [Write, Description("Specifies the error URL of the ServicePrincipal.")] String ErrorUrl;
     [Write, Description("Specifies the homepage of the ServicePrincipal.")] String Homepage;
     [Write, Description("Specifies the LogoutURL of the ServicePrincipal.")] String LogoutUrl;

@@ -1,8 +1,8 @@
 # Deep-Dive into the Local Configuration Manager (LCM) Error Flow
 
 <img src="../../../images/NikCharlebois.jpg" style="width:75px;border-radius:50%;border:3px solid black;float:left;" />
-<div style="position:inherit;padding-top:15px;"><span style="float:left;padding-left:15px;"><p>**by Nik Charlebois**<br />
-June 28th, 2024</p></span></div>
+<div style="position:inherit;padding-top:15px;"><span style="float:left;padding-left:15px;"><b>by Nik Charlebois<br />
+June 28th, 2024</b></span></div>
 
 <br/><br/><br/>
 

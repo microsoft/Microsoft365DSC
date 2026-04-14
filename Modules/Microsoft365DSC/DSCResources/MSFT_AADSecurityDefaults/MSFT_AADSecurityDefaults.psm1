@@ -76,7 +76,7 @@ function Get-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
-        $defaults = Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy
+        $defaults = Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy -ErrorAction Stop
 
         $result = @{
             IsSingleInstance      = 'Yes'
