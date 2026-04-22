@@ -34,6 +34,10 @@
 * M365DSCIntuneUtil
   * Fixed an issue where a settings array was returned as a single element.
     FIXES [#7055](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7055)
+* M365DSCReverse
+  * Fixed an issue where the string replacement map was being added as
+    configuration data entries with the keys set as values and the values as
+    keys
 * M365DSCUtil
   * Added retry logic for too many requests when invoking batch requests.
 * Dependencies

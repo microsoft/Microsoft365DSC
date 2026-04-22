@@ -818,8 +818,8 @@ function Start-M365DSCConfigurationExtract
         foreach ($pair in (Get-M365DSCStringReplacementMap).GetEnumerator())
         {
             Add-ConfigurationDataEntry -Node 'NonNodeData' `
-                -Key $pair.Value `
-                -Value $pair.Key `
+                -Key $pair.Key `
+                -Value $pair.Value `
                 -Description "Placeholder for sensitive data - $($pair.Value)"
         }
 
