@@ -133,6 +133,43 @@ Context 'Integration tests' -Skip { }
 - **Stop on Critical**: Use `-ErrorAction Stop` for pre-conditions
 - **Test Exceptions**: Use `{ Code } | Should -Throw` for exception testing
 
+## Microsoft365DSC Mocking and Stub Rules
+
+When writing unit tests for Microsoft365DSC resources:
+
+- **Mock all functions from other modules.** Every function called from an external module (e.g., `Microsoft.Graph.*`, `ExchangeOnlineManagement`, `MicrosoftTeams`, `PnP.PowerShell`) must be mocked in the test.
+- **Add mock stubs to `Tests/Unit/Stubs/`.** Stubs go in `Microsoft365.psm1` (or `Generic.psm1` for non-workload utilities). Each stub is a function declaration with the correct parameter signatures but an empty body.
+- **Place stubs in the correct `#region`.** Each `#region` corresponds to a PowerShell module name (e.g., `#region Microsoft.Graph.Beta.Identity.SignIns`). Regions are in **alphabetical order** within the file.
+- **If the module region does not exist, create it.** Insert a new `#region <ModuleName>` / `#endregion` block in the correct alphabetical position.
+- **Stubs within each region must be in alphabetical order** by function name.
+- **Example stub structure:**
+
+```powershell
+#region Microsoft.Graph.Users
+
+function Get-MgUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $UserId
+    )
+}
+
+function Update-MgUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $UserId
+    )
+}
+
+#endregion
+```
+
 ## Best Practices
 
 - **Descriptive Names**: Use clear test descriptions that explain behavior

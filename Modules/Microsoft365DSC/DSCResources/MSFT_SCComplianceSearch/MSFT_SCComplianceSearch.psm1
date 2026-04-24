@@ -118,11 +118,11 @@ function Get-TargetResource
 
             if ($null -eq $Case)
             {
-                $Search = Get-ComplianceSearch -Identity $Name -ErrorAction SilentlyContinue
+                $Search = Invoke-M365DSCCommand -ScriptBlock { Get-ComplianceSearch -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
             }
             else
             {
-                $Search = Get-ComplianceSearch -Identity $Name -Case $Case -ErrorAction SilentlyContinue
+                $Search = Invoke-M365DSCCommand -ScriptBlock { Get-ComplianceSearch -Identity $Name -Case $Case -ErrorAction Stop } -SuppressNotFoundError
             }
 
             if ($null -eq $Search)
@@ -137,6 +137,7 @@ function Get-TargetResource
         }
 
         Write-Verbose "Found existing SCComplianceSearch $($Name)"
+
         $result = @{
             Name                                  = $Name
             Case                                  = $Case

@@ -11,7 +11,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Uri[]]
+        [System.String[]]
         $AzureKeyIDs,
 
         [Parameter()]
@@ -114,7 +114,7 @@ function Get-TargetResource
 
         $result = @{
             Identity                  = $Identity
-            AzureKeyIDs               = $DataEncryptionPolicy.AzureKeyIDs
+            AzureKeyIDs               = [System.String[]]$DataEncryptionPolicy.AzureKeyIDs
             Description               = $DataEncryptionPolicy.Description
             Enabled                   = $DataEncryptionPolicy.Enabled
             Name                      = $DataEncryptionPolicy.Name
@@ -155,7 +155,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Uri[]]
+        [System.String[]]
         $AzureKeyIDs,
 
         [Parameter()]
@@ -268,7 +268,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Uri[]]
+        [System.String[]]
         $AzureKeyIDs,
 
         [Parameter()]

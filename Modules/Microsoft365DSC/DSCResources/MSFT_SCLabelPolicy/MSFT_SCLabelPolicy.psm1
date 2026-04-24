@@ -154,7 +154,7 @@ function Get-TargetResource
 
             try
             {
-                $policy = Get-LabelPolicy -Identity $Name -ErrorAction SilentlyContinue -WarningAction Ignore
+                $policy = Invoke-M365DSCCommand -ScriptBlock { Get-LabelPolicy -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
             }
             catch
             {

@@ -82,7 +82,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $RuleObject = Get-SupervisoryReviewRule -Identity $Name -ErrorAction SilentlyContinue
+            $RuleObject = Invoke-M365DSCCommand -ScriptBlock { Get-SupervisoryReviewRule -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $RuleObject)
             {

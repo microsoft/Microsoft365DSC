@@ -752,16 +752,15 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $instance = Get-InsiderRiskPolicy -Identity $Name
+            $instance = Invoke-M365DSCCommand -ScriptBlock { Get-InsiderRiskPolicy -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
+            if ($null -eq $instance)
+            {
+                return $nullResult
+            }
         }
         else
         {
             $instance = $Script:exportedInstance
-        }
-
-        if ($null -eq $instance)
-        {
-            return $nullResult
         }
 
         $results = @{

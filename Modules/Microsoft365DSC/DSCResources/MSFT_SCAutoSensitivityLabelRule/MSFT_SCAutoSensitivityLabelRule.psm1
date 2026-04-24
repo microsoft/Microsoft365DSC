@@ -247,7 +247,7 @@ function Get-TargetResource
 
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
-            $PolicyRule = Get-AutoSensitivityLabelRule -Identity $Name -ErrorAction SilentlyContinue
+            $PolicyRule = Invoke-M365DSCCommand -ScriptBlock { Get-AutoSensitivityLabelRule -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $PolicyRule)
             {

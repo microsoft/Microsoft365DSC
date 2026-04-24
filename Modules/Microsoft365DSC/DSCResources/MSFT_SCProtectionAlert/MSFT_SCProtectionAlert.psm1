@@ -165,7 +165,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $AlertObject = Get-ProtectionAlert -Identity $Name -ErrorAction SilentlyContinue
+            $AlertObject = Invoke-M365DSCCommand -ScriptBlock { Get-ProtectionAlert -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $AlertObject)
             {
@@ -179,6 +179,7 @@ function Get-TargetResource
         }
 
         Write-Verbose "Found existing SCProtectionAlert $($Name)"
+
         $result = @{
             Ensure                                                      = 'Present'
             AlertBy                                                     = $AlertObject.AlertBy

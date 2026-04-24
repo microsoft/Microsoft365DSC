@@ -110,7 +110,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $tagObject = Get-ComplianceTag -Identity $Name -ErrorAction SilentlyContinue
+            $tagObject = Invoke-M365DSCCommand -ScriptBlock { Get-ComplianceTag -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $tagObject)
             {

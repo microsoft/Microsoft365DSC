@@ -480,8 +480,7 @@ namespace Microsoft365DSC.Converter
                         // Handle simple types using SimpleObjectConverter
                         var currentValue = value;
 
-                        if (currentValue is not null && !string.IsNullOrEmpty(currentValue.ToString()) &&
-                            !currentValue.GetType().Name.Contains("Dictionary"))
+                        if (currentValue is not null && !currentValue.GetType().Name.Contains("Dictionary"))
                         {
                             if (currentValue is string stringValue)
                             {

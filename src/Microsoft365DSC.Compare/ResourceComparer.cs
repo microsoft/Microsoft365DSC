@@ -23,9 +23,9 @@ namespace Microsoft365DSC.Compare
         // Properties that are always excluded from comparison
         private static readonly HashSet<string> AlwaysExcludedProperties = new(StringComparer.OrdinalIgnoreCase)
         {
-            "Verbose", "Credential", "ApplicationId", "CertificateThumbprint",
-            "CertificatePath", "CertificatePassword", "TenantId",
-            "ApplicationSecret", "ManagedIdentity", "AccessTokens"
+            "Id", "Identity", "Verbose", "Credential", "ApplicationId",
+            "CertificateThumbprint","CertificatePath", "CertificatePassword",
+            "TenantId", "ApplicationSecret", "ManagedIdentity", "AccessTokens"
         };
 
         /// <summary>
@@ -61,12 +61,12 @@ namespace Microsoft365DSC.Compare
             // Transform schema elements from PSObject to their BaseObject if needed for easier access
             var result = new CompareResult();
             var excludedSet = new HashSet<string>(AlwaysExcludedProperties, StringComparer.OrdinalIgnoreCase);
-            if (excludedProperties != null)
+            if (excludedProperties is not null)
             {
                 foreach (string prop in excludedProperties)
                     excludedSet.Add(prop);
             }
-            var includedSet = includedProperties != null
+            var includedSet = includedProperties is not null
                 ? new HashSet<string>(includedProperties, StringComparer.OrdinalIgnoreCase)
                 : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -205,7 +205,7 @@ namespace Microsoft365DSC.Compare
                             RemovePrimaryKeysFromHashtable(currentCopy, primaryKeyNames, includedSet, isIntunePolicyAssignment);
 
                             // Compare as single objects
-                            var compResult = ComplexObjectComparer.Compare(desiredCopy, currentCopy, $"{key}[{idx}]");
+                            var compResult = ComplexObjectComparer.Compare(desiredCopy, currentCopy, $"{key}[{idx}]", excludedSet);
                             if (!compResult.Item2)
                             {
                                 result.TestResult = false;
@@ -226,7 +226,7 @@ namespace Microsoft365DSC.Compare
                     else
                     {
                         // No primary keys: fall back to full array comparison
-                        var compResult = ComplexObjectComparer.Compare(desiredArray, currentArray, key);
+                        var compResult = ComplexObjectComparer.Compare(desiredArray, currentArray, key, excludedSet);
                         if (!compResult.Item2)
                         {
                             result.TestResult = false;
@@ -240,7 +240,7 @@ namespace Microsoft365DSC.Compare
                 else
                 {
                     // Single complex object (not array)
-                    var compResult = ComplexObjectComparer.Compare(normalizedDesired, normalizedCurrent, key);
+                    var compResult = ComplexObjectComparer.Compare(normalizedDesired, normalizedCurrent, key, excludedSet);
                     if (!compResult.Item2)
                     {
                         result.TestResult = false;

@@ -1,0 +1,52 @@
+{
+  "resourceName": "AADB2BManagementPolicy",
+  "description": "This resource configures an Azure AD B2B Management Policy.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.B2BManagementPolicy"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.B2BManagementPolicy"
+          }
+        ]
+      },
+      "delegated": {
+        "read": [
+          {
+            "name": "Policy.Read.B2BManagementPolicy"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.B2BManagementPolicy"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyB2BManagementPolicy",
+        "New-MgBetaPolicyB2BManagementPolicy",
+        "Remove-MgBetaPolicyB2BManagementPolicy",
+        "Update-MgBetaPolicyB2BManagementPolicy"
+      ]
+    }
+  ]
+}

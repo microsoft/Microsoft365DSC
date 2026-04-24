@@ -129,6 +129,13 @@ namespace Microsoft365DSC.Intune
                 ? GetAdditionalPropertyRaw(template, valueTemplateKey)
                 : SettingDefinitionMapper.TryGetPropertyRaw(template, valueTemplateKey);
 
+            // Collection types (GroupSettingCollection, SimpleSettingCollection, ChoiceSettingCollection)
+            // return an array of value templates. Unwrap to the first element which defines the repeating structure.
+            if (valueTemplateRaw is IEnumerable<object> valueTemplateCollection)
+            {
+                valueTemplateRaw = valueTemplateCollection.FirstOrDefault();
+            }
+
             if (valueTemplateRaw is not null)
             {
                 // Extract @odata.type from value template and transform ValueTemplate->Value
@@ -146,7 +153,7 @@ namespace Microsoft365DSC.Intune
                     {
                         info.ValueTemplateId = templateIdStr;
                     }
-                    else if (templateIdRaw is IEnumerable && !(templateIdRaw is string))
+                    else if (templateIdRaw is IEnumerable && templateIdRaw is not string)
                     {
                         // Array of template IDs (e.g., ThreatTypeSettings in IntuneAntivirusPolicyLinux)
                         // The IDs are from child settings, not from the parent - set null

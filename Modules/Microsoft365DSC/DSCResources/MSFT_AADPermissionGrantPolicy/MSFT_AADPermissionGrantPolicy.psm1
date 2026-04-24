@@ -1418,4 +1418,4 @@ function Test-ConditionSetsEqual
 
 #endregion
 
-Export-ModuleMember -Function *-TargetResource
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

@@ -26,6 +26,12 @@ jobs:
           Install-PSResource -Name Pester -Scope AllUsers -TrustRepository
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
 
+      - name: Generate SchemaDefinition.json
+        shell: pwsh
+        run: |
+          Import-Module './Modules/Microsoft365DSC/Modules/M365DSCSchemaHandler.psm1'
+          New-M365DSCSchemaDefinition
+
       - name: Build Dll Files
         shell: pwsh
         run: |
@@ -75,6 +81,12 @@ jobs:
           Install-PSResource -Name PSDesiredStateConfiguration -Scope AllUsers -TrustRepository
           Install-PSResource -Name Pester -Scope AllUsers -TrustRepository
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
+
+      - name: Generate SchemaDefinition.json
+        shell: pwsh
+        run: |
+          Import-Module './Modules/Microsoft365DSC/Modules/M365DSCSchemaHandler.psm1'
+          New-M365DSCSchemaDefinition
 
       - name: Build Dll Files
         shell: pwsh

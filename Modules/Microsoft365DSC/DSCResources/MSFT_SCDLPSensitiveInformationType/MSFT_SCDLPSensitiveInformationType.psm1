@@ -77,7 +77,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $SIT = Get-DlpSensitiveInformationType -Identity $Name -ErrorAction SilentlyContinue
+            $SIT = Invoke-M365DSCCommand -ScriptBlock { Get-DlpSensitiveInformationType -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $SIT)
             {

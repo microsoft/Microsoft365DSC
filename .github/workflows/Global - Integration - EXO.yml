@@ -15,6 +15,15 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+      - name: Generate SchemaDefinition.json
+        shell: pwsh
+        run: |
+          Import-Module './Modules/Microsoft365DSC/Modules/M365DSCSchemaHandler.psm1'
+          New-M365DSCSchemaDefinition
+      - name: Build Dll Files
+        shell: pwsh
+        run: |
+          & ./Utilities/Build-DllFiles.ps1 -Configuration Release
       - name: Copy Microsoft365DSC
         shell: powershell
         run: |

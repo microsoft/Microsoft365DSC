@@ -71,7 +71,9 @@ function Get-TargetResource
             #region resource generator code
             if (-not [System.String]::IsNullOrEmpty($<PrimaryKey>))
             {
-                $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
+                $getValue = Invoke-M365DSCCommand -ScriptBlock {
+                    <GetCmdLetName> <getKeyIdentifier> -ErrorAction Stop
+                } -SuppressNotFoundError
             }
 
             if ($null -eq $getValue)
@@ -80,8 +82,10 @@ function Get-TargetResource
 
                 if (-not [System.String]::IsNullOrEmpty($<FilterKey>))
                 {
-                    $getValue = <GetCmdLetName> `
-    <AlternativeFilter>
+                    $getValue = Invoke-M365DSCCommand -ScriptBlock {
+                        <GetCmdLetName> `
+        <AlternativeFilter>
+                    }
                 }
             }
             #endregionResourceGenerator#>

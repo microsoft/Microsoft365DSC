@@ -35,7 +35,7 @@ class MSFT_SCDLPContainsSensitiveInformation
     [Write, Description("Operator"),ValueMap{"And","Or"}, Values{"And","Or"}] String Operator;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("SCDLPComplianceRule")]
+[ClassVersion("1.0.0.1"), FriendlyName("SCDLPComplianceRule")]
 class MSFT_SCDLPComplianceRule : OMI_BaseResource
 {
     [Key, Description("Name of the Rule.")] String Name;
@@ -49,6 +49,7 @@ class MSFT_SCDLPComplianceRule : OMI_BaseResource
     [Write, Description("The ExceptIfContentContainsSensitiveInformation parameter specifies an exception for the rule that's based on a sensitive information type match in content. The rule isn't applied to content that contains the specified sensitive information type."), EmbeddedInstance("MSFT_SCDLPContainsSensitiveInformation")] String ExceptIfContentContainsSensitiveInformation;
     [Write, Description("The ContentPropertyContainsWords parameter specifies a condition for the DLP rule that's based on a property match in content. The rule is applied to content that contains the specified property.")] String ContentPropertyContainsWords[];
     [Write, Description("The Disabled parameter specifies whether the DLP rule is disabled.")] Boolean Disabled;
+    [Write, Description("The Quarantine parameter specifies an action that quarantines messages. Valid values are: $true: The message is delivered to the hosted quarantine. $false: The message is not quarantined.")] Boolean Quarantine;
     [Write, Description("The GenerateAlert parameter specifies an action for the DLP rule that notifies the specified users when the conditions of the rule are met.")] String GenerateAlert[];
     [Write, Description("The GenerateIncidentReport parameter specifies an action for the DLP rule that sends an incident report to the specified users when the conditions of the rule are met.")] String GenerateIncidentReport[];
     [Write, Description("The IncidentReportContent parameter specifies the content to include in the report when you use the GenerateIncidentReport parameter."), ValueMap{"All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title","RetentionLabel","SensitivityLabel"}, Values{"All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title","RetentionLabel","SensitivityLabel"}] String IncidentReportContent[];

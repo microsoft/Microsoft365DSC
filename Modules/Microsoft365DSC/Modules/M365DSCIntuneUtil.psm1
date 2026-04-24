@@ -953,7 +953,7 @@ function Get-IntuneSettingCatalogPolicySetting
             -All
     }
 
-    return [Microsoft365DSC.Intune.SettingCatalogPolicySettingBuilder]::Build(
+    return ,[Microsoft365DSC.Intune.SettingCatalogPolicySettingBuilder]::Build(
         [System.Collections.Generic.List[object]]@($SettingTemplates),
         $DSCParams,
         $ContainsDeviceAndUserSettings.IsPresent)

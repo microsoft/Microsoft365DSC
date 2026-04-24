@@ -94,7 +94,7 @@ function Get-TargetResource
                 Ensure   = 'Absent'
             }
 
-            $CASMailboxPlan = Get-CASMailboxPlan -Identity $Identity -ErrorAction SilentlyContinue
+            $CASMailboxPlan = Invoke-M365DSCCommand -ScriptBlock { Get-CASMailboxPlan -Identity $Identity } -SuppressNotFoundError
             if ($null -eq $MailboxPlan)
             {
                 Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
@@ -102,12 +102,12 @@ function Get-TargetResource
                 # Try and retrieve by Display Name
                 if (-not [System.String]::IsNullOrEmpty($DisplayName))
                 {
-                    $CASMailboxPlan = Get-CASMailboxPlan -Filter "DisplayName -eq '$DisplayName'"
+                    $CASMailboxPlan = Invoke-M365DSCCommand -ScriptBlock { Get-CASMailboxPlan -Filter "DisplayName -eq '$DisplayName'" }
                 }
 
                 if ($null -eq $MailboxPlan)
                 {
-                    $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
+                    $CASMailboxPlan = Invoke-M365DSCCommand -ScriptBlock { Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'" }
                     if ($null -eq $CASMailboxPlan)
                     {
                         Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
@@ -125,7 +125,7 @@ function Get-TargetResource
 
         $result = @{
             Ensure                = 'Present'
-            Identity              = $Identity
+            Identity              = $CASMailboxPlan.Identity
             DisplayName           = $CASMailboxPlan.DisplayName
             ActiveSyncEnabled     = $CASMailboxPlan.ActiveSyncEnabled
             ImapEnabled           = $CASMailboxPlan.ImapEnabled
@@ -236,24 +236,19 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    $currentInstance = Get-TargetResource @PSBoundParameters
 
     $updateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $updateParameters.Remove('DisplayName') | Out-Null
 
-    $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
-
-    if ($null -ne $CASMailboxPlan)
-    {
-        $updateParameters.Identity = $CASMailboxPlan.Identity
-        Write-Verbose -Message "Setting CASMailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $updateParameters)"
-        Set-CASMailboxPlan @updateParameters
-    }
-    else
+    if ($null -eq $currentInstance -or $currentInstance.Ensure -eq 'Absent')
     {
         throw "The specified CAS Mailbox Plan {$($Identity)} doesn't exist"
     }
+
+    $updateParameters.Identity = $currentInstance.Identity
+    Write-Verbose -Message "Setting CASMailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $updateParameters)"
+    Invoke-M365DSCCommand -ScriptBlock { Set-CASMailboxPlan @updateParameters }
 }
 
 function Test-TargetResource

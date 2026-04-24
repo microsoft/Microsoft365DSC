@@ -78,7 +78,7 @@ function Get-TargetResource
             $nullReturn.Ensure = 'Absent'
         }
 
-        $PolicyObject = Get-SupervisoryReviewPolicyV2 $Name -ErrorAction SilentlyContinue
+        $PolicyObject = Invoke-M365DSCCommand -ScriptBlock { Get-SupervisoryReviewPolicyV2 -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
         if ($null -eq $PolicyObject)
         {

@@ -13,6 +13,8 @@ namespace Microsoft365DSC.Compare
     /// </summary>
     public static class ComplexObjectComparer
     {
+        private static HashSet<string> excludedSet = new(StringComparer.OrdinalIgnoreCase);
+
         /// <summary>
         /// Compares two complex M365DSC objects to detect configuration drift.
         /// </summary>
@@ -23,9 +25,14 @@ namespace Microsoft365DSC.Compare
         public static Tuple<List<Dictionary<string, object>>, bool> Compare(
             object source,
             object target,
-            string propertyName)
+            string propertyName,
+            HashSet<string>? excludedSet)
         {
             var drifts = new List<Dictionary<string, object>>();
+            if (excludedSet is not null)
+            {
+                ComplexObjectComparer.excludedSet = excludedSet;
+            }
             bool result = CompareWithDrifts(source, target, propertyName, drifts);
             return new Tuple<List<Dictionary<string, object>>, bool>(drifts, result);
         }
@@ -59,6 +66,11 @@ namespace Microsoft365DSC.Compare
                 var left = frame.Left;
                 var right = frame.Right;
                 var propName = frame.PropName;
+
+                if (excludedSet.Contains(propName))
+                {
+                    continue;
+                }
 
                 // Both null => identical
                 if (left is null && right is null)
@@ -103,8 +115,8 @@ namespace Microsoft365DSC.Compare
                         };
                         drifts.Add(driftEntry);
                         result = false;
-                        continue;
                     }
+                    continue;
                 }
 
                 // Handle single complex objects or simple values
@@ -242,6 +254,11 @@ namespace Microsoft365DSC.Compare
             bool returnResult = true;
             foreach (var key in leftKeys)
             {
+                if (excludedSet.Contains(key))
+                {
+                    continue;
+                }
+
                 // Check if key exists in target
                 if (!HasKey(right, key))
                 {
@@ -257,8 +274,8 @@ namespace Microsoft365DSC.Compare
                     drifts.Add(new Dictionary<string, object>
                     {
                         { "PropertyName", $"{propName}.{key}" },
-                        { "CurrentValue", targetValue },
-                        { "DesiredValue", sourceValue }
+                        { "CurrentValue", targetValue is null ? "Current value is null" : "Current value is NOT null" },
+                        { "DesiredValue", sourceValue is null ? "Desired value is null" : "Desired value is NOT null" }
                     });
                     result = false;
                     returnResult = false;

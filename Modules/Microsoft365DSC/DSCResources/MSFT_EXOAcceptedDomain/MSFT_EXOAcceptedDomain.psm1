@@ -87,7 +87,7 @@ function Get-TargetResource
             $nullReturn.Ensure = 'Absent'
 
             Write-Verbose -Message 'Getting all Accepted Domain'
-            $AcceptedDomain = Get-AcceptedDomain -Identity $Identity -ErrorAction SilentlyContinue
+            $AcceptedDomain = Invoke-M365DSCCommand -ScriptBlock { Get-AcceptedDomain -Identity $Identity -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $AcceptedDomain)
             {

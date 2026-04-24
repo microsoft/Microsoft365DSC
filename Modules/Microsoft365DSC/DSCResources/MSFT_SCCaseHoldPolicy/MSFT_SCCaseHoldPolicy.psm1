@@ -91,7 +91,7 @@ function Get-TargetResource
 
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
-            $PolicyObject = Get-CaseHoldPolicy -Case $Case -Identity $Name -ErrorAction SilentlyContinue
+            $PolicyObject = Invoke-M365DSCCommand -ScriptBlock { Get-CaseHoldPolicy -Case $Case -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $PolicyObject)
             {
@@ -105,6 +105,7 @@ function Get-TargetResource
         }
 
         Write-Verbose "Found existing SCCaseHoldPolicy $($Name)"
+
         $result = @{
             Ensure                = 'Present'
             Name                  = $PolicyObject.Name

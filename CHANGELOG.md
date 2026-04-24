@@ -1,5 +1,45 @@
 # Change log for Microsoft365DSC
 
+# 1.26.422.1
+
+* AADApplication
+  * Fixed an issue where the value of `Value` in `MSFT_MicrosoftGraphAppRole` was missing.
+    FIXES [#7064](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7064)
+* AADB2BManagementPolicy
+  * Initial release.
+* AADConditionalAccessPolicy
+  * Fixes an issue when applying a configuration where some settings are not specified to an existing policy
+* AADPasswordRuleSettings
+  * Fixed an issue where invalid condition checks were in-place.
+* AADPermissionsGrantPolicy
+  * Fixed an issue when comparing `AADPermissionGrantConditionSet` instances.
+    FIXES [#7062](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7062)
+* AADServicePrincipal
+  * Fixed an issue where `odataType` and `userType` were missing from the
+    `MSFT_AADServicePrincipalCustomClaimCondition` instances.
+* EXOCASMailboxPlan
+  * Fixed an issue where `Identity` was missing in the export.
+* EXODataEncryptionPolicy
+  * Fixed an issue when comparing `AzureKeyIDs` elements.
+    FIXES [#7069](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7069)
+* TeamsTenantDialPlan
+  * Fixed issue so that `NormalizationRules` are always exported as an array even
+    when they only contain one entry
+* TeamsOnlineVoicemailPolicy
+  * Fixed `MaximumRecordingLength` handling by aligning type to `Int32` and
+    converting values to `TimeSpan` seconds for Teams cmdlets.
+    FIXES [#7054](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7054)
+* M365DSCModuleMgmt
+  * Fixed an issue when updating the module from a custom import.
+* M365DSCIntuneUtil
+  * Fixed an issue where a settings array was returned as a single element.
+    FIXES [#7055](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7055)
+* M365DSCUtil
+  * Added retry logic for too many requests when invoking batch requests.
+* Dependencies
+  * Updated `DSCParser` to version 3.0.0.4.
+    FIXES [#7056](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7056)
+
 # 1.26.408.1
 
 * AADAccessReviewDefinition
@@ -35,6 +75,10 @@
 * AADRoleSetting
   * [BREAKING CHANGE] Fix typo in use of Elegibility -> Eligibility
     FIXES [#7021](https://github.com/microsoft/Microsoft365DSC/issues/7021)
+* AADServicePrincipal
+  * Added the property `ClaimsPolicy` to the resource.
+    FIXES [#6448](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/6448)
+  * Fixed an issue when updating the policy.
 * AADTenantAppManagementPolicy
   * [BREAKING CHANGE] Added `IsSingleInstance` and removed `Ensure` parameter.
 * AADTokenLifetimePolicy
@@ -134,6 +178,9 @@
   * Changed type of `EnableDesktopFlowDataPolicyManagement` property from String to
     Boolean to avoid errors or warnings.
     FIXES [#6740](https://github.com/microsoft/Microsoft365DSC/issues/6740)
+* SCDLPComplianceRule
+  * Added property `Quarantine` to the resource.
+    FIXES [#7042](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7042)
 * SCPolicyConfig
   * Fixed an issue where `JustificationText` was exported as an array and could
     contain empty strings.
@@ -144,12 +191,17 @@
 * SCSensitivityLabel
   * Fixed an issue where the CIM definition for `MSFT_LabelSetting` did not match.
     FIXES [#7002](https://github.com/microsoft/Microsoft365DSC/issues/7002)
+  * Fixed an issue where creating sensitivity label groups would fail.
+    FIXES [#6994](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/6994)
 * SPOBrowserIdleSignout
   * Updated the timespan comparison to allow a discrepancy of up to 30 seconds
     for the `SignOutAfter` and `WarnAfter` properties.
     FIXES [#7031](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7031)
 * SPOHomeSite
   * Fixed an issue where an empty / non-existant Home Site was exported.
+* SPOSharingSettings
+  * Fixed an issue in determining the correct MySite.
+    FIXES [#6991](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/6991)
 * SPOTheme
   * Fixed an issue where `Palette` entries were not correctly compared.
 * TeamsClientConfiguration

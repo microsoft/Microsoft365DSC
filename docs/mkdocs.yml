@@ -16,6 +16,7 @@ nav:
           - 'October 2022': 'blog/october-2022-major-release.md'
       - Concepts:
           - 'DSC Error Flow': 'blog/2024/dsc-error-flow/dsc-error-flow.md'
+          - 'Intune Settings Catalog': 'blog/2026/intune-settings-catalog/intune-settings-catalog.md'
           - 'Moving from Microsoft365DSC to Tenant Configuration Management APIs': 'blog/2026/utcm-transition/utcm-transition.md'
   - User Guide:
       - 'Get Started':
@@ -145,7 +146,11 @@ markdown_extensions:
       permalink: true
       toc_depth: 3
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.snippets
   - def_list
   - attr_list

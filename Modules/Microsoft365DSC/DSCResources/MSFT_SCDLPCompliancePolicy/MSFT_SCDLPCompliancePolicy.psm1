@@ -150,7 +150,7 @@ function Get-TargetResource
             $nullReturn.Ensure = 'Absent'
 
             Write-Verbose -Message "Retrieving DLPCompliancePolicy {$Name}"
-            $PolicyObject = Get-DlpCompliancePolicy -Identity $Name -ErrorAction SilentlyContinue
+            $PolicyObject = Invoke-M365DSCCommand -ScriptBlock { Get-DlpCompliancePolicy -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $PolicyObject)
             {

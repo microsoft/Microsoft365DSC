@@ -73,8 +73,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $EventTypeObject = Get-ComplianceRetentionEventType -Identity $Name `
-                -ErrorAction SilentlyContinue
+            $EventTypeObject = Invoke-M365DSCCommand -ScriptBlock { Get-ComplianceRetentionEventType -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $EventTypeObject)
             {
@@ -88,6 +87,7 @@ function Get-TargetResource
         }
 
         Write-Verbose "Found existing RetentionComplianceEventType $($Name)"
+
         $result = @{
             Name                  = $EventTypeObject.Name
             Comment               = $EventTypeObject.Comment

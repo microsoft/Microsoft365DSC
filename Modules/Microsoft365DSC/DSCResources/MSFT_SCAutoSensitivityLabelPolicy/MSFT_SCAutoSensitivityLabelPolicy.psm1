@@ -159,16 +159,10 @@ function Get-TargetResource
                 Ensure = 'Absent'
                 Name   = $Name
             }
-            try
-            {
-                # There is a bug with the Get-AutoSensitivityLabelPolicy where if you get by Identity, the priority is an invalid number.
-                # Threfore we get it by name.
-                $policy = Get-AutoSensitivityLabelPolicy | Where-Object -FilterScript { $_.Name -eq $Name }
-            }
-            catch
-            {
-                throw $_
-            }
+
+            # There is a bug with the Get-AutoSensitivityLabelPolicy where if you get by Identity, the priority is an invalid number.
+            # Threfore we get it by name.
+            $policy = Invoke-M365DSCCommand -ScriptBlock { Get-AutoSensitivityLabelPolicy -ErrorAction Stop | Where-Object { $_.Name -eq $Name } } -SuppressNotFoundError
 
             if ($null -eq $policy)
             {

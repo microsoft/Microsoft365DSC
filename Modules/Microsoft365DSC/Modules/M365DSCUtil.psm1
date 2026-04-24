@@ -473,6 +473,10 @@ function Test-M365DSCTargetResource
     if (-not [Microsoft365DSC.Cache.CacheManager]::IsSchemaLoaded)
     {
         $schemaPath = Join-Path -Path $currentPath -ChildPath '..\SchemaDefinition.json'
+        if (-not (Test-Path -Path $schemaPath))
+        {
+            throw "SchemaDefinition.json not found at expected path: $schemaPath. Ensure that the schema was properly included during module build and that the module is not being run from a non-standard location."
+        }
         $schemaContent = [System.IO.File]::ReadAllText($schemaPath) | ConvertFrom-Json
         [Microsoft365DSC.Cache.CacheManager]::LoadSchema($schemaContent)
     }
@@ -1806,23 +1810,44 @@ function Invoke-M365DSCGraphBatchRequest
 
         [Parameter()]
         [switch]
-        $AsList
+        $AsList,
+
+        [Parameter()]
+        [System.Int32]
+        $ThrottlingDelayInSeconds = 5,
+
+        [Parameter()]
+        [System.Int32]
+        $BatchRequestSize = 20
     )
 
     $batchResponses = [System.Collections.Generic.List[System.Collections.Hashtable]]::new()
-    for ($i = 0; $i -lt $Requests.Count; $i += 20)
+    $halfBatchSize = [Math]::Ceiling($BatchRequestSize / 2)
+    for ($i = 0; $i -lt $Requests.Count; $i += $BatchRequestSize)
     {
-        $batchRequestSized = $Requests[$i..([Math]::Min($i + 19, $Requests.Count - 1))]
+        $batchRequestSized = $Requests[$i..([Math]::Min($i + $BatchRequestSize - 1, $Requests.Count - 1))]
 
         $request = @{
             requests = $batchRequestSized
         }
 
         Write-Verbose -Message "Sending BATCH Request with:`r`n$($request | ConvertTo-Json -Depth 10))"
-        $batchResponses.AddRange([System.Collections.Hashtable[]](Invoke-MgGraphRequest -Method POST `
+        $apiResponse = Invoke-MgGraphRequest -Method POST `
             -Uri 'beta/$batch' `
             -Body ($request | ConvertTo-Json -Depth 10) `
-            -ErrorAction SilentlyContinue).responses)
+            -ErrorAction SilentlyContinue
+
+        [array]$throttlingResponse = $apiResponse.responses | Where-Object { $_.status -eq 429 }
+        if ($throttlingResponse.Count -gt 0)
+        {
+            Write-Warning -Message "Throttling encountered, pausing and repeating request..."
+            Start-Sleep -Seconds $ThrottlingDelayInSeconds
+            $BatchRequestSize = [Math]::Max($halfBatchSize, [Math]::Floor($BatchRequestSize / 2))
+            $i = if ($i -ge $BatchRequestSize) { $i - $BatchRequestSize } else { 0 }
+            continue
+        }
+
+        $batchResponses.AddRange([System.Collections.Hashtable[]]$apiResponse.responses)
     }
 
     if ($AsList)

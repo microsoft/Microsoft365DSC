@@ -15,8 +15,8 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('disabled', 'enabled', 'enabledForReportingButNotEnforced')]
+        [System.String]
         $State,
 
         #ConditionalAccessApplicationCondition
@@ -823,8 +823,8 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('disabled', 'enabled', 'enabledForReportingButNotEnforced')]
+        [System.String]
         $State,
 
         #ConditionalAccessApplicationCondition
@@ -1108,15 +1108,17 @@ function Set-TargetResource
         Write-Verbose -Message "Set-Targetresource: Policy $Displayname Ensure Present"
         $NewParameters = @{}
         $NewParameters.Add('displayName', $DisplayName)
-        $NewParameters.Add('state', $State)
-        #create Conditions object
-        $conditions = @{
-            applications = @{}
+        if (-not [system.string]::IsNullOrEmpty($State))
+        {
+            $NewParameters.Add('state', $State)
         }
+        #create Conditions object
+        $conditions = @{}
         #create and provision Application Condition object
         Write-Verbose -Message 'Set-Targetresource: create Application Condition object'
         if ($currentParameters.ContainsKey('IncludeApplications'))
         {
+            $conditions.Add('applications', @{})
             $IncludeApplicationsValue = @()
             foreach ($app in $IncludeApplications)
             {
@@ -1157,6 +1159,10 @@ function Set-TargetResource
         }
         if ($currentParameters.ContainsKey('ExcludeApplications'))
         {
+            if (-not $conditions.ContainsKey('applications'))
+            {
+                $conditions.Add('applications', @{})
+            }
             $ExcludeApplicationsValue = @()
             foreach ($app in $ExcludeApplications)
             {
@@ -1196,6 +1202,10 @@ function Set-TargetResource
         }
         if ($ApplicationsFilter -and $ApplicationsFilterMode)
         {
+            if (-not $conditions.ContainsKey('applications'))
+            {
+                $conditions.Add('applications', @{})
+            }
             $appFilterValue = @{
                 rule = $ApplicationsFilter
                 mode = $ApplicationsFilterMode
@@ -1204,10 +1214,18 @@ function Set-TargetResource
         }
         if ($IncludeUserActions)
         {
+            if (-not $conditions.ContainsKey('applications'))
+            {
+                $conditions.Add('applications', @{})
+            }
             $conditions.Applications.Add('includeUserActions', $IncludeUserActions)
         }
         if ($AuthenticationContexts)
         {
+            if (-not $conditions.ContainsKey('applications'))
+            {
+                $conditions.Add('applications', @{})
+            }
             # Retrieve the class reference based on display name.
             $AuthenticationContextsValues = @()
             $classReferences = Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference -ErrorAction SilentlyContinue
@@ -1778,7 +1796,6 @@ function Set-TargetResource
                 {
                     $authenticationStrengthInstance = @{
                         id            = $strengthPolicy.Id
-                        '@odata.type' = '#microsoft.graph.authenticationStrengthPolicy'
                     }
                     $GrantControls.Add('authenticationStrength', $authenticationStrengthInstance)
                 }
@@ -1974,8 +1991,8 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('disabled', 'enabled', 'enabledForReportingButNotEnforced')]
+        [System.String]
         $State,
 
         #ConditionalAccessApplicationCondition

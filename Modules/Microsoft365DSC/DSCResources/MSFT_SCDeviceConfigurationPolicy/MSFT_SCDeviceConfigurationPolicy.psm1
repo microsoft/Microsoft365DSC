@@ -76,8 +76,7 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $PolicyObject = Get-DeviceConfigurationPolicy -Identity $Name `
-                -ErrorAction SilentlyContinue
+            $PolicyObject = Invoke-M365DSCCommand -ScriptBlock { Get-DeviceConfigurationPolicy -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
 
             if ($null -eq $PolicyObject)
             {
