@@ -386,7 +386,7 @@ function Get-TargetResource
             $myappRoles.Add('Id', $currentappRoles.id)
             $myappRoles.Add('IsEnabled', $currentappRoles.isEnabled)
             $myappRoles.Add('Origin', $currentappRoles.origin)
-            $myappRoles.Add('Value', $currentappRoles.value)
+            $myappRoles.Add('Value', $(if ($null -eq $currentappRoles.value) { "" } else { $currentappRoles.value }))
             if ($myappRoles.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexAppRoles += $myappRoles
@@ -1896,7 +1896,8 @@ function Export-TargetResource
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                             -ComplexObject $Results.AppRoles `
-                            -CIMInstanceName 'MicrosoftGraphappRole'
+                            -CIMInstanceName 'MicrosoftGraphAppRole' `
+                            -IsArray
                         if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                         {
                             $Results.AppRoles = $complexTypeStringResult

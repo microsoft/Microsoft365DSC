@@ -266,22 +266,22 @@ function Set-TargetResource
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = $LockoutDurationInSeconds
             }
-            elseif ($property.Value -eq 'EnableBannedPasswordCheck')
+            elseif ($property.Name -eq 'EnableBannedPasswordCheck')
             {
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = [System.Boolean]$EnableBannedPasswordCheck
             }
-            elseif ($property.Value -eq 'BannedPasswordList')
+            elseif ($property.Name -eq 'BannedPasswordList')
             {
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = $BannedPasswordList -join "`t"
             }
-            elseif ($property.Value -eq 'EnableBannedPasswordCheckOnPremises')
+            elseif ($property.Name -eq 'EnableBannedPasswordCheckOnPremises')
             {
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = [System.Boolean]$EnableBannedPasswordCheckOnPremises
             }
-            elseif ($property.Value -eq 'BannedPasswordCheckOnPremisesMode')
+            elseif ($property.Name -eq 'BannedPasswordCheckOnPremisesMode')
             {
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = $BannedPasswordCheckOnPremisesMode

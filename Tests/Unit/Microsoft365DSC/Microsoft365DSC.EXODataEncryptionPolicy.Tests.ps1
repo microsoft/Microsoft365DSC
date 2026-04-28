@@ -40,7 +40,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-DataEncryptionPolicy -MockWith {
                 return @{
                     Identity                  = 'Test'
-                    AzureKeyIDs               = '123456789'
+                    AzureKeyIDs               = [System.Collections.ArrayList]::new(@('123456789'))
                     Description               = 'Test Description'
                     Enabled                   = $true
                     Name                      = 'Test Policy'

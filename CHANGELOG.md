@@ -1,9 +1,27 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.26.422.1
 
+* AADApplication
+  * Fixed an issue where the value of `Value` in `MSFT_MicrosoftGraphAppRole` was missing.
+    FIXES [#7064](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7064)
 * AADB2BManagementPolicy
   * Initial release.
+* AADConditionalAccessPolicy
+  * Fixes an issue when applying a configuration where some settings are not specified to an existing policy
+* AADPasswordRuleSettings
+  * Fixed an issue where invalid condition checks were in-place.
+* AADPermissionsGrantPolicy
+  * Fixed an issue when comparing `AADPermissionGrantConditionSet` instances.
+    FIXES [#7062](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7062)
+* AADServicePrincipal
+  * Fixed an issue where `odataType` and `userType` were missing from the
+    `MSFT_AADServicePrincipalCustomClaimCondition` instances.
+* EXOCASMailboxPlan
+  * Fixed an issue where `Identity` was missing in the export.
+* EXODataEncryptionPolicy
+  * Fixed an issue when comparing `AzureKeyIDs` elements.
+    FIXES [#7069](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7069)
 * TeamsTenantDialPlan
   * Fixed issue so that `NormalizationRules` are always exported as an array even
     when they only contain one entry
@@ -18,6 +36,9 @@
     FIXES [#7055](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7055)
 * M365DSCUtil
   * Added retry logic for too many requests when invoking batch requests.
+* Dependencies
+  * Updated `DSCParser` to version 3.0.0.4.
+    FIXES [#7056](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7056)
 
 # 1.26.408.1
 

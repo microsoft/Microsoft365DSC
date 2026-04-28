@@ -42,11 +42,12 @@ class MSFT_AADServicePrincipalCustomClaimTransformation
     [Write, Description("The input attribute that provides the source for the transformation. This parameter is required if it's the first or only transformation in the list of transformations to be applied. Subsequent transformations use the output of the prior transformation as input."), EmbeddedInstance("MSFT_AADServicePrincipalTransformationAttribute")] String input;
 };
 
-[ClassVersion("1.0.0.0")]
+[ClassVersion("1.0.0.1")]
 class MSFT_AADServicePrincipalCustomClaimCondition
 {
+    [Write, Description("The type of the entity."), ValueMap{"#microsoft.graph.customClaimCondition"}, Values{"#microsoft.graph.customClaimCondition"}] String odataType;
     [Write, Description("A list of groups (GUIDs) to which the user/application must be a member for this condition to be applied.")] String memberOf[];
-    [Write, Description("The type of user this condition applies to. The possible values are: any, members, allGuests, aadGuests, externalGuests."), ValueMap{"any","members","allGuests","aadGuests","externalGuests"}, Values{"any","members","allGuests","aadGuests","externalGuests"}] String claimConditionUserType;
+    [Write, Description("The type of user this condition applies to. The possible values are: any, members, allGuests, aadGuests, externalGuests."), ValueMap{"any","members","allGuests","aadGuests","externalGuests"}, Values{"any","members","allGuests","aadGuests","externalGuests"}] String userType;
 };
 
 [ClassVersion("1.0.0.0")]

@@ -125,7 +125,7 @@ function Get-TargetResource
 
         $result = @{
             Ensure                = 'Present'
-            Identity              = $currentInstance.Identity
+            Identity              = $CASMailboxPlan.Identity
             DisplayName           = $CASMailboxPlan.DisplayName
             ActiveSyncEnabled     = $CASMailboxPlan.ActiveSyncEnabled
             ImapEnabled           = $CASMailboxPlan.ImapEnabled

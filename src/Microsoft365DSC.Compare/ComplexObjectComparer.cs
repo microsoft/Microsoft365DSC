@@ -13,6 +13,8 @@ namespace Microsoft365DSC.Compare
     /// </summary>
     public static class ComplexObjectComparer
     {
+        private static HashSet<string> excludedSet = new(StringComparer.OrdinalIgnoreCase);
+
         /// <summary>
         /// Compares two complex M365DSC objects to detect configuration drift.
         /// </summary>
@@ -23,9 +25,14 @@ namespace Microsoft365DSC.Compare
         public static Tuple<List<Dictionary<string, object>>, bool> Compare(
             object source,
             object target,
-            string propertyName)
+            string propertyName,
+            HashSet<string>? excludedSet)
         {
             var drifts = new List<Dictionary<string, object>>();
+            if (excludedSet is not null)
+            {
+                ComplexObjectComparer.excludedSet = excludedSet;
+            }
             bool result = CompareWithDrifts(source, target, propertyName, drifts);
             return new Tuple<List<Dictionary<string, object>>, bool>(drifts, result);
         }
@@ -59,6 +66,11 @@ namespace Microsoft365DSC.Compare
                 var left = frame.Left;
                 var right = frame.Right;
                 var propName = frame.PropName;
+
+                if (excludedSet.Contains(propName))
+                {
+                    continue;
+                }
 
                 // Both null => identical
                 if (left is null && right is null)
@@ -242,6 +254,11 @@ namespace Microsoft365DSC.Compare
             bool returnResult = true;
             foreach (var key in leftKeys)
             {
+                if (excludedSet.Contains(key))
+                {
+                    continue;
+                }
+
                 // Check if key exists in target
                 if (!HasKey(right, key))
                 {

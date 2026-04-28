@@ -41,10 +41,13 @@ Use:
 - `Write-M365DSCHost` for user output
 - `Write-Verbose` for Verbose messages
 - Never use `Write-Host` except for interactive scenarios
+- **Do not** add extra `Write-Verbose` in catch blocks — only use `New-M365DSCLogEntry` + `throw`
+- **Do not** output the results of `Get-TargetResource` to log or console
+- **Do not** output status messages for `Test-TargetResource` results — it must only return `$true` or `$false`
 
 ## Exception Handling
 
-Use the built-in error helpers with a try/catch block. Example pattern:
+Use the built-in error helpers with a try/catch block. **Do not** add extra `Write-Verbose` statements in catch blocks. Follow the standard `New-M365DSCLogEntry` + `throw` pattern used across the codebase. Example pattern:
 
 ```powershell
 New-M365DSCLogEntry -Message 'Error retrieving data:' `
@@ -53,8 +56,24 @@ New-M365DSCLogEntry -Message 'Error retrieving data:' `
     -TenantId $TenantId `
     -Credential $Credential
 
-return $nullResult
+throw
 ```
+
+## Debugging
+
+- **Do not** add helper methods or functions for debugging purposes. Use the existing logging utilities (`Write-Verbose`, `New-M365DSCLogEntry`, etc.).
+
+## Set-TargetResource Rules
+
+- **Never call `Test-TargetResource` inside `Set-TargetResource`.** The DSC engine handles the Test -> Set flow automatically. The Set function must only implement the configuration changes.
+
+## Endpoint URLs
+
+- **Never hardcode** URLs to Microsoft endpoints (e.g., `https://graph.microsoft.com`, `https://management.azure.com`). Use `Get-MSCloudLoginConnectionProfile` or equivalent helpers to obtain base URLs at runtime. This ensures cloud-agnostic behaviour for GCC, GCC-High, DoD, China, and other sovereign clouds.
+
+## Complex Type Handling
+
+For detailed patterns on working with complex types (CIM instances, embedded objects, nested arrays), including conversion helpers, deep comparison, export serialization, and unit testing, see `m365dsc-complex-types.instructions.md`.
 
 ## Drift Detection Patterns
 
@@ -94,8 +113,9 @@ When generating exported configuration:
 
 - Output objects in alphabetical parameter order
 - Avoid emitting default values
+- **Always include `$Filter` parameter support** for client-side filtering. See `ResourceGenerator/Templates/Module.Template.psm1` for the standard pattern.
 
-It is always the same set of steps. Refer to `ResourceGenerator/Module.Template.psm1` with the function `Export-TargetResource`.
+It is always the same set of steps. Refer to `ResourceGenerator/Templates/Module.Template.psm1` with the function `Export-TargetResource`.
 
 ## Documentation Rules
 
