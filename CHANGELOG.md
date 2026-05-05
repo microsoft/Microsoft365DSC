@@ -34,6 +34,9 @@
   * Added the new function `Get-M365DSCResourceDifferences`, which returns newly
     added or removed resources between different module versions.
     FIXES [#4416](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/4416)
+* DEPENDENCIES
+  * Rolled back Microsoft.Graph dependencies to version 2.35.1 to avoid
+    conflict with the EXO dependency.
 
 # 1.26.422.1
 
