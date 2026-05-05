@@ -38,7 +38,8 @@
     {
       "module": "Microsoft.Graph.Applications",
       "cmdlets": [
-        "Get-MgApplication"
+        "Get-MgApplication",
+        "Get-MgServicePrincipal"
       ]
     },
     {

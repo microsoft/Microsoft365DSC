@@ -201,16 +201,18 @@ function Get-TargetResource
                         $complexKeyValuePairValues = @()
                         foreach ($value in $presentationValue.AdditionalProperties.values)
                         {
-                            $complexKeyValuePairValues += @{
+
+                            $complexKeyValuePairValue = @{
                                 Name  = $(if ($null -ne $value.name)
-                                    {
-                                        $value.name.Replace('"', '')
-                                    })
-                                Value = $(if ($null -ne $value.value)
-                                    {
-                                        $value.value.Replace('"', '')
-                                    })
+                                {
+                                    $value.name.Replace('"', '')
+                                })
                             }
+                            if ($null -ne $value.value)
+                            {
+                                $complexKeyValuePairValue.Add('Value', $value.value.Replace('"', ''))
+                            }
+                            $complexKeyValuePairValues += $complexKeyValuePairValue
                         }
                         $complexPresentationValue.Add('KeyValuePairValues', $complexKeyValuePairValues)
                     }

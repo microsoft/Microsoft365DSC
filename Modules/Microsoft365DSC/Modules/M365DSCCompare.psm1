@@ -116,6 +116,10 @@ function Compare-M365DSCResourceState
             CurrentValue = $drift['CurrentValue']
             DesiredValue = $drift['DesiredValue']
         }
+        if ($drift.ContainsKey('DeltaValue'))
+        {
+            $Global:AllDrifts.DriftInfo[-1]['DeltaValue'] = $drift['DeltaValue']
+        }
     }
 
     return $testTargetResource

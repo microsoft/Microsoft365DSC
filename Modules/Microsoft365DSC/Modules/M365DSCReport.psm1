@@ -1519,16 +1519,21 @@ function New-M365DSCDeltaReport
             {
                 foreach ($driftInfo in $Global:AllDrifts.DriftInfo)
                 {
+                    $propertiesValue = @{
+                        ParameterName      = $driftInfo.PropertyName
+                        ValueInSource      = $driftInfo.CurrentValue
+                        ValueInDestination = $driftInfo.DesiredValue
+                    }
+                    if ($driftInfo.ContainsKey('DeltaValue'))
+                    {
+                        $propertiesValue.Add('DeltaValue', $driftInfo.DeltaValue)
+                    }
                     $Delta += @{
                         ResourceName         = $resource.ResourceName
                         ResourceInstanceName = $resource.ResourceInstanceName
                         Key                  = $keyName
                         KeyValue             = $sourceKeyValue
-                        Properties           = @(@{
-                            ParameterName      = $driftInfo.PropertyName
-                            ValueInSource      = $driftInfo.CurrentValue
-                            ValueInDestination = $driftInfo.DesiredValue
-                        })
+                        Properties           = @($propertiesValue)
                     }
 
                     if ($destinationResource[0].ContainsKey("_metadata_$($driftInfo.PropertyName)"))
@@ -1789,8 +1794,13 @@ function New-M365DSCDeltaReport
                             $emoticon = '&#x1F7E6;'
                         }
 
+                        $additionalAttribute = ''
+                        if ($drift.ContainsKey('DeltaValue'))
+                        {
+                            $additionalAttribute = 'rowspan="2"'
+                        }
                         [void]$sb.AppendLine('<tr>')
-                        [void]$sb.AppendLine("<td class='property-name'>")
+                        [void]$sb.AppendLine("<td class='property-name' $additionalAttribute>")
                         [void]$sb.AppendLine("$($drift.ParameterName)</td>")
                         [void]$sb.AppendLine("<td class='value-cell $cellStyle'>")
                         [void]$sb.AppendLine("$($drift.ValueInSource)</td>")
@@ -1801,6 +1811,27 @@ function New-M365DSCDeltaReport
                         if ($null -ne $drift._Metadata_Level)
                         {
                             [void]$sb.AppendLine("<tr><td colspan='3'><span class='emoticon'>$emoticon</span> $($drift._Metadata_Info)</td></tr>")
+                        }
+
+                        if ($drift.ContainsKey('DeltaValue') -and $null -ne $drift.DeltaValue)
+                        {
+                            $deltaValues = $drift.DeltaValue.Split("; ")
+                            $destinationValues = $deltaValues | Where-Object { $_ -like "*<=*" } | Foreach-Object { $_.Replace('<= ', '') }
+                            $sourceValues = $deltaValues | Where-Object { $_ -like "*=>*" } | Foreach-Object { $_.Replace('=> ', '') }
+                            [void]$sb.AppendLine('<tr>')
+                            [void]$sb.AppendLine("<td class='value-cell'>")
+                            if ($sourceValues.Count -gt 0)
+                            {
+                                [void]$sb.AppendLine("<strong>Delta:</strong><ul><li>$($sourceValues -join '</li><li>')</li></ul>")
+                            }
+                            [void]$sb.AppendLine("</td>")
+                            [void]$sb.AppendLine("<td class='value-cell'>")
+                            if ($destinationValues.Count -gt 0)
+                            {
+                                [void]$sb.AppendLine("<strong>Delta:</strong><ul><li>$($destinationValues -join '</li><li>')</li></ul>")
+                            }
+                            [void]$sb.AppendLine("</td>")
+                            [void]$sb.AppendLine('</tr>')
                         }
                     }
                 }

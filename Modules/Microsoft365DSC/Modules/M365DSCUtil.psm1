@@ -143,7 +143,7 @@ function Get-M365DSCArrayFromProperty
         $array += $item
     }
 
-    ,$array
+    Write-Output -InputObject $array -NoEnumerate
 }
 
 <#
@@ -1120,6 +1120,93 @@ function Get-M365DSCAllResources
     }
 
     return $result
+}
+
+<#
+.DESCRIPTION
+    This function compares two installed versions of Microsoft365DSC and returns resources that were added or removed in the newer version.
+
+.PARAMETER PreviousVersion
+    Specifies the previous (older) module version to compare against.
+
+.PARAMETER CurrentVersion
+    Specifies the current (newer) module version. If not specified, defaults to the latest installed version.
+
+.EXAMPLE
+    Get-M365DSCNewResources -PreviousVersion '1.24.501.1' -CurrentVersion '1.24.515.1'
+
+.EXAMPLE
+    Get-M365DSCNewResources -PreviousVersion '1.24.501.1'
+
+.OUTPUTS
+    A hashtable with two keys: 'Added' and 'Removed'. Each key contains an array of resource names that were added or removed in the current version compared to the previous version.
+
+.FUNCTIONALITY
+    Public
+#>
+function Get-M365DSCResourceDifferences
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $PreviousVersion,
+
+        [Parameter()]
+        [System.String]
+        $CurrentVersion
+    )
+
+    [Array]$installedModules = Get-Module 'Microsoft365DSC' -ListAvailable | Sort-Object -Property Version -Descending
+
+    if ($installedModules.Count -eq 0)
+    {
+        Write-Error -Message 'No installed versions of Microsoft365DSC were found.'
+        Write-Output -InputObject @() -NoEnumerate
+        return
+    }
+
+    # Resolve current version
+    if ([System.String]::IsNullOrEmpty($CurrentVersion))
+    {
+        $currentModule = $installedModules[0]
+    }
+    else
+    {
+        $currentModule = $installedModules | Where-Object -FilterScript { $_.Version -eq $CurrentVersion }
+    }
+
+    if ($null -eq $currentModule)
+    {
+        throw "Microsoft365DSC version '$CurrentVersion' is not installed."
+    }
+
+    # Resolve previous version
+    $previousModule = $installedModules | Where-Object -FilterScript { $_.Version -eq $PreviousVersion }
+    if ($null -eq $previousModule)
+    {
+        throw "Microsoft365DSC version '$PreviousVersion' is not installed."
+    }
+
+    # Get resources from each version by scanning their DSCResources folders
+    $currentResourcesPath = Join-Path -Path $currentModule.ModuleBase -ChildPath 'DSCResources'
+    $previousResourcesPath = Join-Path -Path $previousModule.ModuleBase -ChildPath 'DSCResources'
+
+    $currentResources = Get-ChildItem -Path $currentResourcesPath -Recurse -Filter '*.psm1' |
+        ForEach-Object { $_.Name -replace 'MSFT_', '' -replace '\.psm1', '' }
+
+    $previousResources = Get-ChildItem -Path $previousResourcesPath -Recurse -Filter '*.psm1' |
+        ForEach-Object { $_.Name -replace 'MSFT_', '' -replace '\.psm1', '' }
+
+    # Return resources present in current but not in previous
+    $newResources = $currentResources | Where-Object -FilterScript { $_ -notin $previousResources } | Sort-Object
+    $removedResources = $previousResources | Where-Object -FilterScript { $_ -notin $currentResources } | Sort-Object
+    return @{
+        Added = $newResources
+        Removed = $removedResources
+    }
 }
 
 <#
@@ -2190,6 +2277,7 @@ Export-ModuleMember -Function @(
     'Get-M365DSCExportContentForResource',
     'Get-M365DSCGroupDisplayNameById',
     'Get-M365DSCGroupIdByDisplayName',
+    'Get-M365DSCResourceDifferences',
     'Get-M365DSCResourceComparisonMetadata',
     'Get-M365DSCResourceComparisonParameters',
     'Get-M365DSCUserIdByPrincipalName',
