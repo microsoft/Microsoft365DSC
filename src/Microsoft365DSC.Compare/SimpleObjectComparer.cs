@@ -21,7 +21,7 @@ namespace Microsoft365DSC.Compare
             List<string>? excludedProperties = null)
         {
             // Contains the strings to write to the event log
-            Hashtable driftedParameters = new();
+            Hashtable driftedParameters = [];
             // Contains the drift
             Hashtable driftObject = new()
             {
@@ -140,8 +140,9 @@ namespace Microsoft365DSC.Compare
                             {
                                 string currentValuesString = string.Join(", ", Utilities.Utilities.UnwrapArrayToStrings(currentValuesArray));
                                 string desiredValuesString = string.Join(", ", Utilities.Utilities.UnwrapArrayToStrings(desiredValuesArray));
-                                AddDriftInfo(driftObject, key, currentValuesString, desiredValuesString);
-                                AddDriftedParameter(driftedParameters, key, currentValuesString, desiredValuesString);
+                                string deltaString = string.Join("; ", arrayDifferences.Select(d => $"{d.SideIndicator} {d.InputObject}"));
+                                AddDriftInfoWithDelta(driftObject, key, currentValuesString, desiredValuesString, deltaString);
+                                AddDriftedParameterWithDelta(driftedParameters, key, currentValuesString, desiredValuesString, deltaString);
                                 returnValue = false;
                             }
                             continue;
@@ -255,10 +256,29 @@ namespace Microsoft365DSC.Compare
             });
         }
 
+        private static void AddDriftInfoWithDelta(Hashtable driftObject, string propertyName, object currentValue, object desiredValue, string delta)
+        {
+            ((List<Hashtable>)driftObject["DriftInfo"]).Add(new Hashtable()
+            {
+                { "PropertyName", propertyName },
+                { "CurrentValue", currentValue },
+                { "DesiredValue", desiredValue },
+                { "DeltaValue", delta }
+            });
+        }
+
         private static void AddDriftedParameter(Hashtable driftedParameters, string propertyName, string currentValue, string desiredValue)
         {
             string eventValue = $"<CurrentValue>{currentValue}</CurrentValue>";
             eventValue += $"<DesiredValue>{desiredValue}</DesiredValue>";
+            driftedParameters.Add(propertyName, eventValue);
+        }
+
+        private static void AddDriftedParameterWithDelta(Hashtable driftedParameters, string propertyName, string currentValue, string desiredValue, string deltaValue)
+        {
+            string eventValue = $"<CurrentValue>{currentValue}</CurrentValue>";
+            eventValue += $"<DesiredValue>{desiredValue}</DesiredValue>";
+            eventValue += $"<DeltaValue>{deltaValue}</DeltaValue>";
             driftedParameters.Add(propertyName, eventValue);
         }
 

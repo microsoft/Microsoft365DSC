@@ -51,6 +51,7 @@ nav:
           - 'Get-M365DSCConfigurationConflict': 'user-guide/cmdlets/Get-M365DSCConfigurationConflict.md'
           - 'Get-M365DSCLoggingOption': 'user-guide/cmdlets/Get-M365DSCLoggingOption.md'
           - 'Get-M365DSCNotificationEndpointRegistration': 'user-guide/cmdlets/Get-M365DSCNotificationEndpointRegistration.md'
+          - 'Get-M365DSCResourceDifferences': 'user-guide/cmdlets/Get-M365DSCResourceDifferences.md'
           - 'Get-M365DSCTelemetryOption': 'user-guide/cmdlets/Get-M365DSCTelemetryOption.md'
           - 'Get-M365DSCResourcesByExportMode': 'user-guide/cmdlets/Get-M365DSCResourcesByExportMode.md'
           - 'Install-M365DSCDevBranch': 'user-guide/cmdlets/Install-M365DSCDevBranch.md'

@@ -1,9 +1,9 @@
 [CmdletBinding()]
 param()
-$M365DSCTestFolder = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Unit' -Resolve
-$CmdletModule = (Join-Path -Path $M365DSCTestFolder -ChildPath '\Stubs\Microsoft365.psm1' -Resolve)
-$GenericStubPath = (Join-Path -Path $M365DSCTestFolder -ChildPath '\Stubs\Generic.psm1' -Resolve)
-Import-Module -Name (Join-Path -Path $M365DSCTestFolder -ChildPath '\UnitTestHelper.psm1' -Resolve)
+$M365DSCTestFolder = Join-Path -Path $PSScriptRoot -ChildPath '../../Unit' -Resolve
+$CmdletModule = (Join-Path -Path $M365DSCTestFolder -ChildPath 'Stubs/Microsoft365.psm1' -Resolve)
+$GenericStubPath = (Join-Path -Path $M365DSCTestFolder -ChildPath 'Stubs/Generic.psm1' -Resolve)
+Import-Module -Name (Join-Path -Path $M365DSCTestFolder -ChildPath 'UnitTestHelper.psm1' -Resolve)
 
 $CurrentScriptPath = $PSCommandPath.Split('\')
 $CurrentScriptName = $CurrentScriptPath[$CurrentScriptPath.Length -1]

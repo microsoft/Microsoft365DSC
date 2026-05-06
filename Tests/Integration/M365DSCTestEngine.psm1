@@ -55,10 +55,10 @@ function New-M365DSCIntegrationTest
 '@
 
     # Fetching examples
-    $exampleFiles = Get-ChildItem -Path ".\Modules\Microsoft365DSC\Examples\Resources\*$Step.ps1" -Recurse
+    $exampleFiles = Get-ChildItem -Path "./Modules/Microsoft365DSC/Examples/Resources/*$Step.ps1" -Recurse
     foreach ($file in $exampleFiles)
     {
-        if ($file.FullName -like "*Modules\Microsoft365DSC\Examples\Resources\$Workload*")
+        if ($file.FullName -like "*Modules/Microsoft365DSC/Examples/Resources/$Workload*")
         {
             # Fetching DSC resources from example file
             $ast = [System.Management.Automation.Language.Parser]::ParseFile($file, [ref]$null, [ref]$null)

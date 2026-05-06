@@ -77,9 +77,9 @@ function Build-Project {
         [switch]$SkipClean
     )
 
-    $projectPath = Join-Path -Path $RepositoryRoot -ChildPath "src\$ProjectName\$ProjectName.csproj"
-    $outputDir = Join-Path -Path $RepositoryRoot -ChildPath "src\$ProjectName\bin\$Configuration\netstandard2.0"
-    $targetDir = Join-Path -Path $RepositoryRoot -ChildPath 'Modules\Microsoft365DSC\Dependencies\Assemblies'
+    $projectPath = Join-Path -Path $RepositoryRoot -ChildPath "src/$ProjectName/$ProjectName.csproj"
+    $outputDir = Join-Path -Path $RepositoryRoot -ChildPath "src/$ProjectName/bin/$Configuration/netstandard2.0"
+    $targetDir = Join-Path -Path $RepositoryRoot -ChildPath 'Modules/Microsoft365DSC/Dependencies/Assemblies'
 
     Write-Host "Building $ProjectName..." -ForegroundColor Cyan
     Write-Host "Repository Root: $RepositoryRoot" -ForegroundColor Gray

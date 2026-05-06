@@ -1,5 +1,5 @@
 BeforeDiscovery {
-    $resourcesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\Microsoft365DSC\DSCResources'
+    $resourcesPath = Join-Path -Path $PSScriptRoot -ChildPath '../../Modules/Microsoft365DSC/DSCResources'
     $schemaFiles = Get-ChildItem -Path $resourcesPath -Filter '*.schema.mof' -Recurse | ForEach-Object {
         $psm1 = Get-ChildItem -Path $_.Directory.FullName -Filter '*.psm1' -File -ErrorAction SilentlyContinue | Select-Object -First 1
         @{

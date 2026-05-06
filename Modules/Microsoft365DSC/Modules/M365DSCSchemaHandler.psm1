@@ -3,14 +3,14 @@ function New-M365DSCSchemaDefinition
     [CmdletBinding()]
     param ()
 
-    $schemaFiles = Get-ChildItem -Path '.\Modules\Microsoft365DSC\DSCResources\*.schema.mof' -Recurse
+    $schemaFiles = Get-ChildItem -Path './Modules/Microsoft365DSC/DSCResources/*.schema.mof' -Recurse
 
     $classInfoList = @()
     $classesList = @()
 
     foreach ($file in $schemaFiles)
     {
-        $readMePath = "$($file.DirectoryName)\ReadMe.md"
+        $readMePath = "$($file.DirectoryName)/readme.md"
         $readMeContent = Get-Content $readMePath -Raw
         $resourceDescription = $readMeContent.Split('## Description')[1].Trim()
 

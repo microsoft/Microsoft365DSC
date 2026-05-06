@@ -347,8 +347,8 @@ function Export-M365DSCDiagnosticData
     $logPath = Join-Path -Path $tempPath -ChildPath 'DSCLogs'
     $null = New-Item -Path $logPath -ItemType 'Directory'
 
-    $sourceLogPath = Join-Path -Path $env:windir -ChildPath 'System32\Configuration\ConfigurationStatus'
-    $items = Get-ChildItem -Path "$sourceLogPath\*.json" | Where-Object { $_.LastWriteTime -gt $afterDate }
+    $sourceLogPath = Join-Path -Path $env:windir -ChildPath 'System32/Configuration/ConfigurationStatus'
+    $items = Get-ChildItem -Path "$sourceLogPath/*.json" | Where-Object { $_.LastWriteTime -gt $afterDate }
     Copy-Item -Path $items -Destination $logPath -ErrorAction 'SilentlyContinue' #-ErrorVariable $err
 
     if ($Anonymize)

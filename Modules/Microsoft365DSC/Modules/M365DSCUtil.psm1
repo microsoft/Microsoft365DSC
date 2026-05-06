@@ -143,7 +143,7 @@ function Get-M365DSCArrayFromProperty
         $array += $item
     }
 
-    ,$array
+    Write-Output -InputObject $array -NoEnumerate
 }
 
 <#
@@ -472,7 +472,7 @@ function Test-M365DSCTargetResource
     $currentPath = $PSScriptRoot
     if (-not [Microsoft365DSC.Cache.CacheManager]::IsSchemaLoaded)
     {
-        $schemaPath = Join-Path -Path $currentPath -ChildPath '..\SchemaDefinition.json'
+        $schemaPath = Join-Path -Path $currentPath -ChildPath '../SchemaDefinition.json'
         if (-not (Test-Path -Path $schemaPath))
         {
             throw "SchemaDefinition.json not found at expected path: $schemaPath. Ensure that the schema was properly included during module build and that the module is not being run from a non-standard location."
@@ -617,20 +617,20 @@ function Test-CodePage
 }
 
 <#
-.Description
-This function downloads and installs the Dev branch of Microsoft365DSC on the local machine
+.DESCRIPTION
+    This function downloads and installs the Dev branch of Microsoft365DSC on the local machine
 
-.Parameter Scope
-Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user).
+.PARAMETER Scope
+    Specifies the scope of the update of the module. The default value is AllUsers (needs to run as elevated user).
 
-.Example
-Install-M365DSCDevBranch
+.EXAMPLE
+    Install-M365DSCDevBranch
 
-.Example
-Install-M365DSCDevBranch -Scope CurrentUser
+.EXAMPLE
+    Install-M365DSCDevBranch -Scope CurrentUser
 
-.Functionality
-Public
+.FUNCTIONALITY
+    Public
 #>
 function Install-M365DSCDevBranch
 {
@@ -1112,7 +1112,7 @@ function Get-M365DSCAllResources
     [CmdletBinding()]
     param ()
 
-    $allResources = Get-ChildItem -Path ($PSScriptRoot + '\..\DSCResources\') -Recurse -Filter '*.psm1'
+    $allResources = Get-ChildItem -Path ($PSScriptRoot + '/../DSCResources/') -Recurse -Filter '*.psm1'
     $result = @()
     foreach ($resource in $allResources)
     {
@@ -1120,6 +1120,93 @@ function Get-M365DSCAllResources
     }
 
     return $result
+}
+
+<#
+.DESCRIPTION
+    This function compares two installed versions of Microsoft365DSC and returns resources that were added or removed in the newer version.
+
+.PARAMETER PreviousVersion
+    Specifies the previous (older) module version to compare against.
+
+.PARAMETER CurrentVersion
+    Specifies the current (newer) module version. If not specified, defaults to the latest installed version.
+
+.EXAMPLE
+    Get-M365DSCNewResources -PreviousVersion '1.24.501.1' -CurrentVersion '1.24.515.1'
+
+.EXAMPLE
+    Get-M365DSCNewResources -PreviousVersion '1.24.501.1'
+
+.OUTPUTS
+    A hashtable with two keys: 'Added' and 'Removed'. Each key contains an array of resource names that were added or removed in the current version compared to the previous version.
+
+.FUNCTIONALITY
+    Public
+#>
+function Get-M365DSCResourceDifferences
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $PreviousVersion,
+
+        [Parameter()]
+        [System.String]
+        $CurrentVersion
+    )
+
+    [Array]$installedModules = Get-Module 'Microsoft365DSC' -ListAvailable | Sort-Object -Property Version -Descending
+
+    if ($installedModules.Count -eq 0)
+    {
+        Write-Error -Message 'No installed versions of Microsoft365DSC were found.'
+        Write-Output -InputObject @() -NoEnumerate
+        return
+    }
+
+    # Resolve current version
+    if ([System.String]::IsNullOrEmpty($CurrentVersion))
+    {
+        $currentModule = $installedModules[0]
+    }
+    else
+    {
+        $currentModule = $installedModules | Where-Object -FilterScript { $_.Version -eq $CurrentVersion }
+    }
+
+    if ($null -eq $currentModule)
+    {
+        throw "Microsoft365DSC version '$CurrentVersion' is not installed."
+    }
+
+    # Resolve previous version
+    $previousModule = $installedModules | Where-Object -FilterScript { $_.Version -eq $PreviousVersion }
+    if ($null -eq $previousModule)
+    {
+        throw "Microsoft365DSC version '$PreviousVersion' is not installed."
+    }
+
+    # Get resources from each version by scanning their DSCResources folders
+    $currentResourcesPath = Join-Path -Path $currentModule.ModuleBase -ChildPath 'DSCResources'
+    $previousResourcesPath = Join-Path -Path $previousModule.ModuleBase -ChildPath 'DSCResources'
+
+    $currentResources = Get-ChildItem -Path $currentResourcesPath -Recurse -Filter '*.psm1' |
+        ForEach-Object { $_.Name -replace 'MSFT_', '' -replace '\.psm1', '' }
+
+    $previousResources = Get-ChildItem -Path $previousResourcesPath -Recurse -Filter '*.psm1' |
+        ForEach-Object { $_.Name -replace 'MSFT_', '' -replace '\.psm1', '' }
+
+    # Return resources present in current but not in previous
+    $newResources = $currentResources | Where-Object -FilterScript { $_ -notin $previousResources } | Sort-Object
+    $removedResources = $previousResources | Where-Object -FilterScript { $_ -notin $currentResources } | Sort-Object
+    return @{
+        Added = $newResources
+        Removed = $removedResources
+    }
 }
 
 <#
@@ -1213,7 +1300,7 @@ function New-M365DSCCmdletDocumentation
 {
     param()
 
-    $cmdletDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\docs\docs\user-guide\cmdlets'
+    $cmdletDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '../../../docs/docs/user-guide/cmdlets'
 
     if ((Test-Path -Path $cmdletDocsRoot) -eq $false)
     {
@@ -1457,7 +1544,7 @@ function New-M365DSCMissingResourcesExample
     $location = $PSScriptRoot
 
     $m365Resources = Get-DscResourceV2 -Module 'Microsoft365DSC' | Select-Object -ExpandProperty Name
-    $examplesPath = Join-Path $location -ChildPath '..\..\..\Examples\Resources'
+    $examplesPath = Join-Path $location -ChildPath '../../../Examples/Resources'
     $examples = Get-ChildItem -Path $examplesPath | Where-Object { $_.PsIsContainer } | Select-Object -ExpandProperty Name
 
     [array]$differences = Compare-Object -ReferenceObject $m365Resources -DifferenceObject $examples
@@ -1468,7 +1555,7 @@ function New-M365DSCMissingResourcesExample
     foreach ($difference in $differences)
     {
         Write-Host "[$count/$total] Processing $($difference.InputObject)"
-        $path = Join-Path -Path '.\Examples\Resources' -ChildPath $difference.InputObject
+        $path = Join-Path -Path './Examples/Resources' -ChildPath $difference.InputObject
         switch ($difference.SideIndicator)
         {
             '<='
@@ -1885,7 +1972,7 @@ function Get-M365DSCResourceComparisonMetadata
 
     if ($null -eq $Script:M365DSCComparisonMetadata)
     {
-        $metadataPath = Join-Path -Path $PSScriptRoot -ChildPath '..\ComparisonMetadata.json'
+        $metadataPath = Join-Path -Path $PSScriptRoot -ChildPath '../ComparisonMetadata.json'
         if (Test-Path -Path $metadataPath)
         {
             try
@@ -1969,7 +2056,7 @@ function Get-M365DSCResourceComparisonParameters
 
         if ($null -eq $module)
         {
-            $resourceModulePath = Join-Path -Path $PSScriptRoot -ChildPath "..\DSCResources\$moduleName\$moduleName.psm1"
+            $resourceModulePath = Join-Path -Path $PSScriptRoot -ChildPath "../DSCResources/$moduleName/$moduleName.psm1"
             if (Test-Path -Path $resourceModulePath)
             {
                 $previousValue = $moduleConfig.skipModuleDependencyValidation
@@ -2190,6 +2277,7 @@ Export-ModuleMember -Function @(
     'Get-M365DSCExportContentForResource',
     'Get-M365DSCGroupDisplayNameById',
     'Get-M365DSCGroupIdByDisplayName',
+    'Get-M365DSCResourceDifferences',
     'Get-M365DSCResourceComparisonMetadata',
     'Get-M365DSCResourceComparisonParameters',
     'Get-M365DSCUserIdByPrincipalName',

@@ -579,22 +579,29 @@ function Set-TargetResource
             }
         }
 
-        foreach ($entity in $EntityMappings)
+        if ($null -eq $EntityMappings -or $EntityMappings.Length -eq 0)
         {
-            $entry = @{
-                entityType    = $entity.entityType
-                fieldMappings = @()
-            }
-
-            foreach ($field in $entity.fieldMappings)
+            $instance.properties.Remove('entityMappings') | Out-Null
+        }
+        else
+        {
+            foreach ($entity in $EntityMappings)
             {
-                $entry.fieldMappings += @{
-                    identifier = $field.identifier
-                    columnName = $field.columnName
+                $entry = @{
+                    entityType    = $entity.entityType
+                    fieldMappings = @()
                 }
-            }
 
-            $instance.properties.entityMappings += $entry
+                foreach ($field in $entity.fieldMappings)
+                {
+                    $entry.fieldMappings += @{
+                        identifier = $field.identifier
+                        columnName = $field.columnName
+                    }
+                }
+
+                $instance.properties.entityMappings += $entry
+            }
         }
 
         foreach ($detail in $CustomDetails)

@@ -17,7 +17,7 @@ function Invoke-TestHarness
 
         [Parameter()]
         [System.String]
-        $ModuleDirectory = (Join-Path -Path $PSScriptRoot -ChildPath '..\Modules\Microsoft365DSC' -Resolve)
+        $ModuleDirectory = (Join-Path -Path $PSScriptRoot -ChildPath '../Modules/Microsoft365DSC' -Resolve)
     )
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
@@ -25,7 +25,7 @@ function Invoke-TestHarness
     $MaximumFunctionCount = 32767
     Write-Host -Object 'Running all Microsoft365DSC Unit Tests'
 
-    $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '../' -Resolve
 
     $oldModPath = $env:PSModulePath
     $env:PSModulePath = $env:PSModulePath + [System.IO.Path]::PathSeparator + $ModuleDirectory
@@ -33,7 +33,7 @@ function Invoke-TestHarness
     $testCoverageFiles = @()
     if ($IgnoreCodeCoverage.IsPresent -eq $false)
     {
-        Get-ChildItem -Path "$repoDir\Modules\Microsoft365DSC\DSCResources\**\*.psm1" -Recurse | ForEach-Object {
+        Get-ChildItem -Path "$repoDir/Modules/Microsoft365DSC/DSCResources/**/*.psm1" -Recurse | ForEach-Object {
             if ($_.FullName -notlike '*\DSCResource.Tests\*')
             {
                 $testCoverageFiles += $_.FullName
@@ -45,18 +45,18 @@ function Invoke-TestHarness
     $testsToRun = @()
 
     # Run Unit Tests
-    $versionsPath = Join-Path -Path $repoDir -ChildPath '\Tests\Unit\Stubs\'
+    $versionsPath = Join-Path -Path $repoDir -ChildPath './Tests/Unit/Stubs/'
     # Import the first stub found so that there is a base module loaded before the tests start
     $firstStub = Join-Path -Path $repoDir `
-        -ChildPath '\Tests\Unit\Stubs\Microsoft365.psm1'
+        -ChildPath './Tests/Unit/Stubs/Microsoft365.psm1'
     Import-Module $firstStub -WarningAction SilentlyContinue
 
     $stubPath = Join-Path -Path $repoDir `
-        -ChildPath '\Tests\Unit\Stubs\Microsoft365.psm1'
+        -ChildPath './Tests/Unit/Stubs/Microsoft365.psm1'
 
     # DSC Common Tests
     $getChildItemParameters = @{
-        Path    = (Join-Path -Path $repoDir -ChildPath '\Tests\Unit')
+        Path    = (Join-Path -Path $repoDir -ChildPath './Tests/Unit')
         Recurse = $true
         Filter  = '*.Tests.ps1'
     }
@@ -66,7 +66,7 @@ function Invoke-TestHarness
 
     # Remove DscResource.Tests unit tests.
     $commonTestFiles = $commonTestFiles | Where-Object -FilterScript {
-        $_.FullName -notmatch 'DSCResource.Tests\\Tests'
+        $_.FullName -notmatch 'DSCResource.Tests[\\/]Tests'
     }
 
     $testsToRun += @( $commonTestFiles.FullName )
@@ -185,14 +185,14 @@ function Invoke-QualityChecksHarness
 
     Write-Host -Object 'Running all Quality Check Tests'
 
-    $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '../' -Resolve
 
     $oldModPath = $env:PSModulePath
-    $env:PSModulePath = $env:PSModulePath + [System.IO.Path]::PathSeparator + (Join-Path -Path $repoDir -ChildPath 'modules\Microsoft365DSC')
+    $env:PSModulePath = $env:PSModulePath + [System.IO.Path]::PathSeparator + (Join-Path -Path $repoDir -ChildPath 'Modules/Microsoft365DSC')
 
     # DSC Common Tests
     $getChildItemParameters = @{
-        Path   = (Join-Path -Path $repoDir -ChildPath '\Tests\QA')
+        Path   = (Join-Path -Path $repoDir -ChildPath './Tests/QA')
         Filter = '*.Tests.ps1'
     }
 

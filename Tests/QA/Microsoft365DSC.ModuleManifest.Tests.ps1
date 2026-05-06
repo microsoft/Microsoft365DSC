@@ -1,6 +1,6 @@
 ﻿Describe -Name 'Checking Module Manifest' {
     BeforeAll {
-        $manifestPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\Microsoft365DSC\Microsoft365DSC.psd1'
+        $manifestPath = Join-Path -Path $PSScriptRoot -ChildPath '../../Modules/Microsoft365DSC/Microsoft365DSC.psd1'
         $manifest = Import-PowerShellDataFile -Path $manifestPath
     }
 

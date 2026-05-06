@@ -355,11 +355,16 @@ function Export-TargetResource
             }
 
             $graphServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $config.Identity
+            $appDisplayName = $graphServicePrincipal.AppDisplayName
+            if ([System.String]::IsNullOrEmpty($appDisplayName))
+            {
+                $appDisplayName = $graphServicePrincipal.DisplayName
+            }
 
-            $displayedKey = $graphServicePrincipal.AppDisplayName
+            $displayedKey = $appDisplayName
             Write-M365DSCHost -Message "    |---[$i/$($servicePrincipals.Count)] $displayedKey" -DeferWrite
             $params = @{
-                AppName               = $graphServicePrincipal.AppDisplayName
+                AppName               = $appDisplayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

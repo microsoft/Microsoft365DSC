@@ -1,5 +1,5 @@
 BeforeDiscovery {
-    $resourcesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\Microsoft365DSC\DSCResources'
+    $resourcesPath = Join-Path -Path $PSScriptRoot -ChildPath '../../Modules/Microsoft365DSC/DSCResources'
     $settingsFiles = Get-ChildItem -Path $resourcesPath -Filter '*.json' -Recurse | ForEach-Object {
         @{
             ResourceName = $_.Directory.Name
@@ -17,7 +17,7 @@ Describe -Name 'Successfully import Settings.json files' {
 
 Describe -Name 'Successfully validate all used permissions in Settings.json files ' {
     BeforeAll {
-        $permissionsFile = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Tests\QA\Graph.PermissionList.txt'
+        $permissionsFile = Join-Path -Path $PSScriptRoot -ChildPath '../../Tests/QA/Graph.PermissionList.txt'
         $roles = (Get-Content $permissionsFile -Raw).Split(',')
     }
 

@@ -13,7 +13,7 @@ Initialize-M365DSCDllLoader -ErrorAction SilentlyContinue
 function Get-M365DSCComponentsWithMostSecureAuthenticationType
 {
     [CmdletBinding()]
-    [OutputType([System.String[]])]
+        [OutputType([System.Collections.Generic.List[System.Collections.Hashtable]])]
     param
     (
         [Parameter()]
@@ -26,7 +26,7 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
         $Resources
     )
 
-    $dscResourcesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\DSCResources'
+    $dscResourcesPath = Join-Path -Path $PSScriptRoot -ChildPath '../DSCResources'
     return [Microsoft365DSC.Connection.ConnectionHelper]::GetComponentsWithMostSecureAuthenticationType(
         $dscResourcesPath,
         $AuthenticationMethod,

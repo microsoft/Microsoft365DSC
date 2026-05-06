@@ -252,10 +252,13 @@ function Get-TargetResource
         $ownersInfo = ($batchResponse | Where-Object -FilterScript { $_.id -eq 'Owners' }).body.value
         foreach ($ownerInfo in $ownersInfo)
         {
-            $info = Get-MgUser -UserId $ownerInfo.Id -ErrorAction SilentlyContinue
-            if ($null -ne $info)
+            if ($ownerInfo.'@odata.type' -eq '#microsoft.graph.user')
             {
-                $ownersValues += $info.UserPrincipalName
+                $ownersValues += $ownerInfo.UserPrincipalName
+            }
+            else
+            {
+                $ownersValues += $ownerInfo.DisplayName
             }
         }
 
@@ -823,21 +826,29 @@ function Set-TargetResource
         }
         foreach ($diff in $diffOwners)
         {
-            $userInfo = Get-MgUser -UserId $diff.InputObject
+            $ownerInfo = Get-MgUser -UserId $diff.InputObject -ErrorAction SilentlyContinue
+            if ($null -eq $ownerInfo)
+            {
+                $ownerInfo = Get-MgServicePrincipal -Filter "displayName eq '$($diff.InputObject -replace "'", "''")'" -ErrorAction SilentlyContinue
+                if ($null -eq $ownerInfo)
+                {
+                    throw "Owner {$($diff.InputObject)} was not found as a user or service principal in the tenant."
+                }
+            }
             if ($diff.SideIndicator -eq '=>')
             {
                 $body = @{
-                    '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($userInfo.Id)"
+                    '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($ownerInfo.Id)"
                 }
-                Write-Verbose -Message "Adding owner {$($userInfo.Id)}"
+                Write-Verbose -Message "Adding owner {$($ownerInfo.Id)}"
                 New-MgServicePrincipalOwnerByRef -ServicePrincipalId $currentAADServicePrincipal.ObjectId `
                     -BodyParameter $body | Out-Null
             }
             else
             {
-                Write-Verbose -Message "Removing owner {$($userInfo.Id)}"
+                Write-Verbose -Message "Removing owner {$($ownerInfo.Id)}"
                 Remove-MgServicePrincipalOwnerDirectoryObjectByRef -ServicePrincipalId $currentAADServicePrincipal.ObjectId `
-                    -DirectoryObjectId $userInfo.Id | Out-Null
+                    -DirectoryObjectId $ownerInfo.Id | Out-Null
             }
         }
 

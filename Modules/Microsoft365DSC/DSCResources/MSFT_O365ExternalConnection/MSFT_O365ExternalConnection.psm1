@@ -99,13 +99,19 @@ function Get-TargetResource
         foreach ($app in $instance.Configuration.AuthorizedAppIds)
         {
             $appInstance = Get-MgApplication -Filter "AppId eq '$app'" -ErrorAction SilentlyContinue
-            if ($null -ne $appInstance)
+            if ($null -eq $appInstance)
             {
-                $AuthorizedAppIdsValue += $appInstance.DisplayName
+                # Try to find it as a service principal
+                $sp = Get-MgServicePrincipal -Filter "AppId eq '$app'" -ErrorAction SilentlyContinue
+                if ($null -eq $sp)
+                {
+                    throw "Could not find referenced application or service principal {$app} in the tenant."
+                }
+                $AuthorizedAppIdsValue += $sp.DisplayName
             }
             else
             {
-                throw "Could not find referenced application {$app} in the tenant."
+                $AuthorizedAppIdsValue += $appInstance.DisplayName
             }
         }
 
@@ -208,14 +214,20 @@ function Set-TargetResource
     {
         foreach ($app in $AuthorizedAppIds)
         {
-            $app = Get-MgApplication -Filter "DisplayName eq '$($app -replace "'", "''")'" -ErrorAction SilentlyContinue
-            if ($null -ne $app)
+            $appInstance = Get-MgApplication -Filter "AppId eq '$app'" -ErrorAction SilentlyContinue
+            if ($null -eq $appInstance)
             {
-                $AuthorizedAppIdsValue += $app.AppId
+                # Try to find it as a service principal
+                $sp = Get-MgServicePrincipal -Filter "AppId eq '$app'" -ErrorAction SilentlyContinue
+                if ($null -eq $sp)
+                {
+                    throw "Could not find referenced application or service principal {$app} in the tenant."
+                }
+                $AuthorizedAppIdsValue += $sp.DisplayName
             }
             else
             {
-                throw "Could not find referenced application {$app} in the tenant."
+                $AuthorizedAppIdsValue += $appInstance.DisplayName
             }
         }
     }

@@ -165,7 +165,7 @@ function Get-PropertyReport
 
                 # Get properties of DSC resource
                 Write-Verbose "Get properties of resource $resourceName"
-                Import-Module $($folderPath + '\' + $resourceName) -Force
+                Import-Module $($folderPath + '/' + $resourceName) -Force
                 $resourceProperties = (Get-Command Set-TargetResource -Module $resourceName).Parameters
 
                 foreach ($property in $resourceProperties.Keys)

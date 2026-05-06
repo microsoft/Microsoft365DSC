@@ -291,14 +291,11 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Set-Targetresource: Running Get-TargetResource'
     $currentPolicy = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message 'Set-Targetresource: Cleaning up parameters'
     $desiredParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $desiredParameters.Remove('IsSingleInstance') | Out-Null
 
-    Write-Verbose -Message 'Set-Targetresource: Authorization Policy Ensure Present'
     $UpdateParameters = @{
         AuthorizationPolicyId = 'authorizationPolicy'
     }
@@ -372,10 +369,9 @@ function Set-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        Write-Verbose -Message "Set-Targetresource: Failed change policy $DisplayName"
+        Write-Verbose -Message "Failed to update authorization policy $DisplayName"
         throw $_
     }
-    Write-Verbose -Message "Set-Targetresource: finished processing Policy $Displayname"
 }
 
 function Test-TargetResource
