@@ -764,7 +764,7 @@ function Get-TargetResource
             foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = [ordered]@{}
-                $currentHash.Add('AppId', $currentValue.appid)
+                $currentHash.Add('AppId', $currentValue.appId)
                 $currentHash.Add('Publisher', $currentValue.publisher)
                 $currentHash.Add('AppStoreUrl', $currentValue.appStoreUrl)
                 $currentHash.Add('Name', $currentValue.name)
@@ -780,7 +780,7 @@ function Get-TargetResource
             foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = [ordered]@{}
-                $currentHash.Add('AppId', $currentValue.appid)
+                $currentHash.Add('AppId', $currentValue.appId)
                 $currentHash.Add('Publisher', $currentValue.publisher)
                 $currentHash.Add('AppStoreUrl', $currentValue.appStoreUrl)
                 $currentHash.Add('Name', $currentValue.name)

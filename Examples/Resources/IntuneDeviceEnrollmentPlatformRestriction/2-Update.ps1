@@ -53,6 +53,14 @@ Configuration Example
                 platformBlocked = $False
                 personalDeviceEnrollmentBlocked = $False
             };
+            TvosRestriction                   = MSFT_DeviceEnrollmentPlatformRestriction{
+                personalDeviceEnrollmentBlocked = $False
+                platformBlocked = $False
+            };
+            VisionOSRestriction               = MSFT_DeviceEnrollmentPlatformRestriction{
+                personalDeviceEnrollmentBlocked = $False
+                platformBlocked = $False
+            };
             WindowsHomeSkuRestriction         = MSFT_DeviceEnrollmentPlatformRestriction{
                 platformBlocked = $False
                 personalDeviceEnrollmentBlocked = $False

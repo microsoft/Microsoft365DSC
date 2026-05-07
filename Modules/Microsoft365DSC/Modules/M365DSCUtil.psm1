@@ -143,7 +143,7 @@ function Get-M365DSCArrayFromProperty
         $array += $item
     }
 
-    Write-Output -InputObject $array -NoEnumerate
+    ,$array
 }
 
 <#
@@ -1164,8 +1164,7 @@ function Get-M365DSCResourceDifferences
     if ($installedModules.Count -eq 0)
     {
         Write-Error -Message 'No installed versions of Microsoft365DSC were found.'
-        Write-Output -InputObject @() -NoEnumerate
-        return
+        return ,@()
     }
 
     # Resolve current version

@@ -73,7 +73,7 @@ class MSFT_MicrosoftGraphWindowsKioskUWPApp
     [Required, Description("The type of the entity."), ValueMap{"#microsoft.graph.windowsKioskDesktopApp","#microsoft.graph.windowsKioskUWPApp","#microsoft.graph.windowsKioskWin32App"}, Values{"#microsoft.graph.windowsKioskDesktopApp","#microsoft.graph.windowsKioskUWPApp","#microsoft.graph.windowsKioskWin32App"}] String odataType;
 };
 
-[ClassVersion("1.0.0.1")]
+[ClassVersion("1.0.0.2")]
 class MSFT_MicrosoftGraphWindowsKioskWin32App
 {
     [Write, Description("This is the classicapppath to be used by v4 Win32 app while in Kiosk Mode")] String ClassicAppPath;
@@ -91,7 +91,7 @@ class MSFT_MicrosoftGraphWindowsKioskWin32App
     [Write, Description("This references an Intune App that will be target to the same assignments as Kiosk configuration")] String AppId;
     [Write, Description("This is the only Application User Model ID (AUMID) that will be available to launch use while in Kiosk Mode")] String AppUserModelId;
     [Write, Description("This references an contained App from an Intune App")] String ContainedAppId;
-    [Required, Description("The type of the entity."), ValueMap{"#microsoft.graph.windowsKioskDesktopApp","#microsoft.graph.windowsKioskUWPApp","#microsoft.graph.windowsKioskWin32App"}, Values{"#microsoft.graph.windowsKioskDesktopApp","#microsoft.graph.windowsKioskUWPApp","#microsoft.graph.windowsKioskWin32App"}] String odataType;
+    [Write, Description("The type of the entity."), ValueMap{"#microsoft.graph.windowsKioskDesktopApp","#microsoft.graph.windowsKioskUWPApp","#microsoft.graph.windowsKioskWin32App"}, Values{"#microsoft.graph.windowsKioskDesktopApp","#microsoft.graph.windowsKioskUWPApp","#microsoft.graph.windowsKioskWin32App"}] String odataType;
 };
 
 [ClassVersion("1.0.0.1")]

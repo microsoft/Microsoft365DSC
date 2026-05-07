@@ -37,11 +37,11 @@ function Get-TargetResource
         $AdvancedRule,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ExceptIfContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -565,11 +565,11 @@ function Set-TargetResource
         $AdvancedRule,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ExceptIfContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -1040,11 +1040,11 @@ function Test-TargetResource
         $AdvancedRule,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ExceptIfContentContainsSensitiveInformation,
 
         [Parameter()]

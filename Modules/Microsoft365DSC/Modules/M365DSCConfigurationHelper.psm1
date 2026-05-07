@@ -138,7 +138,7 @@ function Get-M365DSCEvaluationRulesForConfiguration
             param (
             )
 
-            $OrganizationName = $ConfigurationData.NonNodeData.OrganizationName
+            `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName
 
             Import-DscResource -ModuleName 'Microsoft365DSC'
 

@@ -130,26 +130,38 @@ function Get-TargetResource
         Write-Verbose -Message "Entitlement Management Connected Organization with id {$($getValue.id)} and displayName {$($getValue.DisplayName)} was found."
         [Array]$getExternalSponsors = Get-MgBetaEntitlementManagementConnectedOrganizationExternalSponsor -ConnectedOrganizationId $getValue.id
 
+        $ExternalSponsorsValues = @()
         if ($null -ne $getExternalSponsors -and $getExternalSponsors.Count -gt 0)
         {
-            $sponsors = @()
             foreach ($sponsor in $getExternalSponsors)
             {
-                $sponsors += $sponsor.id
+                if ($sponsor.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.user')
+                {
+                    $ExternalSponsorsValues += $sponsor.AdditionalProperties.userPrincipalName
+                }
+                elseif ($sponsor.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.group')
+                {
+                    $ExternalSponsorsValues += $sponsor.AdditionalProperties.displayName
+                }
             }
-            $getExternalSponsors = $sponsors
         }
 
         [Array]$getInternalSponsors = Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -ConnectedOrganizationId $getValue.id
 
+        $InternalSponsorsValues = @()
         if ($null -ne $getInternalSponsors -and $getInternalSponsors.Count -gt 0)
         {
-            $sponsors = @()
             foreach ($sponsor in $getInternalSponsors)
             {
-                $sponsors += $sponsor.id
+                if ($sponsor.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.user')
+                {
+                    $InternalSponsorsValues += $sponsor.AdditionalProperties.userPrincipalName
+                }
+                elseif ($sponsor.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.group')
+                {
+                    $InternalSponsorsValues += $sponsor.AdditionalProperties.displayName
+                }
             }
-            $getInternalSponsors = $sponsors
         }
 
         $getIdentitySources = $null
@@ -189,49 +201,6 @@ function Get-TargetResource
                 $sources += $formattedSource
             }
             $getIdentitySources = $sources
-        }
-
-        $ObjectGuid = [System.Guid]::empty
-        $ExternalSponsorsValues = @()
-        foreach ($sponsor in $getExternalSponsors)
-        {
-            if ([System.Guid]::TryParse($sponsor, [System.Management.Automation.PSReference]$ObjectGuid))
-            {
-                try
-                {
-                    $user = Get-MgUser -UserId $sponsor
-                    $ExternalSponsorsValues += $user.UserPrincipalName
-                }
-                catch
-                {
-                    Write-Verbose -Message "Couldn't find external sponsor with id {$sponsor}"
-                }
-            }
-            else
-            {
-                $ExternalSponsorsValues += $sponsor
-            }
-        }
-
-        $InternalSponsorsValues = @()
-        foreach ($sponsor in $getInternalSponsors)
-        {
-            if ([System.Guid]::TryParse($sponsor, [System.Management.Automation.PSReference]$ObjectGuid))
-            {
-                try
-                {
-                    $user = Get-MgUser -UserId $sponsor
-                    $InternalSponsorsValues += $user.UserPrincipalName
-                }
-                catch
-                {
-                    Write-Verbose -Message "Couldn't find inter sponsor with id {$sponsor}"
-                }
-            }
-            else
-            {
-                $InternalSponsorsValues += $sponsor
-            }
         }
 
         $results = @{
@@ -357,11 +326,11 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present')
     {
-        $ObjectGuid = [System.Guid]::empty
+        $ObjectGuid = [System.Guid]::Empty
         $ExternalSponsorsValues = @()
         foreach ($sponsor in $ExternalSponsors)
         {
-            if (-not [System.Guid]::TryParse($sponsor, [System.Management.Automation.PSReference]$ObjectGuid))
+            if (-not [System.Guid]::TryParse($sponsor, [ref]$ObjectGuid))
             {
                 try
                 {
@@ -372,7 +341,15 @@ function Set-TargetResource
                     }
                     else
                     {
-                        Write-Verbose -Message "Could not find External Sponsor {$sponsor}"
+                        $group = Get-MgGroup -Filter "displayName eq '$sponsor'" -ErrorAction SilentlyContinue
+                        if ($null -ne $group)
+                        {
+                            $ExternalSponsorsValues += $group.Id
+                        }
+                        else
+                        {
+                            Write-Verbose -Message "Could not find External Sponsor {$sponsor}"
+                        }
                     }
                 }
                 catch
@@ -390,7 +367,7 @@ function Set-TargetResource
         $InternalSponsorsValues = @()
         foreach ($sponsor in $InternalSponsors)
         {
-            if (-not [System.Guid]::TryParse($sponsor, [System.Management.Automation.PSReference]$ObjectGuid))
+            if (-not [System.Guid]::TryParse($sponsor, [ref]$ObjectGuid))
             {
                 try
                 {
@@ -401,7 +378,15 @@ function Set-TargetResource
                     }
                     else
                     {
-                        Write-Verbose -Message "Could not find External Sponsor {$sponsor}"
+                        $group = Get-MgGroup -Filter "displayName eq '$sponsor'" -ErrorAction SilentlyContinue
+                        if ($null -ne $group)
+                        {
+                            $InternalSponsorsValues += $group.Id
+                        }
+                        else
+                        {
+                            Write-Verbose -Message "Could not find Internal Sponsor {$sponsor}"
+                        }
                     }
                 }
                 catch

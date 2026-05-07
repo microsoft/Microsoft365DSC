@@ -67,13 +67,13 @@ function Get-TargetResource
         $ExcludeRoles,
 
         [Parameter()]
-        [System.String[]]
         [ValidateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        [System.String[]]
         $IncludeGuestOrExternalUserTypes,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [System.String]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -81,13 +81,13 @@ function Get-TargetResource
         $IncludeExternalTenantsMembers,
 
         [Parameter()]
-        [System.String[]]
         [ValidateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        [System.String[]]
         $ExcludeGuestOrExternalUserTypes,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [System.String]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -875,13 +875,13 @@ function Set-TargetResource
         $ExcludeRoles,
 
         [Parameter()]
-        [System.String[]]
         [ValidateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        [System.String[]]
         $IncludeGuestOrExternalUserTypes,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [System.String]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -889,13 +889,13 @@ function Set-TargetResource
         $IncludeExternalTenantsMembers,
 
         [Parameter()]
-        [System.String[]]
         [ValidateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        [System.String[]]
         $ExcludeGuestOrExternalUserTypes,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [System.String]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -1014,7 +1014,7 @@ function Set-TargetResource
         $PersistentBrowserIsEnabled,
 
         [Parameter()]
-        [nullable[System.Boolean]]
+        [System.Boolean]
         $DisableResilienceDefaultsIsEnabled,
 
         [Parameter()]
@@ -2043,13 +2043,13 @@ function Test-TargetResource
         $ExcludeRoles,
 
         [Parameter()]
-        [System.String[]]
         [ValidateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        [System.String[]]
         $IncludeGuestOrExternalUserTypes,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [System.String]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -2057,13 +2057,13 @@ function Test-TargetResource
         $IncludeExternalTenantsMembers,
 
         [Parameter()]
-        [System.String[]]
         [ValidateSet('none', 'internalGuest', 'b2bCollaborationGuest', 'b2bCollaborationMember', 'b2bDirectConnectUser', 'otherExternalUser', 'serviceProvider', 'unknownFutureValue')]
+        [System.String[]]
         $ExcludeGuestOrExternalUserTypes,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [System.String]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]

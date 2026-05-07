@@ -21,7 +21,7 @@ class MSFT_DeviceEnrollmentPlatformRestriction
     [Write, Description("Collection of blocked Skus.")] String BlockedSkus[];
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceEnrollmentPlatformRestriction")]
+[ClassVersion("1.0.0.1"), FriendlyName("IntuneDeviceEnrollmentPlatformRestriction")]
 class MSFT_IntuneDeviceEnrollmentPlatformRestriction : OMI_BaseResource
 {
     [Key, Description("Identity of the device enrollment platform restriction.")] String Identity;
@@ -33,6 +33,8 @@ class MSFT_IntuneDeviceEnrollmentPlatformRestriction : OMI_BaseResource
     [Write, Description("Ios restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] String IosRestriction;
     [Write, Description("Mac restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] String MacOSRestriction;
     [Write, Description("Mac restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] String MacRestriction;
+    [Write, Description("TV OS restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] String TvosRestriction;
+    [Write, Description("Vision OS restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] String VisionOSRestriction;
     [Write, Description("Windows Home Sku restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] String WindowsHomeSkuRestriction;
     [Write, Description("Windows mobile restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] String WindowsMobileRestriction;
     [Write, Description("Windows restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] String WindowsRestriction;

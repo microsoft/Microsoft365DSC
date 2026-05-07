@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Policy                              = 'MyParentPolicy'
                     Comment                             = ''
                     AdvancedRule                        = "`"{\r\n  \`"Version\`": \`"1.0\`",\r\n  \`"Condition\`": {\r\n    \`"Operator\`": \`"And\`",\r\n    \`"SubConditions\`": [\r\n      {\r\n        \`"ConditionName\`": \`"ContentContainsSensitiveInformation\`",\r\n        \`"Value\`": [\r\n          {\r\n            \`"Groups\`": [\r\n              {\r\n                \`"Name\`": \`"Default\`",\r\n                \`"Operator\`": \`"Or\`",\r\n                \`"Sensitivetypes\`": [\r\n                  {\r\n                    \`"Name\`": \`"SCSEDM001-SCHEMA-CUSTOMERDATA\`",\r\n                    \`"Id\`": null,\r\n                    \`"Mincount\`": 5,\r\n                    \`"Maxcount\`": 9,\r\n                    \`"Confidencelevel\`": \`"High\`",\r\n                    \`"Minconfidence\`": 85,\r\n                    \`"Maxconfidence\`": 100\r\n                  }\r\n                ]\r\n              }\r\n            ],\r\n            \`"Operator\`": \`"And\`"\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}`"";
-                    ContentContainsSensitiveInformation = New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
+                    ContentContainsSensitiveInformation = [CIMInstance[]]@(New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
                         Operator = 'And'
                         Groups   = [CIMInstance[]]@(
                             New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformationGroup -Property @{
@@ -140,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 )
                             } -ClientOnly
                         )
-                    } -ClientOnly
+                    } -ClientOnly)
                     BlockAccess                         = $False
                     Name                                = 'TestPolicy'
                     Credential                          = $Credential
@@ -169,8 +169,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                              = 'Present'
                     Policy                              = 'MyParentPolicy'
                     Comment                             = 'New comment'
-                    ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
-                            SensitiveInformation = (New-CimInstance -ClassName  MSFT_SCDLPSensitiveInformation -Property @{
+                    ContentContainsSensitiveInformation = [CimInstance[]]@(New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
+                            SensitiveInformation = [CIMInstance[]]@(New-CimInstance -ClassName  MSFT_SCDLPSensitiveInformation -Property @{
                                     name           = 'ABA Routing Number'
                                     id             = 'cb353f78-2b72-4c3c-8827-92ebe4f69fdf'
                                     maxconfidence  = '100'
