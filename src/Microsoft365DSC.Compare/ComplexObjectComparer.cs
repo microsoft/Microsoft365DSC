@@ -111,7 +111,8 @@ namespace Microsoft365DSC.Compare
                         {
                             { "PropertyName", $"{propName}" },
                             { "CurrentValue", string.Join(", ", rightArray as IEnumerable<object>) },
-                            { "DesiredValue", string.Join(", ", leftArray as IEnumerable<object>) }
+                            { "DesiredValue", string.Join(", ", leftArray as IEnumerable<object>) },
+                            { "DeltaValue", string.Join("; ", arrayCompareResult.Select(d => $"{d.SideIndicator} {d.InputObject}")) }
                         };
                         drifts.Add(driftEntry);
                         result = false;

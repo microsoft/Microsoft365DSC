@@ -155,12 +155,12 @@ function Start-M365DSCConfigurationExtract
                 Write-Warning "$($_.Exception.Message)"
                 Write-Warning "Could not create folder $OutputDSCPath!"
             }
-            $OutputDSCPath = Read-Host 'Please Provide Output Folder for DSC Configuration (Will be Created as Necessary)'
+            $OutputDSCPath = Read-Host 'Please Provide Output Folder for DSC Configuration (will be created as necessary)'
         }
         <## Ensures the path we specify ends with a Slash, in order to make sure the resulting file path is properly structured. #>
-        if (!$OutputDSCPath.EndsWith('\') -and !$OutputDSCPath.EndsWith('/'))
+        if (-not $OutputDSCPath.EndsWith('\') -and -not $OutputDSCPath.EndsWith('/'))
         {
-            $OutputDSCPath += '\'
+            $OutputDSCPath += [System.IO.Path]::DirectorySeparatorChar
         }
         Push-Location -Path $OutputDSCPath
         #endregion
@@ -1098,7 +1098,7 @@ function Get-M365DSCResourcesByWorkloads
         $Mode = 'Default'
     )
 
-    $modules = Get-ChildItem -Path ($PSScriptRoot + '\..\DSCResources\') -Recurse -Filter '*.psm1'
+    $modules = Get-ChildItem -Path ($PSScriptRoot + '/../DSCResources/') -Recurse -Filter '*.psm1'
     $Components = @()
     foreach ($Workload in $Workloads)
     {

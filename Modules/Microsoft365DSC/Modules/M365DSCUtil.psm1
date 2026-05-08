@@ -143,7 +143,7 @@ function Get-M365DSCArrayFromProperty
         $array += $item
     }
 
-    Write-Output -InputObject $array -NoEnumerate
+    ,$array
 }
 
 <#
@@ -472,7 +472,7 @@ function Test-M365DSCTargetResource
     $currentPath = $PSScriptRoot
     if (-not [Microsoft365DSC.Cache.CacheManager]::IsSchemaLoaded)
     {
-        $schemaPath = Join-Path -Path $currentPath -ChildPath '..\SchemaDefinition.json'
+        $schemaPath = Join-Path -Path $currentPath -ChildPath '../SchemaDefinition.json'
         if (-not (Test-Path -Path $schemaPath))
         {
             throw "SchemaDefinition.json not found at expected path: $schemaPath. Ensure that the schema was properly included during module build and that the module is not being run from a non-standard location."
@@ -617,20 +617,20 @@ function Test-CodePage
 }
 
 <#
-.Description
-This function downloads and installs the Dev branch of Microsoft365DSC on the local machine
+.DESCRIPTION
+    This function downloads and installs the Dev branch of Microsoft365DSC on the local machine
 
-.Parameter Scope
-Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user).
+.PARAMETER Scope
+    Specifies the scope of the update of the module. The default value is AllUsers (needs to run as elevated user).
 
-.Example
-Install-M365DSCDevBranch
+.EXAMPLE
+    Install-M365DSCDevBranch
 
-.Example
-Install-M365DSCDevBranch -Scope CurrentUser
+.EXAMPLE
+    Install-M365DSCDevBranch -Scope CurrentUser
 
-.Functionality
-Public
+.FUNCTIONALITY
+    Public
 #>
 function Install-M365DSCDevBranch
 {
@@ -1112,7 +1112,7 @@ function Get-M365DSCAllResources
     [CmdletBinding()]
     param ()
 
-    $allResources = Get-ChildItem -Path ($PSScriptRoot + '\..\DSCResources\') -Recurse -Filter '*.psm1'
+    $allResources = Get-ChildItem -Path ($PSScriptRoot + '/../DSCResources/') -Recurse -Filter '*.psm1'
     $result = @()
     foreach ($resource in $allResources)
     {
@@ -1164,8 +1164,7 @@ function Get-M365DSCResourceDifferences
     if ($installedModules.Count -eq 0)
     {
         Write-Error -Message 'No installed versions of Microsoft365DSC were found.'
-        Write-Output -InputObject @() -NoEnumerate
-        return
+        return ,@()
     }
 
     # Resolve current version
@@ -1300,7 +1299,7 @@ function New-M365DSCCmdletDocumentation
 {
     param()
 
-    $cmdletDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\docs\docs\user-guide\cmdlets'
+    $cmdletDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '../../../docs/docs/user-guide/cmdlets'
 
     if ((Test-Path -Path $cmdletDocsRoot) -eq $false)
     {
@@ -1544,7 +1543,7 @@ function New-M365DSCMissingResourcesExample
     $location = $PSScriptRoot
 
     $m365Resources = Get-DscResourceV2 -Module 'Microsoft365DSC' | Select-Object -ExpandProperty Name
-    $examplesPath = Join-Path $location -ChildPath '..\..\..\Examples\Resources'
+    $examplesPath = Join-Path $location -ChildPath '../../../Examples/Resources'
     $examples = Get-ChildItem -Path $examplesPath | Where-Object { $_.PsIsContainer } | Select-Object -ExpandProperty Name
 
     [array]$differences = Compare-Object -ReferenceObject $m365Resources -DifferenceObject $examples
@@ -1555,7 +1554,7 @@ function New-M365DSCMissingResourcesExample
     foreach ($difference in $differences)
     {
         Write-Host "[$count/$total] Processing $($difference.InputObject)"
-        $path = Join-Path -Path '.\Examples\Resources' -ChildPath $difference.InputObject
+        $path = Join-Path -Path './Examples/Resources' -ChildPath $difference.InputObject
         switch ($difference.SideIndicator)
         {
             '<='
@@ -1972,7 +1971,7 @@ function Get-M365DSCResourceComparisonMetadata
 
     if ($null -eq $Script:M365DSCComparisonMetadata)
     {
-        $metadataPath = Join-Path -Path $PSScriptRoot -ChildPath '..\ComparisonMetadata.json'
+        $metadataPath = Join-Path -Path $PSScriptRoot -ChildPath '../ComparisonMetadata.json'
         if (Test-Path -Path $metadataPath)
         {
             try
@@ -2056,7 +2055,7 @@ function Get-M365DSCResourceComparisonParameters
 
         if ($null -eq $module)
         {
-            $resourceModulePath = Join-Path -Path $PSScriptRoot -ChildPath "..\DSCResources\$moduleName\$moduleName.psm1"
+            $resourceModulePath = Join-Path -Path $PSScriptRoot -ChildPath "../DSCResources/$moduleName/$moduleName.psm1"
             if (Test-Path -Path $resourceModulePath)
             {
                 $previousValue = $moduleConfig.skipModuleDependencyValidation

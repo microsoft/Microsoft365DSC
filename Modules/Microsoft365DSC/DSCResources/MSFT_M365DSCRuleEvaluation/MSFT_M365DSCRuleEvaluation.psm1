@@ -177,7 +177,7 @@ function Test-TargetResource
     #endregion
 
     $Global:PartialExportFileName = "$((New-Guid).ToString()).partial"
-    $module = Join-Path -Path $PSScriptRoot -ChildPath "..\MSFT_$ResourceTypeName\MSFT_$ResourceTypeName.psm1" -Resolve
+    $module = Join-Path -Path $PSScriptRoot -ChildPath "../MSFT_$ResourceTypeName/MSFT_$ResourceTypeName.psm1" -Resolve
     if ($null -ne $module)
     {
         $params = @{

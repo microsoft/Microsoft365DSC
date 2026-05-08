@@ -285,6 +285,11 @@ namespace Microsoft365DSC.Converter
                 return string.Empty;
             }
 
+            if (complexObject is PSObject psObject)
+            {
+                complexObject = psObject.BaseObject;
+            }
+
             complexTypeMapping ??= [];
 
             var indent = new string(' ', (int)indentLevel * 4);
@@ -348,7 +353,7 @@ namespace Microsoft365DSC.Converter
                 }
                 keys = keyList.OrderBy(k => k);
             }
-            else if (complexObject is PSObject psObject && psObject.BaseObject is not null && psObject.BaseObject is CimInstance instance)
+            else if (complexObject is CimInstance instance)
             {
                 cimInstance = instance;
                 keys = cimInstance.CimInstanceProperties
@@ -391,6 +396,15 @@ namespace Microsoft365DSC.Converter
 
                 if (value is not null)
                 {
+                    if (value is PSObject psObjectValue)
+                    {
+                        value = psObjectValue.BaseObject;
+                    }
+                    if (value is ArrayList arrayList)
+                    {
+                        value = arrayList.ToArray();
+                    }
+
                     var valueType = value.GetType();
                     var valueTypeName = valueType.FullName ?? valueType.Name;
 
@@ -411,7 +425,7 @@ namespace Microsoft365DSC.Converter
 
                         if (isNestedArray && complexTypeMapping.Any(ctm => ctm.Name.Equals(key, StringComparison.OrdinalIgnoreCase)))
                         {
-                            if (itemValue is Array array)
+                            if (itemValue is Array)
                             {
                                 _ = currentPropertyBuilder.Append($"{indent}{key} = @(");
                             }

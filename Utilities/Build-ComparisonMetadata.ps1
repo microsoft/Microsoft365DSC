@@ -32,11 +32,11 @@ param
 (
     [Parameter()]
     [System.String]
-    $ResourcesPath = (Join-Path -Path $PSScriptRoot -ChildPath '..\Modules\Microsoft365DSC\DSCResources'),
+    $ResourcesPath = (Join-Path -Path $PSScriptRoot -ChildPath '../Modules/Microsoft365DSC/DSCResources'),
 
     [Parameter()]
     [System.String]
-    $OutputPath = (Join-Path -Path $PSScriptRoot -ChildPath '..\Modules\Microsoft365DSC\ComparisonMetadata.json'),
+    $OutputPath = (Join-Path -Path $PSScriptRoot -ChildPath '../Modules/Microsoft365DSC/ComparisonMetadata.json'),
 
     [Parameter()]
     [switch]

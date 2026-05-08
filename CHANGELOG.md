@@ -1,6 +1,28 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.26.506.2
+
+* AADEntitlementManagementConnectedOrganization
+  * Fixed an issue where internal and external sponsors that are group were
+    not resolved correctly and omitted during the export.
+* ComplexObjectConverter
+  * Fixed an issue where `ToDscString` was not handling ArrayList correctly.
+    FIXES [#7103](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7103)
+* IntuneDeviceConfigurationKioskPolicyWindows10
+  * Fixed an issue where `odataType` was required for elements of type
+    `MSFT_MicrosoftGraphWindowsKioskWin32App` that don't need to have it specified.
+* IntuneDeviceConfigurationPolicyAndroidDeviceOwner
+  * Fixed an issue where not all properties were exported in elements of `KioskModeApps`.
+    FIXES [#7102](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7102)
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Added the new properties `TvosRestriction` and `VisionOSRestriction`.
+* SCDLPComplianceRule
+  * Fixed an issue where `ContentContainsSensitiveInformation` was not defined as array.
+* M365DSCUtil
+  * Reverted a change to array return values with `-NoEnumerate`.
+    FIXES [#7105](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7105)
+
+# 1.26.506.1
 
 * AADServicePrincipal
   * Fixed an issue where service principal as owners for other service principals
@@ -34,9 +56,15 @@
   * Added the new function `Get-M365DSCResourceDifferences`, which returns newly
     added or removed resources between different module versions.
     FIXES [#4416](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/4416)
+* MISC
+  * Changed the directory path separator from backslash (\\) to forward slash (/)
+    to ensure cross-platform compatibility.
+    FIXES [#7097](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7097)
 * DEPENDENCIES
-  * Rolled back Microsoft.Graph dependencies to version 2.35.1 to avoid
-    conflict with the EXO dependency.
+  * Rolled back the `Microsoft.Graph.*` dependencies to version 2.35.1 to avoid
+    conflict with the `ExchangeOnlineManagement` dependency.
+    FIXES [#7095](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7095)
+    FIXES [#7091](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7091)
 
 # 1.26.422.1
 

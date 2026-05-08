@@ -60,6 +60,14 @@ function Get-TargetResource
         $MacOSRestriction,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $TvosRestriction,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $VisionOSRestriction,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
@@ -279,6 +287,14 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $MacOSRestriction,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $TvosRestriction,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $VisionOSRestriction,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -547,6 +563,14 @@ function Test-TargetResource
         $MacOSRestriction,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $TvosRestriction,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $VisionOSRestriction,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
@@ -812,6 +836,32 @@ function Export-TargetResource
                 }
             }
 
+            if ($null -ne $Results.TvosRestriction)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.TvosRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
+                if ($complexTypeStringResult)
+                {
+                    $Results.TvosRestriction = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('TvosRestriction') | Out-Null
+                }
+            }
+
+            if ($null -ne $Results.VisionOSRestriction)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.VisionOSRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
+                if ($complexTypeStringResult)
+                {
+                    $Results.VisionOSRestriction = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('VisionOSRestriction') | Out-Null
+                }
+            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -819,7 +869,7 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Assignments', 'IosRestriction', 'WindowsRestriction', 'WindowsHomeSkuRestriction',
                 'WindowsMobileRestriction', 'AndroidRestriction', 'AndroidForWorkRestriction',
-                'MacRestriction', 'MacOSRestriction')
+                'MacRestriction', 'MacOSRestriction', 'TvosRestriction', 'VisionOSRestriction')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

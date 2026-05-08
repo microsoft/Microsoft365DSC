@@ -323,6 +323,8 @@ function Remove-UserAccount {
   - Use `ForEach-Object` instead of `%`
   - Use `Get-ChildItem` instead of `ls` or `dir`
 
+- **Directory Path Separator:** Use forward slashes (/) in directory paths to ensure cross-platform compatibility, even on Windows. For example, use `C:/Users/Username/Documents` instead of `C:\Users\Username\Documents`.
+
 ## Full Example: End-to-End Cmdlet Pattern
 
 ```powershell

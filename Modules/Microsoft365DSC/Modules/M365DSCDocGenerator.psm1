@@ -530,7 +530,7 @@ function New-DscMofResourceWikiPage
         $Force
     )
 
-    $mofSearchPath = Join-Path -Path $SourcePath -ChildPath '\**\*.schema.mof'
+    $mofSearchPath = Join-Path -Path $SourcePath -ChildPath '/**/*.schema.mof'
     $mofSchemaFiles = @(Get-ChildItem -Path $mofSearchPath -Recurse)
 
     Write-Verbose -Message ("Found {0} MOF files in path '{1}'." -f $mofSchemaFiles.Count, $SourcePath)
@@ -864,7 +864,7 @@ function New-DscMofResourceWikiPage
             $null = $output.AppendLine($permissionsContent)
 
             # Adding examples
-            $examplesPath = Join-Path -Path $SourcePath -ChildPath ('..\..\Examples\Resources\{0}' -f $resourceSchema.FriendlyName)
+            $examplesPath = Join-Path -Path $SourcePath -ChildPath ('../../Examples/Resources/{0}' -f $resourceSchema.FriendlyName)
 
             $examplesOutput = Get-ResourceExampleAsMarkdown -Path $examplesPath
 
@@ -952,7 +952,7 @@ function Update-M365DSCResourceDocumentationPage
 
     New-DscMofResourceWikiPage @newDscMofResourceWikiPageParameters
 
-    $resourceDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\docs\docs\resources'
+    $resourceDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '../../docs/docs/resources'
 
     Write-Output -InputObject '  - Moving generated pages to the Docs folder'
 
