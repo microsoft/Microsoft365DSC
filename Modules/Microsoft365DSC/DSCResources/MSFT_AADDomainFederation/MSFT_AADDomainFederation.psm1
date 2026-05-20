@@ -584,7 +584,7 @@ function Export-TargetResource
     {
         [array] $domains = Get-MgBetaDomain -ErrorAction Stop |
             Where-Object { $_.AuthenticationType -eq 'Federated' }
-        [array] $Script:exportedInstances = @()
+        [array] $exportedInstances = @()
 
         # Get federation configurations for federated domains only
         foreach ($domain in $domains)
@@ -606,7 +606,7 @@ function Export-TargetResource
                     foreach ($config in $configsToExport)
                     {
                         $config | Add-Member -MemberType NoteProperty -Name 'DomainId' -Value $domain.Id -Force
-                        $Script:exportedInstances += $config
+                        $exportedInstances += $config
                     }
                 }
             }
@@ -617,8 +617,8 @@ function Export-TargetResource
         }
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -627,7 +627,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -635,7 +635,7 @@ function Export-TargetResource
             }
 
             $displayedKey = "$($config.DomainId) - $($config.DisplayName)"
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 DomainId              = $config.DomainId
                 Id                    = $config.Id
@@ -656,13 +656,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

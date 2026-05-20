@@ -164,18 +164,15 @@ function Add-M365DSCTelemetryEvent
                     $currentUserId = $currentUser.id
 
                     $assignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "principalId eq '$currentUserId'" `
-                        -Property @('RoleDefinitionId', 'DirectoryScopeId') -All -ErrorAction 'SilentlyContinue'
+                        -Property @('RoleDefinitionId', 'DirectoryScopeId') -ExpandProperty 'roleDefinition($select=displayName)' -All -ErrorAction 'SilentlyContinue'
 
                     if ($null -ne $assignments)
                     {
-                        $roles = Get-MgBetaRoleManagementDirectoryRoleDefinition -All `
-                            -Property @('Id', 'DisplayName')
                         foreach ($assignment in $assignments)
                         {
-                            $role = $roles | Where-Object -FilterScript { $_.Id -eq $assignment.RoleDefinitionId }
-                            if ($null -ne $role)
+                            if ($null -ne $assignment.RoleDefinition)
                             {
-                                $Script:M365DSCCurrentRoles += $role.DisplayName + '|' + $assignment.DirectoryScopeId
+                                $Script:M365DSCCurrentRoles += $assignment.RoleDefinition.DisplayName + '|' + $assignment.DirectoryScopeId
                             }
                         }
                         $Data.Add('M365DSCCurrentRoles', $Script:M365DSCCurrentRoles -join ',')
@@ -201,17 +198,14 @@ function Add-M365DSCTelemetryEvent
                         if ($null -ne $sp)
                         {
                             $assignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "principalId eq '$($sp.Id)'" `
-                                -Property @('RoleDefinitionId', 'DirectoryScopeId') -All -ErrorAction 'SilentlyContinue'
+                                -Property @('RoleDefinitionId', 'DirectoryScopeId') -ExpandProperty 'roleDefinition($select=displayName)' -All -ErrorAction 'SilentlyContinue'
                             if ($null -ne $assignments)
                             {
-                                $roles = Get-MgBetaRoleManagementDirectoryRoleDefinition -All `
-                                    -Property @('Id', 'DisplayName')
                                 foreach ($assignment in $assignments)
                                 {
-                                    $role = $roles | Where-Object -FilterScript { $_.Id -eq $assignment.RoleDefinitionId }
-                                    if ($null -ne $role)
+                                    if ($null -ne $assignment.RoleDefinition)
                                     {
-                                        $Script:M365DSCCurrentRoles += $role.DisplayName + '|' + $assignment.DirectoryScopeId
+                                        $Script:M365DSCCurrentRoles += $assignment.RoleDefinition.DisplayName + '|' + $assignment.DirectoryScopeId
                                     }
                                 }
                                 $Data.Add('M365DSCCurrentRoles', $Script:M365DSCCurrentRoles -join ',')
@@ -503,10 +497,6 @@ function Add-M365DSCTelemetryEvent
                 Write-Error $_
             }
         }
-    }
-    else
-    {
-        return
     }
 }
 

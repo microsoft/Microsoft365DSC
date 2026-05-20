@@ -840,7 +840,7 @@ function Export-TargetResource
     {
         [array]$policies = Get-LabelPolicy -ErrorAction Stop -WarningAction Ignore
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         if ($policies.Length -eq 0)
         {
@@ -894,7 +894,7 @@ function Export-TargetResource
                 -NoEscape @('AdvancedSettings')
 
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
@@ -910,7 +910,7 @@ function Export-TargetResource
 
         throw
     }
-    return $dscContent
+    return $dscContent.ToString()
 }
 
 function Convert-StringToAdvancedSettings

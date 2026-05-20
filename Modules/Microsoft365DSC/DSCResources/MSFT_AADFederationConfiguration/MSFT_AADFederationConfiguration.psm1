@@ -435,11 +435,11 @@ function Export-TargetResource
         {
             $uri += "?`$filter=$Filter"
         }
-        [array] $Script:exportedInstances = Invoke-MgGraphRequest $uri -Method Get
+        [array] $exportedInstances = Invoke-MgGraphRequest $uri -Method Get
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -447,7 +447,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances.value)
+        foreach ($config in $exportedInstances.value)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -455,7 +455,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.displayName
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 DisplayName           = $config.displayName
                 Id                    = $config.Id
@@ -476,13 +476,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

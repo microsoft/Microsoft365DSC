@@ -881,7 +881,7 @@ function Export-TargetResource
 
     try
     {
-        $Script:currentModeIsExport = $true
+        $dscContent = [System.Text.StringBuilder]::new()
         $mailboxes = Get-Mailbox -ResultSize 'Unlimited' -ErrorAction Stop
 
         if ($null -eq $mailboxes)
@@ -930,7 +930,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -938,8 +938,7 @@ function Export-TargetResource
             $i++
         }
 
-
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

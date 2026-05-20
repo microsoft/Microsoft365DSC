@@ -698,8 +698,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Address Lists"
             return ''
         }
-        $dscContent = ''
-        $Script:ExportMode = $true
+        $dscContent = [System.Text.StringBuilder]::new()
         [array] $Script:exportedInstances = Get-Addresslist -ErrorAction Stop
         if ($Script:exportedInstances.Length -eq 0)
         {
@@ -737,14 +736,14 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i ++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

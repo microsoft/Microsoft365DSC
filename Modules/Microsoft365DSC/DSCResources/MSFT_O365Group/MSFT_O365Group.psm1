@@ -85,11 +85,11 @@ function Get-TargetResource
             $nullReturn.Ensure = 'Absent'
 
             Write-Verbose -Message "Retrieving AzureADGroup by MailNickName {$MailNickName}"
-            [array]$ADGroup = Get-MgGroup -All:$true | Where-Object -FilterScript { $_.MailNickName -eq $MailNickName }
+            [array]$ADGroup = Get-MgGroup -All | Where-Object -FilterScript { $_.MailNickName -eq $MailNickName }
             if ($null -eq $ADGroup)
             {
                 Write-Verbose -Message "Retrieving AzureADGroup by DisplayName {$DisplayName}"
-                [array]$ADGroup = Get-MgGroup -All:$true | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+                [array]$ADGroup = Get-MgGroup -All | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
                 if ($null -eq $ADGroup)
                 {
                     Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
@@ -283,11 +283,11 @@ function Set-TargetResource
             Write-Verbose -Message 'Group Created'
         }
 
-        [array]$ADGroup = Get-MgGroup -All:$true | Where-Object -FilterScript { $_.MailNickName -eq $MailNickName }
+        [array]$ADGroup = Get-MgGroup -All | Where-Object -FilterScript { $_.MailNickName -eq $MailNickName }
         if ($null -eq $ADGroup)
         {
             Write-Verbose -Message "Retrieving AzureADGroup by DisplayName {$DisplayName}"
-            [array]$ADGroup = Get-MgGroup -All:$true | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+            [array]$ADGroup = Get-MgGroup -All | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             if ($null -eq $ADGroup)
             {
                 Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
@@ -563,7 +563,7 @@ function Export-TargetResource
 
     try
     {
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $ExportParameters = @{
             Filter      = $Filter
             All         = [switch]$true
@@ -607,14 +607,14 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

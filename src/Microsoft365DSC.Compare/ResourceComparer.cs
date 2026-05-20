@@ -149,9 +149,6 @@ namespace Microsoft365DSC.Compare
                 object? desiredRaw = desiredValues.ContainsKey(key) ? desiredValues[key] : null;
                 object? currentRaw = currentValues.ContainsKey(key) ? currentValues[key] : null;
 
-                if (desiredRaw is null)
-                    continue;
-
                 // Normalize both sides to uniform Hashtable/object[] trees
                 object? normalizedDesired = ObjectNormalizer.Normalize(desiredRaw);
                 object? normalizedCurrent = ObjectNormalizer.Normalize(currentRaw);

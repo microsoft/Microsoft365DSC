@@ -311,10 +311,10 @@ function Export-TargetResource
 
     try
     {
-        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop -Filter $filter
+        [array]$groups = Get-MgGroup -All -ErrorAction Stop -Filter $filter
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($group in $groups)
         {
@@ -354,7 +354,7 @@ function Export-TargetResource
                             -ModulePath $PSScriptRoot `
                             -Results $Results `
                             -Credential $Credential
-                        $dscContent += $currentDSCBlock
+                        [void]$dscContent.Append($currentDSCBlock)
 
                         Save-M365DSCPartialExport -Content $currentDSCBlock `
                             -FileName $Global:PartialExportFileName
@@ -376,7 +376,7 @@ function Export-TargetResource
                     -Credential $Credential
             }
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

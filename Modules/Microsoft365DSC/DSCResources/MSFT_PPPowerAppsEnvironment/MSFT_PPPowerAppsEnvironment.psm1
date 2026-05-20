@@ -423,7 +423,7 @@ function Export-TargetResource
             "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments?`$expand=permissions&api-version=2016-11-01"
 
         [array]$environments = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
 
         if ($environments.Length -eq 0)
@@ -468,7 +468,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
 
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
@@ -481,7 +481,7 @@ function Export-TargetResource
             }
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

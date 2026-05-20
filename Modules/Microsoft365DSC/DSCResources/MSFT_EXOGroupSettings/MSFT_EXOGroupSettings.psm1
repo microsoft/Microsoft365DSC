@@ -735,8 +735,7 @@ function Set-TargetResource
             foreach ($member in $UpdateParameters.$key)
             {
                 # If member is a GUID, keep as-is
-                $guid = [System.Guid]::Empty
-                if ([System.Guid]::TryParse($member, [ref]$guid))
+                if ([System.Guid]::TryParse($member, [ref][System.Guid]::Empty))
                 {
                     $convertedList.Add($member)
                     continue
@@ -1074,11 +1073,10 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-UnifiedGroup -ResultSize Unlimited @Script:displayNameProperties -ErrorAction SilentlyContinue
+        [array] $exportedInstances = Get-UnifiedGroup -ResultSize Unlimited @Script:displayNameProperties -ErrorAction SilentlyContinue
 
         $i = 1
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -1087,9 +1085,9 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n"-DeferWrite
         }
         $dscContent = [System.Text.StringBuilder]::New()
-        foreach ($group in $Script:exportedInstances)
+        foreach ($group in $exportedInstances)
         {
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Length)] $($group.DisplayName)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Length)] $($group.DisplayName)" -DeferWrite
             $groupName = $group.DisplayName
             if (-not [System.String]::IsNullOrEmpty($groupName))
             {
@@ -1119,7 +1117,7 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
-                    $dscContent.Append($currentDSCBlock) | Out-Null
+                    [void]$dscContent.Append($currentDSCBlock)
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
 
@@ -1185,8 +1183,7 @@ function Get-CompareParameters
                     $convertedValues = @()
                     foreach ($member in $DesiredValues.$key)
                     {
-                        $guid = [System.Guid]::Empty
-                        if ([System.Guid]::TryParse($member, [ref]$guid))
+                        if ([System.Guid]::TryParse($member, [ref][System.Guid]::Empty))
                         {
                             $entry = Get-Recipient -Identity $member
                             $convertedValues += $entry.PrimarySmtpAddress

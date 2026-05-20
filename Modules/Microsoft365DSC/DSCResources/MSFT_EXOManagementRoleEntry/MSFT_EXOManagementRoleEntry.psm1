@@ -377,12 +377,11 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-ManagementRoleEntry -Identity '*\*' -ResultSize 'Unlimited'
+        [array] $exportedInstances = Get-ManagementRoleEntry -Identity '*\*' -ResultSize 'Unlimited'
 
         $dscContent = [System.Text.StringBuilder]::New()
 
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -391,14 +390,14 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $i = 1
-        foreach ($roleEntry in $Script:exportedInstances)
+        foreach ($roleEntry in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $($roleEntry.Identity + '\' + $roleEntry.Name)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $($roleEntry.Identity + '\' + $roleEntry.Name)" -DeferWrite
 
             $Params = @{
                 Identity              = $roleEntry.Identity + '\' + $roleEntry.Name
@@ -418,7 +417,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent.Append($currentDSCBlock) | Out-Null
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite

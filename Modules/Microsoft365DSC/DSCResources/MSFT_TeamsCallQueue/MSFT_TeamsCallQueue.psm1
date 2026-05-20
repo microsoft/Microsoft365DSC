@@ -914,7 +914,7 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array] $Script:exportedInstances = @()
+        [array] $exportedInstances = @()
         $offset = 0
 
         do
@@ -922,7 +922,7 @@ function Export-TargetResource
             [array] $currentBatch = Get-CsCallQueue -NameFilter $Filter -First 100 -Skip $offset
             if ($currentBatch)
             {
-                $Script:exportedInstances += $currentBatch
+                $exportedInstances += $currentBatch
                 $offset += $currentBatch.Count
             }
         } while ($currentBatch.Count -eq 100)
@@ -956,7 +956,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent.Append($currentDSCBlock) | Out-Null
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++

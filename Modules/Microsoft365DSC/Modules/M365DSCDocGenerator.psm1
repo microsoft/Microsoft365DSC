@@ -952,7 +952,7 @@ function Update-M365DSCResourceDocumentationPage
 
     New-DscMofResourceWikiPage @newDscMofResourceWikiPageParameters
 
-    $resourceDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '../../docs/docs/resources'
+    $resourceDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '../../../docs/docs/resources'
 
     Write-Output -InputObject '  - Moving generated pages to the Docs folder'
 

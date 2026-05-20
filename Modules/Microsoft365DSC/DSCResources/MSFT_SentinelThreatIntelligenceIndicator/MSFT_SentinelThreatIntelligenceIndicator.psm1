@@ -553,12 +553,11 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         $workspaces = Get-AzResource -ResourceType 'Microsoft.OperationalInsights/workspaces'
-        $Script:exportedInstances = @()
+        $exportedInstances = @()
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -623,14 +622,14 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 $j++
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

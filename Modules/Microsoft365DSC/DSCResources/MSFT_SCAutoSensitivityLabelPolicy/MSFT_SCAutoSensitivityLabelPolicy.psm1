@@ -687,7 +687,7 @@ function Export-TargetResource
     {
         [array]$policies = Get-AutoSensitivityLabelPolicy -ErrorAction Stop
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         if ($policies.Length -eq 0)
         {
@@ -715,7 +715,7 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
@@ -738,7 +738,7 @@ function Export-TargetResource
             throw
         }
     }
-    return $dscContent
+    return $dscContent.ToString()
 }
 
 Export-ModuleMember -Function *-TargetResource

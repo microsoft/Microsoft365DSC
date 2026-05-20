@@ -344,7 +344,7 @@ function Export-TargetResource
     #endregion
     try
     {
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $command = Get-Command Get-PolicyTipConfig -ErrorAction SilentlyContinue
         if ($null -ne $command)
         {
@@ -386,7 +386,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -397,7 +397,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Policy Tip Configurations." -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

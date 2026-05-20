@@ -56,49 +56,50 @@ function Get-TargetResource
 
     try
     {
-        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
-        }
-        else
-        {
-            Write-Verbose -Message "GET: Resolving instance by Id '$Id' or DisplayName '$DisplayName'"
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 $instance = Get-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration `
                     -CertificateBasedApplicationConfigurationId $Id `
                     -ErrorAction SilentlyContinue
             }
-            else
+
+            if ($null -eq $instance)
             {
-                $instances = Get-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration -All `
+                Write-Verbose -Message "Could not find an AAD Certificate Based Application Configuration with Id {$Id}"
+                $instance = Get-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration -All `
+                    -Filter "displayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
-                $instance = $instances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            }
+
+            if ($null -eq $instance)
+            {
+                Write-Verbose -Message "Could not find an AAD Certificate Based Application Configuration with DisplayName {$DisplayName}"
+                return $nullResult
             }
         }
-
-        if ($null -eq $instance)
+        else
         {
-            Write-Verbose -Message "GET: No matching instance found; returning Absent"
-            return $nullResult
+            $instance = $Script:exportedInstance
         }
 
         # Get trusted certificate authorities using the dedicated cmdlet
@@ -113,7 +114,6 @@ function Get-TargetResource
             foreach ($ca in $certificateAuthorities)
             {
                 $certificateValue = ConvertTo-M365DSCBase64CertificateValue -CertificateValue $ca.Certificate
-
                 $trustedCAs += @{
                     Certificate                 = $certificateValue
                     IsRootAuthority             = [System.Boolean]$ca.IsRootAuthority
@@ -607,13 +607,12 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration -All -ErrorAction Stop
+        [array] $exportedInstances = Get-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration -All -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
 
-        if ($Script:exportedInstances.Count -eq 0)
+        if ($exportedInstances.Count -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -622,7 +621,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -630,7 +629,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.DisplayName
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
 
             $params = @{
                 DisplayName           = $config.DisplayName
@@ -644,6 +643,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
 
             if ($null -ne $Results.TrustedCertificateAuthorities -and $Results.TrustedCertificateAuthorities.Count -gt 0)
@@ -682,13 +682,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('TrustedCertificateAuthorities')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

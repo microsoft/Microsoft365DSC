@@ -153,7 +153,7 @@ function Get-TargetResource
             if ($null -eq $getValue.IdentitySynchronization.GroupSyncInbound.IsSyncAllowed)
             {
                 $IdentitySynchronizationValue.Remove('GroupSyncInbound') | Out-Null
-            }            
+            }
             if ($null -eq $getValue.IdentitySynchronization.UserSyncInbound.IsSyncAllowed)
             {
                 $IdentitySynchronizationValue.Remove('UserSyncInbound') | Out-Null
@@ -484,7 +484,7 @@ function Export-TargetResource
             -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($entry in $getValue)
         {
@@ -740,14 +740,14 @@ function Export-TargetResource
             # Fix OrganizationName variable in CIMInstance
             $currentDSCBlock = $currentDSCBlock.Replace('@$OrganizationName''', "@' + `$OrganizationName")
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

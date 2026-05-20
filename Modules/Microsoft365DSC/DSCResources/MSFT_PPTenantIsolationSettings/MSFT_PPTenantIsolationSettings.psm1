@@ -662,7 +662,7 @@ function Export-TargetResource
             $Global:M365DSCExportResourceInstancesCount++
         }
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
 
         $Params = @{
             IsSingleInstance      = 'Yes'
@@ -707,7 +707,7 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Rules')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -719,7 +719,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

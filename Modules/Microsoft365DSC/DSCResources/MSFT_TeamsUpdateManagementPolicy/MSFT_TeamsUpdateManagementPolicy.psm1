@@ -442,7 +442,7 @@ function Export-TargetResource
     {
         [array]$policies = Get-CsTeamsUpdateManagementPolicy -Filter $Filter -ErrorAction Stop
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($policy in $policies)
         {
@@ -469,13 +469,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $result `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -340,8 +340,7 @@ function Get-TargetResource
         #endregion
 
         $AccessPackageIdValue = $getValue.AccessPackageId
-        $objectGuid = [System.Guid]::Empty
-        $isGUID = [System.Guid]::TryParse($AccessPackageIdValue, [System.Management.Automation.PSReference]$objectGuid)
+        $isGUID = [System.Guid]::TryParse($AccessPackageIdValue, [ref][System.Guid]::Empty)
         if ($isGUID)
         {
             $accesspackage = Get-MgBetaEntitlementManagementAccessPackage -AccessPackageId $AccessPackageIdValue
@@ -564,8 +563,7 @@ function Set-TargetResource
             elseif ($odataType -eq '#microsoft.graph.groupMembers')
             {
                 # Handle group members - convert DisplayName to GUID if needed
-                $ObjectGuid = [System.Guid]::empty
-                $isGUID = [System.Guid]::TryParse($requestor.Id, [System.Management.Automation.PSReference]$ObjectGuid)
+                $isGUID = [System.Guid]::TryParse($requestor.Id, [ref][System.Guid]::Empty)
 
                 if (-not $isGUID)
                 {
@@ -601,8 +599,7 @@ function Set-TargetResource
     # Check to see if the AccessPackageId is in GUID form. If not, resolve it by name.
     if (-not [System.String]::IsNullOrEmpty($AccessPackageId))
     {
-        $objectGuid = [System.Guid]::Empty
-        $isGUID = [System.Guid]::TryParse($AccessPackageId, [System.Management.Automation.PSReference]$objectGuid)
+        $isGUID = [System.Guid]::TryParse($AccessPackageId, [ref][System.Guid]::Empty)
         if (-not $isGUID)
         {
             # Retrieve by name
@@ -809,7 +806,7 @@ function Export-TargetResource
             -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -985,13 +982,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('AccessReviewSettings', 'Questions', 'RequestApprovalSettings', 'RequestorSettings', 'CustomExtensionHandlers')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

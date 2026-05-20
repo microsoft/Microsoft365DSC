@@ -49,6 +49,22 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $OneDriveSharedBy,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfOneDriveSharedBy,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfOneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.String[]]
         $OnPremisesScannerDlpLocation,
 
         [Parameter()]
@@ -183,28 +199,68 @@ function Get-TargetResource
             }
         }
 
+        $oneDriveSharedByValue = @()
+        if ($null -ne $PolicyObject.OneDriveSharedBy)
+        {
+            foreach ($member in $PolicyObject.OneDriveSharedBy)
+            {
+                $oneDriveSharedByValue += (ConvertFrom-Json $member).PrimarySmtpAddress
+            }
+        }
+
+        $oneDriveSharedByMemberOfValue = @()
+        if ($null -ne $PolicyObject.OneDriveSharedByMemberOf)
+        {
+            foreach ($member in $PolicyObject.OneDriveSharedByMemberOf)
+            {
+                $oneDriveSharedByMemberOfValue += (ConvertFrom-Json $member).DisplayName
+            }
+        }
+
+        $exceptIfOneDriveSharedByValue = @()
+        if ($null -ne $PolicyObject.ExceptIfOneDriveSharedBy)
+        {
+            foreach ($member in $PolicyObject.ExceptIfOneDriveSharedBy)
+            {
+                $exceptIfOneDriveSharedByValue += (ConvertFrom-Json $member).PrimarySmtpAddress
+            }
+        }
+
+        $exceptIfOneDriveSharedByMemberOfValue = @()
+        if ($null -ne $PolicyObject.ExceptIfOneDriveSharedByMemberOf)
+        {
+            foreach ($member in $PolicyObject.ExceptIfOneDriveSharedByMemberOf)
+            {
+                $exceptIfOneDriveSharedByMemberOfValue += (ConvertFrom-Json $member).DisplayName
+            }
+        }
+
         $result = @{
             Ensure                                = 'Present'
             Name                                  = $PolicyObject.Name
             Comment                               = $PolicyObject.Comment
-            EndpointDlpLocation                   = $PolicyObject.EndpointDlpLocation.Name
+            EndpointDlpLocation                   = Get-M365DSCArrayFromProperty -PropertyValue $PolicyObject.EndpointDlpLocation.Name -ElementType ([System.String])
             EndpointDlpLocationException          = $PolicyObject.EndpointDlpLocationException
-            ExchangeLocation                      = $PolicyObject.ExchangeLocation.Name
+            ExchangeLocation                      = Get-M365DSCArrayFromProperty -PropertyValue $PolicyObject.ExchangeLocation.Name -ElementType ([System.String])
             ExchangeSenderMemberOf                = $ExchangeSenderMemberOfValue
             ExchangeSenderMemberOfException       = $ExchangeSenderMemberOfExceptionValue
             Mode                                  = $PolicyObject.Mode
-            OneDriveLocation                      = $PolicyObject.OneDriveLocation.Name
+            OneDriveLocation                      = Get-M365DSCArrayFromProperty -PropertyValue $PolicyObject.OneDriveLocation.Name -ElementType ([System.String])
             OneDriveLocationException             = $PolicyObject.OneDriveLocationException
-            OnPremisesScannerDlpLocation          = $PolicyObject.OnPremisesScannerDlpLocation.Name
+            OneDriveSharedBy                      = $oneDriveSharedByValue
+            OneDriveSharedByMemberOf              = $oneDriveSharedByMemberOfValue
+            ExceptIfOneDriveSharedBy              = $exceptIfOneDriveSharedByValue
+            ExceptIfOneDriveSharedByMemberOf      = $exceptIfOneDriveSharedByMemberOfValue
+            OnPremisesScannerDlpLocation          = Get-M365DSCArrayFromProperty -PropertyValue $PolicyObject.OnPremisesScannerDlpLocation.Name -ElementType ([System.String])
             OnPremisesScannerDlpLocationException = $PolicyObject.OnPremisesScannerDlpLocationException
-            PowerBIDlpLocation                    = $PolicyObject.PowerBIDlpLocation.Name
+            PowerBIDlpLocation                    = Get-M365DSCArrayFromProperty -PropertyValue $PolicyObject.PowerBIDlpLocation.Name -ElementType ([System.String])
             PowerBIDlpLocationException           = $PolicyObject.PowerBIDlpLocationException
             Priority                              = $PolicyObject.Priority
-            SharePointLocation                    = $PolicyObject.SharePointLocation.Name
+            SharePointLocation                    = Get-M365DSCArrayFromProperty -PropertyValue $PolicyObject.SharePointLocation.Name -ElementType ([System.String])
             SharePointLocationException           = $PolicyObject.SharePointLocationException
-            TeamsLocation                         = $PolicyObject.TeamsLocation.Name
+            TeamsLocation                         = Get-M365DSCArrayFromProperty -PropertyValue $PolicyObject.TeamsLocation.Name -ElementType ([System.String])
             TeamsLocationException                = $PolicyObject.TeamsLocationException
-            ThirdPartyAppDlpLocation              = $PolicyObject.ThirdPartyAppDlpLocation.Name
+            ThirdPartyAppDlpLocation              = Get-M365DSCArrayFromProperty -PropertyValue $PolicyObject.ThirdPartyAppDlpLocation.Name -ElementType ([System.String])
             ThirdPartyAppDlpLocationException     = $PolicyObject.ThirdPartyAppDlpLocationException
             Credential                            = $Credential
             ApplicationId                         = $ApplicationId
@@ -274,6 +330,22 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $OneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveSharedBy,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfOneDriveSharedBy,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfOneDriveSharedByMemberOf,
 
         [Parameter()]
         [System.String[]]
@@ -368,6 +440,47 @@ function Set-TargetResource
     #endregion
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
+
+    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    if ($PSBoundParameters.ContainsKey('OneDriveSharedByMemberOf') -and $OneDriveSharedByMemberOf.Count -gt 0)
+    {
+        $groupIds = @()
+        foreach ($group in $OneDriveSharedByMemberOf)
+        {
+            $groupObject = Get-MgGroup -Filter "displayName eq '$group'" -Select Id -ErrorAction Stop
+            if ($null -ne $groupObject)
+            {
+                $groupIds += $groupObject.Id
+            }
+            else
+            {
+                throw "Failed to find group with display name '$group' to add to OneDriveSharedByMemberOf. Ensure the group exists and the display name is correct."
+            }
+        }
+        $PSBoundParameters.Remove('OneDriveSharedByMemberOf') | Out-Null
+        $PSBoundParameters.Add('OneDriveSharedByMemberOf', $groupIds)
+    }
+
+    if ($PSBoundParameters.ContainsKey('ExceptIfOneDriveSharedByMemberOf') -and $ExceptIfOneDriveSharedByMemberOf.Count -gt 0)
+    {
+        $exceptGroupIds = @()
+        foreach ($group in $ExceptIfOneDriveSharedByMemberOf)
+        {
+            $groupObject = Get-MgGroup -Filter "displayName eq '$group'" -Select Id -ErrorAction Stop
+            if ($null -ne $groupObject)
+            {
+                $exceptGroupIds += $groupObject.Id
+            }
+            else
+            {
+                throw "Failed to find group with display name '$group' to add to ExceptIfOneDriveSharedByMemberOf. Ensure the group exists and the display name is correct."
+            }
+        }
+        $PSBoundParameters.Remove('ExceptIfOneDriveSharedByMemberOf') | Out-Null
+        $PSBoundParameters.Add('ExceptIfOneDriveSharedByMemberOf', $exceptGroupIds)
+    }
 
     if ($Ensure -eq 'Present' -and $CurrentPolicy.Ensure -eq 'Absent')
     {
@@ -777,6 +890,22 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $OneDriveSharedBy,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfOneDriveSharedBy,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfOneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.String[]]
         $OnPremisesScannerDlpLocation,
 
         [Parameter()]
@@ -922,7 +1051,7 @@ function Export-TargetResource
         [array] $policies = Get-DLPCompliancePolicy -ErrorAction Stop | Where-Object -FilterScript { $_.Mode -ne 'PendingDeletion' }
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($policies.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -946,13 +1075,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

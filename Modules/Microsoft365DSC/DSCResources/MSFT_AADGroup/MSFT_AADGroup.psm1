@@ -1231,7 +1231,6 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         $ExportParameters = @{
             Filter         = $Filter
             All            = [switch]$true
@@ -1282,7 +1281,7 @@ function Export-TargetResource
         } | Sort-Object -Property DisplayName
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($group in $Script:exportedGroups)
         {
@@ -1339,14 +1338,14 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('AssignedLicenses')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -95,9 +95,8 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Availability Config"
 
-        $guid = [System.Guid]::Empty
         $OrgWideAccount = $availabilityConfig.OrgWideAccount
-        if ($null -ne $availabilityConfig -and -not [System.String]::IsNullOrEmpty($OrgWideAccount) -and [System.Guid]::TryParse($OrgWideAccount, [ref]$guid))
+        if ($null -ne $availabilityConfig -and -not [System.String]::IsNullOrEmpty($OrgWideAccount) -and [System.Guid]::TryParse($OrgWideAccount, [ref][System.Guid]::Empty))
         {
             $user = Get-User -Identity $OrgWideAccount -ErrorAction SilentlyContinue
             if ($null -ne $user)
@@ -391,18 +390,19 @@ function Export-TargetResource
             AccessTokens          = $AccessTokens
         }
         $Script:exportedInstance = $AvailabilityConfig
+        $dscContent = [System.Text.StringBuilder]::new()
         $Results = Get-TargetResource @Params
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -Credential $Credential
-        $dscContent += $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
 
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

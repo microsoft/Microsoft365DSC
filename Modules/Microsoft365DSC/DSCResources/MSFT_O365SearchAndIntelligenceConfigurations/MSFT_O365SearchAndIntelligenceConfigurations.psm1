@@ -433,7 +433,7 @@ function Export-TargetResource
         }
 
         $Results = Get-TargetResource @Params
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -441,14 +441,14 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
         }
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -119,6 +119,7 @@ function Get-TargetResource
         throw
     }
 }
+
 function Set-TargetResource
 {
     [CmdletBinding()]
@@ -315,7 +316,7 @@ function Export-TargetResource
 
         # Get all instances;
         $instances = Get-PnPUser | Where-Object -FilterScript { $_.PrincipalType -eq 'User' -and '' -ne $_.Email }
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         $i = 1
         $Script:ExportMode = $true
@@ -373,7 +374,7 @@ function Export-TargetResource
                         -Results $Results `
                         -Credential $Credential `
                         -NoEscape @('Properties')
-                    $dscContent += $currentDSCBlock
+                    [void]$dscContent.Append($currentDSCBlock)
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                 }
@@ -395,6 +396,7 @@ function Export-TargetResource
         {
             $principal = $organization.Split('.')[0]
         }
+        $dscContent = $dscContent.ToString()
         if ($dscContent.ToLower().Contains($organization.ToLower()) -or `
                 $dscContent.ToLower().Contains($principal.ToLower()))
         {

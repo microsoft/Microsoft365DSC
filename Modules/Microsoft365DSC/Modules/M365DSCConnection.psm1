@@ -69,8 +69,7 @@ function New-M365DSCConnection
 
                 if ($null -ne $_.TenantId)
                 {
-                    $parseGuid = [System.Guid]::Empty
-                    $isValid = [System.Guid]::TryParse($_.TenantId, [ref]$parseGuid)
+                    $isValid = [System.Guid]::TryParse($_.TenantId, [ref][System.Guid]::Empty)
                     if ($isValid)
                     {
                         throw 'Please provide the tenant name (e.g., contoso.onmicrosoft.com) for TenantId instead of its GUID.'

@@ -389,7 +389,7 @@ function Export-TargetResource
         # Get all Site Collections in tenant;
         $sites = Get-PnPTenantSite -ErrorAction Stop
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
 
         if ($sites.Length -eq 0)
         {
@@ -469,7 +469,7 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
-                    $dscContent += $currentDSCBlock
+                    [void]$dscContent.Append($currentDSCBlock)
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
 
@@ -509,6 +509,7 @@ function Export-TargetResource
             $principal = $organization.Split('.')[0]
         }
 
+        $dscContent = $dscContent.ToString()
         if ($dscContent.ToLower().Contains($organization.ToLower()) -or `
                 $dscContent.ToLower().Contains($principal.ToLower()))
         {

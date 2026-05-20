@@ -20,6 +20,98 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EmailSignatureExclusionSettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UserAnalyticsSettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCPromptShields,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCProtectedMaterialDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCSensitiveInformationType,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCSupervisionRuleMatch,
+
+        [Parameter()]
+        [System.Boolean]
+        $CompromisedSignInAlerts,
+
+        [Parameter()]
+        [System.Boolean]
+        $CompromisedUserAlerts,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectedAIAppRiskyPrompt,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectedAIAppSensitiveResponse,
+
+        [Parameter()]
+        [System.Boolean]
+        $CopilotRiskyPrompt,
+
+        [Parameter()]
+        [System.Boolean]
+        $CopilotSensitiveResponse,
+
+        [Parameter()]
+        [System.Boolean]
+        $FabricExternalDataSharingSwitchEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $HighSeverityDlpRuleMatch,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseArtifactDeleted,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseExternalDataShareCreated,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseFileOrBlobDeleted,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseSensitivityLabelDowngraded,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseSensitivityLabelRemoved,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkDownloadFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkDownloadText,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkUploadFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkUploadText,
+
+        [Parameter()]
+        [System.Boolean]
         $InlineAlertPolicyCustomization,
 
         [Parameter()]
@@ -389,6 +481,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $UserHistory,
+
+        [Parameter()]
+        [System.Boolean]
+        $AIAppRiskyPrompt,
 
         [Parameter()]
         [System.Boolean]
@@ -825,11 +921,23 @@ function Get-TargetResource
                 $MDATPTriageStatusValue = [Array]($tenantSettings.IntelligentDetections.MDATPTriageStatus.Replace('"', '').Replace('[', '').Replace(']', '').Split(','))
             }
 
-            $IRASettingsEnabledValue = $false
-            if ($null -ne $tenantSettings.InterpretedSettings -and `
-                    -not [System.String]::IsNullOrEmpty($tenantSettings.InterpretedSettings.IRASettings.Enabled))
+            if ($null -ne $tenantSettings.InterpretedSettings)
             {
-                $IRASettingsEnabledValue = [Boolean]::Parse($tenantSettings.InterpretedSettings.IRASettings.Enabled)
+                $IRASettingsEnabledValue = $false
+                if (-not [System.String]::IsNullOrEmpty($tenantSettings.InterpretedSettings.IRASettings.Enabled))
+                {
+                    $IRASettingsEnabledValue = [Boolean]::Parse($tenantSettings.InterpretedSettings.IRASettings.Enabled)
+                }
+                $EmailSignatureExclusionSettingsEnabledValue = $false
+                if (-not [System.String]::IsNullOrEmpty($tenantSettings.InterpretedSettings.EmailSignatureExclusionSettings.Enabled))
+                {
+                    $EmailSignatureExclusionSettingsEnabledValue = [Boolean]::Parse($tenantSettings.InterpretedSettings.EmailSignatureExclusionSettings.Enabled)
+                }
+                $UserAnalyticsSettingsEnabledValue = $false
+                if (-not [System.String]::IsNullOrEmpty($tenantSettings.InterpretedSettings.UserAnalyticsSettings.Enabled))
+                {
+                    $UserAnalyticsSettingsEnabledValue = [Boolean]::Parse($tenantSettings.InterpretedSettings.UserAnalyticsSettings.Enabled)
+                }
             }
 
             $InlineAlertPolicyCustomizationValue = $true
@@ -848,6 +956,8 @@ function Get-TargetResource
                 AlertVolume                                   = $tenantSettings.IntelligentDetections.AlertVolume
                 MDATPTriageStatus                             = $MDATPTriageStatusValue
                 IRASettingsEnabled                            = $IRASettingsEnabledValue
+                EmailSignatureExclusionSettingsEnabled        = $EmailSignatureExclusionSettingsEnabledValue
+                UserAnalyticsSettingsEnabled                  = $UserAnalyticsSettingsEnabledValue
                 InlineAlertPolicyCustomization                = $InlineAlertPolicyCustomizationValue
                 AnomalyDetections                             = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'AnomalyDetections' }).Enabled
                 CopyToPersonalCloud                           = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'CopyToPersonalCloud' }).Enabled
@@ -935,6 +1045,7 @@ function Get-TargetResource
                 TeamsMemberAddedExternal                      = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'TeamsMemberAddedExternal' }).Enabled
                 TeamsSensitiveMessage                         = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'TeamsSensitiveMessage' }).Enabled
                 UserHistory                                   = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'UserHistory' }).Enabled
+                AIAppRiskyPrompt                              = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'AIAppRiskyPrompt' }).Enabled
                 AWSS3BlockPublicAccessDisabled                = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'AWSS3BlockPublicAccessDisabled' }).Enabled
                 AWSS3BucketDeleted                            = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'AWSS3BucketDeleted' }).Enabled
                 AWSS3PublicAccessEnabled                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'AWSS3PublicAccessEnabled' }).Enabled
@@ -952,13 +1063,34 @@ function Get-TargetResource
                 CCFinancialRegulatoryRiskyTextSent            = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CCFinancialRegulatoryRiskyTextSent' }).Enabled
                 CCInappropriateContentSent                    = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CCInappropriateContentSent' }).Enabled
                 CCInappropriateImagesSent                     = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CCInappropriateImagesSent' }).Enabled
+                CCPromptShields                               = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CCPromptShields' }).Enabled
+                CCProtectedMaterialDetection                  = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CCProtectedMaterialDetection' }).Enabled
+                CCSensitiveInformationType                    = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CCSensitiveInformationType' }).Enabled
+                CCSupervisionRuleMatch                        = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CCSupervisionRuleMatch' }).Enabled
+                CompromisedSignInAlerts                       = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CompromisedSignInAlerts' }).Enabled
+                CompromisedUserAlerts                         = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CompromisedUserAlerts' }).Enabled
+                ConnectedAIAppRiskyPrompt                     = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'ConnectedAIAppRiskyPrompt' }).Enabled
+                ConnectedAIAppSensitiveResponse               = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'ConnectedAIAppSensitiveResponse' }).Enabled
+                CopilotRiskyPrompt                            = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CopilotRiskyPrompt' }).Enabled
+                CopilotSensitiveResponse                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'CopilotSensitiveResponse' }).Enabled
                 DropboxContentAccess                          = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'DropboxContentAccess' }).Enabled
                 DropboxContentDelete                          = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'DropboxContentDelete' }).Enabled
                 DropboxContentDownload                        = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'DropboxContentDownload' }).Enabled
                 DropboxContentExternallyShared                = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'DropboxContentExternallyShared' }).Enabled
+                FabricExternalDataSharingSwitchEnabled        = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'FabricExternalDataSharingSwitchEnabled' }).Enabled
                 GoogleDriveContentAccess                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'GoogleDriveContentAccess' }).Enabled
                 GoogleDriveContentDelete                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'GoogleDriveContentDelete' }).Enabled
                 GoogleDriveContentExternallyShared            = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'GoogleDriveContentExternallyShared' }).Enabled
+                HighSeverityDlpRuleMatch                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'HighSeverityDlpRuleMatch' }).Enabled
+                LakehouseArtifactDeleted                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'LakehouseArtifactDeleted' }).Enabled
+                LakehouseExternalDataShareCreated             = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'LakehouseExternalDataShareCreated' }).Enabled
+                LakehouseFileOrBlobDeleted                    = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'LakehouseFileOrBlobDeleted' }).Enabled
+                LakehouseSensitivityLabelDowngraded           = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'LakehouseSensitivityLabelDowngraded' }).Enabled
+                LakehouseSensitivityLabelRemoved              = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'LakehouseSensitivityLabelRemoved' }).Enabled
+                NetworkDownloadFile                           = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'NetworkDownloadFile' }).Enabled
+                NetworkDownloadText                           = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'NetworkDownloadText' }).Enabled
+                NetworkUploadFile                             = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'NetworkUploadFile' }).Enabled
+                NetworkUploadText                             = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'NetworkUploadText' }).Enabled
                 PowerBIDashboardsDeleted                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'PowerBIDashboardsDeleted' }).Enabled
                 PowerBIReportsDeleted                         = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'PowerBIReportsDeleted' }).Enabled
                 PowerBIReportsDownloaded                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'PowerBIReportsDownloaded' }).Enabled
@@ -1128,6 +1260,98 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $IRASettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EmailSignatureExclusionSettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UserAnalyticsSettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCPromptShields,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCProtectedMaterialDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCSensitiveInformationType,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCSupervisionRuleMatch,
+
+        [Parameter()]
+        [System.Boolean]
+        $CompromisedSignInAlerts,
+
+        [Parameter()]
+        [System.Boolean]
+        $CompromisedUserAlerts,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectedAIAppRiskyPrompt,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectedAIAppSensitiveResponse,
+
+        [Parameter()]
+        [System.Boolean]
+        $CopilotRiskyPrompt,
+
+        [Parameter()]
+        [System.Boolean]
+        $CopilotSensitiveResponse,
+
+        [Parameter()]
+        [System.Boolean]
+        $FabricExternalDataSharingSwitchEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $HighSeverityDlpRuleMatch,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseArtifactDeleted,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseExternalDataShareCreated,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseFileOrBlobDeleted,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseSensitivityLabelDowngraded,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseSensitivityLabelRemoved,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkDownloadFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkDownloadText,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkUploadFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkUploadText,
 
         [Parameter()]
         [System.Boolean]
@@ -1500,6 +1724,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $UserHistory,
+
+        [Parameter()]
+        [System.Boolean]
+        $AIAppRiskyPrompt,
 
         [Parameter()]
         [System.Boolean]
@@ -1854,33 +2082,35 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $indicatorsProperties = @('AnomalyDetections', 'CopyToPersonalCloud', 'CopyToUSB', 'CumulativeExfiltrationDetector', `
-            'EmailExternal', 'EmployeeAccessedEmployeePatientData', 'EmployeeAccessedFamilyData', `
-            'EmployeeAccessedHighVolumePatientData', 'EmployeeAccessedNeighbourData', `
-            'EmployeeAccessedRestrictedData', 'EpoBrowseToChildAbuseSites', 'EpoBrowseToCriminalActivitySites', `
-            'EpoBrowseToCultSites', 'EpoBrowseToGamblingSites', 'EpoBrowseToHackingSites', `
-            'EpoBrowseToHateIntoleranceSites', 'EpoBrowseToIllegalSoftwareSites', 'EpoBrowseToKeyloggerSites', `
-            'EpoBrowseToLlmSites', 'EpoBrowseToMalwareSites', 'EpoBrowseToPhishingSites', `
-            'EpoBrowseToPornographySites', 'EpoBrowseToUnallowedDomain', 'EpoBrowseToViolenceSites', `
-            'EpoCopyToClipboardFromSensitiveFile', 'EpoCopyToNetworkShare', 'EpoFileArchived', `
-            'EpoFileCopiedToRemoteDesktopSession', 'EpoFileDeleted', 'EpoFileDownloadedFromBlacklistedDomain', `
-            'EpoFileDownloadedFromEnterpriseDomain', 'EpoFileRenamed', 'EpoFileStagedToCentralLocation', `
-            'EpoHiddenFileCreated', 'EpoRemovableMediaMount', 'EpoSensitiveFileRead', 'Mcas3rdPartyAppDownload', `
-            'Mcas3rdPartyAppFileDelete', 'Mcas3rdPartyAppFileSharing', 'McasActivityFromInfrequentCountry', `
-            'McasImpossibleTravel', 'McasMultipleFailedLogins', 'McasMultipleStorageDeletion', `
-            'McasMultipleVMCreation', 'McasMultipleVMDeletion', 'McasSuspiciousAdminActivities', `
-            'McasSuspiciousCloudCreation', 'McasSuspiciousCloudTrailLoggingChange', 'McasTerminatedEmployeeActivity', `
-            'OdbDownload', 'OdbSyncDownload', 'PeerCumulativeExfiltrationDetector', 'PhysicalAccess', `
-            'PotentialHighImpactUser', 'Print', 'PriorityUserGroupMember', 'SecurityAlertDefenseEvasion', `
-            'SecurityAlertUnwantedSoftware', 'SpoAccessRequest', 'SpoApprovedAccess', 'SpoDownload', 'SpoDownloadV2', `
-            'SpoFileAccessed', 'SpoFileDeleted', 'SpoFileDeletedFromFirstStageRecycleBin', `
-            'SpoFileDeletedFromSecondStageRecycleBin', 'SpoFileLabelDowngraded', 'SpoFileLabelRemoved', `
-            'SpoFileSharing', 'SpoFolderDeleted', 'SpoFolderDeletedFromFirstStageRecycleBin', `
-            'SpoFolderDeletedFromSecondStageRecycleBin', 'SpoFolderSharing', 'SpoSiteExternalUserAdded', `
-            'SpoSiteInternalUserAdded', 'SpoSiteLabelRemoved', 'SpoSiteSharing', 'SpoSyncDownload', `
-            'TeamsChannelFileSharedExternal', 'TeamsChannelMemberAddedExternal', 'TeamsChatFileSharedExternal', `
-            'TeamsFileDownload', 'TeamsFolderSharedExternal', 'TeamsMemberAddedExternal', 'TeamsSensitiveMessage', `
-            'UserHistory')
+    $indicatorsProperties = @(
+        'AnomalyDetections', 'CopyToPersonalCloud', 'CopyToUSB', 'CumulativeExfiltrationDetector', `
+        'EmailExternal', 'EmployeeAccessedEmployeePatientData', 'EmployeeAccessedFamilyData', `
+        'EmployeeAccessedHighVolumePatientData', 'EmployeeAccessedNeighbourData', `
+        'EmployeeAccessedRestrictedData', 'EpoBrowseToChildAbuseSites', 'EpoBrowseToCriminalActivitySites', `
+        'EpoBrowseToCultSites', 'EpoBrowseToGamblingSites', 'EpoBrowseToHackingSites', `
+        'EpoBrowseToHateIntoleranceSites', 'EpoBrowseToIllegalSoftwareSites', 'EpoBrowseToKeyloggerSites', `
+        'EpoBrowseToLlmSites', 'EpoBrowseToMalwareSites', 'EpoBrowseToPhishingSites', `
+        'EpoBrowseToPornographySites', 'EpoBrowseToUnallowedDomain', 'EpoBrowseToViolenceSites', `
+        'EpoCopyToClipboardFromSensitiveFile', 'EpoCopyToNetworkShare', 'EpoFileArchived', `
+        'EpoFileCopiedToRemoteDesktopSession', 'EpoFileDeleted', 'EpoFileDownloadedFromBlacklistedDomain', `
+        'EpoFileDownloadedFromEnterpriseDomain', 'EpoFileRenamed', 'EpoFileStagedToCentralLocation', `
+        'EpoHiddenFileCreated', 'EpoRemovableMediaMount', 'EpoSensitiveFileRead', 'Mcas3rdPartyAppDownload', `
+        'Mcas3rdPartyAppFileDelete', 'Mcas3rdPartyAppFileSharing', 'McasActivityFromInfrequentCountry', `
+        'McasImpossibleTravel', 'McasMultipleFailedLogins', 'McasMultipleStorageDeletion', `
+        'McasMultipleVMCreation', 'McasMultipleVMDeletion', 'McasSuspiciousAdminActivities', `
+        'McasSuspiciousCloudCreation', 'McasSuspiciousCloudTrailLoggingChange', 'McasTerminatedEmployeeActivity', `
+        'OdbDownload', 'OdbSyncDownload', 'PeerCumulativeExfiltrationDetector', 'PhysicalAccess', `
+        'PotentialHighImpactUser', 'Print', 'PriorityUserGroupMember', 'SecurityAlertDefenseEvasion', `
+        'SecurityAlertUnwantedSoftware', 'SpoAccessRequest', 'SpoApprovedAccess', 'SpoDownload', 'SpoDownloadV2', `
+        'SpoFileAccessed', 'SpoFileDeleted', 'SpoFileDeletedFromFirstStageRecycleBin', `
+        'SpoFileDeletedFromSecondStageRecycleBin', 'SpoFileLabelDowngraded', 'SpoFileLabelRemoved', `
+        'SpoFileSharing', 'SpoFolderDeleted', 'SpoFolderDeletedFromFirstStageRecycleBin', `
+        'SpoFolderDeletedFromSecondStageRecycleBin', 'SpoFolderSharing', 'SpoSiteExternalUserAdded', `
+        'SpoSiteInternalUserAdded', 'SpoSiteLabelRemoved', 'SpoSiteSharing', 'SpoSyncDownload', `
+        'TeamsChannelFileSharedExternal', 'TeamsChannelMemberAddedExternal', 'TeamsChatFileSharedExternal', `
+        'TeamsFileDownload', 'TeamsFolderSharedExternal', 'TeamsMemberAddedExternal', 'TeamsSensitiveMessage', `
+        'UserHistory'
+    )
 
     $indicatorValues = @()
     foreach ($indicatorProperty in $indicatorsProperties)
@@ -1891,15 +2121,22 @@ function Set-TargetResource
         }
     }
 
-    $extensibleIndicatorsProperties = @('AWSS3BlockPublicAccessDisabled', 'AWSS3BucketDeleted', 'AWSS3PublicAccessEnabled', `
-            'AWSS3ServerLoggingDisabled', 'AzureElevateAccessToAllSubscriptions', 'AzureResourceThreatProtectionSettingsUpdated', `
-            'AzureSQLServerAuditingSettingsUpdated', 'AzureSQLServerFirewallRuleDeleted', 'AzureSQLServerFirewallRuleUpdated', `
-            'AzureStorageAccountOrContainerDeleted', 'BoxContentAccess', 'BoxContentDelete', 'BoxContentDownload', 'BoxContentExternallyShared', `
-            'CCFinancialRegulatoryRiskyTextSent', 'CCInappropriateContentSent', 'CCInappropriateImagesSent', 'DropboxContentAccess', `
-            'DropboxContentDelete', 'DropboxContentDownload', 'DropboxContentExternallyShared', 'GoogleDriveContentAccess', `
-            'GoogleDriveContentDelete', 'GoogleDriveContentExternallyShared', 'PowerBIDashboardsDeleted', 'PowerBIReportsDeleted', `
-            'PowerBIReportsDownloaded', 'PowerBIReportsExported', 'PowerBIReportsViewed', 'PowerBISemanticModelsDeleted', `
-            'PowerBISensitivityLabelDowngradedForArtifacts', 'PowerBISensitivityLabelRemovedFromArtifacts')
+    $extensibleIndicatorsProperties = @(
+        'AIAppRiskyPrompt', 'AWSS3BlockPublicAccessDisabled', 'AWSS3BucketDeleted', 'AWSS3PublicAccessEnabled',
+        'AWSS3ServerLoggingDisabled', 'AzureElevateAccessToAllSubscriptions', 'AzureResourceThreatProtectionSettingsUpdated',
+        'AzureSQLServerAuditingSettingsUpdated', 'AzureSQLServerFirewallRuleDeleted', 'AzureSQLServerFirewallRuleUpdated',
+        'AzureStorageAccountOrContainerDeleted', 'BoxContentAccess', 'BoxContentDelete', 'BoxContentDownload', 'BoxContentExternallyShared',
+        'CCFinancialRegulatoryRiskyTextSent', 'CCInappropriateContentSent', 'CCInappropriateImagesSent', 'CCPromptShields',
+        'CCProtectedMaterialDetection', 'CCSensitiveInformationType', 'CCSupervisionRuleMatch', 'CompromisedSignInAlerts',
+        'CompromisedUserAlerts', 'ConnectedAIAppRiskyPrompt', 'ConnectedAIAppSensitiveResponse', 'CopilotRiskyPrompt',
+        'CopilotSensitiveResponse', 'DropboxContentAccess', 'DropboxContentDelete', 'DropboxContentDownload', 'DropboxContentExternallyShared',
+        'FabricExternalDataSharingSwitchEnabled', 'GoogleDriveContentAccess', 'GoogleDriveContentDelete', 'GoogleDriveContentExternallyShared',
+        'HighSeverityDlpRuleMatch', 'LakehouseArtifactDeleted', 'LakehouseExternalDataShareCreated', 'LakehouseFileOrBlobDeleted',
+        'LakehouseSensitivityLabelDowngraded', 'LakehouseSensitivityLabelRemoved', 'NetworkDownloadFile', 'NetworkDownloadText',
+        'NetworkUploadFile', 'NetworkUploadText', 'PowerBIDashboardsDeleted', 'PowerBIReportsDeleted', 'PowerBIReportsDownloaded',
+        'PowerBIReportsExported', 'PowerBIReportsViewed', 'PowerBISemanticModelsDeleted', 'PowerBISensitivityLabelDowngradedForArtifacts',
+        'PowerBISensitivityLabelRemovedFromArtifacts'
+    )
 
     $extensibleIndicatorsValues = @()
     foreach ($extensibleIndicatorsProperty in $extensibleIndicatorsProperties)
@@ -1921,9 +2158,8 @@ function Set-TargetResource
         $MDATPTriageStatusValue = $MDATPTriageStatusValue.Substring(0, $MDATPTriageStatusValue.Length - 1)
     }
     $MDATPTriageStatusValue += ']'
-    $featureSettingsValue = "{`"Anonymization`":$($Anonymization.ToString().ToLower()), `"DLPUserRiskSync`":$($DLPUserRiskSync.ToString().ToLower()), `"OptInIRMDataExport`":$($OptInIRMDataExport.ToString().ToLower()), `"RaiseAuditAlert`":$($RaiseAuditAlert.ToString().ToLower()), `"EnableTeam`":$($EnableTeam.ToString().ToLower()), `"InlineAlertPolicyCustomization`":$($InlineAlertPolicyCustomization.ToString().ToLower())}"
+    $featureSettingsValue = "{`"Anonymization`":$($Anonymization.ToString().ToLower()), `"DLPUserRiskSync`":$($DLPUserRiskSync.ToString().ToLower()), `"OptInIRMDataExport`":$($OptInIRMDataExport.ToString().ToLower()), `"RaiseAuditAlert`":$($RaiseAuditAlert.ToString().ToLower()), `"EnableTeam`":$($EnableTeam.ToString().ToLower()), `"InlineAlertPolicyCustomization`":$($InlineAlertPolicyCustomization.ToString().ToLower()), `"NotificationDetails`":`"{\`"Rolegroups\`":$((ConvertTo-Json -InputObject $NotificationDetailsRoleGroups -Compress) -replace '"', '\"'),\`"Recepients\`":[]}`"}"
     $intelligentDetectionValue = "{`"FileVolCutoffLimits`":`"$($FileVolCutoffLimits)`", `"AlertVolume`":`"$($AlertVolume)`", `"MDATPTriageStatus`": `"$($MDATPTriageStatusValue)`"}"
-
 
     $tenantSettingsValue = "{`"Region`":`"WW`", `"FeatureSettings`":$($featureSettingsValue), " + `
         "`"IntelligentDetections`":$($intelligentDetectionValue)"
@@ -1936,15 +2172,52 @@ function Set-TargetResource
             $AdaptiveProtectionActivatonStatus = 0
         }
         $dynamicRiskPreventionSettings = "{`"RetainSeverityAfterTriage`":$($RetainSeverityAfterTriage.ToString().ToLower()),`"ProfileInScopeTimeSpan`":$($ProfileInscopeTimeSpan), `"LookbackTimeSpan`":$($LookbackTimeSpan), `"DynamicRiskScenarioSettings`":[{`"ActivationStatus`":$AdaptiveProtectionActivatonStatus"
-        $dynamicRiskPreventionSettings += ", `"HighProfile`":{`"ProfileSourceType`":$($AdaptiveProtectionHighProfileSourceType), `"ConfirmedIssueSeverity`":$($AdaptiveProtectionHighProfileConfirmedIssueSeverity), `"GeneratedIssueSeverity`":$($AdaptiveProtectionHighProfileGeneratedIssueSeverity), `"InsightSeverity`": $($AdaptiveProtectionHighProfileInsightSeverity), `"InsightCount`": $($AdaptiveProtectionHighProfileInsightCount), `"InsightTypes`": [`"$($AdaptiveProtectionHighProfileInsightTypes -join '","')`"], `"ConfirmedIssue`": $($AdaptiveProtectionHighProfileConfirmedIssue.ToString().ToLower())}"
-        $dynamicRiskPreventionSettings += ", `"MediumProfile`":{`"ProfileSourceType`":$($AdaptiveProtectionMediumProfileSourceType), `"ConfirmedIssueSeverity`":$($AdaptiveProtectionMediumProfileConfirmedIssueSeverity), `"GeneratedIssueSeverity`":$($AdaptiveProtectionMediumProfileGeneratedIssueSeverity), `"InsightSeverity`": $($AdaptiveProtectionMediumProfileInsightSeverity), `"InsightCount`": $($AdaptiveProtectionMediumProfileInsightCount), `"InsightTypes`": [`"$($AdaptiveProtectionMediumProfileInsightTypes -join '","')`"], `"ConfirmedIssue`": $($AdaptiveProtectionMediumProfileConfirmedIssue.ToString().ToLower())}"
-        $dynamicRiskPreventionSettings += ", `"LowProfile`":{`"ProfileSourceType`":$($AdaptiveProtectionLowProfileSourceType), `"ConfirmedIssueSeverity`":$($AdaptiveProtectionLowProfileConfirmedIssueSeverity), `"GeneratedIssueSeverity`":$($AdaptiveProtectionLowProfileGeneratedIssueSeverity), `"InsightSeverity`": $($AdaptiveProtectionLowProfileInsightSeverity), `"InsightCount`": $($AdaptiveProtectionLowProfileInsightCount), `"InsightTypes`": [`"$($AdaptiveProtectionLowProfileInsightTypes -join '","')`"], `"ConfirmedIssue`": $($AdaptiveProtectionLowProfileConfirmedIssue.ToString().ToLower())}"
+        $dynamicRiskPreventionSettings += ", `"HighProfile`":{`"ProfileSourceType`":$($AdaptiveProtectionHighProfileSourceType), `"ConfirmedIssueSeverity`":$($AdaptiveProtectionHighProfileConfirmedIssueSeverity), `"GeneratedIssueSeverity`":$($AdaptiveProtectionHighProfileGeneratedIssueSeverity), `"InsightSeverity`": $($AdaptiveProtectionHighProfileInsightSeverity), `"InsightCount`": $($AdaptiveProtectionHighProfileInsightCount), `"InsightTypes`": $(ConvertTo-Json -InputObject $AdaptiveProtectionHighProfileInsightTypes -Compress), `"ConfirmedIssue`": $($AdaptiveProtectionHighProfileConfirmedIssue.ToString().ToLower())}"
+        $dynamicRiskPreventionSettings += ", `"MediumProfile`":{`"ProfileSourceType`":$($AdaptiveProtectionMediumProfileSourceType), `"ConfirmedIssueSeverity`":$($AdaptiveProtectionMediumProfileConfirmedIssueSeverity), `"GeneratedIssueSeverity`":$($AdaptiveProtectionMediumProfileGeneratedIssueSeverity), `"InsightSeverity`": $($AdaptiveProtectionMediumProfileInsightSeverity), `"InsightCount`": $($AdaptiveProtectionMediumProfileInsightCount), `"InsightTypes`": $(ConvertTo-Json -InputObject $AdaptiveProtectionMediumProfileInsightTypes -Compress), `"ConfirmedIssue`": $($AdaptiveProtectionMediumProfileConfirmedIssue.ToString().ToLower())}"
+        $dynamicRiskPreventionSettings += ", `"LowProfile`":{`"ProfileSourceType`":$($AdaptiveProtectionLowProfileSourceType), `"ConfirmedIssueSeverity`":$($AdaptiveProtectionLowProfileConfirmedIssueSeverity), `"GeneratedIssueSeverity`":$($AdaptiveProtectionLowProfileGeneratedIssueSeverity), `"InsightSeverity`": $($AdaptiveProtectionLowProfileInsightSeverity), `"InsightCount`": $($AdaptiveProtectionLowProfileInsightCount), `"InsightTypes`": $(ConvertTo-Json -InputObject $AdaptiveProtectionLowProfileInsightTypes -Compress), `"ConfirmedIssue`": $($AdaptiveProtectionLowProfileConfirmedIssue.ToString().ToLower())}"
         $dynamicRiskPreventionSettings += '}]}'
         $tenantSettingsValue += ", `"DynamicRiskPreventionSettings`":$dynamicRiskPreventionSettings"
     }
-    if ($null -ne $IRASettingsEnabled)
+    if ($null -ne $IRASettingsEnabled -or $null -ne $EmailSignatureExclusionSettingsEnabled -or $null -ne $UserAnalyticsSettingsEnabled)
     {
-        $tenantSettingsValue += ", `"InterpretedSettings`":{`"IRASettings`":{`"Enabled`":$($IRASettingsEnabled.ToString().ToLower())}}"
+        $tenantSettingsValue += ", `"InterpretedSettings`":{"
+        if ($null -ne $IRASettingsEnabled)
+        {
+            $tenantSettingsValue += "`"IRASettings`":{`"Enabled`":$($IRASettingsEnabled.ToString().ToLower())},"
+        }
+        if ($null -ne $EmailSignatureExclusionSettingsEnabled)
+        {
+            $tenantSettingsValue += "`"EmailSignatureExclusionSettings`":{`"Enabled`":$($EmailSignatureExclusionSettingsEnabled.ToString().ToLower())},"
+        }
+        if ($null -ne $UserAnalyticsSettingsEnabled)
+        {
+            $tenantSettingsValue += "`"UserAnalyticsSettings`":{`"Enabled`":$($UserAnalyticsSettingsEnabled.ToString().ToLower())}"
+        }
+        $tenantSettingsValue = $tenantSettingsValue.TrimEnd(',')
+        $tenantSettingsValue += "}"
+    }
+    # NotificationPreferences
+    if ($null -ne $AnalyticsNewInsightEnabled -or $null -ne $AnalyticsTurnedOffEnabled -or $null -ne $HighSeverityAlertsEnabled -or $null -ne $PoliciesHealthEnabled)
+    {
+        $tenantSettingsValue += ", `"NotificationPreferences`":["
+        if ($AnalyticsNewInsightEnabled)
+        {
+            $tenantSettingsValue += "{`"NotificationType`":`"AnalyticsNewInsight`",`"Enabled`":$($AnalyticsNewInsightEnabled.ToString().ToLower()), `"RoleGroups`":[`"InsiderRiskManagement`",`"InsiderRiskManagementAdmins`"]},"
+        }
+        if ($AnalyticsTurnedOffEnabled)
+        {
+            $tenantSettingsValue += "{`"NotificationType`":`"AnalyticsTurnedOff`",`"Enabled`":$($AnalyticsTurnedOffEnabled.ToString().ToLower()), `"RoleGroups`":[`"InsiderRiskManagement`",`"InsiderRiskManagementAdmins`"]},"
+        }
+        if ($HighSeverityAlertsEnabled)
+        {
+            $tenantSettingsValue += "{`"NotificationType`":`"HighSeverityAlerts`",`"Enabled`":$($HighSeverityAlertsEnabled.ToString().ToLower()),`"RoleGroups`":$(ConvertTo-Json -InputObject $HighSeverityAlertsRoleGroups -Compress)},"
+        }
+        if ($PoliciesHealthEnabled)
+        {
+            $tenantSettingsValue += "{`"NotificationType`":`"PoliciesHealth`",`"Enabled`":$($PoliciesHealthEnabled.ToString().ToLower()),`"RoleGroups`":$(ConvertTo-Json -InputObject $PoliciesHealthRoleGroups -Compress)}"
+        }
+        $tenantSettingsValue = $tenantSettingsValue.TrimEnd(',')
+        $tenantSettingsValue += "]"
     }
 
     $tenantSettingsValue += '}'
@@ -2006,6 +2279,98 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $IRASettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EmailSignatureExclusionSettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UserAnalyticsSettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCPromptShields,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCProtectedMaterialDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCSensitiveInformationType,
+
+        [Parameter()]
+        [System.Boolean]
+        $CCSupervisionRuleMatch,
+
+        [Parameter()]
+        [System.Boolean]
+        $CompromisedSignInAlerts,
+
+        [Parameter()]
+        [System.Boolean]
+        $CompromisedUserAlerts,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectedAIAppRiskyPrompt,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectedAIAppSensitiveResponse,
+
+        [Parameter()]
+        [System.Boolean]
+        $CopilotRiskyPrompt,
+
+        [Parameter()]
+        [System.Boolean]
+        $CopilotSensitiveResponse,
+
+        [Parameter()]
+        [System.Boolean]
+        $FabricExternalDataSharingSwitchEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $HighSeverityDlpRuleMatch,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseArtifactDeleted,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseExternalDataShareCreated,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseFileOrBlobDeleted,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseSensitivityLabelDowngraded,
+
+        [Parameter()]
+        [System.Boolean]
+        $LakehouseSensitivityLabelRemoved,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkDownloadFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkDownloadText,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkUploadFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkUploadText,
 
         [Parameter()]
         [System.Boolean]
@@ -2378,6 +2743,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $UserHistory,
+
+        [Parameter()]
+        [System.Boolean]
+        $AIAppRiskyPrompt,
 
         [Parameter()]
         [System.Boolean]
@@ -2783,11 +3152,11 @@ function Export-TargetResource
 
     try
     {
-        [array] $Script:exportedInstances = Get-InsiderRiskPolicy -ErrorAction Stop
+        [array] $exportedInstances = Get-InsiderRiskPolicy -ErrorAction Stop
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -2795,14 +3164,14 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
             $displayedKey = $config.Name
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Name                  = $config.Name
                 InsiderRiskScenario   = $config.InsiderRiskScenario
@@ -2822,13 +3191,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

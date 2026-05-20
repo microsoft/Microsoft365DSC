@@ -422,7 +422,7 @@ function Export-TargetResource
     {
         [array]$tenantDialPlans = Get-CsTenantDialPlan -Filter $Filter -ErrorAction Stop
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($plan in $tenantDialPlans)
@@ -477,13 +477,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('NormalizationRules')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

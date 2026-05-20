@@ -71,6 +71,10 @@
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
     },
+    "EXODynamicDistributionGroup": {
+      "HasCustomComparison": true,
+      "Description": "Uses PostProcessing scriptblock"
+    },
     "EXOEOPProtectionPolicyRule": {
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"

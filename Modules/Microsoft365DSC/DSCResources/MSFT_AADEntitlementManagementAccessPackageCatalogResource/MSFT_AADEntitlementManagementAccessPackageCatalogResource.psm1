@@ -122,8 +122,7 @@ function Get-TargetResource
         $CatalogIdValue = $catalogId
         if (-not [System.String]::IsNullOrEmpty($CatalogId))
         {
-            $ObjectGuid = [System.Guid]::empty
-            if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+            if (-not [System.Guid]::TryParse($CatalogId, [ref][System.Guid]::Empty))
             {
                 $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($catalogId -replace "'", "''")'"
                 $CatalogId = $catalogInstance.Id
@@ -324,9 +323,8 @@ function Set-TargetResource
     $PSBoundParameters.Remove('isPendingOnboarding') | Out-Null
 
     $resource = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-    $ObjectGuid = [System.Guid]::empty
     if ($OriginSystem -eq 'AADGroup' -and `
-            -not [System.Guid]::TryParse($OriginId, [System.Management.Automation.PSReference]$ObjectGuid))
+            -not [System.Guid]::TryParse($OriginId, [ref][System.Guid]::Empty))
     {
         Write-Verbose -Message "The Group reference was provided by name {$OriginId}. Retrieving associated id."
         $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($OriginId -replace "'", "''")'"
@@ -337,8 +335,7 @@ function Set-TargetResource
     }
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $ObjectGuid = [System.Guid]::empty
-        if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+        if (-not [System.Guid]::TryParse($CatalogId, [ref][System.Guid]::Empty))
         {
             Write-Verbose -Message 'Retrieving Catalog by Display Name'
             $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId -replace "'", "''")'"
@@ -376,8 +373,7 @@ function Set-TargetResource
         Write-Verbose -Message "Updating resource {$DisplayName} in catalog {$CatalogId}"
 
         $resource = ([Hashtable]$PSBoundParameters).Clone()
-        $ObjectGuid = [System.Guid]::empty
-        if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+        if (-not [System.Guid]::TryParse($CatalogId, [ref][System.Guid]::Empty))
         {
             Write-Verbose -Message 'Retrieving Catalog by Display Name'
             $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId -replace "'", "''")'"
@@ -604,7 +600,7 @@ function Export-TargetResource
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($catalogs.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -712,7 +708,7 @@ function Export-TargetResource
                     -Results $Results `
                     -Credential $Credential `
                     -NoEscape @('Attributes')
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
@@ -725,7 +721,7 @@ function Export-TargetResource
 
         # Removing comma between items in cim instance array
         $dscContent = $dscContent.Replace("            ,`r`n", '')
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

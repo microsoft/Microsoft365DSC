@@ -386,7 +386,7 @@ function Export-TargetResource
     {
         [array]$AllActiveSyncDeviceAccessRules = Get-ActiveSyncDeviceAccessRule -ErrorAction Stop
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         if ($AllActiveSyncDeviceAccessRules.Length -eq 0)
         {
@@ -424,13 +424,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

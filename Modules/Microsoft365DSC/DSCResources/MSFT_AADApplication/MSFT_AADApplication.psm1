@@ -1239,8 +1239,7 @@ function Set-TargetResource
                         $scopeId = $null
                         if ($null -eq $scope)
                         {
-                            $ObjectGuid = [System.Guid]::Empty
-                            if ([System.Guid]::TryParse($permission.Name, [System.Management.Automation.PSReference]$ObjectGuid))
+                            if ([System.Guid]::TryParse($permission.Name, [ref][System.Guid]::Empty))
                             {
                                 $scopeId = $permission.Name
                             }
@@ -1262,8 +1261,7 @@ function Set-TargetResource
                         $roleId = $null
                         if ($null -eq $role)
                         {
-                            $ObjectGuid = [System.Guid]::empty
-                            if ([System.Guid]::TryParse($permission.Name, [System.Management.Automation.PSReference]$ObjectGuid))
+                            if ([System.Guid]::TryParse($permission.Name, [ref][System.Guid]::Empty))
                             {
                                 $roleId = $permission.Name
                             }
@@ -1659,21 +1657,20 @@ function Export-TargetResource
     Write-M365DSCHost -Message "`r`n" -DeferWrite
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaApplication `
+        [array] $exportedInstances = Get-MgBetaApplication `
             -Filter $Filter `
             -Property $Script:PropertiesToRetrieve `
             -ExpandProperty 'owners' `
             -All `
             -ErrorAction Stop
-        foreach ($AADApp in $Script:exportedInstances)
+        foreach ($AADApp in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $($AADApp.DisplayName)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $($AADApp.DisplayName)" -DeferWrite
             $Params = @{
                 ApplicationId         = $ApplicationId
                 AppId                 = $AADApp.AppId
@@ -1915,7 +1912,7 @@ function Export-TargetResource
                         -Credential $Credential `
                         -NoEscape @('Api', 'Permissions', 'OptionalClaims', 'OnPremisesPublishing', 'AuthenticationBehaviors', 'KeyCredentials', 'PasswordCredentials', 'AppRoles', 'Spa')
 
-                    $dscContent.Append($currentDSCBlock) | Out-Null
+                    [void]$dscContent.Append($currentDSCBlock)
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                     Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -2015,8 +2012,7 @@ function Get-M365DSCAzureADAppPermissions
                 $scopeInfoValue = $null
                 if ($null -eq $scopeInfo)
                 {
-                    $ObjectGuid = [System.Guid]::empty
-                    if ([System.Guid]::TryParse($resourceAccess.Id, [System.Management.Automation.PSReference]$ObjectGuid))
+                    if ([System.Guid]::TryParse($resourceAccess.Id, [ref][System.Guid]::Empty))
                     {
                         $scopeInfoValue = $resourceAccess.Id
                     }
@@ -2048,8 +2044,7 @@ function Get-M365DSCAzureADAppPermissions
                 $roleValue = $null
                 if ($null -eq $role)
                 {
-                    $ObjectGuid = [System.Guid]::empty
-                    if ([System.Guid]::TryParse($resourceAccess.Id, [System.Management.Automation.PSReference]$ObjectGuid))
+                    if ([System.Guid]::TryParse($resourceAccess.Id, [ref][System.Guid]::Empty))
                     {
                         $roleValue = $resourceAccess.Id
                     }

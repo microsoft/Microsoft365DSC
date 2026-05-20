@@ -175,6 +175,11 @@ function Get-TargetResource
         $CloudAppSecurityType,
 
         [Parameter()]
+        [ValidateSet('disabled', 'strictEnforcement', 'strictLocation')]
+        [System.String]
+        $ContinuousAccessEvaluationMode,
+
+        [Parameter()]
         [System.Boolean]
         $SecureSignInSessionIsEnabled,
 
@@ -563,13 +568,15 @@ function Get-TargetResource
                 }
             }
         }
+        $CloudAppSecurityType = $null
         if ($Policy.SessionControls.CloudAppSecurity.IsEnabled)
         {
             $CloudAppSecurityType = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
         }
-        else
+        $ContinuousAccessEvaluationModeValue = $null
+        if ($Policy.SessionControls.ContinuousAccessEvaluation.Mode)
         {
-            $CloudAppSecurityType = $null
+            $ContinuousAccessEvaluationModeValue = [System.String]$Policy.SessionControls.ContinuousAccessEvaluation.Mode
         }
         if ($Policy.SessionControls.SignInFrequency.IsEnabled)
         {
@@ -581,13 +588,10 @@ function Get-TargetResource
             $SignInFrequencyType = $null
             $SignInFrequencyIntervalValue = $null
         }
+        $PersistentBrowserMode = $null
         if ($Policy.SessionControls.PersistentBrowser.IsEnabled)
         {
             $PersistentBrowserMode = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
-        }
-        else
-        {
-            $PersistentBrowserMode = $null
         }
         if ($Policy.Conditions.Users.IncludeGuestsOrExternalUsers.GuestOrExternalUserTypes)
         {
@@ -657,10 +661,9 @@ function Get-TargetResource
         {
             foreach ($app in $Policy.Conditions.Applications.IncludeApplications)
             {
-                $appGuid = [System.Guid]::Empty
-                if ([System.Guid]::TryParse($app, [ref]$appGuid))
+                if ([System.Guid]::TryParse($app, [ref][System.Guid]::Empty))
                 {
-                    $appInfo = Get-MgServicePrincipal -Filter "AppId eq '$appGuid'" -ErrorAction SilentlyContinue
+                    $appInfo = Get-MgServicePrincipal -Filter "AppId eq '$app'" -ErrorAction SilentlyContinue
                     if ($null -ne $appInfo)
                     {
                         $includeApplicationsValue += $appInfo.DisplayName
@@ -682,10 +685,9 @@ function Get-TargetResource
         {
             foreach ($app in $Policy.Conditions.Applications.ExcludeApplications)
             {
-                $appGuid = [System.Guid]::Empty
-                if ([System.Guid]::TryParse($app, [ref]$appGuid))
+                if ([System.Guid]::TryParse($app, [ref][System.Guid]::Empty))
                 {
-                    $appInfo = Get-MgServicePrincipal -Filter "AppId eq '$appGuid'" -ErrorAction SilentlyContinue
+                    $appInfo = Get-MgServicePrincipal -Filter "AppId eq '$app'" -ErrorAction SilentlyContinue
                     if ($null -ne $appInfo)
                     {
                         $excludeApplicationsValue += $appInfo.DisplayName
@@ -761,6 +763,7 @@ function Get-TargetResource
             CloudAppSecurityIsEnabled                = $false -or $Policy.SessionControls.CloudAppSecurity.IsEnabled
             #make false if undefined, true if true
             CloudAppSecurityType                     = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
+            ContinuousAccessEvaluationMode           = $ContinuousAccessEvaluationModeValue
             SecureSignInSessionIsEnabled             = $false -or $Policy.SessionControls.SecureSignInSession.IsEnabled
             #no translation needed, return empty string array if undefined
             SignInFrequencyIsEnabled                 = $false -or $Policy.SessionControls.SignInFrequency.IsEnabled
@@ -983,6 +986,11 @@ function Set-TargetResource
         $CloudAppSecurityType,
 
         [Parameter()]
+        [ValidateSet('disabled', 'strictEnforcement', 'strictLocation')]
+        [System.String]
+        $ContinuousAccessEvaluationMode,
+
+        [Parameter()]
         [System.Boolean]
         $SecureSignInSessionIsEnabled,
 
@@ -1128,8 +1136,7 @@ function Set-TargetResource
                     continue
                 }
 
-                $objectGuid = [System.Guid]::Empty
-                if ([System.Guid]::TryParse($app, [ref]$objectGuid))
+                if ([System.Guid]::TryParse($app, [ref][System.Guid]::Empty))
                 {
                     $appInfo = Get-MgServicePrincipal -Filter "AppId eq '$app'" -ErrorAction SilentlyContinue
                     if ($null -ne $appInfo)
@@ -1172,8 +1179,7 @@ function Set-TargetResource
                     continue
                 }
 
-                $objectGuid = [System.Guid]::Empty
-                if ([System.Guid]::TryParse($app, [ref]$objectGuid))
+                if ([System.Guid]::TryParse($app, [ref][System.Guid]::Empty))
                 {
                     $appInfo = Get-MgServicePrincipal -Filter "AppId eq '$app'" -ErrorAction SilentlyContinue
                     if ($null -ne $appInfo)
@@ -1819,11 +1825,11 @@ function Set-TargetResource
             -or ($null -ne $DisableResilienceDefaultsIsEnabled) -or $PSBoundParameters.ContainsKey('SecureSignInSessionIsEnabled'))
         {
             Write-Verbose -Message 'Set-Targetresource: process session controls'
-            $sessioncontrols = $null
             Write-Verbose -Message 'Set-Targetresource: create provision Session Control object'
-            $sessioncontrols = @{
+            $sessionControls = @{
                 applicationEnforcedRestrictions = $null
                 cloudAppSecurity                = $null
+                continuousAccessEvaluation      = $null
                 secureSignInSession             = $null
                 signInFrequency                 = $null
                 persistentBrowser               = $null
@@ -1832,7 +1838,7 @@ function Set-TargetResource
 
             if ($ApplicationEnforcedRestrictionsIsEnabled -eq $true)
             {
-                $sessioncontrols.applicationEnforcedRestrictions = @{
+                $sessionControls.applicationEnforcedRestrictions = @{
                     isEnabled = $ApplicationEnforcedRestrictionsIsEnabled
                 }
             }
@@ -1842,14 +1848,20 @@ function Set-TargetResource
                     isEnabled            = $true
                     cloudAppSecurityType = $CloudAppSecurityType
                 }
-                $sessioncontrols.cloudAppSecurity = $cloudAppSecurityValue
+                $sessionControls.cloudAppSecurity = $cloudAppSecurityValue
+            }
+            if ($ContinuousAccessEvaluationMode)
+            {
+                $sessionControls.continuousAccessEvaluation = @{
+                    mode = $ContinuousAccessEvaluationMode
+                }
             }
             if ($SecureSignInSessionIsEnabled)
             {
                 $secureSignInSessionValue = @{
                     isEnabled = $SecureSignInSessionIsEnabled
                 }
-                $sessioncontrols.secureSignInSession = $secureSignInSessionValue
+                $sessionControls.secureSignInSession = $secureSignInSessionValue
             }
             if ($SignInFrequencyIsEnabled)
             {
@@ -1860,26 +1872,26 @@ function Set-TargetResource
                     frequencyInterval = $null
                 }
 
-                $sessioncontrols.signInFrequency = $signinFrequencyProp
+                $sessionControls.signInFrequency = $signinFrequencyProp
                 #create and provision SignInFrequency object if used
-                $sessioncontrols.signInFrequency.isEnabled = $true
+                $sessionControls.signInFrequency.isEnabled = $true
                 if ($SignInFrequencyType -ne '')
                 {
-                    $sessioncontrols.signInFrequency.type = $SignInFrequencyType
+                    $sessionControls.signInFrequency.type = $SignInFrequencyType
                 }
                 else
                 {
-                    $sessioncontrols.signInFrequency.Remove('type') | Out-Null
+                    $sessionControls.signInFrequency.Remove('type') | Out-Null
                 }
                 if ($SignInFrequencyValue -gt 0)
                 {
-                    $sessioncontrols.signInFrequency.value = $SignInFrequencyValue
+                    $sessionControls.signInFrequency.value = $SignInFrequencyValue
                 }
                 else
                 {
-                    $sessioncontrols.signInFrequency.Remove('value') | Out-Null
+                    $sessionControls.signInFrequency.Remove('value') | Out-Null
                 }
-                $sessioncontrols.signInFrequency.frequencyInterval = $SignInFrequencyInterval
+                $sessionControls.signInFrequency.frequencyInterval = $SignInFrequencyInterval
             }
             if ($PersistentBrowserIsEnabled)
             {
@@ -1887,14 +1899,17 @@ function Set-TargetResource
                     isEnabled = $true
                     mode      = $PersistentBrowserMode
                 }
-                $sessioncontrols.persistentBrowser = $persistentBrowserValue
+                $sessionControls.persistentBrowser = $persistentBrowserValue
             }
             if ($DisableResilienceDefaultsIsEnabled)
             {
-                $sessioncontrols.disableResilienceDefaults = $DisableResilienceDefaultsIsEnabled
+                $sessionControls.disableResilienceDefaults = $DisableResilienceDefaultsIsEnabled
             }
-            $NewParameters.Add('sessionControls', $sessioncontrols)
-            #add SessionControls to the parameter list
+            if ($sessionControls.Values.Where({ $null -ne $_ }).Count -eq 0)
+            {
+                $sessionControls = $null
+            }
+            $NewParameters.Add('sessionControls', $sessionControls)
         }
     }
 
@@ -2151,6 +2166,11 @@ function Test-TargetResource
         $CloudAppSecurityType,
 
         [Parameter()]
+        [ValidateSet('disabled', 'strictEnforcement', 'strictLocation')]
+        [System.String]
+        $ContinuousAccessEvaluationMode,
+
+        [Parameter()]
         [System.Boolean]
         $SecureSignInSessionIsEnabled,
 
@@ -2324,9 +2344,9 @@ function Export-TargetResource
 
     try
     {
-        [array] $Policies = Get-MgBetaIdentityConditionalAccessPolicy -Filter $Filter -All:$true -ErrorAction Stop
+        [array] $Policies = Get-MgBetaIdentityConditionalAccessPolicy -Filter $Filter -All -ErrorAction Stop
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
 
         if ($Policies.Length -eq 0)
         {
@@ -2367,7 +2387,7 @@ function Export-TargetResource
                     -Results $Results `
                     -Credential $Credential
 
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -2375,7 +2395,7 @@ function Export-TargetResource
             }
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

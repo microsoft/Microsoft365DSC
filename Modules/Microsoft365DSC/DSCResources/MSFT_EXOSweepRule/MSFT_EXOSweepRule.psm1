@@ -419,7 +419,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         foreach ($mailbox in $mailboxes)
         {
             Write-M365DSCHost -Message "    |---[$j/$($mailboxes.Count)] $($mailbox.Name)" -DeferWrite
@@ -458,7 +458,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 $i++
@@ -466,7 +466,7 @@ function Export-TargetResource
             }
             $j++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

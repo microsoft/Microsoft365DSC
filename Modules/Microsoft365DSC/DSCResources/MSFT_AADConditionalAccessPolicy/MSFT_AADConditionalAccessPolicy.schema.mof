@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AADConditionalAccessPolicy")]
+[ClassVersion("1.0.0.1"), FriendlyName("AADConditionalAccessPolicy")]
 class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
 {
     [Key, Description("DisplayName of the AAD CA Policy")] String DisplayName;
@@ -39,6 +39,7 @@ class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("Specifies, whether Application Enforced Restrictions are enabled in the Policy.")] Boolean ApplicationEnforcedRestrictionsIsEnabled;
     [Write, Description("Specifies, whether Cloud App Security is enforced by the Policy.")] Boolean CloudAppSecurityIsEnabled;
     [Write, Description("Specifies, what Cloud App Security control is enforced by the Policy.")] String CloudAppSecurityType;
+    [Write, Description("Specifies continuous access evaluation settings. The possible values are: disabled, strictEnforcement, strictLocation"), ValueMap{"disabled","strictEnforcement","strictLocation"}, Values{"disabled","strictEnforcement","strictLocation"}] String ContinuousAccessEvaluationMode;
     [Write, Description("Specifies if token protection for sign-in sessions is to be enforced by the policy.")] Boolean SecureSignInSessionIsEnabled;
     [Write, Description("Sign in frequency time in the given unit to be enforced by the policy.")] UInt32 SignInFrequencyValue;
     [Write, Description("Display name of the terms of use to assign.")] String TermsOfUse;

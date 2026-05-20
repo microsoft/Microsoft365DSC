@@ -468,7 +468,7 @@ function Export-TargetResource
     {
         [array]$filters = Get-ComplianceSecurityFilter -ErrorAction Stop -WarningAction Ignore -Confirm:$false
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         if ($filters.Length -eq 0)
         {
@@ -500,7 +500,7 @@ function Export-TargetResource
                 -Credential $Credential
 
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
@@ -516,7 +516,7 @@ function Export-TargetResource
 
         throw
     }
-    return $dscContent
+    return $dscContent.ToString()
 }
 
 Export-ModuleMember -Function *-TargetResource

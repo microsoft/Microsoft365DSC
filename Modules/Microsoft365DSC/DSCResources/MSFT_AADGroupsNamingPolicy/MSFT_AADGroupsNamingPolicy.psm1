@@ -358,7 +358,7 @@ function Export-TargetResource
             $Global:M365DSCExportResourceInstancesCount++
         }
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $Params = @{
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -378,7 +378,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
         }
 
         if ($currentDSCBlock)
@@ -388,7 +388,7 @@ function Export-TargetResource
         }
 
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

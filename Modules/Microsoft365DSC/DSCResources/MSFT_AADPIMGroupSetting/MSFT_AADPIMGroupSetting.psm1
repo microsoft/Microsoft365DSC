@@ -1546,7 +1546,7 @@ function Export-TargetResource
 
         $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests -AsList
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         foreach ($group in $Script:exportedGroups)
         {
             $response = $batchResponses.Where({ $_.id -eq $group.Id })
@@ -1593,7 +1593,7 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
-                    $dscContent += $currentDSCBlock
+                    [void]$dscContent.Append($currentDSCBlock)
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                 }
@@ -1602,7 +1602,7 @@ function Export-TargetResource
             }
             $j++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -298,13 +298,10 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
             $Global:M365DSCExportResourceInstancesCount++
         }
-
 
         $params = @{
             IsSingleInstance      = 'Yes'
@@ -340,19 +337,20 @@ function Export-TargetResource
                 $Results.Remove('UserSyncInbound') | Out-Null
             }
         }
+        $dscContent = [System.Text.StringBuilder]::new()
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -Credential $Credential `
             -NoEscape @('UserSyncInbound')
-        $dscContent += $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
 
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

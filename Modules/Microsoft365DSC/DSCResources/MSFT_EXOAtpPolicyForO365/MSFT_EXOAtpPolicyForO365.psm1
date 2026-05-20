@@ -349,7 +349,7 @@ function Export-TargetResource
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
         {
             [array]$ATPPolicies = Get-AtpPolicyForO365 -ErrorAction Stop
-            $dscContent = ''
+            $dscContent = [System.Text.StringBuilder]::new()
 
             if ($ATPPolicies.Length -eq 0)
             {
@@ -390,7 +390,7 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
-                    $dscContent += $currentDSCBlock
+                    [void]$dscContent.Append($currentDSCBlock)
 
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
@@ -410,7 +410,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for ATP Policies"
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -6,6 +6,10 @@
 .FUNCTIONALITY
     Internal
 #>
+
+$Script:M365DSCPartialExportWriter = $null
+$Script:M365DSCPartialExportWriterPath = $null
+
 function Save-M365DSCPartialExport
 {
     [CmdletBinding()]
@@ -23,7 +27,45 @@ function Save-M365DSCPartialExport
     if (-not [System.String]::IsNullOrEmpty($env:Temp))
     {
         $tempPath = Join-Path -Path $env:TEMP -ChildPath $FileName
-        $Content | Out-File -FilePath $tempPath -Append:$true -Force
+
+        # Reuse an open StreamWriter for the same file to avoid repeated open/close cycles
+        if ($null -eq $Script:M365DSCPartialExportWriter -or $Script:M365DSCPartialExportWriterPath -ne $tempPath)
+        {
+            Close-M365DSCPartialExport
+            $Script:M365DSCPartialExportWriter = [System.IO.StreamWriter]::new($tempPath, $true, [System.Text.Encoding]::UTF8)
+            $Script:M365DSCPartialExportWriter.AutoFlush = $false
+            $Script:M365DSCPartialExportWriterPath = $tempPath
+        }
+
+        $Script:M365DSCPartialExportWriter.Write($Content)
+        $Script:M365DSCPartialExportWriter.Flush()
+    }
+}
+
+<#
+.DESCRIPTION
+    Closes the StreamWriter used by Save-M365DSCPartialExport. Call at export completion or on error.
+
+.FUNCTIONALITY
+    Internal
+#>
+function Close-M365DSCPartialExport
+{
+    [CmdletBinding()]
+    param()
+
+    if ($null -ne $Script:M365DSCPartialExportWriter)
+    {
+        try
+        {
+            $Script:M365DSCPartialExportWriter.Close()
+        }
+        catch
+        {
+            # Ignore errors on close (writer may already be disposed)
+        }
+        $Script:M365DSCPartialExportWriter = $null
+        $Script:M365DSCPartialExportWriterPath = $null
     }
 }
 
@@ -345,6 +387,7 @@ function Invoke-M365DSCCommand
 }
 
 Export-ModuleMember -Function @(
+    'Close-M365DSCPartialExport',
     'Invoke-M365DSCCommand',
     'Save-M365DSCPartialExport',
     'Test-M365DSCNotFoundError',

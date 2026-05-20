@@ -11,11 +11,17 @@
         "read": [
           {
             "name": "EngagementRole.Read.All"
+          },
+          {
+            "name": "User.ReadBasic.All"
           }
         ],
         "update": [
           {
             "name": "EngagementRole.ReadWrite.All"
+          },
+          {
+            "name": "User.ReadBasic.All"
           }
         ]
       },
@@ -23,11 +29,17 @@
         "read": [
           {
             "name": "EngagementRole.Read.All"
+          },
+          {
+            "name": "User.ReadBasic.All"
           }
         ],
         "update": [
           {
             "name": "EngagementRole.ReadWrite.All"
+          },
+          {
+            "name": "User.ReadBasic.All"
           }
         ]
       }

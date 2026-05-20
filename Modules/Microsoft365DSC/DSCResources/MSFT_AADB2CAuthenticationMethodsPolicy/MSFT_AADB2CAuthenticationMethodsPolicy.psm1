@@ -303,8 +303,7 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-
+        $dscContent = [System.Text.StringBuilder]::new()
         $params = @{
             IsSingleInstance      = 'Yes'
             Credential            = $Credential
@@ -325,13 +324,13 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -Credential $Credential
-        $dscContent += $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
         $i++
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

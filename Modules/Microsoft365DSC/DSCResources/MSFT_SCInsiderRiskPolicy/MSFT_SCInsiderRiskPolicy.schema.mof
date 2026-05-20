@@ -1,9 +1,11 @@
-[ClassVersion("1.0.0.0"), FriendlyName("SCInsiderRiskPolicy")]
+[ClassVersion("1.0.0.1"), FriendlyName("SCInsiderRiskPolicy")]
 class MSFT_SCInsiderRiskPolicy : OMI_BaseResource
 {
     [Key, Description("Name of the insider risk policy.")] string Name;
     [Key, Description("Name of the scenario supported by the policy.")] string InsiderRiskScenario;
-    [Write, Description("When turned on, we'll scan sources in your org (such as the Microsoft 365 audit log) to detect the same activities used by insider risk policies. Scans run daily and provide real-time insights that can help you set up and refine policies to ensure you're detecting the most relevant activities.")] Boolean IRASettingsEnabled;
+    [Write, Description("When turned on, data is aggregated at tenant level and is shown as insights in Analytics reports.")] Boolean IRASettingsEnabled;
+    [Write, Description("When turned on, if an email containing only a signature as attachment is sent to someone outside your org, your policies will attempt to ignore the activity when assigning risk scores, thereby helping reduce inessential alerts.")] Boolean EmailSignatureExclusionSettingsEnabled;
+    [Write, Description("When turned on, data is aggregated at user level and is shown as insights in user activity summary of Data Loss Prevention, Communication Compliance and Microsoft Defender along with Advanced Hunting tables. Data sharing needs to be turned on along with this.")] Boolean UserAnalyticsSettingsEnabled;
     [Write, Description("For users who perform activities matching your insider risk policies, decide whether to show their actual names or use pseudonymized versions to mask their identities.")] Boolean Anonymization;
     [Write, Description("When turned on, admins with the correct permissions will be able to review user risk details from Insider Risk Management within other solutions such as Data Loss Prevention (DLP), Communication Compliance, and user entity pages in Microsoft Defender.")] Boolean DLPUserRiskSync;
     [Write, Description("When turned on, admins with the correct permissions will be able to review user risk details from Insider Risk Management within other solutions such as Data Loss Prevention (DLP), Communication Compliance, and user entity pages in Microsoft Defender.")] Boolean OptInIRMDataExport;
@@ -12,6 +14,28 @@ class MSFT_SCInsiderRiskPolicy : OMI_BaseResource
     [Write, Description("Minimum number of daily events to boost score for unusual activity.")] String FileVolCutoffLimits;
     [Write, Description("Alert volume.")] String AlertVolume;
     [Write, Description("Risk score boosters indicator.")] Boolean AnomalyDetections;
+    [Write, Description("Policy indicators > Entering risky prompt in other AI apps")] Boolean AIAppRiskyPrompt;
+    [Write, Description("Policy indicators > Entering prompt attacks in AI apps")] Boolean CCPromptShields;
+    [Write, Description("Policy indicators > Receiving AI app responses containing protected materials")] Boolean CCProtectedMaterialDetection;
+    [Write, Description("Policy indicators > Sending messages that contain specific sesitive info types")] Boolean CCSensitiveInformationType;
+    [Write, Description("Policy indicators > Detect messages matched by specific Communication Compliance policies")] Boolean CCSupervisionRuleMatch;
+    [Write, Description("Policy indicators > Potentially risky sign-in activity")] Boolean CompromisedSignInAlerts;
+    [Write, Description("Policy indicators > User account potentially compromised")] Boolean CompromisedUserAlerts;
+    [Write, Description("Policy indicators > Entering risky prompt in enterprise AI apps")] Boolean ConnectedAIAppRiskyPrompt;
+    [Write, Description("Policy indicators > Receiving sensitive response from enterprise AI apps")] Boolean ConnectedAIAppSensitiveResponse;
+    [Write, Description("Policy indicators > Entering risky prompt in Copilot")] Boolean CopilotRiskyPrompt;
+    [Write, Description("Policy indicators > Receiving sensitive response from Copilot")] Boolean CopilotSensitiveResponse;
+    [Write, Description("Policy indicators > Enabling external sharing of Microsoft Fabric data")] Boolean FabricExternalDataSharingSwitchEnabled;
+    [Write, Description("Policy indicators > Generating alerts from selected DLP policies")] Boolean HighSeverityDlpRuleMatch;
+    [Write, Description("Policy indicators > Deleting Microsoft Fabric lakehouses")] Boolean LakehouseArtifactDeleted;
+    [Write, Description("Policy indicators > Sharing lakehouse data with people outside the organization")] Boolean LakehouseExternalDataShareCreated;
+    [Write, Description("Policy indicators > Deleted lakehouse files or tables")] Boolean LakehouseFileOrBlobDeleted;
+    [Write, Description("Policy indicators > Downgrading sensitivity labels of lakehouses")] Boolean LakehouseSensitivityLabelDowngraded;
+    [Write, Description("Policy indicators > Removing sensitivity labels of lakehouses")] Boolean LakehouseSensitivityLabelRemoved;
+    [Write, Description("Policy indicators > Files downloaded from the web")] Boolean NetworkDownloadFile;
+    [Write, Description("Policy indicators > Sensitive text downloaded from the web")] Boolean NetworkDownloadText;
+    [Write, Description("Policy indicators > Files uploaded to the web")] Boolean NetworkUploadFile;
+    [Write, Description("Policy indicators > Sensitive text uploaded to the web")] Boolean NetworkUploadText;
     [Write, Description("Official documentation to come.")] Boolean CopyToPersonalCloud;
     [Write, Description("Device indicator.")] Boolean CopyToUSB;
     [Write, Description("Cumulative exfiltration detection indicator.")] Boolean CumulativeExfiltrationDetector;

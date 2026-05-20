@@ -372,7 +372,7 @@ function Export-TargetResource
     {
         [array]$recipientPermissions = Get-RecipientPermission -ResultSize Unlimited
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         if ($recipientPermissions.Count -eq 0)
         {
@@ -382,7 +382,6 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        $ObjectGuid = [System.Guid]::empty
         if ($null -eq $Script:UsersCache)
         {
             $Script:UsersCache = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new()
@@ -401,7 +400,7 @@ function Export-TargetResource
             }
 
             $IdentityValue = $recipientPermission.Identity
-            if ([System.Guid]::TryParse($IdentityValue, [System.Management.Automation.PSReference]$ObjectGuid))
+            if ([System.Guid]::TryParse($IdentityValue, [ref][System.Guid]::Empty))
             {
                 $IdentityValue = $Script:UsersCache[$IdentityValue].UserPrincipalName
             }
@@ -429,7 +428,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
 
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
@@ -444,7 +443,7 @@ function Export-TargetResource
             $i++
 
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName("EXOOrganizationConfig")]
+[ClassVersion("1.0.0.1"), FriendlyName("EXOOrganizationConfig")]
 class MSFT_EXOOrganizationConfig : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
@@ -54,6 +54,7 @@ class MSFT_EXOOrganizationConfig : OMI_BaseResource
     [Write, Description("The DistributionGroupDefaultOU parameter specifies the container where distribution groups are created by default.")] String DistributionGroupDefaultOU;
     [Write, Description("The DistributionGroupNameBlockedWordsList parameter specifies words that can't be included in the names of distribution groups. Separate multiple values with commas.")] String DistributionGroupNameBlockedWordsList[];
     [Write, Description("The DistributionGroupNamingPolicy parameter specifies the template applied to the name of distribution groups that are created in the organization. You can enforce that a prefix or suffix be applied to all distribution groups. Prefixes and suffixes can be either a string or an attribute, and you can combine strings and attributes.")] String DistributionGroupNamingPolicy;
+    [Write, Description("The DLPViaDcsEnabled parameter specifies if Data Loss Prevention policies are evaluated using Exchange or Data Classification Services (DCS) policy evaluation.")] Boolean DLPViaDcsEnabled;
     [Write, Description("The ElcProcessingDisabled parameter specifies whether to enable or disable the processing of mailboxes by the Managed Folder Assistant.")] Boolean ElcProcessingDisabled;
     [Write, Description("The EnableOutlookEvents parameter specifies whether Outlook or Outlook on the web automatically discovers events from email messages and adds them to user calendars.")] Boolean EnableOutlookEvents;
     [Write, Description("The EndUserDLUpgradeFlowsDisabled parameter specifies whether to prevent users from upgrading their own distribution groups to Office 365 groups in an Exchange Online organization.")] Boolean EndUserDLUpgradeFlowsDisabled;
@@ -121,4 +122,3 @@ class MSFT_EXOOrganizationConfig : OMI_BaseResource
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };
-

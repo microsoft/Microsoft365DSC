@@ -685,7 +685,7 @@ function Export-TargetResource
             $Global:M365DSCExportResourceInstancesCount++
         }
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $Params = @{
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
@@ -935,13 +935,13 @@ function Export-TargetResource
         # Fix OrganizationName variable in CIMInstance
         $currentDSCBlock = $currentDSCBlock.Replace('@$OrganizationName''', "@' + `$OrganizationName")
 
-        $dscContent += $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
 
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

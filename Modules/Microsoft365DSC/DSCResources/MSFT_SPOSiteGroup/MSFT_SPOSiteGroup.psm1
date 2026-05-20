@@ -513,7 +513,7 @@ function Export-TargetResource
             $principal = $organization.Split('.')[0]
         }
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($site in $sites)
         {
@@ -583,7 +583,7 @@ function Export-TargetResource
                             $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '-my.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com/"
                             $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
                         }
-                        $dscContent += $currentDSCBlock
+                        [void]$dscContent.Append($currentDSCBlock)
 
                         Save-M365DSCPartialExport -Content $currentDSCBlock `
                             -FileName $Global:PartialExportFileName
@@ -605,7 +605,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message ''
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -156,6 +156,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             IsEnabled            = $True
                             CloudAppSecurityType = 'MonitorOnly'
                         }
+                        ContinuousAccessEvaluation = @{
+                            mode = 'strictLocation'
+                        }
                         SecureSignInSession            = @{
                             IsEnabled = $True
                         }
@@ -195,6 +198,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClientAppTypes                       = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled            = $True
                     CloudAppSecurityType                 = 'MonitorOnly'
+                    ContinuousAccessEvaluationMode       = 'strictLocation'
                     DisplayName                          = 'Allin'
                     Ensure                               = 'Present'
                     ExcludeApplications                  = @('Microsoft Rights Management Services', 'Office365')
@@ -261,6 +265,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClientAppTypes                           = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled                = $True
                     CloudAppSecurityType                     = 'MonitorOnly'
+                    ContinuousAccessEvaluationMode           = 'strictLocation'
                     DisplayName                              = 'Allin'
                     Ensure                                   = 'Present'
                     ExcludeApplications                      = @('Microsoft Rights Management Services', 'Office365')
@@ -348,6 +353,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClientAppTypes                           = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled                = $True
                     CloudAppSecurityType                     = 'MonitorOnly'
+                    ContinuousAccessEvaluationMode           = 'strictLocation'
                     DisplayName                              = 'Allin'
                     Ensure                                   = 'Present'
                     ExcludeApplications                      = @('Microsoft Rights Management Services', 'Office365')
@@ -405,6 +411,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClientAppTypes                           = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled                = $True
                     CloudAppSecurityType                     = 'MonitorOnly'
+                    ContinuousAccessEvaluationMode           = 'strictLocation'
                     DisplayName                              = 'Allin'
                     Ensure                                   = 'Absent'
                     ExcludeApplications                      = @('Microsoft Rights Management Services', 'Office365')

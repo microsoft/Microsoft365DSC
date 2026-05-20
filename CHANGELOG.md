@@ -1,5 +1,78 @@
 # Change log for Microsoft365DSC
 
+# 1.26.520.1
+
+* AADConditionalAccessPolicy
+  * Added the new property `ContinuousAccessEvaluationMode`.
+    FIXES [#7132](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7132)
+  * Fixed an issue where a `SessionControl` object with all null values
+    was used in combination with `ProtocolFlows`.
+    FIXES [#7119](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7119)
+* EXODynamicDistributionGroup
+  * Initial release.
+* EXOManagementRole
+  * Added error handler when fetching resource information.
+    FIXES [#7124](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7124)
+* EXOOrganizationConfig
+  * Added the new property `DLPViaDcsEnabled`.
+    FIXES [#7138](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7138)
+* IntuneAppControlForBusinessPolicyWindows10
+  * Deprecated resource.
+* IntuneAppControlForBusinessPolicyWindows10V2
+  * Initial release. Supersedes `IntuneAppControlForBusinessPolicyWindows10`.
+    FIXES [#7129](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7129)
+* IntuneAppProtectionPolicyAndroid
+  * Fixed an issue where configuring `ExemptedAppPackages` would fail.
+    FIXES [#7135](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7135)
+* SCDLPCompliancePolicy
+  * Added new parameters `OneDriveSharedBy`, `OneDriveSharedByMemberOf`,
+    `ExceptIfOneDriveSharedBy` and `ExceptIfOneDriveSharedByMemberOf`.
+    FIXES [#7123](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7123)
+* SCInsiderRiskPolicy
+  * Added new parameters `AIAppRiskyPrompt`, `EmailSignatureExclusionSettingsEnabled`,
+    `UserAnalyticsSettingsEnabled`, `CCPromptShields`, `CCProtectedMaterialDetection`,
+    `CCSensitiveInformationType`, `CCSupervisionRuleMatch`, `CompromisedSignInAlerts`,
+    `CompromisedUserAlerts`, `ConnectedAIAppRiskyPrompt`, `ConnectedAIAppSensitiveResponse`,
+    `CopilotRiskyPrompt`, `CopilotSensitiveResponse`, `FabricExternalDataSharingSwitchEnabled`,
+    `HighSeverityDlpRuleMatch`, `LakehouseArtifactDeleted`, `LakehouseExternalDataShareCreated`,
+    `LakehouseFileOrBlobDeleted`, `LakehouseSensitivityLabelDowngraded`,
+    `LakehouseSensitivityLabelRemoved`, `NetworkDownloadFile`, `NetworkDownloadText`,
+    `NetworkUploadFile` and `NetworkUploadText`.
+  * Fixed an issue when applying the policy.
+* VivaEngagementRoleMember
+  * Added missing permission `User.ReadBasic.All` to the resource.
+    FIXES [#7133](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7133)
+* M365DSCDocGenerator
+  * Fixed an issue where the directory for the generated documentation
+    was not found at the intended location.
+    FIXES [#7128](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7128)
+* M365DSCErrorHandler
+  * Updated temporary export save operation to use file stream writer
+    to reduce I/O usage.
+* M365DSCExportUtil
+  * Added the `VIVA` workload to the list of supported workloads to export.
+  * Fixed an issue where the organization name was not
+    replaced with `$OrganizationName` during configuration export.
+* M365DSCReport
+  * Added the option to use variable substitution during report generation
+    with `New-M365DSCDeltaReport`. Please refer to the function documentation
+    page for guidance on how to use this new functionality.
+* M365DSCReverse
+  * Updated the parallel export to use `ConcurrentDictionary` instead of
+    a synchronized hashtable to improve parallel performance.
+* M365DSCTelemetryEngine
+  * Reduced number of calls to resolve assignments and role definitions.
+* MISC
+  * Bump GitHub Action dependencies.
+  * Code cleanup in export functions.
+  * Improved export of some resources.
+  * Improved ordered instance logging for parallel export.
+  * Reduced string memory allocations during export.
+  * Updated Guid parsing with a reference to the empty Guid instance.
+* DEPENDENCIES
+  * Updated `DSCParser` to version 3.0.0.5.
+    FIXES [#7122](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7122)
+
 # 1.26.506.2
 
 * AADEntitlementManagementConnectedOrganization

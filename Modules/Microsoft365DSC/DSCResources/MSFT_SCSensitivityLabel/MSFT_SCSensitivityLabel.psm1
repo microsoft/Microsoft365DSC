@@ -1591,7 +1591,7 @@ function Export-TargetResource
     {
         [array]$Script:AllLabels = Get-Label -IncludeDetailedLabelActions -ErrorAction Stop
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         if ($Script:AllLabels.Count -eq 0)
         {
@@ -1715,7 +1715,7 @@ function Export-TargetResource
             $currentDSCBlock = $currentDSCBlock.Replace("''", "'")
 
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
@@ -1731,7 +1731,7 @@ function Export-TargetResource
 
         throw
     }
-    return $dscContent
+    return $dscContent.ToString()
 }
 
 function Convert-JSONToLocaleSettings

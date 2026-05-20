@@ -1329,7 +1329,7 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
+        $dscContent = [System.Text.StringBuilder]::new()
         $params = @{
             IsSingleInstance      = 'Yes'
             Credential            = $Credential
@@ -1601,12 +1601,12 @@ function Export-TargetResource
             'DLPPrinterGroups', 'DLPRemovableMediaGroups', 'SiteGroups', 'UnallowedApp', 'UnallowedCloudSyncApp',
             'UnallowedBluetoothApp', 'UnallowedBrowser', 'EvidenceStoreSettings')
 
-        $dscContent += $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
