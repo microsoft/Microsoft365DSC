@@ -7,32 +7,43 @@ function Get-TargetResource
 <ParameterBlock>
     )
 
-    $null = New-M365DSCConnection -Workload '<#Workload#>' `
-        -InboundParameters $PSBoundParameters
+    Write-Verbose -Message "Getting configuration for the <ResourceDescription> with <FilterKey> {$<FilterKey>}"
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = <GetCmdLetName> -<getKeyIdentifier> $<PrimaryKey> -ErrorAction SilentlyContinue
-        if ($null -eq $instance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.<PrimaryKey> -ne $<PrimaryKey>)
         {
-            return $nullResult
+            $null = New-M365DSCConnection -Workload '<#Workload#>' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $instance = <GetCmdLetName> -<getKeyIdentifier> $<PrimaryKey> -ErrorAction SilentlyContinue
+            if ($null -eq $instance)
+            {
+                Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
+                return $nullResult
+            }
+        }
+        else
+        {
+            $instance = $Script:exportedInstance
         }
 
-        Write-Verbose -Message "Found an instance with <PrimaryKey> {$<PrimaryKey>}"
+        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found"
         $results = @{
 <HashTableMapping>        }
         return $results
@@ -73,50 +84,25 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $createParameters = ([Hashtable]$BoundParameters).Clone()
+        $createParameters = ([Hashtable]$boundParameters).Clone()
 
-        $createParameters.Remove('Verbose') | Out-Null
-
-        $keys = $createParameters.Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $createParameters.$key -and $createParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
-                $createParameters.Remove($key) | Out-Null
-                $createParameters.Add($keyName, $keyValue)
-            }
-        }
-        Write-Verbose -Message "Creating {$<PrimaryKey>} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $createParameters)"
+        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$<PrimaryKey>}"
         <NewCmdLetName> @createParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$<PrimaryKey>}"
+        Write-Verbose -Message "Updating an <ResourceDescription> with <FilterKey> {$<PrimaryKey>}"
 
-        $updateParameters = ([Hashtable]$BoundParameters).Clone()
-        $updateParameters.Remove('Verbose') | Out-Null
-
-        $keys = $updateParameters.Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $updateParameters.$key -and $updateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.$key
-                $updateParameters.Remove($key) | Out-Null
-                $updateParameters.Add($keyName, $keyValue)
-            }
-        }
-
+        $updateParameters = ([Hashtable]$boundParameters).Clone()
         <UpdateCmdLetName> @updateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$<PrimaryKey>}"
+        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
         <RemoveCmdLetName> -<PrimaryKey> $currentInstance.<PrimaryKey>
     }
 }
@@ -171,8 +157,20 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
    $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
@@ -218,10 +216,15 @@ function Export-TargetResource
             }
             Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{
-                <PrimaryKey> = $config.<PrimaryKey>
-                Ensure = 'Present'
-                Credential = $Credential
-<ExportAuth>
+                <ExportParams>
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId<ApplicationSecret>
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

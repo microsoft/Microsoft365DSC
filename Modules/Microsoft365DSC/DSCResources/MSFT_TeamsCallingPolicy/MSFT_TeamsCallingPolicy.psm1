@@ -66,6 +66,11 @@ function Get-TargetResource
         $RealTimeText,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ReportCall,
+
+        [Parameter()]
         [System.Boolean]
         $ShowTeamsCallsInCallLog,
 
@@ -258,6 +263,7 @@ function Get-TargetResource
             PopoutForIncomingPstnCalls           = $policy.PopoutForIncomingPstnCalls
             PreventTollBypass                    = $policy.PreventTollBypass
             RealTimeText                         = $policy.RealTimeText
+            ReportCall                           = $policy.ReportCall
             ShowTeamsCallsInCallLog              = $policy.ShowTeamsCallsInCallLog
             BusyOnBusyEnabledType                = $policy.BusyOnBusyEnabledType
             CallRecordingExpirationDays          = $policy.CallRecordingExpirationDays
@@ -355,6 +361,11 @@ function Set-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $RealTimeText,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ReportCall,
 
         [Parameter()]
         [System.Boolean]
@@ -588,6 +599,11 @@ function Test-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $RealTimeText,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ReportCall,
 
         [Parameter()]
         [System.Boolean]

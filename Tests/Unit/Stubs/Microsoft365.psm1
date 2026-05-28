@@ -73195,6 +73195,10 @@ function New-CsTeamsCallingPolicy
         $RealTimeText,
 
         [Parameter()]
+        [System.String]
+        $ReportCall,
+
+        [Parameter()]
         [System.Boolean]
         $ShowTeamsCallsInCallLog,
 
@@ -73468,11 +73472,19 @@ function New-CsTeamsEventsPolicy
 
         [Parameter()]
         [System.String]
+        $BackroomChat,
+
+        [Parameter()]
+        [System.String]
         $Identity,
 
         [Parameter()]
         [System.String]
         $EventAccessType,
+
+        [Parameter()]
+        [System.String]
+        $ExternalPresenterJoinVerification,
 
         [Parameter()]
         [System.Boolean]
@@ -73512,7 +73524,15 @@ function New-CsTeamsEventsPolicy
 
         [Parameter()]
         [System.String]
+        $Registration,
+
+        [Parameter()]
+        [System.String]
         $TownhallEventAttendeeAccess,
+
+        [Parameter()]
+        [System.String]
+        $TownhallMaxResolution,
 
         [Parameter()]
         [System.String]
@@ -73631,6 +73651,10 @@ function New-CsTeamsMeetingPolicy
         $AllowMeetingCoach,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowMultipleScreenshare,
+
+        [Parameter()]
         [System.String]
         $AttendeeIdentityMasking,
 
@@ -73653,6 +73677,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowAnonymousUsersToDialOut,
+
+        [Parameter()]
+        [System.String]
+        $BackroomChat,
 
         [Parameter()]
         [System.String]
@@ -73773,6 +73801,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowWatermarkForScreenSharing,
+
+        [Parameter()]
+        [System.String]
+        $PasscodeComplexity,
 
         [Parameter()]
         [System.String]
@@ -73961,6 +73993,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.String]
+        $SetRecordingAndTranscriptOwnership,
 
         [Parameter()]
         [System.String]
@@ -75026,6 +75062,10 @@ function Set-CsTeamsAIPolicy
 
         [Parameter()]
         [System.String]
+        $PassiveVoiceEnrollment,
+
+        [Parameter()]
+        [System.String]
         $SpeakerAttributionForBYOD,
 
         [Parameter()]
@@ -75207,6 +75247,10 @@ function Set-CsTeamsCallingPolicy
         [Parameter()]
         [System.String]
         $RealTimeText,
+
+        [Parameter()]
+        [System.String]
+        $ReportCall,
 
         [Parameter()]
         [System.Boolean]
@@ -75482,11 +75526,19 @@ function Set-CsTeamsEventsPolicy
 
         [Parameter()]
         [System.String]
+        $BackroomChat,
+
+        [Parameter()]
+        [System.String]
         $Identity,
 
         [Parameter()]
         [System.String]
         $EventAccessType,
+
+        [Parameter()]
+        [System.String]
+        $ExternalPresenterJoinVerification,
 
         [Parameter()]
         [System.Boolean]
@@ -75526,7 +75578,15 @@ function Set-CsTeamsEventsPolicy
 
         [Parameter()]
         [System.String]
+        $Registration,
+
+        [Parameter()]
+        [System.String]
         $TownhallEventAttendeeAccess,
+
+        [Parameter()]
+        [System.String]
+        $TownhallMaxResolution,
 
         [Parameter()]
         [System.String]
@@ -75717,6 +75777,10 @@ function Set-CsTeamsMeetingPolicy
         $AllowMeetingCoach,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowMultipleScreenshare,
+
+        [Parameter()]
         [System.String]
         $AttendeeIdentityMasking,
 
@@ -75739,6 +75803,10 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowAnonymousUsersToDialOut,
+
+        [Parameter()]
+        [System.String]
+        $BackroomChat,
 
         [Parameter()]
         [System.String]
@@ -75826,7 +75894,15 @@ function Set-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.String]
+        $PasscodeComplexity,
+
+        [Parameter()]
+        [System.String]
         $ScreenSharingMode,
+
+        [Parameter()]
+        [System.String]
+        $SetRecordingAndTranscriptOwnership,
 
         [Parameter()]
         [System.Boolean]
@@ -78325,6 +78401,14 @@ function New-CsCallQueue
         $CallbackOfferTextToSpeechPrompt,
 
         [Parameter()]
+        [System.String]
+        $TextAnnouncementForCR,
+
+        [Parameter()]
+        [System.String]
+        $TextAnnouncementForCRFailure,
+
+        [Parameter()]
         [System.Int16]
         $TimeoutActionCallPriority,
 
@@ -78917,6 +79001,10 @@ function New-CsTeamsAIPolicy
 
         [Parameter()]
         [System.String]
+        $PassiveVoiceEnrollment,
+
+        [Parameter()]
+        [System.String]
         $SpeakerAttributionForBYOD,
 
         [Parameter()]
@@ -79203,6 +79291,10 @@ function New-CsTeamsMobilityPolicy
         [Parameter()]
         [System.String]
         $IPAudioMobileMode,
+
+        [Parameter()]
+        [System.String]
+        $LinksInTeams,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -80026,6 +80118,14 @@ function Set-CsCallQueue
         $CallbackOfferTextToSpeechPrompt,
 
         [Parameter()]
+        [System.String]
+        $TextAnnouncementForCR,
+
+        [Parameter()]
+        [System.String]
+        $TextAnnouncementForCRFailure,
+
+        [Parameter()]
         [System.Int16]
         $TimeoutActionCallPriority,
 
@@ -80783,8 +80883,16 @@ function Set-CsTeamsClientConfiguration
         $ContentPin,
 
         [Parameter()]
+        [System.Boolean]
+        $ExtendedWorkInfoInPeopleSearch,
+
+        [Parameter()]
         [System.String]
-        $MsftInternalProcessingMode
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.String]
+        $UseUnifiedDomain
     )
 }
 function Set-CsTeamsCortanaPolicy
@@ -80918,6 +81026,10 @@ function Set-CsTeamsGuestMeetingConfiguration
         [Parameter()]
         [System.Boolean]
         $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMultipleScreenshare,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -81137,6 +81249,10 @@ function Set-CsTeamsMobilityPolicy
         $IPAudioMobileMode,
 
         [Parameter()]
+        [System.String]
+        $LinksInTeams,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -81354,6 +81470,10 @@ function Set-CsTenantFederationConfiguration
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedTrialTenantDomains,
 
         [Parameter()]
         [System.Boolean]
@@ -81718,6 +81838,90 @@ function Set-CsTeamsMessagingConfiguration
         [Parameter()]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [switch]
+        $Force
+    )
+}
+function Get-CsTeamsTargetingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Filter
+    )
+}
+function Set-CsTeamsTargetingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $CustomTagsMode,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $ManageTagsPermissionMode,
+
+        [Parameter()]
+        [System.String]
+        $ShiftBackedTagsMode,
+
+        [Parameter()]
+        [System.String]
+        $SuggestedPresetTags,
+
+        [Parameter()]
+        [System.String]
+        $TeamOwnersEditWhoCanManageTagsMode
+    )
+}
+function Get-CsTeamsNotificationAndFeedsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Filter
+    )
+}
+function Set-CsTeamsNotificationAndFeedsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $SuggestedFeedsEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $TrendingFeedsEnabledType,
 
         [Parameter()]
         [switch]
@@ -91588,6 +91792,7 @@ function Remove-RoleGroupMember
     )
 }
 #endregion
+
 #region MgBetaDeviceManagementReusableSetting
 function Get-MgBetaDeviceManagementReusableSetting
 {

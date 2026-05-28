@@ -45,12 +45,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableOverflowSharedVoicemailTranscription = $False;
                     EnableTimeoutSharedVoicemailTranscription  = $False;
                     LanguageId                                 = "fr-CA";
+                    HideAuthorizedUsers                        = @("9abce74d-d108-475f-a2cb-bbb82f484982");
                     Name                                       = "TestQueue";
                     OverflowAction                             = "Forward";
                     OverflowActionTarget                       = @{Id="9abce74d-d108-475f-a2cb-bbb82f484982"}
                     OverflowThreshold                          = 50;
                     PresenceBasedRouting                       = $True;
                     RoutingMethod                              = "RoundRobin";
+                    TextAnnouncementForCR                      = "FakeStringValue";
+                    TextAnnouncementForCRFailure               = "FakeStringValue";
                     TimeoutAction                              = "Forward";
                     TimeoutActionTarget                        = @{Id = "9abce74d-d108-475f-a2cb-bbb82f484982"}
                     TimeoutThreshold                           = 1200;
@@ -67,6 +70,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Remove-CsCallQueue -MockWith {
+            }
+
+            Mock -CommandName Get-CsOnlineUser -MockWith {
+                return @{
+                    Id = "9abce74d-d108-475f-a2cb-bbb82f484982"
+                    UserPrincipalName = "dummy@contoso.com"
+                }
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -93,12 +103,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableOverflowSharedVoicemailTranscription = $False;
                     EnableTimeoutSharedVoicemailTranscription  = $False;
                     LanguageId                                 = "fr-CA";
+                    HideAuthorizedUsers                        = @("dummy@contoso.com");
                     Name                                       = "TestQueue";
                     OverflowAction                             = "Forward";
                     OverflowActionTarget                       = "9abce74d-d108-475f-a2cb-bbb82f484982";
                     OverflowThreshold                          = 50;
                     PresenceBasedRouting                       = $True;
                     RoutingMethod                              = "RoundRobin";
+                    TextAnnouncementForCR                      = "FakeStringValue";
+                    TextAnnouncementForCRFailure               = "FakeStringValue";
                     TimeoutAction                              = "Forward";
                     TimeoutActionTarget                        = "9abce74d-d108-475f-a2cb-bbb82f484982";
                     TimeoutThreshold                           = 1200;
@@ -138,12 +151,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableOverflowSharedVoicemailTranscription = $False;
                     EnableTimeoutSharedVoicemailTranscription  = $False;
                     LanguageId                                 = "fr-CA";
+                    HideAuthorizedUsers                        = @("dummy@contoso.com");
                     Name                                       = "TestQueue";
                     OverflowAction                             = "Forward";
                     OverflowActionTarget                       = "9abce74d-d108-475f-a2cb-bbb82f484982";
                     OverflowThreshold                          = 50;
                     PresenceBasedRouting                       = $True;
                     RoutingMethod                              = "RoundRobin";
+                    TextAnnouncementForCR                      = "FakeStringValue";
+                    TextAnnouncementForCRFailure               = "FakeStringValue";
                     TimeoutAction                              = "Forward";
                     TimeoutActionTarget                        = "9abce74d-d108-475f-a2cb-bbb82f484982";
                     TimeoutThreshold                           = 1200;
@@ -179,12 +195,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableOverflowSharedVoicemailTranscription = $False;
                     EnableTimeoutSharedVoicemailTranscription  = $False;
                     LanguageId                                 = "fr-CA";
+                    HideAuthorizedUsers                        = @("dummy@contoso.com");
                     Name                                       = "TestQueue";
                     OverflowAction                             = "Forward";
                     OverflowActionTarget                       = "9abce74d-d108-475f-a2cb-bbb82f484982";
                     OverflowThreshold                          = 50;
                     PresenceBasedRouting                       = $True;
                     RoutingMethod                              = "RoundRobin";
+                    TextAnnouncementForCR                      = "FakeStringValue";
+                    TextAnnouncementForCRFailure               = "FakeStringValue";
                     TimeoutAction                              = "Forward";
                     TimeoutActionTarget                        = "9abce74d-d108-475f-a2cb-bbb82f484982";
                     TimeoutThreshold                           = 1200;
@@ -215,12 +234,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableOverflowSharedVoicemailTranscription = $False;
                     EnableTimeoutSharedVoicemailTranscription  = $False;
                     LanguageId                                 = "fr-CA";
+                    HideAuthorizedUsers                        = @("dummy@contoso.com");
                     Name                                       = "TestQueue";
                     OverflowAction                             = "Forward";
                     OverflowActionTarget                       = "9abce74d-d108-475f-a2cb-bbb82f484982";
                     OverflowThreshold                          = 50;
                     PresenceBasedRouting                       = $True;
                     RoutingMethod                              = "RoundRobin";
+                    TextAnnouncementForCR                      = "FakeStringValue";
+                    TextAnnouncementForCRFailure               = "FakeStringValue";
                     TimeoutAction                              = "Forward";
                     TimeoutActionTarget                        = "9abce74d-d108-475f-a2cb-bbb82f484982";
                     TimeoutThreshold                           = 1200;

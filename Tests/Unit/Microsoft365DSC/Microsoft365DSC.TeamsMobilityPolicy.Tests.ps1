@@ -39,6 +39,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
+                    LinksInTeams           = 'OfferBrowserOptions'
                     Identity               = 'FakeStringValue'
                 }
             }
@@ -71,6 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
+                    LinksInTeams           = 'OfferBrowserOptions'
                     Identity               = 'FakeStringValue'
                     Ensure                 = 'Present'
                     Credential             = $Credential
@@ -102,6 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
+                    LinksInTeams           = 'OfferBrowserOptions'
                     Identity               = 'FakeStringValue'
                     Ensure                 = 'Absent'
                     Credential             = $Credential
@@ -129,6 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
+                    LinksInTeams           = 'OfferBrowserOptions'
                     Identity               = 'FakeStringValue'
                     Ensure                 = 'Present'
                     Credential             = $Credential
@@ -147,6 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description            = 'Updated Description' # Drift
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
+                    LinksInTeams           = 'OfferBrowserOptions'
                     Identity               = 'FakeStringValue'
                     Ensure                 = 'Present'
                     Credential             = $Credential

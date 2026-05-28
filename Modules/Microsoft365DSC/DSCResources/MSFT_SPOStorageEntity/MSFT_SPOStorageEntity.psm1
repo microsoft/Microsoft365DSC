@@ -257,14 +257,28 @@ function Set-TargetResource
         try
         {
             Write-Verbose -Message "Adding new storage entity $Key"
+            $currentTenantSite = Get-PnPTenantSite -Identity $SiteUrl
+            $resetSecurity = $false
+            if ($currentTenantSite.DenyAddAndCustomizePages -eq 'Enabled')
+            {
+                Set-PnPTenantSite -Identity $SiteUrl -NoScriptSite:$false -ErrorAction Stop
+                $resetSecurity = $true
+            }
             Set-PnPStorageEntity @CurrentParameters
+
+            if ($resetSecurity)
+            {
+                Write-Verbose -Message "Resetting security for $SiteUrl"
+                Set-PnPTenantSite -Identity $SiteUrl -NoScriptSite:$true
+            }
         }
         catch
         {
             if ($_.Exception -like '*Access denied*')
             {
                 throw "It appears that the account doesn't have access to create an SPO Storage " + `
-                    'Entity or that an App Catalog was not created for the specified location'
+                    'Entity or that an App Catalog was not created for the specified location. ' + `
+                    'Additionally, make sure that the site is allowed for custom scripts.'
             }
         }
     }

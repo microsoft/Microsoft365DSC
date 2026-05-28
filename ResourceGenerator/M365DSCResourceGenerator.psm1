@@ -1046,6 +1046,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         $ParametersToFilterOut = @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'WhatIf', 'Confirm', 'ProgressAction')
         $cmdlet = Get-Command ($cmdletVerb + "-" + $cmdletNoun)
 
+        $resourceDescription = ($ResourceName -split '_')[0] -creplace '(?<=\w)([A-Z])', ' $1'
         $defaultParameterSetProperties = $cmdlet.ParameterSets | Where-Object -FilterScript {$_.IsDefault}
 
         if ($null -eq $defaultParameterSetProperties)
@@ -1078,9 +1079,23 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         $primaryKey = ''
         $paramContent = [System.Text.StringBuilder]::new()
         $returnContent = [System.Text.StringBuilder]::new()
-        $exportAuthContent = [System.Text.StringBuilder]::new()
         $mofSchemaContent = [System.Text.StringBuilder]::new()
         $fakeValues = @{}
+        if ($IsSingleInstance)
+        {
+            # IsSingleInstance
+            $spacingRequired = " "
+            for ($i = 0; $i -lt ($longestParameterName - ("IsSingleInstance").Length); $i++)
+            {
+                $spacingRequired += " "
+            }
+            $returnContent.AppendLine("            IsSingleInstance$spacingRequired= 'Yes'") | Out-Null
+            $paramContent.AppendLine("        [Parameter(Mandatory = `$true)]") | Out-Null
+            $paramContent.AppendLine("        [ValidateSet('Yes')]") | Out-Null
+            $paramContent.AppendLine("        [System.String]") | Out-Null
+            $paramContent.AppendLine("        `$IsSingleInstance,`r`n") | Out-Null
+            $mofSchemaContent.AppendLine('    [Key, Description("Only valid value is ''Yes''."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;') | Out-Null
+        }
         foreach ($property in $properties)
         {
             $propertyTypeMOF = $property.ParameterType.Name
@@ -1095,19 +1110,26 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                     $propertyTypeMOF = 'UInt32'
                 }
             }
-            if ($property.IsMandatory)
+
+            $propertyDescription = $property.Description
+            if ([System.String]::IsNullOrEmpty($propertyDescription))
+            {
+                $propertyDescription = (Get-Help -Name ($cmdletVerb + "-" + $cmdletNoun) -Parameter $property.Name).Description.Text
+            }
+            if ($property.IsMandatory -or $($Workload -eq 'MicrosoftTeams' -and $property.Name -eq 'Identity'))
             {
                 if ([System.String]::IsNullOrEmpty($primaryKey) -or $property.Name -eq 'Identity')
                 {
                     $primaryKey = $property.Name
+                    $alternativeKey = $property.Name
                 }
                 $paramContent.AppendLine("        [Parameter(Mandatory = `$true)]") | Out-Null
-                $mofSchemaContent.AppendLine("    [Key, Description(`"$($property.Description)`")] $propertyTypeMOF $($property.Name);") | Out-Null
+                $mofSchemaContent.AppendLine("    [Key, Description(`"$propertyDescription`")] $propertyTypeMOF $($property.Name);") | Out-Null
             }
             else
             {
                 $paramContent.AppendLine("        [Parameter()]") | Out-Null
-                $mofSchemaContent.AppendLine("    [Write, Description(`"$($property.Description)`")] $propertyTypeMOF $($property.Name);") | Out-Null
+                $mofSchemaContent.AppendLine("    [Write, Description(`"$propertyDescription`")] $propertyTypeMOF $($property.Name);") | Out-Null
             }
 
             $fakeValues.Add($property.Name, (Get-M365DSCDRGFakeValueForParameter -ParameterType $property.ParameterType.Name))
@@ -1130,14 +1152,15 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         {
             $spacingRequired += " "
         }
-        $returnContent.AppendLine("            Ensure$spacingRequired= 'Present'") | Out-Null
-
-        $paramContent.AppendLine("        [Parameter()]") | Out-Null
-        $paramContent.AppendLine("        [ValidateSet('Present', 'Absent')]") | Out-Null
-        $paramContent.AppendLine("        [System.String]") | Out-Null
-        $paramContent.AppendLine("        `$Ensure,`r`n") | Out-Null
-
-        $mofSchemaContent.AppendLine("    [Write, Description(`"Present ensures the instance exists, absent ensures it is removed.`"), ValueMap{`"Present`",`"Absent`"}, Values{`"Present`",`"Absent`"}] string Ensure;") | Out-Null
+        if (-not $IsSingleInstance)
+        {
+            $returnContent.AppendLine("            Ensure$spacingRequired= 'Present'") | Out-Null
+            $paramContent.AppendLine("        [Parameter()]") | Out-Null
+            $paramContent.AppendLine("        [ValidateSet('Present', 'Absent')]") | Out-Null
+            $paramContent.AppendLine("        [System.String]") | Out-Null
+            $paramContent.AppendLine("        `$Ensure,`r`n") | Out-Null
+            $mofSchemaContent.AppendLine("    [Write, Description(`"Present ensures the instance exists, absent ensures it is removed.`"), ValueMap{`"Present`",`"Absent`"}, Values{`"Present`",`"Absent`"}] string Ensure;") | Out-Null
+        }
 
         # Credential
         $spacingRequired = " "
@@ -1146,11 +1169,9 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
             $spacingRequired += " "
         }
         $returnContent.AppendLine("            Credential$spacingRequired= `$Credential") | Out-Null
-
         $paramContent.AppendLine("        [Parameter()]") | Out-Null
         $paramContent.AppendLine("        [System.Management.Automation.PSCredential]") | Out-Null
         $paramContent.AppendLine("        `$Credential,`r`n") | Out-Null
-
         $mofSchemaContent.AppendLine("    [Write, Description(`"Credentials of the workload's Admin`"), EmbeddedInstance(`"MSFT_Credential`")] string Credential;") | Out-Null
 
         if ($Workload -ne 'SecurityAndCompliance')
@@ -1162,13 +1183,9 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                 $spacingRequired += " "
             }
             $returnContent.AppendLine("            ApplicationId$spacingRequired= `$ApplicationId") | Out-Null
-
             $paramContent.AppendLine("        [Parameter()]") | Out-Null
             $paramContent.AppendLine("        [System.String]") | Out-Null
             $paramContent.AppendLine("        `$ApplicationId,`r`n") | Out-Null
-
-            $exportAuthContent.AppendLine("                ApplicationId = `$ApplicationId") | Out-Null
-
             $mofSchemaContent.AppendLine("    [Write, Description(`"Id of the Azure Active Directory application to authenticate with.`")] String ApplicationId;") | Out-Null
 
             # Tenant Id
@@ -1178,13 +1195,9 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                 $spacingRequired += " "
             }
             $returnContent.AppendLine("            TenantId$spacingRequired= `$TenantId") | Out-Null
-
             $paramContent.AppendLine("        [Parameter()]") | Out-Null
             $paramContent.AppendLine("        [System.String]") | Out-Null
             $paramContent.AppendLine("        `$TenantId,`r`n") | Out-Null
-
-            $exportAuthContent.AppendLine("                TenantId = `$TenantId") | Out-Null
-
             $mofSchemaContent.AppendLine("    [Write, Description(`"Id of the Azure Active Directory tenant used for authentication.`")] String TenantId;") | Out-Null
 
             # CertificateThumbprint
@@ -1194,16 +1207,16 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                 $spacingRequired += " "
             }
             $returnContent.AppendLine("            CertificateThumbprint$spacingRequired= `$CertificateThumbprint") | Out-Null
-
             $paramContent.AppendLine("        [Parameter()]") | Out-Null
             $paramContent.AppendLine("        [System.String]") | Out-Null
             $paramContent.AppendLine("        `$CertificateThumbprint,`r`n") | Out-Null
-
-            $exportAuthContent.AppendLine("                CertificateThumbprint = `$CertificateThumbprint") | Out-Null
-
             $mofSchemaContent.AppendLine("    [Write, Description(`"Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.`")] String CertificateThumbprint;") | Out-Null
 
-            if ($workload -ne 'MicrosoftTeams')
+            if ($workload -eq 'MicrosoftTeams')
+            {
+                Write-TokenReplacement -Token '<ApplicationSecret>' -Value '' -FilePath $moduleFilePath
+            }
+            else
             {
                 # ApplicationSecret
                 $spacingRequired = " "
@@ -1215,22 +1228,73 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                 $paramContent.AppendLine("        [Parameter()]") | Out-Null
                 $paramContent.AppendLine("        [System.Management.Automation.PSCredential]") | Out-Null
                 $paramContent.AppendLine("        `$ApplicationSecret,`r`n") | Out-Null
-
-                $exportAuthContent.AppendLine("                ApplicationSecret = `$ApplicationSecret") | Out-Null
+                Write-TokenReplacement -Token '<ApplicationSecret>' -Value "        `$ApplicationSecret     = `$ApplicationSecret" -FilePath $moduleFilePath
 
                 $mofSchemaContent.AppendLine("    [Write, Description(`"Secret of the Azure Active Directory tenant used for authentication.`"), EmbeddedInstance(`"MSFT_Credential`")] String ApplicationSecret;") | Out-Null
             }
+
+            $spacingRequired = " "
+            for ($i = 0; $i -lt ($longestParameterName - ("CertificatePath").Length); $i++)
+            {
+                $spacingRequired += " "
+            }
+            $returnContent.AppendLine("            CertificatePath$spacingRequired= `$CertificatePath") | Out-Null
+            $paramContent.AppendLine("        [Parameter()]") | Out-Null
+            $paramContent.AppendLine("        [System.String]") | Out-Null
+            $paramContent.AppendLine("        `$CertificatePath,`r`n") | Out-Null
+            $mofSchemaContent.AppendLine('    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;') | Out-Null
+
+            $spacingRequired = " "
+            for ($i = 0; $i -lt ($longestParameterName - ("CertificatePassword").Length); $i++)
+            {
+                $spacingRequired += " "
+            }
+            $returnContent.AppendLine("            CertificatePassword$spacingRequired= `$CertificatePassword") | Out-Null
+            $paramContent.AppendLine("        [Parameter()]") | Out-Null
+            $paramContent.AppendLine("        [System.Management.Automation.PSCredential]") | Out-Null
+            $paramContent.AppendLine("        `$CertificatePassword,`r`n") | Out-Null
+            $mofSchemaContent.AppendLine('    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;') | Out-Null
+
+            $spacingRequired = " "
+            for ($i = 0; $i -lt ($longestParameterName - ("ManagedIdentity").Length); $i++)
+            {
+                $spacingRequired += " "
+            }
+            $returnContent.AppendLine("            ManagedIdentity$spacingRequired= `$ManagedIdentity.IsPresent") | Out-Null
+            $paramContent.AppendLine("        [Parameter()]") | Out-Null
+            $paramContent.AppendLine("        [Switch]") | Out-Null
+            $paramContent.AppendLine("        `$ManagedIdentity,`r`n") | Out-Null
+            $mofSchemaContent.AppendLine('    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;') | Out-Null
+
+            $spacingRequired = " "
+            for ($i = 0; $i -lt ($longestParameterName - ("AccessTokens").Length); $i++)
+            {
+                $spacingRequired += " "
+            }
+            $paramContent.AppendLine("        [Parameter()]") | Out-Null
+            $paramContent.AppendLine("        [System.String[]]") | Out-Null
+            $paramContent.AppendLine("        `$AccessTokens,`r`n") | Out-Null
+            $mofSchemaContent.AppendLine('    [Write, Description("Access token used for authentication.")] String AccessTokens[];') | Out-Null
         }
 
         $parameterBlock = $paramContent.ToString()
         $parameterBlock = $parameterBlock.Remove($parameterBlock.Length -5, 5) # remove trailing comma
         Write-TokenReplacement -Token '<ParameterBlock>' -Value $parameterBlock -FilePath $moduleFilePath
-        Write-TokenReplacement -Token '<ExportAuth>' -Value $exportAuthContent.ToString() -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<HashTableMapping>' -Value $returnContent.ToString() -FilePath $moduleFilePath
-        Write-TokenReplacement -Token '<PrimaryKey>' -Value $primaryKey  -FilePath $moduleFilePath
-        Write-TokenReplacement -Token '<NewCmdLetName>' -Value "New-$cmdletNoun"  -FilePath $moduleFilePath
-        Write-TokenReplacement -Token '<UpdateCmdLetName>' -Value "Set-$cmdletNoun"  -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<PrimaryKey>' -Value $primaryKey -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<NewCmdLetName>' -Value "New-$cmdletNoun" -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<UpdateCmdLetName>' -Value "Set-$cmdletNoun" -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<RemoveCmdLetName>' -Value "Remove-$cmdletNoun" -FilePath $moduleFilePath
+
+        if ($IsSingleInstance)
+        {
+            Write-TokenReplacement -Token '<ExportParams>' -Value "IsSingleInstance      = 'Yes'" -FilePath $moduleFilePath
+        }
+        else
+        {
+            Write-TokenReplacement -Token '<ExportParams>' -Value "$primaryKey                    = `$config.$primaryKey$requiredKey
+                Ensure                = 'Present'" -FilePath $moduleFilePath
+        }
         #endregion
 
         #region GetKeyIdentifier
@@ -1242,6 +1306,8 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         Write-TokenReplacement -Token '<GetCmdLetName>' -Value "Get-$cmdletNoun" -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#Workload#>' -Value $Workload -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<AssignmentsParam>' -Value '' -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<ResourceDescription>' -Value $resourceDescription -FilePath $moduleFilePath
+        Write-TokenReplacement -Token '<FilterKey>' -Value $alternativeKey -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<Properties>' -Value $mofSchemaContent -FilePath $schemaFilePath
         Write-TokenReplacement -Token '<ResourceName>' -Value $ResourceName -FilePath $schemaFilePath
         Write-TokenReplacement -Token '<CIMInstances>' -Value '' -FilePath $schemaFilePath
@@ -3493,8 +3559,6 @@ function New-M365HashTableMapping
         $DefaultParameterSetProperties
     )
 
-    $newCmdlet = Get-Command "New-$GraphNoun"
-
     $results = @{}
     $hashtable = ''
     $complexTypeContent = ''
@@ -3517,11 +3581,6 @@ function New-M365HashTableMapping
 
     foreach ($property in $properties)
     {
-        $cmdletParameter = $DefaultParameterSetProperties | Where-Object -FilterScript { $_.Name -eq $property.Name }
-        if ($null -eq $cmdletParameter)
-        {
-            $UseAdditionalProperties = $true
-        }
         if ($property.Name -ne 'CreatedDateTime' -and $property.Name -ne 'LastModifiedDateTime')
         {
             $paramType = $property.Type
@@ -3632,10 +3691,12 @@ function New-M365HashTableMapping
         'TenantId'
         'ApplicationSecret'
         'CertificateThumbprint'
+        'CertificatePath'
+        'CertificatePassword'
         'ManagedIdentity'
     )
     foreach ($key in $defaultKeys)
-       {
+    {
         $keyValue = "`$$key"
         if ($key -eq 'Ensure')
         {

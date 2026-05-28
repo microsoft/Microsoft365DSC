@@ -26,6 +26,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowMultipleScreenshare,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowTranscription,
 
         [Parameter(Mandatory = $true)]
@@ -88,20 +92,21 @@ function Get-TargetResource
         $config = Get-CsTeamsGuestMeetingConfiguration -ErrorAction Stop
 
         $result = @{
-            AllowIPVideo            = $config.AllowIPVideo
-            LiveCaptionsEnabledType = $config.LiveCaptionsEnabledType
-            ScreenSharingMode       = $config.ScreenSharingMode
-            AllowMeetNow            = $config.AllowMeetNow
-            AllowTranscription      = $config.AllowTranscription
-            IsSingleInstance        = 'Yes'
-            Credential              = $Credential
-            ApplicationId           = $ApplicationId
-            TenantId                = $TenantId
-            CertificateThumbprint   = $CertificateThumbprint
-            CertificatePath         = $CertificatePath
-            CertificatePassword     = $CertificatePassword
-            ManagedIdentity         = $ManagedIdentity.IsPresent
-            AccessTokens            = $AccessTokens
+            AllowIPVideo             = $config.AllowIPVideo
+            LiveCaptionsEnabledType  = $config.LiveCaptionsEnabledType
+            ScreenSharingMode        = $config.ScreenSharingMode
+            AllowMeetNow             = $config.AllowMeetNow
+            AllowMultipleScreenshare = $config.AllowMultipleScreenshare
+            AllowTranscription       = $config.AllowTranscription
+            IsSingleInstance         = 'Yes'
+            Credential               = $Credential
+            ApplicationId            = $ApplicationId
+            TenantId                 = $TenantId
+            CertificateThumbprint    = $CertificateThumbprint
+            CertificatePath          = $CertificatePath
+            CertificatePassword      = $CertificatePassword
+            ManagedIdentity          = $ManagedIdentity.IsPresent
+            AccessTokens             = $AccessTokens
         }
         return $result
     }
@@ -139,6 +144,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMultipleScreenshare,
 
         [Parameter()]
         [System.Boolean]
@@ -228,6 +237,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMultipleScreenshare,
 
         [Parameter()]
         [System.Boolean]

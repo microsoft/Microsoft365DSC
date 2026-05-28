@@ -42,19 +42,22 @@ function Initialize-M365DSCDllLoader
 
     try
     {
-        # Validate .NET Framework version (4.7.2 = Release 461808+)
-        $netFrameworkVersion = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' -ErrorAction Stop
-        $releaseKey = $netFrameworkVersion.Release
-
-        if ($releaseKey -lt 461808)
+        if ($PSVersionTable.PSEdition -eq 'Desktop')
         {
-            $versionString = $netFrameworkVersion.Version
-            $errorMessage = ".NET Framework 4.7.2 or higher is required for Microsoft365DSC C# dll files. Current version: $versionString (Release: $releaseKey). Please install .NET Framework 4.7.2+ from https://dotnet.microsoft.com/download/dotnet-framework"
+            # Validate .NET Framework version (4.7.2 = Release 461808+)
+            $netFrameworkVersion = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' -ErrorAction Stop
+            $releaseKey = $netFrameworkVersion.Release
 
-            throw $errorMessage
+            if ($releaseKey -lt 461808)
+            {
+                $versionString = $netFrameworkVersion.Version
+                $errorMessage = ".NET Framework 4.7.2 or higher is required for Microsoft365DSC C# dll files on Windows PowerShell. Current version: $versionString (Release: $releaseKey). Please install .NET Framework 4.7.2+ from https://dotnet.microsoft.com/download/dotnet-framework"
+
+                throw $errorMessage
+            }
+
+            Write-Verbose -Message ".NET Framework version check passed (Release: $releaseKey)"
         }
-
-        Write-Verbose -Message ".NET Framework version check passed (Release: $releaseKey)"
 
         # Locate the accelerator DLL
         $moduleRoot = Split-Path -Path $PSScriptRoot -Parent

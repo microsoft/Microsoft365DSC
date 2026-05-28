@@ -80,7 +80,7 @@ function Get-TargetResource
         $CertificatePath,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $CertificatePassword,
 
         [Parameter()]
@@ -247,7 +247,7 @@ function Set-TargetResource
         $CertificatePath,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.PSCredential]
         $CertificatePassword,
 
         [Parameter()]

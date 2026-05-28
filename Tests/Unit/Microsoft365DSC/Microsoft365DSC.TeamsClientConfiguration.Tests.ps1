@@ -50,7 +50,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowShareFile                   = $True
                     AllowSkypeBusinessInterop        = $True
                     ContentPin                       = 'RequiredOutsideScheduleMeeting'
-                    IsSingleInstance                 = 'Yes'
+                    ExtendedWorkInfoInPeopleSearch   = $False
+                    UseUnifiedDomain                 = 'Disabled'
                     ResourceAccountContentAccess     = 'NoAccess'
                     RestrictedSenderList             = @('john.smith@contoso.com')
                 }
@@ -81,6 +82,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowShareFile                   = $True
                     AllowSkypeBusinessInterop        = $True
                     ContentPin                       = 'RequiredOutsideScheduleMeeting'
+                    ExtendedWorkInfoInPeopleSearch   = $False
+                    UseUnifiedDomain                 = 'Disabled'
                     Credential                       = $Credential
                     IsSingleInstance                 = 'Yes'
                     ResourceAccountContentAccess     = 'NoAccess'
@@ -115,6 +118,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowShareFile                   = $True
                     AllowSkypeBusinessInterop        = $True
                     ContentPin                       = 'RequiredOutsideScheduleMeeting'
+                    ExtendedWorkInfoInPeopleSearch   = $False
+                    UseUnifiedDomain                 = 'Disabled'
                     Credential                       = $Credential
                     IsSingleInstance                 = 'Yes'
                     ResourceAccountContentAccess     = 'NoAccess'
@@ -147,7 +152,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 It 'Should Reverse Engineer resource from the Export method' {
                     $result = Export-TargetResource @testParams
-                $result | Should -Not -BeNullOrEmpty
+                    $result | Should -Not -BeNullOrEmpty
                 }
             }
         }

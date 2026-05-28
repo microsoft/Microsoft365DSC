@@ -106,6 +106,7 @@ function Get-TargetResource
         Write-Verbose -Message "Found an instance with Identity {$Identity}"
         $results = @{
             Identity                            = $instance.Identity
+            DefaultFileUploadAppId              = $instance.DefaultFileUploadAppId
             FileSharingInChatswithExternalUsers = $instance.FileSharingInChatswithExternalUsers
             NativeFileEntryPoints               = $instance.NativeFileEntryPoints
             SPChannelFilesTab                   = $instance.SPChannelFilesTab

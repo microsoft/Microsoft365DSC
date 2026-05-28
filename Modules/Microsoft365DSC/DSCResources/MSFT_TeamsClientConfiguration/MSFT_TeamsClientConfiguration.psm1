@@ -60,6 +60,10 @@ function Get-TargetResource
         $ContentPin = 'RequiredOutsideScheduledMeeting',
 
         [Parameter()]
+        [System.Boolean]
+        $ExtendedWorkInfoInPeopleSearch,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
@@ -67,6 +71,11 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $RestrictedSenderList = $null,
+
+        [Parameter()]
+        [ValidateSet('MicrosoftDefault', 'Disabled')]
+        [System.String]
+        $UseUnifiedDomain,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
@@ -144,8 +153,10 @@ function Get-TargetResource
             AllowShareFile                   = $config.AllowShareFile
             AllowSkypeBusinessInterop        = $config.AllowSkypeBusinessInterop
             ContentPin                       = $config.ContentPin
+            ExtendedWorkInfoInPeopleSearch   = $config.ExtendedWorkInfoInPeopleSearch
             ResourceAccountContentAccess     = $config.ResourceAccountContentAccess
             RestrictedSenderList             = $config.RestrictedSenderList
+            UseUnifiedDomain                 = $config.UseUnifiedDomain
             IsSingleInstance                 = 'Yes'
             Credential                       = $Credential
             ApplicationId                    = $ApplicationId
@@ -233,6 +244,10 @@ function Set-TargetResource
         $ContentPin = 'RequiredOutsideScheduledMeeting',
 
         [Parameter()]
+        [System.Boolean]
+        $ExtendedWorkInfoInPeopleSearch,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
@@ -240,6 +255,11 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $RestrictedSenderList = $null,
+
+        [Parameter()]
+        [ValidateSet('MicrosoftDefault', 'Disabled')]
+        [System.String]
+        $UseUnifiedDomain,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
@@ -374,6 +394,10 @@ function Test-TargetResource
         $ContentPin = 'RequiredOutsideScheduledMeeting',
 
         [Parameter()]
+        [System.Boolean]
+        $ExtendedWorkInfoInPeopleSearch,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
@@ -381,6 +405,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $RestrictedSenderList = $null,
+
+        [Parameter()]
+        [ValidateSet('MicrosoftDefault', 'Disabled')]
+        [System.String]
+        $UseUnifiedDomain,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]

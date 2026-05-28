@@ -2108,7 +2108,9 @@ function Add-AdvancedRuleConditionId
             $sensitiveTypesValue = $Condition.Value.Groups.Sensitivetypes
             foreach ($stype in $sensitiveTypesValue)
             {
-                if ($null -eq $stype.Id)
+                # Do not attempt to resolve trainable classifiers that have a classifier type set, e.g. MLModel
+                # See https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7156
+                if ($null -eq $stype.Id -and [System.String]::IsNullOrEmpty($stype.Classifiertype))
                 {
                     $stype.Id = $Script:SensitiveInformationTypes | Where-Object -FilterScript { $_.Name -eq $stype.Name } | Select-Object -ExpandProperty Id
                 }

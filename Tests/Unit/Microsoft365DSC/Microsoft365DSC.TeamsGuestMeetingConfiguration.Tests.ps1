@@ -39,13 +39,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-CsTeamsGuestMeetingConfiguration -MockWith {
                 return @{
-                    Identity                = 'Global'
-                    AllowIPVideo            = $true
-                    LiveCaptionsEnabledType = 'Disabled'
-                    ScreenSharingMode       = 'Disabled'
-                    AllowMeetNow            = $false
-                    AllowTranscription      = $false
-                    Credential              = $Credential
+                    Identity                 = 'Global'
+                    AllowIPVideo             = $true
+                    LiveCaptionsEnabledType  = 'Disabled'
+                    ScreenSharingMode        = 'Disabled'
+                    AllowMeetNow             = $false
+                    AllowMultipleScreenshare = $false
+                    AllowTranscription       = $false
+                    Credential               = $Credential
                 }
             }
 
@@ -63,13 +64,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When settings are correctly set' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance        = 'Yes'
-                    AllowIPVideo            = $true
-                    LiveCaptionsEnabledType = 'Disabled'
-                    ScreenSharingMode       = 'Disabled'
-                    AllowMeetNow            = $false
-                    AllowTranscription      = $false
-                    Credential              = $Credential
+                    IsSingleInstance         = 'Yes'
+                    AllowIPVideo             = $true
+                    LiveCaptionsEnabledType  = 'Disabled'
+                    ScreenSharingMode        = 'Disabled'
+                    AllowMeetNow             = $false
+                    AllowMultipleScreenshare = $false
+                    AllowTranscription       = $false
+                    Credential               = $Credential
                 }
             }
 
@@ -89,12 +91,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When settings are NOT correctly set' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance        = 'Yes'
-                    AllowIPVideo            = $false # Drifted
-                    LiveCaptionsEnabledType = 'Disabled'
-                    ScreenSharingMode       = 'Disabled'
-                    AllowMeetNow            = $false
-                    Credential              = $Credential
+                    IsSingleInstance         = 'Yes'
+                    AllowIPVideo             = $false # Drift
+                    LiveCaptionsEnabledType  = 'Disabled'
+                    ScreenSharingMode        = 'Disabled'
+                    AllowMeetNow             = $false
+                    AllowMultipleScreenshare = $false
+                    Credential               = $Credential
                 }
             }
 

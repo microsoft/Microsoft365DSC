@@ -68,8 +68,10 @@
       "module": "PnP.PowerShell",
       "cmdlets": [
         "Get-PnPStorageEntity",
+        "Get-PnPTenantSite",
         "Remove-PnPStorageEntity",
-        "Set-PnPStorageEntity"
+        "Set-PnPStorageEntity",
+        "Set-PnPTenantSite"
       ]
     }
   ]

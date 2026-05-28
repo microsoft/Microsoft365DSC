@@ -2176,7 +2176,13 @@ function Set-TargetResource
         $MDATPTriageStatusValue = $MDATPTriageStatusValue.Substring(0, $MDATPTriageStatusValue.Length - 1)
     }
     $MDATPTriageStatusValue += ']'
-    $featureSettingsValue = "{`"Anonymization`":$($Anonymization.ToString().ToLower()), `"DLPUserRiskSync`":$($DLPUserRiskSync.ToString().ToLower()), `"OptInIRMDataExport`":$($OptInIRMDataExport.ToString().ToLower()), `"RaiseAuditAlert`":$($RaiseAuditAlert.ToString().ToLower()), `"EnableTeam`":$($EnableTeam.ToString().ToLower()), `"InlineAlertPolicyCustomization`":$($InlineAlertPolicyCustomization.ToString().ToLower()), `"NotificationDetails`":`"{\`"Rolegroups\`":$((ConvertTo-Json -InputObject $NotificationDetailsRoleGroups -Compress) -replace '"', '\"'),\`"Recepients\`":[]}`"}"
+
+    $notificationDetailsValue = ''
+    if ($NotificationDetailsEnabled)
+    {
+        $notificationDetailsValue = ", `"NotificationDetails`":`"{\`"Rolegroups\`":$((ConvertTo-Json -InputObject $NotificationDetailsRoleGroups -Compress) -replace '"', '\"'),\`"Recepients\`":[]}`""
+    }
+    $featureSettingsValue = "{`"Anonymization`":$($Anonymization.ToString().ToLower()), `"DLPUserRiskSync`":$($DLPUserRiskSync.ToString().ToLower()), `"OptInIRMDataExport`":$($OptInIRMDataExport.ToString().ToLower()), `"RaiseAuditAlert`":$($RaiseAuditAlert.ToString().ToLower()), `"EnableTeam`":$($EnableTeam.ToString().ToLower()), `"InlineAlertPolicyCustomization`":$($InlineAlertPolicyCustomization.ToString().ToLower())$notificationDetailsValue}"
     $intelligentDetectionValue = "{`"FileVolCutoffLimits`":`"$($FileVolCutoffLimits)`", `"AlertVolume`":`"$($AlertVolume)`", `"MDATPTriageStatus`": `"$($MDATPTriageStatusValue)`"}"
 
     $tenantSettingsValue = "{`"Region`":`"WW`", `"FeatureSettings`":$($featureSettingsValue), " + `

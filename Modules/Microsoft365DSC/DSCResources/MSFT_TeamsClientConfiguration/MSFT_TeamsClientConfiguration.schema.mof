@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.2"), FriendlyName("TeamsClientConfiguration")]
+[ClassVersion("1.0.0.3"), FriendlyName("TeamsClientConfiguration")]
 class MSFT_TeamsClientConfiguration : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
@@ -15,8 +15,10 @@ class MSFT_TeamsClientConfiguration : OMI_BaseResource
     [Write, Description("When set to $true, Teams conversations automatically show up in Skype for Business for users that aren't enabled for Teams.")] Boolean AllowSkypeBusinessInterop;
     [Write, Description("Designates whether users are able to leverage Egnyte as a third party storage solution in Microsoft Teams. If $true, users will be able to add Egnyte in the client and interact with the files stored there.")] Boolean AllowEgnyte;
     [Write, Description("This setting applies only to Skype for Business Online (not Microsoft Teams) and defines whether the user must provide a secondary form of authentication to access the meeting content from a resource device account. Meeting content is defined as files that are shared to the Content Bin - files that have been attached to the meeting."), ValueMap{"NotRequired", "RequiredOutsideScheduleMeeting", "AlwaysRequired"}, Values{"NotRequired", "RequiredOutsideScheduleMeeting", "AlwaysRequired"}] string ContentPin;
+    [Write, Description("TBD")] Boolean ExtendedWorkInfoInPeopleSearch;
     [Write, Description("Require a secondary form of authentication to access meeting content."), ValueMap{"NoAccess", "PartialAccess", "FullAccess"}, Values{"NoAccess", "PartialAccess", "FullAccess"}] string ResourceAccountContentAccess;
     [Write, Description("Senders domains can be further restricted to ensure that only allowed SMTP domains can send emails to the Teams channels. This is a comma-separated string of the domains you'd like to allow to send emails to Teams channels.")] string RestrictedSenderList[];
+    [Write, Description("This setting controls whether users are redirected from teams.microsoft.com to the unified domain teams.cloud.microsoft. Possible values are: MicrosoftDefault, Microsoft will manage redirection behavior. If no explicit admin configuration is set, users may be redirected automatically. Disabled, Users will remain on teams.microsoft.com. Use this if your organization's apps are incompatible with the unified domain"), ValueMap{"MicrosoftDefault","Disabled"}, Values{"MicrosoftDefault","Disabled"}] String UseUnifiedDomain;
     [Write, Description("Credentials of the Teams Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;

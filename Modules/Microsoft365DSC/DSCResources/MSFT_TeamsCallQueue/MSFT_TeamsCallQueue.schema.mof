@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName("TeamsCallQueue")]
+[ClassVersion("1.0.0.1"), FriendlyName("TeamsCallQueue")]
 class MSFT_TeamsCallQueue : OMI_BaseResource
 {
     [Key, Description("The Name parameter specifies a unique name for the Call Queue.")] String Name;
@@ -19,6 +19,7 @@ class MSFT_TeamsCallQueue : OMI_BaseResource
     [Write, Description("The ConferenceMode parameter indicates whether or not Conference mode will be applied on calls for this Call queue. Conference mode significantly reduces the amount of time it takes for a caller to be connected to an agent, after the agent accepts the call.")] Boolean ConferenceMode;
     [Write, Description("The Users parameter lets you add agents to the Call Queue. This parameter expects a list of user unique identifiers (GUID).")] String Users[];
     [Write, Description("The LanguageId parameter indicates the language that is used to play shared voicemail prompts. This parameter becomes a required parameter If either OverflowAction or TimeoutAction is set to SharedVoicemail. You can query the supported languages using the Get-CsAutoAttendantSupportedLanguage cmdlet.")] String LanguageId;
+    [Write, Description("This is a list of UserPrincipalNames of authorized users who should not appear on the list of supervisors for the agents who are members of this queue.")] String HideAuthorizedUsers[];
     [Write, Description("The OboResourceAccountIds parameter lets you add resource account with phone number to the Call Queue. The agents in the Call Queue will be able to make outbound calls using the phone number on the resource accounts. This is a list of resource account GUIDs. Only Call Queue managed by a Teams Channel will be able to use this feature.")] String OboResourceAccountIds[];
     [Write, Description("The OverflowDisconnectTextToSpeechPrompt parameter indicates the Text-to-Speech (TTS) prompt which is played to the caller when being disconnected due to overflow.")] String OverflowDisconnectTextToSpeechPrompt;
     [Write, Description("The OverflowDisconnectAudioFilePrompt parameter indicates the unique identifier for the Audio file prompt which is played to the caller when being disconnected due to overflow.")] String OverflowDisconnectAudioFilePrompt;
@@ -33,6 +34,8 @@ class MSFT_TeamsCallQueue : OMI_BaseResource
     [Write, Description("The OverflowRedirectVoicemailTextToSpeechPrompt parameter indicates the Text-to-Speech (TTS) prompt which is played to the caller when being redirected to a person's voicemail due to overflow.")] String OverflowSharedVoicemailTextToSpeechPrompt;
     [Write, Description("The OverflowSharedVoicemailAudioFilePrompt parameter indicates the unique identifier for the Audio file prompt which is to be played as a greeting to the caller when transferred to shared voicemail on overflow. This parameter becomes a required parameter when OverflowAction is SharedVoicemail and OverflowSharedVoicemailTextToSpeechPrompt is null.")] String OverflowSharedVoicemailAudioFilePrompt;
     [Write, Description("The EnableOverflowSharedVoicemailTranscription parameter is used to turn on transcription for voicemails left by a caller on overflow. This parameter is only applicable when OverflowAction is set to SharedVoicemail.")] Boolean EnableOverflowSharedVoicemailTranscription;
+    [Write, Description("The TextAnnouncementForCR parameter indicates the custom Text-to-Speech (TTS) prompt which is played to callers when compliance recording for call queues is enabled.")] String TextAnnouncementForCR;
+    [Write, Description("The TextAnnouncementForCRFailure parameter indicates the custom Text-to-Speech (TTS) prompt which is played to callers if the compliance recording for call queue bot is unable to join or drops from the call.")] String TextAnnouncementForCRFailure;
     [Write, Description("The TimeoutDisconnectTextToSpeechPrompt parameter indicates the Text-to-Speech (TTS) prompt which is played to the caller when being disconnected due to timeout.")] String TimeoutDisconnectTextToSpeechPrompt;
     [Write, Description("The TimeoutDisconnectAudioFilePrompt parameter indicates the unique identifier for the Audio file prompt which is played to the caller when being disconnected due to timeout.")] String TimeoutDisconnectAudioFilePrompt;
     [Write, Description("The TimeoutRedirectPersonTextToSpeechPrompt parameter indicates the Text-to-Speech (TTS) prompt which is played to the caller when being redirected to a person in the organization due to timeout.")] String TimeoutRedirectPersonTextToSpeechPrompt;

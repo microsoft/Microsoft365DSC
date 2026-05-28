@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.1"), FriendlyName("TeamsCallingPolicy")]
+[ClassVersion("1.0.0.2"), FriendlyName("TeamsCallingPolicy")]
 class MSFT_TeamsCallingPolicy : OMI_BaseResource
 {
     [Key, Description("Identity of the Teams Calling Policy.")] String Identity;
@@ -14,6 +14,7 @@ class MSFT_TeamsCallingPolicy : OMI_BaseResource
     [Write, Description("Setting this parameter allows you to set the PopoutForIncomingPstnCalls setting's URL path of the website to launch upon receiving incoming PSTN calls. This parameter accepts an HTTPS URL with less than 1024 characters. The URL can contain a {phone} placeholder that is replaced with the caller's PSTN number in E.164 format when launched.")] String PopoutAppPathForIncomingPstnCalls;
     [Write, Description("Setting this parameter allows you to control the tenant users' ability to launch an external website URL automatically in the browser window upon incoming PSTN calls for specific users or user groups. Possible values are: Enabled, Disabled."), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String PopoutForIncomingPstnCalls;
     [Write, Description("Allows users to use real time text during a call, allowing them to communicate by typing their messages in real time. Possible values are: Disabled, Enabled"), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String RealTimeText;
+    [Write, Description("TBD. Possible values are: Disabled, Enabled"), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String ReportCall;
     [Write, Description("Controls if Teams calls are shown in the call log.")] Boolean ShowTeamsCallsInCallLog;
     [Write, Description("Enables the user to use the voice simulation feature while being AI interpreted. Possible values are: Disabled, Enabled"), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String VoiceSimulationInInterpreter;
     [Write, Description("Controls all calling capabilities in Teams. Turning this off will turn off all calling functionality in Teams. If you use Skype for Business for calling, this policy will not affect calling functionality in Skype for Business.")] Boolean AllowPrivateCalling;

@@ -47,6 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description               = 'FakeStringValue'
                     EnrollFace                = 'Enabled'
                     EnrollVoice               = 'Enabled'
+                    PassiveVoiceEnrollment    = 'Enabled'
                     Identity                  = 'FakeStringValue'
                     SpeakerAttributionForBYOD = 'Enabled'
                 }
@@ -71,6 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnrollVoice               = 'Enabled'
                     Ensure                    = 'Present'
                     Identity                  = 'Global'
+                    PassiveVoiceEnrollment    = 'Enabled'
                     Credential                = $Credential
                     SpeakerAttributionForBYOD = 'Enabled'
                 }
@@ -102,6 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnrollVoice               = 'Enabled'
                     Ensure                    = 'Absent'
                     Identity                  = 'FakeStringValue'
+                    PassiveVoiceEnrollment    = 'Enabled'
                     Credential                = $Credential
                     SpeakerAttributionForBYOD = 'Enabled'
                 }
@@ -129,6 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnrollVoice               = 'Enabled'
                     Ensure                    = 'Present'
                     Identity                  = 'FakeStringValue'
+                    PassiveVoiceEnrollment    = 'Enabled'
                     Credential                = $Credential
                     SpeakerAttributionForBYOD = 'Enabled'
                 }
@@ -146,6 +150,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnrollFace                = 'Disabled' # Drift
                     EnrollVoice               = 'Enabled'
                     Identity                  = 'FakeStringValue'
+                    PassiveVoiceEnrollment    = 'Enabled'
                     Ensure                    = 'Present'
                     Credential                = $Credential
                     SpeakerAttributionForBYOD = 'Enabled'

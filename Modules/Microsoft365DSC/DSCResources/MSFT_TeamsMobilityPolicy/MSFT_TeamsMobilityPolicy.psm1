@@ -15,18 +15,23 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPAudioMobileMode,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPVideoMobileMode,
 
         [Parameter()]
+        [ValidateSet('OfferBrowserOptions', 'UseSystemDefaults')]
         [System.String]
+        $LinksInTeams,
+
+        [Parameter()]
         [ValidateSet('Teams', 'Native', 'UserOverride')]
+        [System.String]
         $MobileDialerPreference,
 
         [Parameter()]
@@ -109,6 +114,7 @@ function Get-TargetResource
             Description            = $instance.Description
             IPAudioMobileMode      = $instance.IPAudioMobileMode
             IPVideoMobileMode      = $instance.IPVideoMobileMode
+            LinksInTeams           = $instance.LinksInTeams
             MobileDialerPreference = $instance.MobileDialerPreference
             Ensure                 = 'Present'
             Credential             = $Credential
@@ -146,18 +152,23 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPAudioMobileMode,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPVideoMobileMode,
 
         [Parameter()]
+        [ValidateSet('OfferBrowserOptions', 'UseSystemDefaults')]
         [System.String]
+        $LinksInTeams,
+
+        [Parameter()]
         [ValidateSet('Teams', 'Native', 'UserOverride')]
+        [System.String]
         $MobileDialerPreference,
 
         [Parameter()]
@@ -247,18 +258,23 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPAudioMobileMode,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPVideoMobileMode,
 
         [Parameter()]
+        [ValidateSet('OfferBrowserOptions', 'UseSystemDefaults')]
         [System.String]
+        $LinksInTeams,
+
+        [Parameter()]
         [ValidateSet('Teams', 'Native', 'UserOverride')]
+        [System.String]
         $MobileDialerPreference,
 
         [Parameter()]

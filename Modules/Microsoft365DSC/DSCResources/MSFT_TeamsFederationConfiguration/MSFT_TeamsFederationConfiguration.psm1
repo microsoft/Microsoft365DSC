@@ -15,6 +15,10 @@ function Get-TargetResource
         $BlockedDomains,
 
         [Parameter()]
+        [System.String[]]
+        $AllowedTrialTenantDomains,
+
+        [Parameter()]
         [System.Boolean]
         $AllowFederatedUsers,
 
@@ -25,6 +29,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAllSubdomains,
 
         [Parameter()]
         [ValidateSet('Disabled', 'Enabled')]
@@ -135,9 +143,11 @@ function Get-TargetResource
         return @{
             AllowedDomains                              = $AllowedDomainsValues
             BlockedDomains                              = $BlockedDomainsValues
+            AllowedTrialTenantDomains                   = [System.String[]]$config.AllowedTrialTenantDomains
             AllowFederatedUsers                         = $config.AllowFederatedUsers
             AllowTeamsConsumer                          = $config.AllowTeamsConsumer
             AllowTeamsConsumerInbound                   = $config.AllowTeamsConsumerInbound
+            BlockAllSubdomains                          = $config.BlockAllSubdomains
             DomainBlockingForMDOAdminsInTeams           = $config.DomainBlockingForMDOAdminsInTeams
             ExternalAccessWithTrialTenants              = $config.ExternalAccessWithTrialTenants
             TreatDiscoveredPartnersAsUnverified         = $config.TreatDiscoveredPartnersAsUnverified
@@ -180,6 +190,10 @@ function Set-TargetResource
         $BlockedDomains,
 
         [Parameter()]
+        [System.String[]]
+        $AllowedTrialTenantDomains,
+
+        [Parameter()]
         [System.Boolean]
         $AllowFederatedUsers,
 
@@ -190,6 +204,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAllSubdomains,
 
         [Parameter()]
         [ValidateSet('Disabled', 'Enabled')]
@@ -303,6 +321,10 @@ function Test-TargetResource
         $BlockedDomains,
 
         [Parameter()]
+        [System.String[]]
+        $AllowedTrialTenantDomains,
+
+        [Parameter()]
         [System.Boolean]
         $AllowFederatedUsers,
 
@@ -313,6 +335,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAllSubdomains,
 
         [Parameter()]
         [ValidateSet('Disabled', 'Enabled')]

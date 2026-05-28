@@ -86,6 +86,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $HideAuthorizedUsers,
+
+        [Parameter()]
+        [System.String[]]
         $OboResourceAccountIds,
 
         [Parameter()]
@@ -139,6 +143,14 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableOverflowSharedVoicemailTranscription,
+
+        [Parameter()]
+        [System.String]
+        $TextAnnouncementForCR,
+
+        [Parameter()]
+        [System.String]
+        $TextAnnouncementForCRFailure,
 
         [Parameter()]
         [System.String]
@@ -280,11 +292,25 @@ function Get-TargetResource
             return $nullReturn
         }
 
+        $authorizedUsers = @()
+        foreach ($authorizedUser in $queue.HideAuthorizedUsers)
+        {
+            $user = Get-CsOnlineUser -Identity $authorizedUser -Properties UserPrincipalName -ErrorAction SilentlyContinue
+            if ($null -eq $user)
+            {
+                Write-Warning -Message "Unable to retrieve details for authorized user with object id $authorizedUser. Ensure the user exists and the account used for authentication has the necessary permissions to read user details."
+                continue
+            }
+
+            $authorizedUsers += $user.UserPrincipalName
+        }
+
         return @{
             Name                                          = $queue.Name
             AgentAlertTime                                = $queue.AgentAlertTime
             AllowOptOut                                   = $queue.AllowOptOut
             DistributionLists                             = [String[]]$queue.DistributionLists
+            HideAuthorizedUsers                           = $authorizedUsers
             UseDefaultMusicOnHold                         = $queue.UseDefaultMusicOnHold
             WelcomeMusicAudioFileId                       = $queue.WelcomeMusicAudioFileId
             MusicOnHoldAudioFileId                        = $queue.MusicOnHoldAudioFileId
@@ -313,6 +339,8 @@ function Get-TargetResource
             OverflowSharedVoicemailTextToSpeechPrompt     = $queue.OverflowSharedVoicemailTextToSpeechPrompt
             OverflowSharedVoicemailAudioFilePrompt        = $queue.OverflowSharedVoicemailAudioFilePrompt
             EnableOverflowSharedVoicemailTranscription    = $queue.EnableOverflowSharedVoicemailTranscription
+            TextAnnouncementForCR                         = $queue.TextAnnouncementForCR
+            TextAnnouncementForCRFailure                  = $queue.TextAnnouncementForCRFailure
             TimeoutDisconnectTextToSpeechPrompt           = $queue.TimeoutDisconnectTextToSpeechPrompt
             TimeoutDisconnectAudioFilePrompt              = $queue.TimeoutDisconnectAudioFilePrompt
             TimeoutRedirectPersonTextToSpeechPrompt       = $queue.TimeoutRedirectPersonTextToSpeechPrompt
@@ -437,6 +465,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $HideAuthorizedUsers,
+
+        [Parameter()]
+        [System.String[]]
         $OboResourceAccountIds,
 
         [Parameter()]
@@ -490,6 +522,14 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableOverflowSharedVoicemailTranscription,
+
+        [Parameter()]
+        [System.String]
+        $TextAnnouncementForCR,
+
+        [Parameter()]
+        [System.String]
+        $TextAnnouncementForCRFailure,
 
         [Parameter()]
         [System.String]
@@ -608,24 +648,42 @@ function Set-TargetResource
     #endregion
 
     $currentValues = Get-TargetResource @PSBoundParameters
-
     $opsParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    if ($PSBoundParameters.ContainsKey('HideAuthorizedUsers') -and $HideAuthorizedUsers.Count -gt 0)
+    {
+        $opsParameters.Remove('HideAuthorizedUsers') | Out-Null
+        $authorizedUserIds = @()
+        foreach ($user in $HideAuthorizedUsers)
+        {
+            $userDetails = Get-CsOnlineUser -Identity $user -Properties Id -ErrorAction SilentlyContinue
+            if ($null -eq $userDetails)
+            {
+                Write-Warning -Message "Unable to retrieve details for user $user. Ensure the user exists and the account used for authentication has the necessary permissions to read user details."
+                continue
+            }
+
+            $authorizedUserIds += $userDetails.Id
+        }
+
+        $opsParameters.Add('HideAuthorizedUsers', $authorizedUserIds)
+    }
 
     if ($currentValues.Ensure -eq 'Absent' -and 'Present' -eq $Ensure )
     {
-        Write-Verbose -Message "Creating a new Teams Call Queue {$Name}"
+        Write-Verbose -Message "Creating a new Teams Call Queue with Name {$Name}"
         New-CsCallQueue @opsParameters
     }
     elseif (($currentValues.Ensure -eq 'Present' -and 'Present' -eq $Ensure))
     {
-        Write-Verbose -Message "Updating Teams Call Queue {$Name}"
+        Write-Verbose -Message "Updating the Teams Call Queue with Name {$Name}"
         $queue = Get-CsCallQueue -NameFilter $Name
         $opsParameters.Add('Identity', $queue.Id)
         Set-CsCallQueue @opsParameters
     }
     elseif (($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present'))
     {
-        Write-Verbose -Message "Removing Teams Call Queue {$Name}"
+        Write-Verbose -Message "Removing the Teams Call Queue with Name {$Name}"
         $queue = Get-CsCallQueue -NameFilter $Name
         Remove-CsCallQueue -Identity $queue.Id
     }
@@ -717,6 +775,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $HideAuthorizedUsers,
+
+        [Parameter()]
+        [System.String[]]
         $OboResourceAccountIds,
 
         [Parameter()]
@@ -770,6 +832,14 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableOverflowSharedVoicemailTranscription,
+
+        [Parameter()]
+        [System.String]
+        $TextAnnouncementForCR,
+
+        [Parameter()]
+        [System.String]
+        $TextAnnouncementForCRFailure,
 
         [Parameter()]
         [System.String]

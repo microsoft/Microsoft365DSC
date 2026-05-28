@@ -4,13 +4,38 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $Ensure = 'Present',
+        $CustomTagsMode,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'EnabledTeamOwner', 'EnabledTeamOwnerMember', 'EnabledTeamOwnerMemberGuest', 'MicrosoftDefault')]
+        [System.String]
+        $ManageTagsPermissionMode,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ShiftBackedTagsMode,
+
+        [Parameter()]
+        [System.String]
+        $SuggestedPresetTags,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $TeamOwnersEditWhoCanManageTagsMode,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -23,10 +48,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -49,72 +70,52 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration for the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
+    Write-Verbose -Message "Getting configuration for the Teams Targeting Policy"
 
     try
     {
-        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
+        $null = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
+        $instance = Get-CsTeamsTargetingPolicy -ErrorAction SilentlyContinue
+        if ($null -eq $instance)
         {
-
-            $null = New-M365DSCConnection -Workload '<#Workload#>' `
-                -InboundParameters $PSBoundParameters
-
-            #Ensure the proper dependencies are installed in the current environment.
-            Confirm-M365DSCDependencies
-
-            #region Telemetry
-            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-            $CommandName = $MyInvocation.MyCommand
-            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-                -CommandName $CommandName `
-                -Parameters $PSBoundParameters
-            Add-M365DSCTelemetryEvent -Data $data
-            #endregion
-
-            $nullResult = $PSBoundParameters
-            $nullResult.Ensure = 'Absent'
-
-            $getValue = $null
-            <#ResourceGenerator
-            #region resource generator code
-            if (-not [System.String]::IsNullOrEmpty($<PrimaryKey>))
-            {
-                $getValue = Invoke-M365DSCCommand -ScriptBlock {
-                    <GetCmdLetName> <getKeyIdentifier> -ErrorAction Stop
-                } -SuppressNotFoundError
-            }
-
-            if ($null -eq $getValue)
-            {
-                Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
-
-                if (-not [System.String]::IsNullOrEmpty($<FilterKey>))
-                {
-                    $getValue = Invoke-M365DSCCommand -ScriptBlock {
-                        <GetCmdLetName> `
-        <AlternativeFilter>
-                    }
-                }
-            }
-            #endregionResourceGenerator#>
-            if ($null -eq $getValue)
-            {
-                Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}."
-                return $nullResult
-            }
+            Write-Verbose -Message "Could not find an Teams Targeting Policy with Identity {Global}"
+            return $nullResult
         }
-        else
-        {
-            $getValue = $Script:exportedInstance
+
+        Write-Verbose -Message "A Teams Targeting Policy with Identity {Global} was found"
+        $results = @{
+            IsSingleInstance                   = 'Yes'
+            CustomTagsMode                     = $instance.CustomTagsMode
+            Description                        = $instance.Description
+            ManageTagsPermissionMode           = $instance.ManageTagsPermissionMode
+            ShiftBackedTagsMode                = $instance.ShiftBackedTagsMode
+            SuggestedPresetTags                = $instance.SuggestedPresetTags
+            TeamOwnersEditWhoCanManageTagsMode = $instance.TeamOwnersEditWhoCanManageTagsMode
+            Credential                         = $Credential
+            ApplicationId                      = $ApplicationId
+            TenantId                           = $TenantId
+            CertificateThumbprint              = $CertificateThumbprint
+            CertificatePath                    = $CertificatePath
+            CertificatePassword                = $CertificatePassword
+            ManagedIdentity                    = $ManagedIdentity.IsPresent
         }
-        $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found"<#ResourceGenerator
-<SettingsCatalogGetSettings><ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
-        $results = @{<#ResourceGenerator
-            #region resource generator code
-<HashTableMapping>            #endregionResourceGenerator#>
-        }
-<#ComplexTypeContent#><#SettingsCatalogAddSettings#><#AssignmentsGet#>
         return $results
     }
     catch
@@ -134,12 +135,38 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
-        $Ensure = 'Present',
+        $IsSingleInstance,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $CustomTagsMode,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'EnabledTeamOwner', 'EnabledTeamOwnerMember', 'EnabledTeamOwnerMemberGuest', 'MicrosoftDefault')]
+        [System.String]
+        $ManageTagsPermissionMode,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ShiftBackedTagsMode,
+
+        [Parameter()]
+        [System.String]
+        $SuggestedPresetTags,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $TeamOwnersEditWhoCanManageTagsMode,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -152,10 +179,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -178,7 +201,8 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
+    $null = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -195,33 +219,12 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-<#SettingsCatalogProperties#>
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
-<#AssignmentsRemove#>
-<#DefaultCreateParameters#><#ResourceGenerator
-        #region resource generator code
-<NewDataType>        $policy = <NewCmdLetName> <#NewKeyIdentifier#>
-<#AssignmentsNew#>        #endregionResourceGenerator#>
-    }
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Updating the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
-<#AssignmentsRemove#>
-<#DefaultUpdateParameters#><#ResourceGenerator
-        #region resource generator code
-<UpdateDataType><UpdateCmdLetName><#UpdateKeyIdentifier#>
-<#AssignmentsUpdate#>
-        #endregionResourceGenerator#>
-    }
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"<#ResourceGenerator
-        #region resource generator code
-        <RemoveCmdLetName> <#removeKeyIdentifier#>
-        #endregionResourceGenerator#>
-    }
+    Write-Verbose -Message "Updating the Teams Targeting Policy with Identity {Global}"
+
+    $updateParameters = ([Hashtable]$boundParameters).Clone()
+    $updateParameters.Remove('IsSingleInstance') | Out-Null
+    $updateParameters.Add('Identity', 'Global')
+    Set-CsTeamsTargetingPolicy @updateParameters | Out-Null
 }
 
 function Test-TargetResource
@@ -230,13 +233,38 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        #region resource generator code
-<ParameterBlock><AssignmentsParam>        #endregion
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $Ensure = 'Present',
+        $CustomTagsMode,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'EnabledTeamOwner', 'EnabledTeamOwnerMember', 'EnabledTeamOwnerMemberGuest', 'MicrosoftDefault')]
+        [System.String]
+        $ManageTagsPermissionMode,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ShiftBackedTagsMode,
+
+        [Parameter()]
+        [System.String]
+        $SuggestedPresetTags,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $TeamOwnersEditWhoCanManageTagsMode,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -249,10 +277,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -296,10 +320,6 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -336,7 +356,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
+   $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -352,9 +372,8 @@ function Export-TargetResource
     #endregion
 
     try
-    {<#ResourceGenerator
-        #region resource generator code
-<exportGetCommand>        #endregionResourceGenerator#>
+    {
+        [array]$getValue = Get-CsTeamsTargetingPolicy -ErrorAction Stop
 
         $i = 1
         $dscContent = [System.Text.StringBuilder]::new()
@@ -368,22 +387,18 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey = $config.<PrimaryKey>
-            if (-not [System.String]::IsNullOrEmpty($config.displayName))
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
-                $displayedKey = $config.displayName
+                $Global:M365DSCExportResourceInstancesCount++
             }
-            elseif (-not [System.String]::IsNullOrEmpty($config.name))
-            {
-                $displayedKey = $config.name
-            }
+
+            $displayedKey = $config.Identity
             Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{
-                <ExportParams>
+                IsSingleInstance      = 'Yes'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
-                TenantId              = $TenantId<ApplicationSecret>
-                ApplicationSecret     = $ApplicationSecret
+                TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
@@ -391,14 +406,12 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-<#ConvertComplexToString#><#AssignmentsConvertComplexToString#>
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential <#AddToEscape#><#TrailingCharRemoval#>
+                -Credential $Credential
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
