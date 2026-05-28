@@ -36,5 +36,18 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsTemplatePermissionPolicy",
+        "Get-CsTeamTemplateList",
+        "New-CsTeamsHiddenTemplate",
+        "New-CsTeamsTemplatePermissionPolicy",
+        "Remove-CsTeamsTemplatePermissionPolicy",
+        "Set-CsTeamsTemplatePermissionPolicy"
+      ]
+    }
+  ]
 }

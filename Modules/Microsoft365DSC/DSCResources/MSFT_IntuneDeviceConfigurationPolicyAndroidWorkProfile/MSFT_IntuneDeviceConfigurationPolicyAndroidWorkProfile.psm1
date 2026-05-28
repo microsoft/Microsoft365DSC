@@ -12,6 +12,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -234,6 +238,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -266,8 +278,8 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $policy = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
-                -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
+            $policy = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.androidWorkProfileGeneralDeviceConfiguration')" `
+                -ErrorAction Stop
 
             if ($null -eq $policy)
             {
@@ -279,63 +291,67 @@ function Get-TargetResource
         {
             $policy = $Script:exportedInstance
         }
+        $Id = $policy.Id
 
         Write-Verbose -Message "An Intune Device Configuration Policy Android for Work Profile with {$DisplayName} was found"
         $results = @{
             Description                                               = $policy.Description
+            Id                                                        = $policy.Id
             DisplayName                                               = $policy.DisplayName
             RoleScopeTagIds                                           = $policy.RoleScopeTagIds
-            PasswordBlockFaceUnlock                                   = $policy.AdditionalProperties.passwordBlockFaceUnlock
-            PasswordBlockFingerprintUnlock                            = $policy.AdditionalProperties.passwordBlockFingerprintUnlock
-            PasswordBlockIrisUnlock                                   = $policy.AdditionalProperties.passwordBlockIrisUnlock
-            PasswordBlockTrustAgents                                  = $policy.AdditionalProperties.passwordBlockTrustAgents
-            PasswordExpirationDays                                    = $policy.AdditionalProperties.passwordExpirationDays
-            PasswordMinimumLength                                     = $policy.AdditionalProperties.passwordMinimumLength
-            PasswordMinutesOfInactivityBeforeScreenTimeout            = $policy.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
-            PasswordPreviousPasswordBlockCount                        = $policy.AdditionalProperties.passwordPreviousPasswordBlockCount
-            PasswordSignInFailureCountBeforeFactoryReset              = $policy.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
-            PasswordRequiredType                                      = $policy.AdditionalProperties.passwordRequiredType
-            RequiredPasswordComplexity                                = $policy.AdditionalProperties.requiredPasswordComplexity
-            WorkProfileAllowAppInstallsFromUnknownSources             = $policy.AdditionalProperties.workProfileAllowAppInstallsFromUnknownSources
-            WorkProfileDataSharingType                                = $policy.AdditionalProperties.workProfileDataSharingType
-            WorkProfileBlockNotificationsWhileDeviceLocked            = $policy.AdditionalProperties.workProfileBlockNotificationsWhileDeviceLocked
-            WorkProfileBlockAddingAccounts                            = $policy.AdditionalProperties.workProfileBlockAddingAccounts
-            WorkProfileBluetoothEnableContactSharing                  = $policy.AdditionalProperties.workProfileBluetoothEnableContactSharing
-            WorkProfileBlockScreenCapture                             = $policy.AdditionalProperties.workProfileBlockScreenCapture
-            WorkProfileBlockCrossProfileCallerId                      = $policy.AdditionalProperties.workProfileBlockCrossProfileCallerId
-            WorkProfileBlockCamera                                    = $policy.AdditionalProperties.workProfileBlockCamera
-            WorkProfileBlockCrossProfileContactsSearch                = $policy.AdditionalProperties.workProfileBlockCrossProfileContactsSearch
-            WorkProfileBlockCrossProfileCopyPaste                     = $policy.AdditionalProperties.workProfileBlockCrossProfileCopyPaste
-            WorkProfileDefaultAppPermissionPolicy                     = $policy.AdditionalProperties.workProfileDefaultAppPermissionPolicy
-            WorkProfilePasswordBlockFaceUnlock                        = $policy.AdditionalProperties.workProfilePasswordBlockFaceUnlock
-            WorkProfilePasswordBlockFingerprintUnlock                 = $policy.AdditionalProperties.workProfilePasswordBlockFingerprintUnlock
-            WorkProfilePasswordBlockIrisUnlock                        = $policy.AdditionalProperties.workProfilePasswordBlockIrisUnlock
-            WorkProfilePasswordBlockTrustAgents                       = $policy.AdditionalProperties.workProfilePasswordBlockTrustAgents
-            WorkProfilePasswordExpirationDays                         = $policy.AdditionalProperties.workProfilePasswordExpirationDays
-            WorkProfilePasswordMinimumLength                          = $policy.AdditionalProperties.workProfilePasswordMinimumLength
-            WorkProfilePasswordMinNumericCharacters                   = $policy.AdditionalProperties.workProfilePasswordMinNumericCharacters
-            WorkProfilePasswordMinNonLetterCharacters                 = $policy.AdditionalProperties.workProfilePasswordMinNonLetterCharacters
-            WorkProfilePasswordMinLetterCharacters                    = $policy.AdditionalProperties.workProfilePasswordMinLetterCharacters
-            WorkProfilePasswordMinLowerCaseCharacters                 = $policy.AdditionalProperties.workProfilePasswordMinLowerCaseCharacters
-            WorkProfilePasswordMinUpperCaseCharacters                 = $policy.AdditionalProperties.workProfilePasswordMinUpperCaseCharacters
-            WorkProfilePasswordMinSymbolCharacters                    = $policy.AdditionalProperties.workProfilePasswordMinSymbolCharacters
-            WorkProfilePasswordMinutesOfInactivityBeforeScreenTimeout = $policy.AdditionalProperties.workProfilePasswordMinutesOfInactivityBeforeScreenTimeout
-            WorkProfilePasswordPreviousPasswordBlockCount             = $policy.AdditionalProperties.workProfilePasswordPreviousPasswordBlockCount
-            WorkProfilePasswordSignInFailureCountBeforeFactoryReset   = $policy.AdditionalProperties.workProfilePasswordSignInFailureCountBeforeFactoryReset
-            WorkProfilePasswordRequiredType                           = $policy.AdditionalProperties.workProfilePasswordRequiredType
-            WorkProfileRequiredPasswordComplexity                     = $policy.AdditionalProperties.workProfileRequiredPasswordComplexity
-            WorkProfileRequirePassword                                = $policy.AdditionalProperties.workProfileRequirePassword
-            SecurityRequireVerifyApps                                 = $policy.AdditionalProperties.securityRequireVerifyApps
-            VpnAlwaysOnPackageIdentifier                              = $policy.AdditionalProperties.vpnAlwaysOnPackageIdentifier
-            VpnEnableAlwaysOnLockdownMode                             = $policy.AdditionalProperties.vpnEnableAlwaysOnLockdownMode
-            WorkProfileAllowWidgets                                   = $policy.AdditionalProperties.workProfileAllowWidgets
-            WorkProfileBlockPersonalAppInstallsFromUnknownSources     = $policy.AdditionalProperties.workProfileBlockPersonalAppInstallsFromUnknownSources
+            PasswordBlockFaceUnlock                                   = $policy.passwordBlockFaceUnlock
+            PasswordBlockFingerprintUnlock                            = $policy.passwordBlockFingerprintUnlock
+            PasswordBlockIrisUnlock                                   = $policy.passwordBlockIrisUnlock
+            PasswordBlockTrustAgents                                  = $policy.passwordBlockTrustAgents
+            PasswordExpirationDays                                    = $policy.passwordExpirationDays
+            PasswordMinimumLength                                     = $policy.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeScreenTimeout            = $policy.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordPreviousPasswordBlockCount                        = $policy.passwordPreviousPasswordBlockCount
+            PasswordSignInFailureCountBeforeFactoryReset              = $policy.passwordSignInFailureCountBeforeFactoryReset
+            PasswordRequiredType                                      = $policy.passwordRequiredType
+            RequiredPasswordComplexity                                = $policy.requiredPasswordComplexity
+            WorkProfileAllowAppInstallsFromUnknownSources             = $policy.workProfileAllowAppInstallsFromUnknownSources
+            WorkProfileDataSharingType                                = $policy.workProfileDataSharingType
+            WorkProfileBlockNotificationsWhileDeviceLocked            = $policy.workProfileBlockNotificationsWhileDeviceLocked
+            WorkProfileBlockAddingAccounts                            = $policy.workProfileBlockAddingAccounts
+            WorkProfileBluetoothEnableContactSharing                  = $policy.workProfileBluetoothEnableContactSharing
+            WorkProfileBlockScreenCapture                             = $policy.workProfileBlockScreenCapture
+            WorkProfileBlockCrossProfileCallerId                      = $policy.workProfileBlockCrossProfileCallerId
+            WorkProfileBlockCamera                                    = $policy.workProfileBlockCamera
+            WorkProfileBlockCrossProfileContactsSearch                = $policy.workProfileBlockCrossProfileContactsSearch
+            WorkProfileBlockCrossProfileCopyPaste                     = $policy.workProfileBlockCrossProfileCopyPaste
+            WorkProfileDefaultAppPermissionPolicy                     = $policy.workProfileDefaultAppPermissionPolicy
+            WorkProfilePasswordBlockFaceUnlock                        = $policy.workProfilePasswordBlockFaceUnlock
+            WorkProfilePasswordBlockFingerprintUnlock                 = $policy.workProfilePasswordBlockFingerprintUnlock
+            WorkProfilePasswordBlockIrisUnlock                        = $policy.workProfilePasswordBlockIrisUnlock
+            WorkProfilePasswordBlockTrustAgents                       = $policy.workProfilePasswordBlockTrustAgents
+            WorkProfilePasswordExpirationDays                         = $policy.workProfilePasswordExpirationDays
+            WorkProfilePasswordMinimumLength                          = $policy.workProfilePasswordMinimumLength
+            WorkProfilePasswordMinNumericCharacters                   = $policy.workProfilePasswordMinNumericCharacters
+            WorkProfilePasswordMinNonLetterCharacters                 = $policy.workProfilePasswordMinNonLetterCharacters
+            WorkProfilePasswordMinLetterCharacters                    = $policy.workProfilePasswordMinLetterCharacters
+            WorkProfilePasswordMinLowerCaseCharacters                 = $policy.workProfilePasswordMinLowerCaseCharacters
+            WorkProfilePasswordMinUpperCaseCharacters                 = $policy.workProfilePasswordMinUpperCaseCharacters
+            WorkProfilePasswordMinSymbolCharacters                    = $policy.workProfilePasswordMinSymbolCharacters
+            WorkProfilePasswordMinutesOfInactivityBeforeScreenTimeout = $policy.workProfilePasswordMinutesOfInactivityBeforeScreenTimeout
+            WorkProfilePasswordPreviousPasswordBlockCount             = $policy.workProfilePasswordPreviousPasswordBlockCount
+            WorkProfilePasswordSignInFailureCountBeforeFactoryReset   = $policy.workProfilePasswordSignInFailureCountBeforeFactoryReset
+            WorkProfilePasswordRequiredType                           = $policy.workProfilePasswordRequiredType
+            WorkProfileRequiredPasswordComplexity                     = $policy.workProfileRequiredPasswordComplexity
+            WorkProfileRequirePassword                                = $policy.workProfileRequirePassword
+            SecurityRequireVerifyApps                                 = $policy.securityRequireVerifyApps
+            VpnAlwaysOnPackageIdentifier                              = $policy.vpnAlwaysOnPackageIdentifier
+            VpnEnableAlwaysOnLockdownMode                             = $policy.vpnEnableAlwaysOnLockdownMode
+            WorkProfileAllowWidgets                                   = $policy.workProfileAllowWidgets
+            WorkProfileBlockPersonalAppInstallsFromUnknownSources     = $policy.workProfileBlockPersonalAppInstallsFromUnknownSources
             Ensure                                                    = 'Present'
             Credential                                                = $Credential
             ApplicationId                                             = $ApplicationId
             TenantId                                                  = $TenantId
             ApplicationSecret                                         = $ApplicationSecret
             CertificateThumbprint                                     = $CertificateThumbprint
+            CertificatePath                                           = $CertificatePath
+            CertificatePassword                                       = $CertificatePassword
             ManagedIdentity                                           = $ManagedIdentity.IsPresent
             AccessTokens                                              = $AccessTokens
         }
@@ -375,6 +391,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -595,6 +615,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -623,14 +651,10 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Configuration Policy {$DisplayName}"
-        $boundParameters.Remove('DisplayName') | Out-Null
-        $boundParameters.Remove('Description') | Out-Null
         $boundParameters.Remove('Assignments') | Out-Null
-
-        $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyAndroidWorkProfileAdditionalProperties -Properties $boundParameters
-        $policy = New-MgBetaDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
-            -Description $Description `
-            -AdditionalProperties $AdditionalProperties
+        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
+        $createParameters.Add('@odata.type', '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration')
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $createParameters
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -645,24 +669,16 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript {
-            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration'
-        }
-
-        $boundParameters.Remove('DisplayName') | Out-Null
-        $boundParameters.Remove('Description') | Out-Null
         $boundParameters.Remove('Assignments') | Out-Null
-
-        $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyAndroidWorkProfileAdditionalProperties -Properties $boundParameters
-        Update-MgBetaDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
-            -Description $Description `
-            -DeviceConfigurationId $configDevicePolicy.Id
+        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
+        $updateParameters.Add('@odata.type', '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration')
+        Update-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $updateParameters `
+            -DeviceConfigurationId $currentPolicy.Id
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $configDevicePolicy.id `
+            -DeviceConfigurationPolicyId $currentPolicy.Id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceConfigurations'
         #endregion
@@ -670,12 +686,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript {
-            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' `
-        }
-
-        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentPolicy.Id
     }
 }
 
@@ -688,6 +699,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $True)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String]
@@ -911,6 +926,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -966,6 +989,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -991,11 +1022,18 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MgBetaDeviceManagementDeviceConfiguration `
-            -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
+        $baseFilter = "isof('microsoft.graph.androidWorkProfileGeneralDeviceConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$policies = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($policies.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -1020,6 +1058,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -1040,7 +1080,6 @@ function Export-TargetResource
                 }
             }
 
-
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -1048,13 +1087,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Assignments')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -1074,30 +1113,6 @@ function Export-TargetResource
             throw
         }
     }
-}
-
-function Get-M365DSCIntuneDeviceConfigurationPolicyAndroidWorkProfileAdditionalProperties
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $results = @{'@odata.type' = '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
-    foreach ($property in $properties.Keys)
-    {
-        if ($property -ne 'Verbose')
-        {
-            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            $propertyValue = $properties.$property
-            $results.Add($propertyName, $propertyValue)
-        }
-    }
-    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

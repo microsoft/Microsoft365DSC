@@ -1,0 +1,39 @@
+{
+  "resourceName": "EXODynamicDistributionGroup",
+  "roles": {
+    "read": [],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "description": "This resource configures an EXO Dynamic Distribution Group",
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
+        "read": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ],
+        "update": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ]
+      }
+    },
+    "exchange": {
+      "requiredroles": [
+        "Organization Management",
+        "Recipient Management"
+      ],
+      "requiredrolegroups": []
+    }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Data"
+}

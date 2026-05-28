@@ -52,6 +52,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -143,6 +151,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -211,6 +221,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -242,6 +260,15 @@ function Set-TargetResource
         if ($reviewer.ReviewerType -eq 'User')
         {
             $userInfo = Get-MgUser -Filter "UserPrincipalName eq '$($reviewer.ReviewerId)'"
+            if ($null -eq $userInfo)
+            {
+                $message = "User with UPN $($reviewer.ReviewerId) specified in Reviewers not found"
+                New-M365DSCLogEntry -Message $message `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+                continue
+            }
             $entry = @{
                 query     = "/users/$($userInfo.Id)"
                 queryType = 'MicrosoftGraph'
@@ -251,6 +278,15 @@ function Set-TargetResource
         elseif ($reviewer.ReviewerType -eq 'Group')
         {
             $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($reviewer.ReviewerId -replace "'", "''")'"
+            if ($null -eq $groupInfo)
+            {
+                $message = "Group with DisplayName $($reviewer.ReviewerId) specified in Reviewers not found"
+                New-M365DSCLogEntry -Message $message `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+                continue
+            }
             $entry = @{
                 query     = "/groups/$($groupInfo.Id)/transitiveMembers/microsoft.graph.user"
                 queryType = 'MicrosoftGraph'
@@ -260,6 +296,15 @@ function Set-TargetResource
         elseif ($reviewer.ReviewerType -eq 'Role')
         {
             $roleInfo = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($reviewer.ReviewerId -replace "'", "''")'"
+            if ($null -eq $roleInfo)
+            {
+                $message = "Role with DisplayName $($reviewer.ReviewerId) specified in Reviewers not found"
+                New-M365DSCLogEntry -Message $message `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+                continue
+            }
             $entry = @{
                 query     = "/roleManagement/directory/roleAssignments?`$filter=roleDefinitionId eq '$($roleInfo.Id.Replace('\u0027', ''))'"
                 queryType = 'MicrosoftGraph'
@@ -336,6 +381,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -385,6 +438,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -410,77 +471,64 @@ function Export-TargetResource
 
     try
     {
-        [array] $Script:exportedInstances = Get-MgBetaPolicyAdminConsentRequestPolicy -ErrorAction Stop
-
-        $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+            $Global:M365DSCExportResourceInstancesCount++
         }
-        else
-        {
-            Write-M365DSCHost -Message "`r`n" -DeferWrite
+
+        $displayedKey = 'Policy'
+        Write-M365DSCHost -Message "`r`n    |---[1/1] $displayedKey" -DeferWrite
+        $params = @{
+            IsSingleInstance      = 'Yes'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
-        foreach ($config in $Script:exportedInstances)
+
+        $Results = Get-TargetResource @Params
+        if ($null -ne $Results.Reviewers)
         {
-            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
-            {
-                $Global:M365DSCExportResourceInstancesCount++
-            }
-
-            $displayedKey = 'Policy'
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
-            $params = @{
-                IsSingleInstance      = 'Yes'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                ApplicationSecret     = $ApplicationSecret
-                CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokens
-            }
-
-            $Script:exportedInstance = $config
-            $Results = Get-TargetResource @Params
-            if ($null -ne $Results.Reviewers)
-            {
-                $complexMapping = @(
-                    @{
-                        Name            = 'Reviewers'
-                        CimInstanceName = 'AADAdminConsentRequestPolicyReviewer'
-                        IsRequired      = $False
-                    }
-                )
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.Reviewers `
-                    -CIMInstanceName 'AADAdminConsentRequestPolicyReviewer' `
-                    -ComplexTypeMapping $complexMapping
-
-                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
-                {
-                    $Results.Reviewers = $complexTypeStringResult
+            $complexMapping = @(
+                @{
+                    Name            = 'Reviewers'
+                    CimInstanceName = 'AADAdminConsentRequestPolicyReviewer'
+                    IsRequired      = $False
                 }
-                else
-                {
-                    $Results.Remove('Reviewers') | Out-Null
-                }
-            }
+            )
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.Reviewers `
+                -CIMInstanceName 'AADAdminConsentRequestPolicyReviewer' `
+                -ComplexTypeMapping $complexMapping
 
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('Reviewers')
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-            $i++
-            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+            if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            {
+                $Results.Reviewers = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('Reviewers') | Out-Null
+            }
         }
-        return $dscContent
+
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -Credential $Credential `
+            -NoEscape @('Reviewers')
+        [void]$dscContent.Append($currentDSCBlock)
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
+        $i++
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        return $dscContent.ToString()
     }
     catch
     {

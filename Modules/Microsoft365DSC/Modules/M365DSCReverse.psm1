@@ -203,9 +203,33 @@ function Start-M365DSCConfigurationExtract
 
         if ($null -ne $Components)
         {
+            $allM365DscResources = Get-M365DSCAllResources
+            $newComponents = @()
+            foreach ($component in $Components)
+            {
+                if ($component.Contains('*'))
+                {
+                    $matchingResources = $allM365DscResources | Where-Object { $_ -like $component }
+                    if ($matchingResources.Count -eq 0)
+                    {
+                        Write-Warning -Message "The component filter '$component' did not match any resources and will be ignored."
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "The component filter '$component' matched the following resources: $($matchingResources -join ',')"
+                        $newComponents += ($matchingResources | Where-Object { $ComponentsToSkip -notcontains $_ })
+                    }
+                }
+                else
+                {
+                    $newComponents += $component
+                }
+            }
+            $Components = $newComponents | Select-Object -Unique
             $resourcesInBothIncludeAndExclude = Compare-Object -ReferenceObject $Components `
                 -DifferenceObject $ComponentsToSkip -ExcludeDifferent -IncludeEqual
         }
+
         if ($resourcesInBothIncludeAndExclude.Count -gt 0)
         {
             foreach ($resource in $resourcesInBothIncludeAndExclude)
@@ -394,7 +418,7 @@ function Start-M365DSCConfigurationExtract
 
         [array] $version = Get-Module 'Microsoft365DSC'
         $version = $version[0].Version
-        $DSCContent = [System.Text.StringBuilder]::New()
+        $DSCContent = [System.Text.StringBuilder]::new()
         $DSCContent.Append("# Generated with Microsoft365DSC version $version`r`n") | Out-Null
         $DSCContent.Append("# For additional information on how to use Microsoft365DSC, please visit https://aka.ms/M365DSC`r`n") | Out-Null
         $DSCContent.Append("param (`r`n") | Out-Null
@@ -450,7 +474,7 @@ function Start-M365DSCConfigurationExtract
         $DSCContent.Append("    param (`r`n") | Out-Null
 
         $newline = $false
-        $postParamContent = [System.Text.StringBuilder]::New()
+        $postParamContent = [System.Text.StringBuilder]::new()
         switch ($AuthMethods)
         {
             { $_ -in 'CertificateThumbprint', 'CertificatePath', 'ApplicationWithSecret' }
@@ -469,6 +493,11 @@ function Start-M365DSCConfigurationExtract
                     -Key 'TenantId' `
                     -Value $TenantId `
                     -Description 'The Id or Name of the tenant to authenticate against'
+
+                if ([System.Guid]::TryParse($TenantId, [ref][System.Guid]::Empty))
+                {
+                    Set-M365DSCStringReplacementMap -Map @{ $TenantId = '$ConfigurationData.NonNodeData.TenantId' }
+                }
             }
             'CertificateThumbprint'
             {
@@ -528,6 +557,8 @@ function Start-M365DSCConfigurationExtract
                     -Key 'TenantId' `
                     -Value $TenantId `
                     -Description 'The Id or Name of the tenant to authenticate against'
+
+                Set-M365DSCStringReplacementMap -Map @{ $TenantId = '$ConfigurationData.NonNodeData.TenantId' }
             }
             { $_ -in 'Credentials', 'CredentialsWithApplicationId', 'CredentialsWithTenantId' }
             {
@@ -572,6 +603,8 @@ function Start-M365DSCConfigurationExtract
                     -Key 'TenantId' `
                     -Value $TenantId `
                     -Description 'The Id or Name of the tenant to authenticate against'
+
+                Set-M365DSCStringReplacementMap -Map @{ $TenantId = '$ConfigurationData.NonNodeData.TenantId' }
             }
         }
 
@@ -653,12 +686,11 @@ function Start-M365DSCConfigurationExtract
         Confirm-M365DSCDependencies
         $partialExportName = $Global:PartialExportFileName
         $resourcesPath = $resourcesPath | Sort-Object $_.Name
-        $synchronizedHashtable = [System.Collections.Hashtable]::Synchronized(@{
-            ResourceCounter     = 1
-            ResourcesResult     = @{}
-            SuccessfulResources = 0
-            FailedResources     = 0
-        })
+        $synchronizedHashtable = [System.Collections.Concurrent.ConcurrentDictionary[System.String, System.Object]]::new()
+        [void]$synchronizedHashtable.TryAdd('ResourceCounter', 1)
+        [void]$synchronizedHashtable.TryAdd('ResourcesResult', [System.Collections.Concurrent.ConcurrentDictionary[System.String, System.String]]::new())
+        [void]$synchronizedHashtable.TryAdd('SuccessfulResources', 0)
+        [void]$synchronizedHashtable.TryAdd('FailedResources', 0)
         $resourceDictionary = Get-M365DSCAllResourcesDictionary
         $exportScriptBlock = {
             $Global:MaximumFunctionCount = 32768
@@ -722,7 +754,7 @@ function Start-M365DSCConfigurationExtract
             if ($using:ComponentsToSkip -notcontains $resourceName)
             {
                 $counter = ($using:synchronizedHashtable).ResourceCounter++
-                Write-M365DSCHost -Message "[$counter/$($using:ResourcesToExport.Length)] Extracting [" -DeferWrite
+                Write-M365DSCHost -Message "[$counter/$($using:ResourcesToExport.Length - $using:ComponentsToSkip.Count)] Extracting [" -DeferWrite
                 Write-M365DSCHost -Message $resourceName -ForegroundColor Green -DeferWrite
                 Write-M365DSCHost -Message '] using {' -DeferWrite
                 Write-M365DSCHost -Message $mostSecureAuthMethod -ForegroundColor Cyan -DeferWrite
@@ -758,7 +790,7 @@ function Start-M365DSCConfigurationExtract
                 {
                     $exportOutput = Export-TargetResource @parameters
                     $exportString.Append($exportOutput) | Out-Null
-                    ($using:synchronizedHashtable).ResourcesResult.Add($resourceName, $exportString.ToString())
+                    [void]($using:synchronizedHashtable).ResourcesResult.TryAdd($resourceName, $exportString.ToString())
                     ($using:synchronizedHashtable).SuccessfulResources++
                 }
                 catch
@@ -812,7 +844,7 @@ function Start-M365DSCConfigurationExtract
 
         foreach ($resource in $($synchronizedHashtable.ResourcesResult.Keys | Sort-Object))
         {
-            $DSCContent.Append($synchronizedHashtable.ResourcesResult.$resource) | Out-Null
+            [void]$DSCContent.Append($synchronizedHashtable.ResourcesResult[$resource])
         }
 
         foreach ($pair in (Get-M365DSCStringReplacementMap).GetEnumerator())
@@ -1044,6 +1076,9 @@ function Start-M365DSCConfigurationExtract
             }
         }
 
+        # Close the partial export StreamWriter
+        Close-M365DSCPartialExport
+
         # Remove Temp Partial Export File
         if (-not [System.String]::IsNullOrEmpty($env:Temp))
         {
@@ -1067,21 +1102,25 @@ function Start-M365DSCConfigurationExtract
     }
     catch
     {
+        # Close the partial export StreamWriter
+        Close-M365DSCPartialExport
+
         if (-not [System.String]::IsNullOrEmpty($env:Temp))
         {
             $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName)"
             Write-M365DSCHost -Message "Partial Export file was saved at: $partialPath"
         }
-        throw $_
+
+        throw
     }
 }
 
 <#
-.Description
-This function gets all resources for the specified workloads
+.DESCRIPTION
+    This function gets all resources for the specified workloads
 
-.Functionality
-Internal, Hidden
+.FUNCTIONALITY
+    Internal, Hidden
 #>
 function Get-M365DSCResourcesByWorkloads
 {

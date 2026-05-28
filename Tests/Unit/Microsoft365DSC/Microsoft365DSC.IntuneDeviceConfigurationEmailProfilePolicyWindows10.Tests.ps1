@@ -43,22 +43,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        requireSsl = $True
-                        '@odata.type' = "#microsoft.graph.windows10EasEmailProfileConfiguration"
-                        accountName = "FakeStringValue"
-                        hostName = "FakeStringValue"
-                        syncContacts = $True
-                        syncTasks = $True
-                        emailSyncSchedule = "userDefined"
-                        emailAddressSource = "userPrincipalName"
-                        durationOfEmailToSync = "userDefined"
-                        syncCalendar = $True
-                        customDomainName = "FakeStringValue"
-                        userDomainNameSource = "fullDomainName"
-                        usernameAADSource = "userPrincipalName"
-                        usernameSource = "userPrincipalName"
-                    }
+                    requireSsl = $True
+                    '@odata.type' = "#microsoft.graph.windows10EasEmailProfileConfiguration"
+                    accountName = "FakeStringValue"
+                    hostName = "FakeStringValue"
+                    syncContacts = $True
+                    syncTasks = $True
+                    emailSyncSchedule = "userDefined"
+                    emailAddressSource = "userPrincipalName"
+                    durationOfEmailToSync = "userDefined"
+                    syncCalendar = $True
+                    customDomainName = "FakeStringValue"
+                    userDomainNameSource = "fullDomainName"
+                    usernameAADSource = "userPrincipalName"
+                    usernameSource = "userPrincipalName"
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
@@ -143,7 +141,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

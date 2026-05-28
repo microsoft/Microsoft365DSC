@@ -88,6 +88,10 @@ function Get-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -152,13 +156,14 @@ function Get-TargetResource
             PublicFolderLocation                  = $Search.PublicFolderLocation
             SharePointLocation                    = $Search.SharePointLocation
             SharePointLocationExclusion           = $Search.SharePointLocationExclusion
+            Ensure                                = 'Present'
             Credential                            = $Credential
             ApplicationId                         = $ApplicationId
             TenantId                              = $TenantId
             CertificateThumbprint                 = $CertificateThumbprint
             CertificatePath                       = $CertificatePath
             CertificatePassword                   = $CertificatePassword
-            Ensure                                = 'Present'
+            ManagedIdentity                       = $ManagedIdentity.IsPresent
             AccessTokens                          = $AccessTokens
         }
 
@@ -275,6 +280,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -409,6 +418,10 @@ function Test-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -458,6 +471,10 @@ function Export-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -490,7 +507,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n    * Searches not assigned to an eDiscovery Case`r`n" -DeferWrite
         }
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         foreach ($search in $searches)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -502,11 +519,12 @@ function Export-TargetResource
 
             $Script:exportedInstance = $search
             $Results = Get-TargetResource @PSBoundParameters -Name $search.Name
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+            [void]$dscContent.Append($currentDSCBlock)
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
@@ -541,7 +559,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
 
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
@@ -551,7 +569,7 @@ function Export-TargetResource
             $j++
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

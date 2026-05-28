@@ -52,22 +52,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     id = '12345-12345-12345-12345-12345'
                     authenticationConfiguration = @{
-                        AdditionalProperties = @{
-                            "@odata.type" = "#microsoft.graph.azureAdPopTokenAuthentication"
-                        }
+                        "@odata.type" = "#microsoft.graph.azureAdPopTokenAuthentication"
                     }
                     CallbackConfiguration = @{
                         TimeoutDuration = @{
                             Minutes = '34'
                         }
-                        AdditionalProperties = @{
-                            "@odata.type" = "#microsoft.graph.identityGovernance.customTaskExtensionCallbackConfiguration"
-                            authorizedApps = @(
-                                @{
-                                    id = '12345-12345-12345-12345-12345'
-                                }
-                            )
-                        }
+                        "@odata.type" = "#microsoft.graph.identityGovernance.customTaskExtensionCallbackConfiguration"
+                        authorizedApps = @(
+                            @{
+                                id = '12345-12345-12345-12345-12345'
+                            }
+                        )
                     }
                     ClientConfiguration   = @{
                         MaximumRetries = 1
@@ -76,13 +72,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description           = "My Description";
                     DisplayName           = "My Custom Extension";
                     EndpointConfiguration = @{
-                        AdditionalProperties = @{
-                            "@odata.type"         = "#microsoft.graph.logicAppTriggerEndpointConfiguration"
-                            subscriptionId =       '63e62ab2-fd92-46ce-a393-2cb338039cc7'
-                            logicAppWorkflowName = 'MyTestApp'
-                            resourceGroupName =    'TestRG'
-                            url = 'https://prod-35.eastus.logic.azure.com:443/workflows/xxxxxxxxxxx/triggers/manual/paths/invoke?api-version=2016-10-01'
-                        }
+                        "@odata.type"         = "#microsoft.graph.logicAppTriggerEndpointConfiguration"
+                        subscriptionId =       '63e62ab2-fd92-46ce-a393-2cb338039cc7'
+                        logicAppWorkflowName = 'MyTestApp'
+                        resourceGroupName =    'TestRG'
+                        url = 'https://prod-35.eastus.logic.azure.com:443/workflows/xxxxxxxxxxx/triggers/manual/paths/invoke?api-version=2016-10-01'
                     }
                 }
             }
@@ -197,22 +191,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         id = '12345-12345-12345-12345-12345'
                         authenticationConfiguration = @{
-                            AdditionalProperties = @{
-                                "@odata.type" = "#microsoft.graph.azureAdPopTokenAuthentication"
-                            }
+                            "@odata.type" = "#microsoft.graph.azureAdPopTokenAuthentication"
                         }
                         CallbackConfiguration = @{
                             TimeoutDuration = @{
                                 Minutes = '34'
                             }
-                            AdditionalProperties = @{
-                                "@odata.type" = "#microsoft.graph.identityGovernance.customTaskExtensionCallbackConfiguration"
-                                authorizedApps = @(
-                                    @{
-                                        id = '12345-12345-12345-12345-12345'
-                                    }
-                                )
-                            }
+                            "@odata.type" = "#microsoft.graph.identityGovernance.customTaskExtensionCallbackConfiguration"
+                            authorizedApps = @(
+                                @{
+                                    id = '12345-12345-12345-12345-12345'
+                                }
+                            )
                         }
                         ClientConfiguration   = @{
                             MaximumRetries = 1
@@ -221,13 +211,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description           = "My Description";
                         DisplayName           = "My Custom Extension";
                         EndpointConfiguration = @{
-                            AdditionalProperties = @{
-                                "@odata.type"         = "#microsoft.graph.logicAppTriggerEndpointConfiguration"
-                                subscriptionId =       '63e62ab2-fd92-46ce-a393-2cb338039cc7'
-                                logicAppWorkflowName = 'MyTestApp'
-                                resourceGroupName =    'TestRG'
+                            "@odata.type"         = "#microsoft.graph.logicAppTriggerEndpointConfiguration"
+                            subscriptionId =       '63e62ab2-fd92-46ce-a393-2cb338039cc7'
+                            logicAppWorkflowName = 'MyTestApp'
+                            resourceGroupName =    'TestRG'
                                 url = 'https://prod-35.eastus.logic.azure.com:443/workflows/xxxxxxxxxxx/triggers/manual/paths/invoke?api-version=2016-10-01'
-                            }
                         }
                     }
                 }

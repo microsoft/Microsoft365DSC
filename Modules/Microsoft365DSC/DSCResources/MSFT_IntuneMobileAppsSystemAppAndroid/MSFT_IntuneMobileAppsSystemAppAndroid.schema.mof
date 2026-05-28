@@ -10,7 +10,26 @@ class MSFT_DeviceManagementMobileAppAssignment
     [Write, Description("Possible values for the install intent chosen by the admin."), ValueMap{"available", "required", "uninstall", "availableWithoutEnrollment"}, Values{"available", "required", "uninstall", "availableWithoutEnrollment"}] String intent;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneMobileAppsSystemAppAndroid")]
+[ClassVersion("1.0.0.4")]
+class MSFT_DeviceManagementMobileAppAssignmentSettings
+{
+    [Required, Description("The odata type of the assignment type."), ValueMap{"#microsoft.graph.androidManagedStoreAppAssignmentSettings", "#microsoft.graph.iosStoreAppAssignmentSettings", "#microsoft.graph.iosLobAppAssignmentSettings", "#microsoft.graph.macOsLobAppAssignmentSettings", "#microsoft.graph.win32LobAppAssignmentSettings", "#microsoft.graph.winGetAppAssignmentSettings", "#microsoft.graph.windowsUniversalAppXAppAssignmentSettings"}, Values{"#microsoft.graph.androidManagedStoreAppAssignmentSettings", "#microsoft.graph.iosStoreAppAssignmentSettings", "#microsoft.graph.iosLobAppAssignmentSettings", "#microsoft.graph.macOsLobAppAssignmentSettings", "#microsoft.graph.win32LobAppAssignmentSettings", "#microsoft.graph.winGetAppAssignmentSettings", "#microsoft.graph.windowsUniversalAppXAppAssignmentSettings"}] String odataType;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_DeviceManagementSystemMobileAppAssignmentSettings : MSFT_DeviceManagementMobileAppAssignmentSettings
+{
+    [Write, Description("The track IDs to enable for this app assignment.")] String androidManagedStoreAppTrackIds[];
+    [Write, Description("The prioritization of automatic updates for this app assignment. The possible values are: default, postponed, priority, unknownFutureValue."), ValueMap{"default","postponed","priority"}, Values{"default","postponed","priority"}] String autoUpdateMode;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_DeviceManagementSystemMobileAppAssignment : MSFT_DeviceManagementMobileAppAssignment
+{
+    [Write, Description("The settings of the assignment."), EmbeddedInstance("MSFT_DeviceManagementSystemMobileAppAssignmentSettings")] String assignmentSettings;
+};
+
+[ClassVersion("1.0.0.1"), FriendlyName("IntuneMobileAppsSystemAppAndroid")]
 class MSFT_IntuneMobileAppsSystemAppAndroid : OMI_BaseResource
 {
     [Required, Description("The app identifier. Cannot be changed after creation.")] String AppIdentifier;
@@ -25,6 +44,8 @@ class MSFT_IntuneMobileAppsSystemAppAndroid : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

@@ -211,6 +211,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -245,7 +253,7 @@ function Get-TargetResource
 
         $apiVersion = '2020-10-01'
         $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$ScopeId/providers/Microsoft.Authorization/roleManagementPolicyAssignments?api-version=$apiVersion"
-        $response = Invoke-AzRest -Uri $uri -Method GET
+        $response = Invoke-AzRestMethod -Uri $uri -Method GET
         $assignments = (ConvertFrom-Json $response.Content).value
 
         if ($null -eq $assignments -or $assignments.Count -eq 0)
@@ -262,7 +270,7 @@ function Get-TargetResource
         if ($null -eq $assignment)
         {
             $roleDefUri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$ScopeId/providers/Microsoft.Authorization/roleDefinitions?api-version=$apiVersion&`$filter=roleName eq '$RoleDefinitionDisplayName'"
-            $roleDefResponse = Invoke-AzRest -Uri $roleDefUri -Method GET
+            $roleDefResponse = Invoke-AzRestMethod -Uri $roleDefUri -Method GET
             $roleDefinitions = (ConvertFrom-Json $roleDefResponse.Content).value
 
             if ($null -ne $roleDefinitions -and $roleDefinitions.Count -gt 0)
@@ -283,7 +291,7 @@ function Get-TargetResource
         $policyIdValue = $assignment.properties.policyId.Split('/')[-1]
 
         $policyUri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$ScopeId/providers/Microsoft.Authorization/roleManagementPolicies/$($policyIdValue)?api-version=$apiVersion"
-        $policyResponse = Invoke-AzRest -Uri $policyUri -Method GET
+        $policyResponse = Invoke-AzRestMethod -Uri $policyUri -Method GET
         $policy = ConvertFrom-Json $policyResponse.Content
 
         if ($null -eq $policy -or $null -eq $policy.properties -or $null -eq $policy.properties.rules)
@@ -329,17 +337,17 @@ function Get-TargetResource
                     $directoryObject = Get-MgBetaDirectoryObjectById -Ids $approver.id -ErrorAction SilentlyContinue
                     if ($null -ne $directoryObject)
                     {
-                        $odataType = $directoryObject.AdditionalProperties['@odata.type']
+                        $odataType = $directoryObject['@odata.type']
                         if (-not [System.String]::IsNullOrEmpty($odataType) -and $odataType.Split('.').Count -ge 3)
                         {
                             $objectType = $odataType.Split('.')[2]
                             if ($objectType -eq 'user')
                             {
-                                $ActivateApprover += $directoryObject.AdditionalProperties['userPrincipalName']
+                                $ActivateApprover += $directoryObject['userPrincipalName']
                             }
                             else
                             {
-                                $ActivateApprover += $directoryObject.AdditionalProperties['displayName']
+                                $ActivateApprover += $directoryObject['displayName']
                             }
                         }
                         else
@@ -682,6 +690,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -717,7 +733,7 @@ function Set-TargetResource
         # Get the full policy to retrieve all current rules
         $apiVersion = '2020-10-01'
         $policyUri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$ScopeId/providers/Microsoft.Authorization/roleManagementPolicies/$($policyIdValue)?api-version=$apiVersion"
-        $policyResponse = Invoke-AzRest -Uri $policyUri -Method GET
+        $policyResponse = Invoke-AzRestMethod -Uri $policyUri -Method GET
         $policy = ConvertFrom-Json $policyResponse.Content
         $rules = $policy.properties.rules
         $ruleModified = $false
@@ -1232,7 +1248,7 @@ function Set-TargetResource
 
             $payload = ConvertTo-Json $updateBody -Depth 20 -Compress
             Write-Verbose -Message "Updating policy {$policyIdValue} at scope {$ScopeId}"
-            $null = Invoke-AzRest -Uri $policyUri -Method PATCH -Payload $payload
+            $null = Invoke-AzRestMethod -Uri $policyUri -Method PATCH -Payload $payload
         }
     }
     catch
@@ -1458,6 +1474,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1511,6 +1535,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1539,7 +1571,6 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         $apiVersion = '2020-10-01'
 
         if ($Filter -eq 'ModifiedOnly')
@@ -1556,7 +1587,7 @@ function Export-TargetResource
 
         # Add subscriptions
         $subUri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)subscriptions?api-version=2022-12-01"
-        $subResponse = Invoke-AzRest -Uri $subUri -Method GET
+        $subResponse = Invoke-AzRestMethod -Uri $subUri -Method GET
         $subscriptions = (ConvertFrom-Json $subResponse.Content).value
 
         foreach ($sub in $subscriptions)
@@ -1569,7 +1600,7 @@ function Export-TargetResource
 
             # Add resource groups under each subscription
             $rgUri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)subscriptions/$($sub.subscriptionId)/resourcegroups?api-version=2021-04-01"
-            $rgResponse = Invoke-AzRest -Uri $rgUri -Method GET
+            $rgResponse = Invoke-AzRestMethod -Uri $rgUri -Method GET
             $resourceGroups = (ConvertFrom-Json $rgResponse.Content).value
 
             foreach ($rg in $resourceGroups)
@@ -1584,7 +1615,7 @@ function Export-TargetResource
 
         # Add management groups
         $mgUri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/Microsoft.Management/managementGroups?api-version=2021-04-01"
-        $mgResponse = Invoke-AzRest -Uri $mgUri -Method GET
+        $mgResponse = Invoke-AzRestMethod -Uri $mgUri -Method GET
         $managementGroups = (ConvertFrom-Json $mgResponse.Content).value
 
         foreach ($mg in $managementGroups)
@@ -1596,7 +1627,7 @@ function Export-TargetResource
             }
         }
 
-        [System.Collections.Generic.List[hashtable]] $Script:exportedInstances = [System.Collections.Generic.List[hashtable]]::new()
+        [System.Collections.Generic.List[hashtable]] $exportedInstances = [System.Collections.Generic.List[hashtable]]::new()
         $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         $j = 1
@@ -1608,7 +1639,7 @@ function Export-TargetResource
 
             # Get role management policy assignments for this scope
             $assignUri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$currentScope/providers/Microsoft.Authorization/roleManagementPolicyAssignments?api-version=$apiVersion"
-            $assignResponse = Invoke-AzRest -Uri $assignUri -Method GET
+            $assignResponse = Invoke-AzRestMethod -Uri $assignUri -Method GET
             $assignments = (ConvertFrom-Json $assignResponse.Content).value
 
             if ($null -eq $assignments -or $assignments.Count -eq 0)
@@ -1619,7 +1650,7 @@ function Export-TargetResource
 
             # Bulk-fetch all role management policies for this scope in a single API call
             $bulkPolicyUri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$currentScope/providers/Microsoft.Authorization/roleManagementPolicies?api-version=$apiVersion"
-            $bulkPolicyResponse = Invoke-AzRest -Uri $bulkPolicyUri -Method GET
+            $bulkPolicyResponse = Invoke-AzRestMethod -Uri $bulkPolicyUri -Method GET
             $allPolicies = $null
             if ($null -ne $bulkPolicyResponse -and -not [System.String]::IsNullOrEmpty($bulkPolicyResponse.Content))
             {
@@ -1658,7 +1689,7 @@ function Export-TargetResource
                     if (-not [System.String]::IsNullOrEmpty($roleDefId))
                     {
                         $roleDefUri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$roleDefId`?api-version=$apiVersion"
-                        $roleDefResponse = Invoke-AzRest -Uri $roleDefUri -Method GET
+                        $roleDefResponse = Invoke-AzRestMethod -Uri $roleDefUri -Method GET
                         $roleDef = ConvertFrom-Json $roleDefResponse.Content
                         $roleDisplayName = $roleDef.properties.roleName
                     }
@@ -1700,7 +1731,7 @@ function Export-TargetResource
             # Add scope instances to the global exported instances collection
             foreach ($inst in $scopeInstances)
             {
-                $Script:exportedInstances.Add($inst)
+                $exportedInstances.Add($inst)
             }
 
             # Phase 2: Export collected instances
@@ -1738,7 +1769,7 @@ function Export-TargetResource
                     -Results $Results `
                     -Credential $Credential
 
-                $dscContent.Append($currentDSCBlock) | Out-Null
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite

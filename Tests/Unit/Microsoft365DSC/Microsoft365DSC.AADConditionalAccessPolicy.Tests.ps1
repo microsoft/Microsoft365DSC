@@ -106,17 +106,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 guestOrExternalUserTypes = 'b2bCollaborationGuest'
                                 externalTenants          = @{
                                     membershipKind       = 'enumerated'
-                                    AdditionalProperties = @{
-                                        members = @('11111111-1111-1111-1111-111111111111')
-                                    }
+                                    members = @('11111111-1111-1111-1111-111111111111')
                                 }
                             }
                             ExcludeGuestsOrExternalUsers = @{
                                 guestOrExternalUserTypes = 'internalGuest,b2bCollaborationMember'
                                 externalTenants          = @{
                                     membershipKind       = 'all'
-                                    AdditionalProperties = @{
-                                    }
                                 }
                             }
                         }
@@ -155,6 +151,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         CloudAppSecurity                = @{
                             IsEnabled            = $True
                             CloudAppSecurityType = 'MonitorOnly'
+                        }
+                        ContinuousAccessEvaluation = @{
+                            mode = 'strictLocation'
                         }
                         SecureSignInSession            = @{
                             IsEnabled = $True
@@ -195,6 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClientAppTypes                       = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled            = $True
                     CloudAppSecurityType                 = 'MonitorOnly'
+                    ContinuousAccessEvaluationMode       = 'strictLocation'
                     DisplayName                          = 'Allin'
                     Ensure                               = 'Present'
                     ExcludeApplications                  = @('Microsoft Rights Management Services', 'Office365')
@@ -261,6 +261,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClientAppTypes                           = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled                = $True
                     CloudAppSecurityType                     = 'MonitorOnly'
+                    ContinuousAccessEvaluationMode           = 'strictLocation'
                     DisplayName                              = 'Allin'
                     Ensure                                   = 'Present'
                     ExcludeApplications                      = @('Microsoft Rights Management Services', 'Office365')
@@ -348,6 +349,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClientAppTypes                           = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled                = $True
                     CloudAppSecurityType                     = 'MonitorOnly'
+                    ContinuousAccessEvaluationMode           = 'strictLocation'
                     DisplayName                              = 'Allin'
                     Ensure                                   = 'Present'
                     ExcludeApplications                      = @('Microsoft Rights Management Services', 'Office365')
@@ -405,6 +407,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClientAppTypes                           = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled                = $True
                     CloudAppSecurityType                     = 'MonitorOnly'
+                    ContinuousAccessEvaluationMode           = 'strictLocation'
                     DisplayName                              = 'Allin'
                     Ensure                                   = 'Absent'
                     ExcludeApplications                      = @('Microsoft Rights Management Services', 'Office365')

@@ -53,10 +53,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             id = '12345-12345-12345-12345-12345'
                             name = 'MyTopPolicy'
                         }
-                        AdditionalProperties = @{
-                            priority = 200
-                            loggingState = 'enabled'
-                        }
+                        priority = 200
+                        loggingState = 'enabled'
                         State = 'enabled'
                     }
                 )
@@ -73,10 +71,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         @{
                             Id                   = '11111-22222-33333-44444-55556'
                             State                = 'enabled'
-                            AdditionalProperties = @{
-                                priority     = 200
-                                loggingState = 'enabled'
-                            }
+                            priority     = 200
+                            loggingState = 'enabled'
                         }
                     )
                 }

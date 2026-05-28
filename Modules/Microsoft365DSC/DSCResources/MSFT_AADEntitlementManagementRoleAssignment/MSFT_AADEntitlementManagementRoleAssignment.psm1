@@ -54,6 +54,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -113,7 +121,7 @@ function Get-TargetResource
 
                 Write-Verbose -Message "Getting role assignment for Principal {$Principal}"
                 $getValue = $Script:AllRoleAssignments | Where-Object {
-                    ($_.Principal.AdditionalProperties.displayName -eq $Principal -or $_.Principal.AdditionalProperties.userPrincipalName -eq $Principal -or $_.Principal.Id -eq $Principal) `
+                    ($_.Principal.displayName -eq $Principal -or $_.Principal.userPrincipalName -eq $Principal -or $_.Principal.Id -eq $Principal) `
                         -and ($_.RoleDefinitionId -eq $($Script:AllRoleDefinitions | Where-Object { $_.DisplayName -eq $RoleDefinition }).Id)
                 }
             }
@@ -123,11 +131,11 @@ function Get-TargetResource
             $getValue = $Script:exportedInstance
         }
 
-        switch ($getValue.Principal.AdditionalProperties)
+        switch ($getValue.Principal)
         {
             '#microsoft.graph.user'
             {
-                $principalName = $getValue.Principal.AdditionalProperties.userPrincipalName
+                $principalName = $getValue.Principal.userPrincipalName
             }
             '#microsoft.graph.group'
             {
@@ -135,7 +143,7 @@ function Get-TargetResource
             }
             '#microsoft.graph.servicePrincipal'
             {
-                $principalName = $getValue.Principal.AdditionalProperties.displayName
+                $principalName = $getValue.Principal.displayName
             }
         }
 
@@ -160,6 +168,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -231,6 +241,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -260,7 +278,7 @@ function Set-TargetResource
         @{
             id     = 'user'
             method = 'GET'
-            url    = "/users/$($Principal)&`$select=id,userPrincipalName,displayName"
+            url    = "/users/$($Principal)?`$select=id,userPrincipalName,displayName"
         }
         @{
             id     = 'group'
@@ -285,18 +303,19 @@ function Set-TargetResource
         throw "Multiple objects found for Principal '$Principal'. Please specify a unique identifier."
     }
 
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $setParameters = Rename-M365DSCCimInstanceParameter -Properties $setParameters
 
     $roleInfo = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -Filter "DisplayName eq '$($RoleDefinition -replace "'", "''")'"
-    $setParameters.Add('PrincipalId', $objectId)
-    $setParameters.Add('RoleDefinitionId', $roleInfo.Id)
+    $setParameters.Add('principalId', $objectId)
+    $setParameters.Add('roleDefinitionId', $roleInfo.Id)
     $setParameters.Remove('Principal') | Out-Null
     $setParameters.Remove('RoleDefinition') | Out-Null
+
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         $setParameters.Remove('Id') | Out-Null
-        Write-Verbose -Message "Creating a new Entitlement Management Role Assignment with:`r`n$($setParameters | Out-String)"
-        New-MgBetaRoleManagementEntitlementManagementRoleAssignment @setParameters
+        Write-Verbose -Message "Creating a new Entitlement Management Role Assignment for Principal {$Principal} with Role {$RoleDefinition}"
+        New-MgBetaRoleManagementEntitlementManagementRoleAssignment -BodyParameter $setParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -362,6 +381,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -415,6 +442,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -449,7 +484,7 @@ function Export-TargetResource
 
         #endregion
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -481,11 +516,11 @@ function Export-TargetResource
             }
             Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $roleInfo = $Script:AllRoleDefinitions | Where-Object { $_.Id -eq $config.RoleDefinitionId }
-            switch ($config.Principal.AdditionalProperties.'@odata.type')
+            switch ($config.Principal.'@odata.type')
             {
                 '#microsoft.graph.user'
                 {
-                    $principalName = $config.Principal.AdditionalProperties.userPrincipalName
+                    $principalName = $config.Principal.userPrincipalName
                 }
                 $null
                 {
@@ -493,7 +528,7 @@ function Export-TargetResource
                 }
                 '#microsoft.graph.servicePrincipal'
                 {
-                    $principalName = $config.Principal.AdditionalProperties.displayName
+                    $principalName = $config.Principal.displayName
                 }
             }
             $params = @{
@@ -505,6 +540,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -518,7 +555,7 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
@@ -526,7 +563,7 @@ function Export-TargetResource
             $i++
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -11,13 +11,6 @@ namespace Microsoft365DSC.Intune
     /// Lightweight representation of a setting instance coming from the Graph API response.
     /// The PowerShell version works with raw PSObjects or Hashtables; this C# model normalizes
     /// the data to avoid repeated reflection or dictionary lookups during recursive traversal.
-    ///
-    /// <para><b>AdditionalProperties handling:</b></para>
-    /// Graph SDK objects store most of the interesting data in <c>AdditionalProperties</c>,
-    /// which is only accessible via reflection (NonPublic | Instance). Rather than doing
-    /// reflection on every recursive call, this model flattens the data at construction time.
-    /// The <see cref="SettingInstanceMapper"/> handles the extraction from both Graph objects
-    /// and Hashtables (the latter from already-converted data).
     /// </summary>
     public class SettingInstanceInfo
     {
@@ -71,26 +64,21 @@ namespace Microsoft365DSC.Intune
     /// <summary>
     /// Maps raw Graph API response objects (PSObject, Hashtable, or Graph SDK types) to
     /// <see cref="SettingInstanceInfo"/> for use in the exporter.
-    ///
-    /// The "IsRoot" distinction from the PowerShell code is handled here: root instances
-    /// store their data in <c>AdditionalProperties</c>, while child instances have the data
-    /// at the top level.
     /// </summary>
     public static class SettingInstanceMapper
     {
         private static BindingFlags _publicIgnoreCaseInstanceFlags = BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.Instance;
 
-        public static List<SettingInstanceInfo> FromObjects(IEnumerable<object> settingInstances, bool isRoot)
+        public static List<SettingInstanceInfo> FromObjects(IEnumerable<object> settingInstances)
         {
-            return settingInstances.Select(s => FromObject(s, isRoot)).ToList();
+            return settingInstances.Select(s => FromObject(s)).ToList();
         }
 
         /// <summary>
         /// Maps a raw setting instance to <see cref="SettingInstanceInfo"/>.
         /// </summary>
         /// <param name="instance">The setting instance (Graph SDK object or Hashtable).</param>
-        /// <param name="isRoot">True if this is a root-level instance (data in AdditionalProperties).</param>
-        public static SettingInstanceInfo? FromObject(object instance, bool isRoot)
+        public static SettingInstanceInfo? FromObject(object instance)
         {
             if (instance is null)
                 return null;
@@ -100,9 +88,7 @@ namespace Microsoft365DSC.Intune
                 // Extract settingDefinitionId
                 SettingDefinitionId = GetStringProperty(instance, "settingDefinitionId"),
                 // Determine the OData type based on root vs. child
-                ODataType = isRoot
-                    ? GetAdditionalProperty(instance, "@odata.type")
-                    : GetStringProperty(instance, "@odata.type")
+                ODataType = GetStringProperty(instance, "@odata.type")
             };
 
             if (string.IsNullOrEmpty(info.ODataType))
@@ -111,30 +97,28 @@ namespace Microsoft365DSC.Intune
             switch (info.ODataType)
             {
                 case "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance":
-                    MapSimpleSetting(instance, info, isRoot);
+                    MapSimpleSetting(instance, info);
                     break;
                 case "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance":
-                    MapChoiceSetting(instance, info, isRoot);
+                    MapChoiceSetting(instance, info);
                     break;
                 case "#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionInstance":
-                    MapChoiceSettingCollection(instance, info, isRoot);
+                    MapChoiceSettingCollection(instance, info);
                     break;
                 case "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance":
-                    MapGroupSettingCollection(instance, info, isRoot);
+                    MapGroupSettingCollection(instance, info);
                     break;
                 case "#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance":
-                    MapSimpleSettingCollection(instance, info, isRoot);
+                    MapSimpleSettingCollection(instance, info);
                     break;
             }
 
             return info;
         }
 
-        private static void MapSimpleSetting(object instance, SettingInstanceInfo info, bool isRoot)
+        private static void MapSimpleSetting(object instance, SettingInstanceInfo info)
         {
-            object? simpleValue = isRoot
-                ? GetAdditionalPropertyRaw(instance, "simpleSettingValue")
-                : GetPropertyRaw(instance, "simpleSettingValue");
+            object? simpleValue = GetPropertyRaw(instance, "simpleSettingValue");
 
             if (simpleValue is null) return;
 
@@ -145,11 +129,9 @@ namespace Microsoft365DSC.Intune
             };
         }
 
-        private static void MapChoiceSetting(object instance, SettingInstanceInfo info, bool isRoot)
+        private static void MapChoiceSetting(object instance, SettingInstanceInfo info)
         {
-            object? choiceValue = isRoot
-                ? GetAdditionalPropertyRaw(instance, "choiceSettingValue")
-                : GetPropertyRaw(instance, "choiceSettingValue");
+            object? choiceValue = GetPropertyRaw(instance, "choiceSettingValue");
 
             if (choiceValue is null) return;
 
@@ -163,18 +145,16 @@ namespace Microsoft365DSC.Intune
             {
                 foreach (var child in children)
                 {
-                    var childInfo = FromObject(child, false);
+                    var childInfo = FromObject(child);
                     if (childInfo is not null)
                         info.ChoiceSettingValue.Children.Add(childInfo);
                 }
             }
         }
 
-        private static void MapChoiceSettingCollection(object instance, SettingInstanceInfo info, bool isRoot)
+        private static void MapChoiceSettingCollection(object instance, SettingInstanceInfo info)
         {
-            object? collectionValue = isRoot
-                ? GetAdditionalPropertyRaw(instance, "choiceSettingCollectionValue")
-                : GetPropertyRaw(instance, "choiceSettingCollectionValue");
+            object? collectionValue = GetPropertyRaw(instance, "choiceSettingCollectionValue");
 
             if (collectionValue is null) return;
 
@@ -195,11 +175,9 @@ namespace Microsoft365DSC.Intune
             }
         }
 
-        private static void MapGroupSettingCollection(object instance, SettingInstanceInfo info, bool isRoot)
+        private static void MapGroupSettingCollection(object instance, SettingInstanceInfo info)
         {
-            object? groupValue = isRoot
-                ? GetAdditionalPropertyRaw(instance, "groupSettingCollectionValue")
-                : GetPropertyRaw(instance, "groupSettingCollectionValue");
+            object? groupValue = GetPropertyRaw(instance, "groupSettingCollectionValue");
 
             if (groupValue is null) return;
 
@@ -215,7 +193,7 @@ namespace Microsoft365DSC.Intune
                     {
                         foreach (var child in children)
                         {
-                            var childInfo = FromObject(child, false);
+                            var childInfo = FromObject(child);
                             if (childInfo is not null)
                                 groupInfo.Children.Add(childInfo);
                         }
@@ -225,11 +203,9 @@ namespace Microsoft365DSC.Intune
             }
         }
 
-        private static void MapSimpleSettingCollection(object instance, SettingInstanceInfo info, bool isRoot)
+        private static void MapSimpleSettingCollection(object instance, SettingInstanceInfo info)
         {
-            object? collectionValue = isRoot
-                ? GetAdditionalPropertyRaw(instance, "simpleSettingCollectionValue")
-                : GetPropertyRaw(instance, "simpleSettingCollectionValue");
+            object? collectionValue = GetPropertyRaw(instance, "simpleSettingCollectionValue");
 
             if (collectionValue is null) return;
 
@@ -273,60 +249,6 @@ namespace Microsoft365DSC.Intune
             return prop?.GetValue(obj);
         }
 
-        /// <summary>
-        /// Gets a property from AdditionalProperties on Graph SDK objects.
-        /// For Graph SDK objects, AdditionalProperties is a non-public IDictionary&lt;string, object&gt; accessed via reflection.
-        /// For Hashtables, falls back to nested "AdditionalProperties" key.
-        /// </summary>
-        private static string GetAdditionalProperty(object obj, string key)
-        {
-            return GetAdditionalPropertyRaw(obj, key)?.ToString() ?? string.Empty;
-        }
-
-        private static object? GetAdditionalPropertyRaw(object obj, string key)
-        {
-            if (obj is null)
-                return null;
-
-            if (obj is PSObject psobject)
-                obj = psobject.BaseObject;
-
-            // Hashtable: look for AdditionalProperties sub-dictionary
-            if (obj is Hashtable ht)
-            {
-                if (ht.ContainsKey("AdditionalProperties"))
-                {
-                    var ap = ht["AdditionalProperties"];
-                    if (ap is IDictionary<string, object> apDict && apDict.TryGetValue(key, out object val))
-                        return val;
-                    if (ap is Hashtable apHt && apHt.ContainsKey(key))
-                        return apHt[key];
-                }
-                // Some already-flattened hashtables may have the key at the top level
-                return ht.ContainsKey(key) ? ht[key] : null;
-            }
-
-            // Graph SDK object: use reflection for AdditionalProperties
-            try
-            {
-                var propertyInfos = obj.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance);
-                var apProp = propertyInfos
-                    .FirstOrDefault(p => p.Name.IndexOf("AdditionalProperties", StringComparison.OrdinalIgnoreCase) >= 0);
-                if (apProp is not null)
-                {
-                    var apValue = apProp.GetValue(obj);
-                    if (apValue is IDictionary<string, object> apDict && apDict.TryGetValue(key, out object val))
-                        return val;
-                }
-            }
-            catch
-            {
-                // Reflection failed - return null
-            }
-
-            return null;
-        }
-
         #endregion
     }
 
@@ -336,8 +258,7 @@ namespace Microsoft365DSC.Intune
     ///
     /// <para><b>Design notes:</b></para>
     /// <list type="bullet">
-    /// <item>The PowerShell version operates on raw PSObjects/Hashtables and accesses
-    /// <c>AdditionalProperties</c> directly on Graph SDK objects. This C# version pre-maps
+    /// <item>This C# version pre-maps
     /// all data to <see cref="SettingInstanceInfo"/> and <see cref="SettingDefinitionInfo"/>
     /// at the boundary, then works purely with C# models internally.</item>
     /// <item>Parts that require Graph API calls (e.g., fetching setting templates) remain in
@@ -377,7 +298,7 @@ namespace Microsoft365DSC.Intune
             {
                 convertedSettings.Add(new()
                 {
-                    SettingInstance = SettingInstanceMapper.FromObject(SettingDefinitionMapper.TryGetPropertyRaw(setting, "SettingInstance"), true),
+                    SettingInstance = SettingInstanceMapper.FromObject(SettingDefinitionMapper.TryGetPropertyRaw(setting, "SettingInstance")),
                     SettingDefinitions = SettingDefinitionMapper.FromGraphObjects(SettingDefinitionMapper.TryGetPropertyAsEnumerable(setting, "SettingDefinitions") ?? [])
                 });
             }

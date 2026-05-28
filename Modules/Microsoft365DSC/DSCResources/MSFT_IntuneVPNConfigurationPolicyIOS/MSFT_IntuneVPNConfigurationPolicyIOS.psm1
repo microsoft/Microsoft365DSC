@@ -116,6 +116,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -215,10 +223,7 @@ function Get-TargetResource
             #region resource generator code
             if ($null -eq $getValue)
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosVpnConfiguration' `
-                    }
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")' and isof('microsoft.graph.iosVpnConfiguration')" -ErrorAction SilentlyContinue
             }
             #endregion
 
@@ -232,39 +237,40 @@ function Get-TargetResource
         {
             $getValue = $Script:exportedInstance
         }
-
         $Id = $getValue.Id
 
         Write-Verbose -Message "An Intune VPN Policy for iOS with id {$Id} and DisplayName {$DisplayName} was found"
 
-        $complexServers = @()
-        foreach ($currentservers in $getValue.AdditionalProperties.server)
+        $complexServer = $null
+        if ($null -ne $getValue.server)
         {
-            $myservers = [ordered]@{}
-            $myservers.Add('address', $currentservers.address)
-            $myservers.Add('description', $currentservers.description)
-            $myservers.Add('isDefaultServer', $currentservers.isDefaultServer)
-            if ($myservers.values.Where({ $null -ne $_ }).Count -gt 0)
-            {
-                $complexServers += $myservers
+            $complexServer = @{
+                address = $getValue.server.address
+                description = $getValue.server.description
+                isDefaultServer = $getValue.server.isDefaultServer
             }
         }
-
-        $complexProxyServers = @()
-        foreach ($currentservers in $getValue.AdditionalProperties.proxyServer)
+        if ($complexServer.values.Where({ $null -ne $_ }).Count -eq 0)
         {
-            $myservers = [ordered]@{}
-            $myservers.Add('automaticConfigurationScriptUrl', $currentservers.automaticConfigurationScriptUrl)
-            $myservers.Add('address', $currentservers.address)
-            $myservers.Add('port', $currentservers.port)
-            if ($myservers.values.Where({ $null -ne $_ }).Count -gt 0)
-            {
-                $complexProxyServers += $myservers
+            $complexServer = $null
+        }
+
+        $complexProxyServer = $null
+        if ($null -ne $getValue.proxyServer)
+        {
+            $complexProxyServer = @{
+                automaticConfigurationScriptUrl = $getValue.proxyServer.automaticConfigurationScriptUrl
+                address = $getValue.proxyServer.address
+                port = $getValue.proxyServer.port
             }
+        }
+        if ($complexProxyServer.values.Where({ $null -ne $_ }).Count -eq 0)
+        {
+            $complexProxyServer = $null
         }
 
         $complexCustomData = @()
-        foreach ($value in $getValue.AdditionalProperties.customData)
+        foreach ($value in $getValue.customData)
         {
             $myCustomdata = [ordered]@{}
             $myCustomdata.Add('key', $value.key)
@@ -276,7 +282,7 @@ function Get-TargetResource
         }
 
         $complexCustomKeyValueData = @()
-        foreach ($value in $getValue.AdditionalProperties.customKeyValueData)
+        foreach ($value in $getValue.customKeyValueData)
         {
             $myCVdata = [ordered]@{}
             $myCVdata.Add('name', $value.name)
@@ -288,7 +294,7 @@ function Get-TargetResource
         }
 
         $complexTargetedMobileApps = @()
-        foreach ($value in $getValue.AdditionalProperties.targetedMobileApps)
+        foreach ($value in $getValue.targetedMobileApps)
         {
             $myTMAdata = [ordered]@{}
             $myTMAdata.Add('name', $value.name)
@@ -307,43 +313,44 @@ function Get-TargetResource
             Description                    = $getValue.Description
             DisplayName                    = $getValue.DisplayName
             RoleScopeTagIds                = $getValue.RoleScopeTagIds
-            connectionName                 = $getValue.AdditionalProperties.connectionName
-            connectionType                 = $getValue.AdditionalProperties.connectionType
-            enableSplitTunneling           = $getValue.AdditionalProperties.enableSplitTunneling
-            authenticationMethod           = $getValue.AdditionalProperties.authenticationMethod
-            safariDomains                  = $getValue.AdditionalProperties.safariDomains
-            associatedDomains              = $getValue.AdditionalProperties.associatedDomains
-            excludedDomains                = $getValue.AdditionalProperties.excludedDomains
-            optInToDeviceIdSharing         = $getValue.AdditionalProperties.optInToDeviceIdSharing
-            excludeList                    = $getValue.AdditionalProperties.excludeList
-            server                         = $complexServers
-            customData                     = $complexCustomData #$getValue.AdditionalProperties.customData
-            customKeyValueData             = $complexCustomKeyValueData #$getValue.AdditionalProperties.customKeyValueData
-            onDemandRules                  = $getValue.AdditionalProperties.onDemandRules
-            proxyServer                    = $complexProxyServers
-            targetedMobileApps             = $complexTargetedMobileApps #$getValue.AdditionalProperties.targetedMobileApps
+            connectionName                 = $getValue.connectionName
+            connectionType                 = $getValue.connectionType
+            enableSplitTunneling           = $getValue.enableSplitTunneling
+            authenticationMethod           = $getValue.authenticationMethod
+            safariDomains                  = $getValue.safariDomains
+            associatedDomains              = $getValue.associatedDomains
+            excludedDomains                = $getValue.excludedDomains
+            optInToDeviceIdSharing         = $getValue.optInToDeviceIdSharing
+            excludeList                    = $getValue.excludeList
+            server                         = [array]$complexServer
+            customData                     = $complexCustomData #$getValue.customData
+            customKeyValueData             = $complexCustomKeyValueData #$getValue.customKeyValueData
+            onDemandRules                  = $getValue.onDemandRules
+            proxyServer                    = [array]$complexProxyServer
+            targetedMobileApps             = $complexTargetedMobileApps #$getValue.targetedMobileApps
             Ensure                         = 'Present'
             Credential                     = $Credential
             ApplicationId                  = $ApplicationId
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
+            CertificatePath                = $CertificatePath
+            CertificatePassword            = $CertificatePassword
             ManagedIdentity                = $ManagedIdentity.IsPresent
             AccessTokens                   = $AccessTokens
-            version                        = $getValue.AdditionalProperties.version
-            loginGroupOrDomain             = $getValue.AdditionalProperties.loginGroupOrDomain
-            role                           = $getValue.AdditionalProperties.role
-            realm                          = $getValue.AdditionalProperties.realm
-            identifier                     = $getValue.AdditionalProperties.identifier
-            enablePerApp                   = $getValue.AdditionalProperties.enablePerApp
-            providerType                   = $getValue.AdditionalProperties.providerType
-            disableOnDemandUserOverride    = $getValue.AdditionalProperties.disableOnDemandUserOverride
-            disconnectOnIdle               = $getValue.AdditionalProperties.disconnectOnIdle
-            disconnectOnIdleTimerInSeconds = $getValue.AdditionalProperties.disconnectOnIdleTimerInSeconds
-            microsoftTunnelSiteId          = $getValue.AdditionalProperties.microsoftTunnelSiteId
-            cloudName                      = $getValue.AdditionalProperties.cloudName
-            strictEnforcement              = $getValue.AdditionalProperties.strictEnforcement
-            userDomain                     = $getValue.AdditionalProperties.userDomain
+            loginGroupOrDomain             = $getValue.loginGroupOrDomain
+            role                           = $getValue.role
+            realm                          = $getValue.realm
+            identifier                     = $getValue.identifier
+            enablePerApp                   = $getValue.enablePerApp
+            providerType                   = $getValue.providerType
+            disableOnDemandUserOverride    = $getValue.disableOnDemandUserOverride
+            disconnectOnIdle               = $getValue.disconnectOnIdle
+            disconnectOnIdleTimerInSeconds = $getValue.disconnectOnIdleTimerInSeconds
+            microsoftTunnelSiteId          = $getValue.microsoftTunnelSiteId
+            cloudName                      = $getValue.cloudName
+            strictEnforcement              = $getValue.strictEnforcement
+            userDomain                     = $getValue.userDomain
 
         }
 
@@ -486,6 +493,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -569,37 +584,29 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    #proxy and server values need converting before new- / update- cmdlets will accept parameters
-    #creating hashtables now for use later in both present/present and present/absent blocks
-    $allTargetValues = Convert-M365DscHashtableToString -Hashtable $BoundParameters
-
-    if ($allTargetValues -match '\bserver=\(\{([^\)]+)\}\)')
+    if ($BoundParameters.ContainsKey('proxyServer') -and $proxyServer.Count -gt 0)
     {
-        $serverBlock = $matches[1]
+        $BoundParameters.Remove('proxyServer') | Out-Null
+        $BoundParameters.Add('proxyServer', $proxyServer[0])
     }
-
-    $serverHashtable = @{}
-    $serverBlock -split ';' | ForEach-Object {
-        if ($_ -match '^(.*?)=(.*)$')
-        {
-            $key = $matches[1].Trim()
-            $value = $matches[2].Trim()
-            $serverHashtable[$key] = $value
-        }
-    }
-    if ($allTargetValues -match '\bproxyServer=\(\{([^\)]+)\}\)')
+    if ($BoundParameters.ContainsKey('server') -and $server.Count -gt 0)
     {
-        $proxyBlock = $matches[1]
+        $BoundParameters.Remove('server') | Out-Null
+        $BoundParameters.Add('server', $server[0])
     }
-
-    $proxyHashtable = @{}
-    $proxyBlock -split ';' | ForEach-Object {
-        if ($_ -match '^(.*?)=(.*)$')
+    if ($BoundParameters.ContainsKey('customKeyValueData'))
+    {
+        $BoundParameters.Remove('customKeyValueData') | Out-Null
+        $newCustomKeyValueData = @()
+        foreach ($item in $customKeyValueData)
         {
-            $key = $matches[1].Trim()
-            $value = $matches[2].Trim()
-            $proxyHashtable[$key] = $value
+            $newCustomKeyValueData += @{
+                '@odata.type' = '#microsoft.graph.keyValuePair'
+                name = $item.name
+                value = $item.value
+            }
         }
+        $BoundParameters.Add('customKeyValueData', $newCustomKeyValueData)
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -608,33 +615,11 @@ function Set-TargetResource
         $BoundParameters.Remove('Assignments') | Out-Null
         $CreateParameters = ([Hashtable]$BoundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
-
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
-                $CreateParameters.Remove($keyName)
-            }
-        }
         $CreateParameters.Remove('Id') | Out-Null
 
-        if ($AdditionalProperties.server)
-        {
-            $AdditionalProperties.Remove('server') #this is not in a format Update-MgBetaDeviceManagementDeviceConfiguration will accept
-            $AdditionalProperties.Add('server', $serverHashtable) #replaced with the hashtable we created earlier
-        }
-        if ($AdditionalProperties.proxyServer)
-        {
-            $AdditionalProperties.Remove('proxyServer') #this is not in a format Update-MgBetaDeviceManagementDeviceConfiguration will accept
-            $AdditionalProperties.Add('proxyServer', $proxyHashtable) #replaced with the hashtable we created earlier
-        }
-
-        $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
-
         #region resource generator code
-        $policy = New-MgBetaDeviceManagementDeviceConfiguration @CreateParameters
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.iosVpnConfiguration')
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
@@ -652,38 +637,11 @@ function Set-TargetResource
         $BoundParameters.Remove('Assignments') | Out-Null
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
-
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
-                $UpdateParameters.Remove($keyName)
-            }
-        }
         $UpdateParameters.Remove('Id') | Out-Null
 
-        if ($AdditionalProperties)
-        {
-
-            if ($AdditionalProperties.server)
-            {
-                $AdditionalProperties.Remove('server') #this is not in a format Update-MgBetaDeviceManagementDeviceConfiguration will accept
-                $AdditionalProperties.Add('server', $serverHashtable) #replaced with the hashtable we created earlier
-            }
-            if ($AdditionalProperties.proxyServer)
-            {
-                $AdditionalProperties.Remove('proxyServer') #this is not in a format Update-MgBetaDeviceManagementDeviceConfiguration will accept
-                $AdditionalProperties.Add('proxyServer', $proxyHashtable) #replaced with the hashtable we created earlier
-            }
-
-            #add the additional properties to the updateparameters
-            $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
-        }
-
         #region resource generator code
-        Update-MgBetaDeviceManagementDeviceConfiguration @UpdateParameters `
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.iosVpnConfiguration')
+        Update-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.Id `
@@ -816,6 +774,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -926,6 +892,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -953,15 +927,20 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosVpnConfiguration' `
+        $baseFilter = "isof('microsoft.graph.iosVpnConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -987,6 +966,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -1104,13 +1085,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('server', 'onDemandRules', 'proxyServer', 'customData', 'customKeyValueData', 'targetedMobileApps', 'Assignments')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -1130,88 +1111,6 @@ function Export-TargetResource
             throw
         }
     }
-}
-
-function Get-M365DSCAdditionalProperties
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $additionalProperties = @(
-        'connectionName'
-        'connectionType'
-        'enableSplitTunneling'
-        'authenticationMethod'
-        'enablePerApp'
-        'safariDomains'
-        'associatedDomains'
-        'excludedDomains'
-        'disableOnDemandUserOverride'
-        'disconnectOnIdle'
-        'proxyServer'
-        'optInToDeviceIdSharing'
-        'excludeList'
-        'microsoftTunnelSiteId'
-        'server'
-        'customData'
-        'customKeyValueData'
-        'onDemandRules'
-        'targetedMobileApps'
-        'version'
-        'loginGroupOrDomain'
-        'role'
-        'realm'
-        'identifier'
-        'providerType'
-        'disconnectOnIdleTimerInSeconds'
-        'cloudName'
-        'strictEnforcement'
-        'userDomain'
-    )
-
-    $results = @{'@odata.type' = '#microsoft.graph.iosVpnConfiguration' }
-    $cloneProperties = $Properties.Clone()
-    foreach ($property in $cloneProperties.Keys)
-    {
-        if ($property -in ($additionalProperties) )
-        {
-            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            if ($properties.$property -and $properties.$property.GetType().FullName -like '*CIMInstance*')
-            {
-                if ($properties.$property.GetType().FullName -like '*[[\]]')
-                {
-                    $array = @()
-                    foreach ($item in $properties.$property)
-                    {
-                        $array += Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-                    }
-                    $propertyValue = $array
-                }
-                else
-                {
-                    $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
-                }
-
-            }
-            else
-            {
-                $propertyValue = $properties.$property
-            }
-
-            $results.Add($propertyName, $propertyValue)
-        }
-    }
-    if ($results.Count -eq 1)
-    {
-        return $null
-    }
-    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

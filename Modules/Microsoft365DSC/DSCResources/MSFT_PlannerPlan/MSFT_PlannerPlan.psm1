@@ -29,19 +29,31 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret,
+        $TenantId,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Planner Plan {$Title}"
@@ -135,9 +147,12 @@ function Get-TargetResource
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
                 ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
         }
         return $results
@@ -182,19 +197,31 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret,
+        $TenantId,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Planner Plan {$Title}"
@@ -233,10 +260,9 @@ function Set-TargetResource
             [Array]$AllGroups = Get-MgGroup -Search $OwnerGroup
         }
         $plan = Get-MgGroupPlannerPlan -GroupId $AllGroups[0].Id | Where-Object -FilterScript { $_.Title -eq $Title }
-        $SetParams.Add('PlannerPlanId', $plan.Id)
         $SetParams.Add('Owner', $AllGroups[0].Id)
         $SetParams.Remove('OwnerGroup') | Out-Null
-        Update-MgPlannerPlan @SetParams
+        Update-MgPlannerPlan -PlannerPlanId $plan.Id -BodyParameter $SetParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
@@ -273,19 +299,31 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret,
+        $TenantId,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #region Telemetry
@@ -322,19 +360,31 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret,
+        $TenantId,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -353,10 +403,10 @@ function Export-TargetResource
 
     try
     {
-        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop -Filter $filter
+        [array]$groups = Get-MgGroup -All -ErrorAction Stop -Filter $filter
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($group in $groups)
         {
@@ -364,7 +414,7 @@ function Export-TargetResource
             try
             {
                 [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id `
-                    -All:$true `
+                    -All `
                     -ErrorAction 'SilentlyContinue'
 
                 $j = 1
@@ -381,9 +431,12 @@ function Export-TargetResource
                         Credential            = $Credential
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
-                        CertificateThumbprint = $CertificateThumbprint
                         ApplicationSecret     = $ApplicationSecret
+                        CertificateThumbprint = $CertificateThumbprint
+                        CertificatePath       = $CertificatePath
+                        CertificatePassword   = $CertificatePassword
                         ManagedIdentity       = $ManagedIdentity.IsPresent
+                        AccessTokens          = $AccessTokens
                     }
 
                     Write-M365DSCHost -Message "        [$j/$($plans.Length)] $($plan.Title)"
@@ -393,7 +446,7 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
-                    $dscContent += $currentDSCBlock
+                    [void]$dscContent.Append($currentDSCBlock)
 
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
@@ -414,7 +467,7 @@ function Export-TargetResource
             }
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

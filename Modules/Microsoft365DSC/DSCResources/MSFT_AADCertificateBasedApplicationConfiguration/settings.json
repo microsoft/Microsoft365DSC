@@ -52,7 +52,8 @@
   },
   "requiredModules": [
     "Microsoft.Graph.Authentication",
-    "Microsoft.Graph.Beta.Identity.DirectoryManagement"
+    "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+    "MSCloudLoginAssistant"
   ],
   "supportedEnvironments": [
     "Global",
@@ -61,16 +62,27 @@
   "mode": "Configuration",
   "commands": [
     {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
       "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
       "cmdlets": [
         "Get-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration",
         "Get-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority",
-        "New-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration",
-        "Update-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration",
-        "Remove-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration",
         "New-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority",
-        "Update-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority",
-        "Remove-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority"
+        "Remove-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration",
+        "Remove-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority",
+        "Update-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration",
+        "Update-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

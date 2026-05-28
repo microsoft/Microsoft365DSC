@@ -226,11 +226,27 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting the Power Platform Tenant Settings Configuration'
@@ -341,8 +357,12 @@ function Get-TargetResource
             Credential                                         = $Credential
             ApplicationId                                      = $ApplicationId
             TenantId                                           = $TenantId
-            CertificateThumbprint                              = $CertificateThumbprint
             ApplicationSecret                                  = $ApplicationSecret
+            CertificateThumbprint                              = $CertificateThumbprint
+            CertificatePath                                    = $CertificatePath
+            CertificatePassword                                = $CertificatePassword
+            ManagedIdentity                                    = $ManagedIdentity.IsPresent
+            AccessTokens                                       = $AccessTokens
         }
     }
     catch
@@ -582,11 +602,27 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting Power Platform Tenant Settings configuration'
@@ -842,11 +878,27 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #region Telemetry
@@ -883,11 +935,27 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
@@ -915,7 +983,7 @@ function Export-TargetResource
         {
             throw 'Invalid permission for the application. If you are using a custom app registration to authenticate, make sure it is defined as a Power Platform admin management application. For additional information refer to https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application'
         }
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
 
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
@@ -927,8 +995,12 @@ function Export-TargetResource
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
             ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
@@ -938,7 +1010,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -950,7 +1022,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

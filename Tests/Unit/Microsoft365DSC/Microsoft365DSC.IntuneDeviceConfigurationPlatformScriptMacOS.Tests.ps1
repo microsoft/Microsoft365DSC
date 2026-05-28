@@ -51,17 +51,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceShellScript -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.DeviceShellScript"
-                    }
+                    '@odata.type' = "#microsoft.graph.DeviceShellScript"
                     BlockExecutionNotifications = $True
+                    ExecutionFrequency = "PT0S"
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     FileName = "FakeStringValue"
                     Id = "FakeStringValue"
                     RoleScopeTagIds = @("FakeStringValue")
                     RunAsAccount = "system"
-                    ScriptContent = [byte[]]::new(5)
+                    ScriptContent = "AAAAAAA="
                 }
             }
 
@@ -127,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

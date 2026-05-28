@@ -28,7 +28,11 @@ function New-MgGroup
 
         [Parameter()]
         [System.String]
-        $Visibility
+        $Visibility,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter
     )
 }
 
@@ -122,7 +126,11 @@ function Update-MgServicePrincipal
 
         [Parameter()]
         [PSObject]
-        $KeyCredentials
+        $KeyCredentials,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter
     )
 }
 
@@ -202,7 +210,11 @@ function New-MGServicePrincipal
 
         [Parameter()]
         [PSObject]
-        $KeyCredentials
+        $KeyCredentials,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter
     )
 }
 
@@ -273,15 +285,55 @@ function New-MgBetaRoleManagementDirectoryRoleDefinition
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Object]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $AllowedPrincipalTypes,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Object]
+        $InheritsPermissionsFrom,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsBuiltIn,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsPrivileged,
 
         [Parameter()]
         [System.String[]]
         $ResourceScopes,
 
         [Parameter()]
-        [System.String[]]
+        [System.Object]
         $RolePermissions,
 
         [Parameter()]
@@ -289,20 +341,36 @@ function New-MgBetaRoleManagementDirectoryRoleDefinition
         $TemplateId,
 
         [Parameter()]
-        [System.Boolean]
-        $IsEnabled,
-
-        [Parameter()]
         [System.String]
         $Version,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.Management.Automation.SwitchParameter]
+        $Break,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
     )
 }
 
@@ -344,7 +412,11 @@ function Update-MgBetaRoleManagementDirectoryRoleDefinition
 
         [Parameter()]
         [System.String]
-        $UnifiedRoleDefinitionId
+        $UnifiedRoleDefinitionId,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter
     )
 }
 
@@ -415,7 +487,6 @@ function Remove-PSSession
     param(
     )
 }
-
 
 function Get-SPOAdministrationUrl
 {
@@ -1222,10 +1293,13 @@ function Update-MGPlannerPlan
 
         [Parameter()]
         [System.String]
-        $PlannerPlanId
+        $PlannerPlanId,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter
     )
 }
-
 
 function Get-MgPlannerPlanBucket
 {

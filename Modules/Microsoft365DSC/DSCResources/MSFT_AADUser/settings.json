@@ -38,6 +38,9 @@
             "name": "User.ReadWrite.All"
           },
           {
+            "name": "User.DeleteRestore.All"
+          },
+          {
             "name": "Group.ReadWrite.All"
           },
           {
@@ -68,6 +71,9 @@
             "name": "User.ReadWrite.All"
           },
           {
+            "name": "User.DeleteRestore.All"
+          },
+          {
             "name": "Group.ReadWrite.All"
           },
           {
@@ -83,7 +89,8 @@
     "Microsoft.Graph.Beta.Identity.Governance",
     "Microsoft.Graph.Groups",
     "Microsoft.Graph.Users",
-    "Microsoft.Graph.Users.Actions"
+    "Microsoft.Graph.Users.Actions",
+    "MSCloudLoginAssistant"
   ],
   "supportedEnvironments": [
     "Global",
@@ -116,7 +123,7 @@
       "module": "Microsoft.Graph.Groups",
       "cmdlets": [
         "Get-MgGroup",
-        "New-MgGroupMember",
+        "New-MgGroupMemberByRef",
         "Remove-MgGroupMemberDirectoryObjectByRef"
       ]
     },
@@ -133,6 +140,12 @@
       "module": "Microsoft.Graph.Users.Actions",
       "cmdlets": [
         "Set-MgUserLicense"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

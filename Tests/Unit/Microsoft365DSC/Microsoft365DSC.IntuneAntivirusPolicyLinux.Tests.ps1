@@ -72,19 +72,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_mdatp_managed_cloudservice_enabled'
                                 Name = 'enabled'
                                 OffsetUri = 'enabled'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'linux_mdatp_managed_cloudservice_enabled_true'
-                                            name = 'Enabled'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'true'
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'linux_mdatp_managed_cloudservice_enabled_true'
+                                        name = 'Enabled'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'true'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -92,12 +90,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'ad8554ce-16d5-44a5-9686-d286844755b0'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'linux_mdatp_managed_cloudservice_enabled_true'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'linux_mdatp_managed_cloudservice_enabled_true'
                             }
                         }
                     },
@@ -108,11 +104,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_mdatp_managed_antivirusengine_disallowedthreatactions'
                                 Name = 'disallowedThreatActions'
                                 OffsetUri = 'disallowedThreatActions'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 0
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 0
                             }
                         )
                         SettingInstance = @{
@@ -120,15 +114,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'd1673a55-f037-4eca-b037-89392341d1b8'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                                simpleSettingCollectionValue = @(
-                                    @{
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                        value = 'disallowed action 1'
-                                    }
-                                )
-                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
+                            simpleSettingCollectionValue = @(
+                                @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                    value = 'disallowed action 1'
+                                }
+                            )
                         }
                     },
                     @{
@@ -138,95 +130,87 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_mdatp_managed_antivirusengine_exclusions'
                                 Name = 'exclusions'
                                 OffsetUri = 'exclusions'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 0
-                                    childIds = @(
-                                        'linux_mdatp_managed_antivirusengine_exclusions_item_$type',
-                                        'linux_mdatp_managed_antivirusengine_exclusions_item_extension'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 0
+                                childIds = @(
+                                    'linux_mdatp_managed_antivirusengine_exclusions_item_$type',
+                                    'linux_mdatp_managed_antivirusengine_exclusions_item_extension'
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
                                 Name = 'exclusions_item_$type'
                                 OffsetUri = 'exclusions_item_$type'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_0'
-                                            name = 'Path'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                    parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'excludedPath'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_0'
+                                        name = 'Path'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
+                                                parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'excludedPath'
                                         }
-                                        @{
-                                            itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
-                                            name = 'File extension'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                    parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'excludedFileExtension'
+                                    }
+                                    @{
+                                        itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
+                                        name = 'File extension'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
+                                                parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'excludedFileExtension'
                                         }
-                                        @{
-                                            itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
-                                            name = 'Process name'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                    parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'excludedFileName'
+                                    }
+                                    @{
+                                        itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
+                                        name = 'Process name'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
+                                                parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'excludedFileName'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_antivirusengine_exclusions_item_extension'
                                 Name = 'exclusions_item_extension'
                                 OffsetUri = 'exclusions/[{0}]/extension'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
-                                            parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
+                                        parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_antivirusengine_exclusions_item_name'
                                 Name = 'exclusions_item_name'
                                 OffsetUri = 'exclusions/[{0}]/name'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
-                                            parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
+                                        parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -234,53 +218,51 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'e2d557ab-357e-4727-978e-0d655facbb23'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
-                                                choiceSettingValue = @{
-                                                    children = @(
-                                                        @{
-                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                            settingDefinitionId = 'linux_mdatp_managed_antivirusengine_exclusions_item_extension'
-                                                            simpleSettingValue = @{
-                                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                value = '.exe'
-                                                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
+                                            choiceSettingValue = @{
+                                                children = @(
+                                                    @{
+                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                                        settingDefinitionId = 'linux_mdatp_managed_antivirusengine_exclusions_item_extension'
+                                                        simpleSettingValue = @{
+                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                            value = '.exe'
                                                         }
-                                                    )
-                                                    value = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
-                                                }
+                                                    }
+                                                )
+                                                value = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
                                             }
-                                        )
-                                    },
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
-                                                choiceSettingValue = @{
-                                                    children = @(
-                                                        @{
-                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                            settingDefinitionId = 'linux_mdatp_managed_antivirusengine_exclusions_item_name'
-                                                            simpleSettingValue = @{
-                                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                value = 'Test'
-                                                            }
+                                        }
+                                    )
+                                },
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
+                                            choiceSettingValue = @{
+                                                children = @(
+                                                    @{
+                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                                        settingDefinitionId = 'linux_mdatp_managed_antivirusengine_exclusions_item_name'
+                                                        simpleSettingValue = @{
+                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                            value = 'Test'
                                                         }
-                                                    )
-                                                    value = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
-                                                }
+                                                    }
+                                                )
+                                                value = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     },
                     @{
@@ -290,61 +272,55 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_mdatp_managed_antivirusengine_threattypesettings'
                                 Name = 'threatTypeSettings'
                                 OffsetUri = 'threatTypeSettings'
-                                AdditionalProperties = @{
-                                    maximumCount = 2147483647
-                                    minimumCount = 0
-                                    childIds = @(
-                                        'linux_mdatp_managed_antivirusengine_threattypesettings_item_key'
-                                        'linux_mdatp_managed_antivirusengine_threattypesettings_item_value'
-                                    )
-                                }
+                                maximumCount = 2147483647
+                                minimumCount = 0
+                                childIds = @(
+                                    'linux_mdatp_managed_antivirusengine_threattypesettings_item_key'
+                                    'linux_mdatp_managed_antivirusengine_threattypesettings_item_value'
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_key'
                                 Name = 'threatTypeSettings_item_key'
                                 OffsetUri = 'threatTypeSettings/[{0}]/key'
-                                AdditionalProperties = @{
-                                    options = @(
-                                        @{
-                                            itemId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_key_0'
-                                            name = 'potentially_unwanted_application'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_antivirusengine_threattypesettings'
-                                                    parentSettingId = 'linux_mdatp_managed_antivirusengine_threattypesettings'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'potentially_unwanted_application'
+                                options = @(
+                                    @{
+                                        itemId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_key_0'
+                                        name = 'potentially_unwanted_application'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_antivirusengine_threattypesettings'
+                                                parentSettingId = 'linux_mdatp_managed_antivirusengine_threattypesettings'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'potentially_unwanted_application'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_value'
                                 Name = 'threatTypeSettings_item_value'
                                 OffsetUri = 'threatTypeSettings/[{0}]/value'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_value_0'
-                                            name = 'audit'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_antivirusengine_threattypesettings'
-                                                    parentSettingId = 'linux_mdatp_managed_antivirusengine_threattypesettings'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'audit'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_value_0'
+                                        name = 'audit'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_antivirusengine_threattypesettings'
+                                                parentSettingId = 'linux_mdatp_managed_antivirusengine_threattypesettings'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'audit'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -352,31 +328,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '2e407734-2d3a-4cc2-9a81-4d1c54718096'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_key'
-                                                choiceSettingValue = @{
-                                                    children = @()
-                                                    value = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_key_0'
-                                                }
-                                            },
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_value'
-                                                choiceSettingValue = @{
-                                                    children = @()
-                                                    value = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_value_0'
-                                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_key'
+                                            choiceSettingValue = @{
+                                                children = @()
+                                                value = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_key_0'
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                        },
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_value'
+                                            choiceSettingValue = @{
+                                                children = @()
+                                                value = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_value_0'
+                                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     }
                 )
@@ -391,19 +365,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_mdatp_managed_cloudservice_enabled'
                                 Name = 'enabled'
                                 OffsetUri = 'enabled'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'linux_mdatp_managed_cloudservice_enabled_true'
-                                            name = 'Enabled'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'true'
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'linux_mdatp_managed_cloudservice_enabled_true'
+                                        name = 'Enabled'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'true'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -417,11 +389,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_mdatp_managed_antivirusengine_disallowedthreatactions'
                                 Name = 'disallowedThreatActions'
                                 OffsetUri = 'disallowedThreatActions'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 0
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 0
                             }
                         )
                         SettingInstance = @{
@@ -435,95 +405,87 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_mdatp_managed_antivirusengine_exclusions'
                                 Name = 'exclusions'
                                 OffsetUri = 'exclusions'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 0
-                                    childIds = @(
-                                        'linux_mdatp_managed_antivirusengine_exclusions_item_$type',
-                                        'linux_mdatp_managed_antivirusengine_exclusions_item_extension'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 0
+                                childIds = @(
+                                    'linux_mdatp_managed_antivirusengine_exclusions_item_$type',
+                                    'linux_mdatp_managed_antivirusengine_exclusions_item_extension'
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
                                 Name = 'exclusions_item_$type'
                                 OffsetUri = 'exclusions_item_$type'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_0'
-                                            name = 'Path'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                    parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'excludedPath'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_0'
+                                        name = 'Path'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
+                                                parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'excludedPath'
                                         }
-                                        @{
-                                            itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
-                                            name = 'File extension'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                    parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'excludedFileExtension'
+                                    }
+                                    @{
+                                        itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
+                                        name = 'File extension'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
+                                                parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'excludedFileExtension'
                                         }
-                                        @{
-                                            itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
-                                            name = 'Process name'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                    parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'excludedFileName'
+                                    }
+                                    @{
+                                        itemId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
+                                        name = 'Process name'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions'
+                                                parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'excludedFileName'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_antivirusengine_exclusions_item_extension'
                                 Name = 'exclusions_item_extension'
                                 OffsetUri = 'exclusions/[{0}]/extension'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
-                                            parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
+                                        parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_antivirusengine_exclusions_item_name'
                                 Name = 'exclusions_item_name'
                                 OffsetUri = 'exclusions/[{0}]/name'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
-                                            parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
+                                        parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -537,63 +499,57 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_mdatp_managed_antivirusengine_threattypesettings'
                                 Name = 'threatTypeSettings'
                                 OffsetUri = 'threatTypeSettings'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    maximumCount = 2147483647
-                                    minimumCount = 0
-                                    childIds = @(
-                                        'linux_mdatp_managed_antivirusengine_threattypesettings_item_key'
-                                        'linux_mdatp_managed_antivirusengine_threattypesettings_item_value'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                maximumCount = 2147483647
+                                minimumCount = 0
+                                childIds = @(
+                                    'linux_mdatp_managed_antivirusengine_threattypesettings_item_key'
+                                    'linux_mdatp_managed_antivirusengine_threattypesettings_item_value'
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_key'
                                 Name = 'threatTypeSettings_item_key'
                                 OffsetUri = 'threatTypeSettings/[{0}]/key'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_key_0'
-                                            name = 'potentially_unwanted_application'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_antivirusengine_threattypesettings'
-                                                    parentSettingId = 'linux_mdatp_managed_antivirusengine_threattypesettings'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'potentially_unwanted_application'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_key_0'
+                                        name = 'potentially_unwanted_application'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_antivirusengine_threattypesettings'
+                                                parentSettingId = 'linux_mdatp_managed_antivirusengine_threattypesettings'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'potentially_unwanted_application'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_value'
                                 Name = 'threatTypeSettings_item_value'
                                 OffsetUri = 'threatTypeSettings/[{0}]/value'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_value_0'
-                                            name = 'audit'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_antivirusengine_threattypesettings'
-                                                    parentSettingId = 'linux_mdatp_managed_antivirusengine_threattypesettings'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'audit'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'linux_mdatp_managed_antivirusengine_threattypesettings_item_value_0'
+                                        name = 'audit'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_antivirusengine_threattypesettings'
+                                                parentSettingId = 'linux_mdatp_managed_antivirusengine_threattypesettings'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'audit'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -634,12 +590,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -741,7 +693,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

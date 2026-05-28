@@ -36,5 +36,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsMessagingPolicy",
+        "New-CsTeamsMessagingPolicy",
+        "Remove-CsTeamsMessagingPolicy",
+        "Set-CsTeamsMessagingPolicy"
+      ]
+    }
+  ]
 }

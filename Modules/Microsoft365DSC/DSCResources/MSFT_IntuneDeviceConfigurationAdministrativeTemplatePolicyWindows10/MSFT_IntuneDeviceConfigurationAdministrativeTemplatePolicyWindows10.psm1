@@ -63,6 +63,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -182,24 +190,24 @@ function Get-TargetResource
             foreach ($presentationValue in $presentationValues)
             {
                 $complexPresentationValue = [ordered]@{}
-                $complexPresentationValue.Add('odataType', $presentationValue.AdditionalProperties.'@odata.type')
+                $complexPresentationValue.Add('odataType', $presentationValue.'@odata.type')
                 $complexPresentationValue.Add('Id', $presentationValue.Id)
                 $complexPresentationValue.Add('presentationDefinitionId', $presentationValue.Presentation.Id)
                 $complexPresentationValue.Add('presentationDefinitionLabel', $presentationValue.Presentation.Label)
-                switch -Wildcard ($presentationValue.AdditionalProperties.'@odata.type')
+                switch -Wildcard ($presentationValue.'@odata.type')
                 {
                     '*.groupPolicyPresentationValueBoolean'
                     {
-                        $complexPresentationValue.Add('BooleanValue', $presentationValue.AdditionalProperties.value)
+                        $complexPresentationValue.Add('BooleanValue', $presentationValue.value)
                     }
                     '*.groupPolicyPresentationValue*Decimal'
                     {
-                        $complexPresentationValue.Add('DecimalValue', $presentationValue.AdditionalProperties.value)
+                        $complexPresentationValue.Add('DecimalValue', $presentationValue.value)
                     }
                     '*.groupPolicyPresentationValueList'
                     {
                         $complexKeyValuePairValues = @()
-                        foreach ($value in $presentationValue.AdditionalProperties.values)
+                        foreach ($value in $presentationValue.values)
                         {
 
                             $complexKeyValuePairValue = @{
@@ -218,11 +226,11 @@ function Get-TargetResource
                     }
                     '*.groupPolicyPresentationValueMultiText'
                     {
-                        $complexPresentationValue.Add('StringValues', $presentationValue.AdditionalProperties.values)
+                        $complexPresentationValue.Add('StringValues', $presentationValue.values)
                     }
                     '*.groupPolicyPresentationValueText'
                     {
-                        $complexPresentationValue.Add('StringValue', $presentationValue.AdditionalProperties.value)
+                        $complexPresentationValue.Add('StringValue', $presentationValue.value)
                     }
                 }
                 $complexPresentationValues += $complexPresentationValue
@@ -246,6 +254,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
             #endregion
@@ -333,6 +343,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -611,6 +629,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -738,6 +764,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -768,7 +802,7 @@ function Export-TargetResource
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -799,6 +833,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -857,13 +893,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Assignments', 'DefinitionValues', 'PresentationValues', 'KeyValuePairValues')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

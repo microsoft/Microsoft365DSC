@@ -64,6 +64,10 @@ function Get-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -121,6 +125,7 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             CertificatePath       = $CertificatePath
             CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
 
@@ -200,6 +205,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -376,6 +385,10 @@ function Test-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -425,6 +438,10 @@ function Export-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -448,7 +465,7 @@ function Export-TargetResource
     {
         [array]$cases = Get-ComplianceCase -ErrorAction Stop
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         if ($cases.Length -eq 0)
         {
@@ -483,7 +500,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
 
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
@@ -493,7 +510,7 @@ function Export-TargetResource
             $i++
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

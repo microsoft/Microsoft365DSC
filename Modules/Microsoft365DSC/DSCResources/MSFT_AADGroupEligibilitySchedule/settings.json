@@ -53,8 +53,7 @@
     "Microsoft.Graph.Beta.Identity.Governance",
     "Microsoft.Graph.Beta.Identity.SignIns",
     "Microsoft.Graph.Groups",
-    "Microsoft.Graph.Users",
-    "MSCloudLoginAssistant"
+    "Microsoft.Graph.Users"
   ],
   "supportedEnvironments": [
     "Global",

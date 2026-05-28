@@ -129,15 +129,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -224,15 +224,15 @@ function Get-TargetResource
             FolderAnonymousLinkType                  = $SPOSharingSettings.FolderAnonymousLinkType.ToString()
             NotifyOwnersWhenItemsReshared            = $SPOSharingSettings.NotifyOwnersWhenItemsReshared
             DefaultLinkPermission                    = $DefaultLinkPermission
+            Ensure                                   = 'Present'
             Credential                               = $Credential
             ApplicationId                            = $ApplicationId
             TenantId                                 = $TenantId
             ApplicationSecret                        = $ApplicationSecret
-            CertificatePassword                      = $CertificatePassword
-            CertificatePath                          = $CertificatePath
             CertificateThumbprint                    = $CertificateThumbprint
+            CertificatePath                          = $CertificatePath
+            CertificatePassword                      = $CertificatePassword
             ManagedIdentity                          = $ManagedIdentity.IsPresent
-            Ensure                                   = 'Present'
             AccessTokens                             = $AccessTokens
         }
 
@@ -383,15 +383,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -632,15 +632,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -737,15 +737,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -779,14 +779,15 @@ function Export-TargetResource
         }
 
         $Script:ExportMode = $true
+        $dscContent = [System.Text.StringBuilder]::new()
         $Params = @{
             IsSingleInstance      = 'Yes'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
             AccessTokens          = $AccessTokens
@@ -802,11 +803,11 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -Credential $Credential
-        $dscContent += $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -68,6 +68,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -135,15 +143,15 @@ function Get-TargetResource
 
         #region resource generator code
         $enumAllowDeviceHealthMonitoring = $null
-        if ($null -ne $getValue.AdditionalProperties.allowDeviceHealthMonitoring)
+        if ($null -ne $getValue.allowDeviceHealthMonitoring)
         {
-            $enumAllowDeviceHealthMonitoring = $getValue.AdditionalProperties.allowDeviceHealthMonitoring.ToString()
+            $enumAllowDeviceHealthMonitoring = $getValue.allowDeviceHealthMonitoring.ToString()
         }
 
         $enumConfigDeviceHealthMonitoringScope = @()
-        if ($null -ne $getValue.AdditionalProperties.configDeviceHealthMonitoringScope)
+        if ($null -ne $getValue.configDeviceHealthMonitoringScope)
         {
-            $enumConfigDeviceHealthMonitoringScope = $getValue.AdditionalProperties.configDeviceHealthMonitoringScope.ToString().Split(',')
+            $enumConfigDeviceHealthMonitoringScope = $getValue.configDeviceHealthMonitoringScope.ToString().Split(',')
 
         }
         #endregion
@@ -151,7 +159,7 @@ function Get-TargetResource
         $results = @{
             #region resource generator code
             AllowDeviceHealthMonitoring             = $enumAllowDeviceHealthMonitoring
-            ConfigDeviceHealthMonitoringCustomScope = $getValue.AdditionalProperties.configDeviceHealthMonitoringCustomScope
+            ConfigDeviceHealthMonitoringCustomScope = $getValue.configDeviceHealthMonitoringCustomScope
             ConfigDeviceHealthMonitoringScope       = $enumConfigDeviceHealthMonitoringScope
             Description                             = $getValue.Description
             DisplayName                             = $getValue.DisplayName
@@ -163,6 +171,8 @@ function Get-TargetResource
             TenantId                                = $TenantId
             ApplicationSecret                       = $ApplicationSecret
             CertificateThumbprint                   = $CertificateThumbprint
+            CertificatePath                         = $CertificatePath
+            CertificatePassword                     = $CertificatePassword
             ManagedIdentity                         = $ManagedIdentity.IsPresent
             AccessTokens                            = $AccessTokens
             #endregion
@@ -257,6 +267,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -411,6 +429,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -464,6 +490,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -490,15 +524,20 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsHealthMonitoringConfiguration' `
+        $baseFilter = "isof('microsoft.graph.windowsHealthMonitoringConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -529,6 +568,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -554,13 +595,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Assignments')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -1,5 +1,3 @@
-Initialize-M365DSCDllLoader -ErrorAction SilentlyContinue
-
 function Get-StringFirstCharacterToUpper
 {
     [CmdletBinding()]
@@ -124,6 +122,8 @@ function Get-M365DSCDRGComplexTypeToHashtable
         $ComplexObject
     )
 
+    Initialize-M365DSCDllLoader -ErrorAction Stop
+
     if ($null -eq $ComplexObject)
     {
         return $null
@@ -196,6 +196,8 @@ function Get-M365DSCDRGComplexTypeToString
         return $null
     }
 
+    Initialize-M365DSCDllLoader -ErrorAction Stop
+
     $typeMappingList = [System.Collections.Generic.List[Microsoft365DSC.Converter.ComplexTypeMapping]]::new()
     if ($PSBoundParameters.ContainsKey('ComplexTypeMapping') -and $ComplexTypeMapping -ne $null)
     {
@@ -241,6 +243,7 @@ function Update-M365DSCSpecialCharacters
         $String
     )
 
+    Initialize-M365DSCDllLoader -ErrorAction Stop
     return [Microsoft365DSC.Utilities.Utilities]::UpdateSpecialCharacters($String)
 }
 
@@ -348,6 +351,8 @@ function Compare-M365DSCComplexObject
             DesiredValues = @{}
         }
     }
+
+    Initialize-M365DSCDllLoader -ErrorAction Stop
 
     $tuple = [Microsoft365DSC.Compare.ComplexObjectComparer]::Compare($Source, $Target, $PropertyName, $null)
     if ($tuple.Item1.Count -gt 0)
@@ -508,6 +513,8 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         }
         return $returnObject
     }
+
+    Initialize-M365DSCDllLoader -ErrorAction Stop
 
     return [Microsoft365DSC.Converter.ObjectNormalizer]::Normalize($ComplexObject)
 }

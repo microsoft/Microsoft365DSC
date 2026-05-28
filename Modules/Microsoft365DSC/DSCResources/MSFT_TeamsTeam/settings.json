@@ -53,6 +53,23 @@
       "cmdlets": [
         "Get-MgUser"
       ]
+    },
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Add-TeamUser",
+        "Get-Team",
+        "Get-TeamUser",
+        "New-Team",
+        "Remove-Team",
+        "Set-Team"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
     }
   ]
 }

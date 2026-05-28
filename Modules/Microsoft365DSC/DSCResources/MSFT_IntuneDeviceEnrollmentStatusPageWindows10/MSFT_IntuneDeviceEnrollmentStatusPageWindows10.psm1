@@ -110,6 +110,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -166,8 +174,8 @@ function Get-TargetResource
                         -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue | Where-Object `
                         -FilterScript {
-                            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
-                    } | Where-Object -FilterScript { $null -ne $_.DisplayName }
+                            $_.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' -and $null -ne $_.DisplayName
+                    }
                 }
             }
             #endregion
@@ -191,7 +199,7 @@ function Get-TargetResource
         Write-Verbose -Message "An Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
 
         $SelectedMobileAppNamesValue = @()
-        foreach ($mobileApp in $getValue.AdditionalProperties.selectedMobileAppIds)
+        foreach ($mobileApp in $getValue.selectedMobileAppIds)
         {
             $mobileEntry = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $mobileApp
             $SelectedMobileAppNamesValue += $mobileEntry.DisplayName
@@ -199,19 +207,19 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            AllowDeviceResetOnInstallFailure        = $getValue.AdditionalProperties.allowDeviceResetOnInstallFailure
-            AllowDeviceUseOnInstallFailure          = $getValue.AdditionalProperties.allowDeviceUseOnInstallFailure
-            AllowLogCollectionOnInstallFailure      = $getValue.AdditionalProperties.allowLogCollectionOnInstallFailure
-            AllowNonBlockingAppInstallation         = $getValue.AdditionalProperties.allowNonBlockingAppInstallation
-            BlockDeviceSetupRetryByUser             = $getValue.AdditionalProperties.blockDeviceSetupRetryByUser
-            CustomErrorMessage                      = $getValue.AdditionalProperties.customErrorMessage
-            DisableUserStatusTrackingAfterFirstUser = $getValue.AdditionalProperties.disableUserStatusTrackingAfterFirstUser
-            InstallProgressTimeoutInMinutes         = $getValue.AdditionalProperties.installProgressTimeoutInMinutes
-            InstallQualityUpdates                   = $getValue.AdditionalProperties.installQualityUpdates
+            AllowDeviceResetOnInstallFailure        = $getValue.allowDeviceResetOnInstallFailure
+            AllowDeviceUseOnInstallFailure          = $getValue.allowDeviceUseOnInstallFailure
+            AllowLogCollectionOnInstallFailure      = $getValue.allowLogCollectionOnInstallFailure
+            AllowNonBlockingAppInstallation         = $getValue.allowNonBlockingAppInstallation
+            BlockDeviceSetupRetryByUser             = $getValue.blockDeviceSetupRetryByUser
+            CustomErrorMessage                      = $getValue.customErrorMessage
+            DisableUserStatusTrackingAfterFirstUser = $getValue.disableUserStatusTrackingAfterFirstUser
+            InstallProgressTimeoutInMinutes         = $getValue.installProgressTimeoutInMinutes
+            InstallQualityUpdates                   = $getValue.installQualityUpdates
             SelectedMobileAppNames                  = $SelectedMobileAppNamesValue
-            SelectedMobileAppIds                    = $getValue.AdditionalProperties.selectedMobileAppIds
-            ShowInstallationProgress                = $getValue.AdditionalProperties.showInstallationProgress
-            TrackInstallProgressForAutopilotOnly    = $getValue.AdditionalProperties.trackInstallProgressForAutopilotOnly
+            SelectedMobileAppIds                    = $getValue.selectedMobileAppIds
+            ShowInstallationProgress                = $getValue.showInstallationProgress
+            TrackInstallProgressForAutopilotOnly    = $getValue.trackInstallProgressForAutopilotOnly
             Priority                                = $getValue.Priority
             Description                             = $getValue.Description
             DisplayName                             = $getValue.DisplayName
@@ -223,6 +231,8 @@ function Get-TargetResource
             TenantId                                = $TenantId
             ApplicationSecret                       = $ApplicationSecret
             CertificateThumbprint                   = $CertificateThumbprint
+            CertificatePath                         = $CertificatePath
+            CertificatePassword                     = $CertificatePassword
             ManagedIdentity                         = $ManagedIdentity.IsPresent
             AccessTokens                            = $AccessTokens
             #endregion
@@ -359,6 +369,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -612,6 +630,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -678,6 +704,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -704,15 +738,13 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter $Filter -All -ErrorAction Stop | Where-Object {
+            $_.'@odata.type' -eq "#microsoft.graph.windows10EnrollmentCompletionPageConfiguration"
         }
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -742,6 +774,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -767,14 +801,14 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Assignments')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

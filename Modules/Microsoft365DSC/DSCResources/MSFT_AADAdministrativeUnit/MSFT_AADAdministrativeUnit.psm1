@@ -77,6 +77,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -151,6 +159,8 @@ function Get-TargetResource
             TenantId                     = $TenantId
             ApplicationSecret            = $ApplicationSecret
             CertificateThumbprint        = $CertificateThumbprint
+            CertificatePath              = $CertificatePath
+            CertificatePassword          = $CertificatePassword
             ManagedIdentity              = $ManagedIdentity.IsPresent
             AccessTokens                 = $AccessTokens
             #endregion
@@ -181,24 +191,24 @@ function Get-TargetResource
                 foreach ($auMember in $auMembers)
                 {
                     $member = [ordered]@{}
-                    if ($auMember.AdditionalProperties.'@odata.type' -match 'user')
+                    if ($auMember.'@odata.type' -match 'user')
                     {
-                        $member.Add('Identity', $auMember.AdditionalProperties.userPrincipalName)
+                        $member.Add('Identity', $auMember.userPrincipalName)
                         $member.Add('Type', 'User')
                     }
-                    elseif ($auMember.AdditionalProperties.'@odata.type' -match 'group')
+                    elseif ($auMember.'@odata.type' -match 'group')
                     {
-                        $member.Add('Identity', $auMember.AdditionalProperties.displayName)
+                        $member.Add('Identity', $auMember.displayName)
                         $member.Add('Type', 'Group')
                     }
-                    elseif ($auMember.AdditionalProperties.'@odata.type' -match 'device')
+                    elseif ($auMember.'@odata.type' -match 'device')
                     {
-                        $member.Add('Identity', $auMember.AdditionalProperties.displayName)
+                        $member.Add('Identity', $auMember.displayName)
                         $member.Add('Type', 'Device')
                     }
                     else
                     {
-                        throw "AU {$DisplayName}: member {$($auMember.Id)} has invalid type {$($auMember.AdditionalProperties.'@odata.type')}"
+                        throw "AU {$DisplayName}: member {$($auMember.Id)} has invalid type {$($auMember.'@odata.type')}"
                     }
                     $memberSpec += $member
                 }
@@ -245,8 +255,8 @@ function Get-TargetResource
                 Write-Verbose -Message "AU {$DisplayName} @odata.Type={$($memberObject.'@odata.type')}"
                 if (($memberObject.'@odata.type') -match 'user')
                 {
-                    Write-Verbose -Message "AU {$DisplayName} UPN = {$($auScopedRoleMember.RoleMemberInfo.AdditionalProperties.userPrincipalName)}"
-                    $scopedRoleMember.RoleMemberInfo.Identity = $auScopedRoleMember.RoleMemberInfo.AdditionalProperties.userPrincipalName
+                    Write-Verbose -Message "AU {$DisplayName} UPN = {$($auScopedRoleMember.RoleMemberInfo.userPrincipalName)}"
+                    $scopedRoleMember.RoleMemberInfo.Identity = $auScopedRoleMember.RoleMemberInfo.userPrincipalName
                     $scopedRoleMember.RoleMemberInfo.Type = 'User'
                 }
                 elseif (($memberObject.'@odata.type') -match 'group')
@@ -362,6 +372,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -409,7 +427,7 @@ function Set-TargetResource
                 Write-Verbose -Message "AU {$DisplayName} member Type '$($member.Type)' Identity '$($member.Identity)'"
                 if ($member.Type -eq 'User')
                 {
-                    $memberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($member.Identity -replace "'", "''")'" -ErrorAction Stop
+                    [array]$memberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($member.Identity -replace "'", "''")'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
                         $memberSpecification += $memberIdentity.Id
@@ -421,7 +439,7 @@ function Set-TargetResource
                 }
                 elseif ($member.Type -eq 'Group')
                 {
-                    $memberIdentity = Get-MgGroup -Filter "DisplayName eq '$($member.Identity -replace "'", "''")'" -ErrorAction Stop
+                    [array]$memberIdentity = Get-MgGroup -Filter "DisplayName eq '$($member.Identity -replace "'", "''")'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
                         if ($memberIdentity.Count -gt 1)
@@ -437,7 +455,7 @@ function Set-TargetResource
                 }
                 elseif ($member.Type -eq 'Device')
                 {
-                    $memberIdentity = Get-MgDevice -Filter "DisplayName eq '$($member.Identity -replace "'", "''")'" -ErrorAction Stop
+                    [array]$memberIdentity = Get-MgDevice -Filter "DisplayName eq '$($member.Identity -replace "'", "''")'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
                         if ($memberIdentity.Count -gt 1)
@@ -448,7 +466,7 @@ function Set-TargetResource
                     }
                     else
                     {
-                        throw "AU {$($DisplayName)}: Device {$($Member.Identity)} does not exist"
+                        throw "AU {$($DisplayName)}: Device {$($member.Identity)} does not exist"
                     }
                 }
                 else
@@ -545,8 +563,8 @@ function Set-TargetResource
 
         #region resource generator code
         Write-Verbose -Message "Creating new Administrative Unit with: $(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
-
-        $policy = New-MgDirectoryAdministrativeUnit @CreateParameters
+        $policy = New-MgDirectoryAdministrativeUnit -BodyParameter $CreateParameters
+        Start-Sleep -Seconds 2 # Sleep added to allow for AU to be fully available before adding members
 
         if ($MembershipType -ne 'Dynamic')
         {
@@ -555,7 +573,7 @@ function Set-TargetResource
                 Write-Verbose -Message "Adding new assigned member {$($member)}"
                 $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($member)"
 
-                New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId $policy.Id -OdataId $url
+                New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId $policy.Id -BodyParameter @{ "@odata.id" = $url }
             }
         }
 
@@ -563,8 +581,6 @@ function Set-TargetResource
         {
             New-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId $policy.Id -BodyParameter $scopedRoleMember
         }
-
-
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -581,8 +597,7 @@ function Set-TargetResource
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
 
         #region resource generator code
-        Update-MgDirectoryAdministrativeUnit @UpdateParameters `
-            -AdministrativeUnitId $currentInstance.Id
+        Update-MgDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id -BodyParameter $UpdateParameters
         #endregion
 
         if ($MembershipType -ne 'Dynamic')
@@ -599,47 +614,47 @@ function Set-TargetResource
                 {
                     $desiredMembers += @{Type = $member.Type; Identity = $member.Identity }
                 }
-                $membersDiff = Compare-Object -ReferenceObject $currentMembers -DifferenceObject $desiredMembers -Property Identity, Type
+                $membersDiff = Compare-Object -ReferenceObject $currentMembers -DifferenceObject $desiredMembers
                 foreach ($diff in $membersDiff)
                 {
-                    if ($diff.Type -eq 'User')
+                    if ($diff.InputObject.Type -eq 'User')
                     {
-                        $memberObject = Get-MgUser -Filter "UserPrincipalName eq '$($diff.Identity -replace "'", "''")'"
+                        [array]$memberObject = Get-MgUser -Filter "UserPrincipalName eq '$($diff.InputObject.Identity -replace "'", "''")'"
                         #$memberType = 'users'
                     }
-                    elseif ($diff.Type -eq 'Group')
+                    elseif ($diff.InputObject.Type -eq 'Group')
                     {
-                        $memberObject = Get-MgGroup -Filter "DisplayName eq '$($diff.Identity -replace "'", "''")'"
+                        [array]$memberObject = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject.Identity -replace "'", "''")'"
                         #$memberType = 'groups'
                     }
-                    elseif ($diff.Type -eq 'Device')
+                    elseif ($diff.InputObject.Type -eq 'Device')
                     {
-                        $memberObject = Get-MgDevice -Filter "DisplayName eq '$($diff.Identity -replace "'", "''")'"
+                        [array]$memberObject = Get-MgDevice -Filter "DisplayName eq '$($diff.InputObject.Identity -replace "'", "''")'"
                         #memberType = 'devices'
                     }
                     else
                     {
                         # a *new* member has been specified with invalid type
-                        throw "AU {$($DisplayName)}: Member {$($diff.Identity)} has invalid type {$($diff.Type)}"
+                        throw "AU {$($DisplayName)}: Member {$($diff.InputObject.Identity)} has invalid type {$($diff.InputObject.Type)}"
                     }
                     if ($null -eq $memberObject)
                     {
-                        throw "AU member {$($diff.Identity)} does not exist as a $($diff.Type)"
+                        throw "AU member {$($diff.InputObject.Identity)} does not exist as a $($diff.InputObject.Type)"
                     }
                     if ($memberObject.Count -gt 1)
                     {
-                        throw "AU member {$($diff.Identity)} is not a unique $($diff.Type.ToLower()) (Count=$($memberObject.Count))"
+                        throw "AU member {$($diff.InputObject.Identity)} is not a unique $($diff.InputObject.Type.ToLower()) (Count=$($memberObject.Count))"
                     }
                     if ($diff.SideIndicator -eq '=>')
                     {
-                        Write-Verbose -Message "AdministrativeUnit {$DisplayName} Adding member {$($diff.Identity)}, type {$($diff.Type)}"
+                        Write-Verbose -Message "AdministrativeUnit {$DisplayName} Adding member {$($diff.InputObject.Identity)}, type {$($diff.InputObject.Type)}"
 
                         $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($memberObject.Id)"
-                        New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -OdataId $url | Out-Null
+                        New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -BodyParameter @{ "@odata.id" = $url } | Out-Null
                     }
                     else
                     {
-                        Write-Verbose -Message "Administrative Unit {$DisplayName} Removing member {$($diff.Identity)}, type {$($diff.Type)}"
+                        Write-Verbose -Message "Administrative Unit {$DisplayName} Removing member {$($diff.InputObject.Identity)}, type {$($diff.InputObject.Type)}"
                         Remove-MgDirectoryAdministrativeUnitMemberDirectoryObjectByRef -AdministrativeUnitId ($currentInstance.Id) -DirectoryObjectId ($memberObject.Id) | Out-Null
                     }
                 }
@@ -844,6 +859,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -899,6 +922,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -924,7 +955,6 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         #region resource generator code
         $ExportParameters = @{
             Filter      = $Filter
@@ -972,12 +1002,12 @@ function Export-TargetResource
             $ExportParameters.Add('headers', @{'ConsistencyLevel' = 'Eventual' })
         }
 
-        [array] $Script:exportedInstances = Get-MgDirectoryAdministrativeUnit @ExportParameters
+        [array] $exportedInstances = Get-MgDirectoryAdministrativeUnit @ExportParameters
         #endregion
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -985,7 +1015,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -997,7 +1027,7 @@ function Export-TargetResource
             {
                 $displayedKey = $config.displayName
             }
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 DisplayName           = $config.DisplayName
                 Id                    = $config.Id
@@ -1007,6 +1037,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -1050,13 +1082,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Members', 'ScopedRoleMembers')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

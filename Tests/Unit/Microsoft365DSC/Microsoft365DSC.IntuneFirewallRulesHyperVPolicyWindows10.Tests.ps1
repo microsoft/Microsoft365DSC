@@ -72,216 +72,197 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
                                 Name = '{FirewallRuleName}'
                                 OffsetUri = '/MdmStore/HyperVFirewallRules/{0}'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    minimumCount = 0
-                                    maximumCount = 100
-                                    childIds = @(
-                                        'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_firewallrulename'
-                                        'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_direction'
-                                        'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_remoteportranges'
-                                        'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_name'
-                                        'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_protocol'
-                                        'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_enabled'
-                                        'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_action'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                minimumCount = 0
+                                maximumCount = 100
+                                childIds = @(
+                                    'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_firewallrulename'
+                                    'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_direction'
+                                    'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_remoteportranges'
+                                    'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_name'
+                                    'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_protocol'
+                                    'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_enabled'
+                                    'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_action'
+                                )
                             },
                             @{
                                 Id = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_firewallrulename'
                                 Name = 'FirewallRuleName'
                                 OffsetUri = '/MdmStore/HyperVFirewallRules/{0}/FirewallRuleName'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                            parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                        parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_direction'
                                 Name = 'Direction'
                                 OffsetUri = '/MdmStore/HyperVFirewallRules/{0}/Direction'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_direction_out'
-                                            name = 'The rule applies to outbound traffic.'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                                    parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'OUT'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_direction_out'
+                                        name = 'The rule applies to outbound traffic.'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                                parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'OUT'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_remoteportranges'
                                 Name = 'RemotePortRanges'
                                 OffsetUri = '/MdmStore/HyperVFirewallRules/{0}/RemotePortRanges'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
-                                    minimumCount = 0
-                                    maximumCount = 600
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                            parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
+                                minimumCount = 0
+                                maximumCount = 600
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                        parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_name'
                                 Name = 'Name'
                                 OffsetUri = '/MdmStore/HyperVFirewallRules/{0}/Name'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                            parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                        parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_protocol'
                                 Name = 'Protocol'
                                 OffsetUri = '/MdmStore/HyperVFirewallRules/{0}/Protocol'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                            parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                        parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_enabled'
                                 Name = 'Enabled'
                                 OffsetUri = '/MdmStore/HyperVFirewallRules/{0}/Enabled'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_enabled_1'
-                                            name = 'Enabled'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                                    parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_enabled_1'
+                                        name = 'Enabled'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                                parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_action'
                                 Name = 'Action'
                                 OffsetUri = '/MdmStore/HyperVFirewallRules/{0}/Action/Type'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_action_1'
+                                        name = 'Allow'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                                parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                            }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
+                                        }
+                                    }
+                                )
+                            }
+                        )
+                        SettingInstance = @{
+                            SettingInstanceTemplateReference = @{
+                                SettingInstanceTemplateId = '76c7a8be-67d2-44bf-81a5-38c94926b1a1'
+                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
                                         @{
-                                            itemId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_action_1'
-                                            name = 'Allow'
-                                            dependentOn = @(
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_enabled'
+                                            choiceSettingValue = @{
+                                                children = @()
+                                                value = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_enabled_1'
+                                            }
+                                        },
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_name'
+                                            simpleSettingValue = @{
+                                                value = '__Test'
+                                            }
+                                        },
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
+                                            settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_remoteportranges'
+                                            simpleSettingCollectionValue = @(
                                                 @{
-                                                    dependentOn = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                                    parentSettingId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
+                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                    value = '0-100'
                                                 }
                                             )
-                                            optionValue = @{
+                                        },
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_direction'
+                                            choiceSettingValue = @{
+                                                children = @()
+                                                value = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_direction_out'
+                                            }
+                                        },
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_action'
+                                            choiceSettingValue = @{
+                                                children = @()
+                                                value = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_action_1'
+                                            }
+                                        },
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_protocol'
+                                            simpleSettingValue = @{
                                                 '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
+                                                value = 80
                                             }
                                         }
                                     )
                                 }
-                            }
-                        )
-                        SettingInstance = @{
-                            SettingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                            SettingInstanceTemplateReference = @{
-                                SettingInstanceTemplateId = '76c7a8be-67d2-44bf-81a5-38c94926b1a1'
-                            }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_enabled'
-                                                choiceSettingValue = @{
-                                                    children = @()
-                                                    value = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_enabled_1'
-                                                }
-                                            },
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_name'
-                                                simpleSettingValue = @{
-                                                    value = '__Test'
-                                                }
-                                            },
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                                                settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_remoteportranges'
-                                                simpleSettingCollectionValue = @(
-                                                    @{
-                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                        value = '0-100'
-                                                    }
-                                                )
-                                            },
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_direction'
-                                                choiceSettingValue = @{
-                                                    children = @()
-                                                    value = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_direction_out'
-                                                }
-                                            },
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_action'
-                                                choiceSettingValue = @{
-                                                    children = @()
-                                                    value = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_action_1'
-                                                }
-                                            },
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'vendor_msft_firewall_mdmstore_hypervfirewallrules_{firewallrulename}_protocol'
-                                                simpleSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                    value = 80
-                                                }
-                                            }
-                                        )
-                                    }
-                                )
-                            }
+                            )
                         }
                     }
                 )
@@ -318,12 +299,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -410,7 +387,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

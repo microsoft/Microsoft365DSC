@@ -58,6 +58,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -125,9 +133,14 @@ function Get-TargetResource
         Write-Verbose -Message "An Intune Windows Update For Business Quality Update Profile for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found"
 
         #region resource generator code
+        $qualityUpdateReleaseDateTime = $getValue.ExpeditedUpdateSettings.qualityUpdateRelease
+        if ($null -ne $qualityUpdateReleaseDateTime)
+        {
+            $qualityUpdateReleaseDateTime = [DateTime]::Parse($qualityUpdateReleaseDateTime).ToString('yyyy-MM-ddTHH:mm:ssZ')
+        }
         $complexExpeditedUpdateSettings = [ordered]@{}
         $complexExpeditedUpdateSettings.Add('DaysUntilForcedReboot', $getValue.ExpeditedUpdateSettings.daysUntilForcedReboot)
-        $complexExpeditedUpdateSettings.Add('QualityUpdateRelease', $getValue.ExpeditedUpdateSettings.qualityUpdateRelease)
+        $complexExpeditedUpdateSettings.Add('QualityUpdateRelease', $qualityUpdateReleaseDateTime)
         if ($complexExpeditedUpdateSettings.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexExpeditedUpdateSettings = $null
@@ -147,6 +160,8 @@ function Get-TargetResource
             TenantId                = $TenantId
             ApplicationSecret       = $ApplicationSecret
             CertificateThumbprint   = $CertificateThumbprint
+            CertificatePath         = $CertificatePath
+            CertificatePassword     = $CertificatePassword
             ManagedIdentity         = $ManagedIdentity.IsPresent
             #endregion
         }
@@ -230,6 +245,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -267,7 +290,6 @@ function Set-TargetResource
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
         $createParameters.Remove('Id') | Out-Null
 
-
         #region resource generator code
         $policy = New-MgBetaDeviceManagementWindowsQualityUpdateProfile -BodyParameter $createParameters
         if ($policy.Id)
@@ -288,7 +310,6 @@ function Set-TargetResource
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
         $updateParameters.Remove('Id') | Out-Null
-
 
         #region resource generator code
         Update-MgBetaDeviceManagementWindowsQualityUpdateProfile `
@@ -369,6 +390,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -427,6 +456,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -466,7 +503,7 @@ function Export-TargetResource
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -492,6 +529,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -533,13 +572,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('ExpeditedUpdateSettings', 'Assignments')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

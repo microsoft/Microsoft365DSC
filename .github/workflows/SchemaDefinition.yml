@@ -16,7 +16,7 @@ jobs:
     if: github.repository == 'Microsoft365DSC/Microsoft365DSC' && github.event.pull_request.merged == true
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Import Module and Generate Schema Definition
         shell: pwsh

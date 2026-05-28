@@ -72,6 +72,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -132,6 +140,8 @@ function Get-TargetResource
             TenantId                         = $TenantId
             ApplicationSecret                = $ApplicationSecret
             CertificateThumbprint            = $CertificateThumbprint
+            CertificatePath                  = $CertificatePath
+            CertificatePassword              = $CertificatePassword
             ManagedIdentity                  = $ManagedIdentity.IsPresent
             AccessTokens                     = $AccessTokens
         }
@@ -220,6 +230,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -266,7 +284,7 @@ function Set-TargetResource
 
         $payload = ConvertTo-Json $setParameters -Depth 10 -Compress
         Write-Verbose -Message "Creating new custom domain name {$Id} with payload: `r`n$payload"
-        $domain = New-MgBetaDomain @setParameters
+        $domain = New-MgBetaDomain -BodyParameter $setParameters
 
         if ($NeedAdditionalUpdate)
         {
@@ -282,17 +300,16 @@ function Set-TargetResource
                 $UpdateParams.Add('PasswordValidityPeriodInDays', $PasswordValidityPeriodInDays)
             }
 
-            Update-MgBetaDomain -DomainId $domain.Id @UpdateParams
+            Update-MgBetaDomain -DomainId $domain.Id -BodyParameter $UpdateParams
         }
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        $setParameters.Add('DomainId', $Id)
         $setParameters.Remove('Id') | Out-Null
         $setParameters.Remove('IsVerified') | Out-Null
         Write-Verbose -Message "Updating custom domain name {$Id} with:`r`n$(ConvertTo-Json $SetParameters -Depth 5)"
-        Update-MgBetaDomain @SetParameters
+        Update-MgBetaDomain -DomainId $Id -BodyParameter $setParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -374,6 +391,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -427,6 +452,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -452,14 +485,14 @@ function Export-TargetResource
 
     try
     {
-        [array] $Script:exportedInstances = Get-MgBetaDomain `
+        [array] $exportedInstances = Get-MgBetaDomain `
             -All `
             -Filter $Filter `
             -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -467,7 +500,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -475,7 +508,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.Id
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                    = $config.Id
                 Credential            = $Credential
@@ -483,6 +516,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -495,13 +530,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -52,6 +52,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -132,6 +140,8 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -201,6 +211,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -232,15 +250,14 @@ function Set-TargetResource
         Write-Verbose -Message "Creating new AzureAD Token Lifetime Policy {$Displayname)}"
         Write-Verbose -Message "Parameters: $($currentParameters | Out-String)}"
         $currentParameters.Remove('Id') | Out-Null
-        New-MgBetaPolicyTokenLifetimePolicy @currentParameters
+        New-MgBetaPolicyTokenLifetimePolicy -BodyParameter $currentParameters
     }
     # Policy should exist and will be configured to desire state
     elseif ($Ensure -eq 'Present' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AzureAD Policy {$Displayname)}"
-        $currentParameters.Add('TokenLifetimePolicyId', $currentAADPolicy.ID)
         $currentParameters.Remove('Id') | Out-Null
-        Update-MgBetaPolicyTokenLifetimePolicy @currentParameters
+        Update-MgBetaPolicyTokenLifetimePolicy -TokenLifetimePolicyId $currentAADPolicy.ID -BodyParameter $currentParameters
     }
     # Policy exist but should not
     elseif ($Ensure -eq 'Absent' -and $CurrentAADPolicy.Ensure -eq 'Present')
@@ -302,6 +319,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -355,6 +380,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -377,11 +410,11 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ''
+    $dscContent = [System.Text.StringBuilder]::new()
     $i = 1
     try
     {
-        [array]$AADPolicies = Get-MgBetaPolicyTokenLifetimePolicy -All:$true -Filter $Filter -ErrorAction Stop
+        [array]$AADPolicies = Get-MgBetaPolicyTokenLifetimePolicy -All -Filter $Filter -ErrorAction Stop
 
         if ($AADPolicies.Length -eq 0)
         {
@@ -405,6 +438,8 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 DisplayName           = $AADPolicy.DisplayName
                 ID                    = $AADPolicy.ID
@@ -420,7 +455,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
@@ -428,7 +463,7 @@ function Export-TargetResource
                 $i++
             }
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

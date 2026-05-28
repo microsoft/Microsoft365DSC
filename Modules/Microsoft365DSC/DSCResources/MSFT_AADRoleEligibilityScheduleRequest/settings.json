@@ -33,7 +33,6 @@
   },
   "requiredModules": [
     "Microsoft.Graph.Applications",
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.DirectoryObjects",
     "Microsoft.Graph.Beta.Identity.Governance",
     "Microsoft.Graph.Groups",

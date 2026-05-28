@@ -32,7 +32,22 @@
     }
   },
   "requiredModules": [
+    "Az.Accounts",
     "Az.Resources"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Invoke-AzRestMethod"
+      ]
+    },
+    {
+      "module": "Az.Resources",
+      "cmdlets": [
+        "Get-AzResource"
+      ]
+    }
+  ]
 }

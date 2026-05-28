@@ -60,6 +60,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -126,6 +134,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -200,6 +210,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -295,7 +313,7 @@ function Set-TargetResource
     {
         try
         {
-            New-MgBetaIdentityGovernanceLifecycleWorkflow @SetParameters -ErrorAction Stop
+            New-MgBetaIdentityGovernanceLifecycleWorkflow -BodyParameter $SetParameters -ErrorAction Stop
         }
         catch
         {
@@ -323,10 +341,6 @@ function Set-TargetResource
             $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -WorkflowId $instance.Id
 
             New-MgBetaIdentityGovernanceLifecycleWorkflowNewVersion -WorkflowId $instance.Id -BodyParameter $newParams -ErrorAction Stop
-
-            # the below implementation of Update cmdlet can't be used for updating parameters other than basic parameters like display name,
-            # description, isEnabled, isSchedulingEnabled. Hence using the new version cmdlet for exhaustive update scenarios.
-            # Update-MgBetaIdentityGovernanceLifecycleWorkflow @setParameters
         }
         catch
         {
@@ -432,6 +446,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -485,6 +507,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -510,12 +540,11 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaIdentityGovernanceLifecycleWorkflow -All -Filter $Filter -ErrorAction Stop
+        [array] $exportedInstances = Get-MgBetaIdentityGovernanceLifecycleWorkflow -All -Filter $Filter -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -523,7 +552,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -531,7 +560,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.DisplayName
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 DisplayName           = $config.DisplayName
                 Credential            = $Credential
@@ -539,6 +568,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -615,13 +646,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Tasks', 'ExecutionConditions')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -652,7 +683,6 @@ function Get-M365DSCIdentityGovernanceTasks
         [Parameter(Mandatory = $true)]
         $WorkflowId
     )
-
 
     # Get the tasks from the specified workflow
     $tasks = Get-MgBetaIdentityGovernanceLifecycleWorkflowTask -WorkflowId $WorkflowId
@@ -715,7 +745,7 @@ function Get-M365DSCIdentityGovernanceWorkflowExecutionConditions
 
     if ($null -ne $instance -and $null -ne $instance.ExecutionConditions)
     {
-        $executionConditions = $instance.ExecutionConditions.AdditionalProperties
+        $executionConditions = $instance.ExecutionConditions
         $executionConditionsResult = @{
             ScopeValue   = @{
                 Rule      = $ExecutionConditions['scope']['rule']

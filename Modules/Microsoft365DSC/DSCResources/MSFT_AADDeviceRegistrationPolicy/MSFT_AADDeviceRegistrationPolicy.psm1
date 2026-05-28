@@ -78,6 +78,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -110,15 +118,15 @@ function Get-TargetResource
         $AzureADAllowedToJoin = 'None'
         $AzureADAllowedToJoinUsers = @()
         $AzureADAllowedToJoinGroups = @()
-        if ($getValue.AzureADJoin.AllowedToJoin.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.allDeviceRegistrationMembership')
+        if ($getValue.AzureADJoin.AllowedToJoin.'@odata.type' -eq '#microsoft.graph.allDeviceRegistrationMembership')
         {
             $AzureADAllowedToJoin = 'All'
         }
-        elseif ($getValue.AzureADJoin.AllowedToJoin.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.enumeratedDeviceRegistrationMembership')
+        elseif ($getValue.AzureADJoin.AllowedToJoin.'@odata.type' -eq '#microsoft.graph.enumeratedDeviceRegistrationMembership')
         {
             $AzureADAllowedToJoin = 'Selected'
 
-            foreach ($userId in $getValue.AzureAdJoin.AllowedToJoin.AdditionalProperties.users)
+            foreach ($userId in $getValue.AzureAdJoin.AllowedToJoin.users)
             {
                 try
                 {
@@ -137,7 +145,7 @@ function Get-TargetResource
                 }
             }
 
-            foreach ($groupId in $getValue.AzureAdJoin.AllowedToJoin.AdditionalProperties.groups)
+            foreach ($groupId in $getValue.AzureAdJoin.AllowedToJoin.groups)
             {
                 try
                 {
@@ -161,14 +169,14 @@ function Get-TargetResource
         $AzureAdJoinLocalAdminsRegisteringGroups = @()
         $AzureAdJoinLocalAdminsRegisteringMode = 'All'
 
-        if ($getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.noDeviceRegistrationMembership')
+        if ($getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.'@odata.type' -eq '#microsoft.graph.noDeviceRegistrationMembership')
         {
             $AzureAdJoinLocalAdminsRegisteringMode = 'None'
         }
-        elseif ($getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.enumeratedDeviceRegistrationMembership')
+        elseif ($getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.'@odata.type' -eq '#microsoft.graph.enumeratedDeviceRegistrationMembership')
         {
             $AzureAdJoinLocalAdminsRegisteringMode = 'Selected'
-            foreach ($userId in $getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.AdditionalProperties.users)
+            foreach ($userId in $getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.users)
             {
                 try
                 {
@@ -187,7 +195,7 @@ function Get-TargetResource
                 }
             }
 
-            foreach ($groupId in $getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.AdditionalProperties.groups)
+            foreach ($groupId in $getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.groups)
             {
                 try
                 {
@@ -235,6 +243,8 @@ function Get-TargetResource
             TenantId                                = $TenantId
             ApplicationSecret                       = $ApplicationSecret
             CertificateThumbprint                   = $CertificateThumbprint
+            CertificatePath                         = $CertificatePath
+            CertificatePassword                     = $CertificatePassword
             ManagedIdentity                         = $ManagedIdentity.IsPresent
             AccessTokens                            = $AccessTokens
         }
@@ -328,6 +338,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -521,6 +539,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -570,6 +596,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -599,6 +633,7 @@ function Export-TargetResource
         {
             $Global:M365DSCExportResourceInstancesCount++
         }
+        $dscContent = [System.Text.StringBuilder]::new()
         $params = @{
             IsSingleInstance      = 'Yes'
             Credential            = $Credential
@@ -606,6 +641,8 @@ function Export-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -618,12 +655,12 @@ function Export-TargetResource
             -Results $Results `
             -Credential $Credential
 
-        $dscContent = $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
         $i++
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

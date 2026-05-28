@@ -56,35 +56,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        applicableDeviceTypes = "none"
-                        commandLine = "FakeStringValue"
-                        identityResourceIdentifier = "FakeStringValue"
-                        identityPublisherHash = "FakeStringValue"
-                        applicableArchitectures = "none"
-                        identityName = "FakeStringValue"
-                        minimumSupportedOperatingSystem = @{
-                            v10_1607 = $True
-                            v10_0 = $True
-                            v10_1909 = $True
-                            v10_1903 = $True
-                            v10_21H1 = $True
-                            v10_2004 = $True
-                            v8_1 = $True
-                            v10_1809 = $True
-                            v8_0 = $True
-                            v10_2H20 = $True
-                            v10_1709 = $True
-                            v10_1803 = $True
-                            v10_1703 = $True
-                        }
-                        committedContentVersion = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.windowsMobileMSI"
-                        identityVersion = "FakeStringValue"
-                        fileName = "FakeStringValue.msi"
-                        ignoreVersionDetection = $True
-                        useDeviceContext = $True
+                    applicableDeviceTypes = "none"
+                    commandLine = "FakeStringValue"
+                    identityResourceIdentifier = "FakeStringValue"
+                    identityPublisherHash = "FakeStringValue"
+                    applicableArchitectures = "none"
+                    identityName = "FakeStringValue"
+                    minimumSupportedOperatingSystem = @{
+                        v10_1607 = $True
+                        v10_0 = $True
+                        v10_1909 = $True
+                        v10_1903 = $True
+                        v10_21H1 = $True
+                        v10_2004 = $True
+                        v8_1 = $True
+                        v10_1809 = $True
+                        v8_0 = $True
+                        v10_2H20 = $True
+                        v10_1709 = $True
+                        v10_1803 = $True
+                        v10_1703 = $True
                     }
+                    committedContentVersion = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.windowsMobileMSI"
+                    identityVersion = "FakeStringValue"
+                    fileName = "FakeStringValue.msi"
+                    ignoreVersionDetection = $True
+                    useDeviceContext = $True
                     Categories = @(
                         @{
                             Id = "FakeStringValue"
@@ -100,7 +98,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     isFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -116,35 +114,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        applicableDeviceTypes = "none"
-                        commandLine = "FakeStringValue"
-                        identityResourceIdentifier = "FakeStringValue"
-                        identityPublisherHash = "FakeStringValue"
-                        applicableArchitectures = "none"
-                        identityName = "FakeStringValue"
-                        minimumSupportedOperatingSystem = @{
-                            v10_1607 = $True
-                            v10_0 = $True
-                            v10_1909 = $True
-                            v10_1903 = $True
-                            v10_21H1 = $True
-                            v10_2004 = $True
-                            v8_1 = $True
-                            v10_1809 = $True
-                            v8_0 = $True
-                            v10_2H20 = $True
-                            v10_1709 = $True
-                            v10_1803 = $True
-                            v10_1703 = $True
-                        }
-                        committedContentVersion = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.windowsMobileMSI"
-                        identityVersion = "FakeStringValue"
-                        fileName = "FakeStringValue.msi"
-                        ignoreVersionDetection = $True
-                        useDeviceContext = $True
+                    applicableDeviceTypes = "none"
+                    commandLine = "FakeStringValue"
+                    identityResourceIdentifier = "FakeStringValue"
+                    identityPublisherHash = "FakeStringValue"
+                    applicableArchitectures = "none"
+                    identityName = "FakeStringValue"
+                    minimumSupportedOperatingSystem = @{
+                        v10_1607 = $True
+                        v10_0 = $True
+                        v10_1909 = $True
+                        v10_1903 = $True
+                        v10_21H1 = $True
+                        v10_2004 = $True
+                        v8_1 = $True
+                        v10_1809 = $True
+                        v8_0 = $True
+                        v10_2H20 = $True
+                        v10_1709 = $True
+                        v10_1803 = $True
+                        v10_1703 = $True
                     }
+                    committedContentVersion = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.windowsMobileMSI"
+                    identityVersion = "FakeStringValue"
+                    fileName = "FakeStringValue.msi"
+                    ignoreVersionDetection = $True
+                    useDeviceContext = $True
                     Categories = @(
                         @{
                             Id = "FakeStringValue"
@@ -160,7 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     isFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -192,10 +188,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Source = "direct"
                         SourceId = "12345-12345-12345-12345-12345"
                         Target = @{
-                            AdditionalProperties = @{
-                                "@odata.type" = "#microsoft.graph.groupAssignmentTarget"
-                                groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
-                            }
+                            "@odata.type" = "#microsoft.graph.groupAssignmentTarget"
+                            groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
                             "deviceAndAppManagementAssignmentFilterId" = '12345-12345-12345-12345-12345'
                             "deviceAndAppManagementAssignmentFilterType" = "none"
                         }

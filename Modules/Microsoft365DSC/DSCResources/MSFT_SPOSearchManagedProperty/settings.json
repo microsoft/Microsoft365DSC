@@ -63,5 +63,21 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    },
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Get-PnPSearchConfiguration",
+        "Remove-PnPSearchConfiguration",
+        "Set-PnPSearchConfiguration"
+      ]
+    }
+  ]
 }

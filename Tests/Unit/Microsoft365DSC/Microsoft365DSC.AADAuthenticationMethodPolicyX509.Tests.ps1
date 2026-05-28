@@ -35,31 +35,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        IncludeTargets        = @(
-                            @{
-                                TargetType = 'group'
-                                Id         = '00000000-0000-0000-0000-000000000000'
-                            }
-                        )
-                        '@odata.type' = "#microsoft.graph.x509CertificateAuthenticationMethodConfiguration"
-                        certificateUserBindings = @(
-                            @{
-                                x509CertificateField = "FakeStringValue"
-                                userProperty = "FakeStringValue"
-                                priority = 25
-                            }
-                        )
-                        authenticationModeConfiguration = @{
-                            x509CertificateAuthenticationDefaultMode = "x509CertificateSingleFactor"
-                            rules = @(
-                                @{
-                                    x509CertificateRuleType = "issuerSubject"
-                                    identifier = "FakeStringValue"
-                                    x509CertificateAuthenticationMode = "x509CertificateSingleFactor"
-                                }
-                            )
+                    IncludeTargets        = @(
+                        @{
+                            TargetType = 'group'
+                            Id         = '00000000-0000-0000-0000-000000000000'
                         }
+                    )
+                    '@odata.type' = "#microsoft.graph.x509CertificateAuthenticationMethodConfiguration"
+                    certificateUserBindings = @(
+                        @{
+                            x509CertificateField = "FakeStringValue"
+                            userProperty = "FakeStringValue"
+                            priority = 25
+                        }
+                    )
+                    authenticationModeConfiguration = @{
+                        x509CertificateAuthenticationDefaultMode = "x509CertificateSingleFactor"
+                        rules = @(
+                            @{
+                                x509CertificateRuleType = "issuerSubject"
+                                identifier = "FakeStringValue"
+                                x509CertificateAuthenticationMode = "x509CertificateSingleFactor"
+                            }
+                        )
                     }
                     ExcludeTargets = @(
                         @{
@@ -187,7 +185,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

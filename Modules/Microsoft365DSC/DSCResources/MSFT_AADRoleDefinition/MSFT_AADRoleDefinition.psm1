@@ -64,6 +64,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -135,6 +143,8 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -215,6 +225,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -252,6 +270,7 @@ function Set-TargetResource
     {
         $currentParameters.Add('ResourceScopes', $resourceScopesObj) | Out-Null
     }
+    $currentParameters = Rename-M365DSCCimInstanceParameter -Properties $currentParameters
 
     # Role definition should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADRoleDef.Ensure -eq 'Absent')
@@ -259,15 +278,14 @@ function Set-TargetResource
         Write-Verbose -Message "Creating New AzureAD role defition {$DisplayName} with parameters:"
         Write-Verbose -Message (Convert-M365DscHashtableToString -Hashtable $currentParameters)
         $currentParameters.Remove('Id') | Out-Null
-        New-MgBetaRoleManagementDirectoryRoleDefinition @currentParameters
+        New-MgBetaRoleManagementDirectoryRoleDefinition -BodyParameter $currentParameters
     }
     # Role definition should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADRoleDef.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AzureAD role definition {$DisplayName}"
-        $currentParameters.Add('UnifiedRoleDefinitionId', $currentAADRoleDef.Id)
         $currentParameters.Remove('Id') | Out-Null
-        Update-MgBetaRoleManagementDirectoryRoleDefinition @currentParameters
+        Update-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $currentAADRoleDef.Id -BodyParameter $currentParameters
     }
     # Role definition exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADRoleDef.Ensure -eq 'Present')
@@ -341,6 +359,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -396,6 +422,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -419,13 +453,12 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ''
+    $dscContent = [System.Text.StringBuilder]::new()
     $i = 1
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter $Filter -All:$true -ErrorAction Stop
-        if ($Script:exportedInstances.Length -eq 0)
+        [array] $exportedInstances = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter $Filter -All -ErrorAction Stop
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -433,20 +466,22 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($AADRoleDefinition in $Script:exportedInstances)
+        foreach ($AADRoleDefinition in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $($AADRoleDefinition.DisplayName)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $($AADRoleDefinition.DisplayName)" -DeferWrite
             $Params = @{
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 DisplayName           = $AADRoleDefinition.DisplayName
                 Id                    = $AADRoleDefinition.Id
@@ -463,7 +498,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
             }
@@ -471,7 +506,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -119,6 +119,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -189,13 +197,17 @@ function Get-TargetResource
                 Write-Verbose -Message "Could not find an Intune Mobile Apps Web Link with DisplayName {$DisplayName}."
                 return $nullResult
             }
+
+            $Id = $getValue.Id
         }
         else
         {
-            $getValue = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Script:exportedInstance.Id `
-                -ExpandProperty 'categories'
+            $Id = $Script:exportedInstance.Id
         }
-        $Id = $getValue.Id
+
+        $getValue = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id `
+            -ExpandProperty 'categories'
+
         Write-Verbose -Message "An Intune Mobile Apps Web Link with Id {$Id} and DisplayName {$DisplayName} was found"
 
         #region resource generator code
@@ -212,19 +224,19 @@ function Get-TargetResource
         {
             $complexLargeIcon = [ordered]@{}
             $complexLargeIcon.Add('Type', $getValue.LargeIcon.Type)
-            $complexLargeIcon.Add('Value', [System.Convert]::ToBase64String($getValue.LargeIcon.Value))
+            $complexLargeIcon.Add('Value', $getValue.LargeIcon.Value)
         }
         #endregion
 
         $results = @{
             #region resource generator code
-            TargetType                        = $getValue.AdditionalProperties.'@odata.type'.Replace('#microsoft.graph.', '')
-            AppUrl                            = $getValue.AdditionalProperties.appUrl
-            UseManagedBrowser                 = $getValue.AdditionalProperties.useManagedBrowser
-            FullScreenEnabled                 = $getValue.AdditionalProperties.fullScreenEnabled
-            PreComposedIconEnabled            = $getValue.AdditionalProperties.preComposedIconEnabled
-            IgnoreManifestScope               = $getValue.AdditionalProperties.ignoreManifestScope
-            TargetApplicationBundleIdentifier = $getValue.AdditionalProperties.targetApplicationBundleIdentifier
+            TargetType                        = $getValue.'@odata.type'.Replace('#microsoft.graph.', '')
+            AppUrl                            = $getValue.appUrl
+            UseManagedBrowser                 = $getValue.useManagedBrowser
+            FullScreenEnabled                 = $getValue.fullScreenEnabled
+            PreComposedIconEnabled            = $getValue.preComposedIconEnabled
+            IgnoreManifestScope               = $getValue.ignoreManifestScope
+            TargetApplicationBundleIdentifier = $getValue.targetApplicationBundleIdentifier
             Categories                        = $complexCategories
             Description                       = $getValue.Description
             Developer                         = $getValue.Developer
@@ -244,6 +256,8 @@ function Get-TargetResource
             TenantId                          = $TenantId
             ApplicationSecret                 = $ApplicationSecret
             CertificateThumbprint             = $CertificateThumbprint
+            CertificatePath                   = $CertificatePath
+            CertificatePassword               = $CertificatePassword
             ManagedIdentity                   = $ManagedIdentity.IsPresent
             #endregion
         }
@@ -387,6 +401,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -430,7 +452,6 @@ function Set-TargetResource
         }
     }
 
-    $BoundParameters.Remove('AppUrl') | Out-Null
     $BoundParameters.Remove('Categories') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -464,11 +485,11 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the Intune Mobile Apps Web Link with Id {$($currentInstance.Id)}"
         $BoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove('AppUrl') | Out-Null
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
         $updateParameters.Remove('Id') | Out-Null
-
 
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.' + $BoundParameters.TargetType)
@@ -615,6 +636,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -670,6 +699,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -713,7 +750,7 @@ function Export-TargetResource
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -737,13 +774,15 @@ function Export-TargetResource
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.DisplayName
-                TargetType            = $config.AdditionalProperties.'@odata.type'.Replace('#microsoft.graph.', '')
+                TargetType            = $config.'@odata.type'.Replace('#microsoft.graph.', '')
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -800,13 +839,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('Assignments', 'Categories', 'LargeIcon')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

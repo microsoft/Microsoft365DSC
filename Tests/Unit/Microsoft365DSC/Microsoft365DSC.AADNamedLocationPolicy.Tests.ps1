@@ -42,13 +42,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     DisplayName          = 'Company Network'
                     Id                   = '046956df-2367-4dd4-b7fd-c6175ec11cd5'
-                    AdditionalProperties = @{
-                        ipRanges                          = @(@{cidrAddress = '2.1.1.1/32' }, @{cidrAddress = '1.2.2.2/32' })
-                        isTrusted                         = $True
-                        '@odata.type'                     = '#microsoft.graph.ipNamedLocation'
-                        countriesAndRegions               = $null
-                        includeUnknownCountriesAndRegions = $null
-                    }
+                    ipRanges                          = @(@{cidrAddress = '2.1.1.1/32' }, @{cidrAddress = '1.2.2.2/32' })
+                    isTrusted                         = $True
+                    '@odata.type'                     = '#microsoft.graph.ipNamedLocation'
+                    countriesAndRegions               = $null
+                    includeUnknownCountriesAndRegions = $null
                 }
             }
 
@@ -185,20 +183,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         @{
                             DisplayName          = 'Company Network'
                             Id                   = '046956df-2367-4dd4-b7fd-c6175ec11cd5'
-                            AdditionalProperties = @{
-                                ipRanges      = @(@{cidrAddress = '2.1.1.1/32' }, @{cidrAddress = '1.2.2.2/32' })
-                                isTrusted     = $False
-                                '@odata.type' = '#microsoft.graph.ipNamedLocation'
-                            }
+                            ipRanges      = @(@{cidrAddress = '2.1.1.1/32' }, @{cidrAddress = '1.2.2.2/32' })
+                            isTrusted     = $False
+                            '@odata.type' = '#microsoft.graph.ipNamedLocation'
                         }
                         @{
                             DisplayName          = 'Company Network'
                             Id                   = '046956df-2367-4dd4-b7fd-c6175ec11cd6'
-                            AdditionalProperties = @{
-                                ipRanges      = @(@{cidrAddress = '2.1.1.1/32' }, @{cidrAddress = '1.2.2.2/32' })
-                                isTrusted     = $False
-                                '@odata.type' = '#microsoft.graph.ipNamedLocation'
-                            }
+                            ipRanges      = @(@{cidrAddress = '2.1.1.1/32' }, @{cidrAddress = '1.2.2.2/32' })
+                            isTrusted     = $False
+                            '@odata.type' = '#microsoft.graph.ipNamedLocation'
                         }
                     )
                 }

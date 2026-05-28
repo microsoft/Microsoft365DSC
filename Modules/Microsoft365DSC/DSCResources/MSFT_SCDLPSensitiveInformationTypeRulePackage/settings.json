@@ -1,0 +1,34 @@
+{
+  "resourceName": "SCDLPSensitiveInformationTypeRulePackage",
+  "description": "Manages sensitive information type rule packages in Purview.",
+  "roles": {
+    "read": [
+      "Compliance Administrator"
+    ],
+    "update": [
+      "Compliance Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
+        "read": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ],
+        "update": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration"
+}

@@ -57,6 +57,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -110,9 +118,9 @@ function Get-TargetResource
         #region resource generator code
         $complexAuthenticationModeConfiguration = [ordered]@{}
         $complexRules = @()
-        if ($getValue.AdditionalProperties.authenticationModeConfiguration.rules.Count -gt 0)
+        if ($getValue.authenticationModeConfiguration.rules.Count -gt 0)
         {
-            foreach ($currentRules in $getValue.AdditionalProperties.authenticationModeConfiguration.rules)
+            foreach ($currentRules in $getValue.authenticationModeConfiguration.rules)
             {
                 $myRules = [ordered]@{}
                 $myRules.Add('Identifier', $currentRules.identifier)
@@ -132,9 +140,9 @@ function Get-TargetResource
         }
         $complexAuthenticationModeConfiguration.Add('Rules', $complexRules)
 
-        if ($null -ne $getValue.AdditionalProperties.authenticationModeConfiguration.x509CertificateAuthenticationDefaultMode)
+        if ($null -ne $getValue.authenticationModeConfiguration.x509CertificateAuthenticationDefaultMode)
         {
-            $complexAuthenticationModeConfiguration.Add('X509CertificateAuthenticationDefaultMode', $getValue.AdditionalProperties.authenticationModeConfiguration.x509CertificateAuthenticationDefaultMode.ToString())
+            $complexAuthenticationModeConfiguration.Add('X509CertificateAuthenticationDefaultMode', $getValue.authenticationModeConfiguration.x509CertificateAuthenticationDefaultMode.ToString())
         }
         if ($complexAuthenticationModeConfiguration.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -142,7 +150,7 @@ function Get-TargetResource
         }
 
         $complexCertificateUserBindings = @()
-        foreach ($currentcertificateUserBindings in $getValue.AdditionalProperties.certificateUserBindings)
+        foreach ($currentcertificateUserBindings in $getValue.certificateUserBindings)
         {
             $mycertificateUserBindings = [ordered]@{}
             $mycertificateUserBindings.Add('Priority', $currentcertificateUserBindings.priority)
@@ -187,7 +195,7 @@ function Get-TargetResource
 
         Write-Verbose 'Processing IncludeTargets'
         $complexIncludeTargets = @()
-        foreach ($currentIncludeTargets in $getValue.AdditionalProperties.includeTargets)
+        foreach ($currentIncludeTargets in $getValue.includeTargets)
         {
             $myIncludeTargets = [ordered]@{}
             if ($currentIncludeTargets.id -ne 'all_users')
@@ -241,6 +249,8 @@ function Get-TargetResource
             TenantId                        = $TenantId
             ApplicationSecret               = $ApplicationSecret
             CertificateThumbprint           = $CertificateThumbprint
+            CertificatePath                 = $CertificatePath
+            CertificatePassword             = $CertificatePassword
             ManagedIdentity                 = $ManagedIdentity.IsPresent
             AccessTokens                    = $AccessTokens
             #endregion
@@ -316,6 +326,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -430,6 +448,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -479,6 +505,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -511,7 +545,7 @@ function Export-TargetResource
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -537,6 +571,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -622,13 +658,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('AuthenticationModeConfiguration', 'CertificateUserBindings', 'ExcludeTargets', 'IncludeTargets')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

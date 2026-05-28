@@ -75,107 +75,97 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_mdatp_managed_exclusionsettings_exclusions'
                                 Name = 'exclusions'
                                 OffsetUri = 'exclusions'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 0
-                                    childIds = @(
-                                        'linux_mdatp_managed_exclusionsettings_exclusions_item_$type',
-                                        'linux_mdatp_managed_exclusionsettings_exclusions_item_isdirectory',
-                                        'linux_mdatp_managed_exclusionsettings_exclusions_item_name',
-                                        'linux_mdatp_managed_exclusionsettings_exclusions_item_path'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 0
+                                childIds = @(
+                                    'linux_mdatp_managed_exclusionsettings_exclusions_item_$type',
+                                    'linux_mdatp_managed_exclusionsettings_exclusions_item_isdirectory',
+                                    'linux_mdatp_managed_exclusionsettings_exclusions_item_name',
+                                    'linux_mdatp_managed_exclusionsettings_exclusions_item_path'
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
                                 Name = 'exclusions_item_$type'
                                 OffsetUri = 'exclusions_item_$type'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_0'
-                                            name = 'Path'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_exclusionsettings_exclusions'
-                                                    parentSettingId = 'linux_mdatp_managed_exclusionsettings_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'excludedPath'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_0'
+                                        name = 'Path'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_exclusionsettings_exclusions'
+                                                parentSettingId = 'linux_mdatp_managed_exclusionsettings_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'excludedPath'
                                         }
-                                        @{
-                                            itemId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_1'
-                                            name = 'Process name'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'linux_mdatp_managed_exclusionsettings_exclusions'
-                                                    parentSettingId = 'linux_mdatp_managed_exclusionsettings_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'excludedFileName'
+                                    }
+                                    @{
+                                        itemId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_1'
+                                        name = 'Process name'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'linux_mdatp_managed_exclusionsettings_exclusions'
+                                                parentSettingId = 'linux_mdatp_managed_exclusionsettings_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'excludedFileName'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_exclusionsettings_exclusions_item_name'
                                 Name = 'exclusions_item_name'
                                 OffsetUri = 'exclusions/[{0}]/name'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_2'
-                                            parentSettingId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_2'
+                                        parentSettingId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
+                                    }
+                                )
                             }
                             @{
                                 Id = 'linux_mdatp_managed_exclusionsettings_exclusions_item_path'
                                 Name = 'exclusions_item_path'
                                 OffsetUri = 'exclusions/[{0}]/path'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_0'
-                                            parentSettingId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_0'
+                                        parentSettingId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'linux_mdatp_managed_exclusionsettings_exclusions_item_isdirectory'
                                 Name = 'exclusions_item_isDirectory'
                                 OffsetUri = 'exclusions/[{0}]/isDirectory'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_0'
-                                            parentSettingId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_0'
+                                        parentSettingId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
+                                    }
+                                )
+                                options = @(
+                                    @{
+                                        itemId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_isdirectory_true'
+                                        name = 'Enabled'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'true'
                                         }
-                                    )
-                                    options = @(
-                                        @{
-                                            itemId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_isdirectory_true'
-                                            name = 'Enabled'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'true'
-                                            }
-                                        }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -183,62 +173,60 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'e2d557ab-357e-4727-978e-0d655facbb23'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
-                                                choiceSettingValue = @{
-                                                    children = @(
-                                                        @{
-                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                            settingDefinitionId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_path'
-                                                            simpleSettingValue = @{
-                                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                value = '/temp/dir/local'
-                                                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
+                                            choiceSettingValue = @{
+                                                children = @(
+                                                    @{
+                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                                        settingDefinitionId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_path'
+                                                        simpleSettingValue = @{
+                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                            value = '/temp/dir/local'
                                                         }
-                                                        @{
-                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                            settingDefinitionId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_isdirectory'
-                                                            choiceSettingValue = @{
-                                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                children = @()
-                                                                value = 'linux_mdatp_managed_exclusionsettings_exclusions_item_isdirectory_true'
-                                                            }
+                                                    }
+                                                    @{
+                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                        settingDefinitionId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_isdirectory'
+                                                        choiceSettingValue = @{
+                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                            children = @()
+                                                            value = 'linux_mdatp_managed_exclusionsettings_exclusions_item_isdirectory_true'
                                                         }
-                                                    )
-                                                    value = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_0'
-                                                }
+                                                    }
+                                                )
+                                                value = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_0'
                                             }
-                                        )
-                                    },
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
-                                                choiceSettingValue = @{
-                                                    children = @(
-                                                        @{
-                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                            settingDefinitionId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_name'
-                                                            simpleSettingValue = @{
-                                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                value = 'Test'
-                                                            }
+                                        }
+                                    )
+                                },
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type'
+                                            choiceSettingValue = @{
+                                                children = @(
+                                                    @{
+                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                                        settingDefinitionId = 'linux_mdatp_managed_exclusionsettings_exclusions_item_name'
+                                                        simpleSettingValue = @{
+                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                            value = 'Test'
                                                         }
-                                                    )
-                                                    value = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_1'
-                                                }
+                                                    }
+                                                )
+                                                value = 'linux_mdatp_managed_exclusionsettings_exclusions_item_$type_1'
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     }
                 )
@@ -272,12 +260,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -365,7 +349,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

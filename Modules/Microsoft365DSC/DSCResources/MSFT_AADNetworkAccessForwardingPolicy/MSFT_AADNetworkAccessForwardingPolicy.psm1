@@ -35,6 +35,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -86,6 +94,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -135,6 +145,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -273,6 +291,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -326,6 +352,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -351,15 +385,15 @@ function Export-TargetResource
 
     try
     {
-        [array] $Script:exportedInstances = Get-MgBetaNetworkAccessForwardingPolicy `
+        [array] $exportedInstances = Get-MgBetaNetworkAccessForwardingPolicy `
             -All `
             -ExpandProperty * `
             -Filter $Filter `
             -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -367,7 +401,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -375,7 +409,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.Name
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Name                  = $config.Name
                 Credential            = $Credential
@@ -383,6 +417,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -421,13 +457,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('PolicyRules')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -457,22 +493,21 @@ function Get-MicrosoftGraphNetworkAccessForwardingPolicyRules
     foreach ($rule in $PolicyRules)
     {
         [System.String[]]$destinations = @()
-        foreach ($destination in $rule.AdditionalProperties.destinations)
+        foreach ($destination in $rule.destinations)
         {
             $destinations += $destination.value
         }
         $newPolicyRules += [ordered]@{
             Name         = $rule.Name
-            ActionValue  = $rule.AdditionalProperties.action
-            RuleType     = $rule.AdditionalProperties.ruleType
-            Ports        = [System.Int32[]]$rule.AdditionalProperties.ports
-            Protocol     = $rule.AdditionalProperties.protocol
+            ActionValue  = $rule.action
+            RuleType     = $rule.ruleType
+            Ports        = [System.Int32[]]$rule.ports
+            Protocol     = $rule.protocol
             Destinations = $destinations
         }
     }
 
     ,$newPolicyRules
 }
-
 
 Export-ModuleMember -Function *-TargetResource

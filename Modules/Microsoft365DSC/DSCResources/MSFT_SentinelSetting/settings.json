@@ -35,5 +35,20 @@
     "Az.Resources",
     "Az.SecurityInsights"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Az.Resources",
+      "cmdlets": [
+        "Get-AzResource"
+      ]
+    },
+    {
+      "module": "Az.SecurityInsights",
+      "cmdlets": [
+        "Get-AzSentinelSetting",
+        "Update-AzSentinelSetting"
+      ]
+    }
+  ]
 }

@@ -61,6 +61,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -109,7 +117,7 @@ function Get-TargetResource
                     $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
                         -All `
                         -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" | Where-Object -FilterScript {
-                            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                            $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration'
                         }
                 }
             }
@@ -131,7 +139,7 @@ function Get-TargetResource
             Id                    = $config.Id
             DisplayName           = $config.DisplayName
             Description           = $config.Description
-            Limit                 = $config.AdditionalProperties.limit
+            Limit                 = $config.limit
             Priority              = $config.Priority
             RoleScopeTagIds       = $config.RoleScopeTagIds
             Ensure                = 'Present'
@@ -140,6 +148,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -228,6 +238,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -255,12 +273,13 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $BoundParameters = Rename-M365DSCCimInstanceParameter -Properties $BoundParameters
 
     $priorityPresent = $false
-    if ($PSBoundParameters.Keys.Contains('Priority'))
+    if ($BoundParameters.Keys.Contains('Priority'))
     {
         $priorityPresent = $true
-        $PSBoundParameters.Remove('Priority') | Out-Null
+        $BoundParameters.Remove('Priority') | Out-Null
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -269,15 +288,7 @@ function Set-TargetResource
 
         $BoundParameters.Remove('Assignments') | Out-Null
         $BoundParameters.Add('@odata.type', '#microsoft.graph.deviceEnrollmentLimitConfiguration')
-
-        $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
-            -DisplayName $DisplayName `
-            -Description $Description `
-            -RoleScopeTagIds $RoleScopeTagIds `
-            -AdditionalProperties @{
-                '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
-                limit         = $Limit
-            }
+        $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -BodyParameter $BoundParameters
 
         # Assignments from DefaultPolicy are not editable and will raise an alert
         if ($policy.Id -notlike '*_DefaultLimit')
@@ -305,15 +316,9 @@ function Set-TargetResource
 
         $BoundParameters.Remove('Assignments') | Out-Null
         $BoundParameters.Add('@odata.type', '#microsoft.graph.deviceEnrollmentLimitConfiguration')
-
         Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
             -DeviceEnrollmentConfigurationId $currentInstance.Id `
-            -Description $Description `
-            -RoleScopeTagIds $RoleScopeTagIds `
-            -AdditionalProperties @{
-                '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
-                limit         = $Limit
-            }
+            -BodyParameter $BoundParameters
 
         # Assignments from DefaultPolicy are not editable and will raise an alert
         if ($currentInstance.Id -notlike '*_DefaultLimit')
@@ -403,6 +408,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -456,6 +469,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -481,10 +502,11 @@ function Export-TargetResource
 
     try
     {
-        [array]$configs = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
-        | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
+        [array]$configs = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter $Filter -All -ErrorAction Stop | Where-Object {
+            $_.'@odata.type' -eq "#microsoft.graph.deviceEnrollmentLimitConfiguration"
+        }
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($configs.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -509,6 +531,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -535,13 +559,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('Assignments')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

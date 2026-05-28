@@ -76,6 +76,10 @@ function Get-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -158,7 +162,15 @@ function Get-M365DSCSCMapSecurityFilter
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $result = @{
         FilterName            = $Filter.FilterName
@@ -167,13 +179,15 @@ function Get-M365DSCSCMapSecurityFilter
         Description           = $Filter.Description
         Filters               = $Filter.Filters
         Region                = $Filter.Region
+        Ensure                = 'Present'
         Credential            = $Credential
         ApplicationId         = $ApplicationId
         TenantId              = $TenantId
         CertificateThumbprint = $CertificateThumbprint
         CertificatePath       = $CertificatePath
         CertificatePassword   = $CertificatePassword
-        Ensure                = 'Present'
+        ManagedIdentity       = $ManagedIdentity.IsPresent
+        AccessTokens          = $AccessTokens
     }
     return $result
 }
@@ -251,6 +265,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -395,6 +413,10 @@ function Test-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -444,6 +466,10 @@ function Export-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -468,7 +494,7 @@ function Export-TargetResource
     {
         [array]$filters = Get-ComplianceSecurityFilter -ErrorAction Stop -WarningAction Ignore -Confirm:$false
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         if ($filters.Length -eq 0)
         {
@@ -500,7 +526,7 @@ function Export-TargetResource
                 -Credential $Credential
 
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
@@ -516,7 +542,7 @@ function Export-TargetResource
 
         throw
     }
-    return $dscContent
+    return $dscContent.ToString()
 }
 
 Export-ModuleMember -Function *-TargetResource

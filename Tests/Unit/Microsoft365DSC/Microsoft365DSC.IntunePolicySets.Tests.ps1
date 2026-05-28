@@ -49,6 +49,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
+            Mock -CommandName Get-MgBetaDeviceAppManagementManagedAppPolicy -MockWith {
+                return @{
+                    displayName = "FakeStringValue"
+                    id = "T_12345678-1234-1234-1234-1234567890ab"
+                    '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -57,9 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgbetaDeviceAppManagementPolicySet -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.PolicySet"
-                    }
+                    '@odata.type' = "#microsoft.graph.PolicySet"
                     CreatedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
@@ -71,30 +77,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Status = "unknown"
                     Assignments = @(
                         [pscustomobject]@{
-                                        Target = [pscustomobject]@{
-                                                    AdditionalProperties = [pscustomobject]@{
-                                                                            '@odata.type' = '#microsoft.graph.GroupAssignmentTarget'
-                                                                            groupId = '12345678-1234-1234-1234-1234567890ab'
-                                                                            }
-                                                    DeviceAndAppManagementAssignmentFilterType = 'none'
-                                                    DeviceAndAppManagementAssignmentFilterId = $null
-
-                                                }
-                                        }
-                                    )
+                            Target = [pscustomobject]@{
+                                '@odata.type' = '#microsoft.graph.GroupAssignmentTarget'
+                                groupId = '12345678-1234-1234-1234-1234567890ab'
+                                DeviceAndAppManagementAssignmentFilterType = 'none'
+                                DeviceAndAppManagementAssignmentFilterId = $null
+                            }
+                        }
+                    )
                     Items = @(
                         [pscustomobject]@{
-
-                                        AdditionalProperties = [pscustomobject]@{
-                                                                '@odata.type' = '#microsoft.graph.managedAppProtectionPolicySetItem'
-                                                                }
-                                        payloadId = 'T_12345678-1234-1234-1234-1234567890ab'
-                                        itemType = '#microsoft.graph.androidManagedAppProtection'
-                                        displayName = 'FakeStringValue'
-                                        guidedDeploymentTags = @('FakeStringValue')
-
-                                        }
-                                    )
+                            '@odata.type' = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                            payloadId = 'T_12345678-1234-1234-1234-1234567890ab'
+                            itemType = '#microsoft.graph.androidManagedAppProtection'
+                            displayName = 'FakeStringValue'
+                            guidedDeploymentTags = @('FakeStringValue')
+                        }
+                    )
                 }
             }
 
@@ -183,7 +182,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

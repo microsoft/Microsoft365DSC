@@ -58,6 +58,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -105,10 +113,8 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                         -All `
-                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
-                        -ErrorAction SilentlyContinue | Where-Object -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10NetworkBoundaryConfiguration'
-                    }
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.windows10NetworkBoundaryConfiguration')" `
+                        -ErrorAction SilentlyContinue
                 }
             }
             #endregion
@@ -128,7 +134,7 @@ function Get-TargetResource
         #region resource generator code
         $complexWindowsNetworkIsolationPolicy = [ordered]@{}
         $complexEnterpriseCloudResources = @()
-        foreach ($currentEnterpriseCloudResources in $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseCloudResources)
+        foreach ($currentEnterpriseCloudResources in $getValue.windowsNetworkIsolationPolicy.enterpriseCloudResources)
         {
             $myEnterpriseCloudResources = [ordered]@{}
             $myEnterpriseCloudResources.Add('IpAddressOrFQDN', $currentEnterpriseCloudResources.ipAddressOrFQDN)
@@ -139,9 +145,9 @@ function Get-TargetResource
             }
         }
         $complexWindowsNetworkIsolationPolicy.Add('EnterpriseCloudResources', $complexEnterpriseCloudResources)
-        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseInternalProxyServers', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseInternalProxyServers)
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseInternalProxyServers', $getValue.windowsNetworkIsolationPolicy.enterpriseInternalProxyServers)
         $complexEnterpriseIPRanges = @()
-        foreach ($currentEnterpriseIPRanges in $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseIPRanges)
+        foreach ($currentEnterpriseIPRanges in $getValue.windowsNetworkIsolationPolicy.enterpriseIPRanges)
         {
             $myEnterpriseIPRanges = [ordered]@{}
             $myEnterpriseIPRanges.Add('CidrAddress', $currentEnterpriseIPRanges.cidrAddress)
@@ -157,11 +163,11 @@ function Get-TargetResource
             }
         }
         $complexWindowsNetworkIsolationPolicy.Add('EnterpriseIPRanges', $complexEnterpriseIPRanges)
-        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseIPRangesAreAuthoritative', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseIPRangesAreAuthoritative)
-        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseNetworkDomainNames', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseNetworkDomainNames)
-        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseProxyServers', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseProxyServers)
-        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseProxyServersAreAuthoritative', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseProxyServersAreAuthoritative)
-        $complexWindowsNetworkIsolationPolicy.Add('NeutralDomainResources', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.neutralDomainResources)
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseIPRangesAreAuthoritative', $getValue.windowsNetworkIsolationPolicy.enterpriseIPRangesAreAuthoritative)
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseNetworkDomainNames', $getValue.windowsNetworkIsolationPolicy.enterpriseNetworkDomainNames)
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseProxyServers', $getValue.windowsNetworkIsolationPolicy.enterpriseProxyServers)
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseProxyServersAreAuthoritative', $getValue.windowsNetworkIsolationPolicy.enterpriseProxyServersAreAuthoritative)
+        $complexWindowsNetworkIsolationPolicy.Add('NeutralDomainResources', $getValue.windowsNetworkIsolationPolicy.neutralDomainResources)
         if ($complexWindowsNetworkIsolationPolicy.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexWindowsNetworkIsolationPolicy = $null
@@ -181,6 +187,8 @@ function Get-TargetResource
             TenantId                      = $TenantId
             ApplicationSecret             = $ApplicationSecret
             CertificateThumbprint         = $CertificateThumbprint
+            CertificatePath               = $CertificatePath
+            CertificatePassword           = $CertificatePassword
             ManagedIdentity               = $ManagedIdentity.IsPresent
             AccessTokens                  = $AccessTokens
             #endregion
@@ -264,6 +272,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -399,6 +415,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -452,6 +476,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -478,15 +510,20 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10NetworkBoundaryConfiguration'
+        $baseFilter = "isof('microsoft.graph.windows10NetworkBoundaryConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -517,6 +554,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -574,13 +613,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('WindowsNetworkIsolationPolicy', 'Assignments')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

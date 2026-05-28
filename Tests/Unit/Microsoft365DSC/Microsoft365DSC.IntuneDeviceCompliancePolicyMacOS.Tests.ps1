@@ -46,26 +46,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName          = 'MacOS DSC Policy'
                     Description          = 'Test policy'
                     Id                   = 'd95e706d-c92c-410d-a132-09e0b1032dbd'
-                    AdditionalProperties = @{
-                        '@odata.type'                               = '#microsoft.graph.macOSCompliancePolicy'
-                        PasswordRequired                            = $False
-                        PasswordBlockSimple                         = $False
-                        PasswordExpirationDays                      = 365
-                        PasswordMinimumLength                       = 6
-                        PasswordMinutesOfInactivityBeforeLock       = 5
-                        PasswordPreviousPasswordBlockCount          = 13
-                        PasswordMinimumCharacterSetCount            = 1
-                        PasswordRequiredType                        = 'DeviceDefault'
-                        OsMinimumVersion                            = 10
-                        OsMaximumVersion                            = 13
-                        SystemIntegrityProtectionEnabled            = $False
-                        DeviceThreatProtectionEnabled               = $False
-                        DeviceThreatProtectionRequiredSecurityLevel = 'Unavailable'
-                        StorageRequireEncryption                    = $False
-                        FirewallEnabled                             = $False
-                        FirewallBlockAllIncoming                    = $False
-                        FirewallEnableStealthMode                   = $False
-                    }
+                    '@odata.type'                               = '#microsoft.graph.macOSCompliancePolicy'
+                    PasswordRequired                            = $False
+                    PasswordBlockSimple                         = $False
+                    PasswordExpirationDays                      = 365
+                    PasswordMinimumLength                       = 6
+                    PasswordMinutesOfInactivityBeforeLock       = 5
+                    PasswordPreviousPasswordBlockCount          = 13
+                    PasswordMinimumCharacterSetCount            = 1
+                    PasswordRequiredType                        = 'DeviceDefault'
+                    OsMinimumVersion                            = 10
+                    OsMaximumVersion                            = 13
+                    SystemIntegrityProtectionEnabled            = $False
+                    DeviceThreatProtectionEnabled               = $False
+                    DeviceThreatProtectionRequiredSecurityLevel = 'Unavailable'
+                    StorageRequireEncryption                    = $False
+                    FirewallEnabled                             = $False
+                    FirewallBlockAllIncoming                    = $False
+                    FirewallEnableStealthMode                   = $False
                 }
             }
 
@@ -233,7 +231,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

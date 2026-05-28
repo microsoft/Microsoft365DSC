@@ -138,6 +138,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -175,7 +183,7 @@ function Get-TargetResource
             {
                 if (-not [System.String]::IsNullOrEmpty($AppId))
                 {
-                    $AADApp = Get-MgBetaApplication `
+                    [array]$AADApp = Get-MgBetaApplication `
                         -Filter "AppId eq '$AppId'" `
                         -Property $Script:PropertiesToRetrieve `
                         -ExpandProperty 'owners'
@@ -189,10 +197,10 @@ function Get-TargetResource
             if ($null -eq $AADApp)
             {
                 Write-Verbose -Message "Attempting to retrieve Azure AD Application by DisplayName {$DisplayName}"
-                $AADApp = [Array](Get-MgBetaApplication `
+                [array]$AADApp = Get-MgBetaApplication `
                         -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                         -Property $Script:PropertiesToRetrieve `
-                        -ExpandProperty 'owners')
+                        -ExpandProperty 'owners'
             }
             if ($null -ne $AADApp -and $AADApp.Count -gt 1)
             {
@@ -328,7 +336,7 @@ function Get-TargetResource
             $mykeyCredentials = [ordered]@{}
             if ($null -ne $currentkeyCredentials.customKeyIdentifier)
             {
-                $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
+                $mykeyCredentials.Add('CustomKeyIdentifier', $currentkeyCredentials.customKeyIdentifier)
             }
             $mykeyCredentials.Add('DisplayName', $currentkeyCredentials.displayName)
             if ($null -ne $currentkeyCredentials.endDateTime)
@@ -337,10 +345,9 @@ function Get-TargetResource
             }
             $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
 
-
             if ($null -ne $currentkeyCredentials.Key)
             {
-                $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
+                $mykeyCredentials.Add('Key', $currentkeyCredentials.Key)
             }
 
             if ($null -ne $currentkeyCredentials.startDateTime)
@@ -410,9 +417,9 @@ function Get-TargetResource
         $OwnersValues = @()
         foreach ($Owner in $($AADApp.Owners | Where-Object { -not $_.DeletedDateTime }))
         {
-            if ($Owner.AdditionalProperties.userPrincipalName)
+            if ($Owner.userPrincipalName)
             {
-                $OwnersValues += $Owner.AdditionalProperties.userPrincipalName
+                $OwnersValues += $Owner.userPrincipalName
             }
             else
             {
@@ -550,7 +557,7 @@ function Get-TargetResource
             AppRoles                 = $complexAppRoles
             Permissions              = $permissionsObj
             OnPremisesPublishing     = $onPremisesPublishingValue
-            ApplicationTemplateId    = $AADApp.AdditionalProperties.applicationTemplateId
+            ApplicationTemplateId    = $AADApp.applicationTemplateId
             Spa                      = $SpaValue
             TokenLifetimePolicy      = $lifetimePolicy.displayName
             PublicClientRedirectUris = $PublicClientRedirectUrisValue
@@ -561,6 +568,8 @@ function Get-TargetResource
             TenantId                 = $TenantId
             ApplicationSecret        = $ApplicationSecret
             CertificateThumbprint    = $CertificateThumbprint
+            CertificatePath          = $CertificatePath
+            CertificatePassword      = $CertificatePassword
             ManagedIdentity          = $ManagedIdentity.IsPresent
             AccessTokens             = $AccessTokens
         }
@@ -715,6 +724,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -781,7 +798,6 @@ function Set-TargetResource
 
     # App should exist but it doesn't
     $needToUpdatePermissions = $false
-    $needToUpdateAuthenticationBehaviors = $false
     $needToUpdateKeyCredentials = $false
     $currentParameters.Remove('AppId') | Out-Null
     $currentParameters.Remove('Permissions') | Out-Null
@@ -795,7 +811,6 @@ function Set-TargetResource
     }
 
     $currentParameters.Remove('PublicClient') | Out-Null
-    $currentParameters.Remove('Verbose') | Out-Null
 
     if ($PublicClientRedirectUris.Length -gt 0)
     {
@@ -930,15 +945,7 @@ function Set-TargetResource
     $currentParameters.Remove('LogoutURL') | Out-Null
     $currentParameters.Remove('Homepage') | Out-Null
     $currentParameters.Remove('OnPremisesPublishing') | Out-Null
-
-    $keys = (([Hashtable]$currentParameters).Clone()).Keys
-    foreach ($key in $keys)
-    {
-        if ($null -ne $currentParameters.$key -and $currentParameters.$key.GetType().Name -like '*cimInstance*')
-        {
-            $currentParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $currentParameters.$key
-        }
-    }
+    $currentParameters = Rename-M365DSCCimInstanceParameter -Properties $currentParameters
 
     $skipToUpdate = $false
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Absent')
@@ -975,9 +982,9 @@ function Set-TargetResource
                 $ownersValues = @()
                 foreach ($owner in $($restoredApp.Owners | Where-Object { -not $_.DeletedDateTime }))
                 {
-                    if ($owner.AdditionalProperties.userPrincipalName)
+                    if ($owner.userPrincipalName)
                     {
-                        $ownersValues += $owner.AdditionalProperties.userPrincipalName
+                        $ownersValues += $owner.userPrincipalName
                     }
                     else
                     {
@@ -1030,7 +1037,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating New AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
 
         Write-Verbose -Message "Parameters with API: $(ConvertTo-Json $currentParameters -Depth 10)"
-        $currentAADApp = New-MgApplication @currentParameters
+        $currentAADApp = New-MgApplication -BodyParameter $currentParameters
         $currentAADApp = @{
             AppId       = $currentAADApp.AppId
             Id          = $currentAADApp.Id
@@ -1039,7 +1046,6 @@ function Set-TargetResource
         }
         Write-Verbose -Message "Azure AD Application {$DisplayName} was successfully created"
         $needToUpdatePermissions = $true
-        $needToUpdateAuthenticationBehaviors = $true
         $needToUpdateKeyCredentials = $true
 
         $tries = 1
@@ -1058,20 +1064,17 @@ function Set-TargetResource
     {
         $currentParameters.Remove('ObjectId') | Out-Null
         $currentParameters.Remove('ApplicationTemplateId') | Out-Null
-
-        $currentParameters.Add('ApplicationId', $currentAADApp.ObjectId)
         $currentParameters.Remove('AppRoles') | Out-Null
         $currentParameters.Remove('TokenLifetimePolicy') | Out-Null
 
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
-        Update-MgApplication @currentParameters
+        Update-MgApplication -ApplicationId $currentAADApp.ObjectId -BodyParameter $currentParameters
 
         if (-not $currentAADApp.ContainsKey('Id'))
         {
             $currentAADApp.Add('Id', $currentAADApp.ObjectId)
         }
         $needToUpdatePermissions = $true
-        $needToUpdateAuthenticationBehaviors = $true
         $needToUpdateKeyCredentials = $true
 
         # Update AppRoles
@@ -1097,13 +1100,13 @@ function Set-TargetResource
                 {
                     Write-Verbose -Message "Found matching AppRole entry in Desired values for {$($currentRole.DisplayName)}. Keeping same value as current, but setting to disable."
                     $entry = @{
-                        AllowedMemberTypes = $currentRole.AllowedMemberTypes
-                        Id                 = $currentRole.Id
-                        IsEnabled          = $false
-                        Origin             = $currentRole.Origin
-                        Value              = $currentRole.Value
-                        DisplayName        = $currentRole.DisplayName
-                        Description        = $currentRole.Description
+                        allowedMemberTypes = $currentRole.AllowedMemberTypes
+                        id                 = $currentRole.Id
+                        isEnabled          = $false
+                        origin             = $currentRole.Origin
+                        value              = $currentRole.Value
+                        displayName        = $currentRole.DisplayName
+                        description        = $currentRole.Description
                     }
                     $fixedRoles += $entry
                 }
@@ -1117,13 +1120,13 @@ function Set-TargetResource
             foreach ($currentAppRole in $AppRoles)
             {
                 $entry = @{
-                    AllowedMemberTypes = $currentAppRole.AllowedMemberTypes
-                    Id                 = $currentAppRole.Id
-                    IsEnabled          = $currentAppRole.IsEnabled
-                    Origin             = $currentAppRole.Origin
-                    Value              = $currentAppRole.Value
-                    DisplayName        = $currentAppRole.DisplayName
-                    Description        = $currentAppRole.Description
+                    allowedMemberTypes = $currentAppRole.AllowedMemberTypes
+                    id                 = $currentAppRole.Id
+                    isEnabled          = $currentAppRole.IsEnabled
+                    origin             = $currentAppRole.Origin
+                    value              = $currentAppRole.Value
+                    displayName        = $currentAppRole.DisplayName
+                    description        = $currentAppRole.Description
                 }
                 $resultingAppRoles += $entry
             }
@@ -1228,8 +1231,8 @@ function Set-TargetResource
                 $permissionsForcurrentAPI = $Permissions | Where-Object -FilterScript { $_.SourceAPI -eq $sourceAPI }
                 $apiPrincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$($sourceAPI -replace "'", "''")'"
                 $currentAPIAccess = @{
-                    ResourceAppId  = $apiPrincipal.AppId
-                    ResourceAccess = @()
+                    resourceAppId  = $apiPrincipal.AppId
+                    resourceAccess = @()
                 }
                 foreach ($permission in $permissionsForcurrentAPI)
                 {
@@ -1239,8 +1242,7 @@ function Set-TargetResource
                         $scopeId = $null
                         if ($null -eq $scope)
                         {
-                            $ObjectGuid = [System.Guid]::Empty
-                            if ([System.Guid]::TryParse($permission.Name, [System.Management.Automation.PSReference]$ObjectGuid))
+                            if ([System.Guid]::TryParse($permission.Name, [ref][System.Guid]::Empty))
                             {
                                 $scopeId = $permission.Name
                             }
@@ -1251,10 +1253,10 @@ function Set-TargetResource
                         }
                         Write-Verbose -Message "Adding Delegated Permission {$($scopeId)}"
                         $delPermission = @{
-                            Id   = $scopeId
-                            Type = 'Scope'
+                            id   = $scopeId
+                            type = 'Scope'
                         }
-                        $currentAPIAccess.ResourceAccess += $delPermission
+                        $currentAPIAccess.resourceAccess += $delPermission
                     }
                     elseif ($permission.Type -eq 'AppOnly')
                     {
@@ -1262,8 +1264,7 @@ function Set-TargetResource
                         $roleId = $null
                         if ($null -eq $role)
                         {
-                            $ObjectGuid = [System.Guid]::empty
-                            if ([System.Guid]::TryParse($permission.Name, [System.Management.Automation.PSReference]$ObjectGuid))
+                            if ([System.Guid]::TryParse($permission.Name, [ref][System.Guid]::Empty))
                             {
                                 $roleId = $permission.Name
                             }
@@ -1277,10 +1278,10 @@ function Set-TargetResource
                             throw "Could not find associated role {$($permission.Name)} for API {$($sourceAPI)}"
                         }
                         $appPermission = @{
-                            Id   = $roleId
-                            Type = 'Role'
+                            id   = $roleId
+                            type = 'Role'
                         }
-                        $currentAPIAccess.ResourceAccess += $appPermission
+                        $currentAPIAccess.resourceAccess += $appPermission
                     }
                 }
                 if ($null -ne $currentAPIAccess)
@@ -1298,18 +1299,29 @@ function Set-TargetResource
             -RequiredResourceAccess $allRequiredAccess | Out-Null
     }
 
-    if ($needToUpdateAuthenticationBehaviors -and $AuthenticationBehaviors)
+    if ($PSBoundParameters.ContainsKey('AuthenticationBehaviors'))
     {
         Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with AuthenticationBehaviors:`r`n$($AuthenticationBehaviors| Out-String)"
         Write-Verbose -Message "Current App Id: $($currentAADApp.AppId)"
 
-        $IAuthenticationBehaviors = @{
-            blockAzureADGraphAccess    = $AuthenticationBehaviors.blockAzureADGraphAccess
-            removeUnverifiedEmailClaim = $AuthenticationBehaviors.removeUnverifiedEmailClaim
+        $IAuthenticationBehaviors = @{}
+        if ($AuthenticationBehaviors.BlockAzureADGraphAccess -ne $currentAADApp.AuthenticationBehaviors.BlockAzureADGraphAccess)
+        {
+            $blockAzureADGraphAccessValue = if ($AuthenticationBehaviors.BlockAzureADGraphAccess -eq "Null") { $null } else { $AuthenticationBehaviors.BlockAzureADGraphAccess }
+            $IAuthenticationBehaviors.Add('blockAzureADGraphAccess', $blockAzureADGraphAccessValue)
+        }
+        if ($AuthenticationBehaviors.RemoveUnverifiedEmailClaim -ne $currentAADApp.AuthenticationBehaviors.RemoveUnverifiedEmailClaim)
+        {
+            $removeUnverifiedEmailClaimValue = if ($AuthenticationBehaviors.RemoveUnverifiedEmailClaim -eq "Null") { $null } else { $AuthenticationBehaviors.RemoveUnverifiedEmailClaim }
+            $IAuthenticationBehaviors.Add('removeUnverifiedEmailClaim', $removeUnverifiedEmailClaimValue)
         }
 
-        Update-MgBetaApplication -ApplicationId $currentAADApp.ObjectId -BodyParameter @{
-            authenticationBehaviors = $IAuthenticationBehaviors
+        if ($IAuthenticationBehaviors.Keys.Count -gt 0)
+        {
+             Write-Verbose -Message "Updating AuthenticationBehaviors for Azure AD Application {$($currentAADApp.DisplayName)} with values:`r`n$($IAuthenticationBehaviors | Out-String)"
+            Update-MgBetaApplication -ApplicationId $currentAADApp.ObjectId -BodyParameter @{
+                authenticationBehaviors = $IAuthenticationBehaviors
+            }
         }
     }
 
@@ -1425,7 +1437,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Removing Token Lifetime Policy with DisplayName [$policyToRemove] from Application [$($currentAADApp.DisplayName)]"
             $policy = $allTokenLifetimePolicies | Where-Object { $_.DisplayName -eq $policyToRemove }
-            Remove-MgApplicationTokenLifetimePolicyByRef -ApplicationId $currentAADApp.Id -TokenLifetimePolicyId $policy.Id
+            Remove-MgApplicationTokenLifetimePolicyTokenLifetimePolicyByRef -ApplicationId $currentAADApp.Id -TokenLifetimePolicyId $policy.Id
         }
 
         if ($null -ne $policyToAdd)
@@ -1576,6 +1588,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1631,6 +1651,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1659,21 +1687,20 @@ function Export-TargetResource
     Write-M365DSCHost -Message "`r`n" -DeferWrite
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaApplication `
+        [array] $exportedInstances = Get-MgBetaApplication `
             -Filter $Filter `
             -Property $Script:PropertiesToRetrieve `
             -ExpandProperty 'owners' `
             -All `
             -ErrorAction Stop
-        foreach ($AADApp in $Script:exportedInstances)
+        foreach ($AADApp in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $($AADApp.DisplayName)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $($AADApp.DisplayName)" -DeferWrite
             $Params = @{
                 ApplicationId         = $ApplicationId
                 AppId                 = $AADApp.AppId
@@ -1915,7 +1942,7 @@ function Export-TargetResource
                         -Credential $Credential `
                         -NoEscape @('Api', 'Permissions', 'OptionalClaims', 'OnPremisesPublishing', 'AuthenticationBehaviors', 'KeyCredentials', 'PasswordCredentials', 'AppRoles', 'Spa')
 
-                    $dscContent.Append($currentDSCBlock) | Out-Null
+                    [void]$dscContent.Append($currentDSCBlock)
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                     Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -1985,6 +2012,15 @@ function Get-M365DSCAzureADAppPermissions
         $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests
 
         $SourceAPI = ($batchResponses | Where-Object -FilterScript { $_.id -eq 'SourceAPI' }).body.value
+        if ([System.String]::IsNullOrEmpty($SourceAPI))
+        {
+            Write-Warning -Message "Could not find the Service Principal for API with AppId {$($requiredAccess.ResourceAppId)}. Using ResourceAppId as the identifier in the exported configuration."
+            $SourceAPI = @{
+                AppId = $requiredAccess.ResourceAppId
+                DisplayName = $requiredAccess.ResourceAppId
+                Id = $requiredAccess.ResourceAppId
+            }
+        }
         $appServicePrincipal = ($batchResponses | Where-Object -FilterScript { $_.id -eq 'AppServicePrincipal' }).body.value
         if ($null -ne $appServicePrincipal)
         {
@@ -2015,8 +2051,7 @@ function Get-M365DSCAzureADAppPermissions
                 $scopeInfoValue = $null
                 if ($null -eq $scopeInfo)
                 {
-                    $ObjectGuid = [System.Guid]::empty
-                    if ([System.Guid]::TryParse($resourceAccess.Id, [System.Management.Automation.PSReference]$ObjectGuid))
+                    if ([System.Guid]::TryParse($resourceAccess.Id, [ref][System.Guid]::Empty))
                     {
                         $scopeInfoValue = $resourceAccess.Id
                     }
@@ -2048,8 +2083,7 @@ function Get-M365DSCAzureADAppPermissions
                 $roleValue = $null
                 if ($null -eq $role)
                 {
-                    $ObjectGuid = [System.Guid]::empty
-                    if ([System.Guid]::TryParse($resourceAccess.Id, [System.Management.Automation.PSReference]$ObjectGuid))
+                    if ([System.Guid]::TryParse($resourceAccess.Id, [ref][System.Guid]::Empty))
                     {
                         $roleValue = $resourceAccess.Id
                     }
@@ -2085,7 +2119,7 @@ function Get-CompareParameters
     param()
 
     return @{
-        ExcludedProperties = @('AppId', 'ObjectId')
+        ExcludedProperties = @('AppId', 'ObjectId', 'ApplicationTemplateId', 'AdminConsentGranted')
     }
 }
 

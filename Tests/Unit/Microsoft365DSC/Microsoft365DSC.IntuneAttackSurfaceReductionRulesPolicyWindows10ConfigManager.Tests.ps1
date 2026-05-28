@@ -69,32 +69,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
                             Name = 'UseAdvancedProtectionAgainstRansomware'
                             OffsetUri = '/Config/Defender/AttackSurfaceReductionRules'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                options = @(
-                                    @{
-                                        itemId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware_block'
-                                        name = 'Block'
-                                        optionValue = @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                            value = 'block'
-                                        }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                            options = @(
+                                @{
+                                    itemId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware_block'
+                                    name = 'Block'
+                                    optionValue = @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                        value = 'block'
                                     }
-                                )
-                            }
+                                }
+                            )
                         },
                         @{
                             Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
                             Name = 'AttackSurfaceReductionRules'
                             OffsetUri = '/Config/Defender/AttackSurfaceReductionRules'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                'childIds' = @(
-                                    'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
-                                )
-                                minimumCount = 0
-                                maximumCount = 1
-                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                            'childIds' = @(
+                                'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
+                            )
+                            minimumCount = 0
+                            maximumCount = 1
                         }
                     )
                     SettingInstance      = @{
@@ -102,23 +98,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SettingInstanceTemplateReference = @{
                             SettingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
                         }
-                        AdditionalProperties             = @{
-                            '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                            groupSettingCollectionValue = @(@{
-                                children = @(
-                                    @{
-                                        "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                        "settingDefinitionId" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware"
-                                        "choiceSettingValue" = @{
-                                            "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingValue"
-                                            "value" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware_block"
-                                        }
+                        '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                        groupSettingCollectionValue = @(@{
+                            children = @(
+                                @{
+                                    "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
+                                    "settingDefinitionId" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware"
+                                    "choiceSettingValue" = @{
+                                        "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingValue"
+                                        "value" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware_block"
                                     }
-                                )
-                            })
-                        }
+                                }
+                            )
+                        })
                     }
-                    AdditionalProperties = $null
                 }
             }
 
@@ -129,12 +122,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SourceId = '12345-12345-12345-12345-12345'
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
-                                collectionId  = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                        collectionId  = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }

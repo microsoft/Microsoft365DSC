@@ -101,6 +101,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -156,17 +164,16 @@ function Get-TargetResource
             if ($null -eq $config)
             {
                 Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with Id {$Identity}"
-                $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
+                $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration')" `
                     -ErrorAction SilentlyContinue | Where-Object -FilterScript {
-                    $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatformRestriction*Configuration' -and
-                    $(if ($null -ne $_.AdditionalProperties.platformType)
-                        {
-                            $_.AdditionalProperties.platformType -eq $PlatformType
-                        }
-                        else
-                        {
-                            $true
-                        })
+                    if ($null -ne $_.platformType)
+                    {
+                        $_.platformType -eq $PlatformType
+                    }
+                    else
+                    {
+                        $true
+                    }
                 }
 
                 if ($null -eq $config)
@@ -195,11 +202,13 @@ function Get-TargetResource
             TenantId                          = $TenantId
             ApplicationSecret                 = $ApplicationSecret
             CertificateThumbprint             = $CertificateThumbprint
+            CertificatePath                   = $CertificatePath
+            CertificatePassword               = $CertificatePassword
             ManagedIdentity                   = $ManagedIdentity.IsPresent
             AccessTokens                      = $AccessTokens
         }
 
-        $results += Get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
+        $results += Get-DevicePlatformRestrictionSetting -Properties $config
 
         if ($null -ne $results.WindowsMobileRestriction)
         {
@@ -330,6 +339,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -358,22 +375,23 @@ function Set-TargetResource
     }
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-    $PSBoundParameters.Remove('Identity') | Out-Null
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
+    $boundParameters.Remove('Identity') | Out-Null
     $PriorityPresent = $false
-    if ($PSBoundParameters.Keys.Contains('Priority'))
+    if ($boundParameters.Keys.Contains('Priority'))
     {
         $PriorityPresent = $true
-        $PSBoundParameters.Remove('Priority') | Out-Null
+        $boundParameters.Remove('Priority') | Out-Null
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
 
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
-        if ($PSBoundParameters.Keys.Contains('WindowsMobileRestriction'))
+        if ($boundParameters.Keys.Contains('WindowsMobileRestriction'))
         {
             if ($WindowsMobileRestriction.platformBlocked -eq $false)
             {
@@ -382,36 +400,34 @@ function Set-TargetResource
             }
         }
 
-        $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
+        $keys = (([Hashtable]$boundParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
-            $keyValue = $PSBoundParameters.$key
-            if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.GetType().Name -like '*cimInstance*')
+            $keyValue = $boundParameters.$key
+            if ($null -ne $boundParameters.$key -and $PSBoundParameters.$key.GetType().Name -like '*cimInstance*')
             {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.$key
-                if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
+                if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction')
                 {
                     $keyName = 'platformRestriction'
-                    $PSBoundParameters.Add('platformType', ($key.Replace('Restriction', '')))
+                    $boundParameters.Add('platformType', ($key.Replace('Restriction', '')))
+                    $boundParameters.Add($keyName, $boundParameters.$key)
+                    $boundParameters.Remove($key)
                 }
             }
-            $PSBoundParameters.Remove($key)
-            $PSBoundParameters.Add($keyName, $keyValue)
         }
 
         $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
         if ($DeviceEnrollmentConfigurationType -eq 'platformRestrictions' )
         {
             $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
-            $PSBoundParameters.Add('deviceEnrollmentConfigurationType ', 'limit')
+            $boundParameters.Add('deviceEnrollmentConfigurationType ', 'limit')
         }
-        $PSBoundParameters.Add('@odata.type', $policyType)
+        $boundParameters.Add('@odata.type', $policyType)
 
-        #Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
+        #Write-Verbose ($boundParameters | ConvertTo-Json -Depth 20)
 
         $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
-            -BodyParameter ([hashtable]$PSBoundParameters)
+            -BodyParameter ([hashtable]$boundParameters)
 
         # Assignments from DefaultPolicy are not editable and will raise an alert
         if ($policy.Id -notlike '*_DefaultPlatformRestrictions')
@@ -437,9 +453,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
 
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
-        if ($PSBoundParameters.Keys.Contains('WindowsMobileRestriction'))
+        if ($boundParameters.Keys.Contains('WindowsMobileRestriction'))
         {
             if ($WindowsMobileRestriction.platformBlocked -eq $false)
             {
@@ -448,21 +464,19 @@ function Set-TargetResource
             }
         }
 
-        $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
+        $keys = (([Hashtable]$boundParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
-            $keyValue = $PSBoundParameters.$key
-            if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.GetType().Name -like '*cimInstance*')
+            $keyValue = $boundParameters.$key
+            if ($null -ne $boundParameters.$key -and $PSBoundParameters.$key.GetType().Name -like '*cimInstance*')
             {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.$key
-                if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
+                if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction')
                 {
                     $keyName = 'platformRestriction'
+                    $boundParameters.Add($keyName, $boundParameters.$key)
+                    $boundParameters.Remove($key)
                 }
             }
-            $PSBoundParameters.Remove($key)
-            $PSBoundParameters.Add($keyName, $keyValue)
         }
 
         $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
@@ -470,11 +484,11 @@ function Set-TargetResource
         {
             $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
         }
-        $PSBoundParameters.Add('@odata.type', $policyType)
+        $boundParameters.Add('@odata.type', $policyType)
 
         Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
             -DeviceEnrollmentConfigurationId $currentInstance.Identity `
-            -BodyParameter ([hashtable]$PSBoundParameters)
+            -BodyParameter ([hashtable]$boundParameters)
 
         # Assignments from DefaultPolicy are not editable and will raise an alert
         if ($currentInstance.Identity -notlike '*_DefaultPlatformRestrictions')
@@ -604,6 +618,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -658,6 +680,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -687,7 +717,7 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object -FilterScript { $_.DeviceEnrollmentConfigurationType -like '*platformRestriction*' }
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($configs.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -713,6 +743,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -871,13 +903,13 @@ function Export-TargetResource
                 'WindowsMobileRestriction', 'AndroidRestriction', 'AndroidForWorkRestriction',
                 'MacRestriction', 'MacOSRestriction', 'TvosRestriction', 'VisionOSRestriction')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -911,7 +943,6 @@ function Get-DevicePlatformRestrictionSetting
     )
 
     $results = @{}
-
     if ($null -ne $Properties.platformType)
     {
         $keyName = ($Properties.platformType).Substring(0, 1).ToUpper() + ($Properties.platformType).Substring(1, $Properties.platformType.length - 1) + 'Restriction'
@@ -951,10 +982,14 @@ function Get-DevicePlatformRestrictionSetting
         $platformRestrictions = $Properties
         $platformRestrictions.Remove('@odata.type')
         $platformRestrictions.Remove('@odata.context')
-        foreach ($key in $platformRestrictions.Keys)
+        foreach ($key in $($platformRestrictions.Keys | Where-Object { $_ -like "*Restriction" }))
         {
             $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
             $keyValue = $platformRestrictions.$key
+            if ($null -eq $keyValue)
+            {
+                continue
+            }
             $hash = @{}
             foreach ($key in $keyValue.Keys)
             {

@@ -44,79 +44,77 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                             = 'FakeStringValue'
                     Description                             = 'FakeStringValue'
                     Id                                      = 'ab915bca-1234-4b11-8acb-719a771139bc'
-                    AdditionalProperties                    = @{
-                        '@odata.type'              = '#microsoft.graph.iosDeviceFeaturesConfiguration'
-                        wallpaperDisplayLocation   = 'notConfigured'
-                        airPrintDestinations      = @(
-                            @{
-                                ipAddress     = '1.0.0.1'
-                                resourcePath  = 'printers/xerox_Phase'
-                                port          = 0
-                                forceTls      = $false
-                            }
-                        )
-                        contentFilterSettings     = @{
-                                '@odata.Type' = '#microsoft.graph.iosWebContentFilterAutoFilter'
-                                allowedUrls = @(
-                                    'https://www.fakeallowed.com'
-                                )
-                                blockedUrls = @(
-                                    'https://www.fakeblocked.com'
-                                )
+                    '@odata.type'              = '#microsoft.graph.iosDeviceFeaturesConfiguration'
+                    wallpaperDisplayLocation   = 'notConfigured'
+                    airPrintDestinations      = @(
+                        @{
+                            ipAddress     = '1.0.0.1'
+                            resourcePath  = 'printers/xerox_Phase'
+                            port          = 0
+                            forceTls      = $false
                         }
-                        homeScreenDockIcons       = @(
-                            @{
-                                '@odata.type'   = '#microsoft.graph.iosHomeScreenApp'
-                                displayName   = 'Apple Store'
-                                bundleID      = 'com.apple.store.Jolly'
-                                isWebClip     = $false
-                            }
-                        )
-                        homeScreenPages           = @(
-                            @{
-                                icons = @(
-                                    @{
-                                        '@odata.type'   = '#microsoft.graph.iosHomeScreenApp'
-                                        displayName   = 'App Store'
-                                        bundleID      = 'com.apple.AppStore'
-                                        isWebClip     = $false
-                                    }
-                                )
-                            }
-                        )
-                        notificationSettings      = @(
-                            @{
-                                bundleID               = 'app.id'
-                                appName                = 'fakeapp'
-                                publisher              = 'fakepublisher'
-                                enabled                = $true
-                                showInNotificationCenter = $true
-                                showOnLockScreen       = $true
-                                alertType              = 'banner'
-                                badgesEnabled          = $true
-                                soundsEnabled          = $true
-                                previewVisibility      = 'hideWhenLocked'
-                            }
-                        )
-                        singleSignOnSettings      = @{
-                            allowedUrls            = @('https://www.fakeurl.com')
-                            displayName            = 'iOS-DeviceFeatures-ContentSettingsSpecificSites'
-                            kerberosPrincipalName  = 'userPrincipalName'
-                            kerberosRealm          = 'fakerealm.com'
-                            allowedAppsList        = @(
+                    )
+                    contentFilterSettings     = @{
+                            '@odata.Type' = '#microsoft.graph.iosWebContentFilterAutoFilter'
+                            allowedUrls = @(
+                                'https://www.fakeallowed.com'
+                            )
+                            blockedUrls = @(
+                                'https://www.fakeblocked.com'
+                            )
+                    }
+                    homeScreenDockIcons       = @(
+                        @{
+                            '@odata.type'   = '#microsoft.graph.iosHomeScreenApp'
+                            displayName   = 'Apple Store'
+                            bundleID      = 'com.apple.store.Jolly'
+                            isWebClip     = $false
+                        }
+                    )
+                    homeScreenPages           = @(
+                        @{
+                            icons = @(
                                 @{
-                                    name   = 'Intune Company Portal'
-                                    appId  = 'com.microsoft.companyportal'
+                                    '@odata.type'   = '#microsoft.graph.iosHomeScreenApp'
+                                    displayName   = 'App Store'
+                                    bundleID      = 'com.apple.AppStore'
+                                    isWebClip     = $false
                                 }
                             )
                         }
-                        iosSingleSignOnExtension = @{
-                            '@odata.type' = '#microsoft.graph.iosCredentialSingleSignOnExtension'
-                            extensionIdentifier = 'com.example.sso.credential'
-                            teamIdentifier      = '4HMSJJRMAD'
-                            realm               = 'EXAMPLE.COM'
-                            domains             = @('example.com')
+                    )
+                    notificationSettings      = @(
+                        @{
+                            bundleID               = 'app.id'
+                            appName                = 'fakeapp'
+                            publisher              = 'fakepublisher'
+                            enabled                = $true
+                            showInNotificationCenter = $true
+                            showOnLockScreen       = $true
+                            alertType              = 'banner'
+                            badgesEnabled          = $true
+                            soundsEnabled          = $true
+                            previewVisibility      = 'hideWhenLocked'
                         }
+                    )
+                    singleSignOnSettings      = @{
+                        allowedUrls            = @('https://www.fakeurl.com')
+                        displayName            = 'iOS-DeviceFeatures-ContentSettingsSpecificSites'
+                        kerberosPrincipalName  = 'userPrincipalName'
+                        kerberosRealm          = 'fakerealm.com'
+                        allowedAppsList        = @(
+                            @{
+                                name   = 'Intune Company Portal'
+                                appId  = 'com.microsoft.companyportal'
+                            }
+                        )
+                    }
+                    iosSingleSignOnExtension = @{
+                        '@odata.type' = '#microsoft.graph.iosCredentialSingleSignOnExtension'
+                        extensionIdentifier = 'com.example.sso.credential'
+                        teamIdentifier      = '4HMSJJRMAD'
+                        realm               = 'EXAMPLE.COM'
+                        domains             = @('example.com')
                     }
                 }
             }
@@ -538,7 +536,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

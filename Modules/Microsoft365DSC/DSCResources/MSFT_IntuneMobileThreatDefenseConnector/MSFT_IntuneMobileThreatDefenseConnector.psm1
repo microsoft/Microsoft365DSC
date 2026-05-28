@@ -10,7 +10,6 @@ function Get-TargetResource
     param
     (
         #region Intune parameters
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
@@ -25,7 +24,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPartnerToCollectIosPersonalApplicationMetadata,
+        $AllowPartnerToCollectIOSPersonalApplicationMetadata,
 
         [Parameter()]
         [System.Boolean]
@@ -99,12 +98,20 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -158,8 +165,8 @@ function Get-TargetResource
                 # The DisplayName property is not supported by the any API of this resource, hence hard-coded in below function for convenience.
                 $connectorId = (Get-MobileThreatDefenseConnectorIdOrDisplayName -DisplayName $DisplayName).Id
                 $instance = Get-MgBetaDeviceManagementMobileThreatDefenseConnector `
-                    -MobileThreatDefenseConnectorId $connectorId
-                -ErrorAction SilentlyContinue
+                    -MobileThreatDefenseConnectorId $connectorId `
+                    -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $instance)
@@ -178,7 +185,7 @@ function Get-TargetResource
             Id                                                  = $instance.Id
             DisplayName                                         = $DisplayName
             AllowPartnerToCollectIosApplicationMetadata         = $instance.AllowPartnerToCollectIosApplicationMetadata
-            AllowPartnerToCollectIosPersonalApplicationMetadata = $instance.AllowPartnerToCollectIosPersonalApplicationMetadata
+            AllowPartnerToCollectIOSPersonalApplicationMetadata = $instance.AllowPartnerToCollectIosPersonalApplicationMetadata
             AndroidDeviceBlockedOnMissingPartnerData            = $instance.AndroidDeviceBlockedOnMissingPartnerData
             AndroidEnabled                                      = $instance.AndroidEnabled
             AndroidMobileApplicationManagementEnabled           = $instance.AndroidMobileApplicationManagementEnabled
@@ -192,13 +199,14 @@ function Get-TargetResource
             PartnerUnsupportedOSVersionBlocked                  = $instance.PartnerUnsupportedOSVersionBlocked
             WindowsDeviceBlockedOnMissingPartnerData            = $instance.WindowsDeviceBlockedOnMissingPartnerData
             WindowsEnabled                                      = $instance.WindowsEnabled
-
             Ensure                                              = 'Present'
             Credential                                          = $Credential
             ApplicationId                                       = $ApplicationId
             TenantId                                            = $TenantId
-            CertificateThumbprint                               = $CertificateThumbprint
             ApplicationSecret                                   = $ApplicationSecret
+            CertificateThumbprint                               = $CertificateThumbprint
+            CertificatePath                                     = $CertificatePath
+            CertificatePassword                                 = $CertificatePassword
             ManagedIdentity                                     = $ManagedIdentity.IsPresent
             AccessTokens                                        = $AccessTokens
         }
@@ -238,7 +246,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPartnerToCollectIosPersonalApplicationMetadata,
+        $AllowPartnerToCollectIOSPersonalApplicationMetadata,
 
         [Parameter()]
         [System.Boolean]
@@ -312,12 +320,20 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -342,26 +358,39 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
     $SetParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $SetParameters = Rename-M365DSCCimInstanceParameter -Properties $SetParameters
 
     # Remove the DisplayName parameter as the Graph API does not support it
     $SetParameters.Remove('DisplayName') | Out-Null
     $SetParameters.Remove('Id') | Out-Null
     $SetParameters.Remove('LastHeartbeatDateTime') | Out-Null
 
+
+    if ($PSBoundParameters.ContainsKey('PartnerUnsupportedOSVersionBlocked'))
+    {
+        $SetParameters.Remove('PartnerUnsupportedOSVersionBlocked') | Out-Null
+        $SetParameters.Add('partnerUnsupportedOsVersionBlocked', $PartnerUnsupportedOSVersionBlocked)
+    }
+    if ($PSBoundParameters.ContainsKey('AllowPartnerToCollectIosApplicationMetadata'))
+    {
+        $SetParameters.Remove('AllowPartnerToCollectIosApplicationMetadata') | Out-Null
+        $SetParameters.Add('allowPartnerToCollectIOSApplicationMetadata', $AllowPartnerToCollectIosApplicationMetadata)
+    }
+
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        New-MgBetaDeviceManagementMobileThreatDefenseConnector @SetParameters
+        New-MgBetaDeviceManagementMobileThreatDefenseConnector -BodyParameter $SetParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Update-MgBetaDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $currentInstance.Id @SetParameters
+        Update-MgBetaDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $currentInstance.Id -BodyParameter $SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Remove-MgBetaDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $currentInstance.Id -Confirm:$false
+        Remove-MgBetaDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $currentInstance.Id
     }
 }
 
@@ -387,7 +416,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPartnerToCollectIosPersonalApplicationMetadata,
+        $AllowPartnerToCollectIOSPersonalApplicationMetadata,
 
         [Parameter()]
         [System.Boolean]
@@ -462,12 +491,20 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -517,12 +554,20 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -550,11 +595,10 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         [array] $getValue = Get-MgBetaDeviceManagementMobileThreatDefenseConnector -Filter $Filter -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -572,7 +616,7 @@ function Export-TargetResource
                 Id                                                  = $config.Id
                 DisplayName                                         = $config.DisplayName
                 AllowPartnerToCollectIosApplicationMetadata         = $config.AllowPartnerToCollectIosApplicationMetadata
-                AllowPartnerToCollectIosPersonalApplicationMetadata = $config.AllowPartnerToCollectIosPersonalApplicationMetadata
+                AllowPartnerToCollectIOSPersonalApplicationMetadata = $config.AllowPartnerToCollectIosPersonalApplicationMetadata
                 AndroidDeviceBlockedOnMissingPartnerData            = $config.AndroidDeviceBlockedOnMissingPartnerData
                 AndroidEnabled                                      = $config.AndroidEnabled
                 AndroidMobileApplicationManagementEnabled           = $config.AndroidMobileApplicationManagementEnabled
@@ -586,13 +630,14 @@ function Export-TargetResource
                 PartnerUnsupportedOSVersionBlocked                  = $config.PartnerUnsupportedOSVersionBlocked
                 WindowsDeviceBlockedOnMissingPartnerData            = $config.WindowsDeviceBlockedOnMissingPartnerData
                 WindowsEnabled                                      = $config.WindowsEnabled
-
                 Ensure                                              = 'Present'
                 Credential                                          = $Credential
                 ApplicationId                                       = $ApplicationId
                 TenantId                                            = $TenantId
-                CertificateThumbprint                               = $CertificateThumbprint
                 ApplicationSecret                                   = $ApplicationSecret
+                CertificateThumbprint                               = $CertificateThumbprint
+                CertificatePath                                     = $CertificatePath
+                CertificatePassword                                 = $CertificatePassword
                 ManagedIdentity                                     = $ManagedIdentity.IsPresent
                 AccessTokens                                        = $AccessTokens
             }
@@ -605,13 +650,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

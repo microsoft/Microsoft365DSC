@@ -78,6 +78,12 @@
       "cmdlets": [
         "Get-MgGroup"
       ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
     }
   ]
 }

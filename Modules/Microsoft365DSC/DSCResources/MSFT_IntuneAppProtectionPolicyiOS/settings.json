@@ -45,7 +45,8 @@
     "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.DeviceManagement",
     "Microsoft.Graph.Beta.Devices.CorporateManagement",
-    "Microsoft.Graph.Groups"
+    "Microsoft.Graph.Groups",
+    "MSCloudLoginAssistant"
   ],
   "supportedEnvironments": [
     "Global",
@@ -81,6 +82,12 @@
       "module": "Microsoft.Graph.Groups",
       "cmdlets": [
         "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

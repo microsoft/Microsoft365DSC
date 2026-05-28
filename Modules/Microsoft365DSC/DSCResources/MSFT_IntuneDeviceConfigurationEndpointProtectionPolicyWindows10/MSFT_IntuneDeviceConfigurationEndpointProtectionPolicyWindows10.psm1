@@ -1019,6 +1019,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1066,11 +1074,8 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                         -All `
-                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
-                        -ErrorAction SilentlyContinue | Where-Object `
-                        -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EndpointProtectionConfiguration'
-                    }
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.windows10EndpointProtectionConfiguration')" `
+                        -ErrorAction SilentlyContinue
 
                     if ($null -eq $getValue)
                     {
@@ -1095,98 +1100,98 @@ function Get-TargetResource
 
         #region resource generator code
         $complexBitLockerFixedDrivePolicy = [ordered]@{}
-        if ($null -ne $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.encryptionMethod)
+        if ($null -ne $getValue.bitLockerFixedDrivePolicy.encryptionMethod)
         {
-            $complexBitLockerFixedDrivePolicy.Add('EncryptionMethod', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.encryptionMethod.ToString())
+            $complexBitLockerFixedDrivePolicy.Add('EncryptionMethod', $getValue.bitLockerFixedDrivePolicy.encryptionMethod.ToString())
         }
         $complexRecoveryOptions = [ordered]@{}
-        $complexRecoveryOptions.Add('BlockDataRecoveryAgent', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.blockDataRecoveryAgent)
-        $complexRecoveryOptions.Add('EnableBitLockerAfterRecoveryInformationToStore', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.enableBitLockerAfterRecoveryInformationToStore)
-        $complexRecoveryOptions.Add('EnableRecoveryInformationSaveToStore', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.enableRecoveryInformationSaveToStore)
-        $complexRecoveryOptions.Add('HideRecoveryOptions', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.hideRecoveryOptions)
-        if ($null -ne $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.recoveryInformationToStore)
+        $complexRecoveryOptions.Add('BlockDataRecoveryAgent', $getValue.bitLockerFixedDrivePolicy.recoveryOptions.blockDataRecoveryAgent)
+        $complexRecoveryOptions.Add('EnableBitLockerAfterRecoveryInformationToStore', $getValue.bitLockerFixedDrivePolicy.recoveryOptions.enableBitLockerAfterRecoveryInformationToStore)
+        $complexRecoveryOptions.Add('EnableRecoveryInformationSaveToStore', $getValue.bitLockerFixedDrivePolicy.recoveryOptions.enableRecoveryInformationSaveToStore)
+        $complexRecoveryOptions.Add('HideRecoveryOptions', $getValue.bitLockerFixedDrivePolicy.recoveryOptions.hideRecoveryOptions)
+        if ($null -ne $getValue.bitLockerFixedDrivePolicy.recoveryOptions.recoveryInformationToStore)
         {
-            $complexRecoveryOptions.Add('RecoveryInformationToStore', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.recoveryInformationToStore.ToString())
+            $complexRecoveryOptions.Add('RecoveryInformationToStore', $getValue.bitLockerFixedDrivePolicy.recoveryOptions.recoveryInformationToStore.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.recoveryKeyUsage)
+        if ($null -ne $getValue.bitLockerFixedDrivePolicy.recoveryOptions.recoveryKeyUsage)
         {
-            $complexRecoveryOptions.Add('RecoveryKeyUsage', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.recoveryKeyUsage.ToString())
+            $complexRecoveryOptions.Add('RecoveryKeyUsage', $getValue.bitLockerFixedDrivePolicy.recoveryOptions.recoveryKeyUsage.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.recoveryPasswordUsage)
+        if ($null -ne $getValue.bitLockerFixedDrivePolicy.recoveryOptions.recoveryPasswordUsage)
         {
-            $complexRecoveryOptions.Add('RecoveryPasswordUsage', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.recoveryPasswordUsage.ToString())
+            $complexRecoveryOptions.Add('RecoveryPasswordUsage', $getValue.bitLockerFixedDrivePolicy.recoveryOptions.recoveryPasswordUsage.ToString())
         }
         if ($complexRecoveryOptions.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexRecoveryOptions = $null
         }
         $complexBitLockerFixedDrivePolicy.Add('RecoveryOptions', $complexRecoveryOptions)
-        $complexBitLockerFixedDrivePolicy.Add('RequireEncryptionForWriteAccess', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.requireEncryptionForWriteAccess)
+        $complexBitLockerFixedDrivePolicy.Add('RequireEncryptionForWriteAccess', $getValue.bitLockerFixedDrivePolicy.requireEncryptionForWriteAccess)
         if ($complexBitLockerFixedDrivePolicy.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexBitLockerFixedDrivePolicy = $null
         }
 
         $complexBitLockerRemovableDrivePolicy = [ordered]@{}
-        $complexBitLockerRemovableDrivePolicy.Add('BlockCrossOrganizationWriteAccess', $getValue.AdditionalProperties.bitLockerRemovableDrivePolicy.blockCrossOrganizationWriteAccess)
-        if ($null -ne $getValue.AdditionalProperties.bitLockerRemovableDrivePolicy.encryptionMethod)
+        $complexBitLockerRemovableDrivePolicy.Add('BlockCrossOrganizationWriteAccess', $getValue.bitLockerRemovableDrivePolicy.blockCrossOrganizationWriteAccess)
+        if ($null -ne $getValue.bitLockerRemovableDrivePolicy.encryptionMethod)
         {
-            $complexBitLockerRemovableDrivePolicy.Add('EncryptionMethod', $getValue.AdditionalProperties.bitLockerRemovableDrivePolicy.encryptionMethod.ToString())
+            $complexBitLockerRemovableDrivePolicy.Add('EncryptionMethod', $getValue.bitLockerRemovableDrivePolicy.encryptionMethod.ToString())
         }
-        $complexBitLockerRemovableDrivePolicy.Add('RequireEncryptionForWriteAccess', $getValue.AdditionalProperties.bitLockerRemovableDrivePolicy.requireEncryptionForWriteAccess)
+        $complexBitLockerRemovableDrivePolicy.Add('RequireEncryptionForWriteAccess', $getValue.bitLockerRemovableDrivePolicy.requireEncryptionForWriteAccess)
         if ($complexBitLockerRemovableDrivePolicy.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexBitLockerRemovableDrivePolicy = $null
         }
 
         $complexBitLockerSystemDrivePolicy = [ordered]@{}
-        if ($null -ne $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.encryptionMethod)
+        if ($null -ne $getValue.bitLockerSystemDrivePolicy.encryptionMethod)
         {
-            $complexBitLockerSystemDrivePolicy.Add('EncryptionMethod', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.encryptionMethod.ToString())
+            $complexBitLockerSystemDrivePolicy.Add('EncryptionMethod', $getValue.bitLockerSystemDrivePolicy.encryptionMethod.ToString())
         }
-        $complexBitLockerSystemDrivePolicy.Add('MinimumPinLength', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.minimumPinLength)
-        $complexBitLockerSystemDrivePolicy.Add('PrebootRecoveryEnableMessageAndUrl', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.prebootRecoveryEnableMessageAndUrl)
-        $complexBitLockerSystemDrivePolicy.Add('PrebootRecoveryMessage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.prebootRecoveryMessage)
-        $complexBitLockerSystemDrivePolicy.Add('PrebootRecoveryUrl', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.prebootRecoveryUrl)
+        $complexBitLockerSystemDrivePolicy.Add('MinimumPinLength', $getValue.bitLockerSystemDrivePolicy.minimumPinLength)
+        $complexBitLockerSystemDrivePolicy.Add('PrebootRecoveryEnableMessageAndUrl', $getValue.bitLockerSystemDrivePolicy.prebootRecoveryEnableMessageAndUrl)
+        $complexBitLockerSystemDrivePolicy.Add('PrebootRecoveryMessage', $getValue.bitLockerSystemDrivePolicy.prebootRecoveryMessage)
+        $complexBitLockerSystemDrivePolicy.Add('PrebootRecoveryUrl', $getValue.bitLockerSystemDrivePolicy.prebootRecoveryUrl)
         $complexRecoveryOptions = [ordered]@{}
-        $complexRecoveryOptions.Add('BlockDataRecoveryAgent', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.blockDataRecoveryAgent)
-        $complexRecoveryOptions.Add('EnableBitLockerAfterRecoveryInformationToStore', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.enableBitLockerAfterRecoveryInformationToStore)
-        $complexRecoveryOptions.Add('EnableRecoveryInformationSaveToStore', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.enableRecoveryInformationSaveToStore)
-        $complexRecoveryOptions.Add('HideRecoveryOptions', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.hideRecoveryOptions)
-        if ($null -ne $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.recoveryInformationToStore)
+        $complexRecoveryOptions.Add('BlockDataRecoveryAgent', $getValue.bitLockerSystemDrivePolicy.recoveryOptions.blockDataRecoveryAgent)
+        $complexRecoveryOptions.Add('EnableBitLockerAfterRecoveryInformationToStore', $getValue.bitLockerSystemDrivePolicy.recoveryOptions.enableBitLockerAfterRecoveryInformationToStore)
+        $complexRecoveryOptions.Add('EnableRecoveryInformationSaveToStore', $getValue.bitLockerSystemDrivePolicy.recoveryOptions.enableRecoveryInformationSaveToStore)
+        $complexRecoveryOptions.Add('HideRecoveryOptions', $getValue.bitLockerSystemDrivePolicy.recoveryOptions.hideRecoveryOptions)
+        if ($null -ne $getValue.bitLockerSystemDrivePolicy.recoveryOptions.recoveryInformationToStore)
         {
-            $complexRecoveryOptions.Add('RecoveryInformationToStore', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.recoveryInformationToStore.ToString())
+            $complexRecoveryOptions.Add('RecoveryInformationToStore', $getValue.bitLockerSystemDrivePolicy.recoveryOptions.recoveryInformationToStore.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.recoveryKeyUsage)
+        if ($null -ne $getValue.bitLockerSystemDrivePolicy.recoveryOptions.recoveryKeyUsage)
         {
-            $complexRecoveryOptions.Add('RecoveryKeyUsage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.recoveryKeyUsage.ToString())
+            $complexRecoveryOptions.Add('RecoveryKeyUsage', $getValue.bitLockerSystemDrivePolicy.recoveryOptions.recoveryKeyUsage.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.recoveryPasswordUsage)
+        if ($null -ne $getValue.bitLockerSystemDrivePolicy.recoveryOptions.recoveryPasswordUsage)
         {
-            $complexRecoveryOptions.Add('RecoveryPasswordUsage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.recoveryPasswordUsage.ToString())
+            $complexRecoveryOptions.Add('RecoveryPasswordUsage', $getValue.bitLockerSystemDrivePolicy.recoveryOptions.recoveryPasswordUsage.ToString())
         }
         if ($complexRecoveryOptions.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexRecoveryOptions = $null
         }
         $complexBitLockerSystemDrivePolicy.Add('RecoveryOptions', $complexRecoveryOptions)
-        $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationBlockWithoutTpmChip', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationBlockWithoutTpmChip)
-        $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationRequired', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationRequired)
-        if ($null -ne $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmKeyUsage)
+        $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationBlockWithoutTpmChip', $getValue.bitLockerSystemDrivePolicy.startupAuthenticationBlockWithoutTpmChip)
+        $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationRequired', $getValue.bitLockerSystemDrivePolicy.startupAuthenticationRequired)
+        if ($null -ne $getValue.bitLockerSystemDrivePolicy.startupAuthenticationTpmKeyUsage)
         {
-            $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationTpmKeyUsage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmKeyUsage.ToString())
+            $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationTpmKeyUsage', $getValue.bitLockerSystemDrivePolicy.startupAuthenticationTpmKeyUsage.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmPinAndKeyUsage)
+        if ($null -ne $getValue.bitLockerSystemDrivePolicy.startupAuthenticationTpmPinAndKeyUsage)
         {
-            $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationTpmPinAndKeyUsage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmPinAndKeyUsage.ToString())
+            $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationTpmPinAndKeyUsage', $getValue.bitLockerSystemDrivePolicy.startupAuthenticationTpmPinAndKeyUsage.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmPinUsage)
+        if ($null -ne $getValue.bitLockerSystemDrivePolicy.startupAuthenticationTpmPinUsage)
         {
-            $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationTpmPinUsage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmPinUsage.ToString())
+            $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationTpmPinUsage', $getValue.bitLockerSystemDrivePolicy.startupAuthenticationTpmPinUsage.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmUsage)
+        if ($null -ne $getValue.bitLockerSystemDrivePolicy.startupAuthenticationTpmUsage)
         {
-            $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationTpmUsage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmUsage.ToString())
+            $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationTpmUsage', $getValue.bitLockerSystemDrivePolicy.startupAuthenticationTpmUsage.ToString())
         }
         if ($complexBitLockerSystemDrivePolicy.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1194,21 +1199,21 @@ function Get-TargetResource
         }
 
         $complexDefenderDetectedMalwareActions = [ordered]@{}
-        if ($null -ne $getValue.AdditionalProperties.defenderDetectedMalwareActions.highSeverity)
+        if ($null -ne $getValue.defenderDetectedMalwareActions.highSeverity)
         {
-            $complexDefenderDetectedMalwareActions.Add('HighSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.highSeverity.ToString())
+            $complexDefenderDetectedMalwareActions.Add('HighSeverity', $getValue.defenderDetectedMalwareActions.highSeverity.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.defenderDetectedMalwareActions.lowSeverity)
+        if ($null -ne $getValue.defenderDetectedMalwareActions.lowSeverity)
         {
-            $complexDefenderDetectedMalwareActions.Add('LowSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.lowSeverity.ToString())
+            $complexDefenderDetectedMalwareActions.Add('LowSeverity', $getValue.defenderDetectedMalwareActions.lowSeverity.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.defenderDetectedMalwareActions.moderateSeverity)
+        if ($null -ne $getValue.defenderDetectedMalwareActions.moderateSeverity)
         {
-            $complexDefenderDetectedMalwareActions.Add('ModerateSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.moderateSeverity.ToString())
+            $complexDefenderDetectedMalwareActions.Add('ModerateSeverity', $getValue.defenderDetectedMalwareActions.moderateSeverity.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.defenderDetectedMalwareActions.severeSeverity)
+        if ($null -ne $getValue.defenderDetectedMalwareActions.severeSeverity)
         {
-            $complexDefenderDetectedMalwareActions.Add('SevereSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.severeSeverity.ToString())
+            $complexDefenderDetectedMalwareActions.Add('SevereSeverity', $getValue.defenderDetectedMalwareActions.severeSeverity.ToString())
         }
         if ($complexDefenderDetectedMalwareActions.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1216,103 +1221,103 @@ function Get-TargetResource
         }
 
         $complexFirewallProfileDomain = [ordered]@{}
-        $complexFirewallProfileDomain.Add('AuthorizedApplicationRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfileDomain.authorizedApplicationRulesFromGroupPolicyMerged)
-        $complexFirewallProfileDomain.Add('AuthorizedApplicationRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfileDomain.authorizedApplicationRulesFromGroupPolicyNotMerged)
-        $complexFirewallProfileDomain.Add('ConnectionSecurityRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfileDomain.connectionSecurityRulesFromGroupPolicyMerged)
-        $complexFirewallProfileDomain.Add('ConnectionSecurityRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfileDomain.connectionSecurityRulesFromGroupPolicyNotMerged)
-        if ($null -ne $getValue.AdditionalProperties.firewallProfileDomain.firewallEnabled)
+        $complexFirewallProfileDomain.Add('AuthorizedApplicationRulesFromGroupPolicyMerged', $getValue.firewallProfileDomain.authorizedApplicationRulesFromGroupPolicyMerged)
+        $complexFirewallProfileDomain.Add('AuthorizedApplicationRulesFromGroupPolicyNotMerged', $getValue.firewallProfileDomain.authorizedApplicationRulesFromGroupPolicyNotMerged)
+        $complexFirewallProfileDomain.Add('ConnectionSecurityRulesFromGroupPolicyMerged', $getValue.firewallProfileDomain.connectionSecurityRulesFromGroupPolicyMerged)
+        $complexFirewallProfileDomain.Add('ConnectionSecurityRulesFromGroupPolicyNotMerged', $getValue.firewallProfileDomain.connectionSecurityRulesFromGroupPolicyNotMerged)
+        if ($null -ne $getValue.firewallProfileDomain.firewallEnabled)
         {
-            $complexFirewallProfileDomain.Add('FirewallEnabled', $getValue.AdditionalProperties.firewallProfileDomain.firewallEnabled.ToString())
+            $complexFirewallProfileDomain.Add('FirewallEnabled', $getValue.firewallProfileDomain.firewallEnabled.ToString())
         }
-        $complexFirewallProfileDomain.Add('GlobalPortRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfileDomain.globalPortRulesFromGroupPolicyMerged)
-        $complexFirewallProfileDomain.Add('GlobalPortRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfileDomain.globalPortRulesFromGroupPolicyNotMerged)
-        $complexFirewallProfileDomain.Add('InboundConnectionsBlocked', $getValue.AdditionalProperties.firewallProfileDomain.inboundConnectionsBlocked)
-        $complexFirewallProfileDomain.Add('InboundConnectionsRequired', $getValue.AdditionalProperties.firewallProfileDomain.inboundConnectionsRequired)
-        $complexFirewallProfileDomain.Add('InboundNotificationsBlocked', $getValue.AdditionalProperties.firewallProfileDomain.inboundNotificationsBlocked)
-        $complexFirewallProfileDomain.Add('InboundNotificationsRequired', $getValue.AdditionalProperties.firewallProfileDomain.inboundNotificationsRequired)
-        $complexFirewallProfileDomain.Add('IncomingTrafficBlocked', $getValue.AdditionalProperties.firewallProfileDomain.incomingTrafficBlocked)
-        $complexFirewallProfileDomain.Add('IncomingTrafficRequired', $getValue.AdditionalProperties.firewallProfileDomain.incomingTrafficRequired)
-        $complexFirewallProfileDomain.Add('OutboundConnectionsBlocked', $getValue.AdditionalProperties.firewallProfileDomain.outboundConnectionsBlocked)
-        $complexFirewallProfileDomain.Add('OutboundConnectionsRequired', $getValue.AdditionalProperties.firewallProfileDomain.outboundConnectionsRequired)
-        $complexFirewallProfileDomain.Add('PolicyRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfileDomain.policyRulesFromGroupPolicyMerged)
-        $complexFirewallProfileDomain.Add('PolicyRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfileDomain.policyRulesFromGroupPolicyNotMerged)
-        $complexFirewallProfileDomain.Add('SecuredPacketExemptionAllowed', $getValue.AdditionalProperties.firewallProfileDomain.securedPacketExemptionAllowed)
-        $complexFirewallProfileDomain.Add('SecuredPacketExemptionBlocked', $getValue.AdditionalProperties.firewallProfileDomain.securedPacketExemptionBlocked)
-        $complexFirewallProfileDomain.Add('StealthModeBlocked', $getValue.AdditionalProperties.firewallProfileDomain.stealthModeBlocked)
-        $complexFirewallProfileDomain.Add('StealthModeRequired', $getValue.AdditionalProperties.firewallProfileDomain.stealthModeRequired)
-        $complexFirewallProfileDomain.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.AdditionalProperties.firewallProfileDomain.unicastResponsesToMulticastBroadcastsBlocked)
-        $complexFirewallProfileDomain.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.AdditionalProperties.firewallProfileDomain.unicastResponsesToMulticastBroadcastsRequired)
+        $complexFirewallProfileDomain.Add('GlobalPortRulesFromGroupPolicyMerged', $getValue.firewallProfileDomain.globalPortRulesFromGroupPolicyMerged)
+        $complexFirewallProfileDomain.Add('GlobalPortRulesFromGroupPolicyNotMerged', $getValue.firewallProfileDomain.globalPortRulesFromGroupPolicyNotMerged)
+        $complexFirewallProfileDomain.Add('InboundConnectionsBlocked', $getValue.firewallProfileDomain.inboundConnectionsBlocked)
+        $complexFirewallProfileDomain.Add('InboundConnectionsRequired', $getValue.firewallProfileDomain.inboundConnectionsRequired)
+        $complexFirewallProfileDomain.Add('InboundNotificationsBlocked', $getValue.firewallProfileDomain.inboundNotificationsBlocked)
+        $complexFirewallProfileDomain.Add('InboundNotificationsRequired', $getValue.firewallProfileDomain.inboundNotificationsRequired)
+        $complexFirewallProfileDomain.Add('IncomingTrafficBlocked', $getValue.firewallProfileDomain.incomingTrafficBlocked)
+        $complexFirewallProfileDomain.Add('IncomingTrafficRequired', $getValue.firewallProfileDomain.incomingTrafficRequired)
+        $complexFirewallProfileDomain.Add('OutboundConnectionsBlocked', $getValue.firewallProfileDomain.outboundConnectionsBlocked)
+        $complexFirewallProfileDomain.Add('OutboundConnectionsRequired', $getValue.firewallProfileDomain.outboundConnectionsRequired)
+        $complexFirewallProfileDomain.Add('PolicyRulesFromGroupPolicyMerged', $getValue.firewallProfileDomain.policyRulesFromGroupPolicyMerged)
+        $complexFirewallProfileDomain.Add('PolicyRulesFromGroupPolicyNotMerged', $getValue.firewallProfileDomain.policyRulesFromGroupPolicyNotMerged)
+        $complexFirewallProfileDomain.Add('SecuredPacketExemptionAllowed', $getValue.firewallProfileDomain.securedPacketExemptionAllowed)
+        $complexFirewallProfileDomain.Add('SecuredPacketExemptionBlocked', $getValue.firewallProfileDomain.securedPacketExemptionBlocked)
+        $complexFirewallProfileDomain.Add('StealthModeBlocked', $getValue.firewallProfileDomain.stealthModeBlocked)
+        $complexFirewallProfileDomain.Add('StealthModeRequired', $getValue.firewallProfileDomain.stealthModeRequired)
+        $complexFirewallProfileDomain.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.firewallProfileDomain.unicastResponsesToMulticastBroadcastsBlocked)
+        $complexFirewallProfileDomain.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.firewallProfileDomain.unicastResponsesToMulticastBroadcastsRequired)
         if ($complexFirewallProfileDomain.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexFirewallProfileDomain = $null
         }
 
         $complexFirewallProfilePrivate = [ordered]@{}
-        $complexFirewallProfilePrivate.Add('AuthorizedApplicationRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfilePrivate.authorizedApplicationRulesFromGroupPolicyMerged)
-        $complexFirewallProfilePrivate.Add('AuthorizedApplicationRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfilePrivate.authorizedApplicationRulesFromGroupPolicyNotMerged)
-        $complexFirewallProfilePrivate.Add('ConnectionSecurityRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfilePrivate.connectionSecurityRulesFromGroupPolicyMerged)
-        $complexFirewallProfilePrivate.Add('ConnectionSecurityRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfilePrivate.connectionSecurityRulesFromGroupPolicyNotMerged)
-        if ($null -ne $getValue.AdditionalProperties.firewallProfilePrivate.firewallEnabled)
+        $complexFirewallProfilePrivate.Add('AuthorizedApplicationRulesFromGroupPolicyMerged', $getValue.firewallProfilePrivate.authorizedApplicationRulesFromGroupPolicyMerged)
+        $complexFirewallProfilePrivate.Add('AuthorizedApplicationRulesFromGroupPolicyNotMerged', $getValue.firewallProfilePrivate.authorizedApplicationRulesFromGroupPolicyNotMerged)
+        $complexFirewallProfilePrivate.Add('ConnectionSecurityRulesFromGroupPolicyMerged', $getValue.firewallProfilePrivate.connectionSecurityRulesFromGroupPolicyMerged)
+        $complexFirewallProfilePrivate.Add('ConnectionSecurityRulesFromGroupPolicyNotMerged', $getValue.firewallProfilePrivate.connectionSecurityRulesFromGroupPolicyNotMerged)
+        if ($null -ne $getValue.firewallProfilePrivate.firewallEnabled)
         {
-            $complexFirewallProfilePrivate.Add('FirewallEnabled', $getValue.AdditionalProperties.firewallProfilePrivate.firewallEnabled.ToString())
+            $complexFirewallProfilePrivate.Add('FirewallEnabled', $getValue.firewallProfilePrivate.firewallEnabled.ToString())
         }
-        $complexFirewallProfilePrivate.Add('GlobalPortRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfilePrivate.globalPortRulesFromGroupPolicyMerged)
-        $complexFirewallProfilePrivate.Add('GlobalPortRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfilePrivate.globalPortRulesFromGroupPolicyNotMerged)
-        $complexFirewallProfilePrivate.Add('InboundConnectionsBlocked', $getValue.AdditionalProperties.firewallProfilePrivate.inboundConnectionsBlocked)
-        $complexFirewallProfilePrivate.Add('InboundConnectionsRequired', $getValue.AdditionalProperties.firewallProfilePrivate.inboundConnectionsRequired)
-        $complexFirewallProfilePrivate.Add('InboundNotificationsBlocked', $getValue.AdditionalProperties.firewallProfilePrivate.inboundNotificationsBlocked)
-        $complexFirewallProfilePrivate.Add('InboundNotificationsRequired', $getValue.AdditionalProperties.firewallProfilePrivate.inboundNotificationsRequired)
-        $complexFirewallProfilePrivate.Add('IncomingTrafficBlocked', $getValue.AdditionalProperties.firewallProfilePrivate.incomingTrafficBlocked)
-        $complexFirewallProfilePrivate.Add('IncomingTrafficRequired', $getValue.AdditionalProperties.firewallProfilePrivate.incomingTrafficRequired)
-        $complexFirewallProfilePrivate.Add('OutboundConnectionsBlocked', $getValue.AdditionalProperties.firewallProfilePrivate.outboundConnectionsBlocked)
-        $complexFirewallProfilePrivate.Add('OutboundConnectionsRequired', $getValue.AdditionalProperties.firewallProfilePrivate.outboundConnectionsRequired)
-        $complexFirewallProfilePrivate.Add('PolicyRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfilePrivate.policyRulesFromGroupPolicyMerged)
-        $complexFirewallProfilePrivate.Add('PolicyRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfilePrivate.policyRulesFromGroupPolicyNotMerged)
-        $complexFirewallProfilePrivate.Add('SecuredPacketExemptionAllowed', $getValue.AdditionalProperties.firewallProfilePrivate.securedPacketExemptionAllowed)
-        $complexFirewallProfilePrivate.Add('SecuredPacketExemptionBlocked', $getValue.AdditionalProperties.firewallProfilePrivate.securedPacketExemptionBlocked)
-        $complexFirewallProfilePrivate.Add('StealthModeBlocked', $getValue.AdditionalProperties.firewallProfilePrivate.stealthModeBlocked)
-        $complexFirewallProfilePrivate.Add('StealthModeRequired', $getValue.AdditionalProperties.firewallProfilePrivate.stealthModeRequired)
-        $complexFirewallProfilePrivate.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.AdditionalProperties.firewallProfilePrivate.unicastResponsesToMulticastBroadcastsBlocked)
-        $complexFirewallProfilePrivate.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.AdditionalProperties.firewallProfilePrivate.unicastResponsesToMulticastBroadcastsRequired)
+        $complexFirewallProfilePrivate.Add('GlobalPortRulesFromGroupPolicyMerged', $getValue.firewallProfilePrivate.globalPortRulesFromGroupPolicyMerged)
+        $complexFirewallProfilePrivate.Add('GlobalPortRulesFromGroupPolicyNotMerged', $getValue.firewallProfilePrivate.globalPortRulesFromGroupPolicyNotMerged)
+        $complexFirewallProfilePrivate.Add('InboundConnectionsBlocked', $getValue.firewallProfilePrivate.inboundConnectionsBlocked)
+        $complexFirewallProfilePrivate.Add('InboundConnectionsRequired', $getValue.firewallProfilePrivate.inboundConnectionsRequired)
+        $complexFirewallProfilePrivate.Add('InboundNotificationsBlocked', $getValue.firewallProfilePrivate.inboundNotificationsBlocked)
+        $complexFirewallProfilePrivate.Add('InboundNotificationsRequired', $getValue.firewallProfilePrivate.inboundNotificationsRequired)
+        $complexFirewallProfilePrivate.Add('IncomingTrafficBlocked', $getValue.firewallProfilePrivate.incomingTrafficBlocked)
+        $complexFirewallProfilePrivate.Add('IncomingTrafficRequired', $getValue.firewallProfilePrivate.incomingTrafficRequired)
+        $complexFirewallProfilePrivate.Add('OutboundConnectionsBlocked', $getValue.firewallProfilePrivate.outboundConnectionsBlocked)
+        $complexFirewallProfilePrivate.Add('OutboundConnectionsRequired', $getValue.firewallProfilePrivate.outboundConnectionsRequired)
+        $complexFirewallProfilePrivate.Add('PolicyRulesFromGroupPolicyMerged', $getValue.firewallProfilePrivate.policyRulesFromGroupPolicyMerged)
+        $complexFirewallProfilePrivate.Add('PolicyRulesFromGroupPolicyNotMerged', $getValue.firewallProfilePrivate.policyRulesFromGroupPolicyNotMerged)
+        $complexFirewallProfilePrivate.Add('SecuredPacketExemptionAllowed', $getValue.firewallProfilePrivate.securedPacketExemptionAllowed)
+        $complexFirewallProfilePrivate.Add('SecuredPacketExemptionBlocked', $getValue.firewallProfilePrivate.securedPacketExemptionBlocked)
+        $complexFirewallProfilePrivate.Add('StealthModeBlocked', $getValue.firewallProfilePrivate.stealthModeBlocked)
+        $complexFirewallProfilePrivate.Add('StealthModeRequired', $getValue.firewallProfilePrivate.stealthModeRequired)
+        $complexFirewallProfilePrivate.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.firewallProfilePrivate.unicastResponsesToMulticastBroadcastsBlocked)
+        $complexFirewallProfilePrivate.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.firewallProfilePrivate.unicastResponsesToMulticastBroadcastsRequired)
         if ($complexFirewallProfilePrivate.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexFirewallProfilePrivate = $null
         }
 
         $complexFirewallProfilePublic = [ordered]@{}
-        $complexFirewallProfilePublic.Add('AuthorizedApplicationRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfilePublic.authorizedApplicationRulesFromGroupPolicyMerged)
-        $complexFirewallProfilePublic.Add('AuthorizedApplicationRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfilePublic.authorizedApplicationRulesFromGroupPolicyNotMerged)
-        $complexFirewallProfilePublic.Add('ConnectionSecurityRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfilePublic.connectionSecurityRulesFromGroupPolicyMerged)
-        $complexFirewallProfilePublic.Add('ConnectionSecurityRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfilePublic.connectionSecurityRulesFromGroupPolicyNotMerged)
-        if ($null -ne $getValue.AdditionalProperties.firewallProfilePublic.firewallEnabled)
+        $complexFirewallProfilePublic.Add('AuthorizedApplicationRulesFromGroupPolicyMerged', $getValue.firewallProfilePublic.authorizedApplicationRulesFromGroupPolicyMerged)
+        $complexFirewallProfilePublic.Add('AuthorizedApplicationRulesFromGroupPolicyNotMerged', $getValue.firewallProfilePublic.authorizedApplicationRulesFromGroupPolicyNotMerged)
+        $complexFirewallProfilePublic.Add('ConnectionSecurityRulesFromGroupPolicyMerged', $getValue.firewallProfilePublic.connectionSecurityRulesFromGroupPolicyMerged)
+        $complexFirewallProfilePublic.Add('ConnectionSecurityRulesFromGroupPolicyNotMerged', $getValue.firewallProfilePublic.connectionSecurityRulesFromGroupPolicyNotMerged)
+        if ($null -ne $getValue.firewallProfilePublic.firewallEnabled)
         {
-            $complexFirewallProfilePublic.Add('FirewallEnabled', $getValue.AdditionalProperties.firewallProfilePublic.firewallEnabled.ToString())
+            $complexFirewallProfilePublic.Add('FirewallEnabled', $getValue.firewallProfilePublic.firewallEnabled.ToString())
         }
-        $complexFirewallProfilePublic.Add('GlobalPortRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfilePublic.globalPortRulesFromGroupPolicyMerged)
-        $complexFirewallProfilePublic.Add('GlobalPortRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfilePublic.globalPortRulesFromGroupPolicyNotMerged)
-        $complexFirewallProfilePublic.Add('InboundConnectionsBlocked', $getValue.AdditionalProperties.firewallProfilePublic.inboundConnectionsBlocked)
-        $complexFirewallProfilePublic.Add('InboundConnectionsRequired', $getValue.AdditionalProperties.firewallProfilePublic.inboundConnectionsRequired)
-        $complexFirewallProfilePublic.Add('InboundNotificationsBlocked', $getValue.AdditionalProperties.firewallProfilePublic.inboundNotificationsBlocked)
-        $complexFirewallProfilePublic.Add('InboundNotificationsRequired', $getValue.AdditionalProperties.firewallProfilePublic.inboundNotificationsRequired)
-        $complexFirewallProfilePublic.Add('IncomingTrafficBlocked', $getValue.AdditionalProperties.firewallProfilePublic.incomingTrafficBlocked)
-        $complexFirewallProfilePublic.Add('IncomingTrafficRequired', $getValue.AdditionalProperties.firewallProfilePublic.incomingTrafficRequired)
-        $complexFirewallProfilePublic.Add('OutboundConnectionsBlocked', $getValue.AdditionalProperties.firewallProfilePublic.outboundConnectionsBlocked)
-        $complexFirewallProfilePublic.Add('OutboundConnectionsRequired', $getValue.AdditionalProperties.firewallProfilePublic.outboundConnectionsRequired)
-        $complexFirewallProfilePublic.Add('PolicyRulesFromGroupPolicyMerged', $getValue.AdditionalProperties.firewallProfilePublic.policyRulesFromGroupPolicyMerged)
-        $complexFirewallProfilePublic.Add('PolicyRulesFromGroupPolicyNotMerged', $getValue.AdditionalProperties.firewallProfilePublic.policyRulesFromGroupPolicyNotMerged)
-        $complexFirewallProfilePublic.Add('SecuredPacketExemptionAllowed', $getValue.AdditionalProperties.firewallProfilePublic.securedPacketExemptionAllowed)
-        $complexFirewallProfilePublic.Add('SecuredPacketExemptionBlocked', $getValue.AdditionalProperties.firewallProfilePublic.securedPacketExemptionBlocked)
-        $complexFirewallProfilePublic.Add('StealthModeBlocked', $getValue.AdditionalProperties.firewallProfilePublic.stealthModeBlocked)
-        $complexFirewallProfilePublic.Add('StealthModeRequired', $getValue.AdditionalProperties.firewallProfilePublic.stealthModeRequired)
-        $complexFirewallProfilePublic.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.AdditionalProperties.firewallProfilePublic.unicastResponsesToMulticastBroadcastsBlocked)
-        $complexFirewallProfilePublic.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.AdditionalProperties.firewallProfilePublic.unicastResponsesToMulticastBroadcastsRequired)
+        $complexFirewallProfilePublic.Add('GlobalPortRulesFromGroupPolicyMerged', $getValue.firewallProfilePublic.globalPortRulesFromGroupPolicyMerged)
+        $complexFirewallProfilePublic.Add('GlobalPortRulesFromGroupPolicyNotMerged', $getValue.firewallProfilePublic.globalPortRulesFromGroupPolicyNotMerged)
+        $complexFirewallProfilePublic.Add('InboundConnectionsBlocked', $getValue.firewallProfilePublic.inboundConnectionsBlocked)
+        $complexFirewallProfilePublic.Add('InboundConnectionsRequired', $getValue.firewallProfilePublic.inboundConnectionsRequired)
+        $complexFirewallProfilePublic.Add('InboundNotificationsBlocked', $getValue.firewallProfilePublic.inboundNotificationsBlocked)
+        $complexFirewallProfilePublic.Add('InboundNotificationsRequired', $getValue.firewallProfilePublic.inboundNotificationsRequired)
+        $complexFirewallProfilePublic.Add('IncomingTrafficBlocked', $getValue.firewallProfilePublic.incomingTrafficBlocked)
+        $complexFirewallProfilePublic.Add('IncomingTrafficRequired', $getValue.firewallProfilePublic.incomingTrafficRequired)
+        $complexFirewallProfilePublic.Add('OutboundConnectionsBlocked', $getValue.firewallProfilePublic.outboundConnectionsBlocked)
+        $complexFirewallProfilePublic.Add('OutboundConnectionsRequired', $getValue.firewallProfilePublic.outboundConnectionsRequired)
+        $complexFirewallProfilePublic.Add('PolicyRulesFromGroupPolicyMerged', $getValue.firewallProfilePublic.policyRulesFromGroupPolicyMerged)
+        $complexFirewallProfilePublic.Add('PolicyRulesFromGroupPolicyNotMerged', $getValue.firewallProfilePublic.policyRulesFromGroupPolicyNotMerged)
+        $complexFirewallProfilePublic.Add('SecuredPacketExemptionAllowed', $getValue.firewallProfilePublic.securedPacketExemptionAllowed)
+        $complexFirewallProfilePublic.Add('SecuredPacketExemptionBlocked', $getValue.firewallProfilePublic.securedPacketExemptionBlocked)
+        $complexFirewallProfilePublic.Add('StealthModeBlocked', $getValue.firewallProfilePublic.stealthModeBlocked)
+        $complexFirewallProfilePublic.Add('StealthModeRequired', $getValue.firewallProfilePublic.stealthModeRequired)
+        $complexFirewallProfilePublic.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.firewallProfilePublic.unicastResponsesToMulticastBroadcastsBlocked)
+        $complexFirewallProfilePublic.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.firewallProfilePublic.unicastResponsesToMulticastBroadcastsRequired)
         if ($complexFirewallProfilePublic.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexFirewallProfilePublic = $null
         }
 
         $complexFirewallRules = @()
-        foreach ($currentfirewallRules in $getValue.AdditionalProperties.firewallRules)
+        foreach ($currentfirewallRules in $getValue.firewallRules)
         {
             $myfirewallRules = [ordered]@{}
             if ($null -ne $currentfirewallRules.action)
@@ -1354,7 +1359,7 @@ function Get-TargetResource
 
         $complexUserRightsAccessCredentialManagerAsTrustedCaller = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsAccessCredentialManagerAsTrustedCaller.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsAccessCredentialManagerAsTrustedCaller.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1366,9 +1371,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsAccessCredentialManagerAsTrustedCaller.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsAccessCredentialManagerAsTrustedCaller.state)
+        if ($null -ne $getValue.userRightsAccessCredentialManagerAsTrustedCaller.state)
         {
-            $complexUserRightsAccessCredentialManagerAsTrustedCaller.Add('State', $getValue.AdditionalProperties.userRightsAccessCredentialManagerAsTrustedCaller.state.ToString())
+            $complexUserRightsAccessCredentialManagerAsTrustedCaller.Add('State', $getValue.userRightsAccessCredentialManagerAsTrustedCaller.state.ToString())
         }
         if ($complexUserRightsAccessCredentialManagerAsTrustedCaller.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1377,7 +1382,7 @@ function Get-TargetResource
 
         $complexUserRightsActAsPartOfTheOperatingSystem = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsActAsPartOfTheOperatingSystem.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsActAsPartOfTheOperatingSystem.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1389,9 +1394,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsActAsPartOfTheOperatingSystem.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsActAsPartOfTheOperatingSystem.state)
+        if ($null -ne $getValue.userRightsActAsPartOfTheOperatingSystem.state)
         {
-            $complexUserRightsActAsPartOfTheOperatingSystem.Add('State', $getValue.AdditionalProperties.userRightsActAsPartOfTheOperatingSystem.state.ToString())
+            $complexUserRightsActAsPartOfTheOperatingSystem.Add('State', $getValue.userRightsActAsPartOfTheOperatingSystem.state.ToString())
         }
         if ($complexUserRightsActAsPartOfTheOperatingSystem.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1400,7 +1405,7 @@ function Get-TargetResource
 
         $complexUserRightsAllowAccessFromNetwork = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsAllowAccessFromNetwork.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsAllowAccessFromNetwork.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1412,9 +1417,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsAllowAccessFromNetwork.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsAllowAccessFromNetwork.state)
+        if ($null -ne $getValue.userRightsAllowAccessFromNetwork.state)
         {
-            $complexUserRightsAllowAccessFromNetwork.Add('State', $getValue.AdditionalProperties.userRightsAllowAccessFromNetwork.state.ToString())
+            $complexUserRightsAllowAccessFromNetwork.Add('State', $getValue.userRightsAllowAccessFromNetwork.state.ToString())
         }
         if ($complexUserRightsAllowAccessFromNetwork.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1423,7 +1428,7 @@ function Get-TargetResource
 
         $complexUserRightsBackupData = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsBackupData.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsBackupData.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1435,9 +1440,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsBackupData.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsBackupData.state)
+        if ($null -ne $getValue.userRightsBackupData.state)
         {
-            $complexUserRightsBackupData.Add('State', $getValue.AdditionalProperties.userRightsBackupData.state.ToString())
+            $complexUserRightsBackupData.Add('State', $getValue.userRightsBackupData.state.ToString())
         }
         if ($complexUserRightsBackupData.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1446,7 +1451,7 @@ function Get-TargetResource
 
         $complexUserRightsBlockAccessFromNetwork = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsBlockAccessFromNetwork.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsBlockAccessFromNetwork.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1458,9 +1463,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsBlockAccessFromNetwork.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsBlockAccessFromNetwork.state)
+        if ($null -ne $getValue.userRightsBlockAccessFromNetwork.state)
         {
-            $complexUserRightsBlockAccessFromNetwork.Add('State', $getValue.AdditionalProperties.userRightsBlockAccessFromNetwork.state.ToString())
+            $complexUserRightsBlockAccessFromNetwork.Add('State', $getValue.userRightsBlockAccessFromNetwork.state.ToString())
         }
         if ($complexUserRightsBlockAccessFromNetwork.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1469,7 +1474,7 @@ function Get-TargetResource
 
         $complexUserRightsChangeSystemTime = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsChangeSystemTime.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsChangeSystemTime.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1481,9 +1486,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsChangeSystemTime.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsChangeSystemTime.state)
+        if ($null -ne $getValue.userRightsChangeSystemTime.state)
         {
-            $complexUserRightsChangeSystemTime.Add('State', $getValue.AdditionalProperties.userRightsChangeSystemTime.state.ToString())
+            $complexUserRightsChangeSystemTime.Add('State', $getValue.userRightsChangeSystemTime.state.ToString())
         }
         if ($complexUserRightsChangeSystemTime.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1492,7 +1497,7 @@ function Get-TargetResource
 
         $complexUserRightsCreateGlobalObjects = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreateGlobalObjects.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsCreateGlobalObjects.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1504,9 +1509,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsCreateGlobalObjects.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsCreateGlobalObjects.state)
+        if ($null -ne $getValue.userRightsCreateGlobalObjects.state)
         {
-            $complexUserRightsCreateGlobalObjects.Add('State', $getValue.AdditionalProperties.userRightsCreateGlobalObjects.state.ToString())
+            $complexUserRightsCreateGlobalObjects.Add('State', $getValue.userRightsCreateGlobalObjects.state.ToString())
         }
         if ($complexUserRightsCreateGlobalObjects.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1515,7 +1520,7 @@ function Get-TargetResource
 
         $complexUserRightsCreatePageFile = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreatePageFile.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsCreatePageFile.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1527,9 +1532,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsCreatePageFile.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsCreatePageFile.state)
+        if ($null -ne $getValue.userRightsCreatePageFile.state)
         {
-            $complexUserRightsCreatePageFile.Add('State', $getValue.AdditionalProperties.userRightsCreatePageFile.state.ToString())
+            $complexUserRightsCreatePageFile.Add('State', $getValue.userRightsCreatePageFile.state.ToString())
         }
         if ($complexUserRightsCreatePageFile.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1538,7 +1543,7 @@ function Get-TargetResource
 
         $complexUserRightsCreatePermanentSharedObjects = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreatePermanentSharedObjects.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsCreatePermanentSharedObjects.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1550,9 +1555,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsCreatePermanentSharedObjects.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsCreatePermanentSharedObjects.state)
+        if ($null -ne $getValue.userRightsCreatePermanentSharedObjects.state)
         {
-            $complexUserRightsCreatePermanentSharedObjects.Add('State', $getValue.AdditionalProperties.userRightsCreatePermanentSharedObjects.state.ToString())
+            $complexUserRightsCreatePermanentSharedObjects.Add('State', $getValue.userRightsCreatePermanentSharedObjects.state.ToString())
         }
         if ($complexUserRightsCreatePermanentSharedObjects.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1561,7 +1566,7 @@ function Get-TargetResource
 
         $complexUserRightsCreateSymbolicLinks = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreateSymbolicLinks.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsCreateSymbolicLinks.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1573,9 +1578,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsCreateSymbolicLinks.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsCreateSymbolicLinks.state)
+        if ($null -ne $getValue.userRightsCreateSymbolicLinks.state)
         {
-            $complexUserRightsCreateSymbolicLinks.Add('State', $getValue.AdditionalProperties.userRightsCreateSymbolicLinks.state.ToString())
+            $complexUserRightsCreateSymbolicLinks.Add('State', $getValue.userRightsCreateSymbolicLinks.state.ToString())
         }
         if ($complexUserRightsCreateSymbolicLinks.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1584,7 +1589,7 @@ function Get-TargetResource
 
         $complexUserRightsCreateToken = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreateToken.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsCreateToken.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1596,9 +1601,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsCreateToken.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsCreateToken.state)
+        if ($null -ne $getValue.userRightsCreateToken.state)
         {
-            $complexUserRightsCreateToken.Add('State', $getValue.AdditionalProperties.userRightsCreateToken.state.ToString())
+            $complexUserRightsCreateToken.Add('State', $getValue.userRightsCreateToken.state.ToString())
         }
         if ($complexUserRightsCreateToken.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1607,7 +1612,7 @@ function Get-TargetResource
 
         $complexUserRightsDebugPrograms = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsDebugPrograms.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsDebugPrograms.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1619,9 +1624,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsDebugPrograms.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsDebugPrograms.state)
+        if ($null -ne $getValue.userRightsDebugPrograms.state)
         {
-            $complexUserRightsDebugPrograms.Add('State', $getValue.AdditionalProperties.userRightsDebugPrograms.state.ToString())
+            $complexUserRightsDebugPrograms.Add('State', $getValue.userRightsDebugPrograms.state.ToString())
         }
         if ($complexUserRightsDebugPrograms.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1630,7 +1635,7 @@ function Get-TargetResource
 
         $complexUserRightsDelegation = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsDelegation.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsDelegation.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1642,9 +1647,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsDelegation.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsDelegation.state)
+        if ($null -ne $getValue.userRightsDelegation.state)
         {
-            $complexUserRightsDelegation.Add('State', $getValue.AdditionalProperties.userRightsDelegation.state.ToString())
+            $complexUserRightsDelegation.Add('State', $getValue.userRightsDelegation.state.ToString())
         }
         if ($complexUserRightsDelegation.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1653,7 +1658,7 @@ function Get-TargetResource
 
         $complexUserRightsDenyLocalLogOn = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsDenyLocalLogOn.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsDenyLocalLogOn.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1665,9 +1670,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsDenyLocalLogOn.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsDenyLocalLogOn.state)
+        if ($null -ne $getValue.userRightsDenyLocalLogOn.state)
         {
-            $complexUserRightsDenyLocalLogOn.Add('State', $getValue.AdditionalProperties.userRightsDenyLocalLogOn.state.ToString())
+            $complexUserRightsDenyLocalLogOn.Add('State', $getValue.userRightsDenyLocalLogOn.state.ToString())
         }
         if ($complexUserRightsDenyLocalLogOn.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1676,7 +1681,7 @@ function Get-TargetResource
 
         $complexUserRightsGenerateSecurityAudits = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsGenerateSecurityAudits.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsGenerateSecurityAudits.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1688,9 +1693,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsGenerateSecurityAudits.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsGenerateSecurityAudits.state)
+        if ($null -ne $getValue.userRightsGenerateSecurityAudits.state)
         {
-            $complexUserRightsGenerateSecurityAudits.Add('State', $getValue.AdditionalProperties.userRightsGenerateSecurityAudits.state.ToString())
+            $complexUserRightsGenerateSecurityAudits.Add('State', $getValue.userRightsGenerateSecurityAudits.state.ToString())
         }
         if ($complexUserRightsGenerateSecurityAudits.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1699,7 +1704,7 @@ function Get-TargetResource
 
         $complexUserRightsImpersonateClient = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsImpersonateClient.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsImpersonateClient.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1711,9 +1716,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsImpersonateClient.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsImpersonateClient.state)
+        if ($null -ne $getValue.userRightsImpersonateClient.state)
         {
-            $complexUserRightsImpersonateClient.Add('State', $getValue.AdditionalProperties.userRightsImpersonateClient.state.ToString())
+            $complexUserRightsImpersonateClient.Add('State', $getValue.userRightsImpersonateClient.state.ToString())
         }
         if ($complexUserRightsImpersonateClient.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1722,7 +1727,7 @@ function Get-TargetResource
 
         $complexUserRightsIncreaseSchedulingPriority = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsIncreaseSchedulingPriority.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsIncreaseSchedulingPriority.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1734,9 +1739,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsIncreaseSchedulingPriority.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsIncreaseSchedulingPriority.state)
+        if ($null -ne $getValue.userRightsIncreaseSchedulingPriority.state)
         {
-            $complexUserRightsIncreaseSchedulingPriority.Add('State', $getValue.AdditionalProperties.userRightsIncreaseSchedulingPriority.state.ToString())
+            $complexUserRightsIncreaseSchedulingPriority.Add('State', $getValue.userRightsIncreaseSchedulingPriority.state.ToString())
         }
         if ($complexUserRightsIncreaseSchedulingPriority.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1745,7 +1750,7 @@ function Get-TargetResource
 
         $complexUserRightsLoadUnloadDrivers = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsLoadUnloadDrivers.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsLoadUnloadDrivers.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1757,9 +1762,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsLoadUnloadDrivers.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsLoadUnloadDrivers.state)
+        if ($null -ne $getValue.userRightsLoadUnloadDrivers.state)
         {
-            $complexUserRightsLoadUnloadDrivers.Add('State', $getValue.AdditionalProperties.userRightsLoadUnloadDrivers.state.ToString())
+            $complexUserRightsLoadUnloadDrivers.Add('State', $getValue.userRightsLoadUnloadDrivers.state.ToString())
         }
         if ($complexUserRightsLoadUnloadDrivers.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1768,7 +1773,7 @@ function Get-TargetResource
 
         $complexUserRightsLocalLogOn = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsLocalLogOn.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsLocalLogOn.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1780,9 +1785,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsLocalLogOn.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsLocalLogOn.state)
+        if ($null -ne $getValue.userRightsLocalLogOn.state)
         {
-            $complexUserRightsLocalLogOn.Add('State', $getValue.AdditionalProperties.userRightsLocalLogOn.state.ToString())
+            $complexUserRightsLocalLogOn.Add('State', $getValue.userRightsLocalLogOn.state.ToString())
         }
         if ($complexUserRightsLocalLogOn.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1791,7 +1796,7 @@ function Get-TargetResource
 
         $complexUserRightsLockMemory = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsLockMemory.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsLockMemory.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1803,9 +1808,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsLockMemory.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsLockMemory.state)
+        if ($null -ne $getValue.userRightsLockMemory.state)
         {
-            $complexUserRightsLockMemory.Add('State', $getValue.AdditionalProperties.userRightsLockMemory.state.ToString())
+            $complexUserRightsLockMemory.Add('State', $getValue.userRightsLockMemory.state.ToString())
         }
         if ($complexUserRightsLockMemory.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1814,7 +1819,7 @@ function Get-TargetResource
 
         $complexUserRightsManageAuditingAndSecurityLogs = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsManageAuditingAndSecurityLogs.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsManageAuditingAndSecurityLogs.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1826,9 +1831,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsManageAuditingAndSecurityLogs.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsManageAuditingAndSecurityLogs.state)
+        if ($null -ne $getValue.userRightsManageAuditingAndSecurityLogs.state)
         {
-            $complexUserRightsManageAuditingAndSecurityLogs.Add('State', $getValue.AdditionalProperties.userRightsManageAuditingAndSecurityLogs.state.ToString())
+            $complexUserRightsManageAuditingAndSecurityLogs.Add('State', $getValue.userRightsManageAuditingAndSecurityLogs.state.ToString())
         }
         if ($complexUserRightsManageAuditingAndSecurityLogs.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1837,7 +1842,7 @@ function Get-TargetResource
 
         $complexUserRightsManageVolumes = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsManageVolumes.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsManageVolumes.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1849,9 +1854,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsManageVolumes.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsManageVolumes.state)
+        if ($null -ne $getValue.userRightsManageVolumes.state)
         {
-            $complexUserRightsManageVolumes.Add('State', $getValue.AdditionalProperties.userRightsManageVolumes.state.ToString())
+            $complexUserRightsManageVolumes.Add('State', $getValue.userRightsManageVolumes.state.ToString())
         }
         if ($complexUserRightsManageVolumes.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1860,7 +1865,7 @@ function Get-TargetResource
 
         $complexUserRightsModifyFirmwareEnvironment = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsModifyFirmwareEnvironment.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsModifyFirmwareEnvironment.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1872,9 +1877,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsModifyFirmwareEnvironment.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsModifyFirmwareEnvironment.state)
+        if ($null -ne $getValue.userRightsModifyFirmwareEnvironment.state)
         {
-            $complexUserRightsModifyFirmwareEnvironment.Add('State', $getValue.AdditionalProperties.userRightsModifyFirmwareEnvironment.state.ToString())
+            $complexUserRightsModifyFirmwareEnvironment.Add('State', $getValue.userRightsModifyFirmwareEnvironment.state.ToString())
         }
         if ($complexUserRightsModifyFirmwareEnvironment.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1883,7 +1888,7 @@ function Get-TargetResource
 
         $complexUserRightsModifyObjectLabels = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsModifyObjectLabels.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsModifyObjectLabels.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1895,9 +1900,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsModifyObjectLabels.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsModifyObjectLabels.state)
+        if ($null -ne $getValue.userRightsModifyObjectLabels.state)
         {
-            $complexUserRightsModifyObjectLabels.Add('State', $getValue.AdditionalProperties.userRightsModifyObjectLabels.state.ToString())
+            $complexUserRightsModifyObjectLabels.Add('State', $getValue.userRightsModifyObjectLabels.state.ToString())
         }
         if ($complexUserRightsModifyObjectLabels.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1906,7 +1911,7 @@ function Get-TargetResource
 
         $complexUserRightsProfileSingleProcess = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsProfileSingleProcess.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsProfileSingleProcess.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1918,9 +1923,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsProfileSingleProcess.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsProfileSingleProcess.state)
+        if ($null -ne $getValue.userRightsProfileSingleProcess.state)
         {
-            $complexUserRightsProfileSingleProcess.Add('State', $getValue.AdditionalProperties.userRightsProfileSingleProcess.state.ToString())
+            $complexUserRightsProfileSingleProcess.Add('State', $getValue.userRightsProfileSingleProcess.state.ToString())
         }
         if ($complexUserRightsProfileSingleProcess.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1929,7 +1934,7 @@ function Get-TargetResource
 
         $complexUserRightsRemoteDesktopServicesLogOn = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsRemoteDesktopServicesLogOn.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsRemoteDesktopServicesLogOn.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1941,9 +1946,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsRemoteDesktopServicesLogOn.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsRemoteDesktopServicesLogOn.state)
+        if ($null -ne $getValue.userRightsRemoteDesktopServicesLogOn.state)
         {
-            $complexUserRightsRemoteDesktopServicesLogOn.Add('State', $getValue.AdditionalProperties.userRightsRemoteDesktopServicesLogOn.state.ToString())
+            $complexUserRightsRemoteDesktopServicesLogOn.Add('State', $getValue.userRightsRemoteDesktopServicesLogOn.state.ToString())
         }
         if ($complexUserRightsRemoteDesktopServicesLogOn.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1952,7 +1957,7 @@ function Get-TargetResource
 
         $complexUserRightsRemoteShutdown = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsRemoteShutdown.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsRemoteShutdown.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1964,9 +1969,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsRemoteShutdown.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsRemoteShutdown.state)
+        if ($null -ne $getValue.userRightsRemoteShutdown.state)
         {
-            $complexUserRightsRemoteShutdown.Add('State', $getValue.AdditionalProperties.userRightsRemoteShutdown.state.ToString())
+            $complexUserRightsRemoteShutdown.Add('State', $getValue.userRightsRemoteShutdown.state.ToString())
         }
         if ($complexUserRightsRemoteShutdown.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1975,7 +1980,7 @@ function Get-TargetResource
 
         $complexUserRightsRestoreData = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsRestoreData.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsRestoreData.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -1987,9 +1992,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsRestoreData.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsRestoreData.state)
+        if ($null -ne $getValue.userRightsRestoreData.state)
         {
-            $complexUserRightsRestoreData.Add('State', $getValue.AdditionalProperties.userRightsRestoreData.state.ToString())
+            $complexUserRightsRestoreData.Add('State', $getValue.userRightsRestoreData.state.ToString())
         }
         if ($complexUserRightsRestoreData.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1998,7 +2003,7 @@ function Get-TargetResource
 
         $complexUserRightsTakeOwnership = [ordered]@{}
         $complexLocalUsersOrGroups = @()
-        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsTakeOwnership.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.userRightsTakeOwnership.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = [ordered]@{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
@@ -2010,9 +2015,9 @@ function Get-TargetResource
             }
         }
         $complexUserRightsTakeOwnership.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
-        if ($null -ne $getValue.AdditionalProperties.userRightsTakeOwnership.state)
+        if ($null -ne $getValue.userRightsTakeOwnership.state)
         {
-            $complexUserRightsTakeOwnership.Add('State', $getValue.AdditionalProperties.userRightsTakeOwnership.state.ToString())
+            $complexUserRightsTakeOwnership.Add('State', $getValue.userRightsTakeOwnership.state.ToString())
         }
         if ($complexUserRightsTakeOwnership.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -2023,458 +2028,458 @@ function Get-TargetResource
 
         #region resource generator code
         $enumApplicationGuardBlockClipboardSharing = $null
-        if ($null -ne $getValue.AdditionalProperties.applicationGuardBlockClipboardSharing)
+        if ($null -ne $getValue.applicationGuardBlockClipboardSharing)
         {
-            $enumApplicationGuardBlockClipboardSharing = $getValue.AdditionalProperties.applicationGuardBlockClipboardSharing.ToString()
+            $enumApplicationGuardBlockClipboardSharing = $getValue.applicationGuardBlockClipboardSharing.ToString()
         }
 
         $enumApplicationGuardBlockFileTransfer = $null
-        if ($null -ne $getValue.AdditionalProperties.applicationGuardBlockFileTransfer)
+        if ($null -ne $getValue.applicationGuardBlockFileTransfer)
         {
-            $enumApplicationGuardBlockFileTransfer = $getValue.AdditionalProperties.applicationGuardBlockFileTransfer.ToString()
+            $enumApplicationGuardBlockFileTransfer = $getValue.applicationGuardBlockFileTransfer.ToString()
         }
 
         $enumApplicationGuardEnabledOptions = $null
-        if ($null -ne $getValue.AdditionalProperties.applicationGuardEnabledOptions)
+        if ($null -ne $getValue.applicationGuardEnabledOptions)
         {
-            $enumApplicationGuardEnabledOptions = $getValue.AdditionalProperties.applicationGuardEnabledOptions.ToString()
+            $enumApplicationGuardEnabledOptions = $getValue.applicationGuardEnabledOptions.ToString()
         }
 
         $enumAppLockerApplicationControl = $null
-        if ($null -ne $getValue.AdditionalProperties.appLockerApplicationControl)
+        if ($null -ne $getValue.appLockerApplicationControl)
         {
-            $enumAppLockerApplicationControl = $getValue.AdditionalProperties.appLockerApplicationControl.ToString()
+            $enumAppLockerApplicationControl = $getValue.appLockerApplicationControl.ToString()
         }
 
         $enumBitLockerRecoveryPasswordRotation = $null
-        if ($null -ne $getValue.AdditionalProperties.bitLockerRecoveryPasswordRotation)
+        if ($null -ne $getValue.bitLockerRecoveryPasswordRotation)
         {
-            $enumBitLockerRecoveryPasswordRotation = $getValue.AdditionalProperties.bitLockerRecoveryPasswordRotation.ToString()
+            $enumBitLockerRecoveryPasswordRotation = $getValue.bitLockerRecoveryPasswordRotation.ToString()
         }
 
         $enumDefenderAdobeReaderLaunchChildProcess = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderAdobeReaderLaunchChildProcess)
+        if ($null -ne $getValue.defenderAdobeReaderLaunchChildProcess)
         {
-            $enumDefenderAdobeReaderLaunchChildProcess = $getValue.AdditionalProperties.defenderAdobeReaderLaunchChildProcess.ToString()
+            $enumDefenderAdobeReaderLaunchChildProcess = $getValue.defenderAdobeReaderLaunchChildProcess.ToString()
         }
 
         $enumDefenderAdvancedRansomewareProtectionType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderAdvancedRansomewareProtectionType)
+        if ($null -ne $getValue.defenderAdvancedRansomewareProtectionType)
         {
-            $enumDefenderAdvancedRansomewareProtectionType = $getValue.AdditionalProperties.defenderAdvancedRansomewareProtectionType.ToString()
+            $enumDefenderAdvancedRansomewareProtectionType = $getValue.defenderAdvancedRansomewareProtectionType.ToString()
         }
 
         $enumDefenderBlockPersistenceThroughWmiType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderBlockPersistenceThroughWmiType)
+        if ($null -ne $getValue.defenderBlockPersistenceThroughWmiType)
         {
-            $enumDefenderBlockPersistenceThroughWmiType = $getValue.AdditionalProperties.defenderBlockPersistenceThroughWmiType.ToString()
+            $enumDefenderBlockPersistenceThroughWmiType = $getValue.defenderBlockPersistenceThroughWmiType.ToString()
         }
 
         $enumDefenderCloudBlockLevel = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderCloudBlockLevel)
+        if ($null -ne $getValue.defenderCloudBlockLevel)
         {
-            $enumDefenderCloudBlockLevel = $getValue.AdditionalProperties.defenderCloudBlockLevel.ToString()
+            $enumDefenderCloudBlockLevel = $getValue.defenderCloudBlockLevel.ToString()
         }
 
         $enumDefenderEmailContentExecution = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderEmailContentExecution)
+        if ($null -ne $getValue.defenderEmailContentExecution)
         {
-            $enumDefenderEmailContentExecution = $getValue.AdditionalProperties.defenderEmailContentExecution.ToString()
+            $enumDefenderEmailContentExecution = $getValue.defenderEmailContentExecution.ToString()
         }
 
         $enumDefenderEmailContentExecutionType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderEmailContentExecutionType)
+        if ($null -ne $getValue.defenderEmailContentExecutionType)
         {
-            $enumDefenderEmailContentExecutionType = $getValue.AdditionalProperties.defenderEmailContentExecutionType.ToString()
+            $enumDefenderEmailContentExecutionType = $getValue.defenderEmailContentExecutionType.ToString()
         }
 
         $enumDefenderGuardMyFoldersType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderGuardMyFoldersType)
+        if ($null -ne $getValue.defenderGuardMyFoldersType)
         {
-            $enumDefenderGuardMyFoldersType = $getValue.AdditionalProperties.defenderGuardMyFoldersType.ToString()
+            $enumDefenderGuardMyFoldersType = $getValue.defenderGuardMyFoldersType.ToString()
         }
 
         $enumDefenderNetworkProtectionType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderNetworkProtectionType)
+        if ($null -ne $getValue.defenderNetworkProtectionType)
         {
-            $enumDefenderNetworkProtectionType = $getValue.AdditionalProperties.defenderNetworkProtectionType.ToString()
+            $enumDefenderNetworkProtectionType = $getValue.defenderNetworkProtectionType.ToString()
         }
 
         $enumDefenderOfficeAppsExecutableContentCreationOrLaunch = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderOfficeAppsExecutableContentCreationOrLaunch)
+        if ($null -ne $getValue.defenderOfficeAppsExecutableContentCreationOrLaunch)
         {
-            $enumDefenderOfficeAppsExecutableContentCreationOrLaunch = $getValue.AdditionalProperties.defenderOfficeAppsExecutableContentCreationOrLaunch.ToString()
+            $enumDefenderOfficeAppsExecutableContentCreationOrLaunch = $getValue.defenderOfficeAppsExecutableContentCreationOrLaunch.ToString()
         }
 
         $enumDefenderOfficeAppsExecutableContentCreationOrLaunchType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderOfficeAppsExecutableContentCreationOrLaunchType)
+        if ($null -ne $getValue.defenderOfficeAppsExecutableContentCreationOrLaunchType)
         {
-            $enumDefenderOfficeAppsExecutableContentCreationOrLaunchType = $getValue.AdditionalProperties.defenderOfficeAppsExecutableContentCreationOrLaunchType.ToString()
+            $enumDefenderOfficeAppsExecutableContentCreationOrLaunchType = $getValue.defenderOfficeAppsExecutableContentCreationOrLaunchType.ToString()
         }
 
         $enumDefenderOfficeAppsLaunchChildProcess = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderOfficeAppsLaunchChildProcess)
+        if ($null -ne $getValue.defenderOfficeAppsLaunchChildProcess)
         {
-            $enumDefenderOfficeAppsLaunchChildProcess = $getValue.AdditionalProperties.defenderOfficeAppsLaunchChildProcess.ToString()
+            $enumDefenderOfficeAppsLaunchChildProcess = $getValue.defenderOfficeAppsLaunchChildProcess.ToString()
         }
 
         $enumDefenderOfficeAppsLaunchChildProcessType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderOfficeAppsLaunchChildProcessType)
+        if ($null -ne $getValue.defenderOfficeAppsLaunchChildProcessType)
         {
-            $enumDefenderOfficeAppsLaunchChildProcessType = $getValue.AdditionalProperties.defenderOfficeAppsLaunchChildProcessType.ToString()
+            $enumDefenderOfficeAppsLaunchChildProcessType = $getValue.defenderOfficeAppsLaunchChildProcessType.ToString()
         }
 
         $enumDefenderOfficeAppsOtherProcessInjection = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderOfficeAppsOtherProcessInjection)
+        if ($null -ne $getValue.defenderOfficeAppsOtherProcessInjection)
         {
-            $enumDefenderOfficeAppsOtherProcessInjection = $getValue.AdditionalProperties.defenderOfficeAppsOtherProcessInjection.ToString()
+            $enumDefenderOfficeAppsOtherProcessInjection = $getValue.defenderOfficeAppsOtherProcessInjection.ToString()
         }
 
         $enumDefenderOfficeAppsOtherProcessInjectionType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderOfficeAppsOtherProcessInjectionType)
+        if ($null -ne $getValue.defenderOfficeAppsOtherProcessInjectionType)
         {
-            $enumDefenderOfficeAppsOtherProcessInjectionType = $getValue.AdditionalProperties.defenderOfficeAppsOtherProcessInjectionType.ToString()
+            $enumDefenderOfficeAppsOtherProcessInjectionType = $getValue.defenderOfficeAppsOtherProcessInjectionType.ToString()
         }
 
         $enumDefenderOfficeCommunicationAppsLaunchChildProcess = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderOfficeCommunicationAppsLaunchChildProcess)
+        if ($null -ne $getValue.defenderOfficeCommunicationAppsLaunchChildProcess)
         {
-            $enumDefenderOfficeCommunicationAppsLaunchChildProcess = $getValue.AdditionalProperties.defenderOfficeCommunicationAppsLaunchChildProcess.ToString()
+            $enumDefenderOfficeCommunicationAppsLaunchChildProcess = $getValue.defenderOfficeCommunicationAppsLaunchChildProcess.ToString()
         }
 
         $enumDefenderOfficeMacroCodeAllowWin32Imports = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderOfficeMacroCodeAllowWin32Imports)
+        if ($null -ne $getValue.defenderOfficeMacroCodeAllowWin32Imports)
         {
-            $enumDefenderOfficeMacroCodeAllowWin32Imports = $getValue.AdditionalProperties.defenderOfficeMacroCodeAllowWin32Imports.ToString()
+            $enumDefenderOfficeMacroCodeAllowWin32Imports = $getValue.defenderOfficeMacroCodeAllowWin32Imports.ToString()
         }
 
         $enumDefenderOfficeMacroCodeAllowWin32ImportsType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderOfficeMacroCodeAllowWin32ImportsType)
+        if ($null -ne $getValue.defenderOfficeMacroCodeAllowWin32ImportsType)
         {
-            $enumDefenderOfficeMacroCodeAllowWin32ImportsType = $getValue.AdditionalProperties.defenderOfficeMacroCodeAllowWin32ImportsType.ToString()
+            $enumDefenderOfficeMacroCodeAllowWin32ImportsType = $getValue.defenderOfficeMacroCodeAllowWin32ImportsType.ToString()
         }
 
         $enumDefenderPotentiallyUnwantedAppAction = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderPotentiallyUnwantedAppAction)
+        if ($null -ne $getValue.defenderPotentiallyUnwantedAppAction)
         {
-            $enumDefenderPotentiallyUnwantedAppAction = $getValue.AdditionalProperties.defenderPotentiallyUnwantedAppAction.ToString()
+            $enumDefenderPotentiallyUnwantedAppAction = $getValue.defenderPotentiallyUnwantedAppAction.ToString()
         }
 
         $enumDefenderPreventCredentialStealingType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderPreventCredentialStealingType)
+        if ($null -ne $getValue.defenderPreventCredentialStealingType)
         {
-            $enumDefenderPreventCredentialStealingType = $getValue.AdditionalProperties.defenderPreventCredentialStealingType.ToString()
+            $enumDefenderPreventCredentialStealingType = $getValue.defenderPreventCredentialStealingType.ToString()
         }
 
         $enumDefenderProcessCreation = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderProcessCreation)
+        if ($null -ne $getValue.defenderProcessCreation)
         {
-            $enumDefenderProcessCreation = $getValue.AdditionalProperties.defenderProcessCreation.ToString()
+            $enumDefenderProcessCreation = $getValue.defenderProcessCreation.ToString()
         }
 
         $enumDefenderProcessCreationType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderProcessCreationType)
+        if ($null -ne $getValue.defenderProcessCreationType)
         {
-            $enumDefenderProcessCreationType = $getValue.AdditionalProperties.defenderProcessCreationType.ToString()
+            $enumDefenderProcessCreationType = $getValue.defenderProcessCreationType.ToString()
         }
 
         $enumDefenderScanDirection = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScanDirection)
+        if ($null -ne $getValue.defenderScanDirection)
         {
-            $enumDefenderScanDirection = $getValue.AdditionalProperties.defenderScanDirection.ToString()
+            $enumDefenderScanDirection = $getValue.defenderScanDirection.ToString()
         }
 
         $enumDefenderScanType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScanType)
+        if ($null -ne $getValue.defenderScanType)
         {
-            $enumDefenderScanType = $getValue.AdditionalProperties.defenderScanType.ToString()
+            $enumDefenderScanType = $getValue.defenderScanType.ToString()
         }
 
         $enumDefenderScheduledScanDay = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScheduledScanDay)
+        if ($null -ne $getValue.defenderScheduledScanDay)
         {
-            $enumDefenderScheduledScanDay = $getValue.AdditionalProperties.defenderScheduledScanDay.ToString()
+            $enumDefenderScheduledScanDay = $getValue.defenderScheduledScanDay.ToString()
         }
 
         $enumDefenderScriptDownloadedPayloadExecution = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScriptDownloadedPayloadExecution)
+        if ($null -ne $getValue.defenderScriptDownloadedPayloadExecution)
         {
-            $enumDefenderScriptDownloadedPayloadExecution = $getValue.AdditionalProperties.defenderScriptDownloadedPayloadExecution.ToString()
+            $enumDefenderScriptDownloadedPayloadExecution = $getValue.defenderScriptDownloadedPayloadExecution.ToString()
         }
 
         $enumDefenderScriptDownloadedPayloadExecutionType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScriptDownloadedPayloadExecutionType)
+        if ($null -ne $getValue.defenderScriptDownloadedPayloadExecutionType)
         {
-            $enumDefenderScriptDownloadedPayloadExecutionType = $getValue.AdditionalProperties.defenderScriptDownloadedPayloadExecutionType.ToString()
+            $enumDefenderScriptDownloadedPayloadExecutionType = $getValue.defenderScriptDownloadedPayloadExecutionType.ToString()
         }
 
         $enumDefenderScriptObfuscatedMacroCode = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScriptObfuscatedMacroCode)
+        if ($null -ne $getValue.defenderScriptObfuscatedMacroCode)
         {
-            $enumDefenderScriptObfuscatedMacroCode = $getValue.AdditionalProperties.defenderScriptObfuscatedMacroCode.ToString()
+            $enumDefenderScriptObfuscatedMacroCode = $getValue.defenderScriptObfuscatedMacroCode.ToString()
         }
 
         $enumDefenderScriptObfuscatedMacroCodeType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScriptObfuscatedMacroCodeType)
+        if ($null -ne $getValue.defenderScriptObfuscatedMacroCodeType)
         {
-            $enumDefenderScriptObfuscatedMacroCodeType = $getValue.AdditionalProperties.defenderScriptObfuscatedMacroCodeType.ToString()
+            $enumDefenderScriptObfuscatedMacroCodeType = $getValue.defenderScriptObfuscatedMacroCodeType.ToString()
         }
 
         $enumDefenderSecurityCenterITContactDisplay = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderSecurityCenterITContactDisplay)
+        if ($null -ne $getValue.defenderSecurityCenterITContactDisplay)
         {
-            $enumDefenderSecurityCenterITContactDisplay = $getValue.AdditionalProperties.defenderSecurityCenterITContactDisplay.ToString()
+            $enumDefenderSecurityCenterITContactDisplay = $getValue.defenderSecurityCenterITContactDisplay.ToString()
         }
 
         $enumDefenderSecurityCenterNotificationsFromApp = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderSecurityCenterNotificationsFromApp)
+        if ($null -ne $getValue.defenderSecurityCenterNotificationsFromApp)
         {
-            $enumDefenderSecurityCenterNotificationsFromApp = $getValue.AdditionalProperties.defenderSecurityCenterNotificationsFromApp.ToString()
+            $enumDefenderSecurityCenterNotificationsFromApp = $getValue.defenderSecurityCenterNotificationsFromApp.ToString()
         }
 
         $enumDefenderSubmitSamplesConsentType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderSubmitSamplesConsentType)
+        if ($null -ne $getValue.defenderSubmitSamplesConsentType)
         {
-            $enumDefenderSubmitSamplesConsentType = $getValue.AdditionalProperties.defenderSubmitSamplesConsentType.ToString()
+            $enumDefenderSubmitSamplesConsentType = $getValue.defenderSubmitSamplesConsentType.ToString()
         }
 
         $enumDefenderUntrustedExecutable = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderUntrustedExecutable)
+        if ($null -ne $getValue.defenderUntrustedExecutable)
         {
-            $enumDefenderUntrustedExecutable = $getValue.AdditionalProperties.defenderUntrustedExecutable.ToString()
+            $enumDefenderUntrustedExecutable = $getValue.defenderUntrustedExecutable.ToString()
         }
 
         $enumDefenderUntrustedExecutableType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderUntrustedExecutableType)
+        if ($null -ne $getValue.defenderUntrustedExecutableType)
         {
-            $enumDefenderUntrustedExecutableType = $getValue.AdditionalProperties.defenderUntrustedExecutableType.ToString()
+            $enumDefenderUntrustedExecutableType = $getValue.defenderUntrustedExecutableType.ToString()
         }
 
         $enumDefenderUntrustedUSBProcess = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderUntrustedUSBProcess)
+        if ($null -ne $getValue.defenderUntrustedUSBProcess)
         {
-            $enumDefenderUntrustedUSBProcess = $getValue.AdditionalProperties.defenderUntrustedUSBProcess.ToString()
+            $enumDefenderUntrustedUSBProcess = $getValue.defenderUntrustedUSBProcess.ToString()
         }
 
         $enumDefenderUntrustedUSBProcessType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderUntrustedUSBProcessType)
+        if ($null -ne $getValue.defenderUntrustedUSBProcessType)
         {
-            $enumDefenderUntrustedUSBProcessType = $getValue.AdditionalProperties.defenderUntrustedUSBProcessType.ToString()
+            $enumDefenderUntrustedUSBProcessType = $getValue.defenderUntrustedUSBProcessType.ToString()
         }
 
         $enumDeviceGuardLaunchSystemGuard = $null
-        if ($null -ne $getValue.AdditionalProperties.deviceGuardLaunchSystemGuard)
+        if ($null -ne $getValue.deviceGuardLaunchSystemGuard)
         {
-            $enumDeviceGuardLaunchSystemGuard = $getValue.AdditionalProperties.deviceGuardLaunchSystemGuard.ToString()
+            $enumDeviceGuardLaunchSystemGuard = $getValue.deviceGuardLaunchSystemGuard.ToString()
         }
 
         $enumDeviceGuardLocalSystemAuthorityCredentialGuardSettings = $null
-        if ($null -ne $getValue.AdditionalProperties.deviceGuardLocalSystemAuthorityCredentialGuardSettings)
+        if ($null -ne $getValue.deviceGuardLocalSystemAuthorityCredentialGuardSettings)
         {
-            $enumDeviceGuardLocalSystemAuthorityCredentialGuardSettings = $getValue.AdditionalProperties.deviceGuardLocalSystemAuthorityCredentialGuardSettings.ToString()
+            $enumDeviceGuardLocalSystemAuthorityCredentialGuardSettings = $getValue.deviceGuardLocalSystemAuthorityCredentialGuardSettings.ToString()
         }
 
         $enumDeviceGuardSecureBootWithDMA = $null
-        if ($null -ne $getValue.AdditionalProperties.deviceGuardSecureBootWithDMA)
+        if ($null -ne $getValue.deviceGuardSecureBootWithDMA)
         {
-            $enumDeviceGuardSecureBootWithDMA = $getValue.AdditionalProperties.deviceGuardSecureBootWithDMA.ToString()
+            $enumDeviceGuardSecureBootWithDMA = $getValue.deviceGuardSecureBootWithDMA.ToString()
         }
 
         $enumDmaGuardDeviceEnumerationPolicy = $null
-        if ($null -ne $getValue.AdditionalProperties.dmaGuardDeviceEnumerationPolicy)
+        if ($null -ne $getValue.dmaGuardDeviceEnumerationPolicy)
         {
-            $enumDmaGuardDeviceEnumerationPolicy = $getValue.AdditionalProperties.dmaGuardDeviceEnumerationPolicy.ToString()
+            $enumDmaGuardDeviceEnumerationPolicy = $getValue.dmaGuardDeviceEnumerationPolicy.ToString()
         }
 
         $enumFirewallCertificateRevocationListCheckMethod = $null
-        if ($null -ne $getValue.AdditionalProperties.firewallCertificateRevocationListCheckMethod)
+        if ($null -ne $getValue.firewallCertificateRevocationListCheckMethod)
         {
-            $enumFirewallCertificateRevocationListCheckMethod = $getValue.AdditionalProperties.firewallCertificateRevocationListCheckMethod.ToString()
+            $enumFirewallCertificateRevocationListCheckMethod = $getValue.firewallCertificateRevocationListCheckMethod.ToString()
         }
 
         $enumFirewallPacketQueueingMethod = $null
-        if ($null -ne $getValue.AdditionalProperties.firewallPacketQueueingMethod)
+        if ($null -ne $getValue.firewallPacketQueueingMethod)
         {
-            $enumFirewallPacketQueueingMethod = $getValue.AdditionalProperties.firewallPacketQueueingMethod.ToString()
+            $enumFirewallPacketQueueingMethod = $getValue.firewallPacketQueueingMethod.ToString()
         }
 
         $enumFirewallPreSharedKeyEncodingMethod = $null
-        if ($null -ne $getValue.AdditionalProperties.firewallPreSharedKeyEncodingMethod)
+        if ($null -ne $getValue.firewallPreSharedKeyEncodingMethod)
         {
-            $enumFirewallPreSharedKeyEncodingMethod = $getValue.AdditionalProperties.firewallPreSharedKeyEncodingMethod.ToString()
+            $enumFirewallPreSharedKeyEncodingMethod = $getValue.firewallPreSharedKeyEncodingMethod.ToString()
         }
 
         $enumLanManagerAuthenticationLevel = $null
-        if ($null -ne $getValue.AdditionalProperties.lanManagerAuthenticationLevel)
+        if ($null -ne $getValue.lanManagerAuthenticationLevel)
         {
-            $enumLanManagerAuthenticationLevel = $getValue.AdditionalProperties.lanManagerAuthenticationLevel.ToString()
+            $enumLanManagerAuthenticationLevel = $getValue.lanManagerAuthenticationLevel.ToString()
         }
 
         $enumLocalSecurityOptionsAdministratorElevationPromptBehavior = $null
-        if ($null -ne $getValue.AdditionalProperties.localSecurityOptionsAdministratorElevationPromptBehavior)
+        if ($null -ne $getValue.localSecurityOptionsAdministratorElevationPromptBehavior)
         {
-            $enumLocalSecurityOptionsAdministratorElevationPromptBehavior = $getValue.AdditionalProperties.localSecurityOptionsAdministratorElevationPromptBehavior.ToString()
+            $enumLocalSecurityOptionsAdministratorElevationPromptBehavior = $getValue.localSecurityOptionsAdministratorElevationPromptBehavior.ToString()
         }
 
         $enumLocalSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser = $null
-        if ($null -ne $getValue.AdditionalProperties.localSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser)
+        if ($null -ne $getValue.localSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser)
         {
-            $enumLocalSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser = $getValue.AdditionalProperties.localSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser.ToString()
+            $enumLocalSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser = $getValue.localSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser.ToString()
         }
 
         $enumLocalSecurityOptionsInformationDisplayedOnLockScreen = $null
-        if ($null -ne $getValue.AdditionalProperties.localSecurityOptionsInformationDisplayedOnLockScreen)
+        if ($null -ne $getValue.localSecurityOptionsInformationDisplayedOnLockScreen)
         {
-            $enumLocalSecurityOptionsInformationDisplayedOnLockScreen = $getValue.AdditionalProperties.localSecurityOptionsInformationDisplayedOnLockScreen.ToString()
+            $enumLocalSecurityOptionsInformationDisplayedOnLockScreen = $getValue.localSecurityOptionsInformationDisplayedOnLockScreen.ToString()
         }
 
         $enumLocalSecurityOptionsInformationShownOnLockScreen = $null
-        if ($null -ne $getValue.AdditionalProperties.localSecurityOptionsInformationShownOnLockScreen)
+        if ($null -ne $getValue.localSecurityOptionsInformationShownOnLockScreen)
         {
-            $enumLocalSecurityOptionsInformationShownOnLockScreen = $getValue.AdditionalProperties.localSecurityOptionsInformationShownOnLockScreen.ToString()
+            $enumLocalSecurityOptionsInformationShownOnLockScreen = $getValue.localSecurityOptionsInformationShownOnLockScreen.ToString()
         }
 
         $enumLocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients = $null
-        if ($null -ne $getValue.AdditionalProperties.localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients)
+        if ($null -ne $getValue.localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients)
         {
-            $enumLocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients = $getValue.AdditionalProperties.localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients.ToString()
+            $enumLocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients = $getValue.localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients.ToString()
         }
 
         $enumLocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers = $null
-        if ($null -ne $getValue.AdditionalProperties.localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers)
+        if ($null -ne $getValue.localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers)
         {
-            $enumLocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers = $getValue.AdditionalProperties.localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers.ToString()
+            $enumLocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers = $getValue.localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers.ToString()
         }
 
         $enumLocalSecurityOptionsSmartCardRemovalBehavior = $null
-        if ($null -ne $getValue.AdditionalProperties.localSecurityOptionsSmartCardRemovalBehavior)
+        if ($null -ne $getValue.localSecurityOptionsSmartCardRemovalBehavior)
         {
-            $enumLocalSecurityOptionsSmartCardRemovalBehavior = $getValue.AdditionalProperties.localSecurityOptionsSmartCardRemovalBehavior.ToString()
+            $enumLocalSecurityOptionsSmartCardRemovalBehavior = $getValue.localSecurityOptionsSmartCardRemovalBehavior.ToString()
         }
 
         $enumLocalSecurityOptionsStandardUserElevationPromptBehavior = $null
-        if ($null -ne $getValue.AdditionalProperties.localSecurityOptionsStandardUserElevationPromptBehavior)
+        if ($null -ne $getValue.localSecurityOptionsStandardUserElevationPromptBehavior)
         {
-            $enumLocalSecurityOptionsStandardUserElevationPromptBehavior = $getValue.AdditionalProperties.localSecurityOptionsStandardUserElevationPromptBehavior.ToString()
+            $enumLocalSecurityOptionsStandardUserElevationPromptBehavior = $getValue.localSecurityOptionsStandardUserElevationPromptBehavior.ToString()
         }
 
         $enumWindowsDefenderTamperProtection = $null
-        if ($null -ne $getValue.AdditionalProperties.windowsDefenderTamperProtection)
+        if ($null -ne $getValue.windowsDefenderTamperProtection)
         {
-            $enumWindowsDefenderTamperProtection = $getValue.AdditionalProperties.windowsDefenderTamperProtection.ToString()
+            $enumWindowsDefenderTamperProtection = $getValue.windowsDefenderTamperProtection.ToString()
         }
 
         $enumXboxServicesAccessoryManagementServiceStartupMode = $null
-        if ($null -ne $getValue.AdditionalProperties.xboxServicesAccessoryManagementServiceStartupMode)
+        if ($null -ne $getValue.xboxServicesAccessoryManagementServiceStartupMode)
         {
-            $enumXboxServicesAccessoryManagementServiceStartupMode = $getValue.AdditionalProperties.xboxServicesAccessoryManagementServiceStartupMode.ToString()
+            $enumXboxServicesAccessoryManagementServiceStartupMode = $getValue.xboxServicesAccessoryManagementServiceStartupMode.ToString()
         }
 
         $enumXboxServicesLiveAuthManagerServiceStartupMode = $null
-        if ($null -ne $getValue.AdditionalProperties.xboxServicesLiveAuthManagerServiceStartupMode)
+        if ($null -ne $getValue.xboxServicesLiveAuthManagerServiceStartupMode)
         {
-            $enumXboxServicesLiveAuthManagerServiceStartupMode = $getValue.AdditionalProperties.xboxServicesLiveAuthManagerServiceStartupMode.ToString()
+            $enumXboxServicesLiveAuthManagerServiceStartupMode = $getValue.xboxServicesLiveAuthManagerServiceStartupMode.ToString()
         }
 
         $enumXboxServicesLiveGameSaveServiceStartupMode = $null
-        if ($null -ne $getValue.AdditionalProperties.xboxServicesLiveGameSaveServiceStartupMode)
+        if ($null -ne $getValue.xboxServicesLiveGameSaveServiceStartupMode)
         {
-            $enumXboxServicesLiveGameSaveServiceStartupMode = $getValue.AdditionalProperties.xboxServicesLiveGameSaveServiceStartupMode.ToString()
+            $enumXboxServicesLiveGameSaveServiceStartupMode = $getValue.xboxServicesLiveGameSaveServiceStartupMode.ToString()
         }
 
         $enumXboxServicesLiveNetworkingServiceStartupMode = $null
-        if ($null -ne $getValue.AdditionalProperties.xboxServicesLiveNetworkingServiceStartupMode)
+        if ($null -ne $getValue.xboxServicesLiveNetworkingServiceStartupMode)
         {
-            $enumXboxServicesLiveNetworkingServiceStartupMode = $getValue.AdditionalProperties.xboxServicesLiveNetworkingServiceStartupMode.ToString()
+            $enumXboxServicesLiveNetworkingServiceStartupMode = $getValue.xboxServicesLiveNetworkingServiceStartupMode.ToString()
         }
 
         #endregion
 
         #region resource generator code
         $timeDefenderScheduledQuickScanTime = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScheduledQuickScanTime)
+        if ($null -ne $getValue.defenderScheduledQuickScanTime)
         {
-            $timeDefenderScheduledQuickScanTime = ([TimeSpan]$getValue.AdditionalProperties.defenderScheduledQuickScanTime).ToString()
+            $timeDefenderScheduledQuickScanTime = ([TimeSpan]$getValue.defenderScheduledQuickScanTime).ToString()
         }
 
         $timeDefenderScheduledScanTime = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScheduledScanTime)
+        if ($null -ne $getValue.defenderScheduledScanTime)
         {
-            $timeDefenderScheduledScanTime = ([TimeSpan]$getValue.AdditionalProperties.defenderScheduledScanTime).ToString()
+            $timeDefenderScheduledScanTime = ([TimeSpan]$getValue.defenderScheduledScanTime).ToString()
         }
 
         #endregion
 
         $results = @{
             #region resource generator code
-            ApplicationGuardAllowCameraMicrophoneRedirection                             = $getValue.AdditionalProperties.applicationGuardAllowCameraMicrophoneRedirection
-            ApplicationGuardAllowFileSaveOnHost                                          = $getValue.AdditionalProperties.applicationGuardAllowFileSaveOnHost
-            ApplicationGuardAllowPersistence                                             = $getValue.AdditionalProperties.applicationGuardAllowPersistence
-            ApplicationGuardAllowPrintToLocalPrinters                                    = $getValue.AdditionalProperties.applicationGuardAllowPrintToLocalPrinters
-            ApplicationGuardAllowPrintToNetworkPrinters                                  = $getValue.AdditionalProperties.applicationGuardAllowPrintToNetworkPrinters
-            ApplicationGuardAllowPrintToPDF                                              = $getValue.AdditionalProperties.applicationGuardAllowPrintToPDF
-            ApplicationGuardAllowPrintToXPS                                              = $getValue.AdditionalProperties.applicationGuardAllowPrintToXPS
-            ApplicationGuardAllowVirtualGPU                                              = $getValue.AdditionalProperties.applicationGuardAllowVirtualGPU
+            ApplicationGuardAllowCameraMicrophoneRedirection                             = $getValue.applicationGuardAllowCameraMicrophoneRedirection
+            ApplicationGuardAllowFileSaveOnHost                                          = $getValue.applicationGuardAllowFileSaveOnHost
+            ApplicationGuardAllowPersistence                                             = $getValue.applicationGuardAllowPersistence
+            ApplicationGuardAllowPrintToLocalPrinters                                    = $getValue.applicationGuardAllowPrintToLocalPrinters
+            ApplicationGuardAllowPrintToNetworkPrinters                                  = $getValue.applicationGuardAllowPrintToNetworkPrinters
+            ApplicationGuardAllowPrintToPDF                                              = $getValue.applicationGuardAllowPrintToPDF
+            ApplicationGuardAllowPrintToXPS                                              = $getValue.applicationGuardAllowPrintToXPS
+            ApplicationGuardAllowVirtualGPU                                              = $getValue.applicationGuardAllowVirtualGPU
             ApplicationGuardBlockClipboardSharing                                        = $enumApplicationGuardBlockClipboardSharing
             ApplicationGuardBlockFileTransfer                                            = $enumApplicationGuardBlockFileTransfer
-            ApplicationGuardBlockNonEnterpriseContent                                    = $getValue.AdditionalProperties.applicationGuardBlockNonEnterpriseContent
-            ApplicationGuardCertificateThumbprints                                       = $getValue.AdditionalProperties.applicationGuardCertificateThumbprints
-            ApplicationGuardEnabled                                                      = $getValue.AdditionalProperties.applicationGuardEnabled
+            ApplicationGuardBlockNonEnterpriseContent                                    = $getValue.applicationGuardBlockNonEnterpriseContent
+            ApplicationGuardCertificateThumbprints                                       = $getValue.applicationGuardCertificateThumbprints
+            ApplicationGuardEnabled                                                      = $getValue.applicationGuardEnabled
             ApplicationGuardEnabledOptions                                               = $enumApplicationGuardEnabledOptions
-            ApplicationGuardForceAuditing                                                = $getValue.AdditionalProperties.applicationGuardForceAuditing
+            ApplicationGuardForceAuditing                                                = $getValue.applicationGuardForceAuditing
             AppLockerApplicationControl                                                  = $enumAppLockerApplicationControl
-            BitLockerAllowStandardUserEncryption                                         = $getValue.AdditionalProperties.bitLockerAllowStandardUserEncryption
-            BitLockerDisableWarningForOtherDiskEncryption                                = $getValue.AdditionalProperties.bitLockerDisableWarningForOtherDiskEncryption
-            BitLockerEnableStorageCardEncryptionOnMobile                                 = $getValue.AdditionalProperties.bitLockerEnableStorageCardEncryptionOnMobile
-            BitLockerEncryptDevice                                                       = $getValue.AdditionalProperties.bitLockerEncryptDevice
+            BitLockerAllowStandardUserEncryption                                         = $getValue.bitLockerAllowStandardUserEncryption
+            BitLockerDisableWarningForOtherDiskEncryption                                = $getValue.bitLockerDisableWarningForOtherDiskEncryption
+            BitLockerEnableStorageCardEncryptionOnMobile                                 = $getValue.bitLockerEnableStorageCardEncryptionOnMobile
+            BitLockerEncryptDevice                                                       = $getValue.bitLockerEncryptDevice
             BitLockerFixedDrivePolicy                                                    = $complexBitLockerFixedDrivePolicy
             BitLockerRecoveryPasswordRotation                                            = $enumBitLockerRecoveryPasswordRotation
             BitLockerRemovableDrivePolicy                                                = $complexBitLockerRemovableDrivePolicy
             BitLockerSystemDrivePolicy                                                   = $complexBitLockerSystemDrivePolicy
-            DefenderAdditionalGuardedFolders                                             = $getValue.AdditionalProperties.defenderAdditionalGuardedFolders
+            DefenderAdditionalGuardedFolders                                             = $getValue.defenderAdditionalGuardedFolders
             DefenderAdobeReaderLaunchChildProcess                                        = $enumDefenderAdobeReaderLaunchChildProcess
             DefenderAdvancedRansomewareProtectionType                                    = $enumDefenderAdvancedRansomewareProtectionType
-            DefenderAllowBehaviorMonitoring                                              = $getValue.AdditionalProperties.defenderAllowBehaviorMonitoring
-            DefenderAllowCloudProtection                                                 = $getValue.AdditionalProperties.defenderAllowCloudProtection
-            DefenderAllowEndUserAccess                                                   = $getValue.AdditionalProperties.defenderAllowEndUserAccess
-            DefenderAllowIntrusionPreventionSystem                                       = $getValue.AdditionalProperties.defenderAllowIntrusionPreventionSystem
-            DefenderAllowOnAccessProtection                                              = $getValue.AdditionalProperties.defenderAllowOnAccessProtection
-            DefenderAllowRealTimeMonitoring                                              = $getValue.AdditionalProperties.defenderAllowRealTimeMonitoring
-            DefenderAllowScanArchiveFiles                                                = $getValue.AdditionalProperties.defenderAllowScanArchiveFiles
-            DefenderAllowScanDownloads                                                   = $getValue.AdditionalProperties.defenderAllowScanDownloads
-            DefenderAllowScanNetworkFiles                                                = $getValue.AdditionalProperties.defenderAllowScanNetworkFiles
-            DefenderAllowScanRemovableDrivesDuringFullScan                               = $getValue.AdditionalProperties.defenderAllowScanRemovableDrivesDuringFullScan
-            DefenderAllowScanScriptsLoadedInInternetExplorer                             = $getValue.AdditionalProperties.defenderAllowScanScriptsLoadedInInternetExplorer
-            DefenderAttackSurfaceReductionExcludedPaths                                  = $getValue.AdditionalProperties.defenderAttackSurfaceReductionExcludedPaths
-            DefenderBlockEndUserAccess                                                   = $getValue.AdditionalProperties.defenderBlockEndUserAccess
+            DefenderAllowBehaviorMonitoring                                              = $getValue.defenderAllowBehaviorMonitoring
+            DefenderAllowCloudProtection                                                 = $getValue.defenderAllowCloudProtection
+            DefenderAllowEndUserAccess                                                   = $getValue.defenderAllowEndUserAccess
+            DefenderAllowIntrusionPreventionSystem                                       = $getValue.defenderAllowIntrusionPreventionSystem
+            DefenderAllowOnAccessProtection                                              = $getValue.defenderAllowOnAccessProtection
+            DefenderAllowRealTimeMonitoring                                              = $getValue.defenderAllowRealTimeMonitoring
+            DefenderAllowScanArchiveFiles                                                = $getValue.defenderAllowScanArchiveFiles
+            DefenderAllowScanDownloads                                                   = $getValue.defenderAllowScanDownloads
+            DefenderAllowScanNetworkFiles                                                = $getValue.defenderAllowScanNetworkFiles
+            DefenderAllowScanRemovableDrivesDuringFullScan                               = $getValue.defenderAllowScanRemovableDrivesDuringFullScan
+            DefenderAllowScanScriptsLoadedInInternetExplorer                             = $getValue.defenderAllowScanScriptsLoadedInInternetExplorer
+            DefenderAttackSurfaceReductionExcludedPaths                                  = $getValue.defenderAttackSurfaceReductionExcludedPaths
+            DefenderBlockEndUserAccess                                                   = $getValue.defenderBlockEndUserAccess
             DefenderBlockPersistenceThroughWmiType                                       = $enumDefenderBlockPersistenceThroughWmiType
-            DefenderCheckForSignaturesBeforeRunningScan                                  = $getValue.AdditionalProperties.defenderCheckForSignaturesBeforeRunningScan
+            DefenderCheckForSignaturesBeforeRunningScan                                  = $getValue.defenderCheckForSignaturesBeforeRunningScan
             DefenderCloudBlockLevel                                                      = $enumDefenderCloudBlockLevel
-            DefenderCloudExtendedTimeoutInSeconds                                        = $getValue.AdditionalProperties.defenderCloudExtendedTimeoutInSeconds
-            DefenderDaysBeforeDeletingQuarantinedMalware                                 = $getValue.AdditionalProperties.defenderDaysBeforeDeletingQuarantinedMalware
+            DefenderCloudExtendedTimeoutInSeconds                                        = $getValue.defenderCloudExtendedTimeoutInSeconds
+            DefenderDaysBeforeDeletingQuarantinedMalware                                 = $getValue.defenderDaysBeforeDeletingQuarantinedMalware
             DefenderDetectedMalwareActions                                               = $complexDefenderDetectedMalwareActions
-            DefenderDisableBehaviorMonitoring                                            = $getValue.AdditionalProperties.defenderDisableBehaviorMonitoring
-            DefenderDisableCatchupFullScan                                               = $getValue.AdditionalProperties.defenderDisableCatchupFullScan
-            DefenderDisableCatchupQuickScan                                              = $getValue.AdditionalProperties.defenderDisableCatchupQuickScan
-            DefenderDisableCloudProtection                                               = $getValue.AdditionalProperties.defenderDisableCloudProtection
-            DefenderDisableIntrusionPreventionSystem                                     = $getValue.AdditionalProperties.defenderDisableIntrusionPreventionSystem
-            DefenderDisableOnAccessProtection                                            = $getValue.AdditionalProperties.defenderDisableOnAccessProtection
-            DefenderDisableRealTimeMonitoring                                            = $getValue.AdditionalProperties.defenderDisableRealTimeMonitoring
-            DefenderDisableScanArchiveFiles                                              = $getValue.AdditionalProperties.defenderDisableScanArchiveFiles
-            DefenderDisableScanDownloads                                                 = $getValue.AdditionalProperties.defenderDisableScanDownloads
-            DefenderDisableScanNetworkFiles                                              = $getValue.AdditionalProperties.defenderDisableScanNetworkFiles
-            DefenderDisableScanRemovableDrivesDuringFullScan                             = $getValue.AdditionalProperties.defenderDisableScanRemovableDrivesDuringFullScan
-            DefenderDisableScanScriptsLoadedInInternetExplorer                           = $getValue.AdditionalProperties.defenderDisableScanScriptsLoadedInInternetExplorer
+            DefenderDisableBehaviorMonitoring                                            = $getValue.defenderDisableBehaviorMonitoring
+            DefenderDisableCatchupFullScan                                               = $getValue.defenderDisableCatchupFullScan
+            DefenderDisableCatchupQuickScan                                              = $getValue.defenderDisableCatchupQuickScan
+            DefenderDisableCloudProtection                                               = $getValue.defenderDisableCloudProtection
+            DefenderDisableIntrusionPreventionSystem                                     = $getValue.defenderDisableIntrusionPreventionSystem
+            DefenderDisableOnAccessProtection                                            = $getValue.defenderDisableOnAccessProtection
+            DefenderDisableRealTimeMonitoring                                            = $getValue.defenderDisableRealTimeMonitoring
+            DefenderDisableScanArchiveFiles                                              = $getValue.defenderDisableScanArchiveFiles
+            DefenderDisableScanDownloads                                                 = $getValue.defenderDisableScanDownloads
+            DefenderDisableScanNetworkFiles                                              = $getValue.defenderDisableScanNetworkFiles
+            DefenderDisableScanRemovableDrivesDuringFullScan                             = $getValue.defenderDisableScanRemovableDrivesDuringFullScan
+            DefenderDisableScanScriptsLoadedInInternetExplorer                           = $getValue.defenderDisableScanScriptsLoadedInInternetExplorer
             DefenderEmailContentExecution                                                = $enumDefenderEmailContentExecution
             DefenderEmailContentExecutionType                                            = $enumDefenderEmailContentExecutionType
-            DefenderEnableLowCpuPriority                                                 = $getValue.AdditionalProperties.defenderEnableLowCpuPriority
-            DefenderEnableScanIncomingMail                                               = $getValue.AdditionalProperties.defenderEnableScanIncomingMail
-            DefenderEnableScanMappedNetworkDrivesDuringFullScan                          = $getValue.AdditionalProperties.defenderEnableScanMappedNetworkDrivesDuringFullScan
-            DefenderExploitProtectionXml                                                 = $getValue.AdditionalProperties.defenderExploitProtectionXml
-            DefenderExploitProtectionXmlFileName                                         = $getValue.AdditionalProperties.defenderExploitProtectionXmlFileName
-            DefenderFileExtensionsToExclude                                              = $getValue.AdditionalProperties.defenderFileExtensionsToExclude
-            DefenderFilesAndFoldersToExclude                                             = $getValue.AdditionalProperties.defenderFilesAndFoldersToExclude
-            DefenderGuardedFoldersAllowedAppPaths                                        = $getValue.AdditionalProperties.defenderGuardedFoldersAllowedAppPaths
+            DefenderEnableLowCpuPriority                                                 = $getValue.defenderEnableLowCpuPriority
+            DefenderEnableScanIncomingMail                                               = $getValue.defenderEnableScanIncomingMail
+            DefenderEnableScanMappedNetworkDrivesDuringFullScan                          = $getValue.defenderEnableScanMappedNetworkDrivesDuringFullScan
+            DefenderExploitProtectionXml                                                 = $getValue.defenderExploitProtectionXml
+            DefenderExploitProtectionXmlFileName                                         = $getValue.defenderExploitProtectionXmlFileName
+            DefenderFileExtensionsToExclude                                              = $getValue.defenderFileExtensionsToExclude
+            DefenderFilesAndFoldersToExclude                                             = $getValue.defenderFilesAndFoldersToExclude
+            DefenderGuardedFoldersAllowedAppPaths                                        = $getValue.defenderGuardedFoldersAllowedAppPaths
             DefenderGuardMyFoldersType                                                   = $enumDefenderGuardMyFoldersType
             DefenderNetworkProtectionType                                                = $enumDefenderNetworkProtectionType
             DefenderOfficeAppsExecutableContentCreationOrLaunch                          = $enumDefenderOfficeAppsExecutableContentCreationOrLaunch
@@ -2490,9 +2495,9 @@ function Get-TargetResource
             DefenderPreventCredentialStealingType                                        = $enumDefenderPreventCredentialStealingType
             DefenderProcessCreation                                                      = $enumDefenderProcessCreation
             DefenderProcessCreationType                                                  = $enumDefenderProcessCreationType
-            DefenderProcessesToExclude                                                   = $getValue.AdditionalProperties.defenderProcessesToExclude
+            DefenderProcessesToExclude                                                   = $getValue.defenderProcessesToExclude
             DefenderScanDirection                                                        = $enumDefenderScanDirection
-            DefenderScanMaxCpuPercentage                                                 = $getValue.AdditionalProperties.defenderScanMaxCpuPercentage
+            DefenderScanMaxCpuPercentage                                                 = $getValue.defenderScanMaxCpuPercentage
             DefenderScanType                                                             = $enumDefenderScanType
             DefenderScheduledQuickScanTime                                               = $timeDefenderScheduledQuickScanTime
             DefenderScheduledScanDay                                                     = $enumDefenderScheduledScanDay
@@ -2501,47 +2506,47 @@ function Get-TargetResource
             DefenderScriptDownloadedPayloadExecutionType                                 = $enumDefenderScriptDownloadedPayloadExecutionType
             DefenderScriptObfuscatedMacroCode                                            = $enumDefenderScriptObfuscatedMacroCode
             DefenderScriptObfuscatedMacroCodeType                                        = $enumDefenderScriptObfuscatedMacroCodeType
-            DefenderSecurityCenterBlockExploitProtectionOverride                         = $getValue.AdditionalProperties.defenderSecurityCenterBlockExploitProtectionOverride
-            DefenderSecurityCenterDisableAccountUI                                       = $getValue.AdditionalProperties.defenderSecurityCenterDisableAccountUI
-            DefenderSecurityCenterDisableAppBrowserUI                                    = $getValue.AdditionalProperties.defenderSecurityCenterDisableAppBrowserUI
-            DefenderSecurityCenterDisableClearTpmUI                                      = $getValue.AdditionalProperties.defenderSecurityCenterDisableClearTpmUI
-            DefenderSecurityCenterDisableFamilyUI                                        = $getValue.AdditionalProperties.defenderSecurityCenterDisableFamilyUI
-            DefenderSecurityCenterDisableHardwareUI                                      = $getValue.AdditionalProperties.defenderSecurityCenterDisableHardwareUI
-            DefenderSecurityCenterDisableHealthUI                                        = $getValue.AdditionalProperties.defenderSecurityCenterDisableHealthUI
-            DefenderSecurityCenterDisableNetworkUI                                       = $getValue.AdditionalProperties.defenderSecurityCenterDisableNetworkUI
-            DefenderSecurityCenterDisableNotificationAreaUI                              = $getValue.AdditionalProperties.defenderSecurityCenterDisableNotificationAreaUI
-            DefenderSecurityCenterDisableRansomwareUI                                    = $getValue.AdditionalProperties.defenderSecurityCenterDisableRansomwareUI
-            DefenderSecurityCenterDisableSecureBootUI                                    = $getValue.AdditionalProperties.defenderSecurityCenterDisableSecureBootUI
-            DefenderSecurityCenterDisableTroubleshootingUI                               = $getValue.AdditionalProperties.defenderSecurityCenterDisableTroubleshootingUI
-            DefenderSecurityCenterDisableVirusUI                                         = $getValue.AdditionalProperties.defenderSecurityCenterDisableVirusUI
-            DefenderSecurityCenterDisableVulnerableTpmFirmwareUpdateUI                   = $getValue.AdditionalProperties.defenderSecurityCenterDisableVulnerableTpmFirmwareUpdateUI
-            DefenderSecurityCenterHelpEmail                                              = $getValue.AdditionalProperties.defenderSecurityCenterHelpEmail
-            DefenderSecurityCenterHelpPhone                                              = $getValue.AdditionalProperties.defenderSecurityCenterHelpPhone
-            DefenderSecurityCenterHelpURL                                                = $getValue.AdditionalProperties.defenderSecurityCenterHelpURL
+            DefenderSecurityCenterBlockExploitProtectionOverride                         = $getValue.defenderSecurityCenterBlockExploitProtectionOverride
+            DefenderSecurityCenterDisableAccountUI                                       = $getValue.defenderSecurityCenterDisableAccountUI
+            DefenderSecurityCenterDisableAppBrowserUI                                    = $getValue.defenderSecurityCenterDisableAppBrowserUI
+            DefenderSecurityCenterDisableClearTpmUI                                      = $getValue.defenderSecurityCenterDisableClearTpmUI
+            DefenderSecurityCenterDisableFamilyUI                                        = $getValue.defenderSecurityCenterDisableFamilyUI
+            DefenderSecurityCenterDisableHardwareUI                                      = $getValue.defenderSecurityCenterDisableHardwareUI
+            DefenderSecurityCenterDisableHealthUI                                        = $getValue.defenderSecurityCenterDisableHealthUI
+            DefenderSecurityCenterDisableNetworkUI                                       = $getValue.defenderSecurityCenterDisableNetworkUI
+            DefenderSecurityCenterDisableNotificationAreaUI                              = $getValue.defenderSecurityCenterDisableNotificationAreaUI
+            DefenderSecurityCenterDisableRansomwareUI                                    = $getValue.defenderSecurityCenterDisableRansomwareUI
+            DefenderSecurityCenterDisableSecureBootUI                                    = $getValue.defenderSecurityCenterDisableSecureBootUI
+            DefenderSecurityCenterDisableTroubleshootingUI                               = $getValue.defenderSecurityCenterDisableTroubleshootingUI
+            DefenderSecurityCenterDisableVirusUI                                         = $getValue.defenderSecurityCenterDisableVirusUI
+            DefenderSecurityCenterDisableVulnerableTpmFirmwareUpdateUI                   = $getValue.defenderSecurityCenterDisableVulnerableTpmFirmwareUpdateUI
+            DefenderSecurityCenterHelpEmail                                              = $getValue.defenderSecurityCenterHelpEmail
+            DefenderSecurityCenterHelpPhone                                              = $getValue.defenderSecurityCenterHelpPhone
+            DefenderSecurityCenterHelpURL                                                = $getValue.defenderSecurityCenterHelpURL
             DefenderSecurityCenterITContactDisplay                                       = $enumDefenderSecurityCenterITContactDisplay
             DefenderSecurityCenterNotificationsFromApp                                   = $enumDefenderSecurityCenterNotificationsFromApp
-            DefenderSecurityCenterOrganizationDisplayName                                = $getValue.AdditionalProperties.defenderSecurityCenterOrganizationDisplayName
-            DefenderSignatureUpdateIntervalInHours                                       = $getValue.AdditionalProperties.defenderSignatureUpdateIntervalInHours
+            DefenderSecurityCenterOrganizationDisplayName                                = $getValue.defenderSecurityCenterOrganizationDisplayName
+            DefenderSignatureUpdateIntervalInHours                                       = $getValue.defenderSignatureUpdateIntervalInHours
             DefenderSubmitSamplesConsentType                                             = $enumDefenderSubmitSamplesConsentType
             DefenderUntrustedExecutable                                                  = $enumDefenderUntrustedExecutable
             DefenderUntrustedExecutableType                                              = $enumDefenderUntrustedExecutableType
             DefenderUntrustedUSBProcess                                                  = $enumDefenderUntrustedUSBProcess
             DefenderUntrustedUSBProcessType                                              = $enumDefenderUntrustedUSBProcessType
-            DeviceGuardEnableSecureBootWithDMA                                           = $getValue.AdditionalProperties.deviceGuardEnableSecureBootWithDMA
-            DeviceGuardEnableVirtualizationBasedSecurity                                 = $getValue.AdditionalProperties.deviceGuardEnableVirtualizationBasedSecurity
+            DeviceGuardEnableSecureBootWithDMA                                           = $getValue.deviceGuardEnableSecureBootWithDMA
+            DeviceGuardEnableVirtualizationBasedSecurity                                 = $getValue.deviceGuardEnableVirtualizationBasedSecurity
             DeviceGuardLaunchSystemGuard                                                 = $enumDeviceGuardLaunchSystemGuard
             DeviceGuardLocalSystemAuthorityCredentialGuardSettings                       = $enumDeviceGuardLocalSystemAuthorityCredentialGuardSettings
             DeviceGuardSecureBootWithDMA                                                 = $enumDeviceGuardSecureBootWithDMA
             DmaGuardDeviceEnumerationPolicy                                              = $enumDmaGuardDeviceEnumerationPolicy
-            FirewallBlockStatefulFTP                                                     = $getValue.AdditionalProperties.firewallBlockStatefulFTP
+            FirewallBlockStatefulFTP                                                     = $getValue.firewallBlockStatefulFTP
             FirewallCertificateRevocationListCheckMethod                                 = $enumFirewallCertificateRevocationListCheckMethod
-            FirewallIdleTimeoutForSecurityAssociationInSeconds                           = $getValue.AdditionalProperties.firewallIdleTimeoutForSecurityAssociationInSeconds
-            FirewallIPSecExemptionsAllowDHCP                                             = $getValue.AdditionalProperties.firewallIPSecExemptionsAllowDHCP
-            FirewallIPSecExemptionsAllowICMP                                             = $getValue.AdditionalProperties.firewallIPSecExemptionsAllowICMP
-            FirewallIPSecExemptionsAllowNeighborDiscovery                                = $getValue.AdditionalProperties.firewallIPSecExemptionsAllowNeighborDiscovery
-            FirewallIPSecExemptionsAllowRouterDiscovery                                  = $getValue.AdditionalProperties.firewallIPSecExemptionsAllowRouterDiscovery
-            FirewallIPSecExemptionsNone                                                  = $getValue.AdditionalProperties.firewallIPSecExemptionsNone
-            FirewallMergeKeyingModuleSettings                                            = $getValue.AdditionalProperties.firewallMergeKeyingModuleSettings
+            FirewallIdleTimeoutForSecurityAssociationInSeconds                           = $getValue.firewallIdleTimeoutForSecurityAssociationInSeconds
+            FirewallIPSecExemptionsAllowDHCP                                             = $getValue.firewallIPSecExemptionsAllowDHCP
+            FirewallIPSecExemptionsAllowICMP                                             = $getValue.firewallIPSecExemptionsAllowICMP
+            FirewallIPSecExemptionsAllowNeighborDiscovery                                = $getValue.firewallIPSecExemptionsAllowNeighborDiscovery
+            FirewallIPSecExemptionsAllowRouterDiscovery                                  = $getValue.firewallIPSecExemptionsAllowRouterDiscovery
+            FirewallIPSecExemptionsNone                                                  = $getValue.firewallIPSecExemptionsNone
+            FirewallMergeKeyingModuleSettings                                            = $getValue.firewallMergeKeyingModuleSettings
             FirewallPacketQueueingMethod                                                 = $enumFirewallPacketQueueingMethod
             FirewallPreSharedKeyEncodingMethod                                           = $enumFirewallPreSharedKeyEncodingMethod
             FirewallProfileDomain                                                        = $complexFirewallProfileDomain
@@ -2549,55 +2554,55 @@ function Get-TargetResource
             FirewallProfilePublic                                                        = $complexFirewallProfilePublic
             FirewallRules                                                                = $complexFirewallRules
             LanManagerAuthenticationLevel                                                = $enumLanManagerAuthenticationLevel
-            LanManagerWorkstationDisableInsecureGuestLogons                              = $getValue.AdditionalProperties.lanManagerWorkstationDisableInsecureGuestLogons
-            LocalSecurityOptionsAdministratorAccountName                                 = $getValue.AdditionalProperties.localSecurityOptionsAdministratorAccountName
+            LanManagerWorkstationDisableInsecureGuestLogons                              = $getValue.lanManagerWorkstationDisableInsecureGuestLogons
+            LocalSecurityOptionsAdministratorAccountName                                 = $getValue.localSecurityOptionsAdministratorAccountName
             LocalSecurityOptionsAdministratorElevationPromptBehavior                     = $enumLocalSecurityOptionsAdministratorElevationPromptBehavior
-            LocalSecurityOptionsAllowAnonymousEnumerationOfSAMAccountsAndShares          = $getValue.AdditionalProperties.localSecurityOptionsAllowAnonymousEnumerationOfSAMAccountsAndShares
-            LocalSecurityOptionsAllowPKU2UAuthenticationRequests                         = $getValue.AdditionalProperties.localSecurityOptionsAllowPKU2UAuthenticationRequests
-            LocalSecurityOptionsAllowRemoteCallsToSecurityAccountsManager                = $getValue.AdditionalProperties.localSecurityOptionsAllowRemoteCallsToSecurityAccountsManager
-            LocalSecurityOptionsAllowRemoteCallsToSecurityAccountsManagerHelperBool      = $getValue.AdditionalProperties.localSecurityOptionsAllowRemoteCallsToSecurityAccountsManagerHelperBool
-            LocalSecurityOptionsAllowSystemToBeShutDownWithoutHavingToLogOn              = $getValue.AdditionalProperties.localSecurityOptionsAllowSystemToBeShutDownWithoutHavingToLogOn
-            LocalSecurityOptionsAllowUIAccessApplicationElevation                        = $getValue.AdditionalProperties.localSecurityOptionsAllowUIAccessApplicationElevation
-            LocalSecurityOptionsAllowUIAccessApplicationsForSecureLocations              = $getValue.AdditionalProperties.localSecurityOptionsAllowUIAccessApplicationsForSecureLocations
-            LocalSecurityOptionsAllowUndockWithoutHavingToLogon                          = $getValue.AdditionalProperties.localSecurityOptionsAllowUndockWithoutHavingToLogon
-            LocalSecurityOptionsBlockMicrosoftAccounts                                   = $getValue.AdditionalProperties.localSecurityOptionsBlockMicrosoftAccounts
-            LocalSecurityOptionsBlockRemoteLogonWithBlankPassword                        = $getValue.AdditionalProperties.localSecurityOptionsBlockRemoteLogonWithBlankPassword
-            LocalSecurityOptionsBlockRemoteOpticalDriveAccess                            = $getValue.AdditionalProperties.localSecurityOptionsBlockRemoteOpticalDriveAccess
-            LocalSecurityOptionsBlockUsersInstallingPrinterDrivers                       = $getValue.AdditionalProperties.localSecurityOptionsBlockUsersInstallingPrinterDrivers
-            LocalSecurityOptionsClearVirtualMemoryPageFile                               = $getValue.AdditionalProperties.localSecurityOptionsClearVirtualMemoryPageFile
-            LocalSecurityOptionsClientDigitallySignCommunicationsAlways                  = $getValue.AdditionalProperties.localSecurityOptionsClientDigitallySignCommunicationsAlways
-            LocalSecurityOptionsClientSendUnencryptedPasswordToThirdPartySMBServers      = $getValue.AdditionalProperties.localSecurityOptionsClientSendUnencryptedPasswordToThirdPartySMBServers
-            LocalSecurityOptionsDetectApplicationInstallationsAndPromptForElevation      = $getValue.AdditionalProperties.localSecurityOptionsDetectApplicationInstallationsAndPromptForElevation
-            LocalSecurityOptionsDisableAdministratorAccount                              = $getValue.AdditionalProperties.localSecurityOptionsDisableAdministratorAccount
-            LocalSecurityOptionsDisableClientDigitallySignCommunicationsIfServerAgrees   = $getValue.AdditionalProperties.localSecurityOptionsDisableClientDigitallySignCommunicationsIfServerAgrees
-            LocalSecurityOptionsDisableGuestAccount                                      = $getValue.AdditionalProperties.localSecurityOptionsDisableGuestAccount
-            LocalSecurityOptionsDisableServerDigitallySignCommunicationsAlways           = $getValue.AdditionalProperties.localSecurityOptionsDisableServerDigitallySignCommunicationsAlways
-            LocalSecurityOptionsDisableServerDigitallySignCommunicationsIfClientAgrees   = $getValue.AdditionalProperties.localSecurityOptionsDisableServerDigitallySignCommunicationsIfClientAgrees
-            LocalSecurityOptionsDoNotAllowAnonymousEnumerationOfSAMAccounts              = $getValue.AdditionalProperties.localSecurityOptionsDoNotAllowAnonymousEnumerationOfSAMAccounts
-            LocalSecurityOptionsDoNotRequireCtrlAltDel                                   = $getValue.AdditionalProperties.localSecurityOptionsDoNotRequireCtrlAltDel
-            LocalSecurityOptionsDoNotStoreLANManagerHashValueOnNextPasswordChange        = $getValue.AdditionalProperties.localSecurityOptionsDoNotStoreLANManagerHashValueOnNextPasswordChange
+            LocalSecurityOptionsAllowAnonymousEnumerationOfSAMAccountsAndShares          = $getValue.localSecurityOptionsAllowAnonymousEnumerationOfSAMAccountsAndShares
+            LocalSecurityOptionsAllowPKU2UAuthenticationRequests                         = $getValue.localSecurityOptionsAllowPKU2UAuthenticationRequests
+            LocalSecurityOptionsAllowRemoteCallsToSecurityAccountsManager                = $getValue.localSecurityOptionsAllowRemoteCallsToSecurityAccountsManager
+            LocalSecurityOptionsAllowRemoteCallsToSecurityAccountsManagerHelperBool      = $getValue.localSecurityOptionsAllowRemoteCallsToSecurityAccountsManagerHelperBool
+            LocalSecurityOptionsAllowSystemToBeShutDownWithoutHavingToLogOn              = $getValue.localSecurityOptionsAllowSystemToBeShutDownWithoutHavingToLogOn
+            LocalSecurityOptionsAllowUIAccessApplicationElevation                        = $getValue.localSecurityOptionsAllowUIAccessApplicationElevation
+            LocalSecurityOptionsAllowUIAccessApplicationsForSecureLocations              = $getValue.localSecurityOptionsAllowUIAccessApplicationsForSecureLocations
+            LocalSecurityOptionsAllowUndockWithoutHavingToLogon                          = $getValue.localSecurityOptionsAllowUndockWithoutHavingToLogon
+            LocalSecurityOptionsBlockMicrosoftAccounts                                   = $getValue.localSecurityOptionsBlockMicrosoftAccounts
+            LocalSecurityOptionsBlockRemoteLogonWithBlankPassword                        = $getValue.localSecurityOptionsBlockRemoteLogonWithBlankPassword
+            LocalSecurityOptionsBlockRemoteOpticalDriveAccess                            = $getValue.localSecurityOptionsBlockRemoteOpticalDriveAccess
+            LocalSecurityOptionsBlockUsersInstallingPrinterDrivers                       = $getValue.localSecurityOptionsBlockUsersInstallingPrinterDrivers
+            LocalSecurityOptionsClearVirtualMemoryPageFile                               = $getValue.localSecurityOptionsClearVirtualMemoryPageFile
+            LocalSecurityOptionsClientDigitallySignCommunicationsAlways                  = $getValue.localSecurityOptionsClientDigitallySignCommunicationsAlways
+            LocalSecurityOptionsClientSendUnencryptedPasswordToThirdPartySMBServers      = $getValue.localSecurityOptionsClientSendUnencryptedPasswordToThirdPartySMBServers
+            LocalSecurityOptionsDetectApplicationInstallationsAndPromptForElevation      = $getValue.localSecurityOptionsDetectApplicationInstallationsAndPromptForElevation
+            LocalSecurityOptionsDisableAdministratorAccount                              = $getValue.localSecurityOptionsDisableAdministratorAccount
+            LocalSecurityOptionsDisableClientDigitallySignCommunicationsIfServerAgrees   = $getValue.localSecurityOptionsDisableClientDigitallySignCommunicationsIfServerAgrees
+            LocalSecurityOptionsDisableGuestAccount                                      = $getValue.localSecurityOptionsDisableGuestAccount
+            LocalSecurityOptionsDisableServerDigitallySignCommunicationsAlways           = $getValue.localSecurityOptionsDisableServerDigitallySignCommunicationsAlways
+            LocalSecurityOptionsDisableServerDigitallySignCommunicationsIfClientAgrees   = $getValue.localSecurityOptionsDisableServerDigitallySignCommunicationsIfClientAgrees
+            LocalSecurityOptionsDoNotAllowAnonymousEnumerationOfSAMAccounts              = $getValue.localSecurityOptionsDoNotAllowAnonymousEnumerationOfSAMAccounts
+            LocalSecurityOptionsDoNotRequireCtrlAltDel                                   = $getValue.localSecurityOptionsDoNotRequireCtrlAltDel
+            LocalSecurityOptionsDoNotStoreLANManagerHashValueOnNextPasswordChange        = $getValue.localSecurityOptionsDoNotStoreLANManagerHashValueOnNextPasswordChange
             LocalSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser                = $enumLocalSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser
-            LocalSecurityOptionsGuestAccountName                                         = $getValue.AdditionalProperties.localSecurityOptionsGuestAccountName
-            LocalSecurityOptionsHideLastSignedInUser                                     = $getValue.AdditionalProperties.localSecurityOptionsHideLastSignedInUser
-            LocalSecurityOptionsHideUsernameAtSignIn                                     = $getValue.AdditionalProperties.localSecurityOptionsHideUsernameAtSignIn
+            LocalSecurityOptionsGuestAccountName                                         = $getValue.localSecurityOptionsGuestAccountName
+            LocalSecurityOptionsHideLastSignedInUser                                     = $getValue.localSecurityOptionsHideLastSignedInUser
+            LocalSecurityOptionsHideUsernameAtSignIn                                     = $getValue.localSecurityOptionsHideUsernameAtSignIn
             LocalSecurityOptionsInformationDisplayedOnLockScreen                         = $enumLocalSecurityOptionsInformationDisplayedOnLockScreen
             LocalSecurityOptionsInformationShownOnLockScreen                             = $enumLocalSecurityOptionsInformationShownOnLockScreen
-            LocalSecurityOptionsLogOnMessageText                                         = $getValue.AdditionalProperties.localSecurityOptionsLogOnMessageText
-            LocalSecurityOptionsLogOnMessageTitle                                        = $getValue.AdditionalProperties.localSecurityOptionsLogOnMessageTitle
-            LocalSecurityOptionsMachineInactivityLimit                                   = $getValue.AdditionalProperties.localSecurityOptionsMachineInactivityLimit
-            LocalSecurityOptionsMachineInactivityLimitInMinutes                          = $getValue.AdditionalProperties.localSecurityOptionsMachineInactivityLimitInMinutes
+            LocalSecurityOptionsLogOnMessageText                                         = $getValue.localSecurityOptionsLogOnMessageText
+            LocalSecurityOptionsLogOnMessageTitle                                        = $getValue.localSecurityOptionsLogOnMessageTitle
+            LocalSecurityOptionsMachineInactivityLimit                                   = $getValue.localSecurityOptionsMachineInactivityLimit
+            LocalSecurityOptionsMachineInactivityLimitInMinutes                          = $getValue.localSecurityOptionsMachineInactivityLimitInMinutes
             LocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients             = $enumLocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients
             LocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers             = $enumLocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers
-            LocalSecurityOptionsOnlyElevateSignedExecutables                             = $getValue.AdditionalProperties.localSecurityOptionsOnlyElevateSignedExecutables
-            LocalSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares             = $getValue.AdditionalProperties.localSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares
+            LocalSecurityOptionsOnlyElevateSignedExecutables                             = $getValue.localSecurityOptionsOnlyElevateSignedExecutables
+            LocalSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares             = $getValue.localSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares
             LocalSecurityOptionsSmartCardRemovalBehavior                                 = $enumLocalSecurityOptionsSmartCardRemovalBehavior
             LocalSecurityOptionsStandardUserElevationPromptBehavior                      = $enumLocalSecurityOptionsStandardUserElevationPromptBehavior
-            LocalSecurityOptionsSwitchToSecureDesktopWhenPromptingForElevation           = $getValue.AdditionalProperties.localSecurityOptionsSwitchToSecureDesktopWhenPromptingForElevation
-            LocalSecurityOptionsUseAdminApprovalMode                                     = $getValue.AdditionalProperties.localSecurityOptionsUseAdminApprovalMode
-            LocalSecurityOptionsUseAdminApprovalModeForAdministrators                    = $getValue.AdditionalProperties.localSecurityOptionsUseAdminApprovalModeForAdministrators
-            LocalSecurityOptionsVirtualizeFileAndRegistryWriteFailuresToPerUserLocations = $getValue.AdditionalProperties.localSecurityOptionsVirtualizeFileAndRegistryWriteFailuresToPerUserLocations
-            SmartScreenBlockOverrideForFiles                                             = $getValue.AdditionalProperties.smartScreenBlockOverrideForFiles
-            SmartScreenEnableInShell                                                     = $getValue.AdditionalProperties.smartScreenEnableInShell
+            LocalSecurityOptionsSwitchToSecureDesktopWhenPromptingForElevation           = $getValue.localSecurityOptionsSwitchToSecureDesktopWhenPromptingForElevation
+            LocalSecurityOptionsUseAdminApprovalMode                                     = $getValue.localSecurityOptionsUseAdminApprovalMode
+            LocalSecurityOptionsUseAdminApprovalModeForAdministrators                    = $getValue.localSecurityOptionsUseAdminApprovalModeForAdministrators
+            LocalSecurityOptionsVirtualizeFileAndRegistryWriteFailuresToPerUserLocations = $getValue.localSecurityOptionsVirtualizeFileAndRegistryWriteFailuresToPerUserLocations
+            SmartScreenBlockOverrideForFiles                                             = $getValue.smartScreenBlockOverrideForFiles
+            SmartScreenEnableInShell                                                     = $getValue.smartScreenEnableInShell
             UserRightsAccessCredentialManagerAsTrustedCaller                             = $complexUserRightsAccessCredentialManagerAsTrustedCaller
             UserRightsActAsPartOfTheOperatingSystem                                      = $complexUserRightsActAsPartOfTheOperatingSystem
             UserRightsAllowAccessFromNetwork                                             = $complexUserRightsAllowAccessFromNetwork
@@ -2629,7 +2634,7 @@ function Get-TargetResource
             UserRightsTakeOwnership                                                      = $complexUserRightsTakeOwnership
             WindowsDefenderTamperProtection                                              = $enumWindowsDefenderTamperProtection
             XboxServicesAccessoryManagementServiceStartupMode                            = $enumXboxServicesAccessoryManagementServiceStartupMode
-            XboxServicesEnableXboxGameSaveTask                                           = $getValue.AdditionalProperties.xboxServicesEnableXboxGameSaveTask
+            XboxServicesEnableXboxGameSaveTask                                           = $getValue.xboxServicesEnableXboxGameSaveTask
             XboxServicesLiveAuthManagerServiceStartupMode                                = $enumXboxServicesLiveAuthManagerServiceStartupMode
             XboxServicesLiveGameSaveServiceStartupMode                                   = $enumXboxServicesLiveGameSaveServiceStartupMode
             XboxServicesLiveNetworkingServiceStartupMode                                 = $enumXboxServicesLiveNetworkingServiceStartupMode
@@ -3688,6 +3693,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -4809,6 +4822,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -4862,6 +4883,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -4888,15 +4917,20 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EndpointProtectionConfiguration' `
+        $baseFilter = "isof('microsoft.graph.windows10EndpointProtectionConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -4927,6 +4961,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -5913,13 +5949,13 @@ function Export-TargetResource
                 'UserRightsLockMemory', 'UserRightsManageAuditingAndSecurityLogs', 'UserRightsManageVolumes', 'UserRightsModifyFirmwareEnvironment',
                 'UserRightsModifyObjectLabels', 'UserRightsProfileSingleProcess', 'UserRightsRemoteDesktopServicesLogOn', 'UserRightsRemoteShutdown',
                 'UserRightsRestoreData', 'UserRightsTakeOwnership', 'Assignments')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -64,6 +64,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -102,7 +110,7 @@ function Get-TargetResource
                 $GroupDisplayName = $GroupDisplayName -replace "'", "''"
             }
             $filter = "DisplayName eq '$GroupDisplayName'"
-            $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
+            [array]$Group = Get-MgGroup -Filter $filter -ErrorAction Stop
             if ($Group.Count -gt 1)
             {
                 throw "Duplicate AzureAD Groups named $GroupDisplayName exist in tenant"
@@ -153,6 +161,8 @@ function Get-TargetResource
             TenantId                  = $TenantId
             ApplicationSecret         = $ApplicationSecret
             CertificateThumbprint     = $CertificateThumbprint
+            CertificatePath           = $CertificatePath
+            CertificatePassword       = $CertificatePassword
             ManagedIdentity           = $ManagedIdentity.IsPresent
         }
 
@@ -233,6 +243,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -262,63 +280,38 @@ function Set-TargetResource
         '@odata.type' = $ruleType
     }
 
-    if ($ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyExpirationRule')
+    switch ($ruleType)
     {
-        $expirationRuleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $expirationRule
-        # add all the properties to the body
-        foreach ($key in $expirationRuleHashmap.Keys)
+        '#microsoft.graph.unifiedRoleManagementPolicyExpirationRule'
         {
-            $body.Add($key, $expirationRuleHashmap.$key)
+            $ruleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $expirationRule
+        }
+        '#microsoft.graph.unifiedRoleManagementPolicyNotificationRule'
+        {
+            $ruleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $notificationRule
+        }
+        '#microsoft.graph.unifiedRoleManagementPolicyEnablementRule'
+        {
+            $ruleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $enablementRule
+        }
+        '#microsoft.graph.unifiedRoleManagementPolicyApprovalRule'
+        {
+            $ruleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $approvalRule
+        }
+        '#microsoft.graph.unifiedRoleManagementPolicyAuthenticationContextRule'
+        {
+            $ruleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $authenticationContextRule
         }
     }
 
-    if ($ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyNotificationRule')
+    foreach ($key in $ruleHashmap.Keys)
     {
-        $notificationRuleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $notificationRule
-        # add all the properties to the body
-        foreach ($key in $notificationRuleHashmap.Keys)
-        {
-            $body.Add($key, $notificationRuleHashmap.$key)
-        }
+        $body.Add($key, $ruleHashmap.$key)
     }
 
-    if ($ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyEnablementRule')
-    {
-        $enablementRuleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $enablementRule
-        # add all the properties to the body
-        foreach ($key in $enablementRuleHashmap.Keys)
-        {
-            $body.Add($key, $enablementRuleHashmap.$key)
-        }
-    }
-
-    if ($ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyApprovalRule')
-    {
-        $approvalRuleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $approvalRule
-        # add all the properties to the body
-        foreach ($key in $approvalRuleHashmap.Keys)
-        {
-            $body.Add($key, $approvalRuleHashmap.$key)
-        }
-    }
-
-    if ($ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyAuthenticationContextRule')
-    {
-        $authenticationContextRuleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $authenticationContextRule
-        # add all the properties to the body
-        foreach ($key in $authenticationContextRuleHashmap.Keys)
-        {
-            $body.Add($key, $authenticationContextRuleHashmap.$key)
-        }
-    }
-
-    if ($GroupDisplayName.Contains("'"))
-    {
-        $GroupDisplayName = $GroupDisplayName -replace "'", "''"
-    }
-    $filter = "DisplayName eq '$GroupDisplayName'"
-    $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
-    if ($Group.Length -gt 1)
+    $filter = "DisplayName eq '$($GroupDisplayName -replace "'", "''")'"
+    [array]$Group = Get-MgGroup -Filter $filter -ErrorAction Stop
+    if ($Group.Count -gt 1)
     {
         throw "Duplicate AzureAD Groups named $GroupDisplayName exist in tenant"
     }
@@ -403,6 +396,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -454,6 +455,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -682,7 +691,7 @@ function Export-TargetResource
                         -Credential $Credential `
                         -NoEscape @('ExpirationRule', 'NotificationRule', 'EnablementRule', 'ApprovalRule', 'AuthenticationContextRule')
 
-                    $dscContent.Append($currentDSCBlock) | Out-Null
+                    [void]$dscContent.Append($currentDSCBlock)
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                     Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -704,7 +713,6 @@ function Export-TargetResource
         throw
     }
 }
-
 
 function Get-M365DSCRoleManagementPolicyRuleObject
 {
@@ -731,7 +739,7 @@ function Get-M365DSCRoleManagementPolicyRuleObject
     {
         $values = [ordered]@{
             id       = $Rule.id
-            ruleType = $Rule.AdditionalProperties.'@odata.type'
+            ruleType = $Rule.'@odata.type'
         }
     }
 
@@ -747,8 +755,8 @@ function Get-M365DSCRoleManagementPolicyRuleObject
         else
         {
             $expirationRule = [ordered]@{
-                isExpirationRequired = $Rule.AdditionalProperties.isExpirationRequired
-                maximumDuration      = $Rule.AdditionalProperties.maximumDuration
+                isExpirationRequired = $Rule.isExpirationRequired
+                maximumDuration      = $Rule.maximumDuration
             }
         }
 
@@ -770,11 +778,11 @@ function Get-M365DSCRoleManagementPolicyRuleObject
         else
         {
             $notificationRule = [ordered]@{
-                notificationType           = $Rule.AdditionalProperties.notificationType
-                recipientType              = $Rule.AdditionalProperties.recipientType
-                notificationLevel          = $Rule.AdditionalProperties.notificationLevel
-                isDefaultRecipientsEnabled = $Rule.AdditionalProperties.isDefaultRecipientsEnabled
-                notificationRecipients     = [array]$Rule.AdditionalProperties.notificationRecipients
+                notificationType           = $Rule.notificationType
+                recipientType              = $Rule.recipientType
+                notificationLevel          = $Rule.notificationLevel
+                isDefaultRecipientsEnabled = $Rule.isDefaultRecipientsEnabled
+                notificationRecipients     = [array]$Rule.notificationRecipients
             }
         }
         $values.Add('notificationRule', $notificationRule)
@@ -791,7 +799,7 @@ function Get-M365DSCRoleManagementPolicyRuleObject
         else
         {
             $enablementRule = @{
-                enabledRules = [array]$Rule.AdditionalProperties.enabledRules
+                enabledRules = [array]$Rule.enabledRules
             }
         }
         $values.Add('enablementRule', $enablementRule)
@@ -806,7 +814,7 @@ function Get-M365DSCRoleManagementPolicyRuleObject
         }
         else
         {
-            $foreachApprovalStages = $Rule.AdditionalProperties.setting.approvalStages
+            $foreachApprovalStages = $Rule.setting.approvalStages
         }
         foreach ($stage in $foreachApprovalStages)
         {
@@ -853,10 +861,10 @@ function Get-M365DSCRoleManagementPolicyRuleObject
         else
         {
             $setting = [ordered]@{
-                approvalMode                     = $Rule.AdditionalProperties.setting.approvalMode
-                isApprovalRequired               = $Rule.AdditionalProperties.setting.isApprovalRequired
-                isApprovalRequiredForExtension   = $Rule.AdditionalProperties.setting.isApprovalRequiredForExtension
-                isRequestorJustificationRequired = $Rule.AdditionalProperties.setting.isRequestorJustificationRequired
+                approvalMode                     = $Rule.setting.approvalMode
+                isApprovalRequired               = $Rule.setting.isApprovalRequired
+                isApprovalRequiredForExtension   = $Rule.setting.isApprovalRequiredForExtension
+                isRequestorJustificationRequired = $Rule.setting.isRequestorJustificationRequired
                 approvalStages                   = [array]$approvalStages
             }
         }
@@ -878,8 +886,8 @@ function Get-M365DSCRoleManagementPolicyRuleObject
         else
         {
             $authenticationContextRule = [ordered]@{
-                isEnabled  = $Rule.AdditionalProperties.isEnabled
-                claimValue = $Rule.AdditionalProperties.claimValue
+                isEnabled  = $Rule.isEnabled
+                claimValue = $Rule.claimValue
             }
         }
         $values.Add('authenticationContextRule', $authenticationContextRule)

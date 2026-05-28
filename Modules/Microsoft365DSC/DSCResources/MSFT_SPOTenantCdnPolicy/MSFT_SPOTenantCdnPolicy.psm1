@@ -37,15 +37,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -79,23 +79,20 @@ function Get-TargetResource
         }
 
         $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
-        if ($Policies['ExcludeRestrictedSiteClassifications'].Length -gt 0)
-        {
-            $ExcludeRestrictedSiteClassifications = `
-                $Policies['ExcludeRestrictedSiteClassifications'].Split(',')
-        }
-        else
-        {
-            $ExcludeRestrictedSiteClassifications = @()
-        }
-        if ($Policies['IncludeFileExtensions'].Length -gt 0)
-        {
-            $IncludeFileExtensions = `
-                $Policies['IncludeFileExtensions'].Split(',')
-        }
-        else
-        {
-            $IncludeFileExtensions = @()
+
+        $ExcludeRestrictedSiteClassifications = @()
+        $IncludeFileExtensions = @()
+        $Policies.GetEnumerator() | ForEach-Object {
+            if ($_.Name.Value -eq 'ExcludeRestrictedSiteClassifications' -and $_.Value.Length -gt 0)
+            {
+                $ExcludeRestrictedSiteClassifications = `
+                    $_.Value.Split(',')
+            }
+            if ($_.Name.Value -eq 'IncludeFileExtensions' -and $_.Value.Length -gt 0)
+            {
+                $IncludeFileExtensions = `
+                    $_.Value.Split(',')
+            }
         }
 
         return @{
@@ -106,9 +103,9 @@ function Get-TargetResource
             ApplicationId                        = $ApplicationId
             TenantId                             = $TenantId
             ApplicationSecret                    = $ApplicationSecret
-            CertificatePassword                  = $CertificatePassword
-            CertificatePath                      = $CertificatePath
             CertificateThumbprint                = $CertificateThumbprint
+            CertificatePath                      = $CertificatePath
+            CertificatePassword                  = $CertificatePassword
             ManagedIdentity                      = $ManagedIdentity.IsPresent
             AccessTokens                         = $AccessTokens
         }
@@ -161,15 +158,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -256,15 +253,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -313,15 +310,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -360,25 +357,26 @@ function Export-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
             AccessTokens          = $AccessTokens
         }
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
 
         Write-M365DSCHost -Message "`r`n    |---[1/2] Public" -DeferWrite
         $Results = Get-TargetResource @Params
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            Save-M365DSCPartialExport -Content $dscContent `
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -397,9 +395,9 @@ function Export-TargetResource
             CdnType               = 'Private'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
         }
@@ -413,7 +411,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
@@ -424,7 +422,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

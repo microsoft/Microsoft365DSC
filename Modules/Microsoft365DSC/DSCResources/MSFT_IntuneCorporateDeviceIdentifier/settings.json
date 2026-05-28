@@ -42,7 +42,8 @@
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication"
+    "Microsoft.Graph.Authentication",
+    "MSCloudLoginAssistant"
   ],
   "supportedEnvironments": [
     "Global",
@@ -54,6 +55,12 @@
       "module": "Microsoft.Graph.Authentication",
       "cmdlets": [
         "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

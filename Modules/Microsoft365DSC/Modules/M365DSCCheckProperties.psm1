@@ -181,7 +181,7 @@ function Get-PropertyReport
                 Write-Verbose "Compare parameters of $resourceName"
                 $difference = Compare-Object -ReferenceObject @($targetParameters | Select-Object) -DifferenceObject @($resourceParamters | Select-Object) -IncludeEqual
                 $missingProperties = ($difference | Where-Object { $_.SideIndicator -eq '<=' }).InputObject
-                $addtionalProperties = ($difference | Where-Object { $_.SideIndicator -eq '=>' }).InputObject
+                $additionalProperties = ($difference | Where-Object { $_.SideIndicator -eq '=>' }).InputObject
 
                 # Add to report
                 $cmdletResult = [PSCustomObject]@{
@@ -189,7 +189,7 @@ function Get-PropertyReport
                     'Cmdlet'               = $cmdlet.Name
                     'Service'              = $module.Name
                     'MissingProperties'    = $missingProperties -join ('; ')
-                    'AdditionalProperties' = $addtionalProperties -join ('; ')
+                    'AdditionalProperties' = $additionalProperties -join ('; ')
                 }
                 $report += $cmdletResult
             }

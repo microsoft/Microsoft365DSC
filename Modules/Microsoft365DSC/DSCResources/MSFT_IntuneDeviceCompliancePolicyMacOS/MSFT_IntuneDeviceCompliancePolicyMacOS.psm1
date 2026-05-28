@@ -12,6 +12,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -66,6 +70,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $OsMaximumBuildVersion,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ScheduledActionsForRule,
 
         [Parameter()]
         [System.Boolean]
@@ -134,6 +142,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -168,11 +184,19 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-                -All `
-                -ErrorAction Stop | Where-Object `
-                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' -and `
-                    $_.displayName -eq $($DisplayName) }
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $Id -ErrorAction SilentlyContinue
+            }
+
+            if ($null -eq $devicePolicy)
+            {
+                $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
+                    -All `
+                    -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.macOSCompliancePolicy')" `
+                    -ErrorAction Stop
+            }
+
             if (([array]$devicePolicy).Count -gt 1)
             {
                 throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
@@ -188,38 +212,70 @@ function Get-TargetResource
             $devicePolicy = $Script:exportedInstance
         }
 
+        $complexScheduledActionsForRule = @()
+        foreach ($actionConfiguration in $devicePolicy.ScheduledActionsForRule.ScheduledActionConfigurations)
+        {
+            $scheduledAction = [ordered]@{
+                ActionType       = [string]$actionConfiguration.ActionType
+                GracePeriodHours = $actionConfiguration.GracePeriodHours
+            }
+            if ($null -ne $actionConfiguration.NotificationMessageCCList -and `
+                    $actionConfiguration.NotificationMessageCCList.Count -gt 0)
+            {
+                [System.String[]]$groups = @()
+                foreach ($group in $actionConfiguration.NotificationMessageCCList)
+                {
+                    $groups += (Get-MgGroup -GroupId $group -ErrorAction SilentlyContinue).DisplayName
+                }
+                $scheduledAction.Add('NotificationMessageCCList', $groups)
+            }
+            if ($null -ne $actionConfiguration.NotificationTemplateId -and `
+                    $actionConfiguration.NotificationTemplateId -ne '00000000-0000-0000-0000-000000000000')
+            {
+                $notificationTemplate = Get-MgBetaDeviceManagementNotificationMessageTemplate `
+                    -NotificationMessageTemplateId $actionConfiguration.NotificationTemplateId `
+                    -ErrorAction SilentlyContinue
+                $scheduledAction.Add('NotificationTemplateId', $notificationTemplate.DisplayName)
+            }
+            $complexScheduledActionsForRule += $scheduledAction
+        }
+
         Write-Verbose -Message "Found MacOS Device Compliance Policy with displayName {$DisplayName}"
         $results = @{
             DisplayName                                   = $devicePolicy.DisplayName
+            Id                                            = $devicePolicy.Id
             Description                                   = $devicePolicy.Description
             RoleScopeTagIds                               = $devicePolicy.RoleScopeTagIds
-            PasswordRequired                              = $devicePolicy.AdditionalProperties.passwordRequired
-            PasswordBlockSimple                           = $devicePolicy.AdditionalProperties.passwordBlockSimple
-            PasswordExpirationDays                        = $devicePolicy.AdditionalProperties.passwordExpirationDays
-            PasswordMinimumLength                         = $devicePolicy.AdditionalProperties.passwordMinimumLength
-            PasswordMinutesOfInactivityBeforeLock         = $devicePolicy.AdditionalProperties.passwordMinutesOfInactivityBeforeLock
-            PasswordPreviousPasswordBlockCount            = $devicePolicy.AdditionalProperties.passwordPreviousPasswordBlockCount
-            PasswordMinimumCharacterSetCount              = $devicePolicy.AdditionalProperties.passwordMinimumCharacterSetCount
-            PasswordRequiredType                          = $devicePolicy.AdditionalProperties.passwordRequiredType
-            OsMinimumVersion                              = $devicePolicy.AdditionalProperties.osMinimumVersion
-            OsMaximumVersion                              = $devicePolicy.AdditionalProperties.osMaximumVersion
-            OsMinimumBuildVersion                         = $devicePolicy.AdditionalProperties.osMinimumBuildVersion
-            OsMaximumBuildVersion                         = $devicePolicy.AdditionalProperties.osMaximumBuildVersion
-            SystemIntegrityProtectionEnabled              = $devicePolicy.AdditionalProperties.systemIntegrityProtectionEnabled
-            DeviceThreatProtectionEnabled                 = $devicePolicy.AdditionalProperties.deviceThreatProtectionEnabled
-            DeviceThreatProtectionRequiredSecurityLevel   = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
-            AdvancedThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.advancedThreatProtectionRequiredSecurityLevel
-            StorageRequireEncryption                      = $devicePolicy.AdditionalProperties.storageRequireEncryption
-            GatekeeperAllowedAppSource                    = $devicePolicy.AdditionalProperties.gatekeeperAllowedAppSource
-            FirewallEnabled                               = $devicePolicy.AdditionalProperties.firewallEnabled
-            FirewallBlockAllIncoming                      = $devicePolicy.AdditionalProperties.firewallBlockAllIncoming
-            FirewallEnableStealthMode                     = $devicePolicy.AdditionalProperties.firewallEnableStealthMode
+            PasswordRequired                              = $devicePolicy.passwordRequired
+            PasswordBlockSimple                           = $devicePolicy.passwordBlockSimple
+            PasswordExpirationDays                        = $devicePolicy.passwordExpirationDays
+            PasswordMinimumLength                         = $devicePolicy.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeLock         = $devicePolicy.passwordMinutesOfInactivityBeforeLock
+            PasswordPreviousPasswordBlockCount            = $devicePolicy.passwordPreviousPasswordBlockCount
+            PasswordMinimumCharacterSetCount              = $devicePolicy.passwordMinimumCharacterSetCount
+            PasswordRequiredType                          = $devicePolicy.passwordRequiredType
+            OsMinimumVersion                              = $devicePolicy.osMinimumVersion
+            OsMaximumVersion                              = $devicePolicy.osMaximumVersion
+            OsMinimumBuildVersion                         = $devicePolicy.osMinimumBuildVersion
+            OsMaximumBuildVersion                         = $devicePolicy.osMaximumBuildVersion
+            ScheduledActionsForRule                       = $complexScheduledActionsForRule
+            SystemIntegrityProtectionEnabled              = $devicePolicy.systemIntegrityProtectionEnabled
+            DeviceThreatProtectionEnabled                 = $devicePolicy.deviceThreatProtectionEnabled
+            DeviceThreatProtectionRequiredSecurityLevel   = $devicePolicy.deviceThreatProtectionRequiredSecurityLevel
+            AdvancedThreatProtectionRequiredSecurityLevel = $devicePolicy.advancedThreatProtectionRequiredSecurityLevel
+            StorageRequireEncryption                      = $devicePolicy.storageRequireEncryption
+            GatekeeperAllowedAppSource                    = $devicePolicy.gatekeeperAllowedAppSource
+            FirewallEnabled                               = $devicePolicy.firewallEnabled
+            FirewallBlockAllIncoming                      = $devicePolicy.firewallBlockAllIncoming
+            FirewallEnableStealthMode                     = $devicePolicy.firewallEnableStealthMode
             Ensure                                        = 'Present'
             Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
             ApplicationSecret                             = $ApplicationSecret
             CertificateThumbprint                         = $CertificateThumbprint
+            CertificatePath                               = $CertificatePath
+            CertificatePassword                           = $CertificatePassword
             ManagedIdentity                               = $ManagedIdentity.IsPresent
             AccessTokens                                  = $AccessTokens
         }
@@ -233,7 +289,6 @@ function Get-TargetResource
                 -Assignments ($graphAssignments)
         }
         $results.Add('Assignments', $returnAssignments)
-
 
         return $results
     }
@@ -260,6 +315,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -314,6 +373,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $OsMaximumBuildVersion,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ScheduledActionsForRule,
 
         [Parameter()]
         [System.Boolean]
@@ -384,6 +447,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -391,7 +462,6 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
-
 
     Write-Verbose -Message "Intune Device Compliance MacOS Policy {$DisplayName}"
 
@@ -413,29 +483,61 @@ function Set-TargetResource
     $currentDeviceMacOsPolicy = Get-TargetResource @PSBoundParameters
     $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $scheduledActionsForRule = @{
-        '@odata.type'                 = '#microsoft.graph.deviceComplianceScheduledActionForRule'
-        ruleName                      = 'PasswordRequired'
-        scheduledActionConfigurations = @(
-            @{
-                '@odata.type' = '#microsoft.graph.deviceComplianceActionItem'
-                actionType    = 'block'
-            }
-        )
+    $notificationTemplates = Get-MgBetaDeviceManagementNotificationMessageTemplate -All | Where-Object -FilterScript {
+        $_.Id -ne '8ca486fc-bee8-4ef2-983b-21e8908d11b8' # Exclude the second, unused default template
     }
+    $complexScheduledActionsForRule = @(
+        @{
+            ruleName                      = 'PasswordRequired'
+            scheduledActionConfigurations = @()
+        }
+    )
+    foreach ($scheduledAction in $boundParameters.ScheduledActionsForRule)
+    {
+        $actionConfiguration = @{
+            actionType       = $scheduledAction.ActionType
+            gracePeriodHours = $scheduledAction.GracePeriodHours
+        }
+
+        $ccList = @()
+        if ($null -ne $scheduledAction.NotificationMessageCCList)
+        {
+            foreach ($group in $scheduledAction.NotificationMessageCCList)
+            {
+                $groupObject = Get-MgGroup -Filter "displayName eq '$group'" -ErrorAction SilentlyContinue
+                if ($null -eq $groupObject)
+                {
+                    throw "The referenced Intune Group with DisplayName {$group} was not found for NotificationMessageCCList"
+                }
+                $ccList += $groupObject.Id
+            }
+        }
+        $actionConfiguration.notificationMessageCCList = $ccList
+
+        $template = [System.Guid]::Empty
+        if (-not [string]::IsNullOrEmpty($scheduledAction.NotificationTemplateId))
+        {
+            $template = $notificationTemplates | Where-Object -FilterScript { $_.DisplayName -eq $scheduledAction.NotificationTemplateId }
+            if ($null -eq $template)
+            {
+                throw "The referenced Intune Notification Template with DisplayName {$($scheduledAction.NotificationTemplateId)} was not found"
+            }
+            $template = $template.Id
+        }
+        $actionConfiguration.notificationTemplateId = [string]$template
+        $complexScheduledActionsForRule[0].scheduledActionConfigurations += $actionConfiguration
+    }
+    $boundParameters.Remove('ScheduledActionsForRule') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentDeviceMacOsPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Intune Device Compliance MacOS Policy {$DisplayName}"
-        $boundParameters.Remove('DisplayName') | Out-Null
-        $boundParameters.Remove('Description') | Out-Null
         $boundParameters.Remove('Assignments') | Out-Null
-
-        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyMacOSAdditionalProperties -Properties $boundParameters
-        $policy = New-MgBetaDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
-            -Description $Description `
-            -AdditionalProperties $AdditionalProperties `
-            -ScheduledActionsForRule $scheduledActionsForRule
+        $boundParameters.Remove('Id') | Out-Null
+        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
+        $createParameters.Add('@odata.type', '#microsoft.graph.macOSCompliancePolicy')
+        $createParameters.Add('scheduledActionsForRule', $complexScheduledActionsForRule)
+        $policy = New-MgBetaDeviceManagementDeviceCompliancePolicy -BodyParameter $createParameters
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -450,23 +552,22 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentDeviceMacOsPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune Device Compliance MacOS Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
-
-        $boundParameters.Remove('DisplayName') | Out-Null
-        $boundParameters.Remove('Description') | Out-Null
         $boundParameters.Remove('Assignments') | Out-Null
+        $boundParameters.Remove('Id') | Out-Null
+        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
+        $updateParameters.Add('@odata.type', '#microsoft.graph.macOSCompliancePolicy')
+        Update-MgBetaDeviceManagementDeviceCompliancePolicy -BodyParameter $updateParameters `
+            -DeviceCompliancePolicyId $currentDeviceMacOsPolicy.Id
 
-        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyMacOSAdditionalProperties -Properties $boundParameters
-        Update-MgBetaDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
-            -Description $Description `
-            -DeviceCompliancePolicyId $configDevicePolicy.Id
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceCompliancePolicies/$($currentDeviceMacOsPolicy.Id)/scheduleActionsForRules"
+        $mgGraphScheduledActionForRules = @{
+            deviceComplianceScheduledActionForRules = $complexScheduledActionsForRule
+        }
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $($mgGraphScheduledActionForRules | ConvertTo-Json -Depth 10)
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $configDevicePolicy.id `
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentDeviceMacOsPolicy.Id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceCompliancePolicies'
         #endregion
@@ -474,12 +575,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentDeviceMacOsPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune Device Compliance MacOS Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
-
-        Remove-MgBetaDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
+        Remove-MgBetaDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $currentDeviceMacOsPolicy.Id
     }
 }
 
@@ -492,6 +588,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String]
@@ -549,6 +649,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $OsMaximumBuildVersion,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ScheduledActionsForRule,
 
         [Parameter()]
         [System.Boolean]
@@ -617,6 +721,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -672,6 +784,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -697,18 +817,24 @@ function Export-TargetResource
 
     try
     {
+        $baseFilter = "isof('microsoft.graph.macOSCompliancePolicy')"
         if (-not [string]::IsNullOrEmpty($Filter))
         {
             $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
             $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+            $Filter = "($baseFilter) and ($Filter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
         }
         [array]$configDeviceMacOsPolicies = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-            -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' }
+            -ExpandProperty 'scheduledActionsForRule($expand=scheduledActionConfigurations)' `
+            -ErrorAction Stop -All -Filter $Filter
         $configDeviceMacOsPolicies = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $configDeviceMacOsPolicies
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($configDeviceMacOsPolicies.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -734,6 +860,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -755,6 +883,20 @@ function Export-TargetResource
                 }
             }
 
+            if ($Results.ScheduledActionsForRule)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.ScheduledActionsForRule `
+                    -CIMInstanceName MSFT_scheduledActionConfigurations
+                if ($complexTypeStringResult)
+                {
+                    $Results.ScheduledActionsForRule = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ScheduledActionsForRule') | Out-Null
+                }
+            }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -763,14 +905,14 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Assignments')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -790,30 +932,6 @@ function Export-TargetResource
             throw
         }
     }
-}
-
-function Get-M365DSCIntuneDeviceCompliancePolicyMacOSAdditionalProperties
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $results = @{'@odata.type' = '#microsoft.graph.macOSCompliancePolicy' }
-    foreach ($property in $properties.Keys)
-    {
-        if ($property -ne 'Verbose')
-        {
-            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            $propertyValue = $properties.$property
-            $results.Add($propertyName, $propertyValue)
-        }
-    }
-    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

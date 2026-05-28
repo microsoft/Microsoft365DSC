@@ -36,5 +36,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsEventsPolicy",
+        "New-CsTeamsEventsPolicy",
+        "Remove-CsTeamsEventsPolicy",
+        "Set-CsTeamsEventsPolicy"
+      ]
+    }
+  ]
 }

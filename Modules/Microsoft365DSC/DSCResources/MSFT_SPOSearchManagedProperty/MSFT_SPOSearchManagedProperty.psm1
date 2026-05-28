@@ -225,15 +225,15 @@ function Get-TargetResource
             FinerQueryTokenization      = [boolean]::Parse($property.Value.ExpandSegments)
             MappedCrawledProperties     = $mappings
             CompanyNameExtraction       = $CompanyNameExtraction
+            Ensure                      = 'Present'
             Credential                  = $Credential
             ApplicationId               = $ApplicationId
             TenantId                    = $TenantId
             ApplicationSecret           = $ApplicationSecret
-            CertificatePassword         = $CertificatePassword
-            CertificatePath             = $CertificatePath
             CertificateThumbprint       = $CertificateThumbprint
+            CertificatePath             = $CertificatePath
+            CertificatePassword         = $CertificatePassword
             ManagedIdentity             = $ManagedIdentity.IsPresent
-            Ensure                      = 'Present'
             AccessTokens                = $AccessTokens
         }
     }
@@ -925,7 +925,7 @@ function Export-TargetResource
         $Script:RecentMPExtract = $SearchConfig
         $Script:exportMode = $true
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
 
         if ($properties.Length -eq 0)
@@ -952,9 +952,9 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
@@ -966,7 +966,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
@@ -979,7 +979,7 @@ function Export-TargetResource
 
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

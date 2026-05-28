@@ -40,11 +40,16 @@
   },
   "requiredModules": [
     "Az.Accounts",
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.DeviceManagement.Administration"
   ],
   "mode": "Configuration",
   "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Get-AzSubscription"
+      ]
+    },
     {
       "module": "Microsoft.Graph.Beta.DeviceManagement.Administration",
       "cmdlets": [

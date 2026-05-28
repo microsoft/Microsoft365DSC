@@ -106,6 +106,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -154,8 +162,8 @@ function Get-TargetResource
                 catch
                 {
                     Write-Verbose -Message "Couldn't get group by ID, trying by name"
-                    $Group = Get-MgBetaGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ExpandProperty 'members' -ErrorAction Stop
-                    if ($Group.Length -gt 1)
+                    [array]$Group = Get-MgBetaGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ExpandProperty 'members' -ErrorAction Stop
+                    if ($Group.Count -gt 1)
                     {
                         throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
                     }
@@ -165,8 +173,8 @@ function Get-TargetResource
             {
                 Write-Verbose -Message 'Id was NOT specified'
                 ## Can retreive multiple AAD Groups since displayname is not unique
-                $Group = Get-MgBetaGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ExpandProperty 'members' -ErrorAction Stop
-                if ($Group.Length -gt 1)
+                [array]$Group = Get-MgBetaGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ExpandProperty 'members' -ErrorAction Stop
+                if ($Group.Count -gt 1)
                 {
                     throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
                 }
@@ -236,60 +244,27 @@ function Get-TargetResource
             if ($Group.Members.Count -eq 20 -or $Script:requireGroupMemberFetching -eq $true)
             {
                 # Fetch all group members
-                $uri = "/beta/groups/$($Group.Id)/members?`$top=999"
-                $groupMembers = [System.Collections.Generic.List[System.Object]]::new()
-                $graphRequest = Invoke-MgGraphRequest -Uri $uri -Method GET
-                $groupMembers.AddRange($graphRequest.value)
-                while (-not [System.String]::IsNullOrEmpty($graphRequest.'@odata.nextLink'))
-                {
-                    $graphRequest = Invoke-MgGraphRequest -Uri $graphRequest.'@odata.nextLink' -Method GET
-                    $groupMembers.AddRange($graphRequest.value)
-                }
+                $groupMembers = Get-MgGroupMember -GroupId $Group.Id -All -Top 999
             }
             foreach ($member in $groupMembers)
             {
-                if ($null -ne $member.AdditionalProperties)
+                switch ($member.'@odata.type')
                 {
-                    switch ($member.AdditionalProperties.'@odata.type')
+                    '#microsoft.graph.user'
                     {
-                        '#microsoft.graph.user'
-                        {
-                            $MembersValues.Add($member.AdditionalProperties.userPrincipalName)
-                        }
-                        '#microsoft.graph.servicePrincipal'
-                        {
-                            $MembersValues.Add($member.AdditionalProperties.displayName)
-                        }
-                        '#microsoft.graph.device'
-                        {
-                            $MembersValues.Add($member.AdditionalProperties.displayName)
-                        }
-                        '#microsoft.graph.group'
-                        {
-                            $GroupAsMembersValues.Add($member.AdditionalProperties.displayName)
-                        }
+                        $MembersValues.Add($member.userPrincipalName)
                     }
-                }
-                else
-                {
-                    switch ($member.'@odata.type')
+                    '#microsoft.graph.servicePrincipal'
                     {
-                        '#microsoft.graph.user'
-                        {
-                            $MembersValues.Add($member.userPrincipalName)
-                        }
-                        '#microsoft.graph.servicePrincipal'
-                        {
-                            $MembersValues.Add($member.displayName)
-                        }
-                        '#microsoft.graph.device'
-                        {
-                            $MembersValues.Add($member.displayName)
-                        }
-                        '#microsoft.graph.group'
-                        {
-                            $GroupAsMembersValues.Add($member.displayName)
-                        }
+                        $MembersValues.Add($member.displayName)
+                    }
+                    '#microsoft.graph.device'
+                    {
+                        $MembersValues.Add($member.displayName)
+                    }
+                    '#microsoft.graph.group'
+                    {
+                        $GroupAsMembersValues.Add($member.displayName)
                     }
                 }
             }
@@ -495,6 +470,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -629,7 +612,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Checking to see if an existing deleted group exists with DisplayName {$DisplayName}"
         $restoringExisting = $false
-        [Array]$groups = Get-MgBetaDirectoryDeletedItemAsGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
+        # Not using Get-MgBetaDirectoryDeletedItemAsGroup because the URI from Find-MgGraphCommand is not correct
+        [Array]$groups = (Invoke-MgGraphRequest -Uri "/beta/directory/deletedItems/microsoft.graph.group?`$filter=DisplayName eq '$($DisplayName -replace "'", "''")'").value
         if ($groups.Length -gt 1)
         {
             throw "Multiple deleted groups with the name {$DisplayName} were found. Cannot restore the existing group. Please ensure that you either have no instance of the group in the deleted list or that you have a single one."
@@ -640,7 +624,15 @@ function Set-TargetResource
             Write-Verbose -Message "Found an instance of a deleted group {$DisplayName}. Restoring it."
             Restore-MgBetaDirectoryDeletedItem -DirectoryObjectId $groups[0].Id
             $restoringExisting = $true
-            $currentGroup = Get-MgBetaGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction Stop
+            do
+            {
+                $currentGroup = Get-MgBetaGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction Stop
+            } while ($null -eq $currentGroup)
+            $null = Invoke-M365DSCCommand -ScriptBlock { Get-MgBetaGroupMember -GroupId $currentGroup.Id -ErrorAction Stop } -RetryOnNotFoundError
+            $commandParameters = ([Hashtable]$PSBoundParameters).Clone()
+            Invoke-M365DSCCommand -ScriptBlock { $currentGroup = Get-TargetResource @commandParameters } -RetryOnNotFoundError
+            $backCurrentOwners = $currentGroup.Owners
+            $backCurrentMembers = $currentGroup.Members
         }
 
         if (-not $restoringExisting)
@@ -651,7 +643,7 @@ function Set-TargetResource
             try
             {
                 Write-Verbose -Message "Creating Group with Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
-                $currentGroup = New-MgGroup @currentParameters
+                $currentGroup = New-MgGroup -BodyParameter $currentParameters
                 Write-Verbose -Message "Created Group $($currentGroup.id)"
             }
             catch
@@ -677,14 +669,13 @@ function Set-TargetResource
 
             if ($false -eq $currentParameters.ContainsKey('Id'))
             {
-                Update-MgGroup @currentParameters -GroupId $currentGroup.Id | Out-Null
+                Update-MgGroup -BodyParameter $currentParameters -GroupId $currentGroup.Id | Out-Null
             }
             else
             {
                 $currentParameters.Remove('Id') | Out-Null
-                $currentParameters.Add('GroupId', $currentGroup.Id)
                 Write-Verbose -Message "Updating Group with Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
-                Update-MgGroup @currentParameters | Out-Null
+                Invoke-M365DSCCommand -ScriptBlock { Update-MgGroup -GroupId $currentGroup.Id -BodyParameter $currentParameters -ErrorAction Stop } -RetryOnNotFoundError | Out-Null
             }
 
             if (($licensesToAdd.Length -gt 0 -or $licensesToRemove.Length -gt 0) -and $PSBoundParameters.ContainsKey('AssignedLicenses'))
@@ -746,19 +737,19 @@ function Set-TargetResource
                 if ($null -eq $directoryObject)
                 {
                     Write-Verbose -Message "Trying to retrieve Service Principal {$($diff.InputObject)}"
-                    $app = Get-MgApplication -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
-                    if ($null -ne $app)
+                    [array]$app = Get-MgApplication -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
+                    if ($app.Count -gt 0)
                     {
                         $directoryObject = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'"
                     }
                     else
                     {
-                        $spInstances = Get-MgServicePrincipal -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
-                        if ($null -ne $spInstances -and $spInstances.Count -gt 1)
+                        [array]$spInstances = Get-MgServicePrincipal -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
+                        if ($spInstances.Count -gt 1)
                         {
                             throw "Duplicate Service Principals named '$($diff.InputObject)' exist in tenant"
                         }
-                        elseif ($null -ne $spInstances -and $spInstances.Count -eq 1)
+                        elseif ($spInstances.Count -eq 1)
                         {
                             $directoryObject = $spInstances
                         }
@@ -814,19 +805,19 @@ function Set-TargetResource
                 if ($null -eq $directoryObject)
                 {
                     Write-Verbose -Message "Trying to retrieve Service Principal {$($diff.InputObject)}"
-                    $app = Get-MgApplication -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
-                    if ($null -ne $app)
+                    [array]$app = Get-MgApplication -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
+                    if ($app.Count -gt 0)
                     {
                         $directoryObject = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'"
                     }
                     else
                     {
-                        $spInstances = Get-MgServicePrincipal -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
-                        if ($null -ne $spInstances -and $spInstances.Count -gt 1)
+                        [array]$spInstances = Get-MgServicePrincipal -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
+                        if ($spInstances.Count -gt 1)
                         {
                             throw "Duplicate Service Principals named '$($diff.InputObject)' exist in tenant"
                         }
-                        elseif ($null -ne $spInstances -and $spInstances.Count -eq 1)
+                        elseif ($spInstances.Count -eq 1)
                         {
                             $directoryObject = $spInstances
                         }
@@ -842,17 +833,13 @@ function Set-TargetResource
                 if ($diff.SideIndicator -eq '=>')
                 {
                     Write-Verbose -Message "Adding new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                    $memberObject = @{
+                    New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -BodyParameter @{
                         '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/{$($directoryObject.Id)}"
                     }
-                    New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -BodyParameter $memberObject | Out-Null
                 }
                 elseif ($diff.SideIndicator -eq '<=')
                 {
-                    Write-Verbose -Message "Removing new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                    $memberObject = @{
-                        '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/{$($directoryObject.Id)}"
-                    }
+                    Write-Verbose -Message "Removing new member {$($diff.InputObject)} from AAD Group {$($currentGroup.DisplayName)}"
                     Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($directoryObject.Id) | Out-Null
                 }
             }
@@ -945,7 +932,9 @@ function Set-TargetResource
                         if ($memberOfGroup.psobject.Typenames -match 'Group')
                         {
                             Write-Verbose -Message "Adding AAD group {$($currentGroup.DisplayName)} as member of AAD group {$($memberOfGroup.DisplayName)}"
-                            New-MgGroupMember -GroupId ($memberOfGroup.Id) -DirectoryObject ($currentGroup.Id) | Out-Null
+                            New-MgGroupMemberByRef -GroupId ($memberOfGroup.Id) -BodyParameter @{
+                                '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($currentGroup.Id)"
+                            } | Out-Null
                         }
                         else
                         {
@@ -1151,6 +1140,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1206,6 +1203,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1231,7 +1236,6 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         $ExportParameters = @{
             Filter         = $Filter
             All            = [switch]$true
@@ -1258,7 +1262,7 @@ function Export-TargetResource
         # Check each attribute in the list
         foreach ($attribute in $attributesToCheck)
         {
-            if ($Filter -like "*$attribute eq null*")
+            if ($Filter -like "*$attribute eq *")
             {
                 $matchConditionFound = $true
                 break
@@ -1282,7 +1286,7 @@ function Export-TargetResource
         } | Sort-Object -Property DisplayName
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($group in $Script:exportedGroups)
         {
@@ -1339,14 +1343,14 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('AssignedLicenses')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

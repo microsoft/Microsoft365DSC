@@ -24,12 +24,12 @@
         ]
       }
     },
-    "purview":{
-      "requiredroles":[
+    "purview": {
+      "requiredroles": [
         "Sensitivity Label Administrator",
         "Sensitivity Label Reader"
       ],
-      "requiredrolegroups":[
+      "requiredrolegroups": [
         "Compliance Data Administrator",
         "Security Reader"
       ]

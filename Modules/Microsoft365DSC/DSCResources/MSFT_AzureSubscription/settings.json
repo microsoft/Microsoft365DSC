@@ -26,7 +26,30 @@
     }
   },
   "requiredModules": [
-    "Az.Accounts"
+    "Az.Accounts",
+    "Az.Subscription",
+    "MSCloudLoginAssistant"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Invoke-AzRestMethod"
+      ]
+    },
+    {
+      "module": "Az.Subscription",
+      "cmdlets": [
+        "Disable-AzSubscription",
+        "Enable-AzSubscription"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
 }

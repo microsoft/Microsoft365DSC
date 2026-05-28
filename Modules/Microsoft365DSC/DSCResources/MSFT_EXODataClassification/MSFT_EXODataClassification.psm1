@@ -405,12 +405,11 @@ function Export-TargetResource
     #endregion
     try
     {
-        $Script:ExportMode = $true
         #region resource generator code
-        [array] $Script:exportedInstances = Get-DataClassification -ErrorAction SilentlyContinue | Sort-Object -Property Name
+        [array] $exportedInstances = Get-DataClassification -ErrorAction SilentlyContinue | Sort-Object -Property Name
         $dscContent = [System.Text.StringBuilder]::new()
 
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -419,14 +418,14 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $i = 1
-        foreach ($DataClassification in $Script:exportedInstances)
+        foreach ($DataClassification in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Length)] $($DataClassification.Name)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Length)] $($DataClassification.Name)" -DeferWrite
 
             $Params = @{
                 Identity              = $DataClassification.Identity
@@ -447,7 +446,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent.Append($currentDSCBlock) | Out-Null
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite

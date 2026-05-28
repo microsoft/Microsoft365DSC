@@ -50,6 +50,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -90,6 +98,8 @@ function Get-TargetResource
             ApplicationId           = $ApplicationId
             TenantId                = $TenantId
             CertificateThumbprint   = $CertificateThumbprint
+            CertificatePath         = $CertificatePath
+            CertificatePassword     = $CertificatePassword
             ManagedIdentity         = $ManagedIdentity.IsPresent
             AccessTokens            = $AccessTokens
         }
@@ -154,6 +164,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -237,6 +255,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -282,6 +308,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -307,13 +341,15 @@ function Export-TargetResource
 
     try
     {
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $params = @{
             IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -330,7 +366,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
@@ -341,7 +377,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

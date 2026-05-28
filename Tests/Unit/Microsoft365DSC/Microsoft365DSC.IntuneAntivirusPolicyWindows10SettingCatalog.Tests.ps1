@@ -53,37 +53,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Id = 'device_vendor_msft_policy_config_defender_allowarchivescanning'
                             Name = 'AllowArchiveScanning'
                             OffsetUri = '/Config/Defender/AllowArchiveScanning'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                options = @(
-                                    @{
-                                        itemId = 'device_vendor_msft_policy_config_defender_allowarchivescanning_1'
-                                        name = 'Allowed. Scans the archive files.'
-                                        optionValue = @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                            value = 1
-                                        }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                            options = @(
+                                @{
+                                    itemId = 'device_vendor_msft_policy_config_defender_allowarchivescanning_1'
+                                    name = 'Allowed. Scans the archive files.'
+                                    optionValue = @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                        value = 1
                                     }
-                                )
-                            }
+                                }
+                            )
                         }
                     )
                     SettingInstance      = @{
                         SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_allowarchivescanning'
                         SettingInstanceTemplateReference = @{
                             SettingInstanceTemplateId = '7c5c9cde-f74d-4d11-904f-de4c27f72d89'
-                            AdditionalProperties      = $null
                         }
-                        AdditionalProperties             = @{
-                            '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                            choiceSettingValue = @{
-                                value                         = 'device_vendor_msft_policy_config_defender_allowarchivescanning_1'
-                                settingValueTemplateReference = @{
-                                    settingValueTemplateId = '9ead75d4-6f30-4bc5-8cc5-ab0f999d79f0'
-                                    useTemplateDefault     = $false
-                                }
-                                children                   = @()
+                        '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                        choiceSettingValue = @{
+                            value                         = 'device_vendor_msft_policy_config_defender_allowarchivescanning_1'
+                            settingValueTemplateReference = @{
+                                settingValueTemplateId = '9ead75d4-6f30-4bc5-8cc5-ab0f999d79f0'
+                                useTemplateDefault     = $false
                             }
+                            children                   = @()
                         }
                     }
                 }
@@ -110,12 +105,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Target   = @{
                             DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                             DeviceAndAppManagementAssignmentFilterType = 'none'
-                            AdditionalProperties                       = @(
-                                @{
-                                    '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                    groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                                }
-                            )
+                            '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         }
                     }
                 )
@@ -256,7 +247,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

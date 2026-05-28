@@ -102,6 +102,8 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -360,6 +362,7 @@ function Export-TargetResource
     try
     {
         # Ensure the cmdlet is available
+        $dscContent = [System.Text.StringBuilder]::new()
         $cmdletInfo = Get-Command Get-MailboxFolder -ErrorAction SilentlyContinue
 
         if ($null -eq $cmdletInfo)
@@ -392,6 +395,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -421,14 +426,14 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('UserPermissions')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
             $j++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

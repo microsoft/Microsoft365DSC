@@ -35,5 +35,17 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsEmergencyCallRoutingPolicy",
+        "New-CsTeamsEmergencyCallRoutingPolicy",
+        "New-CsTeamsEmergencyNumber",
+        "Remove-CsTeamsEmergencyCallRoutingPolicy",
+        "Set-CsTeamsEmergencyCallRoutingPolicy"
+      ]
+    }
+  ]
 }

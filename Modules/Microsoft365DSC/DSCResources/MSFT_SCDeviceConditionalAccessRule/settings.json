@@ -61,11 +61,7 @@
       }
     }
   },
-  "requiredModules": [
-    "Microsoft.Graph.Authentication",
-    "Microsoft.Graph.Groups",
-    "Microsoft.Graph.Users"
-  ],
+  "requiredModules": [],
   "supportedEnvironments": [
     "Global",
     "USGov"

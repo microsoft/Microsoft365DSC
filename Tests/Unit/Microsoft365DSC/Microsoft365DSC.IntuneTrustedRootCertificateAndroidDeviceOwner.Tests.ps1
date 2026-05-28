@@ -99,11 +99,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName                      = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner'
                         Description                      = 'Different Value'
                         Id                               = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'
-                        AdditionalProperties             = @{
-                            certFileName                 = "FakeStringValue"
-                            trustedRootCertificate       = "fakestringvalue0"
-                            '@odata.type'             = '#microsoft.graph.androidDeviceOwnerTrustedRootCertificate'
-                        }
+                        certFileName                 = "FakeStringValue"
+                        trustedRootCertificate       = "fakestringvalue0"
+                        '@odata.type'             = '#microsoft.graph.androidDeviceOwnerTrustedRootCertificate'
                     }
                 }
             }
@@ -139,11 +137,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName                             = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner'
                         Description                             = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner Description'
                         Id                                      = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'
-                        AdditionalProperties                    = @{
-                            certFileName                        = "FakeStringValue"
-                            trustedRootCertificate              = "fakestringvalue0"
-                            '@odata.type'                       = '#microsoft.graph.androidDeviceOwnerTrustedRootCertificate'
-                        }
+                        certFileName                        = "FakeStringValue"
+                        trustedRootCertificate              = "fakestringvalue0"
+                        '@odata.type'                       = '#microsoft.graph.androidDeviceOwnerTrustedRootCertificate'
                     }
                 }
             }
@@ -169,11 +165,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName                 = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner'
                         Description                 = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner Description'
                         Id                          = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'
-                        AdditionalProperties        = @{
-                            certFileName            = "FakeStringValue"
-                            trustedRootCertificate  = "fakestringvalue0"
-                            '@odata.type'           = '#microsoft.graph.androidDeviceOwnerTrustedRootCertificate'
-                        }
+                        certFileName            = "FakeStringValue"
+                        trustedRootCertificate  = "fakestringvalue0"
+                        '@odata.type'           = '#microsoft.graph.androidDeviceOwnerTrustedRootCertificate'
                     }
                 }
             }
@@ -182,7 +176,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -205,11 +199,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName                      = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner'
                         Description                      = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner Description'
                         Id                               = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'
-                        AdditionalProperties             = @{
-                            certFileName                 = "FakeStringValue"
-                            trustedRootCertificate       = "fakestringvalue0"
-                            '@odata.type'                = '#microsoft.graph.androidDeviceOwnerTrustedRootCertificate'
-                        }
+                        certFileName                 = "FakeStringValue"
+                        trustedRootCertificate       = "fakestringvalue0"
+                        '@odata.type'                = '#microsoft.graph.androidDeviceOwnerTrustedRootCertificate'
                     }
                 }
             }

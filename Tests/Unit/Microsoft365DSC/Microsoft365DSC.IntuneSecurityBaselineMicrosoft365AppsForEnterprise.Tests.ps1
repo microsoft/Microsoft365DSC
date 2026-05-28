@@ -72,133 +72,125 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
                                 Name = 'L_ProtectionFromZoneElevation'
                                 OffsetUri = '/Config/office16v2~Policy~L_MicrosoftOfficemachine~L_SecuritySettingsMachine~L_IESecurity/L_ProtectionFromZoneElevation'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
-                                            name = 'Enabled'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
+                                        name = 'Enabled'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_excelexe99'
                                 Name = 'L_excelexe99'
                                 OffsetUri = '/Config/office16v2~Policy~L_MicrosoftOfficemachine~L_SecuritySettingsMachine~L_IESecurity/L_ProtectionFromZoneElevation'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'False'
-                                            itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_excelexe99_0'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'False'
+                                        itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_excelexe99_0'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
+                                                parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
                                             }
-                                        },
-                                        @{
-                                            name = 'True'
-                                            itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_excelexe99_1'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    },
+                                    @{
+                                        name = 'True'
+                                        itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_excelexe99_1'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
+                                                parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
+                                            }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
+                                        }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_grooveexe98'
                                 Name = 'L_grooveexe98'
                                 OffsetUri = '/Config/office16v2~Policy~L_MicrosoftOfficemachine~L_SecuritySettingsMachine~L_IESecurity/L_ProtectionFromZoneElevation'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'False'
-                                            itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_grooveexe98_0'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'False'
+                                        itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_grooveexe98_0'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
+                                                parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
                                             }
-                                        },
-                                        @{
-                                            name = 'True'
-                                            itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_grooveexe98_1'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    },
+                                    @{
+                                        name = 'True'
+                                        itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_grooveexe98_1'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
+                                                parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
+                                            }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
+                                        }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_mspubexe100'
                                 Name = 'L_mspubexe100'
                                 OffsetUri = '/Config/office16v2~Policy~L_MicrosoftOfficemachine~L_SecuritySettingsMachine~L_IESecurity/L_ProtectionFromZoneElevation'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'False'
-                                            itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_mspubexe100_0'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'False'
+                                        itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_mspubexe100_0'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
+                                                parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
                                             }
-                                        },
-                                        @{
-                                            name = 'True'
-                                            itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_mspubexe100_1'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    },
+                                    @{
+                                        name = 'True'
+                                        itemId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_mspubexe100_1'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
+                                                parentSettingId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation'
+                                            }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
+                                        }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -206,37 +198,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '7f23a242-9f64-47a5-8a57-a4675ca74c2b'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    value = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
-                                    children = @(
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_grooveexe98'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_grooveexe98_1'
-                                            }
-                                        },
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_excelexe99'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_excelexe99_1'
-                                            }
-                                        },
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_mspubexe100'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_mspubexe100_1'
-                                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                value = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_1'
+                                children = @(
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_grooveexe98'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_grooveexe98_1'
                                         }
-                                    )
-                                }
+                                    },
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_excelexe99'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_excelexe99_1'
+                                        }
+                                    },
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_mspubexe100'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'device_vendor_msft_policy_config_office16v2~policy~l_microsoftofficemachine~l_securitysettingsmachine~l_iesecurity_l_protectionfromzoneelevation_l_mspubexe100_1'
+                                        }
+                                    }
+                                )
                             }
                         }
                     },
@@ -247,43 +237,39 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates'
                                 Name = 'L_Word2003BinaryDocumentsAndTemplates'
                                 OffsetUri = '/Config/word16v2~Policy~L_MicrosoftOfficeWord~L_WordOptions~L_Security~L_TrustCenter~L_FileBlockSettings/L_Word2003BinaryDocumentsAndTemplates'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'Enabled'
-                                            itemId = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_1'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'Enabled'
+                                        itemId = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_1'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_l_word2003binarydocumentsandtemplatesdropid'
                                 Name = 'L_Word2003BinaryDocumentsAndTemplatesDropID'
                                 OffsetUri = '/Config/word16v2~Policy~L_MicrosoftOfficeWord~L_WordOptions~L_Security~L_TrustCenter~L_FileBlockSettings/L_Word2003BinaryDocumentsAndTemplates'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'Open/Save blocked, use open policy'
-                                            itemId = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_l_word2003binarydocumentsandtemplatesdropid_2'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_1'
-                                                    parentSettingId = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 2
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'Open/Save blocked, use open policy'
+                                        itemId = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_l_word2003binarydocumentsandtemplatesdropid_2'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_1'
+                                                parentSettingId = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 2
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -291,21 +277,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '23436aa2-f056-40bd-aca3-9bc84b2aeff0'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    value = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_1'
-                                    children = @(
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_l_word2003binarydocumentsandtemplatesdropid'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_l_word2003binarydocumentsandtemplatesdropid_2'
-                                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                value = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_1'
+                                children = @(
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_l_word2003binarydocumentsandtemplatesdropid'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'user_vendor_msft_policy_config_word16v2~policy~l_microsoftofficeword~l_wordoptions~l_security~l_trustcenter~l_fileblocksettings_l_word2003binarydocumentsandtemplates_l_word2003binarydocumentsandtemplatesdropid_2'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         }
                     }
@@ -343,12 +327,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -442,7 +422,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

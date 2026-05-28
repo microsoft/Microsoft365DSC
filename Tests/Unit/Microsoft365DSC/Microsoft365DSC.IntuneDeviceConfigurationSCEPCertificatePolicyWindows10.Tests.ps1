@@ -68,34 +68,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        subjectAlternativeNameType = "none"
-                        keyUsage = "keyEncipherment"
-                        subjectAlternativeNameFormatString = "FakeStringValue"
-                        certificateValidityPeriodScale = "days"
-                        keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
-                        '@odata.type' = "#microsoft.graph.windows81SCEPCertificateProfile"
-                        scepServerUrls = @("FakeStringValue")
-                        renewalThresholdPercentage = 25
-                        certificateValidityPeriodValue = 25
-                        hashAlgorithm = "sha1"
-                        keySize = "size1024"
-                        subjectNameFormatString = "FakeStringValue"
-                        subjectNameFormat = "commonName"
-                        certificateStore = "user"
-                        extendedKeyUsages = @(
-                            @{
-                                objectIdentifier = "FakeStringValue"
-                                name = "FakeStringValue"
-                            }
-                        )
-                        customSubjectAlternativeNames = @(
-                            @{
-                                sanType = "none"
-                                name = "FakeStringValue"
-                            }
-                        )
-                    }
+                    subjectAlternativeNameType = "none"
+                    keyUsage = "keyEncipherment"
+                    subjectAlternativeNameFormatString = "FakeStringValue"
+                    certificateValidityPeriodScale = "days"
+                    keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
+                    '@odata.type' = "#microsoft.graph.windows81SCEPCertificateProfile"
+                    scepServerUrls = @("FakeStringValue")
+                    renewalThresholdPercentage = 25
+                    certificateValidityPeriodValue = 25
+                    hashAlgorithm = "sha1"
+                    keySize = "size1024"
+                    subjectNameFormatString = "FakeStringValue"
+                    subjectNameFormat = "commonName"
+                    certificateStore = "user"
+                    extendedKeyUsages = @(
+                        @{
+                            objectIdentifier = "FakeStringValue"
+                            name = "FakeStringValue"
+                        }
+                    )
+                    customSubjectAlternativeNames = @(
+                        @{
+                            sanType = "none"
+                            name = "FakeStringValue"
+                        }
+                    )
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
                     id = "FakeStringValue"
@@ -152,13 +150,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -ParameterFilter { $DeviceConfigurationId -eq $RootCertificateId } -MockWith {
-                    $AdditionalProperties = @{}
-                    $AdditionalProperties.'@odata.type' = "#microsoft.graph.windows81TrustedRootCertificate"
-
                     return @{
                         Id = $RootCertificateId
                         DisplayName = "RootCertificate"
-                        AdditionalProperties = $AdditionalProperties
+                        '@odata.type' = "#microsoft.graph.windows81TrustedRootCertificate"
                     }
                 }
             }
@@ -216,7 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -309,13 +304,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -ParameterFilter { $DeviceConfigurationId -eq $RootCertificateId } -MockWith {
-                    $AdditionalProperties = @{}
-                    $AdditionalProperties.'@odata.type' = "#microsoft.graph.windows81TrustedRootCertificate"
-
                     return @{
                         Id = $RootCertificateId
                         DisplayName = "RootCertificate"
-                        AdditionalProperties = $AdditionalProperties
+                        '@odata.type' = "#microsoft.graph.windows81TrustedRootCertificate"
                     }
                 }
             }

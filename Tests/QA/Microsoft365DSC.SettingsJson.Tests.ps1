@@ -27,9 +27,8 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
         foreach ($permission in $settings.permissions.graph.application.read)
         {
             # Only validate non-GUID (hidden) permissions.
-            $ObjectGuid = [System.Guid]::empty
             # There is an issue where the GUI shows Tasks.Read.All but the OAuth value is actually Tasks.Read
-            if (-not [System.Guid]::TryParse($permission.Name  , [System.Management.Automation.PSReference]$ObjectGuid) -and
+            if (-not [System.Guid]::TryParse($permission.Name, [ref][System.Guid]::Empty) -and
                 $permission.Name -ne 'Tasks.Read.All')
             {
                 $permission.Name | Should -BeIn $roles -ErrorAction Continue
@@ -38,8 +37,7 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
         foreach ($permission in $settings.permissions.graph.application.write)
         {
             # Only validate non-GUID (hidden) permissions.
-            $ObjectGuid = [System.Guid]::empty
-            if (-not [System.Guid]::TryParse($permission.Name  , [System.Management.Automation.PSReference]$ObjectGuid))
+            if (-not [System.Guid]::TryParse($permission.Name, [ref][System.Guid]::Empty))
             {
                 $permission.Name | Should -BeIn $roles -ErrorAction Continue
             }
@@ -67,6 +65,13 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
             )
         }
 
+        if ($settings.ResourceName -like 'VivaEngagement*')
+        {
+            $allowedPermissions = @(
+                'User.ReadBasic.All'
+            )
+        }
+
         if ($settings.ResourceName -like 'AADAuthenticationMethod*' -or $settings.ResourceName -eq 'AADAuthenticationStrengthPolicy')
         {
             $allowedPermissions = @(
@@ -90,9 +95,8 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
 
         foreach ($permission in $settings.permissions.graph.application.read)
         {
-            $ObjectGuid = [System.Guid]::empty
             # There is an issue where the GUI shows Tasks.Read.All but the OAuth value is actually Tasks.Read
-            if (-not [System.Guid]::TryParse($permission.Name  , [System.Management.Automation.PSReference]$ObjectGuid) -and
+            if (-not [System.Guid]::TryParse($permission.Name, [ref][System.Guid]::Empty) -and
                 $permission.Name -ne 'Tasks.Read.All' -and -not ($permission.Name -in $allowedPermissions))
             {
                 $permission.Name | Should -BeLike '*.Read.*' -ErrorAction Continue

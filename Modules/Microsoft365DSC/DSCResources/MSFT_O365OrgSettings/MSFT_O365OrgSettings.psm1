@@ -261,10 +261,9 @@ function Get-TargetResource
                 $PSBoundParameters.ContainsKey('VivaInsightsWebExperience') -or `
                 $Script:exportedInstance)
         {
-            # TODO: Remove verbose information after testing is complete
             try
             {
-                $currentVivaInsightsSettings = Invoke-M365DSCCommand -ScriptBlock { Get-DefaultTenantMyAnalyticsFeatureConfig -Verbose } -RetryOnNotFoundError
+                $currentVivaInsightsSettings = Invoke-M365DSCCommand -ScriptBlock { Get-DefaultTenantMyAnalyticsFeatureConfig } -RetryOnNotFoundError
                 Write-Verbose -Message "Current Viva Insights Settings: $($currentVivaInsightsSettings | ConvertTo-Json -Depth 5)" -Verbose
                 if ($null -ne $currentVivaInsightsSettings)
                 {
@@ -1130,19 +1129,19 @@ function Export-TargetResource
 
         $Script:exportedInstance = $true
         $Results = Get-TargetResource @Params
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -Credential $Credential
-        $dscContent += $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
 
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

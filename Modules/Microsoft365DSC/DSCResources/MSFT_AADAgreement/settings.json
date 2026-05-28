@@ -48,5 +48,9 @@
         "Remove-MgBetaAgreement"
       ]
     }
+  ],
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.Governance"
   ]
 }

@@ -48,14 +48,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $null
             }
 
-            Mock -CommandName Remove-MgBetaPolicyFeatureRolloutPolicyApplyToByRef -MockWith {
+            Mock -CommandName Remove-MgBetaPolicyFeatureRolloutPolicyApplyToDirectoryObjectByRef -MockWith {
             }
 
             Mock -CommandName Get-MgBetaPolicyFeatureRolloutPolicy -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.FeatureRolloutPolicy"
-                    }
+                    '@odata.type' = "#microsoft.graph.FeatureRolloutPolicy"
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     Feature = "passthroughAuthentication"
@@ -124,7 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

@@ -4,7 +4,7 @@ class MSFT_IntuneMobileThreatDefenseConnector : OMI_BaseResource
     [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("The DisplayName of the Mobile Threat Defense Connector partner. NOTE: Hard coded for convenience, not returned by the Graph API.")] String DisplayName;
     [Write, Description("When TRUE, indicates the Mobile Threat Defense partner may collect metadata about installed applications from Intune for IOS devices. When FALSE, indicates the Mobile Threat Defense partner may not collect metadata about installed applications from Intune for IOS devices. Default value is FALSE.")] Boolean AllowPartnerToCollectIosApplicationMetadata;
-    [Write, Description("When TRUE, indicates the Mobile Threat Defense partner may collect metadata about personally installed applications from Intune for IOS devices. When FALSE, indicates the Mobile Threat Defense partner may not collect metadata about personally installed applications from Intune for IOS devices. Default value is FALSE.")] Boolean AllowPartnerToCollectIosPersonalApplicationMetadata;
+    [Write, Description("When TRUE, indicates the Mobile Threat Defense partner may collect metadata about personally installed applications from Intune for IOS devices. When FALSE, indicates the Mobile Threat Defense partner may not collect metadata about personally installed applications from Intune for IOS devices. Default value is FALSE.")] Boolean AllowPartnerToCollectIOSPersonalApplicationMetadata;
     [Write, Description("For Android, set whether Intune must receive data from the Mobile Threat Defense partner prior to marking a device compliant.")] Boolean AndroidDeviceBlockedOnMissingPartnerData;
     [Write, Description("For Android, set whether data from the Mobile Threat Defense partner should be used during compliance evaluations.")] Boolean AndroidEnabled;
     [Write, Description("When TRUE, indicates that data from the Mobile Threat Defense partner can be used during Mobile Application Management (MAM) evaluations for Android devices. When FALSE, indicates that data from the Mobile Threat Defense partner should not be used during Mobile Application Management (MAM) evaluations for Android devices. Only one partner per platform may be enabled for Mobile Application Management (MAM) evaluation. Default value is FALSE.")] Boolean AndroidMobileApplicationManagementEnabled;
@@ -22,8 +22,10 @@ class MSFT_IntuneMobileThreatDefenseConnector : OMI_BaseResource
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

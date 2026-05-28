@@ -62,5 +62,23 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Add-PnPHubSiteAssociation",
+        "Get-PnPAvailableLanguage",
+        "Get-PnPContext",
+        "Get-PnPHubSite",
+        "Get-PnPTenantSite",
+        "Get-PnPWeb",
+        "New-PnPTenantSite",
+        "Remove-PnPHubSiteAssociation",
+        "Remove-PnPTenantSite",
+        "Set-PnPSite",
+        "Set-PnPTenantSite"
+      ]
+    }
+  ]
 }

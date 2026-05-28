@@ -73,6 +73,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -153,6 +161,8 @@ function Get-TargetResource
             TenantId                = $TenantId
             ApplicationSecret       = $ApplicationSecret
             CertificateThumbprint   = $CertificateThumbprint
+            CertificatePath         = $CertificatePath
+            CertificatePassword     = $CertificatePassword
             ManagedIdentity         = $ManagedIdentity.IsPresent
             AccessTokens            = $AccessTokens
         }
@@ -242,6 +252,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -273,7 +291,7 @@ function Set-TargetResource
     {
         $setParameters.Remove('Id') | Out-Null
         Write-Verbose -Message "Creating new Atribute Definition {$Name}"
-        $attributeDefinition = New-MgBetaDirectoryCustomSecurityAttributeDefinition @SetParameters
+        $attributeDefinition = New-MgBetaDirectoryCustomSecurityAttributeDefinition -BodyParameter $setParameters
 
         foreach ($allowedValue in $AllowedValues)
         {
@@ -287,7 +305,6 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Atribute Definition {$Name}"
-        $setParameters.Add('CustomSecurityAttributeDefinitionId', $currentInstance.Id)
         $setParameters.Remove('Id') | Out-Null
         $setParameters.Remove('AttributeSet') | Out-Null
         $setParameters.Remove('IsCollection') | Out-Null
@@ -298,7 +315,7 @@ function Set-TargetResource
         {
             $setParameters.Remove('UsePreDefinedValuesOnly') | Out-Null
         }
-        Update-MgBetaDirectoryCustomSecurityAttributeDefinition @SetParameters
+        Update-MgBetaDirectoryCustomSecurityAttributeDefinition -CustomSecurityAttributeDefinitionId $currentInstance.Id -BodyParameter $setParameters
 
         # Allowed values cannot be removed, therefore we only need to add new ones or update existing ones
         foreach ($allowedValue in $AllowedValues)
@@ -309,16 +326,28 @@ function Set-TargetResource
                 # Add new allowed value
                 New-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue `
                     -CustomSecurityAttributeDefinitionId $currentInstance.Id `
-                    -Id $allowedValue.ValueId `
-                    -IsActive:$allowedValue.IsActive
+                    -BodyParameter @{
+                        'allowedValues@delta' = @(
+                            @{
+                                id       = $allowedValue.ValueId
+                                isActive = $allowedValue.IsActive
+                            }
+                        )
+                    }
             }
             elseif ($existingAllowedValue.IsActive -ne $allowedValue.IsActive)
             {
                 # Update existing allowed value
                 Update-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue `
                     -CustomSecurityAttributeDefinitionId $currentInstance.Id `
-                    -AllowedValueId $allowedValue.ValueId `
-                    -IsActive:$allowedValue.IsActive
+                    -BodyParameter @{
+                        'allowedValues@delta' = @(
+                            @{
+                                id       = $allowedValue.ValueId
+                                isActive = $allowedValue.IsActive
+                            }
+                        )
+                    }
             }
         }
     }
@@ -404,6 +433,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -455,6 +492,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -480,13 +525,13 @@ function Export-TargetResource
 
     try
     {
-        [array] $Script:exportedInstances = Get-MgBetaDirectoryCustomSecurityAttributeDefinition `
+        [array] $exportedInstances = Get-MgBetaDirectoryCustomSecurityAttributeDefinition `
             -ExpandProperty 'allowedValues' `
             -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -494,7 +539,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -502,7 +547,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.Id
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                    = $config.Id
                 Name                  = $config.Name
@@ -512,6 +557,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -540,13 +587,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('AllowedValues')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

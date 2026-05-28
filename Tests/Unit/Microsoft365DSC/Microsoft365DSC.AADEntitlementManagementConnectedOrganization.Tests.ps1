@@ -58,10 +58,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @(
                     @{
                         Id = '12345678-1234-1234-1234-123456789012'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.user'
-                            userPrincipalName = 'John.smith@contoso.com'
-                        }
+                        '@odata.type' = '#microsoft.graph.user'
+                        userPrincipalName = 'John.smith@contoso.com'
                     }
                 )
             }
@@ -69,10 +67,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @(
                     @{
                         Id = '12345678-1234-1234-1234-123456789012'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.user'
-                            userPrincipalName = 'John.smith@contoso.com'
-                        }
+                        '@odata.type' = '#microsoft.graph.user'
+                        userPrincipalName = 'John.smith@contoso.com'
                     }
                 )
             }
@@ -114,27 +110,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDirectoryObject -ParameterFilter { $DirectoryObjectId -eq '12345678-1234-1234-1234-234567890123' } -MockWith {
                 return @{
                     Id                   = '12345678-1234-1234-1234-234567890123'
-                    AdditionalProperties = @{
-                        '@odata.type' = '#microsoft.graph.user'
-                    }
+                    '@odata.type' = '#microsoft.graph.user'
                 }
             }
 
             Mock -CommandName Get-MgBetaDirectoryObject -ParameterFilter { $DirectoryObjectId -eq '12345678-1234-1234-1234-123456789012' } -MockWith {
                 return @{
                     Id                   = '12345678-1234-1234-1234-123456789012'
-                    AdditionalProperties = @{
-                        '@odata.type' = '#microsoft.graph.user'
-                    }
+                    '@odata.type' = '#microsoft.graph.user'
                 }
             }
 
             Mock -CommandName Get-MgBetaDirectoryObject -ParameterFilter { $DirectoryObjectId -eq '12345678-1234-1234-1234-12345678903' } -MockWith {
                 return @{
                     Id                   = '12345678-1234-1234-1234-12345678903'
-                    AdditionalProperties = @{
-                        '@odata.type' = '#microsoft.graph.user'
-                    }
+                    '@odata.type' = '#microsoft.graph.user'
                 }
             }
 
@@ -145,11 +135,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id              = 'ConnectedOrganization_Id'
                     IdentitySources = @(
                         @{
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.azureActiveDirectoryTenant'
-                                tenantId      = 'IdentitySource_TenantId'
-                                displayName   = 'IdentitySource_DisplayName'
-                            }
+                            '@odata.type' = '#microsoft.graph.azureActiveDirectoryTenant'
+                            tenantId      = 'IdentitySource_TenantId'
+                            displayName   = 'IdentitySource_DisplayName'
                         }
                     )
                     State           = 'configured'
@@ -226,7 +214,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -284,17 +272,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @(
                         @{
                             Id = '12345678-1234-1234-1234-123456789012'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.user'
-                                userPrincipalName = 'John.Smith@contoso.com'
-                            }
+                            '@odata.type' = '#microsoft.graph.user'
+                            userPrincipalName = 'John.Smith@contoso.com'
                         },
                         @{
                             Id = '12345678-1234-1234-1234-234567890123' #Drift
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.user'
-                                userPrincipalName = 'John.doe@contoso.com'
-                            }
+                            '@odata.type' = '#microsoft.graph.user'
+                            userPrincipalName = 'John.doe@contoso.com'
                         }
                     )
                 }

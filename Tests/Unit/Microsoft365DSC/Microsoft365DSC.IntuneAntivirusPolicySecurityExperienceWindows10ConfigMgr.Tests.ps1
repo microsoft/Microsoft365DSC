@@ -90,20 +90,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_companyname'
                                 Name = 'CompanyName'
                                 OffsetUri = '/Config/WindowsDefenderSecurityCenter/CompanyName'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                             }
                         )
                         SettingInstance = @{
                             SettingDefinitionId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_companyname'
                             SettingInstanceTemplateReference = $null
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                simpleSettingValue = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                    value = 'FakeStringValue'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                            simpleSettingValue = @{
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                value = 'FakeStringValue'
                             }
                         }
                     },
@@ -114,30 +110,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'vendor_msft_defender_configuration_tamperprotection'
                                 Name = 'TamperProtection'
                                 OffsetUri = '/Configuration/TamperProtection'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'vendor_msft_defender_configuration_tamperprotection_1'
-                                            name = 'Offboarding'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'vendor_msft_defender_configuration_tamperprotection_1'
+                                        name = 'Offboarding'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
                             SettingDefinitionId = 'vendor_msft_defender_configuration_tamperprotection'
                             SettingInstanceTemplateReference = $null
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'vendor_msft_defender_configuration_tamperprotection_1'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'vendor_msft_defender_configuration_tamperprotection_1'
                             }
                         }
                     },
@@ -148,30 +140,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disabletpmfirmwareupdatewarning'
                                 Name = 'DisableTpmFirmwareUpdateWarning'
                                 OffsetUri = '/Config/WindowsDefenderSecurityCenter/DisableTpmFirmwareUpdateWarning'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disabletpmfirmwareupdatewarning_1'
-                                            name = 'Offboarding'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disabletpmfirmwareupdatewarning_1'
+                                        name = 'Offboarding'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
                             SettingDefinitionId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disabletpmfirmwareupdatewarning'
                             SettingInstanceTemplateReference = $null
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disabletpmfirmwareupdatewarning_1'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disabletpmfirmwareupdatewarning_1'
                             }
                         }
                     },
@@ -182,30 +170,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disableaccountprotectionui'
                                 Name = 'DisableAccountProtectionUI'
                                 OffsetUri = '/Config/WindowsDefenderSecurityCenter/DisableAccountProtectionUI'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disableaccountprotectionui_0'
-                                            name = 'Enable'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 0
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disableaccountprotectionui_0'
+                                        name = 'Enable'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
                             SettingDefinitionId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disableaccountprotectionui'
                             SettingInstanceTemplateReference = $null
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disableaccountprotectionui_0'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disableaccountprotectionui_0'
                             }
                         }
                     },
@@ -216,20 +200,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disablenotifications'
                                 Name = 'DisableNotifications'
                                 OffsetUri = '/Config/WindowsDefenderSecurityCenter/DisableNotifications'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                             }
                         )
                         SettingInstance = @{
                             SettingDefinitionId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disablenotifications'
                             SettingInstanceTemplateReference = $null
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disablenotifications_1'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disablenotifications_1'
                             }
                         }
                     }
@@ -245,9 +225,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_companyname'
                                 Name = 'CompanyName'
                                 OffsetUri = '/Config/WindowsDefenderSecurityCenter/CompanyName'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                             }
                         )
                     },
@@ -258,19 +236,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'vendor_msft_defender_configuration_tamperprotection'
                                 Name = 'TamperProtection'
                                 OffsetUri = '/Configuration/TamperProtection'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'vendor_msft_defender_configuration_tamperprotection_1'
-                                            name = 'Offboarding'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'vendor_msft_defender_configuration_tamperprotection_1'
+                                        name = 'Offboarding'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                     },
@@ -281,19 +257,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disabletpmfirmwareupdatewarning'
                                 Name = 'DisableTpmFirmwareUpdateWarning'
                                 OffsetUri = '/Config/WindowsDefenderSecurityCenter/DisableTpmFirmwareUpdateWarning'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disabletpmfirmwareupdatewarning_1'
-                                            name = 'Offboarding'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disabletpmfirmwareupdatewarning_1'
+                                        name = 'Offboarding'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                     },
@@ -304,19 +278,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disableaccountprotectionui'
                                 Name = 'DisableAccountProtectionUI'
                                 OffsetUri = '/Config/WindowsDefenderSecurityCenter/DisableAccountProtectionUI'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disableaccountprotectionui_0'
-                                            name = 'Enable'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 0
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_config_windowsdefendersecuritycenter_disableaccountprotectionui_0'
+                                        name = 'Enable'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                     }

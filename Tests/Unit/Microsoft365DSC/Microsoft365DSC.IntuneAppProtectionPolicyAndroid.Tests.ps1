@@ -199,10 +199,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MaximumPinRetries                               = 5
                     MinimumPinLength                                = 4
                     OrganizationalCredentialsRequired               = $False
-                    PeriodBeforePinReset                            = New-TimeSpan -Days 60
-                    PeriodOfflineBeforeAccessCheck                  = New-TimeSpan -Hours 12
-                    PeriodOfflineBeforeWipeIsEnforced               = New-TimeSpan -Days 90
-                    PeriodOnlineBeforeAccessCheck                   = New-TimeSpan -Minutes 30
+                    PeriodBeforePinReset                            = 'P60D'
+                    PeriodOfflineBeforeAccessCheck                  = 'PT12H'
+                    PeriodOfflineBeforeWipeIsEnforced               = 'P90D'
+                    PeriodOnlineBeforeAccessCheck                   = 'PT30M'
                     PinCharacterSet                                 = 'alphanumericAndSymbol'
                     PinRequired                                     = $True
                     DisableAppPinIfDevicePinIsSet                   = $False
@@ -268,28 +268,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 [pscustomobject]@{
                     id                  = 'com.cisco.im.intune.android'
                     mobileAppIdentifier = @{
-                        'AdditionalProperties' = @{
-                            '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
-                            'packageid'   = 'com.cisco.im.intune'
-                        }
+                        '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
+                        'packageid'   = 'com.cisco.im.intune'
                     }
                 },
                 [pscustomobject]@{
                     id                  = 'com.penlink.penpoint.android'
                     mobileAppIdentifier = @{
-                        'AdditionalProperties' = @{
-                            '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
-                            'packageid'   = 'com.penlink.penpoint'
-                        }
+                        '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
+                        packageid   = 'com.penlink.penpoint'
                     }
                 },
                 [pscustomobject]@{
                     id                  = 'com.slack.intune.android'
                     mobileAppIdentifier = @{
-                        'AdditionalProperties' = @{
-                            '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
-                            'packageid'   = 'com.slack.intune'
-                        }
+                        '@odata.type' = '#microsoft.graph.androidMobileAppIdentifier'
+                        packageid   = 'com.slack.intune'
                     }
                 }
             }
@@ -299,19 +293,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     @{
                         id     = '6ee86c9f-2b3c-471d-ad38-ff4673ed723e'
                         target = @{
-                            'AdditionalProperties' = @{
-                                '@odata.type' = '#microsoft.graph.groupAssignmentTarget'
-                                groupId       = '6ee86c9f-2b3c-471d-ad38-ff4673ed723e'
-                            }
+                            '@odata.type' = '#microsoft.graph.groupAssignmentTarget'
+                            groupId       = '6ee86c9f-2b3c-471d-ad38-ff4673ed723e'
                         }
                     },
                     @{
                         id     = '3eacc231-d77b-4efb-bb5f-310f68bd6198'
                         target = @{
-                            'AdditionalProperties' = @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '3eacc231-d77b-4efb-bb5f-310f68bd6198'
-                            }
+                            '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            groupId       = '3eacc231-d77b-4efb-bb5f-310f68bd6198'
                         }
                     }
                 )

@@ -56,41 +56,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Id = 'com.apple.managedclient.preferences_tags'
                             Name = 'tags'
                             OffsetUri = 'tags'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                childIds = @(
-                                    'com.apple.managedclient.preferences_tags_item_value',
-                                    'com.apple.managedclient.preferences_tags_item_key'
-                                )
-                                minimumCount = 1
-                                maximumCount = 1
-                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                            childIds = @(
+                                'com.apple.managedclient.preferences_tags_item_value',
+                                'com.apple.managedclient.preferences_tags_item_key'
+                            )
+                            minimumCount = 1
+                            maximumCount = 1
                         },
                         @{
                             Id = 'com.apple.managedclient.preferences_tags_item_value'
                             Name = 'tags_item_value'
                             OffsetUri = 'tags/[{0}]/value'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                         },
                         @{
                             Id = 'com.apple.managedclient.preferences_tags_item_key'
                             Name = 'tags_item_key'
                             OffsetUri = 'tags/[{0}]/key'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                options = @(
-                                    @{
-                                        itemId = 'com.apple.managedclient.preferences_tags_item_key_0'
-                                        name = 'GROUP'
-                                        optionValue = @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                            value = 'GROUP'
-                                        }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                            options = @(
+                                @{
+                                    itemId = 'com.apple.managedclient.preferences_tags_item_key_0'
+                                    name = 'GROUP'
+                                    optionValue = @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                        value = 'GROUP'
                                     }
-                                )
-                            }
+                                }
+                            )
                         }
                     )
                     SettingInstance      = @{
@@ -98,33 +92,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SettingInstanceTemplateReference = @{
                             SettingInstanceTemplateId = 'd0eb0a92-3807-4d9d-8432-6edd1aa108ce'
                         }
-                        AdditionalProperties             = @{
-                            '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                            groupSettingCollectionValue = @(
-                                @{
-                                    settingValueTemplateReference = $null
-                                    children                   = @(
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            choiceSettingValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingInstance'
-                                                children = @()
-                                                value = 'com.apple.managedclient.preferences_tags_item_key_0'
-                                            }
-                                            settingDefinitionId = 'com.apple.managedclient.preferences_tags_item_key'
-                                        },
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                            simpleSettingValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'tag'
-                                            }
-                                            settingDefinitionId = 'com.apple.managedclient.preferences_tags_item_value'
+                        '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                        groupSettingCollectionValue = @(
+                            @{
+                                settingValueTemplateReference = $null
+                                children                   = @(
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        choiceSettingValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingInstance'
+                                            children = @()
+                                            value = 'com.apple.managedclient.preferences_tags_item_key_0'
                                         }
-                                    )
-                                }
-                            )
-                        }
+                                        settingDefinitionId = 'com.apple.managedclient.preferences_tags_item_key'
+                                    },
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                        simpleSettingValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'tag'
+                                        }
+                                        settingDefinitionId = 'com.apple.managedclient.preferences_tags_item_value'
+                                    }
+                                )
+                            }
+                        )
                     }
                 }
             }
@@ -169,12 +161,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -240,7 +228,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -300,23 +288,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             @{
                                 Id = 'com.apple.managedclient.preferences_tags'
                                 Name = 'tags'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_tags_item_value'
                                 Name = 'tags_item_value'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_tags_item_key'
                                 Name = 'tags_item_key'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                             }
                         )
                         SettingInstance      = @{
@@ -324,33 +306,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'd0eb0a92-3807-4d9d-8432-6edd1aa108ce'
                             }
-                            AdditionalProperties             = @{
-                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        settingValueTemplateReference = $null
-                                        children                   = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                choiceSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingInstance'
-                                                    children = @()
-                                                    value = 'com.apple.managedclient.preferences_tags_item_key_0'
-                                                }
-                                                settingDefinitionId = 'com.apple.managedclient.preferences_tags_item_key'
-                                            },
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                simpleSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                    value = 'tag1234' #drift
-                                                }
-                                                settingDefinitionId = 'com.apple.managedclient.preferences_tags_item_value'
+                            '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    settingValueTemplateReference = $null
+                                    children                   = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            choiceSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingInstance'
+                                                children = @()
+                                                value = 'com.apple.managedclient.preferences_tags_item_key_0'
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                            settingDefinitionId = 'com.apple.managedclient.preferences_tags_item_key'
+                                        },
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            simpleSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                value = 'tag1234' #drift
+                                            }
+                                            settingDefinitionId = 'com.apple.managedclient.preferences_tags_item_value'
+                                        }
+                                    )
+                                }
+                            )
                         }
                     }
                 }

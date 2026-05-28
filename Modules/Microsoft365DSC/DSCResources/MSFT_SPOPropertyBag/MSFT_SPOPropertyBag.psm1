@@ -41,15 +41,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -142,9 +142,9 @@ function Get-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -204,15 +204,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -293,15 +293,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -350,15 +350,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -389,7 +389,7 @@ function Export-TargetResource
         # Get all Site Collections in tenant;
         $sites = Get-PnPTenantSite -ErrorAction Stop
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
 
         if ($sites.Length -eq 0)
         {
@@ -469,7 +469,7 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
-                    $dscContent += $currentDSCBlock
+                    [void]$dscContent.Append($currentDSCBlock)
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
 
@@ -509,6 +509,7 @@ function Export-TargetResource
             $principal = $organization.Split('.')[0]
         }
 
+        $dscContent = $dscContent.ToString()
         if ($dscContent.ToLower().Contains($organization.ToLower()) -or `
                 $dscContent.ToLower().Contains($principal.ToLower()))
         {

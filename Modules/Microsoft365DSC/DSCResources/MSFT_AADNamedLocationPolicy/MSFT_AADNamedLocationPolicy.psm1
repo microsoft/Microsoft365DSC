@@ -66,6 +66,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -137,14 +145,14 @@ function Get-TargetResource
         }
         Write-Verbose "Found existing AAD Named Location {$($NamedLocation.DisplayName)}"
         $Result = @{
-            OdataType                         = $NamedLocation.AdditionalProperties.'@odata.type'
+            OdataType                         = $NamedLocation.'@odata.type'
             Id                                = $NamedLocation.Id
             DisplayName                       = $NamedLocation.DisplayName
-            IpRanges                          = $NamedLocation.AdditionalProperties.ipRanges.cidrAddress
-            IsTrusted                         = $NamedLocation.AdditionalProperties.isTrusted
-            CountriesAndRegions               = [String[]]$NamedLocation.AdditionalProperties.countriesAndRegions
-            CountryLookupMethod               = $NamedLocation.AdditionalProperties.countryLookupMethod
-            IncludeUnknownCountriesAndRegions = $NamedLocation.AdditionalProperties.includeUnknownCountriesAndRegions
+            IpRanges                          = $NamedLocation.ipRanges.cidrAddress
+            IsTrusted                         = $NamedLocation.isTrusted
+            CountriesAndRegions               = [String[]]$NamedLocation.countriesAndRegions
+            CountryLookupMethod               = $NamedLocation.countryLookupMethod
+            IncludeUnknownCountriesAndRegions = $NamedLocation.includeUnknownCountriesAndRegions
             Ensure                            = 'Present'
             ApplicationSecret                 = $ApplicationSecret
             ApplicationId                     = $ApplicationId
@@ -232,6 +240,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -412,6 +428,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -465,6 +489,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -488,12 +520,12 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ''
+    $dscContent = [System.Text.StringBuilder]::new()
     $i = 1
 
     try
     {
-        $AADNamedLocations = Get-MgBetaIdentityConditionalAccessNamedLocation -Filter $Filter -All:$true -ErrorAction Stop
+        $AADNamedLocations = Get-MgBetaIdentityConditionalAccessNamedLocation -Filter $Filter -All -ErrorAction Stop
         if ($AADNamedLocations.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -530,7 +562,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
@@ -538,7 +570,7 @@ function Export-TargetResource
                 $i++
             }
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

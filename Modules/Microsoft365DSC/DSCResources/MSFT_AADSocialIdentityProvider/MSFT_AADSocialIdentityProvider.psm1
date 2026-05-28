@@ -49,6 +49,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -81,9 +89,7 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $getValue = Get-MgBetaIdentityProvider -Filter "Id eq '$ClientId'" `
-                -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.socialIdentityProvider' }
-
+            $getValue = Get-MgBetaIdentityProvider -Filter "Id eq '$ClientId' and isof('microsoft.graph.socialIdentityProvider')" -ErrorAction SilentlyContinue
             if ($null -eq $getValue)
             {
                 Write-Verbose -Message "Could not find Social Identity Provider Client Id {$ClientId}"
@@ -98,21 +104,23 @@ function Get-TargetResource
         Write-Verbose -Message "Social Identity Provider with ClientId {$ClientId} was found."
 
         $ClientSecretValue = $null
-        if ($getValue.AdditionalProperties.clientSecret)
+        if ($getValue.clientSecret)
         {
-            $ClientSecretValue = $getValue.AdditionalProperties.clientSecret
+            $ClientSecretValue = $getValue.clientSecret
         }
         $results = @{
             ClientId              = $getValue.Id
             ClientSecret          = $ClientSecretValue
             DisplayName           = $getValue.DisplayName
-            IdentityProviderType  = $getValue.AdditionalProperties.identityProviderType
+            IdentityProviderType  = $getValue.identityProviderType
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -179,6 +187,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -202,33 +218,17 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $AdditionalProperties = @{
-        '@odata.type'        = 'microsoft.graph.socialIdentityProvider'
-        identityProviderType = $IdentityProviderType
-    }
-    $BoundParameters.Add('AdditionalProperties', $AdditionalProperties)
-    $BoundParameters.Remove('IdentityProviderType') | Out-Null
-    if ($ClientId)
-    {
-        $BoundParameters.AdditionalProperties.Add('ClientId', $ClientId)
-        $BoundParameters.Remove('ClientId') | Out-Null
-    }
-    if ($ClientSecret)
-    {
-        $BoundParameters.AdditionalProperties.Add('ClientSecret', $ClientSecret)
-        $BoundParameters.Remove('ClientSecret') | Out-Null
-    }
+    $BoundParameters.Add('@odata.type', 'microsoft.graph.socialIdentityProvider')
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Social Identity Provider with Client Id {$ClientId}"
-        New-MgBetaIdentityProvider @BoundParameters | Out-Null
+        New-MgBetaIdentityProvider -BodyParameter $BoundParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        $BoundParameters.Add('IdentityProviderBaseId', $ClientId)
-        $BoundParameters.AdditionalProperties.Remove('IdentityProviderType') | Out-Null
+        $BoundParameters.Remove('IdentityProviderType') | Out-Null
         Write-Verbose -Message "Updating the Social Identity Provider with Client Id {$ClientId}"
-        Update-MgBetaIdentityProvider @BoundParameters | Out-Null
+        Update-MgBetaIdentityProvider -IdentityProviderBaseId $ClientId -BodyParameter $BoundParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -286,6 +286,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -341,6 +349,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -378,7 +394,7 @@ function Export-TargetResource
         [array]$getValue = Get-MgBetaIdentityProvider -All -Filter $Filter -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -405,6 +421,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -418,13 +436,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

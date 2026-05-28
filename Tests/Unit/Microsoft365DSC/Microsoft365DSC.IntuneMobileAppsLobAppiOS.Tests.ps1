@@ -56,31 +56,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.iosLobApp"
-                        minimumSupportedOperatingSystem = @{
-                            v12_0 = $True
-                            v17_0 = $True
-                            v8_0 = $True
-                            v9_0 = $True
-                            v10_0 = $True
-                            v18_0 = $True
-                            v11_0 = $True
-                            v14_0 = $True
-                            v15_0 = $True
-                            v16_0 = $True
-                            v13_0 = $True
-                        }
-                        expirationDateTime = "2023-01-01T00:00:00.0000000+01:00"
-                        bundleId = "FakeStringValue"
-                        fileName = "FakeStringValue.ipa"
-                        versionNumber = "FakeStringValue"
-                        buildNumber = "FakeStringValue"
-                        committedContentVersion = "FakeStringValue"
-                        applicableDeviceType = @{
-                            iPad = $True
-                            iPhoneAndIPod = $True
-                        }
+                    '@odata.type' = "#microsoft.graph.iosLobApp"
+                    minimumSupportedOperatingSystem = @{
+                        v12_0 = $True
+                        v17_0 = $True
+                        v8_0 = $True
+                        v9_0 = $True
+                        v10_0 = $True
+                        v18_0 = $True
+                        v11_0 = $True
+                        v14_0 = $True
+                        v15_0 = $True
+                        v16_0 = $True
+                        v13_0 = $True
+                    }
+                    expirationDateTime = "2023-01-01T00:00:00.0000000+01:00"
+                    bundleId = "FakeStringValue"
+                    fileName = "FakeStringValue.ipa"
+                    versionNumber = "FakeStringValue"
+                    buildNumber = "FakeStringValue"
+                    committedContentVersion = "FakeStringValue"
+                    applicableDeviceType = @{
+                        iPad = $True
+                        iPhoneAndIPod = $True
                     }
                     Categories = @(
                         @{
@@ -97,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     isFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -113,31 +111,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.iosLobApp"
-                        minimumSupportedOperatingSystem = @{
-                            v12_0 = $True
-                            v17_0 = $True
-                            v8_0 = $True
-                            v9_0 = $True
-                            v10_0 = $True
-                            v18_0 = $True
-                            v11_0 = $True
-                            v14_0 = $True
-                            v15_0 = $True
-                            v16_0 = $True
-                            v13_0 = $True
-                        }
-                        expirationDateTime = "2023-01-01T00:00:00.0000000+01:00"
-                        bundleId = "FakeStringValue"
-                        fileName = "FakeStringValue.ipa"
-                        versionNumber = "FakeStringValue"
-                        buildNumber = "FakeStringValue"
-                        committedContentVersion = "FakeStringValue"
-                        applicableDeviceType = @{
-                            iPad = $True
-                            iPhoneAndIPod = $True
-                        }
+                    '@odata.type' = "#microsoft.graph.iosLobApp"
+                    minimumSupportedOperatingSystem = @{
+                        v12_0 = $True
+                        v17_0 = $True
+                        v8_0 = $True
+                        v9_0 = $True
+                        v10_0 = $True
+                        v18_0 = $True
+                        v11_0 = $True
+                        v14_0 = $True
+                        v15_0 = $True
+                        v16_0 = $True
+                        v13_0 = $True
+                    }
+                    expirationDateTime = "2023-01-01T00:00:00.0000000+01:00"
+                    bundleId = "FakeStringValue"
+                    fileName = "FakeStringValue.ipa"
+                    versionNumber = "FakeStringValue"
+                    buildNumber = "FakeStringValue"
+                    committedContentVersion = "FakeStringValue"
+                    applicableDeviceType = @{
+                        iPad = $True
+                        iPhoneAndIPod = $True
                     }
                     Categories = @(
                         @{
@@ -154,7 +150,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     isFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -186,10 +182,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Source = "direct"
                         SourceId = "12345-12345-12345-12345-12345"
                         Target = @{
-                            AdditionalProperties = @{
-                                "@odata.type" = "#microsoft.graph.groupAssignmentTarget"
-                                groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
-                            }
+                            "@odata.type" = "#microsoft.graph.groupAssignmentTarget"
+                            groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
                             "deviceAndAppManagementAssignmentFilterId" = '12345-12345-12345-12345-12345'
                             "deviceAndAppManagementAssignmentFilterType" = "none"
                         }

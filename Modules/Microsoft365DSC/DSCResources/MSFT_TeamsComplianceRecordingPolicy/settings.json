@@ -36,5 +36,20 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsComplianceRecordingApplication",
+        "Get-CsTeamsComplianceRecordingPolicy",
+        "New-CsTeamsComplianceRecordingApplication",
+        "New-CsTeamsComplianceRecordingPairedApplication",
+        "New-CsTeamsComplianceRecordingPolicy",
+        "Remove-CsTeamsComplianceRecordingPolicy",
+        "Set-CsTeamsComplianceRecordingApplication",
+        "Set-CsTeamsComplianceRecordingPolicy"
+      ]
+    }
+  ]
 }

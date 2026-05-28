@@ -50,13 +50,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        manifestHash = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.winGetApp"
-                        packageIdentifier = "FakeStringValue"
-                        installExperience = @{
-                            runAsAccount = "system"
-                        }
+                    manifestHash = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.winGetApp"
+                    packageIdentifier = "FakeStringValue"
+                    installExperience = @{
+                        runAsAccount = "system"
                     }
                     Categories = @(
                         @{
@@ -73,7 +71,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     isFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -92,13 +90,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        manifestHash = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.winGetApp"
-                        packageIdentifier = "FakeStringValue"
-                        installExperience = @{
-                            runAsAccount = "system"
-                        }
+                    manifestHash = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.winGetApp"
+                    packageIdentifier = "FakeStringValue"
+                    installExperience = @{
+                        runAsAccount = "system"
                     }
                     Categories = @(
                         @{
@@ -115,7 +111,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     isFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"

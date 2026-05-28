@@ -30,13 +30,6 @@ namespace Microsoft365DSC.Intune
     ///
     /// This function does NOT call any Graph API. It operates purely on the pre-fetched
     /// setting definitions and the DSC parameters provided by the caller.
-    ///
-    /// <para><b>AdditionalProperties handling:</b></para>
-    /// The PowerShell version accesses <c>$SettingDefinition.AdditionalProperties.options</c> directly
-    /// on Graph SDK objects. In this C# port, the setting definitions are pre-mapped to
-    /// <see cref="SettingDefinitionInfo"/> which extracts all AdditionalProperties during construction
-    /// (using reflection for Graph SDK objects). This avoids repeated reflection access at runtime,
-    /// which would be prohibitively expensive in tight loops.
     /// </summary>
     public static class SettingValueResolver
     {

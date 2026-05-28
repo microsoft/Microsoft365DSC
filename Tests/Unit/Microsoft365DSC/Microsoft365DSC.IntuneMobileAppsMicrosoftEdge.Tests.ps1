@@ -50,11 +50,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        channel = "dev"
-                        displayLanguageLocale = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.windowsMicrosoftEdgeApp"
-                    }
+                    channel = "dev"
+                    displayLanguageLocale = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.windowsMicrosoftEdgeApp"
                     DependentAppCount = 25
                     Description = "FakeStringValue"
                     Developer = "FakeStringValue"
@@ -64,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -83,11 +81,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        channel = "dev"
-                        displayLanguageLocale = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.windowsMicrosoftEdgeApp"
-                    }
+                    channel = "dev"
+                    displayLanguageLocale = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.windowsMicrosoftEdgeApp"
                     Categories = @(
                         @{
                             Id = "FakeStringValue"
@@ -103,7 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"

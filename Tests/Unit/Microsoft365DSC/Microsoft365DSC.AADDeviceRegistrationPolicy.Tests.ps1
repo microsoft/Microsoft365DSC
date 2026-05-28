@@ -46,11 +46,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         LocalAdmins = @{
                             EnableGlobalAdmins = $true
                             RegisteringUsers = @{
-                                AdditionalProperties = @{
-                                    "@odata.type" = "#microsoft.graph.enumeratedDeviceRegistrationMembership"
-                                    users = @('12345-12345-12345-12345-12345')
-                                    groups = @()
-                                }
+                                "@odata.type" = "#microsoft.graph.enumeratedDeviceRegistrationMembership"
+                                users = @('12345-12345-12345-12345-12345')
+                                groups = @()
                             }
                         }
                     }
@@ -96,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AzureADAllowedToJoin                    = "None";
+                    AzureADAllowedToJoin                    = "All";
                     AzureADAllowedToJoinGroups              = @();
                     AzureADAllowedToJoinUsers               = @();
                     AzureAdJoinLocalAdminsRegisteringGroups = @();
@@ -119,7 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AzureADAllowedToJoin                    = "Selected";
+                    AzureADAllowedToJoin                    = "All";
                     AzureADAllowedToJoinGroups              = @();
                     AzureADAllowedToJoinUsers               = @("john.smith@contoso.com");
                     AzureAdJoinLocalAdminsRegisteringGroups = @();

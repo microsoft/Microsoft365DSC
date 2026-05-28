@@ -190,46 +190,44 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName                                 = 'FakeStringValue'
                         Description                                 = 'FakeStringValue'
                         Id                              = 'FakeStringValue'
-                        AdditionalProperties                        = @{
-                            '@odata.type'                           = '#microsoft.graph.androidDeviceOwnerVpnConfiguration'
-                            authenticationMethod                    = 'usernameAndPassword'
-                            connectionName                          = 'FakeStringValue'
-                            connectionType                          = 'ciscoAnyConnect'
-                            customData             = @(
-                                @{
-                                    key                  = 'FakeStringValue'
-                                    value                = 'FakeStringValue'
-                                }
-                            )
-                            customKeyValueData      = @(
-                                @{
-                                    name                  = 'FakeStringValue'
-                                    value                = 'FakeStringValue'
-                                }
-                            )
-                            servers                                  = @(
-                                @{
-                                    isDefaultServer                  = $True
-                                    description                      = 'server'
-                                    address                          = 'vpn.CHANGED.com' #changed value
-                                }
-                            )
-                            proxyServer                              = @(
-                                 @{
-                                    port                             = 80
-                                    automaticConfigurationScriptUrl  = 'https://www.test.com'
-                                    address                          = 'proxy.test.com'
-                                 }
-                            )
-                            targetedMobileApps                      = @(
-                                @{
-                                    name                            = 'FakeStringValue'
-                                    publisher                       = 'FakeStringValue'
-                                    appStoreUrl                     = 'FakeStringValue'
-                                    appId                           = 'FakeStringValue'
-                                }
-                            )
-                        }
+                        '@odata.type'                           = '#microsoft.graph.androidDeviceOwnerVpnConfiguration'
+                        authenticationMethod                    = 'usernameAndPassword'
+                        connectionName                          = 'FakeStringValue'
+                        connectionType                          = 'ciscoAnyConnect'
+                        customData             = @(
+                            @{
+                                key                  = 'FakeStringValue'
+                                value                = 'FakeStringValue'
+                            }
+                        )
+                        customKeyValueData      = @(
+                            @{
+                                name                  = 'FakeStringValue'
+                                value                = 'FakeStringValue'
+                            }
+                        )
+                        servers                                  = @(
+                            @{
+                                isDefaultServer                  = $True
+                                description                      = 'server'
+                                address                          = 'vpn.CHANGED.com' #changed value
+                            }
+                        )
+                        proxyServer                              = @(
+                             @{
+                                port                             = 80
+                                automaticConfigurationScriptUrl  = 'https://www.test.com'
+                                address                          = 'proxy.test.com'
+                             }
+                        )
+                        targetedMobileApps                      = @(
+                            @{
+                                name                            = 'FakeStringValue'
+                                publisher                       = 'FakeStringValue'
+                                appStoreUrl                     = 'FakeStringValue'
+                                appId                           = 'FakeStringValue'
+                            }
+                        )
                     }
                 }
             }
@@ -309,46 +307,44 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                    return  @{
                         DisplayName                                 = 'FakeStringValue'
                         Description                                 = 'FakeStringValue'
-                        AdditionalProperties                        = @{
-                            '@odata.type'                           = '#microsoft.graph.androidDeviceOwnerVpnConfiguration'
-                            authenticationMethod                    = 'usernameAndPassword'
-                            connectionName                          = 'FakeStringValue'
-                            connectionType                          = 'ciscoAnyConnect'
-                            proxyServer                             = @(
-                                @{
-                                    port                            = 80
-                                    automaticConfigurationScriptUrl = 'https://www.test.com'
-                                    address                         = 'proxy.test.com'
-                                }
-                            )
-                            servers                                  = @(
-                                @{
-                                    isDefaultServer                 = $True
-                                    description                     = 'server'
-                                    address                         = 'vpn.test.com'
-                                }
-                            )
-                            customData                              = @(
-                                @{
-                                    key                             = 'FakeStringValue'
-                                    value                           = 'FakeStringValue'
-                                }
-                            )
-                            customKeyValueData                      = @(
-                                @{
-                                    name                            = 'FakeStringValue'
-                                    value                           = 'FakeStringValue'
-                                }
-                            )
-                            targetedMobileApps                    = @(
-                                @{
-                                    name                            = 'FakeStringValue'
-                                    publisher                       = 'FakeStringValue'
-                                    appStoreUrl                     = 'FakeStringValue'
-                                    appId                           = 'FakeStringValue'
-                                }
-                            )
-                        }
+                        '@odata.type'                           = '#microsoft.graph.androidDeviceOwnerVpnConfiguration'
+                        authenticationMethod                    = 'usernameAndPassword'
+                        connectionName                          = 'FakeStringValue'
+                        connectionType                          = 'ciscoAnyConnect'
+                        proxyServer                             = @(
+                            @{
+                                port                            = 80
+                                automaticConfigurationScriptUrl = 'https://www.test.com'
+                                address                         = 'proxy.test.com'
+                            }
+                        )
+                        servers                                  = @(
+                            @{
+                                isDefaultServer                 = $True
+                                description                     = 'server'
+                                address                         = 'vpn.test.com'
+                            }
+                        )
+                        customData                              = @(
+                            @{
+                                key                             = 'FakeStringValue'
+                                value                           = 'FakeStringValue'
+                            }
+                        )
+                        customKeyValueData                      = @(
+                            @{
+                                name                            = 'FakeStringValue'
+                                value                           = 'FakeStringValue'
+                            }
+                        )
+                        targetedMobileApps                    = @(
+                            @{
+                                name                            = 'FakeStringValue'
+                                publisher                       = 'FakeStringValue'
+                                appStoreUrl                     = 'FakeStringValue'
+                                appId                           = 'FakeStringValue'
+                            }
+                        )
                     }
                 }
             }
@@ -392,26 +388,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                    return @{
                         DisplayName                                  = 'FakeStringValue'
                         Description                                  = 'FakeStringValue'
-                        AdditionalProperties                         = @{
-                            '@odata.type'                           = '#microsoft.graph.androidDeviceOwnerVpnConfiguration'
-                            authenticationMethod                     = 'usernameAndPassword'
-                            connectionName                           = 'FakeStringValue'
-                            connectionType                           = 'ciscoAnyConnect'
-                            proxyServer                              = @(
-                                @{
-                                    port                             = 80
-                                    automaticConfigurationScriptUrl  = 'https://www.test.com'
-                                    address                          = 'proxy.test.com'
-                                }
-                            )
-                            servers                                  = @(
-                                @{
-                                    isDefaultServer                  = $True
-                                    description                      = 'server'
-                                    address                          = 'vpn.test.com'
-                                }
-                            )
-                        }
+                        '@odata.type'                           = '#microsoft.graph.androidDeviceOwnerVpnConfiguration'
+                        authenticationMethod                     = 'usernameAndPassword'
+                        connectionName                           = 'FakeStringValue'
+                        connectionType                           = 'ciscoAnyConnect'
+                        proxyServer                              = @(
+                            @{
+                                port                             = 80
+                                automaticConfigurationScriptUrl  = 'https://www.test.com'
+                                address                          = 'proxy.test.com'
+                            }
+                        )
+                        servers                                  = @(
+                            @{
+                                isDefaultServer                  = $True
+                                description                      = 'server'
+                                address                          = 'vpn.test.com'
+                            }
+                        )
                     }
                 }
             }
@@ -420,7 +414,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -442,26 +436,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                    return @{
                         DisplayName                                 = 'FakeStringValue'
                         Description                                 = 'FakeStringValue'
-                        AdditionalProperties                        = @{
-                            '@odata.type'                           = '#microsoft.graph.androidDeviceOwnerVpnConfiguration'
-                            authenticationMethod                    = 'usernameAndPassword'
-                            connectionName                          = 'FakeStringValue'
-                            connectionType                          = 'ciscoAnyConnect'
-                            proxyServer                             = @(
-                                @{
-                                    port                            = 80
-                                    automaticConfigurationScriptUrl = 'https://www.test.com'
-                                    address                         = 'proxy.test.com'
-                                }
-                            )
-                            servers                                 = @(
-                                @{
-                                    isDefaultServer                 = $True
-                                    description                     = 'server'
-                                    address                         = 'vpn.test.com'
-                                }
-                            )
-                        }
+                        '@odata.type'                           = '#microsoft.graph.androidDeviceOwnerVpnConfiguration'
+                        authenticationMethod                    = 'usernameAndPassword'
+                        connectionName                          = 'FakeStringValue'
+                        connectionType                          = 'ciscoAnyConnect'
+                        proxyServer                             = @(
+                            @{
+                                port                            = 80
+                                automaticConfigurationScriptUrl = 'https://www.test.com'
+                                address                         = 'proxy.test.com'
+                            }
+                        )
+                        servers                                 = @(
+                            @{
+                                isDefaultServer                 = $True
+                                description                     = 'server'
+                                address                         = 'vpn.test.com'
+                            }
+                        )
                     }
                 }
             }

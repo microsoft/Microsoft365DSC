@@ -48,6 +48,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -85,7 +93,7 @@ function Get-TargetResource
         }
 
         $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$($resourceGroupInstance.ResourceId)/providers/Microsoft.VerifiedId/authorities/$($VerifiedIdAuthorityId)?api-version=2024-01-26-preview"
-        $response = Invoke-AzRest -Uri $uri -Method Get
+        $response = Invoke-AzRestMethod -Uri $uri -Method Get
         $authorities = ConvertFrom-Json $response.Content
 
         $EnabledValue = $false
@@ -105,6 +113,8 @@ function Get-TargetResource
             ApplicationId               = $ApplicationId
             TenantId                    = $TenantId
             CertificateThumbprint       = $CertificateThumbprint
+            CertificatePath             = $CertificatePath
+            CertificatePassword         = $CertificatePassword
             ManagedIdentity             = $ManagedIdentity.IsPresent
             AccessTokens                = $AccessTokens
         }
@@ -169,6 +179,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -198,14 +216,14 @@ function Set-TargetResource
         Write-Verbose -Message "Enabling FaceCheck on Verified ID Authority {$($VerifiedIDAuthorityId)}"
         $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/providers/Microsoft.VerifiedId/authorities/$($VerifiedIdAuthorityId)?api-version=2024-01-26-preview"
         $payload = '{"location": "' + $VerifiedIdAuthorityLocation + '"}'
-        $response = Invoke-AzRest -Uri $uri -Method Put -Payload $payload
+        $response = Invoke-AzRestMethod -Uri $uri -Method Put -Payload $payload
     }
     else
     {
         Write-Verbose -Message "Disabling FaceCheck on Verified ID Authority {$($VerifiedIDAuthorityId)}"
         $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/providers/Microsoft.VerifiedId/authorities/$($VerifiedIdAuthorityId)?api-version=2024-01-26-preview"
         $payload = '{"location": null}'
-        $response = Invoke-AzRest -Uri $uri -Method DELETE
+        $response = Invoke-AzRestMethod -Uri $uri -Method DELETE
     }
 }
 
@@ -257,6 +275,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -306,6 +332,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -342,7 +376,7 @@ function Export-TargetResource
 
         $resourceGroups = Get-AzResourceGroup -ErrorAction Stop
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($resourceGroups.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -374,7 +408,7 @@ function Export-TargetResource
             foreach ($authority in $authorities.value)
             {
                 $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)$($resourceGroup.ResourceId)/providers/Microsoft.VerifiedId/authorities/$($authority.id)?api-version=2024-01-26-preview"
-                $response = Invoke-AzRest -Uri $uri -Method Get
+                $response = Invoke-AzRestMethod -Uri $uri -Method Get
 
                 $Global:M365DSCExportResourceInstancesCount++
 
@@ -403,7 +437,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 $i++
@@ -411,7 +445,7 @@ function Export-TargetResource
             }
             $j++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

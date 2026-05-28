@@ -48,30 +48,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        wakeOnPower = "notConfigured"
-                        microphone = "notConfigured"
-                        bootFromBuiltInNetworkAdapters = "notConfigured"
-                        radios = "notConfigured"
-                        simultaneousMultiThreading = "notConfigured"
-                        usbTypeAPort = "notConfigured"
-                        microphonesAndSpeakers = "notConfigured"
-                        rearCamera = "notConfigured"
-                        infraredCamera = "notConfigured"
-                        changeUefiSettingsPermission = "notConfiguredOnly"
-                        sdCard = "notConfigured"
-                        bootFromExternalMedia = "notConfigured"
-                        frontCamera = "notConfigured"
-                        windowsPlatformBinaryTable = "notConfigured"
-                        '@odata.type' = "#microsoft.graph.windows10DeviceFirmwareConfigurationInterface"
-                        wakeOnLAN = "notConfigured"
-                        virtualizationOfCpuAndIO = "notConfigured"
-                        wirelessWideAreaNetwork = "notConfigured"
-                        nearFieldCommunication = "notConfigured"
-                        wiFi = "notConfigured"
-                        bluetooth = "notConfigured"
-                        cameras = "notConfigured"
-                    }
+                    wakeOnPower = "notConfigured"
+                    microphone = "notConfigured"
+                    bootFromBuiltInNetworkAdapters = "notConfigured"
+                    radios = "notConfigured"
+                    simultaneousMultiThreading = "notConfigured"
+                    usbTypeAPort = "notConfigured"
+                    microphonesAndSpeakers = "notConfigured"
+                    rearCamera = "notConfigured"
+                    infraredCamera = "notConfigured"
+                    changeUefiSettingsPermission = "notConfiguredOnly"
+                    sdCard = "notConfigured"
+                    bootFromExternalMedia = "notConfigured"
+                    frontCamera = "notConfigured"
+                    windowsPlatformBinaryTable = "notConfigured"
+                    '@odata.type' = "#microsoft.graph.windows10DeviceFirmwareConfigurationInterface"
+                    wakeOnLAN = "notConfigured"
+                    virtualizationOfCpuAndIO = "notConfigured"
+                    wirelessWideAreaNetwork = "notConfigured"
+                    nearFieldCommunication = "notConfigured"
+                    wiFi = "notConfigured"
+                    bluetooth = "notConfigured"
+                    cameras = "notConfigured"
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
@@ -173,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

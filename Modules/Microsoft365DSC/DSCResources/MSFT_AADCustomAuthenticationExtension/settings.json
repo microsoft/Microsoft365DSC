@@ -24,13 +24,15 @@
         "update": [
           {
             "name": "CustomSecAttributeDefinition.ReadWrite.All"
+          },
+          {
+            "name": "CustomAuthenticationExtension.ReadWrite.All"
           }
         ]
       }
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Identity.SignIns"
   ],
   "supportedEnvironments": [

@@ -51,6 +51,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -109,6 +117,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -172,6 +188,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -221,7 +245,7 @@ function Test-TargetResource
 
     $result = ($instances.Length - $DSCConvertedInstances.Length) -eq 0
 
-    $message = [System.Text.StringBuilder]::New()
+    $message = [System.Text.StringBuilder]::new()
     [void]$message.AppendLine('<M365DSCGraphAPIRuleEvaluation>')
     [void]$message.AppendLine("  <RuleName>$RuleName</RuleName>")
     [void]$message.AppendLine("  <ResourceName>$ResourceTypeName</ResourceName>")
@@ -368,6 +392,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]

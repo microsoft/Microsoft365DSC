@@ -72,43 +72,39 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel'
                                 Name = 'Pol_MSS_DisableIPSourceRoutingIPv6'
                                 OffsetUri = '/Config/MSSLegacy/IPv6SourceRoutingProtectionLevel'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name ='Enabled'
-                                            itemId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_1'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name ='Enabled'
+                                        itemId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_1'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_disableipsourceroutingipv6'
                                 Name = 'DisableIPSourceRoutingIPv6'
                                 OffsetUri = '/Config/MSSLegacy/IPv6SourceRoutingProtectionLevel'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name ='No additional protection, source routed packets are allowed'
-                                            itemId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_disableipsourceroutingipv6_0'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name ='No additional protection, source routed packets are allowed'
+                                        itemId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_disableipsourceroutingipv6_0'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_1'
+                                                parentSettingId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -116,21 +112,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'd26001a0-5e2d-4f45-94f6-a8fb15b016d8'
                             }
-                            AdditionalProperties = @{
-                               '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                choiceSettingValue = @{
-                                    children = @(
-                                        @{
-                                            SettingDefinitionId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_disableipsourceroutingipv6'
-                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = "device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_disableipsourceroutingipv6_0"
-                                            }
+                           '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
+                            choiceSettingValue = @{
+                                children = @(
+                                    @{
+                                        SettingDefinitionId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_disableipsourceroutingipv6'
+                                        '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = "device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_disableipsourceroutingipv6_0"
                                         }
-                                    )
-                                    value = "device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_1"
-                                }
+                                    }
+                                )
+                                value = "device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_1"
                             }
                         }
                     }
@@ -141,67 +135,59 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths'
                                 Name = 'Pol_HardenedPaths'
                                 OffsetUri = '/Config/Connectivity/HardenedUNCPaths'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name ='Enabled'
-                                            itemId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_1'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name ='Enabled'
+                                        itemId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_1'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
                                 Name = 'Pol_HardenedPaths'
                                 OffsetUri = '/Config/Connectivity/HardenedUNCPaths'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 1
-                                    childIds = @(
-                                        'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_key',
-                                        'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_value'
-                                    )
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_1'
-                                            parentSettingId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 1
+                                childIds = @(
+                                    'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_key',
+                                    'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_value'
+                                )
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_1'
+                                        parentSettingId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_value'
                                 Name = 'Pol_HardenedPaths'
                                 OffsetUri = '/Config/Connectivity/HardenedUNCPaths'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
-                                            parentSettingId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
+                                        parentSettingId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_key'
                                 Name = 'Pol_HardenedPaths'
                                 OffsetUri = '/Config/Connectivity/HardenedUNCPaths'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
-                                            parentSettingId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
+                                        parentSettingId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -209,39 +195,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'd26001a0-5e2d-4f45-94f6-a8fb15b016d8'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                 choiceSettingValue = @{
-                                    children = @(
-                                        @{
-                                            SettingDefinitionId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
-                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance"
-                                            groupSettingCollectionValue = @(
-                                                @{
-                                                    children = @(
-                                                        @{
-                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                            settingDefinitionId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_value'
-                                                            simpleSettingValue = @{
-                                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                value = 'RequireMutualAuthentication=1,RequireIntegrity=1'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                            settingDefinitionId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_key'
-                                                            simpleSettingValue = @{
-                                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                value = '\\*\SYSVOL'
-                                                            }
+                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
+                             choiceSettingValue = @{
+                                children = @(
+                                    @{
+                                        SettingDefinitionId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
+                                        '@odata.type' = "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance"
+                                        groupSettingCollectionValue = @(
+                                            @{
+                                                children = @(
+                                                    @{
+                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                                        settingDefinitionId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_value'
+                                                        simpleSettingValue = @{
+                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                            value = 'RequireMutualAuthentication=1,RequireIntegrity=1'
                                                         }
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    )
-                                    value = "device_vendor_msft_policy_config_connectivity_hardeneduncpaths_1"
-                                }
+                                                    },
+                                                    @{
+                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                                        settingDefinitionId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_key'
+                                                        simpleSettingValue = @{
+                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                            value = '\\*\SYSVOL'
+                                                        }
+                                                    }
+                                                )
+                                            }
+                                        )
+                                    }
+                                )
+                                value = "device_vendor_msft_policy_config_connectivity_hardeneduncpaths_1"
                             }
                         }
                     }
@@ -252,19 +236,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'user_vendor_msft_policy_config_experience_allowwindowsspotlight'
                                 Name = 'AllowWindowsSpotlight'
                                 OffsetUri = '/Config/Experience/AllowWindowsSpotlight'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options=@(
-                                        @{
-                                            name ='Allowed.'
-                                            itemId = 'user_vendor_msft_policy_config_experience_allowwindowsspotlight_1'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options=@(
+                                    @{
+                                        name ='Allowed.'
+                                        itemId = 'user_vendor_msft_policy_config_experience_allowwindowsspotlight_1'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -272,12 +254,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'bb79e6fc-a957-476b-b8a1-0a7b1ac81c6a'
                             }
-                            AdditionalProperties = @{
-                               '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = "user_vendor_msft_policy_config_experience_allowwindowsspotlight_1"
-                                }
+                           '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
+                            choiceSettingValue = @{
+                                children = @()
+                                value = "user_vendor_msft_policy_config_experience_allowwindowsspotlight_1"
                             }
                         }
                     }
@@ -288,39 +268,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
                                 Name = 'AttackSurfaceReductionRules'
                                 OffsetUri = '/Config/Defender/AttackSurfaceReductionRules'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    maximumCount = 1
-                                    minimumCount = 0
-                                    childIds = @(
-                                        'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts'
-                                    )
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                maximumCount = 1
+                                minimumCount = 0
+                                childIds = @(
+                                    'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts'
+                                )
 
-                                }
                             },
                             @{
                                 Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts'
                                 Name = 'BlockExecutionOfPotentiallyObfuscatedScripts'
                                 OffsetUri = '/Config/Defender/AttackSurfaceReductionRules'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options=@(
-                                        @{
-                                            name ='Block'
-                                            itemId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts_block'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                                    parentSettingId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'block'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options=@(
+                                    @{
+                                        name ='Block'
+                                        itemId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts_block'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
+                                                parentSettingId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'block'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -328,21 +304,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '3d6107c2-c307-4399-8070-6542f1760309'
                             }
-                            AdditionalProperties = @{
-                                SettingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance"
-                                groupSettingCollectionValue = @{
-                                    children = @(
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts_block'
-                                            }
+                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance"
+                            groupSettingCollectionValue = @{
+                                children = @(
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts_block'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         }
                     }
@@ -370,12 +343,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -470,7 +439,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

@@ -87,141 +87,129 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse'
                                 Name = 'DefaultElevationResponse'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/DefaultElevationResponse'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
-                                                }
-                                            )
-                                            itemId = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse_0'
-                                            name = 'DenyAllRequests'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
+                                                parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
                                             }
+                                        )
+                                        itemId = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse_0'
+                                        name = 'DenyAllRequests'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_elevationclientsettings_allowelevationdetection'
                                 Name = 'AllowElevationDetection'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/AllowElevationDetection'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
-                                                }
-                                            )
-                                            itemId = 'device_vendor_msft_policy_elevationclientsettings_allowelevationdetection_0'
-                                            name = 'No'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
+                                                parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
                                             }
+                                        )
+                                        itemId = 'device_vendor_msft_policy_elevationclientsettings_allowelevationdetection_0'
+                                        name = 'No'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationclientsettings_defaultelevationresponse_validation'
                                 Name = 'DefaultBehaviorValidation'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/DefaultBehaviorValidation'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionDefinition'
-                                    minimumCount = 0
-                                    maximumCount = 100
-                                    options = @(
-                                        @{
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse'
-                                                }
-                                            )
-                                            itemId = 'device_vendor_msft_policy_privilegemanagement_elevationclientsettings_defaultelevationresponse_validation_0'
-                                            name = 'Business Justification'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionDefinition'
+                                minimumCount = 0
+                                maximumCount = 100
+                                options = @(
+                                    @{
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse_1'
+                                                parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse'
                                             }
+                                        )
+                                        itemId = 'device_vendor_msft_policy_privilegemanagement_elevationclientsettings_defaultelevationresponse_validation_0'
+                                        name = 'Business Justification'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_elevationclientsettings_senddata'
                                 Name = 'SendDataToMicrosoft'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/SendData'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
-                                                }
-                                            )
-                                            itemId = 'device_vendor_msft_policy_elevationclientsettings_senddata_1'
-                                            name = 'Yes'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
+                                                parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
                                             }
+                                        )
+                                        itemId = 'device_vendor_msft_policy_elevationclientsettings_senddata_1'
+                                        name = 'Yes'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_elevationclientsettings_reportingscope'
                                 Name = 'ReportingScope'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/ReportingScope'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_elevationclientsettings_senddata_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_senddata'
-                                                }
-                                            )
-                                            itemId = 'device_vendor_msft_policy_elevationclientsettings_reportingscope_1'
-                                            name = 'DiagnosticDataAndManagedElevationsOnly'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_elevationclientsettings_senddata_1'
+                                                parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_senddata'
                                             }
+                                        )
+                                        itemId = 'device_vendor_msft_policy_elevationclientsettings_reportingscope_1'
+                                        name = 'DiagnosticDataAndManagedElevationsOnly'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
                                 Name = 'EndpointPrivilegeManagement'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/EnableEPM'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
-                                            name = 'Enabled'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
+                                        name = 'Enabled'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -229,38 +217,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '58a79a4b-ba9b-4923-a7a5-6dc1a9f638a4'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @(
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse_0'
-                                            }
-                                            settingDefinitionId = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse'
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @(
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse_0'
                                         }
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            choiceSettingValue = @{
-                                                children = @(
-                                                    @{
-                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        choiceSettingValue = @{
-                                                            children = @()
-                                                            value = 'device_vendor_msft_policy_elevationclientsettings_reportingscope_1'
-                                                        }
-                                                        settingDefinitionId = 'device_vendor_msft_policy_elevationclientsettings_reportingscope'
+                                        settingDefinitionId = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse'
+                                    }
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        choiceSettingValue = @{
+                                            children = @(
+                                                @{
+                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    choiceSettingValue = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_elevationclientsettings_reportingscope_1'
                                                     }
-                                                )
-                                                value = 'device_vendor_msft_policy_elevationclientsettings_senddata_1'
-                                            }
-                                            settingDefinitionId = 'device_vendor_msft_policy_elevationclientsettings_senddata'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_elevationclientsettings_reportingscope'
+                                                }
+                                            )
+                                            value = 'device_vendor_msft_policy_elevationclientsettings_senddata_1'
                                         }
-                                    )
-                                    value = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
-                                }
+                                        settingDefinitionId = 'device_vendor_msft_policy_elevationclientsettings_senddata'
+                                    }
+                                )
+                                value = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
                             }
                         }
                     }
@@ -275,141 +261,129 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse'
                                 Name = 'DefaultElevationResponse'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/DefaultElevationResponse'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
-                                                }
-                                            )
-                                            itemId = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse_0'
-                                            name = 'DenyAllRequests'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
+                                                parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
                                             }
+                                        )
+                                        itemId = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse_0'
+                                        name = 'DenyAllRequests'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_elevationclientsettings_allowelevationdetection'
                                 Name = 'AllowElevationDetection'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/AllowElevationDetection'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
-                                                }
-                                            )
-                                            itemId = 'device_vendor_msft_policy_elevationclientsettings_allowelevationdetection_0'
-                                            name = 'No'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
+                                                parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
                                             }
+                                        )
+                                        itemId = 'device_vendor_msft_policy_elevationclientsettings_allowelevationdetection_0'
+                                        name = 'No'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationclientsettings_defaultelevationresponse_validation'
                                 Name = 'DefaultBehaviorValidation'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/DefaultBehaviorValidation'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionDefinition'
-                                    minimumCount = 0
-                                    maximumCount = 100
-                                    options = @(
-                                        @{
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse'
-                                                }
-                                            )
-                                            itemId = 'device_vendor_msft_policy_privilegemanagement_elevationclientsettings_defaultelevationresponse_validation_0'
-                                            name = 'Business Justification'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionDefinition'
+                                minimumCount = 0
+                                maximumCount = 100
+                                options = @(
+                                    @{
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse_1'
+                                                parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_defaultelevationresponse'
                                             }
+                                        )
+                                        itemId = 'device_vendor_msft_policy_privilegemanagement_elevationclientsettings_defaultelevationresponse_validation_0'
+                                        name = 'Business Justification'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_elevationclientsettings_senddata'
                                 Name = 'SendDataToMicrosoft'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/SendData'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
-                                                }
-                                            )
-                                            itemId = 'device_vendor_msft_policy_elevationclientsettings_senddata_1'
-                                            name = 'Yes'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
+                                                parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
                                             }
+                                        )
+                                        itemId = 'device_vendor_msft_policy_elevationclientsettings_senddata_1'
+                                        name = 'Yes'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_elevationclientsettings_reportingscope'
                                 Name = 'ReportingScope'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/ReportingScope'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_elevationclientsettings_senddata_1'
-                                                    parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_senddata'
-                                                }
-                                            )
-                                            itemId = 'device_vendor_msft_policy_elevationclientsettings_reportingscope_1'
-                                            name = 'DiagnosticDataAndManagedElevationsOnly'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_elevationclientsettings_senddata_1'
+                                                parentSettingId = 'device_vendor_msft_policy_elevationclientsettings_senddata'
                                             }
+                                        )
+                                        itemId = 'device_vendor_msft_policy_elevationclientsettings_reportingscope_1'
+                                        name = 'DiagnosticDataAndManagedElevationsOnly'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_elevationclientsettings_enableepm'
                                 Name = 'EndpointPrivilegeManagement'
                                 OffsetUri = 'PrivilegeManagement/ElevationClientSettings/EnableEPM'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
-                                            name = 'Enabled'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_elevationclientsettings_enableepm_1'
+                                        name = 'Enabled'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                     }
@@ -434,12 +408,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }

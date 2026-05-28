@@ -61,21 +61,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                   = 'FakeStringValue'
                     DisplayName          = 'FakeStringValue'
                     Description          = 'FakeStringValue'
-                    AdditionalProperties = @{
-                        trackInstallProgressForAutopilotOnly    = $True
-                        '@odata.type'                           = '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration'
-                        disableUserStatusTrackingAfterFirstUser = $True
-                        installQualityUpdates                   = $True
-                        showInstallationProgress                = $True
-                        selectedMobileAppIds                    = @('FakeGuidValue')
-                        blockDeviceSetupRetryByUser             = $True
-                        allowDeviceUseOnInstallFailure          = $True
-                        customErrorMessage                      = 'FakeStringValue'
-                        allowNonBlockingAppInstallation         = $True
-                        allowLogCollectionOnInstallFailure      = $True
-                        allowDeviceResetOnInstallFailure        = $True
-                        installProgressTimeoutInMinutes         = 25
-                    }
+                    trackInstallProgressForAutopilotOnly    = $True
+                    '@odata.type'                           = '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration'
+                    disableUserStatusTrackingAfterFirstUser = $True
+                    installQualityUpdates                   = $True
+                    showInstallationProgress                = $True
+                    selectedMobileAppIds                    = @('FakeGuidValue')
+                    blockDeviceSetupRetryByUser             = $True
+                    allowDeviceUseOnInstallFailure          = $True
+                    customErrorMessage                      = 'FakeStringValue'
+                    allowNonBlockingAppInstallation         = $True
+                    allowLogCollectionOnInstallFailure      = $True
+                    allowDeviceResetOnInstallFailure        = $True
+                    installProgressTimeoutInMinutes         = 25
                 }
             }
 
@@ -164,7 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

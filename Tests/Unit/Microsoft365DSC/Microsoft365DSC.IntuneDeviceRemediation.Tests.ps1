@@ -61,7 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDeviceManagementDeviceHealthScript -MockWith {
                 return @{
                     Description = "FakeStringValue"
-                    DetectionScriptContent = [byte[]] @(84, 101, 115, 116)
+                    DetectionScriptContent = "VGVzdA==" # "Test"
                     DetectionScriptParameters = @(
                         @{
                             '@odata.type' = "#microsoft.graph.deviceHealthScriptBooleanParameter"
@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id = "FakeStringValue"
                     IsGlobalScript = $False
                     Publisher = "FakeStringValue"
-                    RemediationScriptContent = [byte[]] @(84, 101, 115, 116)
+                    RemediationScriptContent = "VGVzdA==" # "Test"
                     RemediationScriptParameters = @(
                         @{
                             '@odata.type' = "#microsoft.graph.deviceHealthScriptBooleanParameter"
@@ -102,18 +102,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         RunRemediationScript = $False
                         RunSchedule = @{
                             Interval = 1
-                            AdditionalProperties = @{
-                                '@odata.type' = "#microsoft.graph.deviceHealthScriptRunOnceSchedule"
-                                useUtc = $false
-                                time = "01:00:00.0000000"
-                                date = "2024-01-01"
-                            }
+                            '@odata.type' = "#microsoft.graph.deviceHealthScriptRunOnceSchedule"
+                            useUtc = $false
+                            time = "01:00:00.0000000"
+                            date = "2024-01-01"
                         }
                         Target = @{
-                            AdditionalProperties = @{
-                                '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                groupId = "FakeStringValue"
-                            }
+                            '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+                            groupId = "FakeStringValue"
                             "DeviceAndAppManagementAssignmentFilterId" = "FakeStringValue"
                             "DeviceAndAppManagementAssignmentFilterType" = "none"
                         }
@@ -255,7 +251,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

@@ -35,5 +35,18 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsOnlinePSTNGateway",
+        "Get-CsOnlinePstnUsage",
+        "Get-CsOnlineVoiceRoute",
+        "New-CsOnlineVoiceRoute",
+        "Remove-CsOnlineVoiceRoute",
+        "Set-CsOnlineVoiceRoute"
+      ]
+    }
+  ]
 }

@@ -228,6 +228,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $DLPViaDcsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $ElcProcessingDisabled,
 
         [Parameter()]
@@ -615,6 +619,7 @@ function Get-TargetResource
             DistributionGroupDefaultOU                                = $ConfigSettings.DistributionGroupDefaultOU
             DistributionGroupNameBlockedWordsList                     = $ConfigSettings.DistributionGroupNameBlockedWordsList
             DistributionGroupNamingPolicy                             = $ConfigSettings.DistributionGroupNamingPolicy
+            DLPViaDcsEnabled                                          = $ConfigSettings.DLPViaDcsEnabled
             ElcProcessingDisabled                                     = $ConfigSettings.ElcProcessingDisabled
             EnableOutlookEvents                                       = $ConfigSettings.EnableOutlookEvents
             EndUserDLUpgradeFlowsDisabled                             = $ConfigSettings.EndUserDLUpgradeFlowsDisabled
@@ -944,6 +949,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $DLPViaDcsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $ElcProcessingDisabled,
 
         [Parameter()]
@@ -1230,7 +1239,6 @@ function Set-TargetResource
     $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-
     Write-Verbose -Message "Setting EXOOrganizationConfig with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
     $SetValues = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $SetValues.Remove('IsSingleInstance') | Out-Null
@@ -1501,6 +1509,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $DistributionGroupNamingPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $DLPViaDcsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1841,6 +1853,7 @@ function Export-TargetResource
 
     try
     {
+        $dscContent = [System.Text.StringBuilder]::new()
         $organizationConfig = Get-OrganizationConfig -ErrorAction Stop
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
@@ -1867,7 +1880,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
@@ -1878,7 +1891,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

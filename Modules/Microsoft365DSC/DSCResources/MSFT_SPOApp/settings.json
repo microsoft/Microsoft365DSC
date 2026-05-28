@@ -62,5 +62,17 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Add-PnPApp",
+        "Get-PnPApp",
+        "Get-PnPFile",
+        "Get-PnPTenantAppCatalogUrl",
+        "Remove-PnPApp"
+      ]
+    }
+  ]
 }

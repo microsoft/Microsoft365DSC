@@ -82,6 +82,17 @@
       "cmdlets": [
         "Get-MgGroup"
       ]
+    },
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Get-PnPHubSite",
+        "Get-PnPTenantSite",
+        "Grant-PnPHubSiteRights",
+        "Register-PnPHubSite",
+        "Set-PnPHubSite",
+        "Unregister-PnPHubSite"
+      ]
     }
   ]
 }

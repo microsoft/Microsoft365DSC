@@ -1,6 +1,4 @@
-﻿Initialize-M365DSCDllLoader -ErrorAction SilentlyContinue
-
-function Get-SettingsCatalogSettingName
+﻿function Get-SettingsCatalogSettingName
 {
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -13,6 +11,7 @@ function Get-SettingsCatalogSettingName
         $AllSettingDefinitions
     )
 
+    Initialize-M365DSCDllLoader -ErrorAction Stop
     return [Microsoft365DSC.Intune.SettingsCatalogHelper]::GetSettingName($SettingDefinition, $AllSettingDefinitions)
 }
 

@@ -54,23 +54,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            pinExpirationInDays = 25
-                            unlockWithBiometricsEnabled = $True
-                            state = "notConfigured"
-                            pinLowercaseCharactersUsage = "allowed"
-                            enhancedBiometricsState = "notConfigured"
-                            pinSpecialCharactersUsage = "allowed"
-                            securityDeviceRequired = $True
-                            pinPreviousBlockCount = 25
-                            pinUppercaseCharactersUsage = "allowed"
-                            '@odata.type' = "#microsoft.graph.deviceEnrollmentWindowsHelloForBusinessConfiguration"
-                            pinMaximumLength = 25
-                            securityKeyForSignIn = "notConfigured"
-                            remotePassportEnabled = $True
-                            enhancedSignInSecurity = 25
-                            pinMinimumLength = 25
-                        }
+                        pinExpirationInDays = 25
+                        unlockWithBiometricsEnabled = $True
+                        state = "notConfigured"
+                        pinLowercaseCharactersUsage = "allowed"
+                        enhancedBiometricsState = "notConfigured"
+                        pinSpecialCharactersUsage = "allowed"
+                        securityDeviceRequired = $True
+                        pinPreviousBlockCount = 25
+                        pinUppercaseCharactersUsage = "allowed"
+                        '@odata.type' = "#microsoft.graph.deviceEnrollmentWindowsHelloForBusinessConfiguration"
+                        pinMaximumLength = 25
+                        securityKeyForSignIn = "notConfigured"
+                        remotePassportEnabled = $True
+                        enhancedSignInSecurity = 25
+                        pinMinimumLength = 25
                         Description = "FakeStringValue"
                         DeviceEnrollmentConfigurationType = "unknown"
                         DisplayName = "FakeStringValue"

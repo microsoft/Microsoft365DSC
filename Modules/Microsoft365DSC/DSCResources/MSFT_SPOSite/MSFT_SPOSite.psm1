@@ -140,15 +140,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -275,9 +275,9 @@ function Get-TargetResource
             ApplicationId                               = $ApplicationId
             TenantId                                    = $TenantId
             ApplicationSecret                           = $ApplicationSecret
-            CertificatePassword                         = $CertificatePassword
-            CertificatePath                             = $CertificatePath
             CertificateThumbprint                       = $CertificateThumbprint
+            CertificatePath                             = $CertificatePath
+            CertificatePassword                         = $CertificatePassword
             ManagedIdentity                             = $ManagedIdentity.IsPresent
             AccessTokens                                = $AccessTokens
         }
@@ -433,15 +433,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -821,15 +821,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -878,15 +878,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -931,7 +931,7 @@ function Export-TargetResource
             $organization = $TenantId
             $principal = $organization.Split('.')[0]
         }
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($site in $sites)
@@ -958,9 +958,9 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 Credential            = $Credential
                 AccessTokens          = $AccessTokens
@@ -995,7 +995,6 @@ function Export-TargetResource
                     $Results.Remove('HubUrl') | Out-Null
                 }
 
-
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
@@ -1007,7 +1006,7 @@ function Export-TargetResource
                     $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
                     $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
                 }
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -1018,7 +1017,7 @@ function Export-TargetResource
             }
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

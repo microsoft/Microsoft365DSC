@@ -221,15 +221,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -373,9 +373,9 @@ function Get-TargetResource
             ApplicationId                                          = $ApplicationId
             TenantId                                               = $TenantId
             ApplicationSecret                                      = $ApplicationSecret
+            CertificateThumbprint                                  = $CertificateThumbprint
             CertificatePassword                                    = $CertificatePassword
             CertificatePath                                        = $CertificatePath
-            CertificateThumbprint                                  = $CertificateThumbprint
             ManagedIdentity                                        = $ManagedIdentity.IsPresent
             Ensure                                                 = 'Present'
             AccessTokens                                           = $AccessTokens
@@ -614,15 +614,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -700,7 +700,7 @@ function Set-TargetResource
 
     if ($spoGraphParametersSplat.Keys.Count -gt 0)
     {
-        $null = Update-MgAdminSharepointSetting @spoGraphParametersSplat -ErrorAction Stop
+        $null = Update-MgAdminSharepointSetting -BodyParameter $spoGraphParametersSplat -ErrorAction Stop
     }
 
     # Updating via REST
@@ -946,15 +946,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -1010,15 +1010,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -1055,15 +1055,16 @@ function Export-TargetResource
         }
 
         $Script:ExportMode = $true
+        $dscContent = [System.Text.StringBuilder]::new()
 
         $Params = @{
             IsSingleInstance      = 'Yes'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
             AccessTokens          = $AccessTokens
@@ -1083,11 +1084,11 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -Credential $Credential
-        $dscContent += $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

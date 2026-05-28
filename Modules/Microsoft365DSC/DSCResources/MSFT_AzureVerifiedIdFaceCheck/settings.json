@@ -22,5 +22,25 @@
     "Az.Resources",
     "MSCloudLoginAssistant"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Invoke-AzRestMethod"
+      ]
+    },
+    {
+      "module": "Az.Resources",
+      "cmdlets": [
+        "Get-AzResourceGroup"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
 }

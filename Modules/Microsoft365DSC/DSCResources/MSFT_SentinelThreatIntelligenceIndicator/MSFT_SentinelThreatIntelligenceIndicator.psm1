@@ -96,6 +96,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -177,6 +185,8 @@ function Get-TargetResource
             ApplicationId          = $ApplicationId
             TenantId               = $TenantId
             CertificateThumbprint  = $CertificateThumbprint
+            CertificatePath        = $CertificatePath
+            CertificatePassword    = $CertificatePassword
             ManagedIdentity        = $ManagedIdentity.IsPresent
             AccessTokens           = $AccessTokens
         }
@@ -289,6 +299,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -343,7 +361,6 @@ function Set-TargetResource
         }
         $instanceParameters.properties.Add('KillChainPhases', $values)
     }
-
 
     if ([System.String]::IsNullOrEmpty($TenantId) -and -not $null -eq $Credential)
     {
@@ -479,6 +496,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -528,6 +553,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -553,12 +586,11 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         $workspaces = Get-AzResource -ResourceType 'Microsoft.OperationalInsights/workspaces'
-        $Script:exportedInstances = @()
+        $exportedInstances = @()
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -623,14 +655,14 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 $j++
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -677,14 +709,14 @@ function Get-M365DSCSentinelThreatIntelligenceIndicator
         if (-not [System.String]::IsNullOrEmpty($Id))
         {
             $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/threatIntelligence/main/indicators/$($Id)?api-version=2024-03-01"
-            $response = Invoke-AzRest -Uri $uri -Method 'GET'
+            $response = Invoke-AzRestMethod -Uri $uri -Method 'GET'
             $result = ConvertFrom-Json $response.Content
             return $result
         }
         else
         {
             $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/threatIntelligence/main/indicators?api-version=2024-03-01"
-            $response = Invoke-AzRest -Uri $uri -Method 'GET'
+            $response = Invoke-AzRestMethod -Uri $uri -Method 'GET'
             $result = ConvertFrom-Json $response.Content
             return $result.value
         }
@@ -732,7 +764,7 @@ function New-M365DSCSentinelThreatIntelligenceIndicator
 
         $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/threatIntelligence/main/createIndicator?api-version=2024-03-01"
         $payload = ConvertTo-Json $Body -Depth 10 -Compress
-        $null = Invoke-AzRest -Uri $uri -Method 'POST' -Payload $payload
+        $null = Invoke-AzRestMethod -Uri $uri -Method 'POST' -Payload $payload
     }
     catch
     {
@@ -781,7 +813,7 @@ function Set-M365DSCSentinelThreatIntelligenceIndicator
 
         $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/threatIntelligence/main/indicators/$($Id)?api-version=2024-03-01"
         $payload = ConvertTo-Json $Body -Depth 10 -Compress
-        $null = Invoke-AzRest -Uri $uri -Method 'PUT' -Payload $payload
+        $null = Invoke-AzRestMethod -Uri $uri -Method 'PUT' -Payload $payload
     }
     catch
     {
@@ -825,7 +857,7 @@ function Remove-M365DSCSentinelThreatIntelligenceIndicator
         $uri = $hostUrl.AzureManagement + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
 
         $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/threatIntelligence/main/indicators/$($Id)?api-version=2024-03-01"
-        $null = Invoke-AzRest -Uri $uri -Method 'DELETE'
+        $null = Invoke-AzRestMethod -Uri $uri -Method 'DELETE'
     }
     catch
     {

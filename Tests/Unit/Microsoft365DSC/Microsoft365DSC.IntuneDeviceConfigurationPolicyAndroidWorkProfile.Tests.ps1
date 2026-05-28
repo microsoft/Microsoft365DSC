@@ -46,43 +46,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     id                   = '12345-12345-12345-12345-12345'
                     displayName          = 'Android Work Profile - Device Restrictions - Standard'
                     description          = 'Android device configuration policy'
-                    AdditionalProperties = @{
-                        '@odata.type'                                             = '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration'
-                        passwordBlockFingerprintUnlock                            = $False
-                        passwordBlockTrustAgents                                  = $False
-                        passwordExpirationDays                                    = 10
-                        passwordMinimumLength                                     = 8
-                        passwordMinutesOfInactivityBeforeScreenTimeout            = 3
-                        passwordPreviousPasswordBlockCount                        = 3
-                        passwordSignInFailureCountBeforeFactoryReset              = 10
-                        passwordRequiredType                                      = 'deviceDefault'
-                        workProfileDataSharingType                                = 'deviceDefault'
-                        workProfileBlockNotificationsWhileDeviceLocked            = $False
-                        workProfileBlockAddingAccounts                            = $False
-                        workProfileBluetoothEnableContactSharing                  = $False
-                        workProfileBlockScreenCapture                             = $False
-                        workProfileBlockCrossProfileCallerId                      = $False
-                        workProfileBlockCamera                                    = $False
-                        workProfileBlockCrossProfileContactsSearch                = $False
-                        workProfileBlockCrossProfileCopyPaste                     = $False
-                        workProfileDefaultAppPermissionPolicy                     = 'deviceDefault'
-                        workProfilePasswordBlockFingerprintUnlock                 = $False
-                        workProfilePasswordBlockTrustAgents                       = $False
-                        workProfilePasswordExpirationDays                         = 90
-                        workProfilePasswordMinimumLength                          = 4
-                        workProfilePasswordMinNumericCharacters                   = 3
-                        workProfilePasswordMinNonLetterCharacters                 = 3
-                        workProfilePasswordMinLetterCharacters                    = 3
-                        workProfilePasswordMinLowerCaseCharacters                 = 3
-                        workProfilePasswordMinUpperCaseCharacters                 = 3
-                        workProfilePasswordMinSymbolCharacters                    = 3
-                        workProfilePasswordMinutesOfInactivityBeforeScreenTimeout = 3
-                        workProfilePasswordPreviousPasswordBlockCount             = 3
-                        workProfilePasswordSignInFailureCountBeforeFactoryReset   = 3
-                        workProfilePasswordRequiredType                           = 'deviceDefault'
-                        workProfileRequirePassword                                = $False
-                        securityRequireVerifyApps                                 = $False
-                    }
+                    '@odata.type'                                             = '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration'
+                    passwordBlockFingerprintUnlock                            = $False
+                    passwordBlockTrustAgents                                  = $False
+                    passwordExpirationDays                                    = 10
+                    passwordMinimumLength                                     = 8
+                    passwordMinutesOfInactivityBeforeScreenTimeout            = 3
+                    passwordPreviousPasswordBlockCount                        = 3
+                    passwordSignInFailureCountBeforeFactoryReset              = 10
+                    passwordRequiredType                                      = 'deviceDefault'
+                    workProfileDataSharingType                                = 'deviceDefault'
+                    workProfileBlockNotificationsWhileDeviceLocked            = $False
+                    workProfileBlockAddingAccounts                            = $False
+                    workProfileBluetoothEnableContactSharing                  = $False
+                    workProfileBlockScreenCapture                             = $False
+                    workProfileBlockCrossProfileCallerId                      = $False
+                    workProfileBlockCamera                                    = $False
+                    workProfileBlockCrossProfileContactsSearch                = $False
+                    workProfileBlockCrossProfileCopyPaste                     = $False
+                    workProfileDefaultAppPermissionPolicy                     = 'deviceDefault'
+                    workProfilePasswordBlockFingerprintUnlock                 = $False
+                    workProfilePasswordBlockTrustAgents                       = $False
+                    workProfilePasswordExpirationDays                         = 90
+                    workProfilePasswordMinimumLength                          = 4
+                    workProfilePasswordMinNumericCharacters                   = 3
+                    workProfilePasswordMinNonLetterCharacters                 = 3
+                    workProfilePasswordMinLetterCharacters                    = 3
+                    workProfilePasswordMinLowerCaseCharacters                 = 3
+                    workProfilePasswordMinUpperCaseCharacters                 = 3
+                    workProfilePasswordMinSymbolCharacters                    = 3
+                    workProfilePasswordMinutesOfInactivityBeforeScreenTimeout = 3
+                    workProfilePasswordPreviousPasswordBlockCount             = 3
+                    workProfilePasswordSignInFailureCountBeforeFactoryReset   = 3
+                    workProfilePasswordRequiredType                           = 'deviceDefault'
+                    workProfileRequirePassword                                = $False
+                    securityRequireVerifyApps                                 = $False
                 }
             }
 
@@ -281,7 +279,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

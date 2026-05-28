@@ -69,91 +69,81 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_windowsdefenderapplicationguard_installwindowsdefenderapplicationguard'
                                 Name = 'InstallWindowsDefenderApplicationGuard'
                                 OffsetUri = '/InstallWindowsDefenderApplicationGuard'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_windowsdefenderapplicationguard_installwindowsdefenderapplicationguard_install'
-                                            name = 'Install'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'Install'
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_windowsdefenderapplicationguard_installwindowsdefenderapplicationguard_install'
+                                        name = 'Install'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'Install'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowwindowsdefenderapplicationguard'
                                 Name = 'AllowWindowsDefenderApplicationGuard'
                                 OffsetUri = '/Settings/AllowWindowsDefenderApplicationGuard'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowwindowsdefenderapplicationguard_1'
-                                            name = 'Enable Microsoft Defender Application Guard for Microsoft Edge ONLY'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowwindowsdefenderapplicationguard_1'
+                                        name = 'Enable Microsoft Defender Application Guard for Microsoft Edge ONLY'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowpersistence'
                                 Name = 'AllowPersistence'
                                 OffsetUri = '/Settings/AllowPersistence'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowpersistence_0'
-                                            name = 'Application Guard discards user-downloaded files and other items (such as, cookies, Favorites, and so on) during machine restart or user log-off.'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowpersistence_0'
+                                        name = 'Application Guard discards user-downloaded files and other items (such as, cookies, Favorites, and so on) during machine restart or user log-off.'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowvirtualgpu'
                                 Name = 'AllowVirtualGPU'
                                 OffsetUri = '/Settings/AllowVirtualGPU'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowvirtualgpu_0'
-                                            name = 'Cannot access the vGPU and uses the CPU to support rendering graphics. When the policy is not configured, it is the same as disabled (0).'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowvirtualgpu_0'
+                                        name = 'Cannot access the vGPU and uses the CPU to support rendering graphics. When the policy is not configured, it is the same as disabled (0).'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowcameramicrophoneredirection'
                                 Name = 'AllowCameraMicrophoneRedirection'
                                 OffsetUri = '/Settings/AllowCameraMicrophoneRedirection'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowcameramicrophoneredirection_1'
-                                            name = 'Turns on the functionality to allow Microsoft Defender Application Guard to access the device''s camera and microphone.'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowcameramicrophoneredirection_1'
+                                        name = 'Turns on the functionality to allow Microsoft Defender Application Guard to access the device''s camera and microphone.'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         Settinginstance = @{
@@ -161,45 +151,43 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '1f2529c7-4b06-4ae6-bebc-210f7135676f'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @(
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowpersistence'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowpersistence_0'
-                                            }
-                                        },
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowvirtualgpu'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowvirtualgpu_0'
-                                            }
-                                        },
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowcameramicrophoneredirection'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowcameramicrophoneredirection_1'
-                                            }
-                                        },
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'device_vendor_msft_windowsdefenderapplicationguard_installwindowsdefenderapplicationguard'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'device_vendor_msft_windowsdefenderapplicationguard_installwindowsdefenderapplicationguard_install'
-                                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @(
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowpersistence'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowpersistence_0'
                                         }
-                                    )
-                                    value = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowwindowsdefenderapplicationguard_1'
-                                }
+                                    },
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowvirtualgpu'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowvirtualgpu_0'
+                                        }
+                                    },
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowcameramicrophoneredirection'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowcameramicrophoneredirection_1'
+                                        }
+                                    },
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'device_vendor_msft_windowsdefenderapplicationguard_installwindowsdefenderapplicationguard'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'device_vendor_msft_windowsdefenderapplicationguard_installwindowsdefenderapplicationguard_install'
+                                        }
+                                    }
+                                )
+                                value = 'device_vendor_msft_windowsdefenderapplicationguard_settings_allowwindowsdefenderapplicationguard_1'
                             }
                         }
                     }
@@ -237,12 +225,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -318,7 +302,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

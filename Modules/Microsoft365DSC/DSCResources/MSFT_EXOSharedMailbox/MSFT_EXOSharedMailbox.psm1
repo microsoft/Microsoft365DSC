@@ -590,13 +590,12 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-Mailbox -RecipientTypeDetails 'SharedMailbox' `
+        [array] $exportedInstances = Get-Mailbox -RecipientTypeDetails 'SharedMailbox' `
             -ResultSize Unlimited `
             -ErrorAction Stop
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -604,9 +603,9 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($mailbox in $Script:exportedInstances)
+        foreach ($mailbox in $exportedInstances)
         {
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Length)] $($mailbox.Name)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Length)] $($mailbox.Name)" -DeferWrite
             $mailboxName = $mailbox.Name
             if ($mailboxName)
             {
@@ -635,14 +634,14 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
             }
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

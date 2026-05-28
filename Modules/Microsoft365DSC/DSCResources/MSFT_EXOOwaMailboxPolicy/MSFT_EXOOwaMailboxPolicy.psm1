@@ -1470,7 +1470,7 @@ function Export-TargetResource
     try
     {
         [array]$AllOwaMailboxPolicies = Get-OwaMailboxPolicy -ErrorAction Stop
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
 
         if ($AllOwaMailboxPolicies.Length -eq 0)
         {
@@ -1508,13 +1508,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -25,6 +25,7 @@ Configuration Example
         EXOOrganizationConfig 'EXOOrganizationConfig'
         {
             IsSingleInstance                                          = "Yes"
+            DLPViaDcsEnabled                                          = $False
             ElcProcessingDisabled                                     = $False
             DefaultPublicFolderProhibitPostQuota                      = "13 KB (13,312 bytes)"
             VisibleMeetingUpdateProperties                            = "Location,AllProperties:15"

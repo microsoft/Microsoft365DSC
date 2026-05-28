@@ -720,16 +720,24 @@ function Get-TargetResource
         $ApplicationId,
 
         [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $CertificateThumbprint,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [System.String[]]
@@ -959,8 +967,10 @@ function Get-TargetResource
             WorkspaceCmk                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'WorkspaceCmk' })
             ApplicationId                                                         = $ApplicationId
             TenantId                                                              = $TenantId
-            CertificateThumbprint                                                 = $CertificateThumbprint
             ApplicationSecret                                                     = $ApplicationSecret
+            CertificateThumbprint                                                 = $CertificateThumbprint
+            CertificatePath                                                       = $CertificatePath
+            CertificatePassword                                                   = $CertificatePassword
             AccessTokens                                                          = $AccessTokens
         }
         return $results
@@ -1696,16 +1706,24 @@ function Set-TargetResource
         $ApplicationId,
 
         [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $CertificateThumbprint,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [System.String[]]
@@ -2435,16 +2453,24 @@ function Test-TargetResource
         $ApplicationId,
 
         [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $CertificateThumbprint,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [System.String[]]
@@ -2488,6 +2514,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -2517,12 +2551,14 @@ function Export-TargetResource
         {
             $Global:M365DSCExportResourceInstancesCount++
         }
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         $params = @{
             IsSingleInstance      = 'Yes'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             AccessTokens          = $AccessTokens
         }
 
@@ -2575,11 +2611,11 @@ function Export-TargetResource
             -Credential $Credential `
             -NoEscape $noEscape
 
-        $dscContent += $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

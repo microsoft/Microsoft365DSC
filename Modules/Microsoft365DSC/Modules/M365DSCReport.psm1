@@ -1,6 +1,3 @@
-# Automatically initialize accelerator on module import
-Initialize-M365DSCDllLoader -ErrorAction SilentlyContinue
-
 $Script:ReportCSS = @'
 <style>
     body {
@@ -383,7 +380,6 @@ function New-M365DSCConfigurationToMarkdown
     Write-Output 'Completed generating Markdown report'
 }
 
-
 <#
 .DESCRIPTION
     This function creates a new HTML document from the specified exported configuration
@@ -574,7 +570,6 @@ function New-M365DSCConfigurationToJSON
     $jsonContent = $ParsedContent | ConvertTo-Json -Depth 25
     $jsonContent | Out-File -FilePath $OutputPath
 }
-
 
 <#
 .DESCRIPTION
@@ -1293,11 +1288,34 @@ function Get-M365DSCResourceKey
 .PARAMETER ExcludedResources
     Array that contains the list of resources to exclude.
 
-.EXAMPLE
-    PS> New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html'
+.PARAMETER Type
+    The type of report that should be created: HTML or JSON.
+
+.PARAMETER UseVariableSubstitution
+    Switch that indicates whether variable substitution should be used in the report.
+
+.PARAMETER SourceConfigurationDataPath
+    The path to the ConfigurationData.psd1 file that belongs to the source configuration, used for variable substitution in the report.
+
+.PARAMETER DestinationConfigurationDataPath
+    The path to the ConfigurationData.psd1 file that belongs to the destination configuration, used for variable substitution in the report.
+
+.PARAMETER ExcludedSubstitutionProperties
+    Array that contains the list of properties for which variable substitution should be excluded.
+    Authentication properties are always excluded, with additional properties that can be specified through this parameter.
 
 .EXAMPLE
-    PS> New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html' -DriftOnly $true
+    PS> New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\DSC\DeltaReport.html'
+
+.EXAMPLE
+    PS> New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\DSC\DeltaReport.html' -DriftOnly $true
+
+.EXAMPLE
+    PS> New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\DSC\DeltaReport.html' -IsBlueprintAssessment $true
+
+.EXAMPLE
+    PS> New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\DSC\DeltaReport.html' -HeaderFilePath 'C:\DSC\CustomHeader.html' `
+        -SourceConfigurationDataPath 'C:\DSC\SourceConfigData.psd1' -DestinationConfigurationDataPath 'C:\DSC\DestinationConfigData.psd1' -ExcludedSubstitutionProperties @('TenantEnvironment')
 
 .FUNCTIONALITY
     Public
@@ -1346,7 +1364,23 @@ function New-M365DSCDeltaReport
 
         [Parameter()]
         [Array]
-        $ExcludedResources
+        $ExcludedResources,
+
+        [Parameter(ParameterSetName = 'VariableSubstitution')]
+        [Switch]
+        $UseVariableSubstitution,
+
+        [Parameter(ParameterSetName = 'VariableSubstitution')]
+        [System.String]
+        $SourceConfigurationDataPath,
+
+        [Parameter(ParameterSetName = 'VariableSubstitution')]
+        [System.String]
+        $DestinationConfigurationDataPath,
+
+        [Parameter(ParameterSetName = 'VariableSubstitution')]
+        [System.String[]]
+        $ExcludedSubstitutionProperties
     )
 
     # Validate that the latest version of the module is installed.
@@ -1379,6 +1413,7 @@ function New-M365DSCDeltaReport
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
+    Initialize-M365DSCDllLoader -ErrorAction Stop
 
     if ($null -eq (Get-Module -Name 'M365DSCCompare'))
     {
@@ -1411,8 +1446,140 @@ function New-M365DSCDeltaReport
     Write-Verbose -Message 'Obtaining Delta between the source and destination configurations'
     if (-not $Delta)
     {
+        #region ConfigurationData variable substitution
+        $effectiveSource = $Source
+        $effectiveDestination = $Destination
+        $tempSourcePath = $null
+        $tempDestinationPath = $null
+
+        if ($UseVariableSubstitution)
+        {
+            # Build a map of ConfigurationData paths: key = file path, value = config data path
+            $configDataMap = @{}
+            if (-not [System.String]::IsNullOrEmpty($SourceConfigurationDataPath))
+            {
+                $configDataMap[$Source] = $SourceConfigurationDataPath
+            }
+            if (-not [System.String]::IsNullOrEmpty($DestinationConfigurationDataPath))
+            {
+                $configDataMap[$Destination] = $DestinationConfigurationDataPath
+            }
+
+            # Auto-detect ConfigurationData.psd1 when no explicit path was provided
+            foreach ($filePath in @($Source, $Destination))
+            {
+                if (-not $configDataMap.ContainsKey($filePath))
+                {
+                    $autoPath = Join-Path -Path (Split-Path -Path $filePath -Parent) -ChildPath 'ConfigurationData.psd1'
+                    if (Test-Path -Path $autoPath)
+                    {
+                        $configDataMap[$filePath] = $autoPath
+                    }
+                }
+            }
+
+            foreach ($filePath in @($Source, $Destination))
+            {
+                if (-not $configDataMap.ContainsKey($filePath))
+                {
+                    continue
+                }
+
+                $configDataFile = $configDataMap[$filePath]
+                if (-not (Test-Path -Path $configDataFile))
+                {
+                    Write-Warning -Message "ConfigurationData file not found at '$configDataFile'. Skipping variable substitution for '$filePath'."
+                    continue
+                }
+
+                Write-Verbose -Message "Importing ConfigurationData from '$configDataFile' for '$filePath'"
+                $configData = Import-PowerShellDataFile -Path $configDataFile
+
+                # Collect all string properties from NonNodeData
+                $substitutions = @{}
+                if ($null -ne $configData.NonNodeData)
+                {
+                    $nonNodeEntries = @()
+                    if ($configData.NonNodeData -is [System.Array])
+                    {
+                        $nonNodeEntries = $configData.NonNodeData
+                    }
+                    else
+                    {
+                        $nonNodeEntries = @($configData.NonNodeData)
+                    }
+
+                    $ExcludedSubstitutionProperties += @('ApplicationId', 'ApplicationSecret', 'CertificatePath', 'CertificatePassword', 'CertificateThumbprint', 'Credential', 'ManagedIdentity', 'TenantId', 'TenantGuid')
+                    $ExcludedSubstitutionProperties = $ExcludedSubstitutionProperties | Select-Object -Unique
+                    foreach ($entry in $nonNodeEntries)
+                    {
+                        if ($entry -is [System.Collections.IDictionary])
+                        {
+                            foreach ($key in $entry.Keys)
+                            {
+                                if ($ExcludedSubstitutionProperties -contains $key)
+                                {
+                                    Write-Verbose -Message "  Skipping excluded property '$key'"
+                                    continue
+                                }
+
+                                $value = $entry[$key]
+                                if ($key -eq 'OrganizationName')
+                                {
+                                    $substitutions["`$OrganizationName"] = $value
+                                    continue
+                                }
+
+                                if ($value -is [System.String] -and -not [System.String]::IsNullOrEmpty($value))
+                                {
+                                    $substitutions["`$ConfigurationData.NonNodeData.$key"] = $value
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ($substitutions.Count -eq 0)
+                {
+                    continue
+                }
+
+                $content = [System.IO.File]::ReadAllText($filePath)
+                $hasSubstitutions = $false
+                foreach ($varName in $substitutions.Keys)
+                {
+                    if ($content.Contains($varName))
+                    {
+                        Write-Verbose -Message "  Replacing $varName with '$($substitutions[$varName])'"
+                        $content = $content.Replace('$(' + $varName.TrimStart('`$') + ')', $substitutions[$varName])
+                        $content = $content.Replace('$(' + $varName + ')', $substitutions[$varName])
+                        $content = $content.Replace($varName, $substitutions[$varName])
+                        $hasSubstitutions = $true
+                    }
+                }
+
+                if ($hasSubstitutions)
+                {
+                    $tempPath = [System.IO.Path]::GetTempFileName() + '.ps1'
+                    [System.IO.File]::WriteAllText($tempPath, $content)
+
+                    if ($filePath -eq $Source)
+                    {
+                        $effectiveSource = $tempPath
+                        $tempSourcePath = $tempPath
+                    }
+                    else
+                    {
+                        $effectiveDestination = $tempPath
+                        $tempDestinationPath = $tempPath
+                    }
+                }
+            }
+        }
+        #endregion
+
         $desiredSplat = @{
-            ConfigurationPath = $Destination
+            ConfigurationPath = $effectiveDestination
             IncludeComments   = $false
             DscResourceInfo   = $Script:DscResourceInfo
         }
@@ -1424,7 +1591,17 @@ function New-M365DSCDeltaReport
 
         # Parse the blueprint file, pass to other comparison functions as object (including comments aka metadata)
         [Array]$desiredConfiguration = Initialize-M365DSCReporting @desiredSplat
-        [Array]$sourceReporting = Initialize-M365DSCReporting -ConfigurationPath $Source
+        [Array]$sourceReporting = Initialize-M365DSCReporting -ConfigurationPath $effectiveSource
+
+        # Clean up temp files if created
+        foreach ($tempPath in @($tempSourcePath, $tempDestinationPath))
+        {
+            if ($null -ne $tempPath -and (Test-Path -Path $tempPath))
+            {
+                Remove-Item -Path $tempPath -Force
+            }
+        }
+
         $Delta = @()
         foreach ($resource in $sourceReporting)
         {

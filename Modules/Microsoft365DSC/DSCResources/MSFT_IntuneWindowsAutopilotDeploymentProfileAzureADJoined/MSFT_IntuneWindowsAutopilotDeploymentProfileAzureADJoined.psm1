@@ -87,6 +87,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -175,17 +183,17 @@ function Get-TargetResource
         }
 
         $complexOutOfBoxExperienceSettings = [ordered]@{}
-        if ($null -ne $getValue.OutOfBoxExperienceSettings.deviceUsageType)
+        if ($null -ne $getValue.OutOfBoxExperienceSetting.deviceUsageType)
         {
-            $complexOutOfBoxExperienceSettings.Add('DeviceUsageType', $getValue.OutOfBoxExperienceSettings.deviceUsageType.ToString())
+            $complexOutOfBoxExperienceSettings.Add('DeviceUsageType', $getValue.OutOfBoxExperienceSetting.deviceUsageType.ToString())
         }
-        $complexOutOfBoxExperienceSettings.Add('HideEscapeLink', $getValue.OutOfBoxExperienceSettings.hideEscapeLink)
-        $complexOutOfBoxExperienceSettings.Add('HideEULA', $getValue.OutOfBoxExperienceSettings.hideEULA)
-        $complexOutOfBoxExperienceSettings.Add('HidePrivacySettings', $getValue.OutOfBoxExperienceSettings.hidePrivacySettings)
-        $complexOutOfBoxExperienceSettings.Add('SkipKeyboardSelectionPage', $getValue.OutOfBoxExperienceSettings.skipKeyboardSelectionPage)
-        if ($null -ne $getValue.OutOfBoxExperienceSettings.userType)
+        $complexOutOfBoxExperienceSettings.Add('HideEscapeLink', $getValue.OutOfBoxExperienceSetting.escapeLinkHidden)
+        $complexOutOfBoxExperienceSettings.Add('HideEULA', $getValue.OutOfBoxExperienceSetting.eulaHidden)
+        $complexOutOfBoxExperienceSettings.Add('HidePrivacySettings', $getValue.OutOfBoxExperienceSetting.privacySettingsHidden)
+        $complexOutOfBoxExperienceSettings.Add('SkipKeyboardSelectionPage', $getValue.OutOfBoxExperienceSetting.keyboardSelectionPageSkipped)
+        if ($null -ne $getValue.OutOfBoxExperienceSetting.userType)
         {
-            $complexOutOfBoxExperienceSettings.Add('UserType', $getValue.OutOfBoxExperienceSettings.userType.ToString())
+            $complexOutOfBoxExperienceSettings.Add('UserType', $getValue.OutOfBoxExperienceSetting.userType.ToString())
         }
         if ($complexOutOfBoxExperienceSettings.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -221,6 +229,8 @@ function Get-TargetResource
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
+            CertificatePath                = $CertificatePath
+            CertificatePassword            = $CertificatePassword
             ManagedIdentity                = $ManagedIdentity.IsPresent
             AccessTokens                   = $AccessTokens
             #endregion
@@ -231,6 +241,7 @@ function Get-TargetResource
         $assignmentResult = @()
         if ($null -ne $rawAssignments -and $rawAssignments.Count -gt 0)
         {
+            [array]$rawAssignments = $rawAssignments | Where-Object -FilterScript { $_.source -eq 'direct' }
             $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $rawAssignments -IncludeDeviceFilter $false
         }
         $results.Add('Assignments', $assignmentResult)
@@ -334,6 +345,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -355,15 +374,31 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters.outOfBoxExperienceSetting = @{
+        deviceUsageType = $boundParameters.OutOfBoxExperienceSettings.DeviceUsageType
+        escapeLinkHidden = $boundParameters.OutOfBoxExperienceSettings.HideEscapeLink
+        eulaHidden = $boundParameters.OutOfBoxExperienceSettings.HideEULA
+        privacySettingsHidden = $boundParameters.OutOfBoxExperienceSettings.HidePrivacySettings
+        keyboardSelectionPageSkipped = $boundParameters.OutOfBoxExperienceSettings.SkipKeyboardSelectionPage
+        userType = $boundParameters.OutOfBoxExperienceSettings.UserType
+    }
+    $boundParameters.Remove('OutOfBoxExperienceSettings') | Out-Null
+
+    foreach ($key in $boundParameters.outOfBoxExperienceSetting.Keys.Clone())
+    {
+        if ($null -eq $boundParameters.outOfBoxExperienceSetting[$key])
+        {
+            $boundParameters.outOfBoxExperienceSetting.Remove($key) | Out-Null
+        }
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Windows Autopilot Deployment Profile Azure AD Joined with DisplayName {$DisplayName}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-
-        $CreateParameters = ([Hashtable]$PSBoundParameters).Clone()
+        $createParameters = ([Hashtable]$boundParameters).Clone()
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
+        $createParameters.Remove('Assignments') | Out-Null
         $createParameters.Remove('Id') | Out-Null
 
         #region resource generator code
@@ -388,11 +423,11 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Windows Autopilot Deployment Profile Azure AD Joined with Id {$($currentInstance.Id)}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
+        $UpdateParameters = ([Hashtable]$boundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+        $UpdateParameters.Remove('Assignments') | Out-Null
         $UpdateParameters.Remove('Id') | Out-Null
+        $UpdateParameters.Remove('DeviceType') | Out-Null
 
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.azureADWindowsAutopilotDeploymentProfile')
@@ -412,7 +447,7 @@ function Set-TargetResource
         }
         foreach ($assignment in $intuneAssignments)
         {
-            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type' }))
+            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.groupId -eq $assignment.Target.groupId -and $_.Target.'@odata.type' -eq $assignment.Target.'@odata.type' }))
             {
                 New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
                     -WindowsAutopilotDeploymentProfileId $currentInstance.id `
@@ -420,7 +455,7 @@ function Set-TargetResource
             }
             else
             {
-                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type') }
+                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.groupId -eq $assignment.Target.groupId -and $_.Target.'@odata.type' -eq $assignment.Target.'@odata.type') }
             }
         }
         if ($currentAssignments.Count -gt 0)
@@ -537,6 +572,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -554,8 +597,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -590,6 +635,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -616,15 +669,20 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.azureADWindowsAutopilotDeploymentProfile' `
+        $baseFilter = "isof('microsoft.graph.azureADWindowsAutopilotDeploymentProfile')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -655,6 +713,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -708,13 +768,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('EnrollmentStatusScreenSettings', 'OutOfBoxExperienceSettings', 'Assignments')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -736,4 +796,11 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    return @{
+        ExcludedProperties = @('DeviceType')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

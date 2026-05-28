@@ -48,6 +48,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -60,29 +68,36 @@ function Get-TargetResource
 
     try
     {
-        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        $instance = Get-MgBetaPolicyDefaultAppManagementPolicy -ErrorAction SilentlyContinue
-
-        if ($null -eq $instance)
+        if (-not $Script:exportedInstance)
         {
-            return $nullResult
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $instance = Get-MgBetaPolicyDefaultAppManagementPolicy -ErrorAction SilentlyContinue
+
+            if ($null -eq $instance)
+            {
+                return $nullResult
+            }
+        }
+        else
+        {
+            $instance = $Script:exportedInstance
         }
 
         #region ApplicationRestrictions
@@ -100,8 +115,7 @@ function Get-TargetResource
             }
             if ($null -ne $passwordCred.MaxLifetime)
             {
-                $iso8601Duration = 'P{0}DT{1}H{2}M{3}S' -f $passwordCred.MaxLifetime.Days, $passwordCred.MaxLifetime.Hours, $passwordCred.MaxLifetime.Minutes, $passwordCred.MaxLifetime.Seconds
-                $newItem.Add('maxLifetime', $iso8601Duration)
+                $newItem.Add('maxLifetime', $passwordCred.MaxLifetime)
             }
             $appRestrictionsValue.passwordCredentials += $newItem
         }
@@ -115,8 +129,7 @@ function Get-TargetResource
             }
             if ($null -ne $keyCred.MaxLifetime)
             {
-                $iso8601Duration = 'P{0}DT{1}H{2}M{3}S' -f $keyCred.MaxLifetime.Days, $keyCred.MaxLifetime.Hours, $keyCred.MaxLifetime.Minutes, $keyCred.MaxLifetime.Seconds
-                $newItem.Add('maxLifetime', $iso8601Duration)
+                $newItem.Add('maxLifetime', $keyCred.MaxLifetime)
             }
             if ($null -ne $keyCred.CertificateBasedApplicationConfigurationIds -and $keyCred.CertificateBasedApplicationConfigurationIds.Count -gt 0)
             {
@@ -141,8 +154,7 @@ function Get-TargetResource
             }
             if ($null -ne $passwordCred.MaxLifetime)
             {
-                $iso8601Duration = 'P{0}DT{1}H{2}M{3}S' -f $passwordCred.MaxLifetime.Days, $passwordCred.MaxLifetime.Hours, $passwordCred.MaxLifetime.Minutes, $passwordCred.MaxLifetime.Seconds
-                $newItem.Add('maxLifetime', $iso8601Duration)
+                $newItem.Add('maxLifetime', $passwordCred.MaxLifetime)
             }
             $spnRestrictionsValue.passwordCredentials += $newItem
         }
@@ -156,8 +168,7 @@ function Get-TargetResource
             }
             if ($null -ne $keyCred.MaxLifetime)
             {
-                $iso8601Duration = 'P{0}DT{1}H{2}M{3}S' -f $keyCred.MaxLifetime.Days, $keyCred.MaxLifetime.Hours, $keyCred.MaxLifetime.Minutes, $keyCred.MaxLifetime.Seconds
-                $newItem.Add('maxLifetime', $iso8601Duration)
+                $newItem.Add('maxLifetime', $keyCred.MaxLifetime)
             }
             if ($null -ne $keyCred.CertificateBasedApplicationConfigurationIds -and $keyCred.CertificateBasedApplicationConfigurationIds.Count -gt 0)
             {
@@ -178,6 +189,8 @@ function Get-TargetResource
             ApplicationId                = $ApplicationId
             TenantId                     = $TenantId
             CertificateThumbprint        = $CertificateThumbprint
+            CertificatePath              = $CertificatePath
+            CertificatePassword          = $CertificatePassword
             ManagedIdentity              = $ManagedIdentity.IsPresent
             AccessTokens                 = $AccessTokens
         }
@@ -240,6 +253,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -347,7 +368,7 @@ function Set-TargetResource
     $setParameters.Remove('IsSingleInstance') | Out-Null
 
     Write-Verbose -Message 'Updating the Default App Management Policy'
-    Update-MgBetaPolicyDefaultAppManagementPolicy @setParameters
+    Update-MgBetaPolicyDefaultAppManagementPolicy -BodyParameter $setParameters
 }
 
 function Test-TargetResource
@@ -398,6 +419,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -415,8 +444,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -447,6 +478,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -472,12 +511,11 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaPolicyDefaultAppManagementPolicy -ErrorAction Stop
+        [array] $exportedInstances = Get-MgBetaPolicyDefaultAppManagementPolicy -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -485,7 +523,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -493,17 +531,20 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.DisplayName
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 IsSingleInstance      = 'Yes'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
             if ($null -ne $Results.ApplicationRestrictions)
             {
@@ -577,13 +618,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('ApplicationRestrictions', 'ServicePrincipalRestrictions', 'KeyCredentials', 'PasswordCredentials')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -597,4 +638,70 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    return @{
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            foreach ($keyCred in $DesiredValues.ApplicationRestrictions.KeyCredentials)
+            {
+                if (-not [System.String]::IsNullOrWhiteSpace($keyCred.MaxLifetime))
+                {
+                    $keyCred.MaxLifetime = $keyCred.MaxLifetime.Replace("T0H0M0S", "")
+                }
+            }
+            foreach ($passwordCred in $DesiredValues.ApplicationRestrictions.PasswordCredentials)
+            {
+                if (-not [System.String]::IsNullOrWhiteSpace($passwordCred.MaxLifetime))
+                {
+                    $passwordCred.MaxLifetime = $passwordCred.MaxLifetime.Replace("T0H0M0S", "")
+                }
+            }
+            foreach ($keyCred in $DesiredValues.ServicePrincipalRestrictions.KeyCredentials)
+            {
+                if (-not [System.String]::IsNullOrWhiteSpace($keyCred.MaxLifetime))
+                {
+                    $keyCred.MaxLifetime = $keyCred.MaxLifetime.Replace("T0H0M0S", "")
+                }
+            }
+            foreach ($passwordCred in $DesiredValues.ServicePrincipalRestrictions.PasswordCredentials)
+            {
+                if (-not [System.String]::IsNullOrWhiteSpace($passwordCred.MaxLifetime))
+                {
+                    $passwordCred.MaxLifetime = $passwordCred.MaxLifetime.Replace("T0H0M0S", "")
+                }
+            }
+            foreach ($keyCred in $CurrentValues.ApplicationRestrictions.KeyCredentials)
+            {
+                if (-not [System.String]::IsNullOrWhiteSpace($keyCred.MaxLifetime))
+                {
+                    $keyCred.MaxLifetime = $keyCred.MaxLifetime.Replace("T0H0M0S", "")
+                }
+            }
+            foreach ($passwordCred in $CurrentValues.ApplicationRestrictions.PasswordCredentials)
+            {
+                if (-not [System.String]::IsNullOrWhiteSpace($passwordCred.MaxLifetime))
+                {
+                    $passwordCred.MaxLifetime = $passwordCred.MaxLifetime.Replace("T0H0M0S", "")
+                }
+            }
+            foreach ($keyCred in $CurrentValues.ServicePrincipalRestrictions.KeyCredentials)
+            {
+                if (-not [System.String]::IsNullOrWhiteSpace($keyCred.MaxLifetime))
+                {
+                    $keyCred.MaxLifetime = $keyCred.MaxLifetime.Replace("T0H0M0S", "")
+                }
+            }
+            foreach ($passwordCred in $CurrentValues.ServicePrincipalRestrictions.PasswordCredentials)
+            {
+                if (-not [System.String]::IsNullOrWhiteSpace($passwordCred.MaxLifetime))
+                {
+                    $passwordCred.MaxLifetime = $passwordCred.MaxLifetime.Replace("T0H0M0S", "")
+                }
+            }
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

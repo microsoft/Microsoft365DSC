@@ -50,19 +50,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.macOSDmgApp"
-                        fileName = "FakeStringValue"
-                        ignoreVersionDetection = $true
-                        includedApps = @(
-                            @{
-                                bundleId = "FakeStringValue"
-                                bundleVersion = "FakeStringValue"
-                            }
-                        )
-                        minimumSupportedOperatingSystem = @{
-                            v10_15 = $true
+                    '@odata.type' = "#microsoft.graph.macOSDmgApp"
+                    fileName = "FakeStringValue"
+                    ignoreVersionDetection = $true
+                    includedApps = @(
+                        @{
+                            bundleId = "FakeStringValue"
+                            bundleVersion = "FakeStringValue"
                         }
+                    )
+                    minimumSupportedOperatingSystem = @{
+                        v10_15 = $true
                     }
                     CommittedContentVersion = "FakeStringValue"
                     DependentAppCount = 25
@@ -74,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -93,19 +91,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.macOSDmgApp"
-                        fileName = "FakeStringValue"
-                        ignoreVersionDetection = $true
-                        includedApps = @(
-                            @{
-                                bundleId = "FakeStringValue"
-                                bundleVersion = "FakeStringValue"
-                            }
-                        )
-                        minimumSupportedOperatingSystem = @{
-                            v10_15 = $true
+                    '@odata.type' = "#microsoft.graph.macOSDmgApp"
+                    fileName = "FakeStringValue"
+                    ignoreVersionDetection = $true
+                    includedApps = @(
+                        @{
+                            bundleId = "FakeStringValue"
+                            bundleVersion = "FakeStringValue"
                         }
+                    )
+                    minimumSupportedOperatingSystem = @{
+                        v10_15 = $true
                     }
                     Categories = @(
                         @{
@@ -123,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"

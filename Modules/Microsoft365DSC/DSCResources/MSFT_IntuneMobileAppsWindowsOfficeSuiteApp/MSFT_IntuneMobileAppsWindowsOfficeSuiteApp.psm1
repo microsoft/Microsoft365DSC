@@ -129,12 +129,20 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -211,9 +219,9 @@ function Get-TargetResource
         }
 
         $complexExcludedApps = [ordered]@{}
-        if ($null -ne $instance.AdditionalProperties.excludedApps)
+        if ($null -ne $instance.excludedApps)
         {
-            $instance.AdditionalProperties.excludedApps.GetEnumerator() | ForEach-Object {
+            $instance.excludedApps.GetEnumerator() | ForEach-Object {
                 $complexExcludedApps.Add($_.Key, $_.Value)
             }
         }
@@ -221,13 +229,6 @@ function Get-TargetResource
         {
             $complexExcludedApps = $null
         }
-
-        # $complexLargeIcon = @{}
-        # if ($null -ne $instance.LargeIcon.Value)
-        # {
-        #     $complexLargeIcon.Add('Value', [System.Convert]::ToBase64String($instance.LargeIcon.Value))
-        #     $complexLargeIcon.Add('Type', $instance.LargeIcon.Type)
-        # }
 
         $results = @{
             Id                                   = $instance.Id
@@ -238,18 +239,18 @@ function Get-TargetResource
             InformationUrl                       = $instance.InformationUrl
             Notes                                = $instance.Notes
             RoleScopeTagIds                      = $instance.RoleScopeTagIds
-            AutoAcceptEula                       = $instance.AdditionalProperties.autoAcceptEula
-            ProductIds                           = $instance.AdditionalProperties.productIds
-            UseSharedComputerActivation          = $instance.AdditionalProperties.useSharedComputerActivation
-            UpdateChannel                        = $instance.AdditionalProperties.updateChannel
-            OfficeSuiteAppDefaultFileFormat      = $instance.AdditionalProperties.officeSuiteAppDefaultFileFormat
-            OfficePlatformArchitecture           = $instance.AdditionalProperties.officePlatformArchitecture
-            LocalesToInstall                     = $instance.AdditionalProperties.localesToInstall
-            InstallProgressDisplayLevel          = $instance.AdditionalProperties.installProgressDisplayLevel
-            ShouldUninstallOlderVersionsOfOffice = $instance.AdditionalProperties.shouldUninstallOlderVersionsOfOffice
-            TargetVersion                        = $instance.AdditionalProperties.targetVersion
-            UpdateVersion                        = $instance.AdditionalProperties.updateVersion
-            OfficeConfigurationXml               = $instance.AdditionalProperties.officeConfigurationXml
+            AutoAcceptEula                       = $instance.autoAcceptEula
+            ProductIds                           = $instance.productIds
+            UseSharedComputerActivation          = $instance.useSharedComputerActivation
+            UpdateChannel                        = $instance.updateChannel
+            OfficeSuiteAppDefaultFileFormat      = $instance.officeSuiteAppDefaultFileFormat
+            OfficePlatformArchitecture           = $instance.officePlatformArchitecture
+            LocalesToInstall                     = $instance.localesToInstall
+            InstallProgressDisplayLevel          = $instance.installProgressDisplayLevel
+            ShouldUninstallOlderVersionsOfOffice = $instance.shouldUninstallOlderVersionsOfOffice
+            TargetVersion                        = $instance.targetVersion
+            UpdateVersion                        = $instance.updateVersion
+            OfficeConfigurationXml               = $instance.officeConfigurationXml
             # LargeIcon                       = $complexLargeIcon
             ExcludedApps                         = $complexExcludedApps
             Categories                           = $complexCategories
@@ -257,8 +258,10 @@ function Get-TargetResource
             Credential                           = $Credential
             ApplicationId                        = $ApplicationId
             TenantId                             = $TenantId
-            CertificateThumbprint                = $CertificateThumbprint
             ApplicationSecret                    = $ApplicationSecret
+            CertificateThumbprint                = $CertificateThumbprint
+            CertificatePath                      = $CertificatePath
+            CertificatePassword                  = $CertificatePassword
             ManagedIdentity                      = $ManagedIdentity.IsPresent
             AccessTokens                         = $AccessTokens
         }
@@ -426,12 +429,20 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -456,6 +467,7 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $BoundParameters.Remove('Categories') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -463,12 +475,11 @@ function Set-TargetResource
         $BoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).Clone()
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
-        $CreateParameters.Remove('Categories') | Out-Null
         $CreateParameters.Add('Publisher', 'Microsoft')
         $CreateParameters.Add('Developer', 'Microsoft')
         $CreateParameters.Add('Owner', 'Microsoft')
+        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
 
         $CreateParameters.Add('@odata.type', '#microsoft.graph.officeSuiteApp')
         $app = New-MgBetaDeviceAppManagementMobileApp -BodyParameter $CreateParameters
@@ -510,7 +521,6 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
         $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Remove('Categories') | Out-Null
         $UpdateParameters.Remove('OfficePlatformArchitecture') | Out-Null
 
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.officeSuiteApp')
@@ -571,7 +581,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Remove the Intune Windows Office Suite App with Id {$($currentInstance.Id)}"
-        Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -Confirm:$false
+        Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id
     }
 }
 
@@ -704,12 +714,20 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -759,12 +777,20 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -792,7 +818,6 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         $baseFilter = "isof('microsoft.graph.officeSuiteApp')"
         if (-not [String]::IsNullOrEmpty($Filter))
         {
@@ -808,7 +833,7 @@ function Export-TargetResource
             -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -835,8 +860,10 @@ function Export-TargetResource
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
                 ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -920,14 +947,14 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Categories', 'ExcludedApps', 'Assignments')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

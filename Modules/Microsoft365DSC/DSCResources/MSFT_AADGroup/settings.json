@@ -135,6 +135,7 @@
         "Add-MgBetaGroupToLifecyclePolicy",
         "Get-MgBetaGroup",
         "Get-MgBetaGroupLifecyclePolicy",
+        "Get-MgBetaGroupMember",
         "New-MgBetaGroupMemberByRef",
         "Remove-MgBetaGroupFromLifecyclePolicy",
         "Remove-MgBetaGroupMemberDirectoryObjectByRef"
@@ -143,7 +144,6 @@
     {
       "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
       "cmdlets": [
-        "Get-MgBetaDirectoryDeletedItemAsGroup",
         "Get-MgBetaSubscribedSku",
         "Restore-MgBetaDirectoryDeletedItem"
       ]
@@ -161,7 +161,6 @@
       "module": "Microsoft.Graph.Groups",
       "cmdlets": [
         "New-MgGroup",
-        "New-MgGroupMember",
         "New-MgGroupMemberByRef",
         "New-MgGroupOwnerByRef",
         "Remove-MgGroup",
@@ -181,6 +180,12 @@
       "module": "Microsoft.Graph.Users",
       "cmdlets": [
         "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

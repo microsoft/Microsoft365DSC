@@ -79,19 +79,31 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret,
+        $TenantId,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Planner Task {$Title}"
@@ -129,7 +141,7 @@ function Get-TargetResource
         $assignmentsValue = @()
         if ($null -ne $taskResponse.Assignments)
         {
-            foreach ($assignmentKey in $taskResponse.Assignments.AdditionalProperties.Keys)
+            foreach ($assignmentKey in $taskResponse.Assignments.Keys)
             {
                 $assignedUser = Get-MgUser -UserId $assignmentKey -ErrorAction SilentlyContinue
                 if ($null -eq $assignedUser)
@@ -146,9 +158,9 @@ function Get-TargetResource
         $attachmentsValue = @()
         if ($null -ne $taskDetailsResponse.References)
         {
-            foreach ($attachment in $taskDetailsResponse.References.AdditionalProperties.Keys)
+            foreach ($attachment in $taskDetailsResponse.References.Keys)
             {
-                $entry = $taskDetailsResponse.References.AdditionalProperties."$attachment"
+                $entry = $taskDetailsResponse.References."$attachment"
                 $hashEntry = @{
                     Uri   = $attachment
                     Alias = $entry.alias
@@ -163,7 +175,7 @@ function Get-TargetResource
         $categoriesValue = @()
         if ($null -ne $taskResponse.appliedCategories)
         {
-            foreach ($category in $taskResponse.appliedCategories.AdditionalProperties.Keys)
+            foreach ($category in $taskResponse.appliedCategories.Keys)
             {
                 $categoryValue = $Script:AppliedCategories.$category
                 if ([String]::IsNullOrEmpty($categoryValue))
@@ -179,11 +191,11 @@ function Get-TargetResource
         $checklistValue = @()
         if ($null -ne $taskDetailsResponse.CheckList)
         {
-            foreach ($checkListItem in $taskDetailsResponse.CheckList.AdditionalProperties.Keys)
+            foreach ($checkListItem in $taskDetailsResponse.CheckList.Keys)
             {
                 $hashEntry = @{
-                    Title     = $taskDetailsResponse.CheckList.AdditionalProperties."$checkListItem".title
-                    Completed = [bool]$taskDetailsResponse.CheckList.AdditionalProperties."$checkListItem".isChecked
+                    Title     = $taskDetailsResponse.CheckList."$checkListItem".title
+                    Completed = [bool]$taskDetailsResponse.CheckList."$checkListItem".isChecked
                 }
                 $checklistValue += $hashEntry
             }
@@ -231,9 +243,12 @@ function Get-TargetResource
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
                 ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             return $results
         }
@@ -328,19 +343,31 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret,
+        $TenantId,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Planner Task {$Title}"
@@ -473,7 +500,7 @@ function Set-TargetResource
     {
         $setParams.Remove('TaskId') | Out-Null
         Write-Verbose -Message "Planner Task {$Title} doesn't already exist. Creating it with`r`n:$(Convert-M365DscHashtableToString -Hashtable $setParams)"
-        $newTask = New-MgPlannerTask @setParams
+        $newTask = New-MgPlannerTask -BodyParameter $setParams
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
@@ -517,7 +544,7 @@ function Set-TargetResource
             Desired State. Updating it."
         $currentTask = Get-MgPlannerTask -PlannerTaskId $taskId
         $Headers = @{}
-        $etag = $currentTask.AdditionalProperties.'@odata.etag'
+        $etag = $currentTask.'@odata.etag'
 
         $Headers.Add('If-Match', $etag)
         $JSONDetails = (ConvertTo-Json $setParams)
@@ -531,7 +558,7 @@ function Set-TargetResource
         # Update Details
         $Headers = @{}
         $currentTaskDetails = Get-MgPlannerTaskDetail -PlannerTaskId $taskId
-        $Headers.Add('If-Match', $currentTaskDetails.AdditionalProperties.'@odata.etag')
+        $Headers.Add('If-Match', $currentTaskDetails.'@odata.etag')
         $details.Remove('id') | Out-Null
         $JSONDetails = (ConvertTo-Json $details)
         Write-Verbose -Message "Updating Task's details with:`r`n$JSONDetails"
@@ -629,19 +656,31 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret,
+        $TenantId,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #region Telemetry
@@ -680,19 +719,31 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret,
+        $TenantId,
 
         [Parameter()]
         [System.String]
-        $TenantId,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -711,10 +762,10 @@ function Export-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
-        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop -Filter $filter
+        [array]$groups = Get-MgGroup -All -ErrorAction Stop -Filter $filter
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($group in $groups)
         {
@@ -749,9 +800,12 @@ function Export-TargetResource
                             Credential            = $Credential
                             ApplicationId         = $ApplicationId
                             TenantId              = $TenantId
-                            CertificateThumbprint = $CertificateThumbprint
                             ApplicationSecret     = $ApplicationSecret
+                            CertificateThumbprint = $CertificateThumbprint
+                            CertificatePath       = $CertificatePath
+                            CertificatePassword   = $CertificatePassword
                             ManagedIdentity       = $ManagedIdentity.IsPresent
+                            AccessTokens          = $AccessTokens
                         }
 
                         $result = Get-TargetResource @params
@@ -805,7 +859,7 @@ function Export-TargetResource
                             -Credential $Credential `
                             -NoEscape @('Attachments', 'Checklist')
 
-                        $dscContent += $currentDSCBlock
+                        [void]$dscContent.Append($currentDSCBlock)
                         Save-M365DSCPartialExport -Content $currentDSCBlock `
                             -FileName $Global:PartialExportFileName
                         $k++
@@ -826,7 +880,7 @@ function Export-TargetResource
             }
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

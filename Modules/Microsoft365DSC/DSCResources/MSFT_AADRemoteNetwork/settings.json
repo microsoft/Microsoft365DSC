@@ -55,6 +55,12 @@
         "Remove-MgBetaNetworkAccessConnectivityRemoteNetwork",
         "Remove-MgBetaNetworkAccessConnectivityRemoteNetworkDeviceLink"
       ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
     }
   ]
 }

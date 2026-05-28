@@ -17,7 +17,9 @@
       }
     }
   },
-  "requiredModules": [],
+  "requiredModules": [
+    "Microsoft.Graph.Authentication"
+  ],
   "commands": [
     {
       "module": "Microsoft.Graph.Authentication",

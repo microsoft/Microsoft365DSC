@@ -79,6 +79,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -120,10 +128,7 @@ function Get-TargetResource
             #region resource generator code
             if ($null -eq $getValue)
             {
-                $getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidManagedStoreAppConfiguration' `
-                }
+                $getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration -Filter "DisplayName eq '$($Displayname -replace "'", "''")' and isof('microsoft.graph.androidManagedStoreAppConfiguration')" -ErrorAction SilentlyContinue
             }
             #endregion
 
@@ -142,7 +147,7 @@ function Get-TargetResource
 
         #need to convert dictionary object into a hashtable array so we can work with it
         $complexPermissionActions = @()
-        foreach ($setting in $getValue.AdditionalProperties.permissionActions)
+        foreach ($setting in $getValue.permissionActions)
         {
             $mySettings = [ordered]@{}
             $mySettings.Add('action', $setting['action'])
@@ -154,17 +159,31 @@ function Get-TargetResource
             }
         }
 
+        [System.String[]]$targetedMobileAppsValue = @()
+        foreach ($appId in $getValue.TargetedMobileApps)
+        {
+            $appDetails = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $appId -ErrorAction SilentlyContinue
+            if ($null -eq $appDetails)
+            {
+                Write-Warning -Message "Could not retrieve details for Targeted Mobile App with id {$appId} targeted by this policy. Skipping it."
+            }
+            else
+            {
+                $targetedMobileAppsValue += $appDetails.DisplayName
+            }
+        }
+
         $results = @{
             #region resource generator code
             Id                    = $getValue.Id
             Description           = $getValue.Description
             DisplayName           = $getValue.DisplayName
-            targetedMobileApps    = $getValue.TargetedMobileApps
-            packageId             = $getValue.AdditionalProperties.packageId
-            payloadJson           = $getValue.AdditionalProperties.payloadJson
-            appSupportsOemConfig  = $getValue.AdditionalProperties.appSupportsOemConfig
-            profileApplicability  = $getValue.AdditionalProperties.profileApplicability
-            connectedAppsEnabled  = $getValue.AdditionalProperties.connectedAppsEnabled
+            targetedMobileApps    = $targetedMobileAppsValue
+            packageId             = $getValue.packageId
+            payloadJson           = $getValue.payloadJson
+            appSupportsOemConfig  = $getValue.appSupportsOemConfig
+            profileApplicability  = $getValue.profileApplicability
+            connectedAppsEnabled  = $getValue.connectedAppsEnabled
             permissionActions     = $complexPermissionActions
             Ensure                = 'Present'
             Credential            = $Credential
@@ -172,9 +191,10 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
-            version               = $getValue.AdditionalProperties.version
         }
 
         $assignmentsValues = Get-MgBetaDeviceAppManagementMobileAppConfigurationAssignment -ManagedDeviceMobileAppConfigurationId $Results.Id
@@ -221,7 +241,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $targetedMobileApps,
+        $TargetedMobileApps,
 
         [Parameter()]
         [System.String]
@@ -279,6 +299,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -301,29 +329,45 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
+    if ($PSBoundParameters.ContainsKey('TargetedMobileApps'))
+    {
+        $newTargetedMobileApps = @()
+        foreach ($app in $TargetedMobileApps)
+        {
+            $guid = [System.Guid]::Empty
+            if ([System.Guid]::TryParse($app, [ref]$guid))
+            {
+                $appId = (Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $app -ErrorAction SilentlyContinue).id
+                if ($null -eq $appId)
+                {
+                    throw "Could not find an Android Managed Store App in Intune with the id {$app} that is being targeted by this policy. Please ensure the app exists."
+                }
+            }
+            else
+            {
+                $appId = (Get-MgBetaDeviceAppManagementMobileApp -Filter "DisplayName eq '$($app -replace "'", "''")' and isof('microsoft.graph.androidManagedStoreApp')").id
+                if ($null -eq $appId)
+                {
+                    throw "Could not find an Android Managed Store App in Intune with the display name {$app} that is being targeted by this policy. Please ensure the app exists."
+                }
+            }
+            $newTargetedMobileApps += $appId
+        }
+        $PSBoundParameters.Remove('TargetedMobileApps') | Out-Null
+        $PSBoundParameters.Add('TargetedMobileApps', $newTargetedMobileApps)
+    }
+
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating the Intune Android Managed Store App Configuration Policy {$DisplayName}"
         $PSBoundParameters.Remove('Assignments') | Out-Null
         $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
-
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
-                $CreateParameters.Remove($keyName)
-            }
-        }
-
         $CreateParameters.Remove('Id') | Out-Null
-        $CreateParameters.Remove('Verbose') | Out-Null
-        $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
 
         #region resource generator code
-        $policy = New-MgBetaDeviceAppManagementMobileAppConfiguration @CreateParameters
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.androidManagedStoreAppConfiguration')
+        $policy = New-MgBetaDeviceAppManagementMobileAppConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
@@ -340,23 +384,11 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
-
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
-                $UpdateParameters.Remove($keyName)
-            }
-        }
-
         $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Remove('Verbose') | Out-Null
-        $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
 
         #region resource generator code
-        Update-MgBetaDeviceAppManagementMobileAppConfiguration @UpdateParameters `
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.androidManagedStoreAppConfiguration')
+        Update-MgBetaDeviceAppManagementMobileAppConfiguration -BodyParameter $UpdateParameters `
             -ManagedDeviceMobileAppConfigurationId $currentInstance.Id
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
@@ -452,6 +484,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -505,6 +545,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -532,15 +580,19 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidManagedStoreAppConfiguration' `
+        $baseFilter = "isof('microsoft.graph.androidManagedStoreAppConfiguration')"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
-        #endregion
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration -Filter $Filter -All -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -566,6 +618,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -608,14 +662,14 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Assignments', 'permissionActions')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
 
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -635,65 +689,6 @@ function Export-TargetResource
             throw
         }
     }
-}
-
-function Get-M365DSCAdditionalProperties
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $additionalProperties = @(
-        'packageId'
-        'payloadJson'
-        'permissionActions'
-        'appSupportsOemConfig'
-        'profileApplicability'
-        'connectedAppsEnabled'
-    )
-
-    $results = @{'@odata.type' = '#microsoft.graph.androidManagedStoreAppConfiguration' }
-    $cloneProperties = $Properties.Clone()
-    foreach ($property in $cloneProperties.Keys)
-    {
-        if ($property -in ($additionalProperties) )
-        {
-            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            if ($properties.$property -and $properties.$property.GetType().FullName -like '*CIMInstance*')
-            {
-                if ($properties.$property.GetType().FullName -like '*[[\]]')
-                {
-                    $array = @()
-                    foreach ($item in $properties.$property)
-                    {
-                        $array += Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-                    }
-                    $propertyValue = $array
-                }
-                else
-                {
-                    $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
-                }
-
-            }
-            else
-            {
-                $propertyValue = $properties.$property
-            }
-
-            $results.Add($propertyName, $propertyValue)
-        }
-    }
-    if ($results.Count -eq 1)
-    {
-        return $null
-    }
-    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

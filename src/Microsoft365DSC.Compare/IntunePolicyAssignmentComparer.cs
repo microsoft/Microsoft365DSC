@@ -38,15 +38,17 @@ namespace Microsoft365DSC.Compare
             }
 
             // Compare each assignment in source array
-            foreach (var sourceItem in source)
+            for (int i = 0; i < source.Length; i++)
             {
+                var sourceItem = source.GetValue(i);
                 if (sourceItem is null)
                 {
                     continue;
                 }
 
-                var assignment = ComplexObjectConverter.ToHashtable(sourceItem);
-                var dataType = GetPropertyValue<string>(assignment, "dataType");
+                Hashtable? assignment = ComplexObjectConverter.ToHashtable(sourceItem);
+                Hashtable? assignmentTarget = null;
+                string? dataType = GetPropertyValue<string>(assignment, "dataType");
 
                 if (string.IsNullOrEmpty(dataType))
                 {
@@ -57,11 +59,45 @@ namespace Microsoft365DSC.Compare
                 if (dataType!.EndsWith("AssignmentTarget", StringComparison.OrdinalIgnoreCase))
                 {
                     var assignmentGroupId = GetPropertyValue<string>(assignment, "groupId");
+                    var assignmentCollectionId = GetPropertyValue<string>(assignment, "collectionId");
                     var assignmentIntent = GetPropertyValue<string>(assignment, "intent");
 
+                    if (dataType.Equals("#microsoft.graph.allDevicesAssignmentTarget", StringComparison.OrdinalIgnoreCase)
+                        || dataType.Equals("#microsoft.graph.allLicensedUsersAssignmentTarget", StringComparison.OrdinalIgnoreCase))
+                    {
+                        assignmentTarget = FindAssignmentTarget(target, "dataType", dataType);
+                    }
+
                     // Find matching assignment target by dataType and groupId
-                    Hashtable? assignmentTarget = FindAssignmentTarget(target, dataType, assignmentGroupId);
-                    testResult = assignmentTarget is not null;
+                    if (assignmentTarget is null && assignmentGroupId is not null)
+                    {
+                        assignmentTarget = FindAssignmentTarget(target, "groupId", assignmentGroupId);
+                        testResult = assignmentTarget is not null;
+                    }
+
+                    if (assignmentTarget is null && assignmentCollectionId is not null)
+                    {
+                        assignmentTarget = FindAssignmentTarget(target, "collectionId", assignmentCollectionId);
+                        testResult = assignmentTarget is not null;
+                    }
+
+                    // If not found by groupId, try by groupDisplayName
+                    if (!testResult)
+                    {
+                        var assignmentGroupDisplayName = GetPropertyValue<string>(assignment, "groupDisplayName");
+                        assignmentTarget = FindAssignmentTarget(target, "groupDisplayName", assignmentGroupDisplayName);
+                        testResult = assignmentTarget is not null;
+
+                        if (!testResult)
+                        {
+                            drifts.Add(new Dictionary<string, object>
+                            {
+                                { "PropertyName", $"Assignments[{i}].groupDisplayName" },
+                                { "CurrentValue", GetPropertyValue<string>(ComplexObjectConverter.ToHashtable(target.GetValue(i)), "groupDisplayName") ?? string.Empty },
+                                { "DesiredValue", assignmentGroupDisplayName }
+                            });
+                        }
+                    }
 
                     // Check for mobile app assignments with intent
                     if (testResult && !string.IsNullOrEmpty(assignmentIntent))
@@ -70,20 +106,17 @@ namespace Microsoft365DSC.Compare
                         testResult = string.Equals(assignmentIntent, targetIntent, StringComparison.OrdinalIgnoreCase);
                     }
 
-                    // If not found by groupId, try by groupDisplayName
-                    if (!testResult)
+                    if (testResult)
                     {
-                        var assignmentGroupDisplayName = GetPropertyValue<string>(assignment, "groupDisplayName");
-                        assignmentTarget = FindAssignmentTargetByDisplayName(target, dataType, assignmentGroupDisplayName);
-                        testResult = assignmentTarget is not null;
-
+                        string? assignmentTargetDataType = GetPropertyValue<string>(assignmentTarget, "dataType");
+                        testResult = dataType.Equals(assignmentTargetDataType, StringComparison.OrdinalIgnoreCase);
                         if (!testResult)
                         {
                             drifts.Add(new Dictionary<string, object>
                             {
-                                { "PropertyName", "Assignments.GroupDisplayName" },
-                                { "CurrentValue", assignmentGroupDisplayName },
-                                { "DesiredValue", null }
+                                { "PropertyName", $"Assignments[{i}].dataType" },
+                                { "CurrentValue", dataType },
+                                { "DesiredValue", assignmentTargetDataType }
                             });
                         }
                     }
@@ -91,26 +124,7 @@ namespace Microsoft365DSC.Compare
                     // Check filters if group found
                     if (testResult)
                     {
-                        testResult = CompareFilters(assignment, assignmentTarget, drifts);
-                    }
-
-                    // Check collectionId if still matching
-                    if (testResult)
-                    {
-                        var assignmentCollectionId = GetPropertyValue<string>(assignment, "collectionId");
-                        var targetCollectionId = GetPropertyValue<string>(assignmentTarget, "collectionId");
-
-                        testResult = string.Equals(assignmentCollectionId, targetCollectionId, StringComparison.OrdinalIgnoreCase);
-
-                        if (!testResult)
-                        {
-                            drifts.Add(new Dictionary<string, object>
-                            {
-                                { "PropertyName", "Assignments.collectionId" },
-                                { "CurrentValue", assignmentCollectionId },
-                                { "DesiredValue", targetCollectionId }
-                            });
-                        }
+                        testResult = CompareFilters(assignment, assignmentTarget, i, drifts);
                     }
                 }
                 else
@@ -122,8 +136,8 @@ namespace Microsoft365DSC.Compare
                         if (targetItem is null)
                             continue;
 
-                        var targetHash = ComplexObjectConverter.ToHashtable(targetItem);
-                        var targetDataType = GetPropertyValue<string>(targetHash, "dataType");
+                        assignmentTarget = ComplexObjectConverter.ToHashtable(targetItem);
+                        var targetDataType = GetPropertyValue<string>(assignmentTarget, "dataType");
 
                         if (string.Equals(dataType, targetDataType, StringComparison.OrdinalIgnoreCase))
                         {
@@ -138,10 +152,29 @@ namespace Microsoft365DSC.Compare
                     {
                         drifts.Add(new Dictionary<string, object>
                         {
-                            { "PropertyName", "Assignments.DataType" },
+                            { "PropertyName", $"Assignments[{i}].DataType" },
                             { "CurrentValue", dataType },
                             { "DesiredValue", null }
                         });
+                    }
+                }
+
+                if (testResult)
+                {
+                    // Check for assignmentSettings if available
+                    var assignmentSettings = GetPropertyValue<Hashtable>(assignment, "assignmentSettings");
+                    if (assignmentSettings is not null)
+                    {
+                        var targetAssignmentSettings = GetPropertyValue<Hashtable>(assignmentTarget, "assignmentSettings");
+                        var compareResult = ComplexObjectComparer.Compare(assignmentSettings, targetAssignmentSettings, $"Assignments[{i}].assignmentSettings", []);
+                        if (!compareResult.Item2)
+                        {
+                            testResult = false;
+                            foreach (var drift in compareResult.Item1)
+                            {
+                                drifts.Add(drift);
+                            }
+                        }
                     }
                 }
 
@@ -158,7 +191,7 @@ namespace Microsoft365DSC.Compare
         /// <summary>
         /// Compares filter settings between source and target assignments.
         /// </summary>
-        private static bool CompareFilters(Hashtable assignment, Hashtable assignmentTarget, List<Dictionary<string, object>> drifts)
+        private static bool CompareFilters(Hashtable assignment, Hashtable assignmentTarget, int index, List<Dictionary<string, object>> drifts)
         {
             var assignmentFilterType = GetPropertyValue<string>(assignment, "deviceAndAppManagementAssignmentFilterType");
             var targetFilterType = GetPropertyValue<string>(assignmentTarget, "deviceAndAppManagementAssignmentFilterType");
@@ -197,7 +230,7 @@ namespace Microsoft365DSC.Compare
             {
                 drifts.Add(new Dictionary<string, object>
                 {
-                    { "PropertyName", "Assignments.Filters" },
+                    { "PropertyName", $"Assignments[{index}].Filters" },
                     { "CurrentValue", assignmentFilterType },
                     { "DesiredValue", targetFilterType }
                 });
@@ -207,43 +240,18 @@ namespace Microsoft365DSC.Compare
         }
 
         /// <summary>
-        /// Finds an assignment target in the array by dataType and groupId.
+        /// Finds an assignment target in the array by property value
         /// </summary>
-        private static Hashtable? FindAssignmentTarget(Array targetArray, string dataType, string groupId)
+        private static Hashtable? FindAssignmentTarget(Array targetArray, string key, string value)
         {
             foreach (var item in targetArray)
             {
                 if (item is null) continue;
 
                 var hashtable = ComplexObjectConverter.ToHashtable(item);
-                var itemDataType = GetPropertyValue<string>(hashtable, "dataType");
-                var itemGroupId = GetPropertyValue<string>(hashtable, "groupId");
+                var itemValue = GetPropertyValue<string>(hashtable, key);
 
-                if (string.Equals(dataType, itemDataType, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(groupId, itemGroupId, StringComparison.OrdinalIgnoreCase))
-                {
-                    return hashtable;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Finds an assignment target in the array by dataType and groupDisplayName.
-        /// </summary>
-        private static Hashtable? FindAssignmentTargetByDisplayName(Array targetArray, string dataType, string groupDisplayName)
-        {
-            foreach (var item in targetArray)
-            {
-                if (item is null) continue;
-
-                var hashtable = ComplexObjectConverter.ToHashtable(item);
-                var itemDataType = GetPropertyValue<string>(hashtable, "dataType");
-                var itemGroupDisplayName = GetPropertyValue<string>(hashtable, "groupDisplayName");
-
-                if (string.Equals(dataType, itemDataType, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(groupDisplayName, itemGroupDisplayName, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(value, itemValue, StringComparison.OrdinalIgnoreCase))
                 {
                     return hashtable;
                 }

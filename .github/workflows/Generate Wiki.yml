@@ -9,7 +9,7 @@ jobs:
     if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Modules
         shell: powershell
         run: |

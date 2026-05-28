@@ -44,6 +44,34 @@
       "cmdlets": [
         "Get-MgUser"
       ]
+    },
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsUserPolicyAssignment",
+        "Grant-CsCallingLineIdentity",
+        "Grant-CsExternalAccessPolicy",
+        "Grant-CsOnlineVoicemailPolicy",
+        "Grant-CsOnlineVoiceRoutingPolicy",
+        "Grant-CsTeamsAppPermissionPolicy",
+        "Grant-CsTeamsAppSetupPolicy",
+        "Grant-CsTeamsAudioConferencingPolicy",
+        "Grant-CsTeamsCallHoldPolicy",
+        "Grant-CsTeamsCallingPolicy",
+        "Grant-CsTeamsCallParkPolicy",
+        "Grant-CsTeamsChannelsPolicy",
+        "Grant-CsTeamsEmergencyCallingPolicy",
+        "Grant-CsTeamsEmergencyCallRoutingPolicy",
+        "Grant-CsTeamsEnhancedEncryptionPolicy",
+        "Grant-CsTeamsEventsPolicy",
+        "Grant-CsTeamsMeetingBroadcastPolicy",
+        "Grant-CsTeamsMeetingPolicy",
+        "Grant-CsTeamsMessagingPolicy",
+        "Grant-CsTeamsMobilityPolicy",
+        "Grant-CsTeamsUpdateManagementPolicy",
+        "Grant-CsTeamsUpgradePolicy",
+        "Grant-CsTenantDialPlan"
+      ]
     }
   ]
 }

@@ -476,26 +476,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $result | Should -Not -BeNullOrEmpty
             }
 
-            It 'Should export 3 federation configurations total (2 from contoso.com, 1 from fabrikam.com)' {
-                $Script:exportedInstances = @()
-                $null = Export-TargetResource @testParams
-                $Script:exportedInstances.Count | Should -Be 3
-            }
-
             It 'Should export correct domain IDs and configuration details' {
-                $Script:exportedInstances = @()
-                $null = Export-TargetResource @testParams
+                $exportedContent = Export-TargetResource @testParams
 
                 # Verify contoso.com has 2 configurations
-                $contosoConfigs = $Script:exportedInstances | Where-Object { $_.DomainId -eq 'contoso.com' }
-                $contosoConfigs.Count | Should -Be 2
-                $contosoConfigs[0].DisplayName | Should -Be 'Contoso Primary'
-                $contosoConfigs[1].DisplayName | Should -Be 'Contoso Secondary'
+                $exportedContent | Should -Match "contoso.com"
+                $exportedContent | Should -Match 'Contoso Primary'
+                $exportedContent | Should -Match 'Contoso Secondary'
 
                 # Verify fabrikam.com has 1 configuration
-                $fabrikamConfigs = $Script:exportedInstances | Where-Object { $_.DomainId -eq 'fabrikam.com' }
-                $fabrikamConfigs.Count | Should -Be 1
-                $fabrikamConfigs[0].DisplayName | Should -Be 'Fabrikam Federation'
+                $exportedContent | Should -Match 'fabrikam.com'
+                $exportedContent | Should -Match 'Fabrikam Federation'
             }
         }
 

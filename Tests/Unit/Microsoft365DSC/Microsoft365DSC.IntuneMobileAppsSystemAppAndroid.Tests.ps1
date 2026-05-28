@@ -44,23 +44,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        supportsOemConfig = $True
-                        appStoreUrl = "FakeStringValue"
-                        packageId = "FakeStringValue"
-                        appTracks = @(
-                            @{
-                                trackAlias = "FakeStringValue"
-                                trackId = "FakeStringValue"
-                            }
-                        )
-                        '@odata.type' = "#microsoft.graph.androidManagedStoreApp"
-                        totalLicenseCount = 25
-                        isPrivate = $True
-                        usedLicenseCount = 25
-                        appIdentifier = "FakeStringValue"
-                        isSystemApp = $True
-                    }
+                    supportsOemConfig = $True
+                    appStoreUrl = "FakeStringValue"
+                    packageId = "FakeStringValue"
+                    appTracks = @(
+                        @{
+                            trackAlias = "FakeStringValue"
+                            trackId = "FakeStringValue"
+                        }
+                    )
+                    '@odata.type' = "#microsoft.graph.androidManagedStoreApp"
+                    totalLicenseCount = 25
+                    isPrivate = $True
+                    usedLicenseCount = 25
+                    appIdentifier = "FakeStringValue"
+                    isSystemApp = $True
                     dependentAppCount = 25
                     description = "FakeStringValue"
                     developer = "FakeStringValue"
@@ -88,23 +86,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        supportsOemConfig = $True
-                        appStoreUrl = "FakeStringValue"
-                        packageId = "FakeStringValue"
-                        appTracks = @(
-                            @{
-                                trackAlias = "FakeStringValue"
-                                trackId = "FakeStringValue"
-                            }
-                        )
-                        '@odata.type' = "#microsoft.graph.androidManagedStoreApp"
-                        totalLicenseCount = 25
-                        isPrivate = $True
-                        usedLicenseCount = 25
-                        appIdentifier = "FakeStringValue"
-                        isSystemApp = $True
-                    }
+                    supportsOemConfig = $True
+                    appStoreUrl = "FakeStringValue"
+                    packageId = "FakeStringValue"
+                    appTracks = @(
+                        @{
+                            trackAlias = "FakeStringValue"
+                            trackId = "FakeStringValue"
+                        }
+                    )
+                    '@odata.type' = "#microsoft.graph.androidManagedStoreApp"
+                    totalLicenseCount = 25
+                    isPrivate = $True
+                    usedLicenseCount = 25
+                    appIdentifier = "FakeStringValue"
+                    isSystemApp = $True
                     dependentAppCount = 25
                     description = "FakeStringValue"
                     developer = "FakeStringValue"

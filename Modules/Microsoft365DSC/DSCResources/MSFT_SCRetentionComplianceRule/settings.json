@@ -24,12 +24,12 @@
         ]
       }
     },
-    "purview":{
-      "requiredroles":[
+    "purview": {
+      "requiredroles": [
         "Retention Management",
         "View-Only Retention Management"
       ],
-      "requiredrolegroups":[
+      "requiredrolegroups": [
         "Records Management",
         "Global Reader"
       ]

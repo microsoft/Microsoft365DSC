@@ -10,10 +10,11 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyAndroidWorkProfile")]
+[ClassVersion("1.0.0.1"), FriendlyName("IntuneDeviceConfigurationPolicyAndroidWorkProfile")]
 class MSFT_IntuneDeviceConfigurationPolicyAndroidWorkProfile : OMI_BaseResource
 {
     [Key, Description("Display name of the device general configuration policy for Android WorkProfile.")] String DisplayName;
+    [Write, Description("The Id of the policy.")] String Id;
     [Write, Description("Description of the device general configuration policy for Android WorkProfile")] String Description;
     [Write, Description("List of Scope Tags for this Entity instance.")] String RoleScopeTagIds[];
     [Write, Description("Assignments of the Intune Policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
@@ -68,6 +69,8 @@ class MSFT_IntuneDeviceConfigurationPolicyAndroidWorkProfile : OMI_BaseResource
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

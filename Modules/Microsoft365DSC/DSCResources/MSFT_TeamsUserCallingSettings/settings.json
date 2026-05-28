@@ -44,6 +44,13 @@
       "cmdlets": [
         "Get-MgUser"
       ]
+    },
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsUserCallingSettings",
+        "Set-CsUserCallingSettings"
+      ]
     }
   ]
 }

@@ -80,6 +80,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -171,6 +179,8 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -265,6 +275,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -417,6 +435,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -466,6 +492,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -495,7 +529,7 @@ function Export-TargetResource
         $workspaces = Get-AzResource -ResourceType 'Microsoft.OperationalInsights/workspaces'
         $Script:exportedInstances = @()
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($Script:exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -562,7 +596,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 $j++
@@ -570,7 +604,7 @@ function Export-TargetResource
             }
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -611,7 +645,7 @@ function Get-M365DSCSentinelWatchlist
         $hostUrl = Get-M365DSCAPIEndpoint -TenantId $TenantId
         $uri = $hostUrl.AzureManagement + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
         $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/watchlists?api-version=2022-06-01-preview"
-        $response = Invoke-AzRest -Uri $uri -Method 'GET'
+        $response = Invoke-AzRestMethod -Uri $uri -Method 'GET'
         $result = ConvertFrom-Json $response.Content
         return $result.value
     }
@@ -664,7 +698,7 @@ function Set-M365DSCSentinelWatchlist
 
         Write-Verbose -Message "Calling Url: {$($uri)}"
         Write-Verbose -Message "Payload: {$payload}"
-        $response = Invoke-AzRest -Uri $uri -Method 'PUT' -Payload $payload
+        $response = Invoke-AzRestMethod -Uri $uri -Method 'PUT' -Payload $payload
         if ($response.StatusCode -ne 200 -and $response.StatusCode -ne 201)
         {
             Write-Verbose -Message $($response | Out-String)
@@ -713,7 +747,7 @@ function Remove-M365DSCSentinelWatchlist
         $hostUrl = Get-M365DSCAPIEndpoint -TenantId $TenantId
         $uri = $hostUrl.AzureManagement + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
         $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/watchlists/$($WatchListAlias)?api-version=2022-06-01-preview"
-        Invoke-AzRest -Uri $uri -Method 'DELETE'
+        Invoke-AzRestMethod -Uri $uri -Method 'DELETE'
     }
     catch
     {

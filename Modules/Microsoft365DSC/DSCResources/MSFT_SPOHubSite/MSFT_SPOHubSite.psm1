@@ -172,6 +172,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -342,7 +344,7 @@ function Set-TargetResource
 
         if ($PSBoundParameters.ContainsKey('AllowedToJoin') -eq $true)
         {
-            $groups = Get-MgGroup -All:$true
+            $groups = Get-MgGroup -All
             $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
             Write-Verbose -Message 'Validating AllowedToJoin principals'
@@ -421,7 +423,7 @@ function Set-TargetResource
 
             if ($null -ne $differences)
             {
-                $groups = Get-MgGroup -All:$true
+                $groups = Get-MgGroup -All
                 $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
                 Write-Verbose -Message 'Updating Hub Site permissions'
@@ -643,7 +645,7 @@ function Export-TargetResource
             $principal = $organization.Split('.')[0]
         }
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         foreach ($hub in $hubSites)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -655,14 +657,14 @@ function Export-TargetResource
 
             $Params = @{
                 Url                   = $hub.SiteUrl
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                Credential            = $Credential
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
-                ApplicationSecret     = $ApplicationSecret
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
@@ -681,13 +683,13 @@ function Export-TargetResource
                 $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
                 $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('@' + $organization), "@`$(`$OrganizationName)"
             }
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

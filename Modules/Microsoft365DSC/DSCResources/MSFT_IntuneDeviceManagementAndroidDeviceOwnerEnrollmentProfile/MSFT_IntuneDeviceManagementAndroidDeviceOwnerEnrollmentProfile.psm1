@@ -27,12 +27,13 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
+        [System.String]
         $EnrollmentMode,
 
         [Parameter()]
         [ValidateSet('default', 'corporateOwnedDedicatedDeviceWithAzureADSharedMode', 'deviceStaging')]
+        [System.String]
         $EnrollmentTokenType,
 
         [Parameter()]
@@ -56,8 +57,8 @@ function Get-TargetResource
         $WifiPassword,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('none', 'wpa', 'wep' )]
+        [System.String]
         $WifiSecurityType,
 
         [Parameter()]
@@ -84,6 +85,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -147,6 +156,16 @@ function Get-TargetResource
             $androidDeviceOwnerEnrollmentProfile = $Script:exportedInstance
         }
 
+        $tokenExpirationDateTimeString = $androidDeviceOwnerEnrollmentProfile.TokenExpirationDateTime
+        if ($tokenExpirationDateTimeString -is [System.DateTime])
+        {
+            $tokenExpirationDateTimeString = $tokenExpirationDateTimeString.ToString('yyyy-MM-ddTHH:mm:ssZ')
+        }
+        elseif (-not [string]::IsNullOrEmpty($tokenExpirationDateTimeString))
+        {
+            $tokenExpirationDateTimeString = [System.DateTime]::Parse($tokenExpirationDateTimeString).ToString('yyyy-MM-ddTHH:mm:ssZ')
+        }
+
         $results = @{
             Id                      = $androidDeviceOwnerEnrollmentProfile.Id
             DisplayName             = $androidDeviceOwnerEnrollmentProfile.DisplayName
@@ -157,7 +176,7 @@ function Get-TargetResource
             EnrollmentTokenType     = $androidDeviceOwnerEnrollmentProfile.EnrollmentTokenType.ToString()
             IsTeamsDeviceProfile    = $androidDeviceOwnerEnrollmentProfile.IsTeamsDeviceProfile
             RoleScopeTagIds         = $androidDeviceOwnerEnrollmentProfile.RoleScopeTagIds
-            TokenExpirationDateTime = $androidDeviceOwnerEnrollmentProfile.TokenExpirationDateTime.ToString()
+            TokenExpirationDateTime = $tokenExpirationDateTimeString
             WifiHidden              = $androidDeviceOwnerEnrollmentProfile.WifiHidden
             WifiPassword            = $androidDeviceOwnerEnrollmentProfile.WifiPassword
             WifiSecurityType        = $androidDeviceOwnerEnrollmentProfile.WifiSecurityType.ToString()
@@ -167,6 +186,8 @@ function Get-TargetResource
             ApplicationId           = $ApplicationId
             TenantId                = $TenantId
             CertificateThumbprint   = $CertificateThumbprint
+            CertificatePath         = $CertificatePath
+            CertificatePassword     = $CertificatePassword
             ManagedIdentity         = $ManagedIdentity.IsPresent
             AccessTokens            = $AccessTokens
         }
@@ -211,12 +232,13 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
+        [System.String]
         $EnrollmentMode,
 
         [Parameter()]
         [ValidateSet('default', 'corporateOwnedDedicatedDeviceWithAzureADSharedMode', 'deviceStaging')]
+        [System.String]
         $EnrollmentTokenType,
 
         [Parameter()]
@@ -240,8 +262,8 @@ function Set-TargetResource
         $WifiPassword,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('none', 'wpa', 'wep' )]
+        [System.String]
         $WifiSecurityType,
 
         [Parameter()]
@@ -270,6 +292,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -292,27 +322,27 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $setParameters = Rename-M365DSCCimInstanceParameter -Properties $setParameters
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Create AndroidDeviceOwnerEnrollmentProfile: $DisplayName with Enrollment Mode: $EnrollmentMode"
-
         $setParameters.Remove('Id') | Out-Null
-        $null = New-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile @setParameters
+        $null = New-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile -BodyParameter $setParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating AndroidDeviceOwnerEnrollmentProfile: $DisplayName"
-        Remove-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile -AndroidDeviceOwnerEnrollmentProfileId $currentInstance.Id -Confirm:$false
-        $null = New-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile @setParameters
+        Remove-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile -AndroidDeviceOwnerEnrollmentProfileId $currentInstance.Id
+        $null = New-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile -BodyParameter $setParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AndroidDeviceOwnerEnrollmentProfile: $DisplayName"
-        Remove-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile -AndroidDeviceOwnerEnrollmentProfileId $currentInstance.Id -Confirm:$false
+        Remove-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile -AndroidDeviceOwnerEnrollmentProfileId $currentInstance.Id
     }
 }
 
@@ -343,12 +373,13 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
+        [System.String]
         $EnrollmentMode,
 
         [Parameter()]
         [ValidateSet('default', 'corporateOwnedDedicatedDeviceWithAzureADSharedMode', 'deviceStaging')]
+        [System.String]
         $EnrollmentTokenType,
 
         [Parameter()]
@@ -372,8 +403,8 @@ function Test-TargetResource
         $WifiPassword,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('none', 'wpa', 'wep' )]
+        [System.String]
         $WifiSecurityType,
 
         [Parameter()]
@@ -402,6 +433,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -419,8 +458,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -455,6 +496,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -480,15 +529,15 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         # Exclude profiles with Microsoft internal enrollment mode (EnrollmentMode 5) from export
         # as it cannot be managed. Example is "Default enrollment profile for personally-owned work profile devices"
         [array] $Script:exportedInstances = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
+            -All `
             -ErrorAction Stop | Where-Object EnrollmentMode -NE 5
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -496,14 +545,14 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
             $displayedKey = $config.DisplayName
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.DisplayName
@@ -512,6 +561,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -524,13 +575,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -544,4 +595,15 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('AccountId', 'TokenExpirationDateTime')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

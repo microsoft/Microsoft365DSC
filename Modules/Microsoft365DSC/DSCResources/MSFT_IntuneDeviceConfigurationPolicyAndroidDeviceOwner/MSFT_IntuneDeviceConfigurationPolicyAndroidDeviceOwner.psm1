@@ -613,6 +613,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -655,10 +663,7 @@ function Get-TargetResource
 
             if (-not $getValue)
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' `
-                }
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")' and isof('microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration')" -ErrorAction SilentlyContinue
             }
             #endregion
 
@@ -676,7 +681,7 @@ function Get-TargetResource
         Write-Verbose -Message "Found something with id {$id}"
 
         $complexAzureAdSharedDeviceDataClearApps = @()
-        $currentValueArray = $getValue.AdditionalProperties.azureAdSharedDeviceDataClearApps
+        $currentValueArray = $getValue.azureAdSharedDeviceDataClearApps
         if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
         {
             foreach ($currentValue in $currentValueArray)
@@ -693,7 +698,7 @@ function Get-TargetResource
         }
 
         $complexDetailedHelpText = [ordered]@{}
-        $currentValue = $getValue.AdditionalProperties.detailedHelpText
+        $currentValue = $getValue.detailedHelpText
         if ($null -ne $currentValue)
         {
             $complexDetailedHelpText.Add('DefaultMessage', $currentValue.defaultMessage)
@@ -718,7 +723,7 @@ function Get-TargetResource
         }
 
         $complexDeviceOwnerLockScreenMessage = [ordered]@{}
-        $currentValue = $getValue.AdditionalProperties.deviceOwnerLockScreenMessage
+        $currentValue = $getValue.deviceOwnerLockScreenMessage
         if ($null -ne $currentValue)
         {
             $complexDeviceOwnerLockScreenMessage.Add('DefaultMessage', $currentValue.defaultMessage)
@@ -743,7 +748,7 @@ function Get-TargetResource
         }
 
         $complexGlobalProxy = [ordered]@{}
-        $currentValue = $getValue.AdditionalProperties.globalProxy
+        $currentValue = $getValue.globalProxy
         if ($null -ne $currentValue)
         {
             $complexGlobalProxy.Add('ProxyAutoConfigURL', $currentValue.proxyAutoConfigURL)
@@ -758,7 +763,7 @@ function Get-TargetResource
         }
 
         $complexKioskModeApps = @()
-        $currentValueArray = $getValue.AdditionalProperties.kioskModeApps
+        $currentValueArray = $getValue.kioskModeApps
         if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
         {
             foreach ($currentValue in $currentValueArray)
@@ -774,7 +779,7 @@ function Get-TargetResource
         }
 
         $complexPersonalProfilePersonalApplications = @()
-        $currentValueArray = $getValue.AdditionalProperties.personalProfilePersonalApplications
+        $currentValueArray = $getValue.personalProfilePersonalApplications
         if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
         {
             foreach ($currentValue in $currentValueArray)
@@ -790,7 +795,7 @@ function Get-TargetResource
         }
 
         $complexShortHelpText = [ordered]@{}
-        $currentValue = $getValue.AdditionalProperties.shortHelpText
+        $currentValue = $getValue.shortHelpText
         if ($null -ne $currentValue)
         {
             $complexShortHelpText.Add('DefaultMessage', $currentValue.defaultMessage)
@@ -815,7 +820,7 @@ function Get-TargetResource
         }
 
         $complexSystemUpdateFreezePeriods = @()
-        $currentValueArray = $getValue.AdditionalProperties.systemUpdateFreezePeriods
+        $currentValueArray = $getValue.systemUpdateFreezePeriods
         if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
         {
             foreach ($currentValue in $currentValueArray)
@@ -838,146 +843,148 @@ function Get-TargetResource
             #DeviceManagementApplicabilityRuleOsVersion               = $getValue.DeviceManagementApplicabilityRuleOsVersion
             DisplayName                                              = $getValue.DisplayName
             RoleScopeTagIds                                          = $getValue.RoleScopeTagIds
-            AccountsBlockModification                                = $getValue.AdditionalProperties.accountsBlockModification
-            AppsAllowInstallFromUnknownSources                       = $getValue.AdditionalProperties.appsAllowInstallFromUnknownSources
-            AppsAutoUpdatePolicy                                     = $getValue.AdditionalProperties.appsAutoUpdatePolicy
-            AppsDefaultPermissionPolicy                              = $getValue.AdditionalProperties.appsDefaultPermissionPolicy
-            AppsRecommendSkippingFirstUseHints                       = $getValue.AdditionalProperties.appsRecommendSkippingFirstUseHints
+            AccountsBlockModification                                = $getValue.accountsBlockModification
+            AppsAllowInstallFromUnknownSources                       = $getValue.appsAllowInstallFromUnknownSources
+            AppsAutoUpdatePolicy                                     = $getValue.appsAutoUpdatePolicy
+            AppsDefaultPermissionPolicy                              = $getValue.appsDefaultPermissionPolicy
+            AppsRecommendSkippingFirstUseHints                       = $getValue.appsRecommendSkippingFirstUseHints
             AzureAdSharedDeviceDataClearApps                         = $complexAzureAdSharedDeviceDataClearApps
-            BluetoothBlockConfiguration                              = $getValue.AdditionalProperties.bluetoothBlockConfiguration
-            BluetoothBlockContactSharing                             = $getValue.AdditionalProperties.bluetoothBlockContactSharing
-            CameraBlocked                                            = $getValue.AdditionalProperties.cameraBlocked
-            CellularBlockWiFiTethering                               = $getValue.AdditionalProperties.cellularBlockWiFiTethering
-            CertificateCredentialConfigurationDisabled               = $getValue.AdditionalProperties.certificateCredentialConfigurationDisabled
-            CrossProfilePoliciesAllowCopyPaste                       = $getValue.AdditionalProperties.crossProfilePoliciesAllowCopyPaste
-            CrossProfilePoliciesAllowDataSharing                     = $getValue.AdditionalProperties.crossProfilePoliciesAllowDataSharing
-            CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $getValue.AdditionalProperties.crossProfilePoliciesShowWorkContactsInPersonalProfile
-            DataRoamingBlocked                                       = $getValue.AdditionalProperties.dataRoamingBlocked
-            DateTimeConfigurationBlocked                             = $getValue.AdditionalProperties.dateTimeConfigurationBlocked
+            BluetoothBlockConfiguration                              = $getValue.bluetoothBlockConfiguration
+            BluetoothBlockContactSharing                             = $getValue.bluetoothBlockContactSharing
+            CameraBlocked                                            = $getValue.cameraBlocked
+            CellularBlockWiFiTethering                               = $getValue.cellularBlockWiFiTethering
+            CertificateCredentialConfigurationDisabled               = $getValue.certificateCredentialConfigurationDisabled
+            CrossProfilePoliciesAllowCopyPaste                       = $getValue.crossProfilePoliciesAllowCopyPaste
+            CrossProfilePoliciesAllowDataSharing                     = $getValue.crossProfilePoliciesAllowDataSharing
+            CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $getValue.crossProfilePoliciesShowWorkContactsInPersonalProfile
+            DataRoamingBlocked                                       = $getValue.dataRoamingBlocked
+            DateTimeConfigurationBlocked                             = $getValue.dateTimeConfigurationBlocked
             DetailedHelpText                                         = $complexDetailedHelpText
             DeviceOwnerLockScreenMessage                             = $complexDeviceOwnerLockScreenMessage
-            EnrollmentProfile                                        = $getValue.AdditionalProperties.enrollmentProfile
-            FactoryResetBlocked                                      = $getValue.AdditionalProperties.factoryResetBlocked
-            FactoryResetDeviceAdministratorEmails                    = $getValue.AdditionalProperties.factoryResetDeviceAdministratorEmails
+            EnrollmentProfile                                        = $getValue.enrollmentProfile
+            FactoryResetBlocked                                      = $getValue.factoryResetBlocked
+            FactoryResetDeviceAdministratorEmails                    = $getValue.factoryResetDeviceAdministratorEmails
             GlobalProxy                                              = $complexGlobalProxy
-            GoogleAccountsBlocked                                    = $getValue.AdditionalProperties.googleAccountsBlocked
-            KioskCustomizationDeviceSettingsBlocked                  = $getValue.AdditionalProperties.kioskCustomizationDeviceSettingsBlocked
-            KioskCustomizationPowerButtonActionsBlocked              = $getValue.AdditionalProperties.kioskCustomizationPowerButtonActionsBlocked
-            KioskCustomizationStatusBar                              = $getValue.AdditionalProperties.kioskCustomizationStatusBar
-            KioskCustomizationSystemErrorWarnings                    = $getValue.AdditionalProperties.kioskCustomizationSystemErrorWarnings
-            KioskCustomizationSystemNavigation                       = $getValue.AdditionalProperties.kioskCustomizationSystemNavigation
-            KioskModeAppOrderEnabled                                 = $getValue.AdditionalProperties.kioskModeAppOrderEnabled
-            KioskModeAppPositions                                    = $getValue.AdditionalProperties.kioskModeAppPositions
+            GoogleAccountsBlocked                                    = $getValue.googleAccountsBlocked
+            KioskCustomizationDeviceSettingsBlocked                  = $getValue.kioskCustomizationDeviceSettingsBlocked
+            KioskCustomizationPowerButtonActionsBlocked              = $getValue.kioskCustomizationPowerButtonActionsBlocked
+            KioskCustomizationStatusBar                              = $getValue.kioskCustomizationStatusBar
+            KioskCustomizationSystemErrorWarnings                    = $getValue.kioskCustomizationSystemErrorWarnings
+            KioskCustomizationSystemNavigation                       = $getValue.kioskCustomizationSystemNavigation
+            KioskModeAppOrderEnabled                                 = $getValue.kioskModeAppOrderEnabled
+            KioskModeAppPositions                                    = $getValue.kioskModeAppPositions
             KioskModeApps                                            = $complexKioskModeApps
-            KioskModeAppsInFolderOrderedByName                       = $getValue.AdditionalProperties.kioskModeAppsInFolderOrderedByName
-            KioskModeBluetoothConfigurationEnabled                   = $getValue.AdditionalProperties.kioskModeBluetoothConfigurationEnabled
-            KioskModeDebugMenuEasyAccessEnabled                      = $getValue.AdditionalProperties.kioskModeDebugMenuEasyAccessEnabled
-            KioskModeExitCode                                        = $getValue.AdditionalProperties.kioskModeExitCode
-            KioskModeFlashlightConfigurationEnabled                  = $getValue.AdditionalProperties.kioskModeFlashlightConfigurationEnabled
-            KioskModeFolderIcon                                      = $getValue.AdditionalProperties.kioskModeFolderIcon
-            KioskModeGridHeight                                      = $getValue.AdditionalProperties.kioskModeGridHeight
-            KioskModeGridWidth                                       = $getValue.AdditionalProperties.kioskModeGridWidth
-            KioskModeIconSize                                        = $getValue.AdditionalProperties.kioskModeIconSize
-            KioskModeLockHomeScreen                                  = $getValue.AdditionalProperties.kioskModeLockHomeScreen
-            KioskModeManagedFolders                                  = $getValue.AdditionalProperties.kioskModeManagedFolders
-            KioskModeManagedHomeScreenAutoSignout                    = $getValue.AdditionalProperties.kioskModeManagedHomeScreenAutoSignout
-            KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = $getValue.AdditionalProperties.kioskModeManagedHomeScreenInactiveSignOutDelayInSeconds
-            KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = $getValue.AdditionalProperties.kioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds
-            KioskModeManagedHomeScreenPinComplexity                  = $getValue.AdditionalProperties.kioskModeManagedHomeScreenPinComplexity
-            KioskModeManagedHomeScreenPinRequired                    = $getValue.AdditionalProperties.kioskModeManagedHomeScreenPinRequired
-            KioskModeManagedHomeScreenPinRequiredToResume            = $getValue.AdditionalProperties.kioskModeManagedHomeScreenPinRequiredToResume
-            KioskModeManagedHomeScreenSignInBackground               = $getValue.AdditionalProperties.kioskModeManagedHomeScreenSignInBackground
-            KioskModeManagedHomeScreenSignInBrandingLogo             = $getValue.AdditionalProperties.kioskModeManagedHomeScreenSignInBrandingLogo
-            KioskModeManagedHomeScreenSignInEnabled                  = $getValue.AdditionalProperties.kioskModeManagedHomeScreenSignInEnabled
-            KioskModeManagedSettingsEntryDisabled                    = $getValue.AdditionalProperties.kioskModeManagedSettingsEntryDisabled
-            KioskModeMediaVolumeConfigurationEnabled                 = $getValue.AdditionalProperties.kioskModeMediaVolumeConfigurationEnabled
-            KioskModeScreenOrientation                               = $getValue.AdditionalProperties.kioskModeScreenOrientation
-            KioskModeScreenSaverConfigurationEnabled                 = $getValue.AdditionalProperties.kioskModeScreenSaverConfigurationEnabled
-            KioskModeScreenSaverDetectMediaDisabled                  = $getValue.AdditionalProperties.kioskModeScreenSaverDetectMediaDisabled
-            KioskModeScreenSaverDisplayTimeInSeconds                 = $getValue.AdditionalProperties.kioskModeScreenSaverDisplayTimeInSeconds
-            KioskModeScreenSaverImageUrl                             = $getValue.AdditionalProperties.kioskModeScreenSaverImageUrl
-            KioskModeScreenSaverStartDelayInSeconds                  = $getValue.AdditionalProperties.kioskModeScreenSaverStartDelayInSeconds
-            KioskModeShowAppNotificationBadge                        = $getValue.AdditionalProperties.kioskModeShowAppNotificationBadge
-            KioskModeShowDeviceInfo                                  = $getValue.AdditionalProperties.kioskModeShowDeviceInfo
-            KioskModeUseManagedHomeScreenApp                         = $getValue.AdditionalProperties.kioskModeUseManagedHomeScreenApp
-            KioskModeVirtualHomeButtonEnabled                        = $getValue.AdditionalProperties.kioskModeVirtualHomeButtonEnabled
-            KioskModeVirtualHomeButtonType                           = $getValue.AdditionalProperties.kioskModeVirtualHomeButtonType
-            KioskModeWallpaperUrl                                    = $getValue.AdditionalProperties.kioskModeWallpaperUrl
-            KioskModeWifiAllowedSsids                                = $getValue.AdditionalProperties.kioskModeWifiAllowedSsids
-            KioskModeWiFiConfigurationEnabled                        = $getValue.AdditionalProperties.kioskModeWiFiConfigurationEnabled
-            MicrophoneForceMute                                      = $getValue.AdditionalProperties.microphoneForceMute
-            MicrosoftLauncherConfigurationEnabled                    = $getValue.AdditionalProperties.microsoftLauncherConfigurationEnabled
-            MicrosoftLauncherCustomWallpaperAllowUserModification    = $getValue.AdditionalProperties.microsoftLauncherCustomWallpaperAllowUserModification
-            MicrosoftLauncherCustomWallpaperEnabled                  = $getValue.AdditionalProperties.microsoftLauncherCustomWallpaperEnabled
-            MicrosoftLauncherCustomWallpaperImageUrl                 = $getValue.AdditionalProperties.microsoftLauncherCustomWallpaperImageUrl
-            MicrosoftLauncherDockPresenceAllowUserModification       = $getValue.AdditionalProperties.microsoftLauncherDockPresenceAllowUserModification
-            MicrosoftLauncherDockPresenceConfiguration               = $getValue.AdditionalProperties.microsoftLauncherDockPresenceConfiguration
-            MicrosoftLauncherFeedAllowUserModification               = $getValue.AdditionalProperties.microsoftLauncherFeedAllowUserModification
-            MicrosoftLauncherFeedEnabled                             = $getValue.AdditionalProperties.microsoftLauncherFeedEnabled
-            MicrosoftLauncherSearchBarPlacementConfiguration         = $getValue.AdditionalProperties.microsoftLauncherSearchBarPlacementConfiguration
-            NetworkEscapeHatchAllowed                                = $getValue.AdditionalProperties.networkEscapeHatchAllowed
-            NfcBlockOutgoingBeam                                     = $getValue.AdditionalProperties.nfcBlockOutgoingBeam
-            PasswordBlockKeyguard                                    = $getValue.AdditionalProperties.passwordBlockKeyguard
-            PasswordBlockKeyguardFeatures                            = $getValue.AdditionalProperties.passwordBlockKeyguardFeatures
-            PasswordExpirationDays                                   = $getValue.AdditionalProperties.passwordExpirationDays
-            PasswordMinimumLength                                    = $getValue.AdditionalProperties.passwordMinimumLength
-            PasswordMinimumLetterCharacters                          = $getValue.AdditionalProperties.passwordMinimumLetterCharacters
-            PasswordMinimumLowerCaseCharacters                       = $getValue.AdditionalProperties.passwordMinimumLowerCaseCharacters
-            PasswordMinimumNonLetterCharacters                       = $getValue.AdditionalProperties.passwordMinimumNonLetterCharacters
-            PasswordMinimumNumericCharacters                         = $getValue.AdditionalProperties.passwordMinimumNumericCharacters
-            PasswordMinimumSymbolCharacters                          = $getValue.AdditionalProperties.passwordMinimumSymbolCharacters
-            PasswordMinimumUpperCaseCharacters                       = $getValue.AdditionalProperties.passwordMinimumUpperCaseCharacters
-            PasswordMinutesOfInactivityBeforeScreenTimeout           = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
-            PasswordPreviousPasswordCountToBlock                     = $getValue.AdditionalProperties.passwordPreviousPasswordCountToBlock
-            PasswordRequiredType                                     = $getValue.AdditionalProperties.passwordRequiredType
-            PasswordRequireUnlock                                    = $getValue.AdditionalProperties.passwordRequireUnlock
-            PasswordSignInFailureCountBeforeFactoryReset             = $getValue.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
-            PersonalProfileAppsAllowInstallFromUnknownSources        = $getValue.AdditionalProperties.personalProfileAppsAllowInstallFromUnknownSources
-            PersonalProfileCameraBlocked                             = $getValue.AdditionalProperties.personalProfileCameraBlocked
+            KioskModeAppsInFolderOrderedByName                       = $getValue.kioskModeAppsInFolderOrderedByName
+            KioskModeBluetoothConfigurationEnabled                   = $getValue.kioskModeBluetoothConfigurationEnabled
+            KioskModeDebugMenuEasyAccessEnabled                      = $getValue.kioskModeDebugMenuEasyAccessEnabled
+            KioskModeExitCode                                        = $getValue.kioskModeExitCode
+            KioskModeFlashlightConfigurationEnabled                  = $getValue.kioskModeFlashlightConfigurationEnabled
+            KioskModeFolderIcon                                      = $getValue.kioskModeFolderIcon
+            KioskModeGridHeight                                      = $getValue.kioskModeGridHeight
+            KioskModeGridWidth                                       = $getValue.kioskModeGridWidth
+            KioskModeIconSize                                        = $getValue.kioskModeIconSize
+            KioskModeLockHomeScreen                                  = $getValue.kioskModeLockHomeScreen
+            KioskModeManagedFolders                                  = $getValue.kioskModeManagedFolders
+            KioskModeManagedHomeScreenAutoSignout                    = $getValue.kioskModeManagedHomeScreenAutoSignout
+            KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = $getValue.kioskModeManagedHomeScreenInactiveSignOutDelayInSeconds
+            KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = $getValue.kioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds
+            KioskModeManagedHomeScreenPinComplexity                  = $getValue.kioskModeManagedHomeScreenPinComplexity
+            KioskModeManagedHomeScreenPinRequired                    = $getValue.kioskModeManagedHomeScreenPinRequired
+            KioskModeManagedHomeScreenPinRequiredToResume            = $getValue.kioskModeManagedHomeScreenPinRequiredToResume
+            KioskModeManagedHomeScreenSignInBackground               = $getValue.kioskModeManagedHomeScreenSignInBackground
+            KioskModeManagedHomeScreenSignInBrandingLogo             = $getValue.kioskModeManagedHomeScreenSignInBrandingLogo
+            KioskModeManagedHomeScreenSignInEnabled                  = $getValue.kioskModeManagedHomeScreenSignInEnabled
+            KioskModeManagedSettingsEntryDisabled                    = $getValue.kioskModeManagedSettingsEntryDisabled
+            KioskModeMediaVolumeConfigurationEnabled                 = $getValue.kioskModeMediaVolumeConfigurationEnabled
+            KioskModeScreenOrientation                               = $getValue.kioskModeScreenOrientation
+            KioskModeScreenSaverConfigurationEnabled                 = $getValue.kioskModeScreenSaverConfigurationEnabled
+            KioskModeScreenSaverDetectMediaDisabled                  = $getValue.kioskModeScreenSaverDetectMediaDisabled
+            KioskModeScreenSaverDisplayTimeInSeconds                 = $getValue.kioskModeScreenSaverDisplayTimeInSeconds
+            KioskModeScreenSaverImageUrl                             = $getValue.kioskModeScreenSaverImageUrl
+            KioskModeScreenSaverStartDelayInSeconds                  = $getValue.kioskModeScreenSaverStartDelayInSeconds
+            KioskModeShowAppNotificationBadge                        = $getValue.kioskModeShowAppNotificationBadge
+            KioskModeShowDeviceInfo                                  = $getValue.kioskModeShowDeviceInfo
+            KioskModeUseManagedHomeScreenApp                         = $getValue.kioskModeUseManagedHomeScreenApp
+            KioskModeVirtualHomeButtonEnabled                        = $getValue.kioskModeVirtualHomeButtonEnabled
+            KioskModeVirtualHomeButtonType                           = $getValue.kioskModeVirtualHomeButtonType
+            KioskModeWallpaperUrl                                    = $getValue.kioskModeWallpaperUrl
+            KioskModeWifiAllowedSsids                                = $getValue.kioskModeWifiAllowedSsids
+            KioskModeWiFiConfigurationEnabled                        = $getValue.kioskModeWiFiConfigurationEnabled
+            MicrophoneForceMute                                      = $getValue.microphoneForceMute
+            MicrosoftLauncherConfigurationEnabled                    = $getValue.microsoftLauncherConfigurationEnabled
+            MicrosoftLauncherCustomWallpaperAllowUserModification    = $getValue.microsoftLauncherCustomWallpaperAllowUserModification
+            MicrosoftLauncherCustomWallpaperEnabled                  = $getValue.microsoftLauncherCustomWallpaperEnabled
+            MicrosoftLauncherCustomWallpaperImageUrl                 = $getValue.microsoftLauncherCustomWallpaperImageUrl
+            MicrosoftLauncherDockPresenceAllowUserModification       = $getValue.microsoftLauncherDockPresenceAllowUserModification
+            MicrosoftLauncherDockPresenceConfiguration               = $getValue.microsoftLauncherDockPresenceConfiguration
+            MicrosoftLauncherFeedAllowUserModification               = $getValue.microsoftLauncherFeedAllowUserModification
+            MicrosoftLauncherFeedEnabled                             = $getValue.microsoftLauncherFeedEnabled
+            MicrosoftLauncherSearchBarPlacementConfiguration         = $getValue.microsoftLauncherSearchBarPlacementConfiguration
+            NetworkEscapeHatchAllowed                                = $getValue.networkEscapeHatchAllowed
+            NfcBlockOutgoingBeam                                     = $getValue.nfcBlockOutgoingBeam
+            PasswordBlockKeyguard                                    = $getValue.passwordBlockKeyguard
+            PasswordBlockKeyguardFeatures                            = $getValue.passwordBlockKeyguardFeatures
+            PasswordExpirationDays                                   = $getValue.passwordExpirationDays
+            PasswordMinimumLength                                    = $getValue.passwordMinimumLength
+            PasswordMinimumLetterCharacters                          = $getValue.passwordMinimumLetterCharacters
+            PasswordMinimumLowerCaseCharacters                       = $getValue.passwordMinimumLowerCaseCharacters
+            PasswordMinimumNonLetterCharacters                       = $getValue.passwordMinimumNonLetterCharacters
+            PasswordMinimumNumericCharacters                         = $getValue.passwordMinimumNumericCharacters
+            PasswordMinimumSymbolCharacters                          = $getValue.passwordMinimumSymbolCharacters
+            PasswordMinimumUpperCaseCharacters                       = $getValue.passwordMinimumUpperCaseCharacters
+            PasswordMinutesOfInactivityBeforeScreenTimeout           = $getValue.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordPreviousPasswordCountToBlock                     = $getValue.passwordPreviousPasswordCountToBlock
+            PasswordRequiredType                                     = $getValue.passwordRequiredType
+            PasswordRequireUnlock                                    = $getValue.passwordRequireUnlock
+            PasswordSignInFailureCountBeforeFactoryReset             = $getValue.passwordSignInFailureCountBeforeFactoryReset
+            PersonalProfileAppsAllowInstallFromUnknownSources        = $getValue.personalProfileAppsAllowInstallFromUnknownSources
+            PersonalProfileCameraBlocked                             = $getValue.personalProfileCameraBlocked
             PersonalProfilePersonalApplications                      = $complexPersonalProfilePersonalApplications
-            PersonalProfilePlayStoreMode                             = $getValue.AdditionalProperties.personalProfilePlayStoreMode
-            PersonalProfileScreenCaptureBlocked                      = $getValue.AdditionalProperties.personalProfileScreenCaptureBlocked
-            PlayStoreMode                                            = $getValue.AdditionalProperties.playStoreMode
-            ScreenCaptureBlocked                                     = $getValue.AdditionalProperties.screenCaptureBlocked
-            SecurityCommonCriteriaModeEnabled                        = $getValue.AdditionalProperties.securityCommonCriteriaModeEnabled
-            SecurityDeveloperSettingsEnabled                         = $getValue.AdditionalProperties.securityDeveloperSettingsEnabled
-            SecurityRequireVerifyApps                                = $getValue.AdditionalProperties.securityRequireVerifyApps
+            PersonalProfilePlayStoreMode                             = $getValue.personalProfilePlayStoreMode
+            PersonalProfileScreenCaptureBlocked                      = $getValue.personalProfileScreenCaptureBlocked
+            PlayStoreMode                                            = $getValue.playStoreMode
+            ScreenCaptureBlocked                                     = $getValue.screenCaptureBlocked
+            SecurityCommonCriteriaModeEnabled                        = $getValue.securityCommonCriteriaModeEnabled
+            SecurityDeveloperSettingsEnabled                         = $getValue.securityDeveloperSettingsEnabled
+            SecurityRequireVerifyApps                                = $getValue.securityRequireVerifyApps
             ShortHelpText                                            = $complexShortHelpText
-            StatusBarBlocked                                         = $getValue.AdditionalProperties.statusBarBlocked
-            StayOnModes                                              = $getValue.AdditionalProperties.stayOnModes
-            StorageAllowUsb                                          = $getValue.AdditionalProperties.storageAllowUsb
-            StorageBlockExternalMedia                                = $getValue.AdditionalProperties.storageBlockExternalMedia
-            StorageBlockUsbFileTransfer                              = $getValue.AdditionalProperties.storageBlockUsbFileTransfer
+            StatusBarBlocked                                         = $getValue.statusBarBlocked
+            StayOnModes                                              = $getValue.stayOnModes
+            StorageAllowUsb                                          = $getValue.storageAllowUsb
+            StorageBlockExternalMedia                                = $getValue.storageBlockExternalMedia
+            StorageBlockUsbFileTransfer                              = $getValue.storageBlockUsbFileTransfer
             SystemUpdateFreezePeriods                                = $complexSystemUpdateFreezePeriods
-            SystemUpdateInstallType                                  = $getValue.AdditionalProperties.systemUpdateInstallType
-            SystemUpdateWindowEndMinutesAfterMidnight                = $getValue.AdditionalProperties.systemUpdateWindowEndMinutesAfterMidnight
-            SystemUpdateWindowStartMinutesAfterMidnight              = $getValue.AdditionalProperties.systemUpdateWindowStartMinutesAfterMidnight
-            SystemWindowsBlocked                                     = $getValue.AdditionalProperties.systemWindowsBlocked
-            UsersBlockAdd                                            = $getValue.AdditionalProperties.usersBlockAdd
-            UsersBlockRemove                                         = $getValue.AdditionalProperties.usersBlockRemove
-            VolumeBlockAdjustment                                    = $getValue.AdditionalProperties.volumeBlockAdjustment
-            VpnAlwaysOnLockdownMode                                  = $getValue.AdditionalProperties.vpnAlwaysOnLockdownMode
-            VpnAlwaysOnPackageIdentifier                             = $getValue.AdditionalProperties.vpnAlwaysOnPackageIdentifier
-            WifiBlockEditConfigurations                              = $getValue.AdditionalProperties.wifiBlockEditConfigurations
-            WifiBlockEditPolicyDefinedConfigurations                 = $getValue.AdditionalProperties.wifiBlockEditPolicyDefinedConfigurations
-            WorkProfilePasswordExpirationDays                        = $getValue.AdditionalProperties.workProfilePasswordExpirationDays
-            WorkProfilePasswordMinimumLength                         = $getValue.AdditionalProperties.workProfilePasswordMinimumLength
-            WorkProfilePasswordMinimumLetterCharacters               = $getValue.AdditionalProperties.workProfilePasswordMinimumLetterCharacters
-            WorkProfilePasswordMinimumLowerCaseCharacters            = $getValue.AdditionalProperties.workProfilePasswordMinimumLowerCaseCharacters
-            WorkProfilePasswordMinimumNonLetterCharacters            = $getValue.AdditionalProperties.workProfilePasswordMinimumNonLetterCharacters
-            WorkProfilePasswordMinimumNumericCharacters              = $getValue.AdditionalProperties.workProfilePasswordMinimumNumericCharacters
-            WorkProfilePasswordMinimumSymbolCharacters               = $getValue.AdditionalProperties.workProfilePasswordMinimumSymbolCharacters
-            WorkProfilePasswordMinimumUpperCaseCharacters            = $getValue.AdditionalProperties.workProfilePasswordMinimumUpperCaseCharacters
-            WorkProfilePasswordPreviousPasswordCountToBlock          = $getValue.AdditionalProperties.workProfilePasswordPreviousPasswordCountToBlock
-            WorkProfilePasswordRequiredType                          = $getValue.AdditionalProperties.workProfilePasswordRequiredType
-            WorkProfilePasswordRequireUnlock                         = $getValue.AdditionalProperties.workProfilePasswordRequireUnlock
-            WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = $getValue.AdditionalProperties.workProfilePasswordSignInFailureCountBeforeFactoryReset
+            SystemUpdateInstallType                                  = $getValue.systemUpdateInstallType
+            SystemUpdateWindowEndMinutesAfterMidnight                = $getValue.systemUpdateWindowEndMinutesAfterMidnight
+            SystemUpdateWindowStartMinutesAfterMidnight              = $getValue.systemUpdateWindowStartMinutesAfterMidnight
+            SystemWindowsBlocked                                     = $getValue.systemWindowsBlocked
+            UsersBlockAdd                                            = $getValue.usersBlockAdd
+            UsersBlockRemove                                         = $getValue.usersBlockRemove
+            VolumeBlockAdjustment                                    = $getValue.volumeBlockAdjustment
+            VpnAlwaysOnLockdownMode                                  = $getValue.vpnAlwaysOnLockdownMode
+            VpnAlwaysOnPackageIdentifier                             = $getValue.vpnAlwaysOnPackageIdentifier
+            WifiBlockEditConfigurations                              = $getValue.wifiBlockEditConfigurations
+            WifiBlockEditPolicyDefinedConfigurations                 = $getValue.wifiBlockEditPolicyDefinedConfigurations
+            WorkProfilePasswordExpirationDays                        = $getValue.workProfilePasswordExpirationDays
+            WorkProfilePasswordMinimumLength                         = $getValue.workProfilePasswordMinimumLength
+            WorkProfilePasswordMinimumLetterCharacters               = $getValue.workProfilePasswordMinimumLetterCharacters
+            WorkProfilePasswordMinimumLowerCaseCharacters            = $getValue.workProfilePasswordMinimumLowerCaseCharacters
+            WorkProfilePasswordMinimumNonLetterCharacters            = $getValue.workProfilePasswordMinimumNonLetterCharacters
+            WorkProfilePasswordMinimumNumericCharacters              = $getValue.workProfilePasswordMinimumNumericCharacters
+            WorkProfilePasswordMinimumSymbolCharacters               = $getValue.workProfilePasswordMinimumSymbolCharacters
+            WorkProfilePasswordMinimumUpperCaseCharacters            = $getValue.workProfilePasswordMinimumUpperCaseCharacters
+            WorkProfilePasswordPreviousPasswordCountToBlock          = $getValue.workProfilePasswordPreviousPasswordCountToBlock
+            WorkProfilePasswordRequiredType                          = $getValue.workProfilePasswordRequiredType
+            WorkProfilePasswordRequireUnlock                         = $getValue.workProfilePasswordRequireUnlock
+            WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = $getValue.workProfilePasswordSignInFailureCountBeforeFactoryReset
             Ensure                                                   = 'Present'
             Credential                                               = $Credential
             ApplicationId                                            = $ApplicationId
             TenantId                                                 = $TenantId
             ApplicationSecret                                        = $ApplicationSecret
             CertificateThumbprint                                    = $CertificateThumbprint
+            CertificatePath                                          = $CertificatePath
+            CertificatePassword                                      = $CertificatePassword
             ManagedIdentity                                          = $ManagedIdentity.IsPresent
             AccessTokens                                             = $AccessTokens
         }
@@ -1616,6 +1623,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -2358,6 +2373,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -2411,6 +2434,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -2438,16 +2469,20 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration'
+        $baseFilter = "isof('microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
-
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -2473,6 +2508,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -2602,7 +2639,6 @@ function Export-TargetResource
                 }
             }
 
-
             if ($Results.KioskModeManagedFolders)
             {
                 $complexTypeMapping = @(
@@ -2706,13 +2742,13 @@ function Export-TargetResource
                 'KioskModeAppPositions', 'KioskModeApps', 'KioskModeManagedFolders', 'PersonalProfilePersonalApplications',
                 'ShortHelpText', 'SystemUpdateFreezePeriods', 'Assignments')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

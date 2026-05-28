@@ -21,8 +21,8 @@
             "name": "Organization.Read.All"
           },
           {
-              "name": "TeamSettings.ReadWrite.All"
-            },
+            "name": "TeamSettings.ReadWrite.All"
+          },
           {
             "name": "ChannelSettings.Read.All"
           }
@@ -51,5 +51,17 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-Team",
+        "Get-TeamChannel",
+        "New-TeamChannel",
+        "Remove-TeamChannel",
+        "Set-TeamChannel"
+      ]
+    }
+  ]
 }

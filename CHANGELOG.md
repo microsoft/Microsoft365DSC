@@ -1,5 +1,156 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADAccessReviewDefinition
+  * Added new properties `AdditionalNotificationRecipients` and `InstanceEnumerationScope`.
+  * Fixed issues when creating and updating instances of this resource.
+* AADAuthenticationRequirement
+  * Changed resource type from `Configuration` to `Data`.
+* AADCustomAuthenticationExtension
+  * Added missing application update permission `CustomAuthenticationExtension.ReadWrite.All`.
+* AADEntitlementManagementConnectedOrganization
+  * Removed required value `ExternalTenantId`.
+    FIXES [#7102](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7102)
+* AADEntitlementManagementAccessPackageCatalogResource
+  * Changed properties `CatalogId` and `OriginId` to their display name equivalent.
+* AADPIMGroupSetting
+  * Changed resource type from `Configuration` to `Data`.
+* AADServicePrincipal
+  * Added additional schema definitions for more claims information.
+  * Added support for `groupFilter` in the claims policy.
+    FIXES [#7102](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7102)
+* AADTenantAppManagementPolicy
+  * Changed the `MaxLifetime` property in application + service principal restrictions
+    --> key and password credentials to only include necessary date and time information.
+* EXOCASMailboxSettings
+  * Changed resource type from `Configuration` to `Data`.
+* EXOMailboxCalendarConfiguration
+  * Changed resource type from `Configuration` to `Data`.
+* EXOMailboxIRMAccess
+  * Changed resource type from `Configuration` to `Data`.
+* EXORecipientPermission
+  * Changed resource type from `Configuration` to `Data`.
+* EXOSharedMailbox
+  * Changed resource type from `Configuration` to `Data`.
+* EXOSweepRule
+  * Changed resource type from `Configuration` to `Data`.
+* IntuneAndroidManagedStoreAppConfiguration
+  * Changed property `targetedMobileApps` to use display name instead of app id.
+* IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * Added support for the property `RoleScopeTagIds`.
+* IntuneDeviceCompliancePolicyiOs
+  * Added support for the property `ScheduledActionsForRule`.
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fixed an issue where profiles that didn't match the filter were being exported.
+* IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile
+  * Standardized time format of `TokenExpirationDateTime` and excluded it from comparison.
+* IntunePolicySets
+  * Updated resource to work with multitenants.
+* SCDLPSensitiveInformationType
+  * Removed the parameter verbose output to prevent screen cluttering.
+    FIXES [#7145](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7145)
+  * Removed exporting instances that belong to the `SCDLPSensitiveInformationTypeRulePackage`
+    resource type.
+    FIXES [#7144](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7144)
+* SCDLPSensitiveInformationTypeRulePackage
+  * Initial release.
+    FIXES [#7144](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7144)
+* SPOTenantCdnPolicy
+  * Fixed an issue where property values were not being returned.
+* M365DSCReverse
+  * Added functionality to use wildcards in the `-Components` parameter when exporting.
+  * Fixed an issue where the resources to export counter did not match the actual value.
+* C# - SettingCatalogPolicySettingBuilder
+  * Fixed an issue if a setting definition appears multiple times in the same instance template.
+* MISC
+  * Introduced Microsoft Graph shim layer.
+  * Refactored filters on Graph calls to be done on the server side instead of locally.
+  * Streamlined authentication parameters across all resources and added `CertificatePath`
+    and `CertificatePassword` to supported resources.
+    FIXES [#7147](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7147)
+* Dependencies
+  * Removed all `Microsoft.Graph.*` dependencies except for `Microsoft.Graph.Authentication`.
+  * Updated `MSCloudLoginAssistant` to version 1.1.64.
+  * Updated `Az.Accounts` to version 5.3.2.
+    FIXES [#7143](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7143)
+  * Updated `Az.Resources` to version 9.0.1.
+  * Updated `Az.Security` to version 1.8.0.
+  * Updated `Az.SecurityInsights` to version 3.2.1.
+
+# 1.26.520.1
+
+* AADConditionalAccessPolicy
+  * Added the new property `ContinuousAccessEvaluationMode`.
+    FIXES [#7132](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7132)
+  * Fixed an issue where a `SessionControl` object with all null values
+    was used in combination with `ProtocolFlows`.
+    FIXES [#7119](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7119)
+* EXODynamicDistributionGroup
+  * Initial release.
+* EXOManagementRole
+  * Added error handler when fetching resource information.
+    FIXES [#7124](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7124)
+* EXOOrganizationConfig
+  * Added the new property `DLPViaDcsEnabled`.
+    FIXES [#7138](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7138)
+* IntuneAppControlForBusinessPolicyWindows10
+  * Deprecated resource.
+* IntuneAppControlForBusinessPolicyWindows10V2
+  * Initial release. Supersedes `IntuneAppControlForBusinessPolicyWindows10`.
+    FIXES [#7129](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7129)
+* IntuneAppProtectionPolicyAndroid
+  * Fixed an issue where configuring `ExemptedAppPackages` would fail.
+    FIXES [#7135](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7135)
+* SCDLPCompliancePolicy
+  * Added new parameters `OneDriveSharedBy`, `OneDriveSharedByMemberOf`,
+    `ExceptIfOneDriveSharedBy` and `ExceptIfOneDriveSharedByMemberOf`.
+    FIXES [#7123](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7123)
+* SCInsiderRiskPolicy
+  * Added new parameters `AIAppRiskyPrompt`, `EmailSignatureExclusionSettingsEnabled`,
+    `UserAnalyticsSettingsEnabled`, `CCPromptShields`, `CCProtectedMaterialDetection`,
+    `CCSensitiveInformationType`, `CCSupervisionRuleMatch`, `CompromisedSignInAlerts`,
+    `CompromisedUserAlerts`, `ConnectedAIAppRiskyPrompt`, `ConnectedAIAppSensitiveResponse`,
+    `CopilotRiskyPrompt`, `CopilotSensitiveResponse`, `FabricExternalDataSharingSwitchEnabled`,
+    `HighSeverityDlpRuleMatch`, `LakehouseArtifactDeleted`, `LakehouseExternalDataShareCreated`,
+    `LakehouseFileOrBlobDeleted`, `LakehouseSensitivityLabelDowngraded`,
+    `LakehouseSensitivityLabelRemoved`, `NetworkDownloadFile`, `NetworkDownloadText`,
+    `NetworkUploadFile` and `NetworkUploadText`.
+  * Fixed an issue when applying the policy.
+* VivaEngagementRoleMember
+  * Added missing permission `User.ReadBasic.All` to the resource.
+    FIXES [#7133](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7133)
+* M365DSCDocGenerator
+  * Fixed an issue where the directory for the generated documentation
+    was not found at the intended location.
+    FIXES [#7128](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7128)
+* M365DSCErrorHandler
+  * Updated temporary export save operation to use file stream writer
+    to reduce I/O usage.
+* M365DSCExportUtil
+  * Added the `VIVA` workload to the list of supported workloads to export.
+  * Fixed an issue where the organization name was not
+    replaced with `$OrganizationName` during configuration export.
+* M365DSCReport
+  * Added the option to use variable substitution during report generation
+    with `New-M365DSCDeltaReport`. Please refer to the function documentation
+    page for guidance on how to use this new functionality.
+* M365DSCReverse
+  * Updated the parallel export to use `ConcurrentDictionary` instead of
+    a synchronized hashtable to improve parallel performance.
+* M365DSCTelemetryEngine
+  * Reduced number of calls to resolve assignments and role definitions.
+* MISC
+  * Bump GitHub Action dependencies.
+  * Code cleanup in export functions.
+  * Improved export of some resources.
+  * Improved ordered instance logging for parallel export.
+  * Reduced string memory allocations during export.
+  * Updated Guid parsing with a reference to the empty Guid instance.
+* DEPENDENCIES
+  * Updated `DSCParser` to version 3.0.0.5.
+    FIXES [#7122](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7122)
+
 # 1.26.506.2
 
 * AADEntitlementManagementConnectedOrganization

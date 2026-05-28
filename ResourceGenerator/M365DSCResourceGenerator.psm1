@@ -513,7 +513,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
 
         if ($null -ne $getKeyIdentifier)
         {
-            $getParameterString = [System.Text.StringBuilder]::New()
+            $getParameterString = [System.Text.StringBuilder]::new()
             foreach ($key in $getKeyIdentifier)
             {
                 if ($getKeyIdentifier.Count -gt 1)
@@ -533,21 +533,18 @@ $($userDefinitionSettings.MOF -join "`r`n")
 
         $getDefaultParameterSet = $getCmdlet.ParameterSets | Where-Object -FilterScript { $_.Name -eq 'List' }
         $getListIdentifier = $getDefaultParameterSet.Parameters.Name
-        $getAlternativeFilterString = [System.Text.StringBuilder]::New()
+        $getAlternativeFilterString = [System.Text.StringBuilder]::new()
         if ($getListIdentifier -contains 'Filter')
         {
-            $getAlternativeFilterString.AppendLine("                    -Filter `"$alternativeKey eq '`$(`$$alternativeKey -replace `"'`", `"''`")'`" ``") | Out-Null
-            $getAlternativeFilterString.AppendLine("                        -ErrorAction SilentlyContinue | Where-Object ``") | Out-Null
-            $getAlternativeFilterString.AppendLine("                        -FilterScript {") | Out-Null
-            $getAlternativeFilterString.AppendLine("                            `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`"") | Out-Null
-            $getAlternativeFilterString.Append("                        }") | Out-Null
+            $getAlternativeFilterString.AppendLine("                    -Filter `"$alternativeKey eq '`$(`$$alternativeKey -replace `"'`", `"''`")'`" and isof('microsoft.graph.$SelectedODataType')``") | Out-Null
+            $getAlternativeFilterString.AppendLine("                        -ErrorAction SilentlyContinue") | Out-Null
         }
         else
         {
             $getAlternativeFilterString.AppendLine("                    -ErrorAction SilentlyContinue | Where-Object ``") | Out-Null
             $getAlternativeFilterString.AppendLine("                    -FilterScript {") | Out-Null
             $getAlternativeFilterString.AppendLine("                        `$_.$alternativeKey -eq `"`$(`$$alternativeKey -replace `"'`", `"''`")`" ``") | Out-Null
-            $getAlternativeFilterString.AppendLine("                        -and `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`"") | Out-Null
+            $getAlternativeFilterString.AppendLine("                        -and `$_.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`"") | Out-Null
             $getAlternativeFilterString.Append("                    }") | Out-Null
         }
         Write-TokenReplacement -Token '<AlternativeFilter>' -Value $getAlternativeFilterString.ToString() -FilePath $moduleFilePath
@@ -640,7 +637,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
 
         if ($null -ne $newKeyIdentifier)
         {
-            $newParameterString = [System.Text.StringBuilder]::New()
+            $newParameterString = [System.Text.StringBuilder]::new()
             foreach ($key in $newKeyIdentifier)
             {
                 if ($newKeyIdentifier.Count -gt 1)
@@ -680,12 +677,13 @@ $($userDefinitionSettings.MOF -join "`r`n")
             -TemplateId `$templateReferenceId$(if ($containsDeviceAndUserSettings) { " ```r`n            -ContainsDeviceAndUserSettings" })
 
         `$createParameters = @{
-            Name              = `$DisplayName
-            Description       = `$Description
-            TemplateReference = @{ templateId = `$templateReferenceId }
-            Platforms         = `$platforms
-            Technologies      = `$technologies
-            Settings          = `$settings
+            name              = `$DisplayName
+            description       = `$Description
+            templateReference = @{ templateId = `$templateReferenceId }
+            platforms         = `$platforms
+            technologies      = `$technologies
+            settings          = `$settings
+            roleScopeTagIds   = `$RoleScopeTagIds
         }`r`n
 "@
         }
@@ -700,7 +698,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
         Write-TokenReplacement -Token '<ResourceDescription>' -Value $resourceDescription -FilePath $moduleFilePath
 
         Write-TokenReplacement -Token '<FilterKey>' -Value $alternativeKey -FilePath $moduleFilePath
-        $exportGetCommand = [System.Text.StringBuilder]::New()
+        $exportGetCommand = [System.Text.StringBuilder]::new()
         if ($CmdLetNoun -like "*DeviceManagementConfigurationPolicy")
         {
             $exportGetCommand.AppendLine("        `$policyTemplateID = `"<TemplateId>`"") | Out-Null
@@ -718,7 +716,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
         {
             $exportGetCommand.AppendLine("            -ErrorAction Stop | Where-Object ``") | Out-Null
             $exportGetCommand.AppendLine("            -FilterScript {") | Out-Null
-            $exportGetCommand.AppendLine("                `$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType)'") | Out-Null
+            $exportGetCommand.AppendLine("                `$_.'@odata.type' -eq '#microsoft.graph.$($selectedODataType)'") | Out-Null
             $exportGetCommand.AppendLine("            }") | Out-Null
         }
         elseif ($CmdletNoun -like "*DeviceManagementConfigurationPolicy")
@@ -774,7 +772,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
 
         if ($null -ne $updateKeyIdentifier)
         {
-            $updateParameterString = [System.Text.StringBuilder]::New()
+            $updateParameterString = [System.Text.StringBuilder]::new()
             foreach ($key in $updateKeyIdentifier)
             {
                 if ($updateKeyIdentifier.Count -gt 1)
@@ -834,7 +832,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
 
         if ($null -ne $removeKeyIdentifier)
         {
-            $removeParameterString = [System.Text.StringBuilder]::New()
+            $removeParameterString = [System.Text.StringBuilder]::new()
             foreach ($key in $removeKeyIdentifier)
             {
                 if ($removeKeyIdentifier.Count -gt 1)
@@ -1078,10 +1076,10 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 
         #region Get ParameterBlock
         $primaryKey = ''
-        $paramContent = [System.Text.StringBuilder]::New()
-        $returnContent = [System.Text.StringBuilder]::New()
-        $exportAuthContent = [System.Text.StringBuilder]::New()
-        $mofSchemaContent = [System.Text.StringBuilder]::New()
+        $paramContent = [System.Text.StringBuilder]::new()
+        $returnContent = [System.Text.StringBuilder]::new()
+        $exportAuthContent = [System.Text.StringBuilder]::new()
+        $mofSchemaContent = [System.Text.StringBuilder]::new()
         $fakeValues = @{}
         foreach ($property in $properties)
         {
@@ -1978,7 +1976,7 @@ function Get-ComplexTypeConstructorToString
         $IsNested = $false
     )
 
-    $complexString = [System.Text.StringBuilder]::New()
+    $complexString = [System.Text.StringBuilder]::new()
     $indent = "    "
     $spacing = $indent * $IndentCount
     $propertyName = Get-StringFirstCharacterToUpper -Value $Property.Name
@@ -2275,7 +2273,7 @@ function Get-DateTypeConstructorToString
         $IsNested = $false
     )
 
-    $dateString = [System.Text.StringBuilder]::New()
+    $dateString = [System.Text.StringBuilder]::new()
     $indent = "    "
     $spacing = $indent * $IndentCount
 
@@ -2283,7 +2281,6 @@ function Get-DateTypeConstructorToString
     $propertyName = Get-StringFirstCharacterToUpper -Value $Property.Name
     $returnPropertyName = "date"+ $propertyName
     $propertyType = $Property.Type.Split(".") | Select-Object -Last 1
-
 
     if ($Property.IsRootProperty -eq $false)
     {
@@ -2346,7 +2343,7 @@ function Get-TimeTypeConstructorToString
         $IsNested = $false
     )
 
-    $timeString = [System.Text.StringBuilder]::New()
+    $timeString = [System.Text.StringBuilder]::new()
     $indent = "    "
     $spacing = $indent * $IndentCount
 
@@ -2354,7 +2351,6 @@ function Get-TimeTypeConstructorToString
     $propertyName = Get-StringFirstCharacterToUpper -Value $Property.Name
     $returnPropertyName = "time"+ $propertyName
     $propertyType = $Property.Type.Split(".") | Select-Object -Last 1
-
 
     if ($Property.IsRootProperty -eq $false)
     {
@@ -2413,7 +2409,7 @@ function Get-EnumTypeConstructorToString
         $DateFormat
     )
 
-    $enumString = [System.Text.StringBuilder]::New()
+    $enumString = [System.Text.StringBuilder]::new()
     $indent = "    "
     $spacing = $indent * $IndentCount
 
@@ -2901,7 +2897,7 @@ function Get-M365DSCHashAsString
         [System.Boolean]
         $isCmdletCall = $false
     )
-    $sb = [System.Text.StringBuilder]::New()
+    $sb = [System.Text.StringBuilder]::new()
     $keys = $Values.Keys | Sort-Object -Property $_
     foreach ($key in $keys)
     {
@@ -3505,10 +3501,10 @@ function New-M365HashTableMapping
     $convertToString = ''
     [array]$toEscape = @()
     $additionalProperties = ''
-    $complexTypeConstructor = [System.Text.StringBuilder]::New()
-    $enumTypeConstructor = [System.Text.StringBuilder]::New()
-    $dateTypeConstructor = [System.Text.StringBuilder]::New()
-    $timeTypeConstructor = [System.Text.StringBuilder]::New()
+    $complexTypeConstructor = [System.Text.StringBuilder]::new()
+    $enumTypeConstructor = [System.Text.StringBuilder]::new()
+    $dateTypeConstructor = [System.Text.StringBuilder]::new()
+    $timeTypeConstructor = [System.Text.StringBuilder]::new()
 
     $biggestParameterLength = 'CertificateThumbprint'.Length
     foreach ($property in $properties.Name)
@@ -3540,7 +3536,7 @@ function New-M365HashTableMapping
                 $complexTypeConstructor.AppendLine((Get-ComplexTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat)) | Out-Null
                 $global:ComplexList = $null
                 [Array]$complexMapping = Get-ComplexTypeMapping -Property $property -Workload $Workload
-                $complexMappingString = [System.Text.StringBuilder]::New()
+                $complexMappingString = [System.Text.StringBuilder]::new()
                 if ($complexMapping.Count -gt 1)
                 {
                     $complexMappingString.AppendLine("                `$complexMapping = @(") | Out-Null
@@ -3739,7 +3735,9 @@ function Get-ResourceStub
         'OutVariable'
         'ErrorVariable'
         'WarningAction'
+        'ProgressAction'
         'ErrorAction'
+        'ProgressAction'
         'Debug'
         'Verbose'
         'IfMatch'
@@ -3747,7 +3745,7 @@ function Get-ResourceStub
         'InformationAction'
         'PipelineVariable'
     )
-    $stub = [System.Text.StringBuilder]::New()
+    $stub = [System.Text.StringBuilder]::new()
     $version = (Get-Command -Noun $cmdletNoun | Select-Object -Unique Version | Sort-Object -Descending | Select-Object -First 1).Version.ToString()
     $commands = Get-Command -Noun $cmdletNoun | Where-Object -FilterScript { $_.Version -eq $version }
     foreach ($command in $commands)
@@ -3843,20 +3841,20 @@ function Get-SettingsCatalogSettingDefinitionValueDefinition {
         $SettingDefinitionOdataTypeBase
     )
 
-    if (-not $SettingDefinition.AdditionalProperties.valueDefinition) {
+    if (-not $SettingDefinition.valueDefinition) {
         return $null
     }
 
     $description = ""
-    $type = $SettingDefinition.AdditionalProperties.valueDefinition.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("SettingValueDefinition", "")
+    $type = $SettingDefinition.valueDefinition.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("SettingValueDefinition", "")
     switch ($type) {
         "String" {
-            $max = $SettingDefinition.AdditionalProperties.valueDefinition.maximumLength
-            $min = $SettingDefinition.AdditionalProperties.valueDefinition.minimumLength
+            $max = $SettingDefinition.valueDefinition.maximumLength
+            $min = $SettingDefinition.valueDefinition.minimumLength
             $description = "Length must be between $min and $max characters."
         } "Integer" {
-            $max = $SettingDefinition.AdditionalProperties.valueDefinition.maximumValue
-            $min = $SettingDefinition.AdditionalProperties.valueDefinition.minimumValue
+            $max = $SettingDefinition.valueDefinition.maximumValue
+            $min = $SettingDefinition.valueDefinition.minimumValue
             $description = "Value must be between $min and $max."
         }
     }
@@ -3881,7 +3879,7 @@ function Get-SettingsCatalogSettingDefinitionValueOption {
     )
 
     $options = @()
-    foreach ($option in $SettingDefinition.AdditionalProperties.options) {
+    foreach ($option in $SettingDefinition.options) {
         $options += @{
             Name        = $option.name
             Id          = $option.optionValue.value
@@ -3910,7 +3908,7 @@ function Get-SettingsCatalogSettingDefinitionDefaultValue {
     # If they are a simple setting, they have a default value
     if ($type -like "Simple*") {
         # There might be a default value specified in the setting definition
-        $value = $SettingDefinition.AdditionalProperties.defaultValue.value
+        $value = $SettingDefinition.defaultValue.value
         $nullOrEmpty = [String]::IsNullOrEmpty($value)
 
         # If the value is not null or empty, return the value, otherwise return the default value for the type
@@ -3923,8 +3921,8 @@ function Get-SettingsCatalogSettingDefinitionDefaultValue {
         }
     } else {
         # If the setting is a choice setting, the default value is the default option id
-        if (-not [String]::IsNullOrEmpty($SettingDefinition.AdditionalProperties.defaultOptionId)) {
-            $SettingDefinition.AdditionalProperties.defaultOptionId.Split("_")[-1]
+        if (-not [String]::IsNullOrEmpty($SettingDefinition.defaultOptionId)) {
+            $SettingDefinition.defaultOptionId.Split("_")[-1]
         } else {
             $null
         }
@@ -3943,24 +3941,24 @@ function Get-SettingsCatalogSettingDefinitionValueType {
     )
 
     # Type can be Choice, Simple or *Collection
-    $type = $SettingDefinition.AdditionalProperties.'@odata.type'.Replace($SettingDefinitionOdataTypeBase, "").Replace("Setting", "").Replace("Definition", "")
+    $type = $SettingDefinition.'@odata.type'.Replace($SettingDefinitionOdataTypeBase, "").Replace("Setting", "").Replace("Definition", "")
     if ($type -eq 'Choice') {
-        $type += $SettingDefinition.AdditionalProperties.options[0].optionValue.'@odata.type'.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace("SettingValue", "")
+        $type += $SettingDefinition.options[0].optionValue.'@odata.type'.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace("SettingValue", "")
     } elseif ($type -eq 'Simple') {
-        $type += $SettingDefinition.AdditionalProperties.valueDefinition.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("SettingValueDefinition", "")
+        $type += $SettingDefinition.valueDefinition.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("SettingValueDefinition", "")
     } elseif ($type -eq 'SimpleCollection') {
-        if ($null -ne $SettingDefinition.AdditionalProperties.defaultValue) {
-            $type = $type.Replace("Collection", $SettingDefinition.AdditionalProperties.defaultValue.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("SettingValue", "") + "Collection")
+        if ($null -ne $SettingDefinition.defaultValue) {
+            $type = $type.Replace("Collection", $SettingDefinition.defaultValue.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("SettingValue", "") + "Collection")
         } else {
             $type = $type.Replace("Collection", "StringCollection")
         }
     } elseif ($type -eq 'ChoiceCollection') {
-        $valueType = $SettingDefinition.AdditionalProperties.options[0].optionValue.'@odata.type'.Replace("#microsoft.graph.deviceManagementConfiguration", "").Replace("SettingValue", "")
+        $valueType = $SettingDefinition.options[0].optionValue.'@odata.type'.Replace("#microsoft.graph.deviceManagementConfiguration", "").Replace("SettingValue", "")
         $type = $type.Replace("Collection", $valueType + "Collection")
     } else {
         # Type is GroupCollection and does not have a default value to narrow down the type
         # but we can check the maximum count to determine if it is a collection or not
-        if ($SettingDefinition.AdditionalProperties.maximumCount -gt 1) {
+        if ($SettingDefinition.maximumCount -gt 1) {
             $type += 'Collection'
         }
     }
@@ -4004,7 +4002,7 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
     if ($FromRoot) {
         $RootSettingDefinitions = $SettingTemplate.SettingDefinitions | Where-Object -FilterScript {
             $_.Id -eq $SettingTemplate.SettingInstanceTemplate.SettingDefinitionId -and `
-            ($_.AdditionalProperties.dependentOn.Count -eq 0 -and $_.AdditionalProperties.options.dependentOn.Count -eq 0)
+            ($_.dependentOn.Count -eq 0 -and $_.options.dependentOn.Count -eq 0)
         }
         $settingDefinitionIdPrefix = $SettingTemplate.SettingInstanceTemplate.SettingDefinitionId
         return New-SettingsCatalogSettingDefinitionSettingsFromTemplate `
@@ -4038,13 +4036,13 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
     $childSettings = @()
     $childSettings += $SettingTemplate.SettingDefinitions | Where-Object -FilterScript {
         $_.visibility -notlike "*none*" -and
-        (($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId -contains $SettingDefinition.Id) -or
-        ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId -contains $SettingDefinition.Id))
+        (($_.dependentOn.Count -gt 0 -and $_.dependentOn.parentSettingId -contains $SettingDefinition.Id) -or
+        ($_.options.dependentOn.Count -gt 0 -and $_.options.dependentOn.parentSettingId -contains $SettingDefinition.Id))
     }
 
     $instanceName = "MSFT_MicrosoftGraphIntuneSettingsCatalog"
     if (($Level -gt 1 -and $type -like "GroupCollection*" -and $childSettings.Count -gt 1) -or
-        ($Level -eq 1 -and $type -eq "GroupCollectionCollection" -and $childSettings.Count -ge 1 -and $childSettings.AdditionalProperties.'@odata.type' -notcontains "#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition"))
+        ($Level -eq 1 -and $type -eq "GroupCollectionCollection" -and $childSettings.Count -ge 1 -and $childSettings.'@odata.type' -notcontains "#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition"))
     {
         $instanceName = $ParentInstanceName + $settingName
     }
@@ -4071,7 +4069,7 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
         ChildSettings    = $innerChildSettings
     }
 
-    if ($type -eq "GroupCollectionCollection" -and $childSettings.Count -eq 1 -and $SettingDefinition.AdditionalProperties.maximumCount -eq 1)
+    if ($type -eq "GroupCollectionCollection" -and $childSettings.Count -eq 1 -and $SettingDefinition.maximumCount -eq 1)
     {
         # Reset type and make child setting a collection
         $setting.Type = "GroupCollection"

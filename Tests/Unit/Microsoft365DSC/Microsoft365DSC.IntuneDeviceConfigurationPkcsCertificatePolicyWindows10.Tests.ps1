@@ -42,33 +42,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        subjectAlternativeNameType = "none"
-                        certificationAuthorityName = "FakeStringValue"
-                        renewalThresholdPercentage = 25
-                        subjectAlternativeNameFormatString = "FakeStringValue"
-                        certificateValidityPeriodScale = "days"
-                        keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
-                        certificationAuthority = "FakeStringValue"
-                        certificateValidityPeriodValue = 25
-                        certificateTemplateName = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.windows10PkcsCertificateProfile"
-                        subjectNameFormatString = "FakeStringValue"
-                        subjectNameFormat = "commonName"
-                        certificateStore = "user"
-                        extendedKeyUsages = @(
-                            @{
-                                objectIdentifier = "FakeStringValue"
-                                name = "FakeStringValue"
-                            }
-                        )
-                        customSubjectAlternativeNames = @(
-                            @{
-                                sanType = "none"
-                                name = "FakeStringValue"
-                            }
-                        )
-                    }
+                    subjectAlternativeNameType = "none"
+                    certificationAuthorityName = "FakeStringValue"
+                    renewalThresholdPercentage = 25
+                    subjectAlternativeNameFormatString = "FakeStringValue"
+                    certificateValidityPeriodScale = "days"
+                    keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
+                    certificationAuthority = "FakeStringValue"
+                    certificateValidityPeriodValue = 25
+                    certificateTemplateName = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.windows10PkcsCertificateProfile"
+                    subjectNameFormatString = "FakeStringValue"
+                    subjectNameFormat = "commonName"
+                    certificateStore = "user"
+                    extendedKeyUsages = @(
+                        @{
+                            objectIdentifier = "FakeStringValue"
+                            name = "FakeStringValue"
+                        }
+                    )
+                    customSubjectAlternativeNames = @(
+                        @{
+                            sanType = "none"
+                            name = "FakeStringValue"
+                        }
+                    )
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
                     id = "FakeStringValue"
@@ -177,7 +175,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

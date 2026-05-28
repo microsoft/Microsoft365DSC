@@ -62,6 +62,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -124,7 +132,6 @@ function Get-TargetResource
                     else
                     {
                         $getValue = Get-MgBetaDeviceAppManagementPolicySet -PolicySetId $getValue.Id -ExpandProperty * -ErrorAction SilentlyContinue
-
                     }
                 }
             }
@@ -151,6 +158,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
             #endregion
@@ -174,16 +183,21 @@ function Get-TargetResource
         $itemsValues = $getValue.Items
 
         $itemResult = @()
+        $Script:itemResultCache = @()
         foreach ($itemEntry in $itemsValues)
         {
             $itemValue = @{
-                dataType             = $itemEntry.AdditionalProperties.'@odata.type'
+                dataType             = $itemEntry.'@odata.type'
                 payloadId            = $itemEntry.PayloadId
                 itemType             = $itemEntry.ItemType
                 displayName          = $itemEntry.displayName
                 guidedDeploymentTags = $itemEntry.GuidedDeploymentTags
             }
             $itemResult += $itemValue
+
+            $itemValue = $itemValue.Clone()
+            $itemValue.Add('id', $itemEntry.Id)
+            $Script:itemResultCache += $itemValue
         }
 
         $results.Add('Items', $itemResult)
@@ -263,6 +277,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -299,22 +321,28 @@ function Set-TargetResource
 
         # set assignments and items to work with New-MgBetaDeviceAppManagementPolicySet command
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        $CreateParameters.Add('Assignments', $assignmentsHash)
+        $CreateParameters.Add('assignments', $assignmentsHash)
 
         $itemsHash = @()
         foreach ($item in $items)
         {
             $itemsHash += @{
-                PayloadId            = $item.payloadId
+                payloadId            = Get-PayloadIdFromItem -Item $item
                 '@odata.type'        = $item.dataType
                 guidedDeploymentTags = $item.guidedDeploymentTags
             }
         }
-        $CreateParameters.Add('Items', $itemsHash)
+        $CreateParameters.Add('items', $itemsHash)
+        $policy = New-MgBetaDeviceAppManagementPolicySet -BodyParameter $CreateParameters
 
-        Write-Verbose -Message ($CreateParameters | Out-String)
-        $policy = New-MgBetaDeviceAppManagementPolicySet @CreateParameters
-
+        if ($policy.id)
+        {
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+            $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceAppManagement/policySets/$($policy.Id)/update"
+            Invoke-MgGraphRequest -Method POST -Uri ($url) -Body @{
+                assignments = $assignmentsHash
+            }
+        }
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -329,18 +357,19 @@ function Set-TargetResource
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         #region resource generator code
-        $UpdateParameters.Add('PolicySetId', $currentInstance.Id)
-
-        Update-MgBetaDeviceAppManagementPolicySet @UpdateParameters
+        Update-MgBetaDeviceAppManagementPolicySet -PolicySetId $currentInstance.Id -BodyParameter $UpdateParameters
 
         $Url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceAppManagement/policySets/$($currentInstance.Id)/update"
-        if ($null -ne ($itemamendments = Get-ItemsAmendmentsObject -currentObjectItems $currentInstance.Items -targetObjectItems $items))
+        if ($null -ne ($itemamendments = Get-ItemsAmendmentsObject -currentObjectItems $Script:itemResultCache -targetObjectItems $items))
         {
+            Write-Verbose $($itemamendments | ConvertTo-Json -Depth 10) -Verbose
             Invoke-MgGraphRequest -Method POST -Uri $url -Body $itemamendments
         }
 
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        Invoke-MgGraphRequest -Method POST -Uri $url -Body $assignmentsHash
+        Invoke-MgGraphRequest -Method POST -Uri $url -Body @{
+            assignments = $assignmentsHash
+        }
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -414,6 +443,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -431,8 +468,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -467,6 +506,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -497,7 +544,7 @@ function Export-TargetResource
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -528,6 +575,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -564,13 +613,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Assignments', 'Items')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -595,6 +644,7 @@ function Export-TargetResource
 
 function Get-ItemsAmendmentsObject
 {
+    [CmdletBinding()]
     param
     (
         $currentObjectItems,
@@ -608,39 +658,176 @@ function Get-ItemsAmendmentsObject
         addedPolicySetItems   = @()
     }
 
+    $nullreturn = $true
     $currentObjectItems | ForEach-Object {
-
-        if (!($targetObjectItems.Payloadid -contains $_.PayloadId))
+        if (-not ($targetObjectItems.DisplayName -contains $_.DisplayName))
         {
             Write-Verbose -Message ($_.DisplayName + ' NOT present in Config Document, Removing')
-            $ItemsModificationTemplate.deletedPolicySetItems += $_.Id
+            $ItemsModificationTemplate.deletedPolicySetItems += $_.id
             $nullreturn = $false
         }
-
     }
 
     $targetObjectItems | ForEach-Object {
-
-        if (!($currentObjectItems.PayloadId -contains $_.PayloadId))
+        if (-not ($currentObjectItems.DisplayName -contains $_.DisplayName))
         {
             Write-Verbose -Message ($_.DisplayName + ' NOT already present in Policy Set, Adding')
             $ItemsModificationTemplate.addedPolicySetItems += @{
-                payloadId            = $_.payloadId
+                payloadId            = Get-PayloadIdFromItem -Item $_
                 '@odata.type'        = $_.dataType
                 guidedDeploymentTags = $_.guidedDeploymentTags
             }
             $nullreturn = $false
         }
-
     }
 
-    if (!$nullreturn)
+    if (-not $nullreturn)
     {
         return $ItemsModificationTemplate
     }
 
     return $null
-
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-PayloadIdFromItem
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $Item
+    )
+
+    switch ($Item.dataType)
+    {
+        '#microsoft.graph.windowsAutopilotDeploymentProfilePolicySetItem'
+        {
+            $object = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $Item.payloadId -ErrorAction SilentlyContinue
+            if ($null -eq $object)
+            {
+                if ($null -eq $Item.displayName)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and no displayName to fallback on"
+                }
+                $object = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -Filter "displayName eq '$($Item.displayName)'" -All -ErrorAction SilentlyContinue
+                if ($null -eq $object)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and displayName $($Item.displayName)"
+                }
+            }
+        }
+        '#microsoft.graph.deviceCompliancePolicyPolicySetItem'
+        {
+            $object = Get-MgBetaDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $Item.payloadId -ErrorAction SilentlyContinue
+            if ($null -eq $object)
+            {
+                if ($null -eq $Item.displayName)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and no displayName to fallback on"
+                }
+                $object = Get-MgBetaDeviceManagementDeviceCompliancePolicy -Filter "displayName eq '$($Item.displayName)'" -All -ErrorAction SilentlyContinue
+                if ($null -eq $object)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and displayName $($Item.displayName)"
+                }
+            }
+        }
+        '#microsoft.graph.deviceConfigurationPolicySetItem'
+        {
+            $object = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Item.payloadId -ErrorAction SilentlyContinue
+            if ($null -eq $object)
+            {
+                if ($null -eq $Item.displayName)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and no displayName to fallback on"
+                }
+                $object = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "displayName eq '$($Item.displayName)'" -All -ErrorAction SilentlyContinue
+                if ($null -eq $object)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and displayName $($Item.displayName)"
+                }
+            }
+        }
+        '#microsoft.graph.mobileAppPolicySetItem'
+        {
+            $object = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Item.payloadId -ErrorAction SilentlyContinue
+            if ($null -eq $object)
+            {
+                if ($null -eq $Item.displayName)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and no displayName to fallback on"
+                }
+                $object = Get-MgBetaDeviceAppManagementMobileApp -Filter "displayName eq '$($Item.displayName)'" -All -ErrorAction SilentlyContinue
+                if ($null -eq $object)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and displayName $($Item.displayName)"
+                }
+            }
+        }
+        '#microsoft.graph.targetedManagedAppConfigurationPolicySetItem'
+        {
+            $object = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $Item.payloadId -ErrorAction SilentlyContinue
+            if ($null -eq $object)
+            {
+                if ($null -eq $Item.displayName)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and no displayName to fallback on"
+                }
+                $object = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$($Item.displayName)'" -All -ErrorAction SilentlyContinue
+                if ($null -eq $object)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and displayName $($Item.displayName)"
+                }
+            }
+        }
+        '#microsoft.graph.managedAppProtectionPolicySetItem'
+        {
+            $object = Get-MgBetaDeviceAppManagementManagedAppPolicy -ManagedAppPolicyId $Item.payloadId -ErrorAction SilentlyContinue
+            if ($null -eq $object)
+            {
+                if ($null -eq $Item.displayName)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and no displayName to fallback on"
+                }
+                $object = Get-MgBetaDeviceAppManagementManagedAppPolicy -Filter "displayName eq '$($Item.displayName)'" -All -ErrorAction SilentlyContinue
+                if ($null -eq $object)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and displayName $($Item.displayName)"
+                }
+            }
+        }
+        '#microsoft.graph.windows10EnrollmentCompletionPageConfigurationPolicySetItem'
+        {
+            $object = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Item.payloadId -ErrorAction SilentlyContinue
+            if ($null -eq $object)
+            {
+                if ($null -eq $Item.displayName)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and no displayName to fallback on"
+                }
+                $object = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$($Item.displayName)'" -All -ErrorAction SilentlyContinue
+                if ($null -eq $object)
+                {
+                    throw "Unable to find the item with payloadId $($Item.payloadId) and displayName $($Item.displayName)"
+                }
+            }
+        }
+    }
+
+    return $object.Id
+}
+
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('PayloadId')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

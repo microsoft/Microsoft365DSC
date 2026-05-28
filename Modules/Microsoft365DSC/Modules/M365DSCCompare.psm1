@@ -5,7 +5,6 @@
     primary-key alignment, and drift detection.
 #>
 
-Initialize-M365DSCDllLoader -ErrorAction SilentlyContinue
 $Script:IsPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
 
 function Compare-M365DSCResourceState
@@ -42,6 +41,8 @@ function Compare-M365DSCResourceState
         [System.Object[]]
         $PostProcessingArgs = @()
     )
+
+    Initialize-M365DSCDllLoader -ErrorAction Stop
 
     $Global:AllDrifts = @{
         DriftInfo     = @()

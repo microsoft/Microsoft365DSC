@@ -75,6 +75,10 @@ function Get-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -99,7 +103,6 @@ function Get-TargetResource
                 -Parameters $PSBoundParameters
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
-
 
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
@@ -132,13 +135,14 @@ function Get-TargetResource
             RetentionComplianceAction    = $RetentionComplianceActionValue
             RetentionDurationDisplayHint = $RuleObject.RetentionDurationDisplayHint
             ExpirationDateOption         = $RuleObject.ExpirationDateOption
+            Ensure                       = 'Present'
             Credential                   = $Credential
             ApplicationId                = $ApplicationId
             TenantId                     = $TenantId
             CertificateThumbprint        = $CertificateThumbprint
             CertificatePath              = $CertificatePath
             CertificatePassword          = $CertificatePassword
-            Ensure                       = 'Present'
+            ManagedIdentity              = $ManagedIdentity.IsPresent
             AccessTokens                 = $AccessTokens
         }
         if (-not $associatedPolicy.TeamsPolicy)
@@ -234,6 +238,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -455,6 +463,10 @@ function Test-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -504,6 +516,10 @@ function Export-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -528,7 +544,7 @@ function Export-TargetResource
         [array]$policies = Get-RetentionCompliancePolicy -ErrorAction Stop
 
         $j = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($policies.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -566,7 +582,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -574,7 +590,7 @@ function Export-TargetResource
             }
             $j++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

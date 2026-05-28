@@ -50,6 +50,14 @@
       "cmdlets": [
         "Get-MgUser"
       ]
+    },
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-AllM365TeamsApps",
+        "Get-M365TeamsApp",
+        "Update-M365TeamsApp"
+      ]
     }
   ]
 }

@@ -63,6 +63,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -139,14 +147,14 @@ function Get-TargetResource
 
         $complexRule = [ordered]@{
             id       = $getValue.id
-            ruleType = $getValue.AdditionalProperties.'@odata.type'
+            ruleType = $getValue.'@odata.type'
         }
 
         if ($complexRule.ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyExpirationRule')
         {
             $complexExpirationRule = [ordered]@{
-                isExpirationRequired = $getValue.AdditionalProperties.isExpirationRequired
-                maximumDuration      = $getValue.AdditionalProperties.maximumDuration
+                isExpirationRequired = $getValue.isExpirationRequired
+                maximumDuration      = $getValue.maximumDuration
             }
             $complexRule.Add('ExpirationRule', $complexExpirationRule)
         }
@@ -154,11 +162,11 @@ function Get-TargetResource
         if ($complexRule.ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyNotificationRule')
         {
             $complexNotificationRule = [ordered]@{
-                isDefaultRecipientsEnabled = $getValue.AdditionalProperties.isDefaultRecipientsEnabled
-                notificationLevel          = $getValue.AdditionalProperties.notificationLevel
-                notificationRecipients     = [array]$getValue.AdditionalProperties.notificationRecipients
-                notificationType           = $getValue.AdditionalProperties.notificationType
-                recipientType              = $getValue.AdditionalProperties.recipientType
+                isDefaultRecipientsEnabled = $getValue.isDefaultRecipientsEnabled
+                notificationLevel          = $getValue.notificationLevel
+                notificationRecipients     = [array]$getValue.notificationRecipients
+                notificationType           = $getValue.notificationType
+                recipientType              = $getValue.recipientType
             }
             $complexRule.Add('NotificationRule', $complexNotificationRule)
         }
@@ -166,7 +174,7 @@ function Get-TargetResource
         if ($complexRule.ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyEnablementRule')
         {
             $complexEnablementRule = @{
-                enabledRules = [array]$getValue.AdditionalProperties.enabledRules
+                enabledRules = [array]$getValue.enabledRules
             }
             $complexRule.Add('EnablementRule', $complexEnablementRule)
         }
@@ -174,7 +182,7 @@ function Get-TargetResource
         if ($complexRule.ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyApprovalRule')
         {
             $approvalStages = @()
-            foreach ($stage in $getValue.AdditionalProperties.setting.approvalStages)
+            foreach ($stage in $getValue.setting.approvalStages)
             {
                 $primaryApprovers = @()
                 foreach ($approver in $stage.primaryApprovers)
@@ -206,11 +214,11 @@ function Get-TargetResource
                 $approvalStages += $approvalStage
             }
             $setting = [ordered]@{
-                approvalMode                     = $getValue.AdditionalProperties.setting.approvalMode
+                approvalMode                     = $getValue.setting.approvalMode
                 approvalStages                   = [array]$approvalStages
-                isApprovalRequired               = $getValue.AdditionalProperties.setting.isApprovalRequired
-                isApprovalRequiredForExtension   = $getValue.AdditionalProperties.setting.isApprovalRequiredForExtension
-                isRequestorJustificationRequired = $getValue.AdditionalProperties.setting.isRequestorJustificationRequired
+                isApprovalRequired               = $getValue.setting.isApprovalRequired
+                isApprovalRequiredForExtension   = $getValue.setting.isApprovalRequiredForExtension
+                isRequestorJustificationRequired = $getValue.setting.isRequestorJustificationRequired
             }
             $complexApprovalRule = @{
                 setting = $setting
@@ -221,8 +229,8 @@ function Get-TargetResource
         if ($complexRule.ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyAuthenticationContextRule')
         {
             $complexAuthenticationContextRule = [ordered]@{
-                claimValue = $getValue.AdditionalProperties.claimValue
-                isEnabled  = $getValue.AdditionalProperties.isEnabled
+                claimValue = $getValue.claimValue
+                isEnabled  = $getValue.isEnabled
             }
             $complexRule.Add('AuthenticationContextRule', $complexAuthenticationContextRule)
         }
@@ -242,6 +250,8 @@ function Get-TargetResource
             TenantId                  = $TenantId
             ApplicationSecret         = $ApplicationSecret
             CertificateThumbprint     = $CertificateThumbprint
+            CertificatePath           = $CertificatePath
+            CertificatePassword       = $CertificatePassword
             ManagedIdentity           = $ManagedIdentity.IsPresent
         }
 
@@ -319,6 +329,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -452,6 +470,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -469,8 +495,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -503,6 +531,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -715,7 +751,7 @@ function Export-TargetResource
                     -Credential $Credential `
                     -NoEscape @('ExpirationRule', 'NotificationRule', 'EnablementRule', 'ApprovalRule', 'AuthenticationContextRule')
 
-                $dscContent.Append($currentDSCBlock) | Out-Null
+                [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -737,4 +773,15 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('PolicyId')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

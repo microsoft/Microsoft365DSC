@@ -72,28 +72,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history'
                                 Name = 'History'
                                 OffsetUri = '/{0}/Policies/PINComplexity/History'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'device_vendor_msft_passportforwork_{tenantid}'
-                                            parentSettingId = 'device_vendor_msft_passportforwork_{tenantid}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'device_vendor_msft_passportforwork_{tenantid}'
+                                        parentSettingId = 'device_vendor_msft_passportforwork_{tenantid}'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'device_vendor_msft_passportforwork_{tenantid}'
                                 Name = '{TenantId}'
                                 OffsetUri = '/{0}'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    childIds = @(
-                                        'device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history'
-                                    )
-                                    maximumCount = 1
-                                    minimumCount = 0
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                childIds = @(
+                                    'device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history'
+                                )
+                                maximumCount = 1
+                                minimumCount = 0
                             }
                         )
                         SettingInstance = @{
@@ -101,23 +97,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '0ece2bdc-57c1-4be9-93e9-ac9c395a9c94'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history'
-                                                simpleSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                    value = '10'
-                                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            settingDefinitionId = 'device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history'
+                                            simpleSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                                value = '10'
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     },
                     @{
@@ -127,28 +121,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history'
                                 Name = 'History'
                                 OffsetUri = '/{0}/Policies/PINComplexity/History'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'user_vendor_msft_passportforwork_{tenantid}'
-                                            parentSettingId = 'user_vendor_msft_passportforwork_{tenantid}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'user_vendor_msft_passportforwork_{tenantid}'
+                                        parentSettingId = 'user_vendor_msft_passportforwork_{tenantid}'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'user_vendor_msft_passportforwork_{tenantid}'
                                 Name = '{TenantId}'
                                 OffsetUri = '/{0}'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    childIds = @(
-                                        'user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history'
-                                    )
-                                    maximumCount = 1
-                                    minimumCount = 0
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                childIds = @(
+                                    'user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history'
+                                )
+                                maximumCount = 1
+                                minimumCount = 0
                             }
                         )
                         SettingInstance = @{
@@ -156,23 +146,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '0ece2bdc-57c1-4be9-93e9-ac9c395a9c94'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history'
-                                                simpleSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                    value = '20'
-                                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            settingDefinitionId = 'user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history'
+                                            simpleSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                                value = '20'
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     }
                 )
@@ -208,12 +196,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }

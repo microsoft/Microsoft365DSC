@@ -64,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgGroupOwnerByRef -MockWith {
             }
 
-            Mock -CommandName New-MgGroupMember -MockWith {
+            Mock -CommandName New-MgGroupMemberByRef -MockWith {
             }
 
             Mock -CommandName New-MgBetaGroupOwnerByRef -MockWith {

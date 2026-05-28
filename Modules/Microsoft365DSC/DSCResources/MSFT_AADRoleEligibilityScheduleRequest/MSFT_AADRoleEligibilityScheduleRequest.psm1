@@ -74,6 +74,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -222,7 +230,7 @@ function Get-TargetResource
             }
             if ($null -ne $schedule.ScheduleInfo.Expiration.EndDateTime)
             {
-                $expirationValue.Add('endDateTime', $schedule.ScheduleInfo.Expiration.EndDateTime.ToString('yyyy-MM-ddThh:mm:ssZ'))
+                $expirationValue.Add('endDateTime', $schedule.ScheduleInfo.Expiration.EndDateTime.ToString('yyyy-MM-ddTHH:mm:ssZ'))
             }
             $ScheduleInfoValue.Add('expiration', $expirationValue)
         }
@@ -273,6 +281,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -361,6 +371,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -491,7 +509,7 @@ function Set-TargetResource
         $instanceParams.Add('action', 'AdminAssign')
         $instanceParams.Add('justification', 'AdminAssign by Microsoft365DSC')
         Write-Verbose -Message "Creating new role eligibility Schedule with parameters:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
-        New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @instanceParams
+        New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -BodyParameter $instanceParams
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -499,7 +517,7 @@ function Set-TargetResource
         $instanceParams.Add('action', 'AdminUpdate')
         $instanceParams.Add('justification', 'AdminUpdate by Microsoft365DSC')
         Write-Verbose -Message "Updating role eligibility Schedule with parameters:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
-        New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @instanceParams
+        New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -BodyParameter $instanceParams
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -507,7 +525,7 @@ function Set-TargetResource
         $instanceParams.Add('action', 'AdminRemove')
         $instanceParams.Add('justification', 'AdminRemove by Microsoft365DSC')
         Write-Verbose -Message "Removing role eligibility Schedule with parameters:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
-        New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @instanceParams
+        New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -BodyParameter $instanceParams
         if ($Script:AllSchedules.Count -gt 0)
         {
             # Remove the instance from the cached list to avoid re-processing
@@ -592,6 +610,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -658,6 +684,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -683,12 +717,11 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -All -Filter $Filter -ErrorAction SilentlyContinue
+        [array] $exportedInstances = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -All -Filter $Filter -ErrorAction SilentlyContinue
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Count -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Count -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -705,7 +738,7 @@ function Export-TargetResource
                 $Script:RoleDefinitions.Add($roleDefinition.Id, $roleDefinition)
             }
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -713,18 +746,18 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.Id
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             # Find the Principal Type
             $principalType = 'User'
             $userInfo = Get-MgBetaDirectoryObjectById -Ids $config.PrincipalId -ErrorAction SilentlyContinue
-            $principalType = $userInfo.AdditionalProperties['@odata.type'].Split('.')[2]
+            $principalType = $userInfo['@odata.type'].Split('.')[2]
             $PrincipalValue = if ($principalType -eq 'user' )
             {
-                $userInfo.AdditionalProperties['userPrincipalName']
+                $userInfo['userPrincipalName']
             }
             else
             {
-                $userInfo.AdditionalProperties['displayName']
+                $userInfo['displayName']
             }
 
             if ($null -ne $PrincipalValue)
@@ -798,13 +831,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('ScheduleInfo')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

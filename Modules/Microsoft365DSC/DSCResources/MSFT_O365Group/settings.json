@@ -62,7 +62,7 @@
         "Get-MgGroupMember",
         "Get-MgGroupOwner",
         "New-MgGroup",
-        "New-MgGroupMember",
+        "New-MgGroupMemberByRef",
         "New-MgGroupOwnerByRef",
         "Remove-MgGroup"
       ]
@@ -71,6 +71,12 @@
       "module": "Microsoft.Graph.Users",
       "cmdlets": [
         "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

@@ -36,5 +36,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsUpdateManagementPolicy",
+        "New-CsTeamsUpdateManagementPolicy",
+        "Remove-CsTeamsUpdateManagementPolicy",
+        "Set-CsTeamsUpdateManagementPolicy"
+      ]
+    }
+  ]
 }

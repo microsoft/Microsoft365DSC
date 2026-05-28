@@ -76,6 +76,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -145,13 +153,15 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
 
-        if ($null -ne $instance.AdditionalProperties)
+        if ($null -ne $instance)
         {
-            $results.Add('CustomAuthenticationExtensionType', $instance.AdditionalProperties['@odata.type'])
+            $results.Add('CustomAuthenticationExtensionType', $instance['@odata.type'])
         }
 
         if ($null -ne $instance.AuthenticationConfiguration)
@@ -167,27 +177,27 @@ function Get-TargetResource
         }
 
         $endpointConfigurationInstance = @{}
-        if ($null -ne $instance.EndPointConfiguration -and $null -ne $instance.EndPointConfiguration.AdditionalProperties)
+        if ($null -ne $instance.EndPointConfiguration -and $null -ne $instance.EndPointConfiguration)
         {
-            $endpointConfigurationInstance.Add('EndpointType', $instance.EndPointConfiguration.AdditionalProperties['@odata.type'])
+            $endpointConfigurationInstance.Add('EndpointType', $instance.EndPointConfiguration['@odata.type'])
 
             if ($endpointConfigurationInstance['EndpointType'] -eq '#microsoft.graph.httpRequestEndpoint')
             {
-                $endpointConfigurationInstance.Add('TargetUrl', $instance.EndPointConfiguration.AdditionalProperties['targetUrl'])
+                $endpointConfigurationInstance.Add('TargetUrl', $instance.EndPointConfiguration['targetUrl'])
             }
 
             if ($endpointConfigurationInstance['EndpointType'] -eq '#microsoft.graph.logicAppTriggerEndpointConfiguration')
             {
-                $endpointConfigurationInstance.Add('SubscriptionId', $instance.EndPointConfiguration.AdditionalProperties['subscriptionId'])
-                $endpointConfigurationInstance.Add('ResourceGroupName', $instance.EndPointConfiguration.AdditionalProperties['resourceGroupName'])
-                $endpointConfigurationInstance.Add('LogicAppWorkflowName', $instance.EndPointConfiguration.AdditionalProperties['logicAppWorkflowName'])
+                $endpointConfigurationInstance.Add('SubscriptionId', $instance.EndPointConfiguration['subscriptionId'])
+                $endpointConfigurationInstance.Add('ResourceGroupName', $instance.EndPointConfiguration['resourceGroupName'])
+                $endpointConfigurationInstance.Add('LogicAppWorkflowName', $instance.EndPointConfiguration['logicAppWorkflowName'])
             }
         }
 
         $ClaimsForTokenConfigurationInstance = @()
-        if ($null -ne $instance.AdditionalProperties -and $null -ne $instance.AdditionalProperties['claimsForTokenConfiguration'])
+        if ($null -ne $instance -and $null -ne $instance['claimsForTokenConfiguration'])
         {
-            foreach ($claim in $instance.AdditionalProperties['claimsForTokenConfiguration'])
+            foreach ($claim in $instance['claimsForTokenConfiguration'])
             {
                 $c = @{
                     ClaimIdInApiResponse = $claim.claimIdInApiResponse
@@ -289,6 +299,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -360,7 +378,6 @@ function Set-TargetResource
             $c = @{
                 'claimIdInApiResponse' = $claim.claimIdInApiResponse
             }
-
             $params.claimsForTokenConfiguration += $c
         }
 
@@ -373,19 +390,16 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        $params.Add('CustomAuthenticationExtensionId', $currentInstance.Id)
+        $params.Add('customAuthenticationExtensionId', $currentInstance.Id)
         $params.Remove('Id') | Out-Null
 
-        $params.Add('AdditionalProperties', @{})
-        $params['AdditionalProperties'].Add('ClaimsForTokenConfiguration', @())
-
+        $params.Add('claimsForTokenConfiguration', @())
         foreach ($claim in $setParameters['ClaimsForTokenConfiguration'])
         {
             $c = @{
                 'claimIdInApiResponse' = $claim['ClaimIdInApiResponse']
             }
-
-            $params['AdditionalProperties']['claimsForTokenConfiguration'] += $c
+            $params['claimsForTokenConfiguration'] += $c
         }
 
         Write-Verbose -Message "Updating custom authentication extension {$DisplayName} with:`r`n$(ConvertTo-Json $params -Depth 10)"
@@ -475,6 +489,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -533,6 +555,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -558,14 +588,14 @@ function Export-TargetResource
 
     try
     {
-        [array] $Script:exportedInstances = Get-MgBetaIdentityCustomAuthenticationExtension `
+        [array] $exportedInstances = Get-MgBetaIdentityCustomAuthenticationExtension `
         -All `
         -Filter $Filter `
         -ErrorAction Stop
 
         $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -573,7 +603,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -581,7 +611,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.Id
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.DisplayName
@@ -590,6 +620,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -614,14 +646,14 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('EndPointConfiguration', 'ClaimsForTokenConfiguration')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

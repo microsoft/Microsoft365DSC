@@ -75,6 +75,10 @@ function Get-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -140,13 +144,14 @@ function Get-TargetResource
                 IncludeSharePointDocumentVersions   = $IncludeSP
                 RetryOnError                        = $currentAction.Retry
                 ActionScope                         = $ScopeValue
+                Ensure                              = 'Present'
                 Credential                          = $Credential
                 ApplicationId                       = $ApplicationId
                 TenantId                            = $TenantId
                 CertificateThumbprint               = $CertificateThumbprint
                 CertificatePath                     = $CertificatePath
                 CertificatePassword                 = $CertificatePassword
-                Ensure                              = 'Present'
+                ManagedIdentity                     = $ManagedIdentity.IsPresent
                 AccessTokens                        = $AccessTokens
             }
             if ($ActionName -eq 'Preview')
@@ -286,6 +291,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -473,6 +482,10 @@ function Test-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -522,6 +535,10 @@ function Export-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -554,7 +571,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         foreach ($action in $actions)
         {
             Write-M365DSCHost -Message "        |---[$i/$($actions.Length)] $($action.Name)" -DeferWrite
@@ -576,7 +593,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -615,17 +632,18 @@ function Export-TargetResource
                 }
                 $Results = Get-TargetResource @PSBoundParameters @Params
 
-                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
+                [void]$dscContent.Append($currentDSCBlock)
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $i++
             }
             $j++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

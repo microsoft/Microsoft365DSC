@@ -199,6 +199,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -266,25 +274,25 @@ function Get-TargetResource
 
         #region resource generator code
         $complexInstallationSchedule = [ordered]@{}
-        if ($null -ne $getValue.AdditionalProperties.installationSchedule.activeHoursEnd)
+        if ($null -ne $getValue.installationSchedule.activeHoursEnd)
         {
-            $complexInstallationSchedule.Add('ActiveHoursEnd', ([TimeSpan]$getValue.AdditionalProperties.installationSchedule.activeHoursEnd).ToString())
+            $complexInstallationSchedule.Add('ActiveHoursEnd', ([TimeSpan]$getValue.installationSchedule.activeHoursEnd).ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.installationSchedule.activeHoursStart)
+        if ($null -ne $getValue.installationSchedule.activeHoursStart)
         {
-            $complexInstallationSchedule.Add('ActiveHoursStart', ([TimeSpan]$getValue.AdditionalProperties.installationSchedule.activeHoursStart).ToString())
+            $complexInstallationSchedule.Add('ActiveHoursStart', ([TimeSpan]$getValue.installationSchedule.activeHoursStart).ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.installationSchedule.scheduledInstallDay)
+        if ($null -ne $getValue.installationSchedule.scheduledInstallDay)
         {
-            $complexInstallationSchedule.Add('ScheduledInstallDay', $getValue.AdditionalProperties.installationSchedule.scheduledInstallDay.ToString())
+            $complexInstallationSchedule.Add('ScheduledInstallDay', $getValue.installationSchedule.scheduledInstallDay.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.installationSchedule.scheduledInstallTime)
+        if ($null -ne $getValue.installationSchedule.scheduledInstallTime)
         {
-            $complexInstallationSchedule.Add('ScheduledInstallTime', ([TimeSpan]$getValue.AdditionalProperties.installationSchedule.scheduledInstallTime).ToString())
+            $complexInstallationSchedule.Add('ScheduledInstallTime', ([TimeSpan]$getValue.installationSchedule.scheduledInstallTime).ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.installationSchedule.'@odata.type')
+        if ($null -ne $getValue.installationSchedule.'@odata.type')
         {
-            $complexInstallationSchedule.Add('odataType', $getValue.AdditionalProperties.installationSchedule.'@odata.type'.ToString())
+            $complexInstallationSchedule.Add('odataType', $getValue.installationSchedule.'@odata.type'.ToString())
         }
         if ($complexInstallationSchedule.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -294,130 +302,130 @@ function Get-TargetResource
 
         #region resource generator code
         $enumAutomaticUpdateMode = $null
-        if ($null -ne $getValue.AdditionalProperties.automaticUpdateMode)
+        if ($null -ne $getValue.automaticUpdateMode)
         {
-            $enumAutomaticUpdateMode = $getValue.AdditionalProperties.automaticUpdateMode.ToString()
+            $enumAutomaticUpdateMode = $getValue.automaticUpdateMode.ToString()
         }
 
         $enumAutoRestartNotificationDismissal = $null
-        if ($null -ne $getValue.AdditionalProperties.autoRestartNotificationDismissal)
+        if ($null -ne $getValue.autoRestartNotificationDismissal)
         {
-            $enumAutoRestartNotificationDismissal = $getValue.AdditionalProperties.autoRestartNotificationDismissal.ToString()
+            $enumAutoRestartNotificationDismissal = $getValue.autoRestartNotificationDismissal.ToString()
         }
 
         $enumBusinessReadyUpdatesOnly = $null
-        if ($null -ne $getValue.AdditionalProperties.businessReadyUpdatesOnly)
+        if ($null -ne $getValue.businessReadyUpdatesOnly)
         {
-            $enumBusinessReadyUpdatesOnly = $getValue.AdditionalProperties.businessReadyUpdatesOnly.ToString()
+            $enumBusinessReadyUpdatesOnly = $getValue.businessReadyUpdatesOnly.ToString()
         }
 
         $enumDeliveryOptimizationMode = $null
-        if ($null -ne $getValue.AdditionalProperties.deliveryOptimizationMode)
+        if ($null -ne $getValue.deliveryOptimizationMode)
         {
-            $enumDeliveryOptimizationMode = $getValue.AdditionalProperties.deliveryOptimizationMode.ToString()
+            $enumDeliveryOptimizationMode = $getValue.deliveryOptimizationMode.ToString()
         }
 
         $enumPrereleaseFeatures = $null
-        if ($null -ne $getValue.AdditionalProperties.prereleaseFeatures)
+        if ($null -ne $getValue.prereleaseFeatures)
         {
-            $enumPrereleaseFeatures = $getValue.AdditionalProperties.prereleaseFeatures.ToString()
+            $enumPrereleaseFeatures = $getValue.prereleaseFeatures.ToString()
         }
 
         $enumUpdateNotificationLevel = $null
-        if ($null -ne $getValue.AdditionalProperties.updateNotificationLevel)
+        if ($null -ne $getValue.updateNotificationLevel)
         {
-            $enumUpdateNotificationLevel = $getValue.AdditionalProperties.updateNotificationLevel.ToString()
+            $enumUpdateNotificationLevel = $getValue.updateNotificationLevel.ToString()
         }
 
         $enumUpdateWeeks = $null
-        if ($null -ne $getValue.AdditionalProperties.updateWeeks)
+        if ($null -ne $getValue.updateWeeks)
         {
-            $enumUpdateWeeks = $getValue.AdditionalProperties.updateWeeks.ToString()
+            $enumUpdateWeeks = $getValue.updateWeeks.ToString()
         }
 
         $enumUserPauseAccess = $null
-        if ($null -ne $getValue.AdditionalProperties.userPauseAccess)
+        if ($null -ne $getValue.userPauseAccess)
         {
-            $enumUserPauseAccess = $getValue.AdditionalProperties.userPauseAccess.ToString()
+            $enumUserPauseAccess = $getValue.userPauseAccess.ToString()
         }
 
         $enumUserWindowsUpdateScanAccess = $null
-        if ($null -ne $getValue.AdditionalProperties.userWindowsUpdateScanAccess)
+        if ($null -ne $getValue.userWindowsUpdateScanAccess)
         {
-            $enumUserWindowsUpdateScanAccess = $getValue.AdditionalProperties.userWindowsUpdateScanAccess.ToString()
+            $enumUserWindowsUpdateScanAccess = $getValue.userWindowsUpdateScanAccess.ToString()
         }
         #endregion
 
         #region resource generator code
         $dateFeatureUpdatesPauseExpiryDateTime = $null
-        if ($null -ne $getValue.AdditionalProperties.featureUpdatesPauseExpiryDateTime)
+        if ($null -ne $getValue.featureUpdatesPauseExpiryDateTime)
         {
-            $dateFeatureUpdatesPauseExpiryDateTime = ([DateTimeOffset]$getValue.AdditionalProperties.featureUpdatesPauseExpiryDateTime).ToString('o')
+            $dateFeatureUpdatesPauseExpiryDateTime = ([DateTimeOffset]$getValue.featureUpdatesPauseExpiryDateTime).ToString('o')
         }
 
         $dateFeatureUpdatesPauseStartDate = $null
-        if ($null -ne $getValue.AdditionalProperties.featureUpdatesPauseStartDate)
+        if ($null -ne $getValue.featureUpdatesPauseStartDate)
         {
-            $dateFeatureUpdatesPauseStartDate = ([DateTime]$getValue.AdditionalProperties.featureUpdatesPauseStartDate).ToString('o')
+            $dateFeatureUpdatesPauseStartDate = ([DateTime]$getValue.featureUpdatesPauseStartDate).ToString('o')
         }
 
         $dateFeatureUpdatesRollbackStartDateTime = $null
-        if ($null -ne $getValue.AdditionalProperties.featureUpdatesRollbackStartDateTime)
+        if ($null -ne $getValue.featureUpdatesRollbackStartDateTime)
         {
-            $dateFeatureUpdatesRollbackStartDateTime = ([DateTimeOffset]$getValue.AdditionalProperties.featureUpdatesRollbackStartDateTime).ToString('o')
+            $dateFeatureUpdatesRollbackStartDateTime = ([DateTimeOffset]$getValue.featureUpdatesRollbackStartDateTime).ToString('o')
         }
 
         $dateQualityUpdatesPauseExpiryDateTime = $null
-        if ($null -ne $getValue.AdditionalProperties.qualityUpdatesPauseExpiryDateTime)
+        if ($null -ne $getValue.qualityUpdatesPauseExpiryDateTime)
         {
-            $dateQualityUpdatesPauseExpiryDateTime = ([DateTimeOffset]$getValue.AdditionalProperties.qualityUpdatesPauseExpiryDateTime).ToString('o')
+            $dateQualityUpdatesPauseExpiryDateTime = ([DateTimeOffset]$getValue.qualityUpdatesPauseExpiryDateTime).ToString('o')
         }
 
         $dateQualityUpdatesPauseStartDate = $null
-        if ($null -ne $getValue.AdditionalProperties.qualityUpdatesPauseStartDate)
+        if ($null -ne $getValue.qualityUpdatesPauseStartDate)
         {
-            $dateQualityUpdatesPauseStartDate = ([DateTime]$getValue.AdditionalProperties.qualityUpdatesPauseStartDate).ToString('o')
+            $dateQualityUpdatesPauseStartDate = ([DateTime]$getValue.qualityUpdatesPauseStartDate).ToString('o')
         }
 
         $dateQualityUpdatesRollbackStartDateTime = $null
-        if ($null -ne $getValue.AdditionalProperties.qualityUpdatesRollbackStartDateTime)
+        if ($null -ne $getValue.qualityUpdatesRollbackStartDateTime)
         {
-            $dateQualityUpdatesRollbackStartDateTime = ([DateTimeOffset]$getValue.AdditionalProperties.qualityUpdatesRollbackStartDateTime).ToString('o')
+            $dateQualityUpdatesRollbackStartDateTime = ([DateTimeOffset]$getValue.qualityUpdatesRollbackStartDateTime).ToString('o')
         }
         #endregion
 
         $results = @{
             #region resource generator code
-            AllowWindows11Upgrade                   = $getValue.AdditionalProperties.allowWindows11Upgrade
+            AllowWindows11Upgrade                   = $getValue.allowWindows11Upgrade
             AutomaticUpdateMode                     = $enumAutomaticUpdateMode
             AutoRestartNotificationDismissal        = $enumAutoRestartNotificationDismissal
             BusinessReadyUpdatesOnly                = $enumBusinessReadyUpdatesOnly
-            DeadlineForFeatureUpdatesInDays         = $getValue.AdditionalProperties.deadlineForFeatureUpdatesInDays
-            DeadlineForQualityUpdatesInDays         = $getValue.AdditionalProperties.deadlineForQualityUpdatesInDays
-            DeadlineGracePeriodInDays               = $getValue.AdditionalProperties.deadlineGracePeriodInDays
+            DeadlineForFeatureUpdatesInDays         = $getValue.deadlineForFeatureUpdatesInDays
+            DeadlineForQualityUpdatesInDays         = $getValue.deadlineForQualityUpdatesInDays
+            DeadlineGracePeriodInDays               = $getValue.deadlineGracePeriodInDays
             DeliveryOptimizationMode                = $enumDeliveryOptimizationMode
-            DriversExcluded                         = $getValue.AdditionalProperties.driversExcluded
-            EngagedRestartDeadlineInDays            = $getValue.AdditionalProperties.engagedRestartDeadlineInDays
-            EngagedRestartSnoozeScheduleInDays      = $getValue.AdditionalProperties.engagedRestartSnoozeScheduleInDays
-            EngagedRestartTransitionScheduleInDays  = $getValue.AdditionalProperties.engagedRestartTransitionScheduleInDays
-            FeatureUpdatesDeferralPeriodInDays      = $getValue.AdditionalProperties.featureUpdatesDeferralPeriodInDays
-            FeatureUpdatesPaused                    = $getValue.AdditionalProperties.featureUpdatesPaused
+            DriversExcluded                         = $getValue.driversExcluded
+            EngagedRestartDeadlineInDays            = $getValue.engagedRestartDeadlineInDays
+            EngagedRestartSnoozeScheduleInDays      = $getValue.engagedRestartSnoozeScheduleInDays
+            EngagedRestartTransitionScheduleInDays  = $getValue.engagedRestartTransitionScheduleInDays
+            FeatureUpdatesDeferralPeriodInDays      = $getValue.featureUpdatesDeferralPeriodInDays
+            FeatureUpdatesPaused                    = $getValue.featureUpdatesPaused
             FeatureUpdatesPauseExpiryDateTime       = $dateFeatureUpdatesPauseExpiryDateTime
             FeatureUpdatesPauseStartDate            = $dateFeatureUpdatesPauseStartDate
             FeatureUpdatesRollbackStartDateTime     = $dateFeatureUpdatesRollbackStartDateTime
-            FeatureUpdatesRollbackWindowInDays      = $getValue.AdditionalProperties.featureUpdatesRollbackWindowInDays
+            FeatureUpdatesRollbackWindowInDays      = $getValue.featureUpdatesRollbackWindowInDays
             InstallationSchedule                    = $complexInstallationSchedule
-            MicrosoftUpdateServiceAllowed           = $getValue.AdditionalProperties.microsoftUpdateServiceAllowed
-            PostponeRebootUntilAfterDeadline        = $getValue.AdditionalProperties.postponeRebootUntilAfterDeadline
+            MicrosoftUpdateServiceAllowed           = $getValue.microsoftUpdateServiceAllowed
+            PostponeRebootUntilAfterDeadline        = $getValue.postponeRebootUntilAfterDeadline
             PrereleaseFeatures                      = $enumPrereleaseFeatures
-            QualityUpdatesDeferralPeriodInDays      = $getValue.AdditionalProperties.qualityUpdatesDeferralPeriodInDays
-            QualityUpdatesPaused                    = $getValue.AdditionalProperties.qualityUpdatesPaused
+            QualityUpdatesDeferralPeriodInDays      = $getValue.qualityUpdatesDeferralPeriodInDays
+            QualityUpdatesPaused                    = $getValue.qualityUpdatesPaused
             QualityUpdatesPauseExpiryDateTime       = $dateQualityUpdatesPauseExpiryDateTime
             QualityUpdatesPauseStartDate            = $dateQualityUpdatesPauseStartDate
             QualityUpdatesRollbackStartDateTime     = $dateQualityUpdatesRollbackStartDateTime
-            ScheduleImminentRestartWarningInMinutes = $getValue.AdditionalProperties.scheduleImminentRestartWarningInMinutes
-            ScheduleRestartWarningInHours           = $getValue.AdditionalProperties.scheduleRestartWarningInHours
-            SkipChecksBeforeRestart                 = $getValue.AdditionalProperties.skipChecksBeforeRestart
+            ScheduleImminentRestartWarningInMinutes = $getValue.scheduleImminentRestartWarningInMinutes
+            ScheduleRestartWarningInHours           = $getValue.scheduleRestartWarningInHours
+            SkipChecksBeforeRestart                 = $getValue.skipChecksBeforeRestart
             UpdateNotificationLevel                 = $enumUpdateNotificationLevel
             UpdateWeeks                             = $enumUpdateWeeks
             UserPauseAccess                         = $enumUserPauseAccess
@@ -432,6 +440,8 @@ function Get-TargetResource
             TenantId                                = $TenantId
             ApplicationSecret                       = $ApplicationSecret
             CertificateThumbprint                   = $CertificateThumbprint
+            CertificatePath                         = $CertificatePath
+            CertificatePassword                     = $CertificatePassword
             ManagedIdentity                         = $ManagedIdentity.IsPresent
             AccessTokens                            = $AccessTokens
             #endregion
@@ -657,6 +667,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -678,19 +696,18 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Window Update For Business Ring Update Profile for Windows10 with DisplayName {$DisplayName}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-
-        $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
+        $boundParameters.Remove('Assignments') | Out-Null
+        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
         $createParameters.Remove('Id') | Out-Null
 
         #region resource generator code
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.windowsUpdateForBusinessConfiguration')
-        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $createParameters.Add('@odata.type', '#microsoft.graph.windowsUpdateForBusinessConfiguration')
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $createParameters
         #endregion
         #region new Intune assignment management
         $intuneAssignments = @()
@@ -709,17 +726,15 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Window Update For Business Ring Update Profile for Windows10 with Id {$($currentInstance.Id)}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-
-        $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-        $UpdateParameters.Remove('Id') | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
+        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
+        $updateParameters.Remove('Id') | Out-Null
 
         #region resource generator code
-        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windowsUpdateForBusinessConfiguration')
+        $updateParameters.Add('@odata.type', '#microsoft.graph.windowsUpdateForBusinessConfiguration')
         Update-MgBetaDeviceManagementDeviceConfiguration `
             -DeviceConfigurationId $currentInstance.id `
-            -BodyParameter $UpdateParameters
+            -BodyParameter $updateParameters
         #endregion
         #region new Intune assignment management
         $currentAssignments = @()
@@ -732,7 +747,7 @@ function Set-TargetResource
         }
         foreach ($assignment in $intuneAssignments)
         {
-            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type' }))
+            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.groupId -eq $assignment.Target.groupId -and $_.Target.'@odata.type' -eq $assignment.Target.'@odata.type' }))
             {
                 New-MgBetaDeviceManagementDeviceConfigurationAssignment `
                     -DeviceConfigurationId $currentInstance.id `
@@ -740,7 +755,7 @@ function Set-TargetResource
             }
             else
             {
-                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type') }
+                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.groupId -eq $assignment.Target.groupId -and $_.Target.'@odata.type' -eq $assignment.Target.'@odata.type') }
             }
         }
         if ($currentAssignments.Count -gt 0)
@@ -961,6 +976,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1014,6 +1037,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1040,15 +1071,20 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsUpdateForBusinessConfiguration' `
+        $baseFilter = "isof('microsoft.graph.windowsUpdateForBusinessConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -1079,6 +1115,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -1119,13 +1157,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('InstallationSchedule', 'Assignments')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -75,92 +75,84 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'com.apple.mcx.filevault2_deferdontaskatuserlogout'
                                 Name = 'DeferDontAskAtUserLogout'
                                 OffsetUri = 'DeferDontAskAtUserLogout'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'Disabled'
-                                            itemId = 'com.apple.mcx.filevault2_deferdontaskatuserlogout_false'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
-                                                    parentSettingId = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'false'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'Disabled'
+                                        itemId = 'com.apple.mcx.filevault2_deferdontaskatuserlogout_false'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
+                                                parentSettingId = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'false'
                                         }
-                                        @{
-                                            name = 'Enabled'
-                                            itemId = 'com.apple.mcx.filevault2_deferdontaskatuserlogout_true'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
-                                                    parentSettingId = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'true'
+                                    }
+                                    @{
+                                        name = 'Enabled'
+                                        itemId = 'com.apple.mcx.filevault2_deferdontaskatuserlogout_true'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
+                                                parentSettingId = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'true'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'com.apple.mcx.filevault2_deferforceatuserloginmaxbypassattempts'
                                 Name = 'DeferForceAtUserLoginMaxBypassAttempts'
                                 OffsetUri = 'DeferForceAtUserLoginMaxBypassAttempts'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
-                                            parentSettingId = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
+                                        parentSettingId = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'com.apple.mcx.filevault2_defer'
                                 Name = 'Defer'
                                 OffsetUri = 'Defer'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'Enabled'
-                                            itemId = 'com.apple.mcx.filevault2_defer_true'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
-                                                    parentSettingId = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'true'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'Enabled'
+                                        itemId = 'com.apple.mcx.filevault2_defer_true'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
+                                                parentSettingId = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'true'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'com.apple.mcx.filevault2_com.apple.mcx.filevault2'
                                 Name = 'com.apple.MCX.FileVault2'
                                 OffsetUri = 'com.apple.MCX.FileVault2'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    minimumCount = 0
-                                    maximumCount = 1
-                                    childIds = @(
-                                        'com.apple.mcx.filevault2_defer'
-                                        'com.apple.mcx.filevault2_deferdontaskatuserlogout'
-                                        'com.apple.mcx.filevault2_deferforceatuserloginmaxbypassattempts'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                minimumCount = 0
+                                maximumCount = 1
+                                childIds = @(
+                                    'com.apple.mcx.filevault2_defer'
+                                    'com.apple.mcx.filevault2_deferdontaskatuserlogout'
+                                    'com.apple.mcx.filevault2_deferforceatuserloginmaxbypassattempts'
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -168,41 +160,39 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '0e20e909-e28a-41a1-8541-5aadd4714d7d'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'com.apple.mcx.filevault2_defer'
-                                                choiceSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                    children = @()
-                                                    value = 'com.apple.mcx.filevault2_defer_true'
-                                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'com.apple.mcx.filevault2_defer'
+                                            choiceSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                children = @()
+                                                value = 'com.apple.mcx.filevault2_defer_true'
                                             }
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'com.apple.mcx.filevault2_deferdontaskatuserlogout'
-                                                choiceSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                    children = @()
-                                                    value = 'com.apple.mcx.filevault2_deferdontaskatuserlogout_false'
-                                                }
+                                        }
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'com.apple.mcx.filevault2_deferdontaskatuserlogout'
+                                            choiceSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                children = @()
+                                                value = 'com.apple.mcx.filevault2_deferdontaskatuserlogout_false'
                                             }
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'com.apple.mcx.filevault2_deferforceatuserloginmaxbypassattempts'
-                                                simpleSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                    value = 5
-                                                }
+                                        }
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            settingDefinitionId = 'com.apple.mcx.filevault2_deferforceatuserloginmaxbypassattempts'
+                                            simpleSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                                value = 5
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     }
                     @{
@@ -212,29 +202,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'com.apple.security.fderecoverykeyescrow_com.apple.security.fderecoverykeyescrow'
                                 Name = 'com.apple.security.FDERecoveryKeyEscrow'
                                 OffsetUri = 'com.apple.security.FDERecoveryKeyEscrow'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    minimumCount = 0
-                                    maximumCount = 1
-                                    childIds = @(
-                                        'com.apple.security.fderecoverykeyescrow_location'
-                                        'com.apple.security.fderecoverykeyescrow_devicekey'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                minimumCount = 0
+                                maximumCount = 1
+                                childIds = @(
+                                    'com.apple.security.fderecoverykeyescrow_location'
+                                    'com.apple.security.fderecoverykeyescrow_devicekey'
+                                )
                             }
                             @{
                                 Id = 'com.apple.security.fderecoverykeyescrow_location'
                                 Name = 'Location'
                                 OffsetUri = 'Location'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'com.apple.security.fderecoverykeyescrow_com.apple.security.fderecoverykeyescrow'
-                                            parentSettingId = 'com.apple.security.fderecoverykeyescrow_com.apple.security.fderecoverykeyescrow'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'com.apple.security.fderecoverykeyescrow_com.apple.security.fderecoverykeyescrow'
+                                        parentSettingId = 'com.apple.security.fderecoverykeyescrow_com.apple.security.fderecoverykeyescrow'
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -242,23 +228,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '6f9cb7be-2e50-408a-b24b-6e1387a07fc7'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'com.apple.security.fderecoverykeyescrow_location'
-                                                simpleSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                    value = 'FakeStringValue'
-                                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            settingDefinitionId = 'com.apple.security.fderecoverykeyescrow_location'
+                                            simpleSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                value = 'FakeStringValue'
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     }
                 )
@@ -285,12 +269,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }

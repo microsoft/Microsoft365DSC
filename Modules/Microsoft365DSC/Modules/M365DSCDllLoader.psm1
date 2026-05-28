@@ -5,20 +5,14 @@
 .DESCRIPTION
     This module loads all of the Microsoft365DSC.*.dll at module import time.
     It provides fail-fast validation of .NET Framework version requirements and
-    exports initialization status for diagnostics.
+    ensures that the necessary dll files are present and can be loaded successfully.
 
 .NOTES
     The dll loader requires .NET Framework 4.7.2 or higher.
     The DLLs are located in the Dependencies/Assemblies directory relative to the module root.
 #>
 
-$Script:AcceleratorLoaded = $false
-$Script:AcceleratorAssembly = $null
-$Script:AcceleratorLoadError = $null
-
-$Script:ConverterLoaded = $false
-$Script:ConverterAssembly = $null
-$Script:ConverterLoadError = $null
+$Script:AssembliesInitialized = $false
 
 <#
 .SYNOPSIS
@@ -26,27 +20,25 @@ $Script:ConverterLoadError = $null
 
 .DESCRIPTION
     Validates .NET Framework version requirements and loads the compiled C# dll files.
-    This function is called automatically during module import but can be invoked manually
-    for troubleshooting or reloading scenarios.
-
-.PARAMETER Force
-    Forces reloading of the dll files even if already loaded.
+    This function is called by functions that require access to the Microsoft365DSC C# dll files.
 
 .EXAMPLE
     PS> Initialize-M365DSCDllLoader
     Loads the dll files with standard version checks.
-.EXAMPLE
-    PS> Initialize-M365DSCDllLoader -Force
-    Forces reload of the dll files.
 
 .OUTPUTS
-    System.Collections.Hashtable with keys: Loaded (bool), Assembly (Reflection.Assembly), Error (string)
+    None.
 #>
 function Initialize-M365DSCDllLoader
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
     param()
+
+    if ($Script:AssembliesInitialized)
+    {
+        Write-Verbose "Microsoft365DSC C# dll files are already initialized."
+        return
+    }
 
     try
     {
@@ -59,7 +51,7 @@ function Initialize-M365DSCDllLoader
             $versionString = $netFrameworkVersion.Version
             $errorMessage = ".NET Framework 4.7.2 or higher is required for Microsoft365DSC C# dll files. Current version: $versionString (Release: $releaseKey). Please install .NET Framework 4.7.2+ from https://dotnet.microsoft.com/download/dotnet-framework"
 
-            Write-Error -Message $errorMessage -ErrorAction Stop
+            throw $errorMessage
         }
 
         Write-Verbose -Message ".NET Framework version check passed (Release: $releaseKey)"
@@ -83,14 +75,7 @@ function Initialize-M365DSCDllLoader
                 $errorMessage = "$dllName not found at: $dllPath. Please run Utilities/Build-DllFiles.ps1 to build the dll file."
                 Write-Warning $errorMessage
 
-                $Script:AcceleratorLoaded = $false
-                $Script:AcceleratorLoadError = $errorMessage
-
-                return @{
-                    Loaded = $false
-                    Assembly = $null
-                    Error = $errorMessage
-                }
+                $Script:AssembliesInitialized = $false
             }
 
             Write-Verbose -Message "Loading dll from: $dllPath"
@@ -104,30 +89,13 @@ function Initialize-M365DSCDllLoader
             $loadedAssemblies += Add-Type -Path $dllPath -PassThru -ErrorAction Stop
         }
 
-        # Verify expected types are available
-        $expectedTypes = @(
-            'Microsoft365DSC.Compare.ComplexObjectComparer'
-            'Microsoft365DSC.Connection.ConnectionHelper'
-            'Microsoft365DSC.Converter.ComplexObjectConverter'
-            'Microsoft365DSC.Converter.SimpleObjectConverter'
-            'Microsoft365DSC.Utilities.Utilities'
-        )
-
-        foreach ($typeName in $expectedTypes)
+        foreach ($assembly in $loadedAssemblies)
         {
-            $currentAssemblies = [AppDomain]::CurrentDomain.GetAssemblies().Where({ $_.FullName -like "Microsoft365DSC.*" })
-            $type = $currentAssemblies | ForEach-Object { $_.GetTypes() } | Where-Object { $_.FullName -eq $typeName }
-            if ($null -eq $type)
-            {
-                Write-Warning "Expected type not found in assembly: $typeName"
-            }
-            else
-            {
-                Write-Verbose -Message "Verified accelerator type: $typeName"
-            }
+            Write-Verbose -Message "Loaded assembly: $($assembly.FullName)"
         }
 
         Write-Verbose -Message "Microsoft365DSC C# dll files loaded successfully."
+        $Script:AssembliesInitialized = $true
     }
     catch
     {

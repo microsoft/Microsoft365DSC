@@ -104,6 +104,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -145,10 +153,9 @@ function Get-TargetResource
             #region resource generator code
             if ($null -eq $getValue)
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosWiFiConfiguration' `
-                }
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All `
+                    -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.iosWiFiConfiguration') and not isof('microsoft.graph.iosEnterpriseWiFiConfiguration')" `
+                    -ErrorAction SilentlyContinue
             }
             #endregion
 
@@ -170,24 +177,26 @@ function Get-TargetResource
             Id                             = $getValue.Id
             Description                    = $getValue.Description
             DisplayName                    = $getValue.DisplayName
-            ConnectAutomatically           = $getValue.AdditionalProperties.connectAutomatically
-            ConnectWhenNetworkNameIsHidden = $getValue.AdditionalProperties.connectWhenNetworkNameIsHidden
-            DisableMacAddressRandomization = $getValue.AdditionalProperties.disableMacAddressRandomization
-            NetworkName                    = $getValue.AdditionalProperties.networkName
-            PreSharedKey                   = $getValue.AdditionalProperties.preSharedKey
-            ProxyAutomaticConfigurationUrl = $getValue.AdditionalProperties.proxyAutomaticConfigurationUrl
-            ProxyManualAddress             = $getValue.AdditionalProperties.proxyManualAddress
-            ProxyManualPort                = $getValue.AdditionalProperties.proxyManualPort
-            ProxySettings                  = $getValue.AdditionalProperties.proxySettings
+            ConnectAutomatically           = $getValue.connectAutomatically
+            ConnectWhenNetworkNameIsHidden = $getValue.connectWhenNetworkNameIsHidden
+            DisableMacAddressRandomization = $getValue.disableMacAddressRandomization
+            NetworkName                    = $getValue.networkName
+            PreSharedKey                   = $getValue.preSharedKey
+            ProxyAutomaticConfigurationUrl = $getValue.proxyAutomaticConfigurationUrl
+            ProxyManualAddress             = $getValue.proxyManualAddress
+            ProxyManualPort                = $getValue.proxyManualPort
+            ProxySettings                  = $getValue.proxySettings
             RoleScopeTagIds                = $getValue.RoleScopeTagIds
-            Ssid                           = $getValue.AdditionalProperties.ssid
-            WiFiSecurityType               = $getValue.AdditionalProperties.wiFiSecurityType
+            Ssid                           = $getValue.ssid
+            WiFiSecurityType               = $getValue.wiFiSecurityType
             Ensure                         = 'Present'
             Credential                     = $Credential
             ApplicationId                  = $ApplicationId
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
+            CertificatePath                = $CertificatePath
+            CertificatePassword            = $CertificatePassword
             ManagedIdentity                = $ManagedIdentity.IsPresent
             AccessTokens                   = $AccessTokens
         }
@@ -319,6 +328,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -355,40 +372,18 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Wifi Configuration Policy for iOS with DisplayName {$DisplayName}"
-        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
+        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $BoundParameters
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Assignments') | Out-Null
         $CreateParameters.Remove('ForcePreSharedKeyUpdate') | Out-Null
-
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
-        foreach ($key in $AdditionalProperties.keys)
+        if ($CreateParameters['proxyAutomaticConfigurationUrl'] -eq '')
         {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
-                $CreateParameters.Remove($keyName) | Out-Null
-            }
-        }
-
-        foreach ($key in ($CreateParameters.Clone()).Keys)
-        {
-            if ($CreateParameters[$key].GetType().Fullname -like '*CimInstance*')
-            {
-                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
-            }
-        }
-
-        if ($AdditionalProperties)
-        {
-            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '')
-            {
-                $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
-            }
-            $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
+            $CreateParameters['proxyAutomaticConfigurationUrl'] = $null
         }
 
         #region resource generator code
-        $policy = New-MgBetaDeviceManagementDeviceConfiguration @CreateParameters
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.iosWiFiConfiguration')
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.Id)
@@ -403,40 +398,19 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the Intune Wifi Configuration Policy for iOS with Id {$Id} and DisplayName {$DisplayName}"
 
-        $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
+        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $BoundParameters
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Assignments') | Out-Null
         $UpdateParameters.Remove('ForcePreSharedKeyUpdate') | Out-Null
 
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
-        foreach ($key in $AdditionalProperties.keys)
+        if ($UpdateParameters['proxyAutomaticConfigurationUrl'] -eq '')
         {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
-                $UpdateParameters.Remove($keyName)
-            }
-        }
-
-        foreach ($key in ($UpdateParameters.Clone()).Keys)
-        {
-            if ($UpdateParameters[$key].GetType().Fullname -like '*CimInstance*')
-            {
-                $UpdateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
-            }
-        }
-
-        if ($AdditionalProperties)
-        {
-            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '')
-            {
-                $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
-            }
-            $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
+            $UpdateParameters['proxyAutomaticConfigurationUrl'] = $null
         }
 
         #region resource generator code
-        Update-MgBetaDeviceManagementDeviceConfiguration @UpdateParameters `
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.iosWiFiConfiguration')
+        Update-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
@@ -557,6 +531,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -617,6 +599,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -644,15 +634,20 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosWiFiConfiguration' `
+        $baseFilter = "isof('microsoft.graph.iosWiFiConfiguration') and not isof('microsoft.graph.iosEnterpriseWiFiConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -678,6 +673,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -705,13 +702,13 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Assignments')
 
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -731,71 +728,6 @@ function Export-TargetResource
             throw
         }
     }
-}
-function Get-M365DSCAdditionalProperties
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $additionalProperties = @(
-        'ConnectAutomatically'
-        'ConnectWhenNetworkNameIsHidden'
-        'DisableMacAddressRandomization'
-        'NetworkName'
-        'PreSharedKey'
-        'ProxyAutomaticConfigurationUrl'
-        'ProxyManualAddress'
-        'ProxyManualPort'
-        'ProxySettings'
-        'Ssid'
-        'WiFiSecurityType'
-    )
-
-    $results = @{
-        '@odata.type' = '#microsoft.graph.iosWiFiConfiguration'
-    }
-    $cloneProperties = $Properties.Clone()
-    foreach ($property in $cloneProperties.Keys)
-    {
-        if ($property -in ($additionalProperties) )
-        {
-            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            if ($properties.$property -and $properties.$property.GetType().FullName -like '*CIMInstance*')
-            {
-                if ($properties.$property.GetType().FullName -like '*[[\]]')
-                {
-                    $array = @()
-                    foreach ($item in $properties.$property)
-                    {
-                        $array += Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-                    }
-                    $propertyValue = $array
-                }
-                else
-                {
-                    $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
-                }
-
-            }
-            else
-            {
-                $propertyValue = $properties.$property
-            }
-
-            $results.Add($propertyName, $propertyValue)
-        }
-    }
-    if ($results.Count -eq 1)
-    {
-        return $null
-    }
-    return $results
 }
 
 function Get-CompareParameters

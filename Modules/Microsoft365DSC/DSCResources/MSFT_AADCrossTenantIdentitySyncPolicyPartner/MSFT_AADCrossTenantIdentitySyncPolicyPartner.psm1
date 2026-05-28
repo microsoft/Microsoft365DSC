@@ -40,6 +40,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -52,40 +60,39 @@ function Get-TargetResource
 
     try
     {
-        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.TenantId -ne $CrossTenantAccessPolicyConfigurationPartnerTenantId)
         {
-            Write-Verbose -Message 'Retrieving instance from cache.'
-            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.TenantId -eq $CrossTenantAccessPolicyConfigurationPartnerTenantId }
-        }
-        else
-        {
-            Write-Verbose -Message 'Retrieving instance from API call.'
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
             $instance = Get-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization `
                 -CrossTenantAccessPolicyConfigurationPartnerTenantId $CrossTenantAccessPolicyConfigurationPartnerTenantId `
                 -ErrorAction SilentlyContinue
+
+            if ($null -eq $instance)
+            {
+                Write-Verbose -Message "No AAD Cross Tenant Identity Sync Policy Partner for TenantId {$CrossTenantAccessPolicyConfigurationPartnerTenantId} found."
+                return $nullResult
+            }
         }
-        if ($null -eq $instance)
+        else
         {
-            Write-Verbose -Message "No AAD Cross Tenant Identity Sync Policy Partner for TenantId {$CrossTenantAccessPolicyConfigurationPartnerTenantId} found."
-            return $nullResult
+            $instance = $Script:exportedInstance
         }
 
         $results = @{
@@ -97,6 +104,8 @@ function Get-TargetResource
             ApplicationId                                       = $ApplicationId
             TenantId                                            = $TenantId
             CertificateThumbprint                               = $CertificateThumbprint
+            CertificatePath                                     = $CertificatePath
+            CertificatePassword                                 = $CertificatePassword
             ManagedIdentity                                     = $ManagedIdentity.IsPresent
             AccessTokens                                        = $AccessTokens
         }
@@ -153,6 +162,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -178,13 +195,13 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         $params = @{
-            DisplayName     = $DisplayName
-            UserSyncInbound = @{
+            displayName     = $DisplayName
+            userSyncInbound = @{
                 isSyncAllowed = $IsSyncAllowed
             }
         }
         Write-Verbose -Message "Creating Cross-Tenant Identity Sync Policy for Tenant {$CrossTenantAccessPolicyConfigurationPartnerTenantId} with:`r`n$(ConvertTo-Json $params -Depth 10)"
-        Set-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization @params `
+        Set-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization -BodyParameter $params `
             -CrossTenantAccessPolicyConfigurationPartnerTenantId $CrossTenantAccessPolicyConfigurationPartnerTenantId
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -250,6 +267,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -303,6 +328,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -328,15 +361,12 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-
         $policyPartners = Get-MgBetaPolicyCrossTenantAccessPolicyPartner `
-        -All `
-        -Filter $Filter `
-        -ErrorAction Stop
-        [array] $Script:exportedInstances = @()
+            -All `
+            -Filter $Filter `
+            -ErrorAction Stop
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($policyPartners.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -366,7 +396,6 @@ function Export-TargetResource
                 continue
             }
 
-            $Script:exportedInstances += $config
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
@@ -387,19 +416,20 @@ function Export-TargetResource
                 AccessTokens                                        = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

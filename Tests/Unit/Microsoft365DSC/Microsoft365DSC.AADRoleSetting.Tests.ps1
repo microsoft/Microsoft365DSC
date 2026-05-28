@@ -73,12 +73,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
-                                     "enabledRules":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
+        "enabledRules":  [
 
-                                                      ]
-                                 }
+                        ]
     },
     {
         "Id":  "Expiration_Admin_Eligibility",
@@ -96,11 +94,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
-                                     "isExpirationRequired":  false,
-                                     "maximumDuration":  "P365D"
-                                 }
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+        "isExpirationRequired":  false,
+        "maximumDuration":  "P365D"
     },
     {
         "Id":  "Notification_Approver_Admin_Eligibility",
@@ -118,16 +114,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
-                                     "notificationType":  "Email",
-                                     "recipientType":  "Approver",
-                                     "notificationLevel":  "All",
-                                     "isDefaultRecipientsEnabled":  true,
-                                     "notificationRecipients":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
+        "notificationType":  "Email",
+        "recipientType":  "Approver",
+        "notificationLevel":  "All",
+        "isDefaultRecipientsEnabled":  true,
+        "notificationRecipients":  [
 
-                                                                ]
-                                 }
+                                ]
     },
     {
         "Id":  "Notification_Admin_Admin_Eligibility",
@@ -145,16 +139,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
-                                     "notificationType":  "Email",
-                                     "recipientType":  "Admin",
-                                     "notificationLevel":  "All",
-                                     "isDefaultRecipientsEnabled":  true,
-                                     "notificationRecipients":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
+        "notificationType":  "Email",
+        "recipientType":  "Admin",
+        "notificationLevel":  "All",
+        "isDefaultRecipientsEnabled":  true,
+        "notificationRecipients":  [
 
-                                                                ]
-                                 }
+                                   ]
     },
     {
         "Id":  "Notification_Requestor_Admin_Eligibility",
@@ -172,16 +164,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
-                                     "notificationType":  "Email",
-                                     "recipientType":  "Requestor",
-                                     "notificationLevel":  "All",
-                                     "isDefaultRecipientsEnabled":  true,
-                                     "notificationRecipients":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
+        "notificationType":  "Email",
+        "recipientType":  "Requestor",
+        "notificationLevel":  "All",
+        "isDefaultRecipientsEnabled":  true,
+        "notificationRecipients":  [
 
-                                                                ]
-                                 }
+                                   ]
     },
     {
         "Id":  "Enablement_Admin_Assignment",
@@ -199,12 +189,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
-                                     "enabledRules":  [
-                                                          "Justification"
-                                                      ]
-                                 }
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
+        "enabledRules":  [
+                             "Justification"
+                         ]
     },
     {
         "Id":  "Expiration_Admin_Assignment",
@@ -222,11 +210,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
-                                     "isExpirationRequired":  false,
-                                     "maximumDuration":  "P180D"
-                                 }
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+        "isExpirationRequired":  false,
+        "maximumDuration":  "P180D"
     },
     {
         "Id":  "Notification_Admin_Admin_Assignment",
@@ -244,16 +230,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
-                                     "notificationType":  "Email",
-                                     "recipientType":  "Admin",
-                                     "notificationLevel":  "All",
-                                     "isDefaultRecipientsEnabled":  true,
-                                     "notificationRecipients":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
+        "notificationType":  "Email",
+        "recipientType":  "Admin",
+        "notificationLevel":  "All",
+        "isDefaultRecipientsEnabled":  true,
+        "notificationRecipients":  [
 
-                                                                ]
-                                 }
+                                   ]
     },
     {
         "Id":  "Notification_Approver_Admin_Assignment",
@@ -271,16 +255,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
-                                     "notificationType":  "Email",
-                                     "recipientType":  "Approver",
-                                     "notificationLevel":  "All",
-                                     "isDefaultRecipientsEnabled":  true,
-                                     "notificationRecipients":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
+        "notificationType":  "Email",
+        "recipientType":  "Approver",
+        "notificationLevel":  "All",
+        "isDefaultRecipientsEnabled":  true,
+        "notificationRecipients":  [
 
-                                                                ]
-                                 }
+                                   ]
     },
     {
         "Id":  "Notification_Requestor_Admin_Assignment",
@@ -298,16 +280,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
-                                     "notificationType":  "Email",
-                                     "recipientType":  "Requestor",
-                                     "notificationLevel":  "All",
-                                     "isDefaultRecipientsEnabled":  true,
-                                     "notificationRecipients":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
+        "notificationType":  "Email",
+        "recipientType":  "Requestor",
+        "notificationLevel":  "All",
+        "isDefaultRecipientsEnabled":  true,
+        "notificationRecipients":  [
 
-                                                                ]
-                                 }
+                                   ]
     },
     {
         "Id":  "Approval_EndUser_Assignment",
@@ -325,29 +305,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule",
-                                     "setting":  {
-                                                     "isApprovalRequired":  false,
-                                                     "isApprovalRequiredForExtension":  false,
-                                                     "isRequestorJustificationRequired":  true,
-                                                     "approvalMode":  "SingleStage",
-                                                     "approvalStages":  [
-                                                                            {
-                                                                                "approvalStageTimeOutInDays":  1,
-                                                                                "isApproverJustificationRequired":  true,
-                                                                                "escalationTimeInMinutes":  0,
-                                                                                "isEscalationEnabled":  false,
-                                                                                "primaryApprovers":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule",
+        "setting":  {
+                        "isApprovalRequired":  false,
+                        "isApprovalRequiredForExtension":  false,
+                        "isRequestorJustificationRequired":  true,
+                        "approvalMode":  "SingleStage",
+                        "approvalStages":  [
+                                               {
+                                                   "approvalStageTimeOutInDays":  1,
+                                                   "isApproverJustificationRequired":  true,
+                                                   "escalationTimeInMinutes":  0,
+                                                   "isEscalationEnabled":  false,
+                                                   "primaryApprovers":  [
 
-                                                                                                     ],
-                                                                                "escalationApprovers":  [
+                                                                        ],
+                                                   "escalationApprovers":  [
 
-                                                                                                        ]
-                                                                            }
-                                                                        ]
-                                                 }
-                                 }
+                                                                           ]
+                                               }
+                                           ]
+                    }
     },
     {
         "Id":  "AuthenticationContext_EndUser_Assignment",
@@ -365,11 +343,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyAuthenticationContextRule",
-                                     "isEnabled":  false,
-                                     "claimValue":  ""
-                                 }
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyAuthenticationContextRule",
+        "isEnabled":  false,
+        "claimValue":  ""
     },
     {
         "Id":  "Enablement_EndUser_Assignment",
@@ -387,13 +363,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
-                                     "enabledRules":  [
-                                                          "MultiFactorAuthentication",
-                                                          "Justification"
-                                                      ]
-                                 }
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyEnablementRule",
+        "enabledRules":  [
+                             "MultiFactorAuthentication",
+                             "Justification"
+                         ]
     },
     {
         "Id":  "Expiration_EndUser_Assignment",
@@ -411,11 +385,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
-                                     "isExpirationRequired":  false,
-                                     "maximumDuration":  "PT8H"
-                                 }
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule",
+        "isExpirationRequired":  false,
+        "maximumDuration":  "PT8H"
     },
     {
         "Id":  "Notification_Approver_EndUser_Assignment",
@@ -433,16 +405,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
-                                     "notificationType":  "Email",
-                                     "recipientType":  "Approver",
-                                     "notificationLevel":  "All",
-                                     "isDefaultRecipientsEnabled":  true,
-                                     "notificationRecipients":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
+        "notificationType":  "Email",
+        "recipientType":  "Approver",
+        "notificationLevel":  "All",
+        "isDefaultRecipientsEnabled":  true,
+        "notificationRecipients":  [
 
-                                                                ]
-                                 }
+                                   ]
     },
     {
         "Id":  "Notification_Admin_EndUser_Assignment",
@@ -460,16 +430,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
-                                     "notificationType":  "Email",
-                                     "recipientType":  "Admin",
-                                     "notificationLevel":  "All",
-                                     "isDefaultRecipientsEnabled":  true,
-                                     "notificationRecipients":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
+        "notificationType":  "Email",
+        "recipientType":  "Admin",
+        "notificationLevel":  "All",
+        "isDefaultRecipientsEnabled":  true,
+        "notificationRecipients":  [
 
-                                                                ]
-                                 }
+                                   ]
     },
     {
         "Id":  "Notification_Requestor_EndUser_Assignment",
@@ -487,16 +455,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                       ],
                        "TargetObjects":  null
                    },
-        "AdditionalProperties":  {
-                                     "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
-                                     "notificationType":  "Email",
-                                     "recipientType":  "Requestor",
-                                     "notificationLevel":  "All",
-                                     "isDefaultRecipientsEnabled":  true,
-                                     "notificationRecipients":  [
+        "@odata.type":  "#microsoft.graph.unifiedRoleManagementPolicyNotificationRule",
+        "notificationType":  "Email",
+        "recipientType":  "Requestor",
+        "notificationLevel":  "All",
+        "isDefaultRecipientsEnabled":  true,
+        "notificationRecipients":  [
 
-                                                                ]
-                                 }
+                                   ]
     }
 ]
 '@

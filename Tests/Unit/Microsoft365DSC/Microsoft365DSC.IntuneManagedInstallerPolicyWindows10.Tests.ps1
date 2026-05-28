@@ -60,10 +60,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DetectionScriptContent = $null
                     DetectionScriptParameters = @(
                         @{
-                            AdditionalProperties = @{
-                                '@odata.type' = "#microsoft.graph.deviceHealthScriptStringParameter"
-                                DefaultValue = $True
-                            }
+                            '@odata.type' = "#microsoft.graph.deviceHealthScriptStringParameter"
+                            DefaultValue = $True
                             IsRequired = $True
                             Description = "Enable Managed Installer"
                             Name = "Enabled"
@@ -91,10 +89,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         RunRemediationScript = $False
                         RunSchedule = $null
                         Target = @{
-                            AdditionalProperties = @{
-                                '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                groupId = "FakeStringValue"
-                            }
+                            '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+                            groupId = "FakeStringValue"
                             "DeviceAndAppManagementAssignmentFilterId" = "FakeStringValue"
                             "DeviceAndAppManagementAssignmentFilterType" = "none"
                         }

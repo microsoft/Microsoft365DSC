@@ -26,7 +26,7 @@
         ]
       },
       "application": {
-       "read": [
+        "read": [
           "User Access Administrator",
           "Owner"
         ],
@@ -63,10 +63,42 @@
   },
   "requiredModules": [
     "Az.Accounts",
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.DirectoryObjects",
     "Microsoft.Graph.Groups",
-    "Microsoft.Graph.Users"
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Invoke-AzRestMethod"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.DirectoryObjects",
+      "cmdlets": [
+        "Get-MgBetaDirectoryObjectById"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
 }

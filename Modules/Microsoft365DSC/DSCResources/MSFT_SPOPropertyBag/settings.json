@@ -62,5 +62,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Get-PnPPropertyBag",
+        "Get-PnPTenantSite",
+        "Remove-PnPPropertyBagValue",
+        "Set-PnPPropertyBagValue"
+      ]
+    }
+  ]
 }

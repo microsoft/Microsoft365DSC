@@ -46,7 +46,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Invoke-AzRest -MockWith {
+            Mock -CommandName Invoke-AzRestMethod -MockWith {
                 return @{
                     Content = ConvertTo-Json @{
                         value = @(
@@ -121,7 +121,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Invoke-AzRest -Exactly 1
+                Should -Invoke -CommandName Invoke-AzRestMethod -Exactly 1
             }
         }
 

@@ -48,629 +48,627 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        localSecurityOptionsClearVirtualMemoryPageFile = $True
-                        defenderSecurityCenterDisableHardwareUI = $True
-                        applicationGuardAllowPrintToNetworkPrinters = $True
-                        defenderFilesAndFoldersToExclude = @("FakeStringValue")
-                        defenderAllowScanArchiveFiles = $True
-                        firewallIPSecExemptionsNone = $True
-                        bitLockerAllowStandardUserEncryption = $True
-                        localSecurityOptionsAllowRemoteCallsToSecurityAccountsManager = "FakeStringValue"
-                        defenderScheduledScanDay = "userDefined"
-                        firewallPacketQueueingMethod = "deviceDefault"
-                        defenderUntrustedUSBProcessType = "userDefined"
-                        defenderNetworkProtectionType = "userDefined"
-                        defenderProcessCreation = "userDefined"
-                        applicationGuardEnabledOptions = "notConfigured"
-                        defenderOfficeAppsLaunchChildProcess = "userDefined"
-                        defenderAllowRealTimeMonitoring = $True
-                        firewallIPSecExemptionsAllowNeighborDiscovery = $True
-                        defenderUntrustedExecutable = "userDefined"
-                        defenderGuardMyFoldersType = "userDefined"
-                        localSecurityOptionsInformationDisplayedOnLockScreen = "notConfigured"
-                        defenderScheduledQuickScanTime = "00:00:00"
-                        localSecurityOptionsUseAdminApprovalMode = $True
-                        applicationGuardAllowCameraMicrophoneRedirection = $True
-                        applicationGuardAllowPrintToXPS = $True
-                        deviceGuardLaunchSystemGuard = "notConfigured"
-                        defenderScanDirection = "monitorAllFiles"
-                        userRightsIncreaseSchedulingPriority = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        deviceGuardEnableVirtualizationBasedSecurity = $True
-                        defenderBlockEndUserAccess = $True
-                        firewallIPSecExemptionsAllowRouterDiscovery = $True
-                        xboxServicesLiveGameSaveServiceStartupMode = "manual"
-                        bitLockerFixedDrivePolicy = @{
-                            RecoveryOptions = @{
-                                RecoveryInformationToStore = "passwordAndKey"
-                                HideRecoveryOptions = $True
-                                BlockDataRecoveryAgent = $True
-                                RecoveryKeyUsage = "blocked"
-                                EnableBitLockerAfterRecoveryInformationToStore = $True
-                                EnableRecoveryInformationSaveToStore = $True
-                                RecoveryPasswordUsage = "blocked"
-                            }
-                            RequireEncryptionForWriteAccess = $True
-                            encryptionMethod = "aesCbc128"
-                        }
-                        userRightsCreateSymbolicLinks = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        applicationGuardBlockFileTransfer = "notConfigured"
-                        defenderCheckForSignaturesBeforeRunningScan = $True
-                        userRightsRemoteShutdown = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        firewallRules = @(
+                    localSecurityOptionsClearVirtualMemoryPageFile = $True
+                    defenderSecurityCenterDisableHardwareUI = $True
+                    applicationGuardAllowPrintToNetworkPrinters = $True
+                    defenderFilesAndFoldersToExclude = @("FakeStringValue")
+                    defenderAllowScanArchiveFiles = $True
+                    firewallIPSecExemptionsNone = $True
+                    bitLockerAllowStandardUserEncryption = $True
+                    localSecurityOptionsAllowRemoteCallsToSecurityAccountsManager = "FakeStringValue"
+                    defenderScheduledScanDay = "userDefined"
+                    firewallPacketQueueingMethod = "deviceDefault"
+                    defenderUntrustedUSBProcessType = "userDefined"
+                    defenderNetworkProtectionType = "userDefined"
+                    defenderProcessCreation = "userDefined"
+                    applicationGuardEnabledOptions = "notConfigured"
+                    defenderOfficeAppsLaunchChildProcess = "userDefined"
+                    defenderAllowRealTimeMonitoring = $True
+                    firewallIPSecExemptionsAllowNeighborDiscovery = $True
+                    defenderUntrustedExecutable = "userDefined"
+                    defenderGuardMyFoldersType = "userDefined"
+                    localSecurityOptionsInformationDisplayedOnLockScreen = "notConfigured"
+                    defenderScheduledQuickScanTime = "00:00:00"
+                    localSecurityOptionsUseAdminApprovalMode = $True
+                    applicationGuardAllowCameraMicrophoneRedirection = $True
+                    applicationGuardAllowPrintToXPS = $True
+                    deviceGuardLaunchSystemGuard = "notConfigured"
+                    defenderScanDirection = "monitorAllFiles"
+                    userRightsIncreaseSchedulingPriority = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
                             @{
-                                localAddressRanges = @("FakeStringValue")
-                                action = "notConfigured"
-                                description = "FakeStringValue"
-                                interfaceTypes = "notConfigured"
-                                remotePortRanges = @("FakeStringValue")
-                                displayName = "FakeStringValue"
-                                filePath = "FakeStringValue"
-                                localUserAuthorizations = "FakeStringValue"
-                                protocol = 25
-                                trafficDirection = "notConfigured"
-                                remoteAddressRanges = @("FakeStringValue")
-                                packageFamilyName = "FakeStringValue"
-                                serviceName = "FakeStringValue"
-                                localPortRanges = @("FakeStringValue")
-                                profileTypes = "notConfigured"
-                                edgeTraversal = "notConfigured"
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
                             }
                         )
-                        defenderSignatureUpdateIntervalInHours = 25
-                        defenderEnableLowCpuPriority = $True
-                        localSecurityOptionsAllowAnonymousEnumerationOfSAMAccountsAndShares = $True
-                        defenderFileExtensionsToExclude = @("FakeStringValue")
-                        localSecurityOptionsHideLastSignedInUser = $True
-                        userRightsBlockAccessFromNetwork = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers = "none"
-                        xboxServicesLiveAuthManagerServiceStartupMode = "manual"
-                        localSecurityOptionsMachineInactivityLimitInMinutes = 25
-                        localSecurityOptionsClientDigitallySignCommunicationsAlways = $True
-                        defenderSecurityCenterDisableNetworkUI = $True
-                        userRightsModifyObjectLabels = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        deviceGuardLocalSystemAuthorityCredentialGuardSettings = "notConfigured"
-                        firewallIdleTimeoutForSecurityAssociationInSeconds = 25
-                        defenderSecurityCenterHelpURL = "FakeStringValue"
-                        localSecurityOptionsDisableServerDigitallySignCommunicationsAlways = $True
-                        localSecurityOptionsAllowRemoteCallsToSecurityAccountsManagerHelperBool = $True
-                        userRightsChangeSystemTime = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        localSecurityOptionsAllowUndockWithoutHavingToLogon = $True
-                        defenderEnableScanMappedNetworkDrivesDuringFullScan = $True
-                        defenderUntrustedUSBProcess = "userDefined"
-                        localSecurityOptionsHideUsernameAtSignIn = $True
-                        defenderAllowScanDownloads = $True
-                        localSecurityOptionsDisableAdministratorAccount = $True
-                        defenderSecurityCenterDisableHealthUI = $True
-                        userRightsCreateGlobalObjects = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        localSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares = $True
-                        localSecurityOptionsMachineInactivityLimit = 25
-                        firewallCertificateRevocationListCheckMethod = "deviceDefault"
-                        defenderSecurityCenterDisableFamilyUI = $True
-                        defenderAllowCloudProtection = $True
-                        bitLockerEnableStorageCardEncryptionOnMobile = $True
-                        applicationGuardEnabled = $True
-                        defenderOfficeAppsOtherProcessInjection = "userDefined"
-                        userRightsImpersonateClient = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        '@odata.type' = "#microsoft.graph.windows10EndpointProtectionConfiguration"
-                        localSecurityOptionsUseAdminApprovalModeForAdministrators = $True
-                        lanManagerWorkstationDisableInsecureGuestLogons = $True
-                        defenderAdvancedRansomewareProtectionType = "userDefined"
-                        defenderUntrustedExecutableType = "userDefined"
-                        defenderDisableScanArchiveFiles = $True
-                        lanManagerAuthenticationLevel = "lmAndNltm"
-                        userRightsActAsPartOfTheOperatingSystem = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        defenderPreventCredentialStealingType = "userDefined"
-                        localSecurityOptionsAllowUIAccessApplicationsForSecureLocations = $True
-                        deviceGuardEnableSecureBootWithDMA = $True
-                        localSecurityOptionsDisableClientDigitallySignCommunicationsIfServerAgrees = $True
-                        defenderScriptObfuscatedMacroCode = "userDefined"
-                        defenderDaysBeforeDeletingQuarantinedMalware = 25
-                        defenderAllowScanRemovableDrivesDuringFullScan = $True
-                        localSecurityOptionsDisableServerDigitallySignCommunicationsIfClientAgrees = $True
-                        firewallProfilePrivate = @{
-                            policyRulesFromGroupPolicyNotMerged = $True
-                            inboundConnectionsRequired = $True
-                            securedPacketExemptionAllowed = $True
-                            securedPacketExemptionBlocked = $True
-                            globalPortRulesFromGroupPolicyMerged = $True
-                            stealthModeBlocked = $True
-                            outboundConnectionsBlocked = $True
-                            inboundConnectionsBlocked = $True
-                            authorizedApplicationRulesFromGroupPolicyMerged = $True
-                            inboundNotificationsRequired = $True
-                            firewallEnabled = "notConfigured"
-                            stealthModeRequired = $True
-                            incomingTrafficBlocked = $True
-                            incomingTrafficRequired = $True
-                            unicastResponsesToMulticastBroadcastsBlocked = $True
-                            policyRulesFromGroupPolicyMerged = $True
-                            unicastResponsesToMulticastBroadcastsRequired = $True
-                            connectionSecurityRulesFromGroupPolicyNotMerged = $True
-                            globalPortRulesFromGroupPolicyNotMerged = $True
-                            outboundConnectionsRequired = $True
-                            inboundNotificationsBlocked = $True
-                            connectionSecurityRulesFromGroupPolicyMerged = $True
-                            authorizedApplicationRulesFromGroupPolicyNotMerged = $True
-                        }
-                        defenderSecurityCenterDisableAppBrowserUI = $True
-                        localSecurityOptionsInformationShownOnLockScreen = "notConfigured"
-                        defenderOfficeAppsLaunchChildProcessType = "userDefined"
-                        deviceGuardSecureBootWithDMA = "notConfigured"
-                        applicationGuardAllowPrintToPDF = $True
-                        userRightsCreateToken = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        defenderExploitProtectionXml = $True
-                        userRightsRemoteDesktopServicesLogOn = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        localSecurityOptionsBlockRemoteLogonWithBlankPassword = $True
-                        userRightsBackupData = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        userRightsDenyLocalLogOn = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        localSecurityOptionsOnlyElevateSignedExecutables = $True
-                        applicationGuardAllowVirtualGPU = $True
-                        defenderScanType = "userDefined"
-                        bitLockerSystemDrivePolicy = @{
-                            prebootRecoveryEnableMessageAndUrl = $True
-                            StartupAuthenticationTpmPinUsage = "blocked"
-                            encryptionMethod = "aesCbc128"
-                            minimumPinLength = 25
-                            prebootRecoveryMessage = "FakeStringValue"
-                            StartupAuthenticationTpmPinAndKeyUsage = "blocked"
-                            StartupAuthenticationRequired = $True
-                            RecoveryOptions = @{
-                                RecoveryInformationToStore = "passwordAndKey"
-                                HideRecoveryOptions = $True
-                                BlockDataRecoveryAgent = $True
-                                RecoveryKeyUsage = "blocked"
-                                EnableBitLockerAfterRecoveryInformationToStore = $True
-                                EnableRecoveryInformationSaveToStore = $True
-                                RecoveryPasswordUsage = "blocked"
-                            }
-                            prebootRecoveryUrl = "FakeStringValue"
-                            StartupAuthenticationTpmUsage = "blocked"
-                            StartupAuthenticationTpmKeyUsage = "blocked"
-                            StartupAuthenticationBlockWithoutTpmChip = $True
-                        }
-                        defenderAllowBehaviorMonitoring = $True
-                        defenderAllowIntrusionPreventionSystem = $True
-                        localSecurityOptionsDoNotStoreLANManagerHashValueOnNextPasswordChange = $True
-                        defenderSecurityCenterHelpEmail = "FakeStringValue"
-                        defenderDisableBehaviorMonitoring = $True
-                        localSecurityOptionsVirtualizeFileAndRegistryWriteFailuresToPerUserLocations = $True
-                        applicationGuardBlockClipboardSharing = "notConfigured"
-                        defenderEmailContentExecution = "userDefined"
-                        localSecurityOptionsBlockRemoteOpticalDriveAccess = $True
-                        firewallProfilePublic = @{
-                            policyRulesFromGroupPolicyNotMerged = $True
-                            inboundConnectionsRequired = $True
-                            securedPacketExemptionAllowed = $True
-                            securedPacketExemptionBlocked = $True
-                            globalPortRulesFromGroupPolicyMerged = $True
-                            stealthModeBlocked = $True
-                            outboundConnectionsBlocked = $True
-                            inboundConnectionsBlocked = $True
-                            authorizedApplicationRulesFromGroupPolicyMerged = $True
-                            inboundNotificationsRequired = $True
-                            firewallEnabled = "notConfigured"
-                            stealthModeRequired = $True
-                            incomingTrafficBlocked = $True
-                            incomingTrafficRequired = $True
-                            unicastResponsesToMulticastBroadcastsBlocked = $True
-                            policyRulesFromGroupPolicyMerged = $True
-                            unicastResponsesToMulticastBroadcastsRequired = $True
-                            connectionSecurityRulesFromGroupPolicyNotMerged = $True
-                            globalPortRulesFromGroupPolicyNotMerged = $True
-                            outboundConnectionsRequired = $True
-                            inboundNotificationsBlocked = $True
-                            connectionSecurityRulesFromGroupPolicyMerged = $True
-                            authorizedApplicationRulesFromGroupPolicyNotMerged = $True
-                        }
-                        defenderScriptDownloadedPayloadExecutionType = "userDefined"
-                        xboxServicesAccessoryManagementServiceStartupMode = "manual"
-                        xboxServicesEnableXboxGameSaveTask = $True
-                        bitLockerEncryptDevice = $True
-                        localSecurityOptionsBlockMicrosoftAccounts = $True
-                        bitLockerRemovableDrivePolicy = @{
-                            requireEncryptionForWriteAccess = $True
-                            blockCrossOrganizationWriteAccess = $True
-                            encryptionMethod = "aesCbc128"
-                        }
-                        defenderSecurityCenterBlockExploitProtectionOverride = $True
-                        localSecurityOptionsLogOnMessageText = "FakeStringValue"
-                        applicationGuardCertificateThumbprints = @("FakeStringValue")
-                        defenderCloudBlockLevel = "notConfigured"
-                        defenderProcessCreationType = "userDefined"
-                        defenderDisableScanDownloads = $True
-                        defenderOfficeCommunicationAppsLaunchChildProcess = "userDefined"
-                        localSecurityOptionsClientSendUnencryptedPasswordToThirdPartySMBServers = $True
-                        userRightsAllowAccessFromNetwork = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        applicationGuardForceAuditing = $True
-                        defenderDisableRealTimeMonitoring = $True
-                        defenderSecurityCenterNotificationsFromApp = "notConfigured"
-                        localSecurityOptionsAdministratorAccountName = "FakeStringValue"
-                        windowsDefenderTamperProtection = "notConfigured"
-                        defenderSecurityCenterDisableAccountUI = $True
-                        localSecurityOptionsSwitchToSecureDesktopWhenPromptingForElevation = $True
-                        defenderEmailContentExecutionType = "userDefined"
-                        defenderAllowScanNetworkFiles = $True
-                        defenderSecurityCenterDisableNotificationAreaUI = $True
-                        userRightsProfileSingleProcess = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        localSecurityOptionsSmartCardRemovalBehavior = "noAction"
-                        defenderDisableCloudProtection = $True
-                        userRightsManageVolumes = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        smartScreenEnableInShell = $True
-                        applicationGuardBlockNonEnterpriseContent = $True
-                        defenderAdditionalGuardedFolders = @("FakeStringValue")
-                        localSecurityOptionsDoNotAllowAnonymousEnumerationOfSAMAccounts = $True
-                        userRightsRestoreData = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients = "none"
-                        defenderDisableOnAccessProtection = $True
-                        bitLockerRecoveryPasswordRotation = "notConfigured"
-                        firewallPreSharedKeyEncodingMethod = "deviceDefault"
-                        userRightsDelegation = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        userRightsDebugPrograms = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        defenderSecurityCenterDisableVulnerableTpmFirmwareUpdateUI = $True
-                        defenderSecurityCenterOrganizationDisplayName = "FakeStringValue"
-                        localSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser = "notConfigured"
-                        userRightsLockMemory = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        appLockerApplicationControl = "notConfigured"
-                        defenderBlockPersistenceThroughWmiType = "userDefined"
-                        defenderDisableScanNetworkFiles = $True
-                        defenderDisableCatchupQuickScan = $True
-                        localSecurityOptionsLogOnMessageTitle = "FakeStringValue"
-                        localSecurityOptionsStandardUserElevationPromptBehavior = "notConfigured"
-                        userRightsGenerateSecurityAudits = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        defenderSecurityCenterDisableClearTpmUI = $True
-                        defenderEnableScanIncomingMail = $True
-                        defenderSecurityCenterHelpPhone = "FakeStringValue"
-                        localSecurityOptionsDoNotRequireCtrlAltDel = $True
-                        userRightsTakeOwnership = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        userRightsLocalLogOn = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        applicationGuardAllowPersistence = $True
-                        defenderCloudExtendedTimeoutInSeconds = 25
-                        firewallIPSecExemptionsAllowICMP = $True
-                        defenderAllowEndUserAccess = $True
-                        defenderScriptDownloadedPayloadExecution = "userDefined"
-                        defenderExploitProtectionXmlFileName = "FakeStringValue"
-                        defenderScriptObfuscatedMacroCodeType = "userDefined"
-                        defenderDisableScanRemovableDrivesDuringFullScan = $True
-                        localSecurityOptionsAllowSystemToBeShutDownWithoutHavingToLogOn = $True
-                        defenderOfficeMacroCodeAllowWin32ImportsType = "userDefined"
-                        firewallIPSecExemptionsAllowDHCP = $True
-                        firewallProfileDomain = @{
-                            policyRulesFromGroupPolicyNotMerged = $True
-                            inboundConnectionsRequired = $True
-                            securedPacketExemptionAllowed = $True
-                            securedPacketExemptionBlocked = $True
-                            globalPortRulesFromGroupPolicyMerged = $True
-                            stealthModeBlocked = $True
-                            outboundConnectionsBlocked = $True
-                            inboundConnectionsBlocked = $True
-                            authorizedApplicationRulesFromGroupPolicyMerged = $True
-                            inboundNotificationsRequired = $True
-                            firewallEnabled = "notConfigured"
-                            stealthModeRequired = $True
-                            incomingTrafficBlocked = $True
-                            incomingTrafficRequired = $True
-                            unicastResponsesToMulticastBroadcastsBlocked = $True
-                            policyRulesFromGroupPolicyMerged = $True
-                            unicastResponsesToMulticastBroadcastsRequired = $True
-                            connectionSecurityRulesFromGroupPolicyNotMerged = $True
-                            globalPortRulesFromGroupPolicyNotMerged = $True
-                            outboundConnectionsRequired = $True
-                            inboundNotificationsBlocked = $True
-                            connectionSecurityRulesFromGroupPolicyMerged = $True
-                            authorizedApplicationRulesFromGroupPolicyNotMerged = $True
-                        }
-                        localSecurityOptionsAllowPKU2UAuthenticationRequests = $True
-                        defenderSecurityCenterDisableTroubleshootingUI = $True
-                        defenderPotentiallyUnwantedAppAction = "userDefined"
-                        userRightsModifyFirmwareEnvironment = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        defenderOfficeAppsExecutableContentCreationOrLaunch = "userDefined"
-                        defenderOfficeAppsExecutableContentCreationOrLaunchType = "userDefined"
-                        defenderSubmitSamplesConsentType = "sendSafeSamplesAutomatically"
-                        defenderAdobeReaderLaunchChildProcess = "userDefined"
-                        localSecurityOptionsDetectApplicationInstallationsAndPromptForElevation = $True
-                        defenderDisableIntrusionPreventionSystem = $True
-                        defenderDisableCatchupFullScan = $True
-                        bitLockerDisableWarningForOtherDiskEncryption = $True
-                        xboxServicesLiveNetworkingServiceStartupMode = "manual"
-                        firewallBlockStatefulFTP = $True
-                        firewallMergeKeyingModuleSettings = $True
-                        userRightsManageAuditingAndSecurityLogs = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        userRightsCreatePermanentSharedObjects = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        localSecurityOptionsBlockUsersInstallingPrinterDrivers = $True
-                        smartScreenBlockOverrideForFiles = $True
-                        userRightsCreatePageFile = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        defenderAllowOnAccessProtection = $True
-                        dmaGuardDeviceEnumerationPolicy = "deviceDefault"
-                        defenderOfficeAppsOtherProcessInjectionType = "userDefined"
-                        localSecurityOptionsGuestAccountName = "FakeStringValue"
-                        defenderDetectedMalwareActions = @{
-                            lowSeverity = "deviceDefault"
-                            severeSeverity = "deviceDefault"
-                            moderateSeverity = "deviceDefault"
-                            highSeverity = "deviceDefault"
-                        }
-                        defenderProcessesToExclude = @("FakeStringValue")
-                        defenderScheduledScanTime = "00:00:00"
-                        defenderSecurityCenterDisableSecureBootUI = $True
-                        applicationGuardAllowFileSaveOnHost = $True
-                        localSecurityOptionsDisableGuestAccount = $True
-                        defenderSecurityCenterDisableRansomwareUI = $True
-                        defenderGuardedFoldersAllowedAppPaths = @("FakeStringValue")
-                        defenderOfficeMacroCodeAllowWin32Imports = "userDefined"
-                        applicationGuardAllowPrintToLocalPrinters = $True
-                        defenderSecurityCenterITContactDisplay = "notConfigured"
-                        defenderAttackSurfaceReductionExcludedPaths = @("FakeStringValue")
-                        defenderAllowScanScriptsLoadedInInternetExplorer = $True
-                        defenderSecurityCenterDisableVirusUI = $True
-                        userRightsAccessCredentialManagerAsTrustedCaller = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        localSecurityOptionsAllowUIAccessApplicationElevation = $True
-                        defenderDisableScanScriptsLoadedInInternetExplorer = $True
-                        localSecurityOptionsAdministratorElevationPromptBehavior = "notConfigured"
-                        userRightsLoadUnloadDrivers = @{
-                            State = "notConfigured"
-                            LocalUsersOrGroups = @(
-                                @{
-                                    Description = "FakeStringValue"
-                                    Name = "FakeStringValue"
-                                    SecurityIdentifier = "FakeStringValue"
-                                }
-                            )
-                        }
-                        defenderScanMaxCpuPercentage = 25
                     }
+                    deviceGuardEnableVirtualizationBasedSecurity = $True
+                    defenderBlockEndUserAccess = $True
+                    firewallIPSecExemptionsAllowRouterDiscovery = $True
+                    xboxServicesLiveGameSaveServiceStartupMode = "manual"
+                    bitLockerFixedDrivePolicy = @{
+                        RecoveryOptions = @{
+                            RecoveryInformationToStore = "passwordAndKey"
+                            HideRecoveryOptions = $True
+                            BlockDataRecoveryAgent = $True
+                            RecoveryKeyUsage = "blocked"
+                            EnableBitLockerAfterRecoveryInformationToStore = $True
+                            EnableRecoveryInformationSaveToStore = $True
+                            RecoveryPasswordUsage = "blocked"
+                        }
+                        RequireEncryptionForWriteAccess = $True
+                        encryptionMethod = "aesCbc128"
+                    }
+                    userRightsCreateSymbolicLinks = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    applicationGuardBlockFileTransfer = "notConfigured"
+                    defenderCheckForSignaturesBeforeRunningScan = $True
+                    userRightsRemoteShutdown = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    firewallRules = @(
+                        @{
+                            localAddressRanges = @("FakeStringValue")
+                            action = "notConfigured"
+                            description = "FakeStringValue"
+                            interfaceTypes = "notConfigured"
+                            remotePortRanges = @("FakeStringValue")
+                            displayName = "FakeStringValue"
+                            filePath = "FakeStringValue"
+                            localUserAuthorizations = "FakeStringValue"
+                            protocol = 25
+                            trafficDirection = "notConfigured"
+                            remoteAddressRanges = @("FakeStringValue")
+                            packageFamilyName = "FakeStringValue"
+                            serviceName = "FakeStringValue"
+                            localPortRanges = @("FakeStringValue")
+                            profileTypes = "notConfigured"
+                            edgeTraversal = "notConfigured"
+                        }
+                    )
+                    defenderSignatureUpdateIntervalInHours = 25
+                    defenderEnableLowCpuPriority = $True
+                    localSecurityOptionsAllowAnonymousEnumerationOfSAMAccountsAndShares = $True
+                    defenderFileExtensionsToExclude = @("FakeStringValue")
+                    localSecurityOptionsHideLastSignedInUser = $True
+                    userRightsBlockAccessFromNetwork = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers = "none"
+                    xboxServicesLiveAuthManagerServiceStartupMode = "manual"
+                    localSecurityOptionsMachineInactivityLimitInMinutes = 25
+                    localSecurityOptionsClientDigitallySignCommunicationsAlways = $True
+                    defenderSecurityCenterDisableNetworkUI = $True
+                    userRightsModifyObjectLabels = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    deviceGuardLocalSystemAuthorityCredentialGuardSettings = "notConfigured"
+                    firewallIdleTimeoutForSecurityAssociationInSeconds = 25
+                    defenderSecurityCenterHelpURL = "FakeStringValue"
+                    localSecurityOptionsDisableServerDigitallySignCommunicationsAlways = $True
+                    localSecurityOptionsAllowRemoteCallsToSecurityAccountsManagerHelperBool = $True
+                    userRightsChangeSystemTime = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    localSecurityOptionsAllowUndockWithoutHavingToLogon = $True
+                    defenderEnableScanMappedNetworkDrivesDuringFullScan = $True
+                    defenderUntrustedUSBProcess = "userDefined"
+                    localSecurityOptionsHideUsernameAtSignIn = $True
+                    defenderAllowScanDownloads = $True
+                    localSecurityOptionsDisableAdministratorAccount = $True
+                    defenderSecurityCenterDisableHealthUI = $True
+                    userRightsCreateGlobalObjects = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    localSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares = $True
+                    localSecurityOptionsMachineInactivityLimit = 25
+                    firewallCertificateRevocationListCheckMethod = "deviceDefault"
+                    defenderSecurityCenterDisableFamilyUI = $True
+                    defenderAllowCloudProtection = $True
+                    bitLockerEnableStorageCardEncryptionOnMobile = $True
+                    applicationGuardEnabled = $True
+                    defenderOfficeAppsOtherProcessInjection = "userDefined"
+                    userRightsImpersonateClient = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    '@odata.type' = "#microsoft.graph.windows10EndpointProtectionConfiguration"
+                    localSecurityOptionsUseAdminApprovalModeForAdministrators = $True
+                    lanManagerWorkstationDisableInsecureGuestLogons = $True
+                    defenderAdvancedRansomewareProtectionType = "userDefined"
+                    defenderUntrustedExecutableType = "userDefined"
+                    defenderDisableScanArchiveFiles = $True
+                    lanManagerAuthenticationLevel = "lmAndNltm"
+                    userRightsActAsPartOfTheOperatingSystem = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    defenderPreventCredentialStealingType = "userDefined"
+                    localSecurityOptionsAllowUIAccessApplicationsForSecureLocations = $True
+                    deviceGuardEnableSecureBootWithDMA = $True
+                    localSecurityOptionsDisableClientDigitallySignCommunicationsIfServerAgrees = $True
+                    defenderScriptObfuscatedMacroCode = "userDefined"
+                    defenderDaysBeforeDeletingQuarantinedMalware = 25
+                    defenderAllowScanRemovableDrivesDuringFullScan = $True
+                    localSecurityOptionsDisableServerDigitallySignCommunicationsIfClientAgrees = $True
+                    firewallProfilePrivate = @{
+                        policyRulesFromGroupPolicyNotMerged = $True
+                        inboundConnectionsRequired = $True
+                        securedPacketExemptionAllowed = $True
+                        securedPacketExemptionBlocked = $True
+                        globalPortRulesFromGroupPolicyMerged = $True
+                        stealthModeBlocked = $True
+                        outboundConnectionsBlocked = $True
+                        inboundConnectionsBlocked = $True
+                        authorizedApplicationRulesFromGroupPolicyMerged = $True
+                        inboundNotificationsRequired = $True
+                        firewallEnabled = "notConfigured"
+                        stealthModeRequired = $True
+                        incomingTrafficBlocked = $True
+                        incomingTrafficRequired = $True
+                        unicastResponsesToMulticastBroadcastsBlocked = $True
+                        policyRulesFromGroupPolicyMerged = $True
+                        unicastResponsesToMulticastBroadcastsRequired = $True
+                        connectionSecurityRulesFromGroupPolicyNotMerged = $True
+                        globalPortRulesFromGroupPolicyNotMerged = $True
+                        outboundConnectionsRequired = $True
+                        inboundNotificationsBlocked = $True
+                        connectionSecurityRulesFromGroupPolicyMerged = $True
+                        authorizedApplicationRulesFromGroupPolicyNotMerged = $True
+                    }
+                    defenderSecurityCenterDisableAppBrowserUI = $True
+                    localSecurityOptionsInformationShownOnLockScreen = "notConfigured"
+                    defenderOfficeAppsLaunchChildProcessType = "userDefined"
+                    deviceGuardSecureBootWithDMA = "notConfigured"
+                    applicationGuardAllowPrintToPDF = $True
+                    userRightsCreateToken = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    defenderExploitProtectionXml = $True
+                    userRightsRemoteDesktopServicesLogOn = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    localSecurityOptionsBlockRemoteLogonWithBlankPassword = $True
+                    userRightsBackupData = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    userRightsDenyLocalLogOn = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    localSecurityOptionsOnlyElevateSignedExecutables = $True
+                    applicationGuardAllowVirtualGPU = $True
+                    defenderScanType = "userDefined"
+                    bitLockerSystemDrivePolicy = @{
+                        prebootRecoveryEnableMessageAndUrl = $True
+                        StartupAuthenticationTpmPinUsage = "blocked"
+                        encryptionMethod = "aesCbc128"
+                        minimumPinLength = 25
+                        prebootRecoveryMessage = "FakeStringValue"
+                        StartupAuthenticationTpmPinAndKeyUsage = "blocked"
+                        StartupAuthenticationRequired = $True
+                        RecoveryOptions = @{
+                            RecoveryInformationToStore = "passwordAndKey"
+                            HideRecoveryOptions = $True
+                            BlockDataRecoveryAgent = $True
+                            RecoveryKeyUsage = "blocked"
+                            EnableBitLockerAfterRecoveryInformationToStore = $True
+                            EnableRecoveryInformationSaveToStore = $True
+                            RecoveryPasswordUsage = "blocked"
+                        }
+                        prebootRecoveryUrl = "FakeStringValue"
+                        StartupAuthenticationTpmUsage = "blocked"
+                        StartupAuthenticationTpmKeyUsage = "blocked"
+                        StartupAuthenticationBlockWithoutTpmChip = $True
+                    }
+                    defenderAllowBehaviorMonitoring = $True
+                    defenderAllowIntrusionPreventionSystem = $True
+                    localSecurityOptionsDoNotStoreLANManagerHashValueOnNextPasswordChange = $True
+                    defenderSecurityCenterHelpEmail = "FakeStringValue"
+                    defenderDisableBehaviorMonitoring = $True
+                    localSecurityOptionsVirtualizeFileAndRegistryWriteFailuresToPerUserLocations = $True
+                    applicationGuardBlockClipboardSharing = "notConfigured"
+                    defenderEmailContentExecution = "userDefined"
+                    localSecurityOptionsBlockRemoteOpticalDriveAccess = $True
+                    firewallProfilePublic = @{
+                        policyRulesFromGroupPolicyNotMerged = $True
+                        inboundConnectionsRequired = $True
+                        securedPacketExemptionAllowed = $True
+                        securedPacketExemptionBlocked = $True
+                        globalPortRulesFromGroupPolicyMerged = $True
+                        stealthModeBlocked = $True
+                        outboundConnectionsBlocked = $True
+                        inboundConnectionsBlocked = $True
+                        authorizedApplicationRulesFromGroupPolicyMerged = $True
+                        inboundNotificationsRequired = $True
+                        firewallEnabled = "notConfigured"
+                        stealthModeRequired = $True
+                        incomingTrafficBlocked = $True
+                        incomingTrafficRequired = $True
+                        unicastResponsesToMulticastBroadcastsBlocked = $True
+                        policyRulesFromGroupPolicyMerged = $True
+                        unicastResponsesToMulticastBroadcastsRequired = $True
+                        connectionSecurityRulesFromGroupPolicyNotMerged = $True
+                        globalPortRulesFromGroupPolicyNotMerged = $True
+                        outboundConnectionsRequired = $True
+                        inboundNotificationsBlocked = $True
+                        connectionSecurityRulesFromGroupPolicyMerged = $True
+                        authorizedApplicationRulesFromGroupPolicyNotMerged = $True
+                    }
+                    defenderScriptDownloadedPayloadExecutionType = "userDefined"
+                    xboxServicesAccessoryManagementServiceStartupMode = "manual"
+                    xboxServicesEnableXboxGameSaveTask = $True
+                    bitLockerEncryptDevice = $True
+                    localSecurityOptionsBlockMicrosoftAccounts = $True
+                    bitLockerRemovableDrivePolicy = @{
+                        requireEncryptionForWriteAccess = $True
+                        blockCrossOrganizationWriteAccess = $True
+                        encryptionMethod = "aesCbc128"
+                    }
+                    defenderSecurityCenterBlockExploitProtectionOverride = $True
+                    localSecurityOptionsLogOnMessageText = "FakeStringValue"
+                    applicationGuardCertificateThumbprints = @("FakeStringValue")
+                    defenderCloudBlockLevel = "notConfigured"
+                    defenderProcessCreationType = "userDefined"
+                    defenderDisableScanDownloads = $True
+                    defenderOfficeCommunicationAppsLaunchChildProcess = "userDefined"
+                    localSecurityOptionsClientSendUnencryptedPasswordToThirdPartySMBServers = $True
+                    userRightsAllowAccessFromNetwork = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    applicationGuardForceAuditing = $True
+                    defenderDisableRealTimeMonitoring = $True
+                    defenderSecurityCenterNotificationsFromApp = "notConfigured"
+                    localSecurityOptionsAdministratorAccountName = "FakeStringValue"
+                    windowsDefenderTamperProtection = "notConfigured"
+                    defenderSecurityCenterDisableAccountUI = $True
+                    localSecurityOptionsSwitchToSecureDesktopWhenPromptingForElevation = $True
+                    defenderEmailContentExecutionType = "userDefined"
+                    defenderAllowScanNetworkFiles = $True
+                    defenderSecurityCenterDisableNotificationAreaUI = $True
+                    userRightsProfileSingleProcess = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    localSecurityOptionsSmartCardRemovalBehavior = "noAction"
+                    defenderDisableCloudProtection = $True
+                    userRightsManageVolumes = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    smartScreenEnableInShell = $True
+                    applicationGuardBlockNonEnterpriseContent = $True
+                    defenderAdditionalGuardedFolders = @("FakeStringValue")
+                    localSecurityOptionsDoNotAllowAnonymousEnumerationOfSAMAccounts = $True
+                    userRightsRestoreData = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients = "none"
+                    defenderDisableOnAccessProtection = $True
+                    bitLockerRecoveryPasswordRotation = "notConfigured"
+                    firewallPreSharedKeyEncodingMethod = "deviceDefault"
+                    userRightsDelegation = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    userRightsDebugPrograms = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    defenderSecurityCenterDisableVulnerableTpmFirmwareUpdateUI = $True
+                    defenderSecurityCenterOrganizationDisplayName = "FakeStringValue"
+                    localSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser = "notConfigured"
+                    userRightsLockMemory = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    appLockerApplicationControl = "notConfigured"
+                    defenderBlockPersistenceThroughWmiType = "userDefined"
+                    defenderDisableScanNetworkFiles = $True
+                    defenderDisableCatchupQuickScan = $True
+                    localSecurityOptionsLogOnMessageTitle = "FakeStringValue"
+                    localSecurityOptionsStandardUserElevationPromptBehavior = "notConfigured"
+                    userRightsGenerateSecurityAudits = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    defenderSecurityCenterDisableClearTpmUI = $True
+                    defenderEnableScanIncomingMail = $True
+                    defenderSecurityCenterHelpPhone = "FakeStringValue"
+                    localSecurityOptionsDoNotRequireCtrlAltDel = $True
+                    userRightsTakeOwnership = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    userRightsLocalLogOn = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    applicationGuardAllowPersistence = $True
+                    defenderCloudExtendedTimeoutInSeconds = 25
+                    firewallIPSecExemptionsAllowICMP = $True
+                    defenderAllowEndUserAccess = $True
+                    defenderScriptDownloadedPayloadExecution = "userDefined"
+                    defenderExploitProtectionXmlFileName = "FakeStringValue"
+                    defenderScriptObfuscatedMacroCodeType = "userDefined"
+                    defenderDisableScanRemovableDrivesDuringFullScan = $True
+                    localSecurityOptionsAllowSystemToBeShutDownWithoutHavingToLogOn = $True
+                    defenderOfficeMacroCodeAllowWin32ImportsType = "userDefined"
+                    firewallIPSecExemptionsAllowDHCP = $True
+                    firewallProfileDomain = @{
+                        policyRulesFromGroupPolicyNotMerged = $True
+                        inboundConnectionsRequired = $True
+                        securedPacketExemptionAllowed = $True
+                        securedPacketExemptionBlocked = $True
+                        globalPortRulesFromGroupPolicyMerged = $True
+                        stealthModeBlocked = $True
+                        outboundConnectionsBlocked = $True
+                        inboundConnectionsBlocked = $True
+                        authorizedApplicationRulesFromGroupPolicyMerged = $True
+                        inboundNotificationsRequired = $True
+                        firewallEnabled = "notConfigured"
+                        stealthModeRequired = $True
+                        incomingTrafficBlocked = $True
+                        incomingTrafficRequired = $True
+                        unicastResponsesToMulticastBroadcastsBlocked = $True
+                        policyRulesFromGroupPolicyMerged = $True
+                        unicastResponsesToMulticastBroadcastsRequired = $True
+                        connectionSecurityRulesFromGroupPolicyNotMerged = $True
+                        globalPortRulesFromGroupPolicyNotMerged = $True
+                        outboundConnectionsRequired = $True
+                        inboundNotificationsBlocked = $True
+                        connectionSecurityRulesFromGroupPolicyMerged = $True
+                        authorizedApplicationRulesFromGroupPolicyNotMerged = $True
+                    }
+                    localSecurityOptionsAllowPKU2UAuthenticationRequests = $True
+                    defenderSecurityCenterDisableTroubleshootingUI = $True
+                    defenderPotentiallyUnwantedAppAction = "userDefined"
+                    userRightsModifyFirmwareEnvironment = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    defenderOfficeAppsExecutableContentCreationOrLaunch = "userDefined"
+                    defenderOfficeAppsExecutableContentCreationOrLaunchType = "userDefined"
+                    defenderSubmitSamplesConsentType = "sendSafeSamplesAutomatically"
+                    defenderAdobeReaderLaunchChildProcess = "userDefined"
+                    localSecurityOptionsDetectApplicationInstallationsAndPromptForElevation = $True
+                    defenderDisableIntrusionPreventionSystem = $True
+                    defenderDisableCatchupFullScan = $True
+                    bitLockerDisableWarningForOtherDiskEncryption = $True
+                    xboxServicesLiveNetworkingServiceStartupMode = "manual"
+                    firewallBlockStatefulFTP = $True
+                    firewallMergeKeyingModuleSettings = $True
+                    userRightsManageAuditingAndSecurityLogs = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    userRightsCreatePermanentSharedObjects = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    localSecurityOptionsBlockUsersInstallingPrinterDrivers = $True
+                    smartScreenBlockOverrideForFiles = $True
+                    userRightsCreatePageFile = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    defenderAllowOnAccessProtection = $True
+                    dmaGuardDeviceEnumerationPolicy = "deviceDefault"
+                    defenderOfficeAppsOtherProcessInjectionType = "userDefined"
+                    localSecurityOptionsGuestAccountName = "FakeStringValue"
+                    defenderDetectedMalwareActions = @{
+                        lowSeverity = "deviceDefault"
+                        severeSeverity = "deviceDefault"
+                        moderateSeverity = "deviceDefault"
+                        highSeverity = "deviceDefault"
+                    }
+                    defenderProcessesToExclude = @("FakeStringValue")
+                    defenderScheduledScanTime = "00:00:00"
+                    defenderSecurityCenterDisableSecureBootUI = $True
+                    applicationGuardAllowFileSaveOnHost = $True
+                    localSecurityOptionsDisableGuestAccount = $True
+                    defenderSecurityCenterDisableRansomwareUI = $True
+                    defenderGuardedFoldersAllowedAppPaths = @("FakeStringValue")
+                    defenderOfficeMacroCodeAllowWin32Imports = "userDefined"
+                    applicationGuardAllowPrintToLocalPrinters = $True
+                    defenderSecurityCenterITContactDisplay = "notConfigured"
+                    defenderAttackSurfaceReductionExcludedPaths = @("FakeStringValue")
+                    defenderAllowScanScriptsLoadedInInternetExplorer = $True
+                    defenderSecurityCenterDisableVirusUI = $True
+                    userRightsAccessCredentialManagerAsTrustedCaller = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    localSecurityOptionsAllowUIAccessApplicationElevation = $True
+                    defenderDisableScanScriptsLoadedInInternetExplorer = $True
+                    localSecurityOptionsAdministratorElevationPromptBehavior = "notConfigured"
+                    userRightsLoadUnloadDrivers = @{
+                        State = "notConfigured"
+                        LocalUsersOrGroups = @(
+                            @{
+                                Description = "FakeStringValue"
+                                Name = "FakeStringValue"
+                                SecurityIdentifier = "FakeStringValue"
+                            }
+                        )
+                    }
+                    defenderScanMaxCpuPercentage = 25
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
                     id = "FakeStringValue"
@@ -1970,7 +1968,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADB2BManagementPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -34,6 +36,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -94,6 +104,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
@@ -149,6 +161,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -182,11 +202,21 @@ function Set-TargetResource
 
     $currentInstance = Get-MgBetaPolicyB2BManagementPolicy -Filter "DisplayName eq 'B2BManagementPolicy'"
 
-    #region resource generator code
-    Update-MgBetaPolicyB2BManagementPolicy `
-        -B2BManagementPolicyId $currentInstance.Id `
-        -Definition $Definition
-    #endregion
+    if ($null -eq $currentInstance)
+    {
+        Write-Verbose -Message "No existing Azure AD B2B Management Policy found, creating new policy with DisplayName 'B2BManagementPolicy'"
+        $createParameters = $updateParameters
+        $createParameters.Add('displayName', 'B2BManagementPolicy')
+        $null = New-MgBetaPolicyB2BManagementPolicy -BodyParameter $createParameters
+    }
+    else
+    {
+        #region resource generator code
+        Update-MgBetaPolicyB2BManagementPolicy `
+            -B2BManagementPolicyId $currentInstance.Id `
+            -BodyParameter $updateParameters
+        #endregion
+    }
 }
 
 function Test-TargetResource
@@ -225,6 +255,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -276,6 +314,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -310,7 +356,7 @@ function Export-TargetResource
         #endregion
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -338,6 +384,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -351,13 +399,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('')
-            $dscContent += $currentDSCBlock
+            [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {
@@ -372,3 +420,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

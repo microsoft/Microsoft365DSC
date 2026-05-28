@@ -36,12 +36,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaIdentityProvider -MockWith {
                 return @{
                     Id                   = "Google-OAUTH";
-                    AdditionalProperties = @{
-                        ClientId             = "Google-OAUTH";
-                        ClientSecret         = "FakeSecret";
-                        IdentityProviderType = "Google";
-                        '@odata.type'        = "#microsoft.graph.socialIdentityProvider"
-                    }
+                    ClientId             = "Google-OAUTH";
+                    ClientSecret         = "FakeSecret";
+                    IdentityProviderType = "Google";
+                    '@odata.type'        = "#microsoft.graph.socialIdentityProvider"
                     DisplayName          = "My Google Provider";
                 }
             }
@@ -96,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

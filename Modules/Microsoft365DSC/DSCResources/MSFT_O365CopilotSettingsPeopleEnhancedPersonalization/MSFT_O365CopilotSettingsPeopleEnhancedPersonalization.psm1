@@ -40,6 +40,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -98,6 +106,8 @@ function Get-TargetResource
             TenantId                = $TenantId
             ApplicationSecret       = $ApplicationSecret
             CertificateThumbprint   = $CertificateThumbprint
+            CertificatePath         = $CertificatePath
+            CertificatePassword     = $CertificatePassword
             ManagedIdentity         = $ManagedIdentity.IsPresent
             AccessTokens            = $AccessTokens
         }
@@ -154,6 +164,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -182,8 +200,7 @@ function Set-TargetResource
     # Check if $disabledForGroup is a guid or display name and convert to guid if needed
     if (-not [string]::IsNullOrEmpty($disabledForGroup))
     {
-        $guid = [System.Guid]::Empty
-        if (-not ([System.Guid]::TryParse($disabledForGroup, [ref]$guid)))
+        if (-not ([System.Guid]::TryParse($disabledForGroup, [ref][System.Guid]::Empty)))
         {
             $group = Get-MgGroup -Filter "displayName eq '$disabledForGroup'" -Property Id -Top 1
             if ($null -ne $group)
@@ -254,6 +271,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -303,6 +328,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -328,9 +361,7 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
             $Global:M365DSCExportResourceInstancesCount++
@@ -343,6 +374,8 @@ function Export-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -354,11 +387,11 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -Credential $Credential
-        $dscContent += $currentDSCBlock
+        [void]$dscContent.Append($currentDSCBlock)
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

@@ -53,12 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 state = "enabled"
                             },
                             @{
-                                maxLifetime = @{
-                                    Days    = 90
-                                    Hours   = 0
-                                    Minutes = 0
-                                    Seconds = 0
-                                }
+                                maxLifetime = "P90D"
                                 restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
                                 restrictionType = "passwordLifetime"
                                 state = "enabled"
@@ -69,12 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 state = "enabled"
                             },
                             @{
-                                maxLifetime = @{
-                                    Days    = 90
-                                    Hours   = 0
-                                    Minutes = 0
-                                    Seconds = 0
-                                }
+                                maxLifetime = "P90D"
                                 restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
                                 restrictionType = "symmetricKeyLifetime"
                                 state = "enabled"
@@ -125,7 +115,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $result.ApplicationRestrictions.passwordCredentials | Should -HaveCount 4
                 $lifetimeCred = $result.ApplicationRestrictions.passwordCredentials | Where-Object { $_.restrictionType -eq 'passwordLifetime' }
                 $lifetimeCred | Should -Not -BeNullOrEmpty
-                $lifetimeCred.maxLifetime | Should -Be 'P90DT0H0M0S'
+                $lifetimeCred.maxLifetime | Should -Be 'P90D'
             }
         }
 
@@ -144,7 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 state = "enabled"
                             } -ClientOnly);
                             (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
-                                maxLifetime = "P90DT0H0M0S"
+                                maxLifetime = "P90D"
                                 restrictForAppsCreatedAfterDateTime = "1/1/0001 5:00:00 AM"
                                 restrictionType = "passwordLifetime"
                                 state = "enabled"
@@ -155,7 +145,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 state = "enabled"
                             } -ClientOnly);
                             (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
-                                maxLifetime = "P90DT0H0M0S"
+                                maxLifetime = "P90D"
                                 restrictForAppsCreatedAfterDateTime = "1/1/0001 5:00:00 AM"
                                 restrictionType = "symmetricKeyLifetime"
                                 state = "enabled"
@@ -189,7 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ApplicationRestrictions = (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictions -Property @{
                         keyCredentials = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_AADTenantAppManagementPolicyRestrictionsCredential -Property @{
-                                maxLifetime = "P30DT0H0M0S"
+                                maxLifetime = "P30D"
                                 restrictForAppsCreatedAfterDateTime = "0001-01-01T00:00:00.0000000"
                                 restrictionType = "asymmetricKeyLifetime"
                                 state = "enabled"
@@ -215,12 +205,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ApplicationRestrictions = @{
                             keyCredentials = @(
                                 @{
-                                    maxLifetime = @{
-                                        Days    = 30
-                                        Hours   = 0
-                                        Minutes = 0
-                                        Seconds = 0
-                                    }
+                                    maxLifetime = "P30D"
                                     restrictForAppsCreatedAfterDateTime = [DateTime]::Parse("1/1/0001 12:00:00 AM")
                                     restrictionType = "asymmetricKeyLifetime"
                                     state = "enabled"

@@ -2,9 +2,6 @@
 $Global:SessionSecurityCompliance = $null
 #endregion
 
-# Automatically initialize accelerator on module import
-Initialize-M365DSCDllLoader -ErrorAction SilentlyContinue
-
 $Script:M365DSCWorkloads = @('AAD', 'ADO', 'AZURE', 'COMMERCE', 'DEFENDER', 'EXO', 'FABRIC', 'INTUNE', 'O365', 'OD', 'PLANNER', 'PP', 'SC', 'SENTINEL', 'SH', 'SPO', 'TEAMS')
 
 <#
@@ -74,6 +71,7 @@ function Convert-M365DscHashtableToString
         $Hashtable
     )
 
+    Initialize-M365DSCDllLoader -ErrorAction Stop
     return [Microsoft365DSC.Converter.HashtableConverter]::ToString($Hashtable)
 }
 
@@ -220,23 +218,12 @@ function Test-M365DSCParameterState
 
         $ConnectionMode = Get-M365DSCAuthenticationMode $DesiredValues
         $dataEvaluation.Add('ConnectionMode', $ConnectionMode)
-        # Most likely unnecessary - Keep as a comment for now
-        # TODO: Measure performance impact
-        <#
-        for ($i = 0; $i -lt $ValuesToCheck.Length; $i++)
-        {
-            if ($ValuesToCheck[$i] -eq 'Verbose')
-            {
-                $ValuesToCheck.RemoveAt($i)
-                break
-            }
-        }
-        #>
         $dataEvaluation.Add('Parameters', $ValuesToCheck -join "`r`n")
         $dataEvaluation.Add('ParametersCount', $ValuesToCheck.Length)
         Add-M365DSCTelemetryEvent -Type 'DriftEvaluation' -Data $dataEvaluation
     }
 
+    Initialize-M365DSCDllLoader -ErrorAction Stop
     $compareResult = [Microsoft365DSC.Compare.SimpleObjectComparer]::Compare($CurrentValues, $DesiredValues, $ValuesToCheck, $IncludedDrifts, $NoEventMessage, $NoDriftReset, $ExcludedProperties)
     $driftedParameters = $compareResult.DriftedParameters
     $driftObject = $compareResult.DriftObject
@@ -255,7 +242,7 @@ function Test-M365DSCParameterState
 
     if ($returnValue -eq $false -or $DriftedParameters.Keys.Length -gt 0)
     {
-        $EventMessage = [System.Text.StringBuilder]::New()
+        $EventMessage = [System.Text.StringBuilder]::new()
         $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
         Write-Verbose -Message "Found Tenant Name: $TenantName"
 
@@ -300,21 +287,9 @@ function Test-M365DSCParameterState
         $EventMessage.Append(">`r`n") | Out-Null
         $EventMessage.Append("        <ParametersNotInDesiredState>`r`n") | Out-Null
 
-        $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-        $driftedData.Add('Tenant', $TenantName)
         $DriftObject.Add('Tenant', $TenantName)
-        $driftedData.Add('Resource', $source.Split('_')[1])
         $DriftObject.Add('Resource', $source.Split('_')[1])
 
-        # If custom App Insights is specified, allow for the current and desired values to be captured;
-        # ISSUE #1222
-        if ($null -ne $env:M365DSCTelemetryInstrumentationKey -and `
-                $env:M365DSCTelemetryInstrumentationKey -ne 'bc5aa204-0b1e-4499-a955-d6a639bdb4fa' -and `
-                $env:M365DSCTelemetryInstrumentationKey -ne 'e670af5d-fd30-4407-a796-8ad30491ea7a')
-        {
-            $driftedData.Add('CurrentValues', $CurrentValues)
-            $driftedData.Add('DesiredValues', $DesiredValues)
-        }
         #endregion
         $telemetryDriftedParameters = ''
         foreach ($key in $DriftedParameters.Keys)
@@ -324,8 +299,24 @@ function Test-M365DSCParameterState
             $EventMessage.Append("            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n") | Out-Null
         }
 
-        $driftedData.Add('Parameters', $telemetryDriftedParameters)
-        Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
+        if (Test-IsM365DSCTelemetryEnabled)
+        {
+            $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+            $driftedData.Add('Resource', $source.Split('_')[1])
+            $driftedData.Add('Tenant', $TenantName)
+
+            # If custom App Insights is specified, allow for the current and desired values to be captured;
+            # ISSUE #1222
+            if ($null -ne $env:M365DSCTelemetryInstrumentationKey -and `
+                    $env:M365DSCTelemetryInstrumentationKey -ne 'bc5aa204-0b1e-4499-a955-d6a639bdb4fa' -and `
+                    $env:M365DSCTelemetryInstrumentationKey -ne 'e670af5d-fd30-4407-a796-8ad30491ea7a')
+            {
+                $driftedData.Add('CurrentValues', $CurrentValues)
+                $driftedData.Add('DesiredValues', $DesiredValues)
+            }
+            $driftedData.Add('Parameters', $telemetryDriftedParameters)
+            Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
+        }
         $EventMessage.Append("        </ParametersNotInDesiredState>`r`n") | Out-Null
         $EventMessage.Append("    </ConfigurationDrift>`r`n") | Out-Null
         $EventMessage.Append("    <DesiredValues>`r`n") | Out-Null
@@ -371,7 +362,7 @@ function Test-M365DSCParameterState
     elseif ($includeNonDriftsInformation -eq $true)
     {
         # Include details about non-drifted resources.
-        $EventMessage = [System.Text.StringBuilder]::New()
+        $EventMessage = [System.Text.StringBuilder]::new()
         $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
         $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`" />`r`n") | Out-Null
         $EventMessage.Append("    <DesiredValues>`r`n") | Out-Null
@@ -390,16 +381,19 @@ function Test-M365DSCParameterState
             -EventID 2 -Source $Source
     }
 
-    $timeTaken = [System.DateTime]::Now.Subtract($startTime).TotalMilliseconds
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Resource', $Source)
-    $data.Add('Method', 'Test-M365DSCParameterState')
-    $data.Add('TimeTakenMilliseconds', $timeTaken)
-    $data.Add('Tenant', $TenantName)
-    $data.Add('ParametersCount', $KeyList.Count)
+    if (Test-IsM365DSCTelemetryEnabled)
+    {
+        $timeTaken = [System.DateTime]::Now.Subtract($startTime).TotalMilliseconds
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add('Resource', $Source)
+        $data.Add('Method', 'Test-M365DSCParameterState')
+        $data.Add('TimeTakenMilliseconds', $timeTaken)
+        $data.Add('Tenant', $TenantName)
+        $data.Add('ParametersCount', $KeyList.Count)
 
-    Add-M365DSCTelemetryEvent -Type 'ResourceTesting' `
-        -Data $data
+        Add-M365DSCTelemetryEvent -Type 'ResourceTesting' `
+            -Data $data
+    }
     return $returnValue
 }
 
@@ -461,6 +455,7 @@ function Test-M365DSCTargetResource
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
+    Initialize-M365DSCDllLoader -ErrorAction Stop
 
     if ($null -eq (Get-Module -Name 'M365DSCCompare'))
     {
@@ -971,7 +966,23 @@ function Assert-M365DSCBlueprint
 
         [Parameter()]
         [System.Boolean]
-        $KeepExport = $false
+        $KeepExport = $false,
+
+        [Parameter()]
+        [Switch]
+        $UseVariableSubstitution,
+
+        [Parameter()]
+        [System.String]
+        $SourceConfigurationDataPath,
+
+        [Parameter()]
+        [System.String]
+        $DestinationConfigurationDataPath,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSubstitutionProperties
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -1072,15 +1083,36 @@ function Assert-M365DSCBlueprint
         # Call the New-M365DSCDeltaReport configuration to generate the Delta Report between
         # the BluePrint and the extracted resources;
         $ExportPath = Join-Path -Path $env:Temp -ChildPath $TempExportName
-        New-M365DSCDeltaReport -Source $ExportPath `
-            -Destination $LocalBluePrintPath `
-            -OutputPath $OutputReportPath `
-            -DriftOnly $DriftOnly `
-            -IsBlueprintAssessment:$true `
-            -HeaderFilePath $HeaderFilePath `
-            -Type $Type `
-            -ExcludedProperties $ExcludedProperties `
-            -ExcludedResources $ExcludedResources
+        $deltaReportParams = @{
+            Source                = $ExportPath
+            Destination           = $LocalBluePrintPath
+            OutputPath            = $OutputReportPath
+            DriftOnly             = $DriftOnly
+            IsBlueprintAssessment = $true
+            HeaderFilePath        = $HeaderFilePath
+            Type                  = $Type
+            ExcludedProperties    = $ExcludedProperties
+            ExcludedResources     = $ExcludedResources
+        }
+
+        if ($UseVariableSubstitution)
+        {
+            $deltaReportParams.UseVariableSubstitution = $true
+            if (-not [System.String]::IsNullOrEmpty($SourceConfigurationDataPath))
+            {
+                $deltaReportParams.SourceConfigurationDataPath = $SourceConfigurationDataPath
+            }
+            if (-not [System.String]::IsNullOrEmpty($DestinationConfigurationDataPath))
+            {
+                $deltaReportParams.DestinationConfigurationDataPath = $DestinationConfigurationDataPath
+            }
+            if ($null -ne $ExcludedSubstitutionProperties -and $ExcludedSubstitutionProperties.Count -gt 0)
+            {
+                $deltaReportParams.ExcludedSubstitutionProperties = $ExcludedSubstitutionProperties
+            }
+        }
+
+        New-M365DSCDeltaReport @deltaReportParams
 
         # Clean up the temporary files
         Remove-Item $LocalBluePrintPath -Force -ErrorAction SilentlyContinue
@@ -1917,7 +1949,7 @@ function Invoke-M365DSCGraphBatchRequest
             requests = $batchRequestSized
         }
 
-        Write-Verbose -Message "Sending BATCH Request with:`r`n$($request | ConvertTo-Json -Depth 10))"
+        Write-Verbose -Message "Sending BATCH Request with $($request.requests.Count) sub-requests (starting at index $i)..."
         $apiResponse = Invoke-MgGraphRequest -Method POST `
             -Uri 'beta/$batch' `
             -Body ($request | ConvertTo-Json -Depth 10) `
