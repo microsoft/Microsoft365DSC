@@ -67,6 +67,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -120,12 +128,12 @@ function Get-TargetResource
         #region resource generator code
         Write-Verbose 'Processing KeyRestrictions'
         $complexKeyRestrictions = [ordered]@{}
-        $complexKeyRestrictions.Add('AaGuids', $getValue.AdditionalProperties.keyRestrictions.aaGuids)
-        if ($null -ne $getValue.AdditionalProperties.keyRestrictions.enforcementType)
+        $complexKeyRestrictions.Add('AaGuids', $getValue.keyRestrictions.aaGuids)
+        if ($null -ne $getValue.keyRestrictions.enforcementType)
         {
-            $complexKeyRestrictions.Add('EnforcementType', $getValue.AdditionalProperties.keyRestrictions.enforcementType.ToString())
+            $complexKeyRestrictions.Add('EnforcementType', $getValue.keyRestrictions.enforcementType.ToString())
         }
-        $complexKeyRestrictions.Add('IsEnforced', $getValue.AdditionalProperties.keyRestrictions.isEnforced)
+        $complexKeyRestrictions.Add('IsEnforced', $getValue.keyRestrictions.isEnforced)
         if ($complexKeyRestrictions.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexKeyRestrictions = $null
@@ -174,7 +182,7 @@ function Get-TargetResource
 
         Write-Verbose 'Processing IncludeTargets'
         $complexIncludeTargets = @()
-        foreach ($currentIncludeTargets in $getValue.AdditionalProperties.includeTargets)
+        foreach ($currentIncludeTargets in $getValue.includeTargets)
         {
             $myIncludeTargets = [ordered]@{}
             if ($currentIncludeTargets.id -ne 'all_users')
@@ -214,7 +222,7 @@ function Get-TargetResource
 
         Write-Verbose 'Processing Passkey profiles'
         $complexPasskeyProfiles = @()
-        foreach ($currentPasskeyProfiles in $getValue.AdditionalProperties.passkeyProfiles){
+        foreach ($currentPasskeyProfiles in $getValue.passkeyProfiles){
             $myPasskeyProfiles = @{}
             $myPasskeyProfiles.Add('Id', $currentPasskeyProfiles.id)
             $myPasskeyProfiles.Add('Name', $currentPasskeyProfiles.name)
@@ -262,8 +270,8 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            IsAttestationEnforced            = $getValue.AdditionalProperties.isAttestationEnforced
-            IsSelfServiceRegistrationAllowed = $getValue.AdditionalProperties.isSelfServiceRegistrationAllowed
+            IsAttestationEnforced            = $getValue.isAttestationEnforced
+            IsSelfServiceRegistrationAllowed = $getValue.isSelfServiceRegistrationAllowed
             KeyRestrictions                  = $complexKeyRestrictions
             ExcludeTargets                   = $complexExcludeTargets
             IncludeTargets                   = $complexIncludeTargets
@@ -276,6 +284,8 @@ function Get-TargetResource
             TenantId                         = $TenantId
             ApplicationSecret                = $ApplicationSecret
             CertificateThumbprint            = $CertificateThumbprint
+            CertificatePath                  = $CertificatePath
+            CertificatePassword              = $CertificatePassword
             ManagedIdentity                  = $ManagedIdentity.IsPresent
             AccessTokens                     = $AccessTokens
             #endregion
@@ -359,6 +369,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -492,6 +510,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -539,6 +565,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -599,6 +633,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

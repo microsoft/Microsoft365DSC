@@ -86,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AddedBy             = 'myAdmin'
                     AddedOn             = '25/10/2022 18:47:28'
-                    CatalogId           = 'f34c2d92-9e9d-4703-ba9b-955b6ac8dcb3'
+                    CatalogId           = 'MyCatalog'
                     Description         = 'https://001q1.sharepoint.com/'
                     DisplayName         = 'Communication site'
                     Id                  = '6a636d76-5025-44d4-9a80-78618f00c16d'
@@ -121,7 +121,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AddedBy             = 'myAdmin'
                     AddedOn             = '25/10/2022 18:47:28'
-                    CatalogId           = 'f34c2d92-9e9d-4703-ba9b-955b6ac8dcb3'
+                    CatalogId           = 'MyCatalog'
                     Description         = 'https://001q1.sharepoint.com/'
                     DisplayName         = 'Communication site'
                     Id                  = '6a636d76-5025-44d4-9a80-78618f00c16d'
@@ -140,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -155,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AddedBy             = 'myAdmin'
                     AddedOn             = '25/10/2022 18:47:28'
-                    CatalogId           = 'f34c2d92-9e9d-4703-ba9b-955b6ac8dcb3'
+                    CatalogId           = 'MyCatalog'
                     Description         = 'https://001q1.sharepoint.com/'
                     DisplayName         = 'Communication site'
                     Ensure              = 'Present'
@@ -181,7 +181,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AddedBy             = 'myAdmin'
                     AddedOn             = '25/10/2022 18:47:28'
-                    CatalogId           = 'f34c2d92-9e9d-4703-ba9b-955b6ac8dcb3'
+                    CatalogId           = 'MyCatalog'
                     Description         = 'https://001q2.sharepoint.com/' # Drift
                     DisplayName         = 'Communication site'
                     Ensure              = 'Present'

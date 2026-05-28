@@ -38,9 +38,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaOrganizationCertificateBasedAuthConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.CertificateBasedAuthConfiguration"
-                    }
+                    '@odata.type' = "#microsoft.graph.CertificateBasedAuthConfiguration"
                     CertificateAuthorities = @(
                         @{
                             IssuerSki = "FakeStringValue"
@@ -130,7 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

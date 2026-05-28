@@ -1233,6 +1233,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1280,11 +1288,8 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                         -All `
-                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
-                        -ErrorAction SilentlyContinue | Where-Object `
-                        -FilterScript {
-                            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' `
-                    }
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.windows10GeneralConfiguration')" `
+                        -ErrorAction SilentlyContinue
                 }
             }
             #endregion
@@ -1303,21 +1308,21 @@ function Get-TargetResource
 
         #region resource generator code
         $complexDefenderDetectedMalwareActions = [ordered]@{}
-        if ($null -ne $getValue.AdditionalProperties.defenderDetectedMalwareActions.highSeverity)
+        if ($null -ne $getValue.defenderDetectedMalwareActions.highSeverity)
         {
-            $complexDefenderDetectedMalwareActions.Add('HighSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.highSeverity.ToString())
+            $complexDefenderDetectedMalwareActions.Add('HighSeverity', $getValue.defenderDetectedMalwareActions.highSeverity.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.defenderDetectedMalwareActions.lowSeverity)
+        if ($null -ne $getValue.defenderDetectedMalwareActions.lowSeverity)
         {
-            $complexDefenderDetectedMalwareActions.Add('LowSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.lowSeverity.ToString())
+            $complexDefenderDetectedMalwareActions.Add('LowSeverity', $getValue.defenderDetectedMalwareActions.lowSeverity.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.defenderDetectedMalwareActions.moderateSeverity)
+        if ($null -ne $getValue.defenderDetectedMalwareActions.moderateSeverity)
         {
-            $complexDefenderDetectedMalwareActions.Add('ModerateSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.moderateSeverity.ToString())
+            $complexDefenderDetectedMalwareActions.Add('ModerateSeverity', $getValue.defenderDetectedMalwareActions.moderateSeverity.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.defenderDetectedMalwareActions.severeSeverity)
+        if ($null -ne $getValue.defenderDetectedMalwareActions.severeSeverity)
         {
-            $complexDefenderDetectedMalwareActions.Add('SevereSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.severeSeverity.ToString())
+            $complexDefenderDetectedMalwareActions.Add('SevereSeverity', $getValue.defenderDetectedMalwareActions.severeSeverity.ToString())
         }
         if ($complexDefenderDetectedMalwareActions.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1325,10 +1330,10 @@ function Get-TargetResource
         }
 
         $complexEdgeHomeButtonConfiguration = [ordered]@{}
-        $complexEdgeHomeButtonConfiguration.Add('HomeButtonCustomURL', $getValue.AdditionalProperties.edgeHomeButtonConfiguration.homeButtonCustomURL)
-        if ($null -ne $getValue.AdditionalProperties.edgeHomeButtonConfiguration.'@odata.type')
+        $complexEdgeHomeButtonConfiguration.Add('HomeButtonCustomURL', $getValue.edgeHomeButtonConfiguration.homeButtonCustomURL)
+        if ($null -ne $getValue.edgeHomeButtonConfiguration.'@odata.type')
         {
-            $complexEdgeHomeButtonConfiguration.Add('odataType', $getValue.AdditionalProperties.edgeHomeButtonConfiguration.'@odata.type'.ToString())
+            $complexEdgeHomeButtonConfiguration.Add('odataType', $getValue.edgeHomeButtonConfiguration.'@odata.type'.ToString())
         }
         if ($complexEdgeHomeButtonConfiguration.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1336,14 +1341,14 @@ function Get-TargetResource
         }
 
         $complexEdgeSearchEngine = [ordered]@{}
-        if ($null -ne $getValue.AdditionalProperties.edgeSearchEngine.edgeSearchEngineType)
+        if ($null -ne $getValue.edgeSearchEngine.edgeSearchEngineType)
         {
-            $complexEdgeSearchEngine.Add('EdgeSearchEngineType', $getValue.AdditionalProperties.edgeSearchEngine.edgeSearchEngineType.ToString())
+            $complexEdgeSearchEngine.Add('EdgeSearchEngineType', $getValue.edgeSearchEngine.edgeSearchEngineType.ToString())
         }
-        $complexEdgeSearchEngine.Add('EdgeSearchEngineOpenSearchXmlUrl', $getValue.AdditionalProperties.edgeSearchEngine.edgeSearchEngineOpenSearchXmlUrl)
-        if ($null -ne $getValue.AdditionalProperties.edgeSearchEngine.'@odata.type')
+        $complexEdgeSearchEngine.Add('EdgeSearchEngineOpenSearchXmlUrl', $getValue.edgeSearchEngine.edgeSearchEngineOpenSearchXmlUrl)
+        if ($null -ne $getValue.edgeSearchEngine.'@odata.type')
         {
-            $complexEdgeSearchEngine.Add('odataType', $getValue.AdditionalProperties.edgeSearchEngine.'@odata.type'.ToString())
+            $complexEdgeSearchEngine.Add('odataType', $getValue.edgeSearchEngine.'@odata.type'.ToString())
         }
         if ($complexEdgeSearchEngine.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1351,23 +1356,23 @@ function Get-TargetResource
         }
 
         $complexNetworkProxyServer = [ordered]@{}
-        $complexNetworkProxyServer.Add('Address', $getValue.AdditionalProperties.networkProxyServer.address)
-        $complexNetworkProxyServer.Add('Exceptions', $getValue.AdditionalProperties.networkProxyServer.exceptions)
-        $complexNetworkProxyServer.Add('UseForLocalAddresses', $getValue.AdditionalProperties.networkProxyServer.useForLocalAddresses)
+        $complexNetworkProxyServer.Add('Address', $getValue.networkProxyServer.address)
+        $complexNetworkProxyServer.Add('Exceptions', $getValue.networkProxyServer.exceptions)
+        $complexNetworkProxyServer.Add('UseForLocalAddresses', $getValue.networkProxyServer.useForLocalAddresses)
         if ($complexNetworkProxyServer.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexNetworkProxyServer = $null
         }
 
         $complexWindows10AppsForceUpdateSchedule = [ordered]@{}
-        if ($null -ne $getValue.AdditionalProperties.windows10AppsForceUpdateSchedule.recurrence)
+        if ($null -ne $getValue.windows10AppsForceUpdateSchedule.recurrence)
         {
-            $complexWindows10AppsForceUpdateSchedule.Add('Recurrence', $getValue.AdditionalProperties.windows10AppsForceUpdateSchedule.recurrence.ToString())
+            $complexWindows10AppsForceUpdateSchedule.Add('Recurrence', $getValue.windows10AppsForceUpdateSchedule.recurrence.ToString())
         }
-        $complexWindows10AppsForceUpdateSchedule.Add('RunImmediatelyIfAfterStartDateTime', $getValue.AdditionalProperties.windows10AppsForceUpdateSchedule.runImmediatelyIfAfterStartDateTime)
-        if ($null -ne $getValue.AdditionalProperties.windows10AppsForceUpdateSchedule.startDateTime)
+        $complexWindows10AppsForceUpdateSchedule.Add('RunImmediatelyIfAfterStartDateTime', $getValue.windows10AppsForceUpdateSchedule.runImmediatelyIfAfterStartDateTime)
+        if ($null -ne $getValue.windows10AppsForceUpdateSchedule.startDateTime)
         {
-            $complexWindows10AppsForceUpdateSchedule.Add('StartDateTime', ([DateTimeOffset]$getValue.AdditionalProperties.windows10AppsForceUpdateSchedule.startDateTime).ToString('o'))
+            $complexWindows10AppsForceUpdateSchedule.Add('StartDateTime', ([DateTimeOffset]$getValue.windows10AppsForceUpdateSchedule.startDateTime).ToString('o'))
         }
         if ($complexWindows10AppsForceUpdateSchedule.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -1377,497 +1382,497 @@ function Get-TargetResource
 
         #region resource generator code
         $enumActivateAppsWithVoice = $null
-        if ($null -ne $getValue.AdditionalProperties.activateAppsWithVoice)
+        if ($null -ne $getValue.activateAppsWithVoice)
         {
-            $enumActivateAppsWithVoice = $getValue.AdditionalProperties.activateAppsWithVoice.ToString()
+            $enumActivateAppsWithVoice = $getValue.activateAppsWithVoice.ToString()
         }
 
         $enumAppsAllowTrustedAppsSideloading = $null
-        if ($null -ne $getValue.AdditionalProperties.appsAllowTrustedAppsSideloading)
+        if ($null -ne $getValue.appsAllowTrustedAppsSideloading)
         {
-            $enumAppsAllowTrustedAppsSideloading = $getValue.AdditionalProperties.appsAllowTrustedAppsSideloading.ToString()
+            $enumAppsAllowTrustedAppsSideloading = $getValue.appsAllowTrustedAppsSideloading.ToString()
         }
 
         $enumAuthenticationWebSignIn = $null
-        if ($null -ne $getValue.AdditionalProperties.authenticationWebSignIn)
+        if ($null -ne $getValue.authenticationWebSignIn)
         {
-            $enumAuthenticationWebSignIn = $getValue.AdditionalProperties.authenticationWebSignIn.ToString()
+            $enumAuthenticationWebSignIn = $getValue.authenticationWebSignIn.ToString()
         }
 
         $enumCellularData = $null
-        if ($null -ne $getValue.AdditionalProperties.cellularData)
+        if ($null -ne $getValue.cellularData)
         {
-            $enumCellularData = $getValue.AdditionalProperties.cellularData.ToString()
+            $enumCellularData = $getValue.cellularData.ToString()
         }
 
         $enumDefenderCloudBlockLevel = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderCloudBlockLevel)
+        if ($null -ne $getValue.defenderCloudBlockLevel)
         {
-            $enumDefenderCloudBlockLevel = $getValue.AdditionalProperties.defenderCloudBlockLevel.ToString()
+            $enumDefenderCloudBlockLevel = $getValue.defenderCloudBlockLevel.ToString()
         }
 
         $enumDefenderMonitorFileActivity = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderMonitorFileActivity)
+        if ($null -ne $getValue.defenderMonitorFileActivity)
         {
-            $enumDefenderMonitorFileActivity = $getValue.AdditionalProperties.defenderMonitorFileActivity.ToString()
+            $enumDefenderMonitorFileActivity = $getValue.defenderMonitorFileActivity.ToString()
         }
 
         $enumDefenderPotentiallyUnwantedAppAction = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderPotentiallyUnwantedAppAction)
+        if ($null -ne $getValue.defenderPotentiallyUnwantedAppAction)
         {
-            $enumDefenderPotentiallyUnwantedAppAction = $getValue.AdditionalProperties.defenderPotentiallyUnwantedAppAction.ToString()
+            $enumDefenderPotentiallyUnwantedAppAction = $getValue.defenderPotentiallyUnwantedAppAction.ToString()
         }
 
         $enumDefenderPotentiallyUnwantedAppActionSetting = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderPotentiallyUnwantedAppActionSetting)
+        if ($null -ne $getValue.defenderPotentiallyUnwantedAppActionSetting)
         {
-            $enumDefenderPotentiallyUnwantedAppActionSetting = $getValue.AdditionalProperties.defenderPotentiallyUnwantedAppActionSetting.ToString()
+            $enumDefenderPotentiallyUnwantedAppActionSetting = $getValue.defenderPotentiallyUnwantedAppActionSetting.ToString()
         }
 
         $enumDefenderPromptForSampleSubmission = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderPromptForSampleSubmission)
+        if ($null -ne $getValue.defenderPromptForSampleSubmission)
         {
-            $enumDefenderPromptForSampleSubmission = $getValue.AdditionalProperties.defenderPromptForSampleSubmission.ToString()
+            $enumDefenderPromptForSampleSubmission = $getValue.defenderPromptForSampleSubmission.ToString()
         }
 
         $enumDefenderScanType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScanType)
+        if ($null -ne $getValue.defenderScanType)
         {
-            $enumDefenderScanType = $getValue.AdditionalProperties.defenderScanType.ToString()
+            $enumDefenderScanType = $getValue.defenderScanType.ToString()
         }
 
         $enumDefenderSubmitSamplesConsentType = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderSubmitSamplesConsentType)
+        if ($null -ne $getValue.defenderSubmitSamplesConsentType)
         {
-            $enumDefenderSubmitSamplesConsentType = $getValue.AdditionalProperties.defenderSubmitSamplesConsentType.ToString()
+            $enumDefenderSubmitSamplesConsentType = $getValue.defenderSubmitSamplesConsentType.ToString()
         }
 
         $enumDefenderSystemScanSchedule = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderSystemScanSchedule)
+        if ($null -ne $getValue.defenderSystemScanSchedule)
         {
-            $enumDefenderSystemScanSchedule = $getValue.AdditionalProperties.defenderSystemScanSchedule.ToString()
+            $enumDefenderSystemScanSchedule = $getValue.defenderSystemScanSchedule.ToString()
         }
 
         $enumDeveloperUnlockSetting = $null
-        if ($null -ne $getValue.AdditionalProperties.developerUnlockSetting)
+        if ($null -ne $getValue.developerUnlockSetting)
         {
-            $enumDeveloperUnlockSetting = $getValue.AdditionalProperties.developerUnlockSetting.ToString()
+            $enumDeveloperUnlockSetting = $getValue.developerUnlockSetting.ToString()
         }
 
         $enumDiagnosticsDataSubmissionMode = $null
-        if ($null -ne $getValue.AdditionalProperties.diagnosticsDataSubmissionMode)
+        if ($null -ne $getValue.diagnosticsDataSubmissionMode)
         {
-            $enumDiagnosticsDataSubmissionMode = $getValue.AdditionalProperties.diagnosticsDataSubmissionMode.ToString()
+            $enumDiagnosticsDataSubmissionMode = $getValue.diagnosticsDataSubmissionMode.ToString()
         }
 
         $enumEdgeCookiePolicy = $null
-        if ($null -ne $getValue.AdditionalProperties.edgeCookiePolicy)
+        if ($null -ne $getValue.edgeCookiePolicy)
         {
-            $enumEdgeCookiePolicy = $getValue.AdditionalProperties.edgeCookiePolicy.ToString()
+            $enumEdgeCookiePolicy = $getValue.edgeCookiePolicy.ToString()
         }
 
         $enumEdgeFavoritesBarVisibility = $null
-        if ($null -ne $getValue.AdditionalProperties.edgeFavoritesBarVisibility)
+        if ($null -ne $getValue.edgeFavoritesBarVisibility)
         {
-            $enumEdgeFavoritesBarVisibility = $getValue.AdditionalProperties.edgeFavoritesBarVisibility.ToString()
+            $enumEdgeFavoritesBarVisibility = $getValue.edgeFavoritesBarVisibility.ToString()
         }
 
         $enumEdgeKioskModeRestriction = $null
-        if ($null -ne $getValue.AdditionalProperties.edgeKioskModeRestriction)
+        if ($null -ne $getValue.edgeKioskModeRestriction)
         {
-            $enumEdgeKioskModeRestriction = $getValue.AdditionalProperties.edgeKioskModeRestriction.ToString()
+            $enumEdgeKioskModeRestriction = $getValue.edgeKioskModeRestriction.ToString()
         }
 
         $enumEdgeOpensWith = $null
-        if ($null -ne $getValue.AdditionalProperties.edgeOpensWith)
+        if ($null -ne $getValue.edgeOpensWith)
         {
-            $enumEdgeOpensWith = $getValue.AdditionalProperties.edgeOpensWith.ToString()
+            $enumEdgeOpensWith = $getValue.edgeOpensWith.ToString()
         }
 
         $enumEdgeShowMessageWhenOpeningInternetExplorerSites = $null
-        if ($null -ne $getValue.AdditionalProperties.edgeShowMessageWhenOpeningInternetExplorerSites)
+        if ($null -ne $getValue.edgeShowMessageWhenOpeningInternetExplorerSites)
         {
-            $enumEdgeShowMessageWhenOpeningInternetExplorerSites = $getValue.AdditionalProperties.edgeShowMessageWhenOpeningInternetExplorerSites.ToString()
+            $enumEdgeShowMessageWhenOpeningInternetExplorerSites = $getValue.edgeShowMessageWhenOpeningInternetExplorerSites.ToString()
         }
 
         $enumEdgeTelemetryForMicrosoft365Analytics = $null
-        if ($null -ne $getValue.AdditionalProperties.edgeTelemetryForMicrosoft365Analytics)
+        if ($null -ne $getValue.edgeTelemetryForMicrosoft365Analytics)
         {
-            $enumEdgeTelemetryForMicrosoft365Analytics = $getValue.AdditionalProperties.edgeTelemetryForMicrosoft365Analytics.ToString()
+            $enumEdgeTelemetryForMicrosoft365Analytics = $getValue.edgeTelemetryForMicrosoft365Analytics.ToString()
         }
 
         $enumExperienceDoNotSyncBrowserSettings = $null
-        if ($null -ne $getValue.AdditionalProperties.experienceDoNotSyncBrowserSettings)
+        if ($null -ne $getValue.experienceDoNotSyncBrowserSettings)
         {
-            $enumExperienceDoNotSyncBrowserSettings = $getValue.AdditionalProperties.experienceDoNotSyncBrowserSettings.ToString()
+            $enumExperienceDoNotSyncBrowserSettings = $getValue.experienceDoNotSyncBrowserSettings.ToString()
         }
 
         $enumFindMyFiles = $null
-        if ($null -ne $getValue.AdditionalProperties.findMyFiles)
+        if ($null -ne $getValue.findMyFiles)
         {
-            $enumFindMyFiles = $getValue.AdditionalProperties.findMyFiles.ToString()
+            $enumFindMyFiles = $getValue.findMyFiles.ToString()
         }
 
         $enumInkWorkspaceAccess = $null
-        if ($null -ne $getValue.AdditionalProperties.inkWorkspaceAccess)
+        if ($null -ne $getValue.inkWorkspaceAccess)
         {
-            $enumInkWorkspaceAccess = $getValue.AdditionalProperties.inkWorkspaceAccess.ToString()
+            $enumInkWorkspaceAccess = $getValue.inkWorkspaceAccess.ToString()
         }
 
         $enumInkWorkspaceAccessState = $null
-        if ($null -ne $getValue.AdditionalProperties.inkWorkspaceAccessState)
+        if ($null -ne $getValue.inkWorkspaceAccessState)
         {
-            $enumInkWorkspaceAccessState = $getValue.AdditionalProperties.inkWorkspaceAccessState.ToString()
+            $enumInkWorkspaceAccessState = $getValue.inkWorkspaceAccessState.ToString()
         }
 
         $enumLockScreenActivateAppsWithVoice = $null
-        if ($null -ne $getValue.AdditionalProperties.lockScreenActivateAppsWithVoice)
+        if ($null -ne $getValue.lockScreenActivateAppsWithVoice)
         {
-            $enumLockScreenActivateAppsWithVoice = $getValue.AdditionalProperties.lockScreenActivateAppsWithVoice.ToString()
+            $enumLockScreenActivateAppsWithVoice = $getValue.lockScreenActivateAppsWithVoice.ToString()
         }
 
         $enumMicrosoftAccountSignInAssistantSettings = $null
-        if ($null -ne $getValue.AdditionalProperties.microsoftAccountSignInAssistantSettings)
+        if ($null -ne $getValue.microsoftAccountSignInAssistantSettings)
         {
-            $enumMicrosoftAccountSignInAssistantSettings = $getValue.AdditionalProperties.microsoftAccountSignInAssistantSettings.ToString()
+            $enumMicrosoftAccountSignInAssistantSettings = $getValue.microsoftAccountSignInAssistantSettings.ToString()
         }
 
         $enumPasswordRequiredType = $null
-        if ($null -ne $getValue.AdditionalProperties.passwordRequiredType)
+        if ($null -ne $getValue.passwordRequiredType)
         {
-            $enumPasswordRequiredType = $getValue.AdditionalProperties.passwordRequiredType.ToString()
+            $enumPasswordRequiredType = $getValue.passwordRequiredType.ToString()
         }
 
         $enumPowerButtonActionOnBattery = $null
-        if ($null -ne $getValue.AdditionalProperties.powerButtonActionOnBattery)
+        if ($null -ne $getValue.powerButtonActionOnBattery)
         {
-            $enumPowerButtonActionOnBattery = $getValue.AdditionalProperties.powerButtonActionOnBattery.ToString()
+            $enumPowerButtonActionOnBattery = $getValue.powerButtonActionOnBattery.ToString()
         }
 
         $enumPowerButtonActionPluggedIn = $null
-        if ($null -ne $getValue.AdditionalProperties.powerButtonActionPluggedIn)
+        if ($null -ne $getValue.powerButtonActionPluggedIn)
         {
-            $enumPowerButtonActionPluggedIn = $getValue.AdditionalProperties.powerButtonActionPluggedIn.ToString()
+            $enumPowerButtonActionPluggedIn = $getValue.powerButtonActionPluggedIn.ToString()
         }
 
         $enumPowerHybridSleepOnBattery = $null
-        if ($null -ne $getValue.AdditionalProperties.powerHybridSleepOnBattery)
+        if ($null -ne $getValue.powerHybridSleepOnBattery)
         {
-            $enumPowerHybridSleepOnBattery = $getValue.AdditionalProperties.powerHybridSleepOnBattery.ToString()
+            $enumPowerHybridSleepOnBattery = $getValue.powerHybridSleepOnBattery.ToString()
         }
 
         $enumPowerHybridSleepPluggedIn = $null
-        if ($null -ne $getValue.AdditionalProperties.powerHybridSleepPluggedIn)
+        if ($null -ne $getValue.powerHybridSleepPluggedIn)
         {
-            $enumPowerHybridSleepPluggedIn = $getValue.AdditionalProperties.powerHybridSleepPluggedIn.ToString()
+            $enumPowerHybridSleepPluggedIn = $getValue.powerHybridSleepPluggedIn.ToString()
         }
 
         $enumPowerLidCloseActionOnBattery = $null
-        if ($null -ne $getValue.AdditionalProperties.powerLidCloseActionOnBattery)
+        if ($null -ne $getValue.powerLidCloseActionOnBattery)
         {
-            $enumPowerLidCloseActionOnBattery = $getValue.AdditionalProperties.powerLidCloseActionOnBattery.ToString()
+            $enumPowerLidCloseActionOnBattery = $getValue.powerLidCloseActionOnBattery.ToString()
         }
 
         $enumPowerLidCloseActionPluggedIn = $null
-        if ($null -ne $getValue.AdditionalProperties.powerLidCloseActionPluggedIn)
+        if ($null -ne $getValue.powerLidCloseActionPluggedIn)
         {
-            $enumPowerLidCloseActionPluggedIn = $getValue.AdditionalProperties.powerLidCloseActionPluggedIn.ToString()
+            $enumPowerLidCloseActionPluggedIn = $getValue.powerLidCloseActionPluggedIn.ToString()
         }
 
         $enumPowerSleepButtonActionOnBattery = $null
-        if ($null -ne $getValue.AdditionalProperties.powerSleepButtonActionOnBattery)
+        if ($null -ne $getValue.powerSleepButtonActionOnBattery)
         {
-            $enumPowerSleepButtonActionOnBattery = $getValue.AdditionalProperties.powerSleepButtonActionOnBattery.ToString()
+            $enumPowerSleepButtonActionOnBattery = $getValue.powerSleepButtonActionOnBattery.ToString()
         }
 
         $enumPowerSleepButtonActionPluggedIn = $null
-        if ($null -ne $getValue.AdditionalProperties.powerSleepButtonActionPluggedIn)
+        if ($null -ne $getValue.powerSleepButtonActionPluggedIn)
         {
-            $enumPowerSleepButtonActionPluggedIn = $getValue.AdditionalProperties.powerSleepButtonActionPluggedIn.ToString()
+            $enumPowerSleepButtonActionPluggedIn = $getValue.powerSleepButtonActionPluggedIn.ToString()
         }
 
         $enumPrivacyAdvertisingId = $null
-        if ($null -ne $getValue.AdditionalProperties.privacyAdvertisingId)
+        if ($null -ne $getValue.privacyAdvertisingId)
         {
-            $enumPrivacyAdvertisingId = $getValue.AdditionalProperties.privacyAdvertisingId.ToString()
+            $enumPrivacyAdvertisingId = $getValue.privacyAdvertisingId.ToString()
         }
 
         $enumSafeSearchFilter = $null
-        if ($null -ne $getValue.AdditionalProperties.safeSearchFilter)
+        if ($null -ne $getValue.safeSearchFilter)
         {
-            $enumSafeSearchFilter = $getValue.AdditionalProperties.safeSearchFilter.ToString()
+            $enumSafeSearchFilter = $getValue.safeSearchFilter.ToString()
         }
 
         $enumSmartScreenAppInstallControl = $null
-        if ($null -ne $getValue.AdditionalProperties.smartScreenAppInstallControl)
+        if ($null -ne $getValue.smartScreenAppInstallControl)
         {
-            $enumSmartScreenAppInstallControl = $getValue.AdditionalProperties.smartScreenAppInstallControl.ToString()
+            $enumSmartScreenAppInstallControl = $getValue.smartScreenAppInstallControl.ToString()
         }
 
         $enumStartMenuAppListVisibility = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuAppListVisibility)
+        if ($null -ne $getValue.startMenuAppListVisibility)
         {
-            $enumStartMenuAppListVisibility = $getValue.AdditionalProperties.startMenuAppListVisibility.ToString()
+            $enumStartMenuAppListVisibility = $getValue.startMenuAppListVisibility.ToString()
         }
 
         $enumStartMenuMode = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuMode)
+        if ($null -ne $getValue.startMenuMode)
         {
-            $enumStartMenuMode = $getValue.AdditionalProperties.startMenuMode.ToString()
+            $enumStartMenuMode = $getValue.startMenuMode.ToString()
         }
 
         $enumStartMenuPinnedFolderDocuments = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuPinnedFolderDocuments)
+        if ($null -ne $getValue.startMenuPinnedFolderDocuments)
         {
-            $enumStartMenuPinnedFolderDocuments = $getValue.AdditionalProperties.startMenuPinnedFolderDocuments.ToString()
+            $enumStartMenuPinnedFolderDocuments = $getValue.startMenuPinnedFolderDocuments.ToString()
         }
 
         $enumStartMenuPinnedFolderDownloads = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuPinnedFolderDownloads)
+        if ($null -ne $getValue.startMenuPinnedFolderDownloads)
         {
-            $enumStartMenuPinnedFolderDownloads = $getValue.AdditionalProperties.startMenuPinnedFolderDownloads.ToString()
+            $enumStartMenuPinnedFolderDownloads = $getValue.startMenuPinnedFolderDownloads.ToString()
         }
 
         $enumStartMenuPinnedFolderFileExplorer = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuPinnedFolderFileExplorer)
+        if ($null -ne $getValue.startMenuPinnedFolderFileExplorer)
         {
-            $enumStartMenuPinnedFolderFileExplorer = $getValue.AdditionalProperties.startMenuPinnedFolderFileExplorer.ToString()
+            $enumStartMenuPinnedFolderFileExplorer = $getValue.startMenuPinnedFolderFileExplorer.ToString()
         }
 
         $enumStartMenuPinnedFolderHomeGroup = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuPinnedFolderHomeGroup)
+        if ($null -ne $getValue.startMenuPinnedFolderHomeGroup)
         {
-            $enumStartMenuPinnedFolderHomeGroup = $getValue.AdditionalProperties.startMenuPinnedFolderHomeGroup.ToString()
+            $enumStartMenuPinnedFolderHomeGroup = $getValue.startMenuPinnedFolderHomeGroup.ToString()
         }
 
         $enumStartMenuPinnedFolderMusic = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuPinnedFolderMusic)
+        if ($null -ne $getValue.startMenuPinnedFolderMusic)
         {
-            $enumStartMenuPinnedFolderMusic = $getValue.AdditionalProperties.startMenuPinnedFolderMusic.ToString()
+            $enumStartMenuPinnedFolderMusic = $getValue.startMenuPinnedFolderMusic.ToString()
         }
 
         $enumStartMenuPinnedFolderNetwork = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuPinnedFolderNetwork)
+        if ($null -ne $getValue.startMenuPinnedFolderNetwork)
         {
-            $enumStartMenuPinnedFolderNetwork = $getValue.AdditionalProperties.startMenuPinnedFolderNetwork.ToString()
+            $enumStartMenuPinnedFolderNetwork = $getValue.startMenuPinnedFolderNetwork.ToString()
         }
 
         $enumStartMenuPinnedFolderPersonalFolder = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuPinnedFolderPersonalFolder)
+        if ($null -ne $getValue.startMenuPinnedFolderPersonalFolder)
         {
-            $enumStartMenuPinnedFolderPersonalFolder = $getValue.AdditionalProperties.startMenuPinnedFolderPersonalFolder.ToString()
+            $enumStartMenuPinnedFolderPersonalFolder = $getValue.startMenuPinnedFolderPersonalFolder.ToString()
         }
 
         $enumStartMenuPinnedFolderPictures = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuPinnedFolderPictures)
+        if ($null -ne $getValue.startMenuPinnedFolderPictures)
         {
-            $enumStartMenuPinnedFolderPictures = $getValue.AdditionalProperties.startMenuPinnedFolderPictures.ToString()
+            $enumStartMenuPinnedFolderPictures = $getValue.startMenuPinnedFolderPictures.ToString()
         }
 
         $enumStartMenuPinnedFolderSettings = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuPinnedFolderSettings)
+        if ($null -ne $getValue.startMenuPinnedFolderSettings)
         {
-            $enumStartMenuPinnedFolderSettings = $getValue.AdditionalProperties.startMenuPinnedFolderSettings.ToString()
+            $enumStartMenuPinnedFolderSettings = $getValue.startMenuPinnedFolderSettings.ToString()
         }
 
         $enumStartMenuPinnedFolderVideos = $null
-        if ($null -ne $getValue.AdditionalProperties.startMenuPinnedFolderVideos)
+        if ($null -ne $getValue.startMenuPinnedFolderVideos)
         {
-            $enumStartMenuPinnedFolderVideos = $getValue.AdditionalProperties.startMenuPinnedFolderVideos.ToString()
+            $enumStartMenuPinnedFolderVideos = $getValue.startMenuPinnedFolderVideos.ToString()
         }
 
         $enumWindowsSpotlightConfigureOnLockScreen = $null
-        if ($null -ne $getValue.AdditionalProperties.windowsSpotlightConfigureOnLockScreen)
+        if ($null -ne $getValue.windowsSpotlightConfigureOnLockScreen)
         {
-            $enumWindowsSpotlightConfigureOnLockScreen = $getValue.AdditionalProperties.windowsSpotlightConfigureOnLockScreen.ToString()
+            $enumWindowsSpotlightConfigureOnLockScreen = $getValue.windowsSpotlightConfigureOnLockScreen.ToString()
         }
         #endregion
 
         #region resource generator code
         $timeDefenderScheduledQuickScanTime = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScheduledQuickScanTime)
+        if ($null -ne $getValue.defenderScheduledQuickScanTime)
         {
-            $timeDefenderScheduledQuickScanTime = ([TimeSpan]$getValue.AdditionalProperties.defenderScheduledQuickScanTime).ToString()
+            $timeDefenderScheduledQuickScanTime = ([TimeSpan]$getValue.defenderScheduledQuickScanTime).ToString()
         }
 
         $timeDefenderScheduledScanTime = $null
-        if ($null -ne $getValue.AdditionalProperties.defenderScheduledScanTime)
+        if ($null -ne $getValue.defenderScheduledScanTime)
         {
-            $timeDefenderScheduledScanTime = ([TimeSpan]$getValue.AdditionalProperties.defenderScheduledScanTime).ToString()
+            $timeDefenderScheduledScanTime = ([TimeSpan]$getValue.defenderScheduledScanTime).ToString()
         }
         #endregion
 
         $results = @{
             #region resource generator code
-            AccountsBlockAddingNonMicrosoftAccountEmail           = $getValue.AdditionalProperties.accountsBlockAddingNonMicrosoftAccountEmail
+            AccountsBlockAddingNonMicrosoftAccountEmail           = $getValue.accountsBlockAddingNonMicrosoftAccountEmail
             ActivateAppsWithVoice                                 = $enumActivateAppsWithVoice
-            AntiTheftModeBlocked                                  = $getValue.AdditionalProperties.antiTheftModeBlocked
-            AppManagementMSIAllowUserControlOverInstall           = $getValue.AdditionalProperties.appManagementMSIAllowUserControlOverInstall
-            AppManagementMSIAlwaysInstallWithElevatedPrivileges   = $getValue.AdditionalProperties.appManagementMSIAlwaysInstallWithElevatedPrivileges
-            AppManagementPackageFamilyNamesToLaunchAfterLogOn     = $getValue.AdditionalProperties.appManagementPackageFamilyNamesToLaunchAfterLogOn
+            AntiTheftModeBlocked                                  = $getValue.antiTheftModeBlocked
+            AppManagementMSIAllowUserControlOverInstall           = $getValue.appManagementMSIAllowUserControlOverInstall
+            AppManagementMSIAlwaysInstallWithElevatedPrivileges   = $getValue.appManagementMSIAlwaysInstallWithElevatedPrivileges
+            AppManagementPackageFamilyNamesToLaunchAfterLogOn     = $getValue.appManagementPackageFamilyNamesToLaunchAfterLogOn
             AppsAllowTrustedAppsSideloading                       = $enumAppsAllowTrustedAppsSideloading
-            AppsBlockWindowsStoreOriginatedApps                   = $getValue.AdditionalProperties.appsBlockWindowsStoreOriginatedApps
-            AuthenticationAllowSecondaryDevice                    = $getValue.AdditionalProperties.authenticationAllowSecondaryDevice
-            AuthenticationPreferredAzureADTenantDomainName        = $getValue.AdditionalProperties.authenticationPreferredAzureADTenantDomainName
+            AppsBlockWindowsStoreOriginatedApps                   = $getValue.appsBlockWindowsStoreOriginatedApps
+            AuthenticationAllowSecondaryDevice                    = $getValue.authenticationAllowSecondaryDevice
+            AuthenticationPreferredAzureADTenantDomainName        = $getValue.authenticationPreferredAzureADTenantDomainName
             AuthenticationWebSignIn                               = $enumAuthenticationWebSignIn
-            BluetoothAllowedServices                              = $getValue.AdditionalProperties.bluetoothAllowedServices
-            BluetoothBlockAdvertising                             = $getValue.AdditionalProperties.bluetoothBlockAdvertising
-            BluetoothBlockDiscoverableMode                        = $getValue.AdditionalProperties.bluetoothBlockDiscoverableMode
-            BluetoothBlocked                                      = $getValue.AdditionalProperties.bluetoothBlocked
-            BluetoothBlockPrePairing                              = $getValue.AdditionalProperties.bluetoothBlockPrePairing
-            BluetoothBlockPromptedProximalConnections             = $getValue.AdditionalProperties.bluetoothBlockPromptedProximalConnections
-            CameraBlocked                                         = $getValue.AdditionalProperties.cameraBlocked
-            CellularBlockDataWhenRoaming                          = $getValue.AdditionalProperties.cellularBlockDataWhenRoaming
-            CellularBlockVpn                                      = $getValue.AdditionalProperties.cellularBlockVpn
-            CellularBlockVpnWhenRoaming                           = $getValue.AdditionalProperties.cellularBlockVpnWhenRoaming
+            BluetoothAllowedServices                              = $getValue.bluetoothAllowedServices
+            BluetoothBlockAdvertising                             = $getValue.bluetoothBlockAdvertising
+            BluetoothBlockDiscoverableMode                        = $getValue.bluetoothBlockDiscoverableMode
+            BluetoothBlocked                                      = $getValue.bluetoothBlocked
+            BluetoothBlockPrePairing                              = $getValue.bluetoothBlockPrePairing
+            BluetoothBlockPromptedProximalConnections             = $getValue.bluetoothBlockPromptedProximalConnections
+            CameraBlocked                                         = $getValue.cameraBlocked
+            CellularBlockDataWhenRoaming                          = $getValue.cellularBlockDataWhenRoaming
+            CellularBlockVpn                                      = $getValue.cellularBlockVpn
+            CellularBlockVpnWhenRoaming                           = $getValue.cellularBlockVpnWhenRoaming
             CellularData                                          = $enumCellularData
-            CertificatesBlockManualRootCertificateInstallation    = $getValue.AdditionalProperties.certificatesBlockManualRootCertificateInstallation
-            ConfigureTimeZone                                     = $getValue.AdditionalProperties.configureTimeZone
-            ConnectedDevicesServiceBlocked                        = $getValue.AdditionalProperties.connectedDevicesServiceBlocked
-            CopyPasteBlocked                                      = $getValue.AdditionalProperties.copyPasteBlocked
-            CortanaBlocked                                        = $getValue.AdditionalProperties.cortanaBlocked
-            CryptographyAllowFipsAlgorithmPolicy                  = $getValue.AdditionalProperties.cryptographyAllowFipsAlgorithmPolicy
-            DataProtectionBlockDirectMemoryAccess                 = $getValue.AdditionalProperties.dataProtectionBlockDirectMemoryAccess
-            DefenderBlockEndUserAccess                            = $getValue.AdditionalProperties.defenderBlockEndUserAccess
-            DefenderBlockOnAccessProtection                       = $getValue.AdditionalProperties.defenderBlockOnAccessProtection
+            CertificatesBlockManualRootCertificateInstallation    = $getValue.certificatesBlockManualRootCertificateInstallation
+            ConfigureTimeZone                                     = $getValue.configureTimeZone
+            ConnectedDevicesServiceBlocked                        = $getValue.connectedDevicesServiceBlocked
+            CopyPasteBlocked                                      = $getValue.copyPasteBlocked
+            CortanaBlocked                                        = $getValue.cortanaBlocked
+            CryptographyAllowFipsAlgorithmPolicy                  = $getValue.cryptographyAllowFipsAlgorithmPolicy
+            DataProtectionBlockDirectMemoryAccess                 = $getValue.dataProtectionBlockDirectMemoryAccess
+            DefenderBlockEndUserAccess                            = $getValue.defenderBlockEndUserAccess
+            DefenderBlockOnAccessProtection                       = $getValue.defenderBlockOnAccessProtection
             DefenderCloudBlockLevel                               = $enumDefenderCloudBlockLevel
-            DefenderCloudExtendedTimeout                          = $getValue.AdditionalProperties.defenderCloudExtendedTimeout
-            DefenderCloudExtendedTimeoutInSeconds                 = $getValue.AdditionalProperties.defenderCloudExtendedTimeoutInSeconds
-            DefenderDaysBeforeDeletingQuarantinedMalware          = $getValue.AdditionalProperties.defenderDaysBeforeDeletingQuarantinedMalware
+            DefenderCloudExtendedTimeout                          = $getValue.defenderCloudExtendedTimeout
+            DefenderCloudExtendedTimeoutInSeconds                 = $getValue.defenderCloudExtendedTimeoutInSeconds
+            DefenderDaysBeforeDeletingQuarantinedMalware          = $getValue.defenderDaysBeforeDeletingQuarantinedMalware
             DefenderDetectedMalwareActions                        = $complexDefenderDetectedMalwareActions
-            DefenderDisableCatchupFullScan                        = $getValue.AdditionalProperties.defenderDisableCatchupFullScan
-            DefenderDisableCatchupQuickScan                       = $getValue.AdditionalProperties.defenderDisableCatchupQuickScan
-            DefenderFileExtensionsToExclude                       = $getValue.AdditionalProperties.defenderFileExtensionsToExclude
-            DefenderFilesAndFoldersToExclude                      = $getValue.AdditionalProperties.defenderFilesAndFoldersToExclude
+            DefenderDisableCatchupFullScan                        = $getValue.defenderDisableCatchupFullScan
+            DefenderDisableCatchupQuickScan                       = $getValue.defenderDisableCatchupQuickScan
+            DefenderFileExtensionsToExclude                       = $getValue.defenderFileExtensionsToExclude
+            DefenderFilesAndFoldersToExclude                      = $getValue.defenderFilesAndFoldersToExclude
             DefenderMonitorFileActivity                           = $enumDefenderMonitorFileActivity
             DefenderPotentiallyUnwantedAppAction                  = $enumDefenderPotentiallyUnwantedAppAction
             DefenderPotentiallyUnwantedAppActionSetting           = $enumDefenderPotentiallyUnwantedAppActionSetting
-            DefenderProcessesToExclude                            = $getValue.AdditionalProperties.defenderProcessesToExclude
+            DefenderProcessesToExclude                            = $getValue.defenderProcessesToExclude
             DefenderPromptForSampleSubmission                     = $enumDefenderPromptForSampleSubmission
-            DefenderRequireBehaviorMonitoring                     = $getValue.AdditionalProperties.defenderRequireBehaviorMonitoring
-            DefenderRequireCloudProtection                        = $getValue.AdditionalProperties.defenderRequireCloudProtection
-            DefenderRequireNetworkInspectionSystem                = $getValue.AdditionalProperties.defenderRequireNetworkInspectionSystem
-            DefenderRequireRealTimeMonitoring                     = $getValue.AdditionalProperties.defenderRequireRealTimeMonitoring
-            DefenderScanArchiveFiles                              = $getValue.AdditionalProperties.defenderScanArchiveFiles
-            DefenderScanDownloads                                 = $getValue.AdditionalProperties.defenderScanDownloads
-            DefenderScanIncomingMail                              = $getValue.AdditionalProperties.defenderScanIncomingMail
-            DefenderScanMappedNetworkDrivesDuringFullScan         = $getValue.AdditionalProperties.defenderScanMappedNetworkDrivesDuringFullScan
-            DefenderScanMaxCpu                                    = $getValue.AdditionalProperties.defenderScanMaxCpu
-            DefenderScanNetworkFiles                              = $getValue.AdditionalProperties.defenderScanNetworkFiles
-            DefenderScanRemovableDrivesDuringFullScan             = $getValue.AdditionalProperties.defenderScanRemovableDrivesDuringFullScan
-            DefenderScanScriptsLoadedInInternetExplorer           = $getValue.AdditionalProperties.defenderScanScriptsLoadedInInternetExplorer
+            DefenderRequireBehaviorMonitoring                     = $getValue.defenderRequireBehaviorMonitoring
+            DefenderRequireCloudProtection                        = $getValue.defenderRequireCloudProtection
+            DefenderRequireNetworkInspectionSystem                = $getValue.defenderRequireNetworkInspectionSystem
+            DefenderRequireRealTimeMonitoring                     = $getValue.defenderRequireRealTimeMonitoring
+            DefenderScanArchiveFiles                              = $getValue.defenderScanArchiveFiles
+            DefenderScanDownloads                                 = $getValue.defenderScanDownloads
+            DefenderScanIncomingMail                              = $getValue.defenderScanIncomingMail
+            DefenderScanMappedNetworkDrivesDuringFullScan         = $getValue.defenderScanMappedNetworkDrivesDuringFullScan
+            DefenderScanMaxCpu                                    = $getValue.defenderScanMaxCpu
+            DefenderScanNetworkFiles                              = $getValue.defenderScanNetworkFiles
+            DefenderScanRemovableDrivesDuringFullScan             = $getValue.defenderScanRemovableDrivesDuringFullScan
+            DefenderScanScriptsLoadedInInternetExplorer           = $getValue.defenderScanScriptsLoadedInInternetExplorer
             DefenderScanType                                      = $enumDefenderScanType
             DefenderScheduledQuickScanTime                        = $timeDefenderScheduledQuickScanTime
             DefenderScheduledScanTime                             = $timeDefenderScheduledScanTime
-            DefenderScheduleScanEnableLowCpuPriority              = $getValue.AdditionalProperties.defenderScheduleScanEnableLowCpuPriority
-            DefenderSignatureUpdateIntervalInHours                = $getValue.AdditionalProperties.defenderSignatureUpdateIntervalInHours
+            DefenderScheduleScanEnableLowCpuPriority              = $getValue.defenderScheduleScanEnableLowCpuPriority
+            DefenderSignatureUpdateIntervalInHours                = $getValue.defenderSignatureUpdateIntervalInHours
             DefenderSubmitSamplesConsentType                      = $enumDefenderSubmitSamplesConsentType
             DefenderSystemScanSchedule                            = $enumDefenderSystemScanSchedule
             DeveloperUnlockSetting                                = $enumDeveloperUnlockSetting
-            DeviceManagementBlockFactoryResetOnMobile             = $getValue.AdditionalProperties.deviceManagementBlockFactoryResetOnMobile
-            DeviceManagementBlockManualUnenroll                   = $getValue.AdditionalProperties.deviceManagementBlockManualUnenroll
+            DeviceManagementBlockFactoryResetOnMobile             = $getValue.deviceManagementBlockFactoryResetOnMobile
+            DeviceManagementBlockManualUnenroll                   = $getValue.deviceManagementBlockManualUnenroll
             DiagnosticsDataSubmissionMode                         = $enumDiagnosticsDataSubmissionMode
-            DisplayAppListWithGdiDPIScalingTurnedOff              = $getValue.AdditionalProperties.displayAppListWithGdiDPIScalingTurnedOff
-            DisplayAppListWithGdiDPIScalingTurnedOn               = $getValue.AdditionalProperties.displayAppListWithGdiDPIScalingTurnedOn
-            EdgeAllowStartPagesModification                       = $getValue.AdditionalProperties.edgeAllowStartPagesModification
-            EdgeBlockAccessToAboutFlags                           = $getValue.AdditionalProperties.edgeBlockAccessToAboutFlags
-            EdgeBlockAddressBarDropdown                           = $getValue.AdditionalProperties.edgeBlockAddressBarDropdown
-            EdgeBlockAutofill                                     = $getValue.AdditionalProperties.edgeBlockAutofill
-            EdgeBlockCompatibilityList                            = $getValue.AdditionalProperties.edgeBlockCompatibilityList
-            EdgeBlockDeveloperTools                               = $getValue.AdditionalProperties.edgeBlockDeveloperTools
-            EdgeBlocked                                           = $getValue.AdditionalProperties.edgeBlocked
-            EdgeBlockEditFavorites                                = $getValue.AdditionalProperties.edgeBlockEditFavorites
-            EdgeBlockExtensions                                   = $getValue.AdditionalProperties.edgeBlockExtensions
-            EdgeBlockFullScreenMode                               = $getValue.AdditionalProperties.edgeBlockFullScreenMode
-            EdgeBlockInPrivateBrowsing                            = $getValue.AdditionalProperties.edgeBlockInPrivateBrowsing
-            EdgeBlockJavaScript                                   = $getValue.AdditionalProperties.edgeBlockJavaScript
-            EdgeBlockLiveTileDataCollection                       = $getValue.AdditionalProperties.edgeBlockLiveTileDataCollection
-            EdgeBlockPasswordManager                              = $getValue.AdditionalProperties.edgeBlockPasswordManager
-            EdgeBlockPopups                                       = $getValue.AdditionalProperties.edgeBlockPopups
-            EdgeBlockPrelaunch                                    = $getValue.AdditionalProperties.edgeBlockPrelaunch
-            EdgeBlockPrinting                                     = $getValue.AdditionalProperties.edgeBlockPrinting
-            EdgeBlockSavingHistory                                = $getValue.AdditionalProperties.edgeBlockSavingHistory
-            EdgeBlockSearchEngineCustomization                    = $getValue.AdditionalProperties.edgeBlockSearchEngineCustomization
-            EdgeBlockSearchSuggestions                            = $getValue.AdditionalProperties.edgeBlockSearchSuggestions
-            EdgeBlockSendingDoNotTrackHeader                      = $getValue.AdditionalProperties.edgeBlockSendingDoNotTrackHeader
-            EdgeBlockSendingIntranetTrafficToInternetExplorer     = $getValue.AdditionalProperties.edgeBlockSendingIntranetTrafficToInternetExplorer
-            EdgeBlockSideloadingExtensions                        = $getValue.AdditionalProperties.edgeBlockSideloadingExtensions
-            EdgeBlockTabPreloading                                = $getValue.AdditionalProperties.edgeBlockTabPreloading
-            EdgeBlockWebContentOnNewTabPage                       = $getValue.AdditionalProperties.edgeBlockWebContentOnNewTabPage
-            EdgeClearBrowsingDataOnExit                           = $getValue.AdditionalProperties.edgeClearBrowsingDataOnExit
+            DisplayAppListWithGdiDPIScalingTurnedOff              = $getValue.displayAppListWithGdiDPIScalingTurnedOff
+            DisplayAppListWithGdiDPIScalingTurnedOn               = $getValue.displayAppListWithGdiDPIScalingTurnedOn
+            EdgeAllowStartPagesModification                       = $getValue.edgeAllowStartPagesModification
+            EdgeBlockAccessToAboutFlags                           = $getValue.edgeBlockAccessToAboutFlags
+            EdgeBlockAddressBarDropdown                           = $getValue.edgeBlockAddressBarDropdown
+            EdgeBlockAutofill                                     = $getValue.edgeBlockAutofill
+            EdgeBlockCompatibilityList                            = $getValue.edgeBlockCompatibilityList
+            EdgeBlockDeveloperTools                               = $getValue.edgeBlockDeveloperTools
+            EdgeBlocked                                           = $getValue.edgeBlocked
+            EdgeBlockEditFavorites                                = $getValue.edgeBlockEditFavorites
+            EdgeBlockExtensions                                   = $getValue.edgeBlockExtensions
+            EdgeBlockFullScreenMode                               = $getValue.edgeBlockFullScreenMode
+            EdgeBlockInPrivateBrowsing                            = $getValue.edgeBlockInPrivateBrowsing
+            EdgeBlockJavaScript                                   = $getValue.edgeBlockJavaScript
+            EdgeBlockLiveTileDataCollection                       = $getValue.edgeBlockLiveTileDataCollection
+            EdgeBlockPasswordManager                              = $getValue.edgeBlockPasswordManager
+            EdgeBlockPopups                                       = $getValue.edgeBlockPopups
+            EdgeBlockPrelaunch                                    = $getValue.edgeBlockPrelaunch
+            EdgeBlockPrinting                                     = $getValue.edgeBlockPrinting
+            EdgeBlockSavingHistory                                = $getValue.edgeBlockSavingHistory
+            EdgeBlockSearchEngineCustomization                    = $getValue.edgeBlockSearchEngineCustomization
+            EdgeBlockSearchSuggestions                            = $getValue.edgeBlockSearchSuggestions
+            EdgeBlockSendingDoNotTrackHeader                      = $getValue.edgeBlockSendingDoNotTrackHeader
+            EdgeBlockSendingIntranetTrafficToInternetExplorer     = $getValue.edgeBlockSendingIntranetTrafficToInternetExplorer
+            EdgeBlockSideloadingExtensions                        = $getValue.edgeBlockSideloadingExtensions
+            EdgeBlockTabPreloading                                = $getValue.edgeBlockTabPreloading
+            EdgeBlockWebContentOnNewTabPage                       = $getValue.edgeBlockWebContentOnNewTabPage
+            EdgeClearBrowsingDataOnExit                           = $getValue.edgeClearBrowsingDataOnExit
             EdgeCookiePolicy                                      = $enumEdgeCookiePolicy
-            EdgeDisableFirstRunPage                               = $getValue.AdditionalProperties.edgeDisableFirstRunPage
-            EdgeEnterpriseModeSiteListLocation                    = $getValue.AdditionalProperties.edgeEnterpriseModeSiteListLocation
+            EdgeDisableFirstRunPage                               = $getValue.edgeDisableFirstRunPage
+            EdgeEnterpriseModeSiteListLocation                    = $getValue.edgeEnterpriseModeSiteListLocation
             EdgeFavoritesBarVisibility                            = $enumEdgeFavoritesBarVisibility
-            EdgeFavoritesListLocation                             = $getValue.AdditionalProperties.edgeFavoritesListLocation
-            EdgeFirstRunUrl                                       = $getValue.AdditionalProperties.edgeFirstRunUrl
+            EdgeFavoritesListLocation                             = $getValue.edgeFavoritesListLocation
+            EdgeFirstRunUrl                                       = $getValue.edgeFirstRunUrl
             EdgeHomeButtonConfiguration                           = $complexEdgeHomeButtonConfiguration
-            EdgeHomeButtonConfigurationEnabled                    = $getValue.AdditionalProperties.edgeHomeButtonConfigurationEnabled
-            EdgeHomepageUrls                                      = $getValue.AdditionalProperties.edgeHomepageUrls
+            EdgeHomeButtonConfigurationEnabled                    = $getValue.edgeHomeButtonConfigurationEnabled
+            EdgeHomepageUrls                                      = $getValue.edgeHomepageUrls
             EdgeKioskModeRestriction                              = $enumEdgeKioskModeRestriction
-            EdgeKioskResetAfterIdleTimeInMinutes                  = $getValue.AdditionalProperties.edgeKioskResetAfterIdleTimeInMinutes
-            EdgeNewTabPageURL                                     = $getValue.AdditionalProperties.edgeNewTabPageURL
+            EdgeKioskResetAfterIdleTimeInMinutes                  = $getValue.edgeKioskResetAfterIdleTimeInMinutes
+            EdgeNewTabPageURL                                     = $getValue.edgeNewTabPageURL
             EdgeOpensWith                                         = $enumEdgeOpensWith
-            EdgePreventCertificateErrorOverride                   = $getValue.AdditionalProperties.edgePreventCertificateErrorOverride
-            EdgeRequiredExtensionPackageFamilyNames               = $getValue.AdditionalProperties.edgeRequiredExtensionPackageFamilyNames
-            EdgeRequireSmartScreen                                = $getValue.AdditionalProperties.edgeRequireSmartScreen
+            EdgePreventCertificateErrorOverride                   = $getValue.edgePreventCertificateErrorOverride
+            EdgeRequiredExtensionPackageFamilyNames               = $getValue.edgeRequiredExtensionPackageFamilyNames
+            EdgeRequireSmartScreen                                = $getValue.edgeRequireSmartScreen
             EdgeSearchEngine                                      = $complexEdgeSearchEngine
-            EdgeSendIntranetTrafficToInternetExplorer             = $getValue.AdditionalProperties.edgeSendIntranetTrafficToInternetExplorer
+            EdgeSendIntranetTrafficToInternetExplorer             = $getValue.edgeSendIntranetTrafficToInternetExplorer
             EdgeShowMessageWhenOpeningInternetExplorerSites       = $enumEdgeShowMessageWhenOpeningInternetExplorerSites
-            EdgeSyncFavoritesWithInternetExplorer                 = $getValue.AdditionalProperties.edgeSyncFavoritesWithInternetExplorer
+            EdgeSyncFavoritesWithInternetExplorer                 = $getValue.edgeSyncFavoritesWithInternetExplorer
             EdgeTelemetryForMicrosoft365Analytics                 = $enumEdgeTelemetryForMicrosoft365Analytics
-            EnableAutomaticRedeployment                           = $getValue.AdditionalProperties.enableAutomaticRedeployment
-            EnergySaverOnBatteryThresholdPercentage               = $getValue.AdditionalProperties.energySaverOnBatteryThresholdPercentage
-            EnergySaverPluggedInThresholdPercentage               = $getValue.AdditionalProperties.energySaverPluggedInThresholdPercentage
-            EnterpriseCloudPrintDiscoveryEndPoint                 = $getValue.AdditionalProperties.enterpriseCloudPrintDiscoveryEndPoint
-            EnterpriseCloudPrintDiscoveryMaxLimit                 = $getValue.AdditionalProperties.enterpriseCloudPrintDiscoveryMaxLimit
-            EnterpriseCloudPrintMopriaDiscoveryResourceIdentifier = $getValue.AdditionalProperties.enterpriseCloudPrintMopriaDiscoveryResourceIdentifier
-            EnterpriseCloudPrintOAuthAuthority                    = $getValue.AdditionalProperties.enterpriseCloudPrintOAuthAuthority
-            EnterpriseCloudPrintOAuthClientIdentifier             = $getValue.AdditionalProperties.enterpriseCloudPrintOAuthClientIdentifier
-            EnterpriseCloudPrintResourceIdentifier                = $getValue.AdditionalProperties.enterpriseCloudPrintResourceIdentifier
-            ExperienceBlockDeviceDiscovery                        = $getValue.AdditionalProperties.experienceBlockDeviceDiscovery
-            ExperienceBlockErrorDialogWhenNoSIM                   = $getValue.AdditionalProperties.experienceBlockErrorDialogWhenNoSIM
-            ExperienceBlockTaskSwitcher                           = $getValue.AdditionalProperties.experienceBlockTaskSwitcher
+            EnableAutomaticRedeployment                           = $getValue.enableAutomaticRedeployment
+            EnergySaverOnBatteryThresholdPercentage               = $getValue.energySaverOnBatteryThresholdPercentage
+            EnergySaverPluggedInThresholdPercentage               = $getValue.energySaverPluggedInThresholdPercentage
+            EnterpriseCloudPrintDiscoveryEndPoint                 = $getValue.enterpriseCloudPrintDiscoveryEndPoint
+            EnterpriseCloudPrintDiscoveryMaxLimit                 = $getValue.enterpriseCloudPrintDiscoveryMaxLimit
+            EnterpriseCloudPrintMopriaDiscoveryResourceIdentifier = $getValue.enterpriseCloudPrintMopriaDiscoveryResourceIdentifier
+            EnterpriseCloudPrintOAuthAuthority                    = $getValue.enterpriseCloudPrintOAuthAuthority
+            EnterpriseCloudPrintOAuthClientIdentifier             = $getValue.enterpriseCloudPrintOAuthClientIdentifier
+            EnterpriseCloudPrintResourceIdentifier                = $getValue.enterpriseCloudPrintResourceIdentifier
+            ExperienceBlockDeviceDiscovery                        = $getValue.experienceBlockDeviceDiscovery
+            ExperienceBlockErrorDialogWhenNoSIM                   = $getValue.experienceBlockErrorDialogWhenNoSIM
+            ExperienceBlockTaskSwitcher                           = $getValue.experienceBlockTaskSwitcher
             ExperienceDoNotSyncBrowserSettings                    = $enumExperienceDoNotSyncBrowserSettings
             FindMyFiles                                           = $enumFindMyFiles
-            GameDvrBlocked                                        = $getValue.AdditionalProperties.gameDvrBlocked
+            GameDvrBlocked                                        = $getValue.gameDvrBlocked
             InkWorkspaceAccess                                    = $enumInkWorkspaceAccess
             InkWorkspaceAccessState                               = $enumInkWorkspaceAccessState
-            InkWorkspaceBlockSuggestedApps                        = $getValue.AdditionalProperties.inkWorkspaceBlockSuggestedApps
-            InternetSharingBlocked                                = $getValue.AdditionalProperties.internetSharingBlocked
-            LocationServicesBlocked                               = $getValue.AdditionalProperties.locationServicesBlocked
+            InkWorkspaceBlockSuggestedApps                        = $getValue.inkWorkspaceBlockSuggestedApps
+            InternetSharingBlocked                                = $getValue.internetSharingBlocked
+            LocationServicesBlocked                               = $getValue.locationServicesBlocked
             LockScreenActivateAppsWithVoice                       = $enumLockScreenActivateAppsWithVoice
-            LockScreenAllowTimeoutConfiguration                   = $getValue.AdditionalProperties.lockScreenAllowTimeoutConfiguration
-            LockScreenBlockActionCenterNotifications              = $getValue.AdditionalProperties.lockScreenBlockActionCenterNotifications
-            LockScreenBlockCortana                                = $getValue.AdditionalProperties.lockScreenBlockCortana
-            LockScreenBlockToastNotifications                     = $getValue.AdditionalProperties.lockScreenBlockToastNotifications
-            LockScreenTimeoutInSeconds                            = $getValue.AdditionalProperties.lockScreenTimeoutInSeconds
-            LogonBlockFastUserSwitching                           = $getValue.AdditionalProperties.logonBlockFastUserSwitching
-            MessagingBlockMMS                                     = $getValue.AdditionalProperties.messagingBlockMMS
-            MessagingBlockRichCommunicationServices               = $getValue.AdditionalProperties.messagingBlockRichCommunicationServices
-            MessagingBlockSync                                    = $getValue.AdditionalProperties.messagingBlockSync
-            MicrosoftAccountBlocked                               = $getValue.AdditionalProperties.microsoftAccountBlocked
-            MicrosoftAccountBlockSettingsSync                     = $getValue.AdditionalProperties.microsoftAccountBlockSettingsSync
+            LockScreenAllowTimeoutConfiguration                   = $getValue.lockScreenAllowTimeoutConfiguration
+            LockScreenBlockActionCenterNotifications              = $getValue.lockScreenBlockActionCenterNotifications
+            LockScreenBlockCortana                                = $getValue.lockScreenBlockCortana
+            LockScreenBlockToastNotifications                     = $getValue.lockScreenBlockToastNotifications
+            LockScreenTimeoutInSeconds                            = $getValue.lockScreenTimeoutInSeconds
+            LogonBlockFastUserSwitching                           = $getValue.logonBlockFastUserSwitching
+            MessagingBlockMMS                                     = $getValue.messagingBlockMMS
+            MessagingBlockRichCommunicationServices               = $getValue.messagingBlockRichCommunicationServices
+            MessagingBlockSync                                    = $getValue.messagingBlockSync
+            MicrosoftAccountBlocked                               = $getValue.microsoftAccountBlocked
+            MicrosoftAccountBlockSettingsSync                     = $getValue.microsoftAccountBlockSettingsSync
             MicrosoftAccountSignInAssistantSettings               = $enumMicrosoftAccountSignInAssistantSettings
-            NetworkProxyApplySettingsDeviceWide                   = $getValue.AdditionalProperties.networkProxyApplySettingsDeviceWide
-            NetworkProxyAutomaticConfigurationUrl                 = $getValue.AdditionalProperties.networkProxyAutomaticConfigurationUrl
-            NetworkProxyDisableAutoDetect                         = $getValue.AdditionalProperties.networkProxyDisableAutoDetect
+            NetworkProxyApplySettingsDeviceWide                   = $getValue.networkProxyApplySettingsDeviceWide
+            NetworkProxyAutomaticConfigurationUrl                 = $getValue.networkProxyAutomaticConfigurationUrl
+            NetworkProxyDisableAutoDetect                         = $getValue.networkProxyDisableAutoDetect
             NetworkProxyServer                                    = $complexNetworkProxyServer
-            NfcBlocked                                            = $getValue.AdditionalProperties.nfcBlocked
-            OneDriveDisableFileSync                               = $getValue.AdditionalProperties.oneDriveDisableFileSync
-            PasswordBlockSimple                                   = $getValue.AdditionalProperties.passwordBlockSimple
-            PasswordExpirationDays                                = $getValue.AdditionalProperties.passwordExpirationDays
-            PasswordMinimumAgeInDays                              = $getValue.AdditionalProperties.passwordMinimumAgeInDays
-            PasswordMinimumCharacterSetCount                      = $getValue.AdditionalProperties.passwordMinimumCharacterSetCount
-            PasswordMinimumLength                                 = $getValue.AdditionalProperties.passwordMinimumLength
-            PasswordMinutesOfInactivityBeforeScreenTimeout        = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
-            PasswordPreviousPasswordBlockCount                    = $getValue.AdditionalProperties.passwordPreviousPasswordBlockCount
-            PasswordRequired                                      = $getValue.AdditionalProperties.passwordRequired
+            NfcBlocked                                            = $getValue.nfcBlocked
+            OneDriveDisableFileSync                               = $getValue.oneDriveDisableFileSync
+            PasswordBlockSimple                                   = $getValue.passwordBlockSimple
+            PasswordExpirationDays                                = $getValue.passwordExpirationDays
+            PasswordMinimumAgeInDays                              = $getValue.passwordMinimumAgeInDays
+            PasswordMinimumCharacterSetCount                      = $getValue.passwordMinimumCharacterSetCount
+            PasswordMinimumLength                                 = $getValue.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeScreenTimeout        = $getValue.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordPreviousPasswordBlockCount                    = $getValue.passwordPreviousPasswordBlockCount
+            PasswordRequired                                      = $getValue.passwordRequired
             PasswordRequiredType                                  = $enumPasswordRequiredType
-            PasswordRequireWhenResumeFromIdleState                = $getValue.AdditionalProperties.passwordRequireWhenResumeFromIdleState
-            PasswordSignInFailureCountBeforeFactoryReset          = $getValue.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
-            PersonalizationDesktopImageUrl                        = $getValue.AdditionalProperties.personalizationDesktopImageUrl
-            PersonalizationLockScreenImageUrl                     = $getValue.AdditionalProperties.personalizationLockScreenImageUrl
+            PasswordRequireWhenResumeFromIdleState                = $getValue.passwordRequireWhenResumeFromIdleState
+            PasswordSignInFailureCountBeforeFactoryReset          = $getValue.passwordSignInFailureCountBeforeFactoryReset
+            PersonalizationDesktopImageUrl                        = $getValue.personalizationDesktopImageUrl
+            PersonalizationLockScreenImageUrl                     = $getValue.personalizationLockScreenImageUrl
             PowerButtonActionOnBattery                            = $enumPowerButtonActionOnBattery
             PowerButtonActionPluggedIn                            = $enumPowerButtonActionPluggedIn
             PowerHybridSleepOnBattery                             = $enumPowerHybridSleepOnBattery
@@ -1876,70 +1881,70 @@ function Get-TargetResource
             PowerLidCloseActionPluggedIn                          = $enumPowerLidCloseActionPluggedIn
             PowerSleepButtonActionOnBattery                       = $enumPowerSleepButtonActionOnBattery
             PowerSleepButtonActionPluggedIn                       = $enumPowerSleepButtonActionPluggedIn
-            PrinterBlockAddition                                  = $getValue.AdditionalProperties.printerBlockAddition
-            PrinterDefaultName                                    = $getValue.AdditionalProperties.printerDefaultName
-            PrinterNames                                          = $getValue.AdditionalProperties.printerNames
+            PrinterBlockAddition                                  = $getValue.printerBlockAddition
+            PrinterDefaultName                                    = $getValue.printerDefaultName
+            PrinterNames                                          = $getValue.printerNames
             PrivacyAdvertisingId                                  = $enumPrivacyAdvertisingId
-            PrivacyAutoAcceptPairingAndConsentPrompts             = $getValue.AdditionalProperties.privacyAutoAcceptPairingAndConsentPrompts
-            PrivacyBlockActivityFeed                              = $getValue.AdditionalProperties.privacyBlockActivityFeed
-            PrivacyBlockInputPersonalization                      = $getValue.AdditionalProperties.privacyBlockInputPersonalization
-            PrivacyBlockPublishUserActivities                     = $getValue.AdditionalProperties.privacyBlockPublishUserActivities
-            PrivacyDisableLaunchExperience                        = $getValue.AdditionalProperties.privacyDisableLaunchExperience
-            ResetProtectionModeBlocked                            = $getValue.AdditionalProperties.resetProtectionModeBlocked
+            PrivacyAutoAcceptPairingAndConsentPrompts             = $getValue.privacyAutoAcceptPairingAndConsentPrompts
+            PrivacyBlockActivityFeed                              = $getValue.privacyBlockActivityFeed
+            PrivacyBlockInputPersonalization                      = $getValue.privacyBlockInputPersonalization
+            PrivacyBlockPublishUserActivities                     = $getValue.privacyBlockPublishUserActivities
+            PrivacyDisableLaunchExperience                        = $getValue.privacyDisableLaunchExperience
+            ResetProtectionModeBlocked                            = $getValue.resetProtectionModeBlocked
             SafeSearchFilter                                      = $enumSafeSearchFilter
-            ScreenCaptureBlocked                                  = $getValue.AdditionalProperties.screenCaptureBlocked
-            SearchBlockDiacritics                                 = $getValue.AdditionalProperties.searchBlockDiacritics
-            SearchBlockWebResults                                 = $getValue.AdditionalProperties.searchBlockWebResults
-            SearchDisableAutoLanguageDetection                    = $getValue.AdditionalProperties.searchDisableAutoLanguageDetection
-            SearchDisableIndexerBackoff                           = $getValue.AdditionalProperties.searchDisableIndexerBackoff
-            SearchDisableIndexingEncryptedItems                   = $getValue.AdditionalProperties.searchDisableIndexingEncryptedItems
-            SearchDisableIndexingRemovableDrive                   = $getValue.AdditionalProperties.searchDisableIndexingRemovableDrive
-            SearchDisableLocation                                 = $getValue.AdditionalProperties.searchDisableLocation
-            SearchDisableUseLocation                              = $getValue.AdditionalProperties.searchDisableUseLocation
-            SearchEnableAutomaticIndexSizeManangement             = $getValue.AdditionalProperties.searchEnableAutomaticIndexSizeManangement
-            SearchEnableRemoteQueries                             = $getValue.AdditionalProperties.searchEnableRemoteQueries
-            SecurityBlockAzureADJoinedDevicesAutoEncryption       = $getValue.AdditionalProperties.securityBlockAzureADJoinedDevicesAutoEncryption
-            SettingsBlockAccountsPage                             = $getValue.AdditionalProperties.settingsBlockAccountsPage
-            SettingsBlockAddProvisioningPackage                   = $getValue.AdditionalProperties.settingsBlockAddProvisioningPackage
-            SettingsBlockAppsPage                                 = $getValue.AdditionalProperties.settingsBlockAppsPage
-            SettingsBlockChangeLanguage                           = $getValue.AdditionalProperties.settingsBlockChangeLanguage
-            SettingsBlockChangePowerSleep                         = $getValue.AdditionalProperties.settingsBlockChangePowerSleep
-            SettingsBlockChangeRegion                             = $getValue.AdditionalProperties.settingsBlockChangeRegion
-            SettingsBlockChangeSystemTime                         = $getValue.AdditionalProperties.settingsBlockChangeSystemTime
-            SettingsBlockDevicesPage                              = $getValue.AdditionalProperties.settingsBlockDevicesPage
-            SettingsBlockEaseOfAccessPage                         = $getValue.AdditionalProperties.settingsBlockEaseOfAccessPage
-            SettingsBlockEditDeviceName                           = $getValue.AdditionalProperties.settingsBlockEditDeviceName
-            SettingsBlockGamingPage                               = $getValue.AdditionalProperties.settingsBlockGamingPage
-            SettingsBlockNetworkInternetPage                      = $getValue.AdditionalProperties.settingsBlockNetworkInternetPage
-            SettingsBlockPersonalizationPage                      = $getValue.AdditionalProperties.settingsBlockPersonalizationPage
-            SettingsBlockPrivacyPage                              = $getValue.AdditionalProperties.settingsBlockPrivacyPage
-            SettingsBlockRemoveProvisioningPackage                = $getValue.AdditionalProperties.settingsBlockRemoveProvisioningPackage
-            SettingsBlockSettingsApp                              = $getValue.AdditionalProperties.settingsBlockSettingsApp
-            SettingsBlockSystemPage                               = $getValue.AdditionalProperties.settingsBlockSystemPage
-            SettingsBlockTimeLanguagePage                         = $getValue.AdditionalProperties.settingsBlockTimeLanguagePage
-            SettingsBlockUpdateSecurityPage                       = $getValue.AdditionalProperties.settingsBlockUpdateSecurityPage
-            SharedUserAppDataAllowed                              = $getValue.AdditionalProperties.sharedUserAppDataAllowed
+            ScreenCaptureBlocked                                  = $getValue.screenCaptureBlocked
+            SearchBlockDiacritics                                 = $getValue.searchBlockDiacritics
+            SearchBlockWebResults                                 = $getValue.searchBlockWebResults
+            SearchDisableAutoLanguageDetection                    = $getValue.searchDisableAutoLanguageDetection
+            SearchDisableIndexerBackoff                           = $getValue.searchDisableIndexerBackoff
+            SearchDisableIndexingEncryptedItems                   = $getValue.searchDisableIndexingEncryptedItems
+            SearchDisableIndexingRemovableDrive                   = $getValue.searchDisableIndexingRemovableDrive
+            SearchDisableLocation                                 = $getValue.searchDisableLocation
+            SearchDisableUseLocation                              = $getValue.searchDisableUseLocation
+            SearchEnableAutomaticIndexSizeManangement             = $getValue.searchEnableAutomaticIndexSizeManangement
+            SearchEnableRemoteQueries                             = $getValue.searchEnableRemoteQueries
+            SecurityBlockAzureADJoinedDevicesAutoEncryption       = $getValue.securityBlockAzureADJoinedDevicesAutoEncryption
+            SettingsBlockAccountsPage                             = $getValue.settingsBlockAccountsPage
+            SettingsBlockAddProvisioningPackage                   = $getValue.settingsBlockAddProvisioningPackage
+            SettingsBlockAppsPage                                 = $getValue.settingsBlockAppsPage
+            SettingsBlockChangeLanguage                           = $getValue.settingsBlockChangeLanguage
+            SettingsBlockChangePowerSleep                         = $getValue.settingsBlockChangePowerSleep
+            SettingsBlockChangeRegion                             = $getValue.settingsBlockChangeRegion
+            SettingsBlockChangeSystemTime                         = $getValue.settingsBlockChangeSystemTime
+            SettingsBlockDevicesPage                              = $getValue.settingsBlockDevicesPage
+            SettingsBlockEaseOfAccessPage                         = $getValue.settingsBlockEaseOfAccessPage
+            SettingsBlockEditDeviceName                           = $getValue.settingsBlockEditDeviceName
+            SettingsBlockGamingPage                               = $getValue.settingsBlockGamingPage
+            SettingsBlockNetworkInternetPage                      = $getValue.settingsBlockNetworkInternetPage
+            SettingsBlockPersonalizationPage                      = $getValue.settingsBlockPersonalizationPage
+            SettingsBlockPrivacyPage                              = $getValue.settingsBlockPrivacyPage
+            SettingsBlockRemoveProvisioningPackage                = $getValue.settingsBlockRemoveProvisioningPackage
+            SettingsBlockSettingsApp                              = $getValue.settingsBlockSettingsApp
+            SettingsBlockSystemPage                               = $getValue.settingsBlockSystemPage
+            SettingsBlockTimeLanguagePage                         = $getValue.settingsBlockTimeLanguagePage
+            SettingsBlockUpdateSecurityPage                       = $getValue.settingsBlockUpdateSecurityPage
+            SharedUserAppDataAllowed                              = $getValue.sharedUserAppDataAllowed
             SmartScreenAppInstallControl                          = $enumSmartScreenAppInstallControl
-            SmartScreenBlockPromptOverride                        = $getValue.AdditionalProperties.smartScreenBlockPromptOverride
-            SmartScreenBlockPromptOverrideForFiles                = $getValue.AdditionalProperties.smartScreenBlockPromptOverrideForFiles
-            SmartScreenEnableAppInstallControl                    = $getValue.AdditionalProperties.smartScreenEnableAppInstallControl
-            StartBlockUnpinningAppsFromTaskbar                    = $getValue.AdditionalProperties.startBlockUnpinningAppsFromTaskbar
+            SmartScreenBlockPromptOverride                        = $getValue.smartScreenBlockPromptOverride
+            SmartScreenBlockPromptOverrideForFiles                = $getValue.smartScreenBlockPromptOverrideForFiles
+            SmartScreenEnableAppInstallControl                    = $getValue.smartScreenEnableAppInstallControl
+            StartBlockUnpinningAppsFromTaskbar                    = $getValue.startBlockUnpinningAppsFromTaskbar
             StartMenuAppListVisibility                            = $enumStartMenuAppListVisibility
-            StartMenuHideChangeAccountSettings                    = $getValue.AdditionalProperties.startMenuHideChangeAccountSettings
-            StartMenuHideFrequentlyUsedApps                       = $getValue.AdditionalProperties.startMenuHideFrequentlyUsedApps
-            StartMenuHideHibernate                                = $getValue.AdditionalProperties.startMenuHideHibernate
-            StartMenuHideLock                                     = $getValue.AdditionalProperties.startMenuHideLock
-            StartMenuHidePowerButton                              = $getValue.AdditionalProperties.startMenuHidePowerButton
-            StartMenuHideRecentJumpLists                          = $getValue.AdditionalProperties.startMenuHideRecentJumpLists
-            StartMenuHideRecentlyAddedApps                        = $getValue.AdditionalProperties.startMenuHideRecentlyAddedApps
-            StartMenuHideRestartOptions                           = $getValue.AdditionalProperties.startMenuHideRestartOptions
-            StartMenuHideShutDown                                 = $getValue.AdditionalProperties.startMenuHideShutDown
-            StartMenuHideSignOut                                  = $getValue.AdditionalProperties.startMenuHideSignOut
-            StartMenuHideSleep                                    = $getValue.AdditionalProperties.startMenuHideSleep
-            StartMenuHideSwitchAccount                            = $getValue.AdditionalProperties.startMenuHideSwitchAccount
-            StartMenuHideUserTile                                 = $getValue.AdditionalProperties.startMenuHideUserTile
-            StartMenuLayoutEdgeAssetsXml                          = $getValue.AdditionalProperties.startMenuLayoutEdgeAssetsXml
-            StartMenuLayoutXml                                    = $getValue.AdditionalProperties.startMenuLayoutXml
+            StartMenuHideChangeAccountSettings                    = $getValue.startMenuHideChangeAccountSettings
+            StartMenuHideFrequentlyUsedApps                       = $getValue.startMenuHideFrequentlyUsedApps
+            StartMenuHideHibernate                                = $getValue.startMenuHideHibernate
+            StartMenuHideLock                                     = $getValue.startMenuHideLock
+            StartMenuHidePowerButton                              = $getValue.startMenuHidePowerButton
+            StartMenuHideRecentJumpLists                          = $getValue.startMenuHideRecentJumpLists
+            StartMenuHideRecentlyAddedApps                        = $getValue.startMenuHideRecentlyAddedApps
+            StartMenuHideRestartOptions                           = $getValue.startMenuHideRestartOptions
+            StartMenuHideShutDown                                 = $getValue.startMenuHideShutDown
+            StartMenuHideSignOut                                  = $getValue.startMenuHideSignOut
+            StartMenuHideSleep                                    = $getValue.startMenuHideSleep
+            StartMenuHideSwitchAccount                            = $getValue.startMenuHideSwitchAccount
+            StartMenuHideUserTile                                 = $getValue.startMenuHideUserTile
+            StartMenuLayoutEdgeAssetsXml                          = $getValue.startMenuLayoutEdgeAssetsXml
+            StartMenuLayoutXml                                    = $getValue.startMenuLayoutXml
             StartMenuMode                                         = $enumStartMenuMode
             StartMenuPinnedFolderDocuments                        = $enumStartMenuPinnedFolderDocuments
             StartMenuPinnedFolderDownloads                        = $enumStartMenuPinnedFolderDownloads
@@ -1951,36 +1956,36 @@ function Get-TargetResource
             StartMenuPinnedFolderPictures                         = $enumStartMenuPinnedFolderPictures
             StartMenuPinnedFolderSettings                         = $enumStartMenuPinnedFolderSettings
             StartMenuPinnedFolderVideos                           = $enumStartMenuPinnedFolderVideos
-            StorageBlockRemovableStorage                          = $getValue.AdditionalProperties.storageBlockRemovableStorage
-            StorageRequireMobileDeviceEncryption                  = $getValue.AdditionalProperties.storageRequireMobileDeviceEncryption
-            StorageRestrictAppDataToSystemVolume                  = $getValue.AdditionalProperties.storageRestrictAppDataToSystemVolume
-            StorageRestrictAppInstallToSystemVolume               = $getValue.AdditionalProperties.storageRestrictAppInstallToSystemVolume
-            SystemTelemetryProxyServer                            = $getValue.AdditionalProperties.systemTelemetryProxyServer
-            TaskManagerBlockEndTask                               = $getValue.AdditionalProperties.taskManagerBlockEndTask
-            TenantLockdownRequireNetworkDuringOutOfBoxExperience  = $getValue.AdditionalProperties.tenantLockdownRequireNetworkDuringOutOfBoxExperience
-            UninstallBuiltInApps                                  = $getValue.AdditionalProperties.uninstallBuiltInApps
-            UsbBlocked                                            = $getValue.AdditionalProperties.usbBlocked
-            VoiceRecordingBlocked                                 = $getValue.AdditionalProperties.voiceRecordingBlocked
-            WebRtcBlockLocalhostIpAddress                         = $getValue.AdditionalProperties.webRtcBlockLocalhostIpAddress
-            WiFiBlockAutomaticConnectHotspots                     = $getValue.AdditionalProperties.wiFiBlockAutomaticConnectHotspots
-            WiFiBlocked                                           = $getValue.AdditionalProperties.wiFiBlocked
-            WiFiBlockManualConfiguration                          = $getValue.AdditionalProperties.wiFiBlockManualConfiguration
-            WiFiScanInterval                                      = $getValue.AdditionalProperties.wiFiScanInterval
+            StorageBlockRemovableStorage                          = $getValue.storageBlockRemovableStorage
+            StorageRequireMobileDeviceEncryption                  = $getValue.storageRequireMobileDeviceEncryption
+            StorageRestrictAppDataToSystemVolume                  = $getValue.storageRestrictAppDataToSystemVolume
+            StorageRestrictAppInstallToSystemVolume               = $getValue.storageRestrictAppInstallToSystemVolume
+            SystemTelemetryProxyServer                            = $getValue.systemTelemetryProxyServer
+            TaskManagerBlockEndTask                               = $getValue.taskManagerBlockEndTask
+            TenantLockdownRequireNetworkDuringOutOfBoxExperience  = $getValue.tenantLockdownRequireNetworkDuringOutOfBoxExperience
+            UninstallBuiltInApps                                  = $getValue.uninstallBuiltInApps
+            UsbBlocked                                            = $getValue.usbBlocked
+            VoiceRecordingBlocked                                 = $getValue.voiceRecordingBlocked
+            WebRtcBlockLocalhostIpAddress                         = $getValue.webRtcBlockLocalhostIpAddress
+            WiFiBlockAutomaticConnectHotspots                     = $getValue.wiFiBlockAutomaticConnectHotspots
+            WiFiBlocked                                           = $getValue.wiFiBlocked
+            WiFiBlockManualConfiguration                          = $getValue.wiFiBlockManualConfiguration
+            WiFiScanInterval                                      = $getValue.wiFiScanInterval
             Windows10AppsForceUpdateSchedule                      = $complexWindows10AppsForceUpdateSchedule
-            WindowsSpotlightBlockConsumerSpecificFeatures         = $getValue.AdditionalProperties.windowsSpotlightBlockConsumerSpecificFeatures
-            WindowsSpotlightBlocked                               = $getValue.AdditionalProperties.windowsSpotlightBlocked
-            WindowsSpotlightBlockOnActionCenter                   = $getValue.AdditionalProperties.windowsSpotlightBlockOnActionCenter
-            WindowsSpotlightBlockTailoredExperiences              = $getValue.AdditionalProperties.windowsSpotlightBlockTailoredExperiences
-            WindowsSpotlightBlockThirdPartyNotifications          = $getValue.AdditionalProperties.windowsSpotlightBlockThirdPartyNotifications
-            WindowsSpotlightBlockWelcomeExperience                = $getValue.AdditionalProperties.windowsSpotlightBlockWelcomeExperience
-            WindowsSpotlightBlockWindowsTips                      = $getValue.AdditionalProperties.windowsSpotlightBlockWindowsTips
+            WindowsSpotlightBlockConsumerSpecificFeatures         = $getValue.windowsSpotlightBlockConsumerSpecificFeatures
+            WindowsSpotlightBlocked                               = $getValue.windowsSpotlightBlocked
+            WindowsSpotlightBlockOnActionCenter                   = $getValue.windowsSpotlightBlockOnActionCenter
+            WindowsSpotlightBlockTailoredExperiences              = $getValue.windowsSpotlightBlockTailoredExperiences
+            WindowsSpotlightBlockThirdPartyNotifications          = $getValue.windowsSpotlightBlockThirdPartyNotifications
+            WindowsSpotlightBlockWelcomeExperience                = $getValue.windowsSpotlightBlockWelcomeExperience
+            WindowsSpotlightBlockWindowsTips                      = $getValue.windowsSpotlightBlockWindowsTips
             WindowsSpotlightConfigureOnLockScreen                 = $enumWindowsSpotlightConfigureOnLockScreen
-            WindowsStoreBlockAutoUpdate                           = $getValue.AdditionalProperties.windowsStoreBlockAutoUpdate
-            WindowsStoreBlocked                                   = $getValue.AdditionalProperties.windowsStoreBlocked
-            WindowsStoreEnablePrivateStoreOnly                    = $getValue.AdditionalProperties.windowsStoreEnablePrivateStoreOnly
-            WirelessDisplayBlockProjectionToThisDevice            = $getValue.AdditionalProperties.wirelessDisplayBlockProjectionToThisDevice
-            WirelessDisplayBlockUserInputFromReceiver             = $getValue.AdditionalProperties.wirelessDisplayBlockUserInputFromReceiver
-            WirelessDisplayRequirePinForPairing                   = $getValue.AdditionalProperties.wirelessDisplayRequirePinForPairing
+            WindowsStoreBlockAutoUpdate                           = $getValue.windowsStoreBlockAutoUpdate
+            WindowsStoreBlocked                                   = $getValue.windowsStoreBlocked
+            WindowsStoreEnablePrivateStoreOnly                    = $getValue.windowsStoreEnablePrivateStoreOnly
+            WirelessDisplayBlockProjectionToThisDevice            = $getValue.wirelessDisplayBlockProjectionToThisDevice
+            WirelessDisplayBlockUserInputFromReceiver             = $getValue.wirelessDisplayBlockUserInputFromReceiver
+            WirelessDisplayRequirePinForPairing                   = $getValue.wirelessDisplayRequirePinForPairing
             Description                                           = $getValue.Description
             DisplayName                                           = $getValue.DisplayName
             Id                                                    = $getValue.Id
@@ -1991,6 +1996,8 @@ function Get-TargetResource
             TenantId                                              = $TenantId
             ApplicationSecret                                     = $ApplicationSecret
             CertificateThumbprint                                 = $CertificateThumbprint
+            CertificatePath                                       = $CertificatePath
+            CertificatePassword                                   = $CertificatePassword
             ManagedIdentity                                       = $ManagedIdentity.IsPresent
             AccessTokens                                          = $AccessTokens
             #endregion
@@ -3250,6 +3257,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -3328,7 +3343,7 @@ function Set-TargetResource
         }
         foreach ($assignment in $intuneAssignments)
         {
-            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type' }))
+            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.groupId -eq $assignment.Target.groupId -and $_.Target.'@odata.type' -eq $assignment.Target.'@odata.type' }))
             {
                 New-MgBetaDeviceManagementDeviceConfigurationAssignment `
                     -DeviceConfigurationId $currentInstance.id `
@@ -3336,7 +3351,7 @@ function Set-TargetResource
             }
             else
             {
-                $currentAssignments = $currentAssignments | Where-Object { -not ($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type') }
+                $currentAssignments = $currentAssignments | Where-Object { -not ($_.Target.groupId -eq $assignment.Target.groupId -and $_.Target.'@odata.type' -eq $assignment.Target.'@odata.type') }
             }
         }
         if ($currentAssignments.Count -gt 0)
@@ -4592,6 +4607,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -4645,6 +4668,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -4671,11 +4702,16 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' `
+        $baseFilter = "isof('microsoft.graph.windows10GeneralConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -4710,6 +4746,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

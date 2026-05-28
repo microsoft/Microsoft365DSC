@@ -52,6 +52,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -136,6 +144,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
         }
 
@@ -202,6 +212,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -348,6 +366,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -399,6 +425,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -468,6 +502,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -632,39 +668,39 @@ function Get-MicrosoftGraphRemoteNetworkDeviceLinksHashtable
             }
 
             # Additional Properties
-            if ($deviceLink.TunnelConfiguration.AdditionalProperties)
+            if ($deviceLink.TunnelConfiguration)
             {
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.saLifeTimeSeconds)
+                if ($deviceLink.TunnelConfiguration.saLifeTimeSeconds)
                 {
-                    $tunnelConfig['SaLifeTimeSeconds'] = $deviceLink.TunnelConfiguration.AdditionalProperties.saLifeTimeSeconds
+                    $tunnelConfig['SaLifeTimeSeconds'] = $deviceLink.TunnelConfiguration.saLifeTimeSeconds
                 }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ipSecEncryption)
+                if ($deviceLink.TunnelConfiguration.ipSecEncryption)
                 {
-                    $tunnelConfig['IPSecEncryption'] = $deviceLink.TunnelConfiguration.AdditionalProperties.ipSecEncryption
+                    $tunnelConfig['IPSecEncryption'] = $deviceLink.TunnelConfiguration.ipSecEncryption
                 }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ipSecIntegrity)
+                if ($deviceLink.TunnelConfiguration.ipSecIntegrity)
                 {
-                    $tunnelConfig['IPSecIntegrity'] = $deviceLink.TunnelConfiguration.AdditionalProperties.ipSecIntegrity
+                    $tunnelConfig['IPSecIntegrity'] = $deviceLink.TunnelConfiguration.ipSecIntegrity
                 }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ikeEncryption)
+                if ($deviceLink.TunnelConfiguration.ikeEncryption)
                 {
-                    $tunnelConfig['IKEEncryption'] = $deviceLink.TunnelConfiguration.AdditionalProperties.ikeEncryption
+                    $tunnelConfig['IKEEncryption'] = $deviceLink.TunnelConfiguration.ikeEncryption
                 }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ikeIntegrity)
+                if ($deviceLink.TunnelConfiguration.ikeIntegrity)
                 {
-                    $tunnelConfig['IKEIntegrity'] = $deviceLink.TunnelConfiguration.AdditionalProperties.ikeIntegrity
+                    $tunnelConfig['IKEIntegrity'] = $deviceLink.TunnelConfiguration.ikeIntegrity
                 }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.dhGroup)
+                if ($deviceLink.TunnelConfiguration.dhGroup)
                 {
-                    $tunnelConfig['DHGroup'] = $deviceLink.TunnelConfiguration.AdditionalProperties.dhGroup
+                    $tunnelConfig['DHGroup'] = $deviceLink.TunnelConfiguration.dhGroup
                 }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.pfsGroup)
+                if ($deviceLink.TunnelConfiguration.pfsGroup)
                 {
-                    $tunnelConfig['PFSGroup'] = $deviceLink.TunnelConfiguration.AdditionalProperties.pfsGroup
+                    $tunnelConfig['PFSGroup'] = $deviceLink.TunnelConfiguration.pfsGroup
                 }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties['@odata.type'])
+                if ($deviceLink.TunnelConfiguration['@odata.type'])
                 {
-                    $tunnelConfig['ODataType'] = $deviceLink.TunnelConfiguration.AdditionalProperties['@odata.type']
+                    $tunnelConfig['ODataType'] = $deviceLink.TunnelConfiguration['@odata.type']
                 }
             }
 

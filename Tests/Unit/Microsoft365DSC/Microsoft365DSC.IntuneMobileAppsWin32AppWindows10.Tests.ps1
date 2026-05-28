@@ -53,73 +53,71 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.win32LobApp"
-                        allowedArchitectures = "x86,x64"
-                        installCommandLine = "IntuneWinAppUtil.exe -s -t 0"
-                        uninstallCommandLine = "IntuneWinAppUtil.exe -s -u -t 0"
-                        fileName = "IntuneWinAppUtil.intunewin"
-                        installExperience = @{
-                            deviceRestartBehavior = "suppress"
-                            maxRunTimeInMinutes = 60
-                            runAsAccount = "system"
-                        }
-                        setupFilePath = "IntuneWinAppUtil.exe"
-                        minimumSupportedOperatingSystem = @{
-                            v8_0 = $False
-                            v8_1 = $False
-                            v10_0 = $False
-                            v10_1607 = $True
-                            v10_1703 = $False
-                            v10_1709 = $False
-                            v10_1803 = $False
-                            v10_1809 = $False
-                            v10_1903 = $False
-                            v10_1909 = $False
-                            v10_2004 = $False
-                            v10_2H20 = $False
-                            v10_21H1 = $False
-                        }
-                        minimumSupportedWindowsRelease = "1607"
-                        msiInformation = @{
-                            productCode = "{00000000-0000-0000-0000-000000000000}"
-                            productVersion = "1.0.0.0"
-                            upgradeCode = "{00000000-0000-0000-0000-000000000000}"
-                            requiresReboot = $False
-                            packageType = "dualPurpose"
-                            productName = "IntuneWinAppUtil"
-                            publisher = "FakeStringValue"
-                        }
-                        displayVersion = "1.0.0.0"
-                        allowAvailableUninstall = $False
-                        rules = @(
-                            @{
-                                '@odata.type' = "#microsoft.graph.win32LobAppFileSystemRule"
-                                check32BitOn64System = $False
-                                operationType = "version"
-                                fileOrFolderName = "test.exe"
-                                operator = "equal"
-                                comparisonValue = "1.0.0.0"
-                                path = "C:\Path"
-                                ruleType = "detection"
-                            }
-                            @{
-                                '@odata.type' = "#microsoft.graph.win32LobAppFileSystemRule"
-                                check32BitOn64System = $False
-                                operationType = "exists"
-                                fileOrFolderName = "test.exe"
-                                operator = "notConfigured"
-                                path = "C:\Path"
-                                ruleType = "requirement"
-                            }
-                        )
-                        returnCodes = @(
-                            @{
-                                returnCode = 0
-                                type = "success"
-                            }
-                        )
+                    '@odata.type' = "#microsoft.graph.win32LobApp"
+                    allowedArchitectures = "x86,x64"
+                    installCommandLine = "IntuneWinAppUtil.exe -s -t 0"
+                    uninstallCommandLine = "IntuneWinAppUtil.exe -s -u -t 0"
+                    fileName = "IntuneWinAppUtil.intunewin"
+                    installExperience = @{
+                        deviceRestartBehavior = "suppress"
+                        maxRunTimeInMinutes = 60
+                        runAsAccount = "system"
                     }
+                    setupFilePath = "IntuneWinAppUtil.exe"
+                    minimumSupportedOperatingSystem = @{
+                        v8_0 = $False
+                        v8_1 = $False
+                        v10_0 = $False
+                        v10_1607 = $True
+                        v10_1703 = $False
+                        v10_1709 = $False
+                        v10_1803 = $False
+                        v10_1809 = $False
+                        v10_1903 = $False
+                        v10_1909 = $False
+                        v10_2004 = $False
+                        v10_2H20 = $False
+                        v10_21H1 = $False
+                    }
+                    minimumSupportedWindowsRelease = "1607"
+                    msiInformation = @{
+                        productCode = "{00000000-0000-0000-0000-000000000000}"
+                        productVersion = "1.0.0.0"
+                        upgradeCode = "{00000000-0000-0000-0000-000000000000}"
+                        requiresReboot = $False
+                        packageType = "dualPurpose"
+                        productName = "IntuneWinAppUtil"
+                        publisher = "FakeStringValue"
+                    }
+                    displayVersion = "1.0.0.0"
+                    allowAvailableUninstall = $False
+                    rules = @(
+                        @{
+                            '@odata.type' = "#microsoft.graph.win32LobAppFileSystemRule"
+                            check32BitOn64System = $False
+                            operationType = "version"
+                            fileOrFolderName = "test.exe"
+                            operator = "equal"
+                            comparisonValue = "1.0.0.0"
+                            path = "C:\Path"
+                            ruleType = "detection"
+                        }
+                        @{
+                            '@odata.type' = "#microsoft.graph.win32LobAppFileSystemRule"
+                            check32BitOn64System = $False
+                            operationType = "exists"
+                            fileOrFolderName = "test.exe"
+                            operator = "notConfigured"
+                            path = "C:\Path"
+                            ruleType = "requirement"
+                        }
+                    )
+                    returnCodes = @(
+                        @{
+                            returnCode = 0
+                            type = "success"
+                        }
+                    )
                     Categories = @(
                         @{
                             Id = "FakeStringValue"
@@ -131,13 +129,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = "FakeStringValue"
                     Developer = "FakeStringValue"
                     DisplayName = "FakeStringValue"
-                    FileName = "FakeStringValue"
                     Id = "FakeStringValue"
                     InformationUrl = "FakeStringValue"
                     IsFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -156,73 +153,71 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.win32LobApp"
-                        allowedArchitectures = "x86,x64"
-                        installCommandLine = "IntuneWinAppUtil.exe -s -t 0"
-                        uninstallCommandLine = "IntuneWinAppUtil.exe -s -u -t 0"
-                        installExperience = @{
-                            deviceRestartBehavior = "suppress"
-                            maxRunTimeInMinutes = 60
-                            runAsAccount = "system"
-                        }
-                        fileName = "IntuneWinAppUtil.intunewin"
-                        setupFilePath = "IntuneWinAppUtil.exe"
-                        minimumSupportedOperatingSystem = @{
-                            v8_0 = $False
-                            v8_1 = $False
-                            v10_0 = $False
-                            v10_1607 = $True
-                            v10_1703 = $False
-                            v10_1709 = $False
-                            v10_1803 = $False
-                            v10_1809 = $False
-                            v10_1903 = $False
-                            v10_1909 = $False
-                            v10_2004 = $False
-                            v10_2H20 = $False
-                            v10_21H1 = $False
-                        }
-                        minimumSupportedWindowsRelease = "1607"
-                        msiInformation = @{
-                            productCode = "{00000000-0000-0000-0000-000000000000}"
-                            productVersion = "1.0.0.0"
-                            upgradeCode = "{00000000-0000-0000-0000-000000000000}"
-                            requiresReboot = $False
-                            packageType = "dualPurpose"
-                            productName = "IntuneWinAppUtil"
-                            publisher = "FakeStringValue"
-                        }
-                        displayVersion = "1.0.0.0"
-                        allowAvailableUninstall = $False
-                        rules = @(
-                            @{
-                                '@odata.type' = "#microsoft.graph.win32LobAppFileSystemRule"
-                                check32BitOn64System = $False
-                                operationType = "version"
-                                fileOrFolderName = "test.exe"
-                                operator = "equal"
-                                comparisonValue = "1.0.0.0"
-                                path = "C:\Path"
-                                ruleType = "detection"
-                            }
-                            @{
-                                '@odata.type' = "#microsoft.graph.win32LobAppFileSystemRule"
-                                check32BitOn64System = $False
-                                operationType = "exists"
-                                fileOrFolderName = "test.exe"
-                                operator = "notConfigured"
-                                path = "C:\Path"
-                                ruleType = "requirement"
-                            }
-                        )
-                        returnCodes = @(
-                            @{
-                                returnCode = 0
-                                type = "success"
-                            }
-                        )
+                    '@odata.type' = "#microsoft.graph.win32LobApp"
+                    allowedArchitectures = "x86,x64"
+                    installCommandLine = "IntuneWinAppUtil.exe -s -t 0"
+                    uninstallCommandLine = "IntuneWinAppUtil.exe -s -u -t 0"
+                    installExperience = @{
+                        deviceRestartBehavior = "suppress"
+                        maxRunTimeInMinutes = 60
+                        runAsAccount = "system"
                     }
+                    fileName = "IntuneWinAppUtil.intunewin"
+                    setupFilePath = "IntuneWinAppUtil.exe"
+                    minimumSupportedOperatingSystem = @{
+                        v8_0 = $False
+                        v8_1 = $False
+                        v10_0 = $False
+                        v10_1607 = $True
+                        v10_1703 = $False
+                        v10_1709 = $False
+                        v10_1803 = $False
+                        v10_1809 = $False
+                        v10_1903 = $False
+                        v10_1909 = $False
+                        v10_2004 = $False
+                        v10_2H20 = $False
+                        v10_21H1 = $False
+                    }
+                    minimumSupportedWindowsRelease = "1607"
+                    msiInformation = @{
+                        productCode = "{00000000-0000-0000-0000-000000000000}"
+                        productVersion = "1.0.0.0"
+                        upgradeCode = "{00000000-0000-0000-0000-000000000000}"
+                        requiresReboot = $False
+                        packageType = "dualPurpose"
+                        productName = "IntuneWinAppUtil"
+                        publisher = "FakeStringValue"
+                    }
+                    displayVersion = "1.0.0.0"
+                    allowAvailableUninstall = $False
+                    rules = @(
+                        @{
+                            '@odata.type' = "#microsoft.graph.win32LobAppFileSystemRule"
+                            check32BitOn64System = $False
+                            operationType = "version"
+                            fileOrFolderName = "test.exe"
+                            operator = "equal"
+                            comparisonValue = "1.0.0.0"
+                            path = "C:\Path"
+                            ruleType = "detection"
+                        }
+                        @{
+                            '@odata.type' = "#microsoft.graph.win32LobAppFileSystemRule"
+                            check32BitOn64System = $False
+                            operationType = "exists"
+                            fileOrFolderName = "test.exe"
+                            operator = "notConfigured"
+                            path = "C:\Path"
+                            ruleType = "requirement"
+                        }
+                    )
+                    returnCodes = @(
+                        @{
+                            returnCode = 0
+                            type = "success"
+                        }
+                    )
                     Categories = @(
                         @{
                             Id = "FakeStringValue"
@@ -239,7 +234,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -271,23 +266,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Source = "direct"
                         SourceId = "12345-12345-12345-12345-12345"
                         Target = @{
-                            AdditionalProperties = @{
-                                "@odata.type" = "#microsoft.graph.groupAssignmentTarget"
-                                groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
-                            }
+                            "@odata.type" = "#microsoft.graph.groupAssignmentTarget"
+                            groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
                             "deviceAndAppManagementAssignmentFilterId" = '12345-12345-12345-12345-12345'
                             "deviceAndAppManagementAssignmentFilterType" = "none"
                         }
                         Settings = @{
-                            AdditionalProperties = @{
-                                "@odata.type" = "#microsoft.graph.win32LobAppAssignmentSettings"
-                                notifications = "showAll"
-                                deliveryOptimizationPriority = "notConfigured"
-                                restartSettings = @{
-                                    gracePeriodInMinutes = 1440
-                                    countdownDisplayBeforeRestartInMinutes = 15
-                                    restartNotificationSnoozeDurationInMinutes = 240
-                                }
+                            "@odata.type" = "#microsoft.graph.win32LobAppAssignmentSettings"
+                            notifications = "showAll"
+                            deliveryOptimizationPriority = "notConfigured"
+                            restartSettings = @{
+                                gracePeriodInMinutes = 1440
+                                countdownDisplayBeforeRestartInMinutes = 15
+                                restartNotificationSnoozeDurationInMinutes = 240
                             }
                         }
                     }

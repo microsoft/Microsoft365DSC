@@ -87,84 +87,74 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
                                 Name = 'ElevationRuleName'
                                 OffsetUri = '/PrivilegeManagement/ElevationRules/{0}'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    minimumCount = 1
-                                    maximumCount = 100
-                                    childIds = @(
-                                        'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_name'
-                                        'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filename'
-                                        'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filepath'
-                                        'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                minimumCount = 1
+                                maximumCount = 100
+                                childIds = @(
+                                    'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_name'
+                                    'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filename'
+                                    'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filepath'
+                                    'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filename'
                                 Name = 'FileName'
                                 OffsetUri = '/PrivilegeManagement/ElevationRules/{0}/FileName'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                            parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                        parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_name'
                                 Name = 'Name'
                                 OffsetUri = '/PrivilegeManagement/ElevationRules/{0}/Name'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                            parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                        parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filepath'
                                 Name = 'FilePath'
                                 OffsetUri = '/PrivilegeManagement/ElevationRules/{0}/FilePath'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                            parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                        parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
                                 Name = 'ElevationType'
                                 OffsetUri = '/PrivilegeManagement/ElevationRules/{0}/RuleType'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    rootDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_automatic'
-                                            name = 'Automatic'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'Automatic'
-                                            }
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                                    parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                                }
-                                            )
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                rootDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_automatic'
+                                        name = 'Automatic'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'Automatic'
                                         }
-                                    )
-                                }
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                                parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                            }
+                                        )
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -172,47 +162,45 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'ee3d2e5f-6b3d-4cb1-af9b-37b02d3dbae2'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filename'
-                                                simpleSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                    value = 'file.exe'
-                                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filename'
+                                            simpleSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                value = 'file.exe'
                                             }
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filepath'
-                                                simpleSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                    value = 'C:\Temp'
-                                                }
+                                        }
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filepath'
+                                            simpleSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                value = 'C:\Temp'
                                             }
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_name'
-                                                simpleSettingValue = @{
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                    value = 'Rule Name'
-                                                }
+                                        }
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_name'
+                                            simpleSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                value = 'Rule Name'
                                             }
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
-                                                choiceSettingValue = @{
-                                                    children = @()
-                                                    value = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_automatic'
-                                                }
+                                        }
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
+                                            choiceSettingValue = @{
+                                                children = @()
+                                                value = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_automatic'
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     }
                 )
@@ -226,84 +214,74 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
                                 Name = 'ElevationRuleName'
                                 OffsetUri = '/PrivilegeManagement/ElevationRules/{0}'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    minimumCount = 1
-                                    maximumCount = 100
-                                    childIds = @(
-                                        'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_name'
-                                        'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filename'
-                                        'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filepath'
-                                        'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                minimumCount = 1
+                                maximumCount = 100
+                                childIds = @(
+                                    'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_name'
+                                    'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filename'
+                                    'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filepath'
+                                    'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filename'
                                 Name = 'FileName'
                                 OffsetUri = '/PrivilegeManagement/ElevationRules/{0}/FileName'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                            parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                        parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_name'
                                 Name = 'Name'
                                 OffsetUri = '/PrivilegeManagement/ElevationRules/{0}/Name'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                            parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                        parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filepath'
                                 Name = 'FilePath'
                                 OffsetUri = '/PrivilegeManagement/ElevationRules/{0}/FilePath'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                            parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                        parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                    }
+                                )
                             }
                             @{
                                 Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
                                 Name = 'ElevationType'
                                 OffsetUri = '/PrivilegeManagement/ElevationRules/{0}/RuleType'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    rootDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_automatic'
-                                            name = 'Automatic'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'Automatic'
-                                            }
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                                    parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
-                                                }
-                                            )
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                rootDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_automatic'
+                                        name = 'Automatic'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'Automatic'
                                         }
-                                    )
-                                }
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                                parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                            }
+                                        )
+                                    }
+                                )
                             }
                         )
                     }
@@ -328,12 +306,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }

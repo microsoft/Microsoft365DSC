@@ -35,5 +35,17 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsOnlinePstnUsage",
+        "Get-CsOnlineVoiceRoutingPolicy",
+        "New-CsOnlineVoiceRoutingPolicy",
+        "Remove-CsOnlineVoiceRoutingPolicy",
+        "Set-CsOnlineVoiceRoutingPolicy"
+      ]
+    }
+  ]
 }

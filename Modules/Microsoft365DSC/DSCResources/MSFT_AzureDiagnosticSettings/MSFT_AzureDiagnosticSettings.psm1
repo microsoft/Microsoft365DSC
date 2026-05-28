@@ -56,6 +56,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -88,7 +96,7 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $response = Invoke-AzRest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings?api-version=2017-04-01-preview" `
+            $response = Invoke-AzRestMethod -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings?api-version=2017-04-01-preview" `
                 -Method Get
             $instances = (ConvertFrom-Json $response.Content).value
             $instance = $instances | Where-Object -FilterScript { $_.name -eq $Name }
@@ -125,6 +133,8 @@ function Get-TargetResource
             ApplicationId               = $ApplicationId
             TenantId                    = $TenantId
             CertificateThumbprint       = $CertificateThumbprint
+            CertificatePath             = $CertificatePath
+            CertificatePassword         = $CertificatePassword
             ManagedIdentity             = $ManagedIdentity.IsPresent
             AccessTokens                = $AccessTokens
         }
@@ -195,6 +205,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -269,7 +287,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Updating diagnostic setting {$Name}"
         }
-        $null = Invoke-AzRest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
+        $null = Invoke-AzRestMethod -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
             -Method PUT `
             -Payload $payload
     }
@@ -277,7 +295,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing diagnostic setting {$Name}"
-        $null = Invoke-AzRest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
+        $null = Invoke-AzRestMethod -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
             -Method DELETE
     }
 }
@@ -338,6 +356,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -387,6 +413,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -412,7 +446,7 @@ function Export-TargetResource
 
     try
     {
-        $response = Invoke-AzRest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings?api-version=2017-04-01-preview" `
+        $response = Invoke-AzRestMethod -Uri "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/microsoft.aadiam/diagnosticsettings?api-version=2017-04-01-preview" `
             -Method Get
         [array] $exportedInstances = (ConvertFrom-Json $response.Content).value
         $i = 1
@@ -440,6 +474,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

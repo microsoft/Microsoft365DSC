@@ -140,6 +140,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -219,7 +227,7 @@ function Get-TargetResource
         $disableNotificationsInstance = $settings | Where-Object { $_.SettingInstance.SettingDefinitionId -like '*_disablenotifications' }
         if ($null -ne $disableNotificationsInstance)
         {
-            $policySettings.DisableNotifications = [int]$disableNotificationsInstance.SettingInstance.AdditionalProperties.choiceSettingValue.value.Split('_')[-1]
+            $policySettings.DisableNotifications = [int]$disableNotificationsInstance.SettingInstance.choiceSettingValue.value.Split('_')[-1]
         }
 
         $results = @{
@@ -234,6 +242,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
@@ -400,6 +410,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -470,12 +488,13 @@ function Set-TargetResource
         }
 
         $createParameters = @{
-            Name           = $DisplayName
-            Description    = $Description
-            CreationSource = 'WindowsSecurity'
-            Platforms      = $platforms
-            Technologies   = $technologies
-            Settings       = $settings
+            name           = $DisplayName
+            description    = $Description
+            creationSource = 'WindowsSecurity'
+            platforms      = $platforms
+            technologies   = $technologies
+            settings       = $settings
+            roleScopeTagIds = $RoleScopeTagIds
         }
 
         #region resource generator code
@@ -698,6 +717,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -751,6 +778,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -825,6 +860,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

@@ -62,5 +62,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Add-PnPOrgAssetsLibrary",
+        "Get-PnPOrgAssetsLibrary",
+        "Get-PnPTenantCdnEnabled",
+        "Remove-PnPOrgAssetsLibrary"
+      ]
+    }
+  ]
 }

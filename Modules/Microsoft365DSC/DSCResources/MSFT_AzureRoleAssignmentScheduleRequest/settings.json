@@ -43,11 +43,20 @@
   "mode": "Configuration",
   "commands": [
     {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Get-AzSubscription",
+        "Set-AzContext"
+      ]
+    },
+    {
       "module": "Az.Resources",
       "cmdlets": [
         "Get-AzADGroup",
         "Get-AzADServicePrincipal",
         "Get-AzADUser",
+        "Get-AzManagementGroup",
+        "Get-AzResourceGroup",
         "Get-AzRoleAssignmentSchedule",
         "Get-AzRoleDefinition",
         "New-AzRoleAssignmentScheduleRequest"

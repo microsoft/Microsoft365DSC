@@ -44,6 +44,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'https://contoso-admin.sharepoint.com'
             }
 
+            Mock -CommandName Get-PnPTenantSite -MockWith {
+                return @{
+                    Url = 'https://contoso-admin.sharepoint.com'
+                    DenyAddAndCustomizePages = 'Enabled'
+                }
+            }
+
+            Mock -CommandName Set-PnPTenantSite -MockWith {
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }

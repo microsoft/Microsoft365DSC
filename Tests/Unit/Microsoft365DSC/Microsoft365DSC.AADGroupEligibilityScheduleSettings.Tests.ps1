@@ -50,27 +50,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule"
-                        setting = @{
-                            approvalStages = @(
-                                @{
-                                    approvalStageTimeOutInDays = 1
-                                    escalationApprovers = @(
-                                        @{
-                                            '@odata.type' = "FakeStringValue"
-                                        }
-                                    )
-                                    isEscalationEnabled = $True
-                                    isApproverJustificationRequired = $True
-                                    escalationTimeInMinutes = 1
-                                }
-                            )
-                            isApprovalRequired = $True
-                            isApprovalRequiredForExtension = $True
-                            approvalMode = "FakeStringValue"
-                            isRequestorJustificationRequired = $True
-                        }
+                    '@odata.type' = "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule"
+                    setting = @{
+                        approvalStages = @(
+                            @{
+                                approvalStageTimeOutInDays = 1
+                                escalationApprovers = @(
+                                    @{
+                                        '@odata.type' = "FakeStringValue"
+                                    }
+                                )
+                                isEscalationEnabled = $True
+                                isApproverJustificationRequired = $True
+                                escalationTimeInMinutes = 1
+                            }
+                        )
+                        isApprovalRequired = $True
+                        isApprovalRequiredForExtension = $True
+                        approvalMode = "FakeStringValue"
+                        isRequestorJustificationRequired = $True
                     }
                     id = "FakeStringValue"
                 }

@@ -82,6 +82,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -96,28 +104,22 @@ function Get-TargetResource
     {
         $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
-    }
-    catch
-    {
-        Write-Verbose -Message ($_)
-    }
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
 
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
 
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
-    try
-    {
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
         $getValue = $null
         $CatalogIdValue = $catalogId
         if (-not [System.String]::IsNullOrEmpty($CatalogId))
@@ -127,6 +129,11 @@ function Get-TargetResource
                 $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($catalogId -replace "'", "''")'"
                 $CatalogId = $catalogInstance.Id
                 $CatalogIdValue = $catalogInstance.DisplayName
+            }
+            else
+            {
+                $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $CatalogId -ErrorAction SilentlyContinue
+                $catalogIdValue = $catalogInstance.DisplayName
             }
 
             $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
@@ -159,14 +166,14 @@ function Get-TargetResource
                 AttributeSource                = @{
                     odataType = '#microsoft.graph.accessPackageResourceAttributeQuestion'
                     Question  = @{
-                        odataType               = $attribute.attributeSource.additionalProperties.question.'@odata.type'
-                        Id                      = $attribute.attributeSource.additionalProperties.question.id
-                        IsRequired              = $attribute.attributeSource.additionalProperties.question.isRequired
-                        Sequence                = $attribute.attributeSource.additionalProperties.question.sequence
-                        IsSingleLine            = $attribute.attributeSource.additionalProperties.question.isSingleLine
-                        QuestionText            = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject ($attribute.attributeSource.additionalProperties.question.text)
-                        AllowsMultipleSelection = $attribute.attributeSource.additionalProperties.question.allowsMultipleSelection
-                        Choices                 = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject ([Array]$attribute.attributeSource.additionalProperties.question.choices)
+                        odataType               = $attribute.attributeSource.question.'@odata.type'
+                        Id                      = $attribute.attributeSource.question.id
+                        IsRequired              = $attribute.attributeSource.question.isRequired
+                        Sequence                = $attribute.attributeSource.question.sequence
+                        IsSingleLine            = $attribute.attributeSource.question.isSingleLine
+                        QuestionText            = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject ($attribute.attributeSource.question.text)
+                        AllowsMultipleSelection = $attribute.attributeSource.question.allowsMultipleSelection
+                        Choices                 = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject ([Array]$attribute.attributeSource.question.choices)
                     }
                 }
                 AttributeDestination           = @{
@@ -174,6 +181,19 @@ function Get-TargetResource
                 }
             }
             $hashAttributes += $hashAttribute
+        }
+
+        switch ($getValue.OriginSystem)
+        {
+            'AadApplication' {
+                $originId = (Get-MgServicePrincipal -ServicePrincipalId $getValue.OriginId).DisplayName
+            }
+            'AADGroup' {
+                $originId = (Get-MgGroup -GroupId $getValue.OriginId).DisplayName
+            }
+            default {
+                $originId = $getValue.OriginId
+            }
         }
 
         $results = [ordered]@{
@@ -185,7 +205,7 @@ function Get-TargetResource
             Description           = $getValue.description
             DisplayName           = $getValue.displayName
             IsPendingOnboarding   = $getValue.isPendingOnboarding #Read-Only
-            OriginId              = $OriginId
+            OriginId              = $originId
             OriginSystem          = $getValue.originSystem
             ResourceType          = $getValue.resourceType
             Url                   = $getValue.url
@@ -195,6 +215,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -294,6 +316,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -317,33 +347,45 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters.Remove('AddedBy') | Out-Null
+    $boundParameters.Remove('AddedOn') | Out-Null
+    $boundParameters.Remove('IsPendingOnboarding') | Out-Null
 
-    $PSBoundParameters.Remove('addedBy') | Out-Null
-    $PSBoundParameters.Remove('addedOn') | Out-Null
-    $PSBoundParameters.Remove('isPendingOnboarding') | Out-Null
-
-    $resource = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $resource = $boundParameters
     if ($OriginSystem -eq 'AADGroup' -and `
             -not [System.Guid]::TryParse($OriginId, [ref][System.Guid]::Empty))
     {
         Write-Verbose -Message "The Group reference was provided by name {$OriginId}. Retrieving associated id."
-        $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($OriginId -replace "'", "''")'"
+        $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($OriginId -replace "'", "''")'" -All
         if ($null -ne $groupInfo)
         {
             $resource.OriginId = $groupInfo.Id
         }
     }
+    if ($OriginSystem -eq 'AadApplication' -and `
+            -not [System.Guid]::TryParse($OriginId, [ref][System.Guid]::Empty))
+    {
+        Write-Verbose -Message "The Application reference was provided by name {$OriginId}. Retrieving associated id."
+        $appInfo = Get-MgServicePrincipal -Filter "DisplayName eq '$($OriginId -replace "'", "''")'" -All
+        if ($null -ne $appInfo)
+        {
+            $resource.OriginId = $appInfo.Id
+        }
+    }
+
+    if (-not [System.Guid]::TryParse($CatalogId, [ref][System.Guid]::Empty))
+    {
+        Write-Verbose -Message 'Retrieving Catalog by Display Name'
+        $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId -replace "'", "''")'"
+        if ($catalogInstance)
+        {
+            $CatalogId = $catalogInstance.Id
+        }
+    }
+
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        if (-not [System.Guid]::TryParse($CatalogId, [ref][System.Guid]::Empty))
-        {
-            Write-Verbose -Message 'Retrieving Catalog by Display Name'
-            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId -replace "'", "''")'"
-            if ($catalogInstance)
-            {
-                $CatalogId = $catalogInstance.Id
-            }
-        }
         Write-Verbose -Message "Assigning resource {$DisplayName} to catalog {$CatalogId}"
 
         $resource.Remove('Id') | Out-Null
@@ -358,13 +400,13 @@ function Set-TargetResource
 
         #Preparing parameter splat
         $resourceRequest = @{
-            CatalogId             = $CatalogId
-            RequestType           = 'AdminAdd'
-            AccessPackageresource = $resource
+            catalogId             = $CatalogId
+            requestType           = 'AdminAdd'
+            accessPackageResource = $resource
         }
         #region resource generator code
-        Write-Verbose -Message "Creating with Values: $(Convert-M365DscHashtableToString -Hashtable $resourceRequest)"
-        New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
+        Write-Verbose -Message "Creating a new AAD Entitlement Management Access Package Catalog Resource"
+        New-MgBetaEntitlementManagementAccessPackageResourceRequest -BodyParameter $resourceRequest
 
         #endregion
     }
@@ -372,7 +414,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating resource {$DisplayName} in catalog {$CatalogId}"
 
-        $resource = ([Hashtable]$PSBoundParameters).Clone()
+        $resource = ([Hashtable]$boundParameters).Clone()
+        $resource.Remove('Id') | Out-Null
         if (-not [System.Guid]::TryParse($CatalogId, [ref][System.Guid]::Empty))
         {
             Write-Verbose -Message 'Retrieving Catalog by Display Name'
@@ -382,9 +425,7 @@ function Set-TargetResource
                 $CatalogId = $catalogInstance.Id
             }
         }
-        #$resource.Remove('Id') | Out-Null
         $resource.Remove('CatalogId') | Out-Null
-        $resource.Remove('Verbose') | Out-Null
 
         $mapping = @{
             odataType    = '@odata.type'
@@ -395,25 +436,21 @@ function Set-TargetResource
 
         #region resource generator code
         $resourceRequest = @{
-            CatalogId             = $CatalogId
-            RequestType           = 'AdminUpdate'
-            AccessPackageresource = $resource
+            catalogId             = $CatalogId
+            requestType           = 'AdminUpdate'
+            accessPackageResource = $resource
         }
         #region resource generator code
-        #write-verbose ($resourceRequest|convertTo-Json -depth 20)
-        New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
-
+        New-MgBetaEntitlementManagementAccessPackageResourceRequest -BodyParameter $resourceRequest
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing resource {$DisplayName} from catalog {$CatalogId}"
-
-        $resource = ([Hashtable]$PSBoundParameters).Clone()
+        $resource = ([Hashtable]$boundParameters).Clone()
 
         $resource.Remove('Id') | Out-Null
         $resource.Remove('CatalogId') | Out-Null
-        $resource.Remove('Verbose') | Out-Null
 
         $mapping = @{
             odataType    = '@odata.type'
@@ -423,12 +460,11 @@ function Set-TargetResource
             -KeyMapping $mapping
 
         $resourceRequest = @{
-            CatalogId             = $CatalogId
-            RequestType           = 'AdminRemove'
-            AccessPackageresource = $resource
+            catalogId             = $CatalogId
+            requestType           = 'AdminRemove'
+            accessPackageResource = $resource
         }
-        New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
-
+        New-MgBetaEntitlementManagementAccessPackageResourceRequest -BodyParameter $resourceRequest
     }
 }
 
@@ -514,6 +550,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -569,6 +613,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -619,9 +671,7 @@ function Export-TargetResource
             }
             Write-M365DSCHost -Message "    |---[$i/$($catalogs.Count)] $displayedKey" -DeferWrite
 
-            $catalogId = $catalog.id
-
-            [array]$resources = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId $catalogId -ErrorAction Stop
+            [array]$resources = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId $catalog.Id -ErrorAction Stop
 
             $j = 1
 
@@ -646,7 +696,7 @@ function Export-TargetResource
                 $params = @{
                     Id                    = $resource.id
                     DisplayName           = $resource.displayName
-                    CatalogId             = $catalogId
+                    CatalogId             = $catalog.Id
                     Ensure                = 'Present'
                     Credential            = $Credential
                     ApplicationId         = $ApplicationId

@@ -383,9 +383,7 @@ function Export-TargetResource
     try
     {
         [array] $exportedInstances = Get-RoleGroup
-
-        $dscContent = [System.Text.StringBuilder]::New()
-
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($exportedInstances.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite

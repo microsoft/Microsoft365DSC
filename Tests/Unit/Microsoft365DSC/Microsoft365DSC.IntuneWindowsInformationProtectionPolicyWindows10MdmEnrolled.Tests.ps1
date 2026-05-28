@@ -49,9 +49,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MockWith {
                 return @{
-                    AdditionalProperties                   = @{
-                        '@odata.type' = '#microsoft.graph.MdmWindowsInformationProtectionPolicy'
-                    }
+                    '@odata.type' = '#microsoft.graph.MdmWindowsInformationProtectionPolicy'
                     AzureRightsManagementServicesAllowed   = $True
                     DataRecoveryCertificate                = @{
                         Description        = 'FakeStringValue'
@@ -73,12 +71,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName = 'FakeStringValue'
                             Ranges      = @(
                                 @{
-                                    AdditionalProperties = @{
-                                        cidrAddress   = 'FakeStringValue'
-                                        upperAddress  = 'FakeStringValue'
-                                        lowerAddress  = 'FakeStringValue'
-                                        '@odata.type' = '#microsoft.graph.iPv4CidrRange'
-                                    }
+                                    cidrAddress   = 'FakeStringValue'
+                                    upperAddress  = 'FakeStringValue'
+                                    lowerAddress  = 'FakeStringValue'
+                                    '@odata.type' = '#microsoft.graph.iPv4CidrRange'
                                 }
                             )
                         }
@@ -117,12 +113,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExemptApps                             = @(
                         @{
                             Description          = 'FakeStringValue'
-                            AdditionalProperties = @{
-                                binaryName        = 'FakeStringValue'
-                                binaryVersionLow  = 'FakeStringValue'
-                                binaryVersionHigh = 'FakeStringValue'
-                                '@odata.type'     = '#microsoft.graph.windowsInformationProtectionDesktopApp'
-                            }
+                            binaryName        = 'FakeStringValue'
+                            binaryVersionLow  = 'FakeStringValue'
+                            binaryVersionHigh = 'FakeStringValue'
+                            '@odata.type'     = '#microsoft.graph.windowsInformationProtectionDesktopApp'
                             Denied               = $True
                             PublisherName        = 'FakeStringValue'
                             ProductName          = 'FakeStringValue'
@@ -141,12 +135,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ProtectedApps                          = @(
                         @{
                             Description          = 'FakeStringValue'
-                            AdditionalProperties = @{
-                                binaryName        = 'FakeStringValue'
-                                binaryVersionLow  = 'FakeStringValue'
-                                binaryVersionHigh = 'FakeStringValue'
-                                '@odata.type'     = '#microsoft.graph.windowsInformationProtectionDesktopApp'
-                            }
+                            binaryName        = 'FakeStringValue'
+                            binaryVersionLow  = 'FakeStringValue'
+                            binaryVersionHigh = 'FakeStringValue'
+                            '@odata.type'     = '#microsoft.graph.windowsInformationProtectionDesktopApp'
                             Denied               = $True
                             PublisherName        = 'FakeStringValue'
                             ProductName          = 'FakeStringValue'
@@ -405,7 +397,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

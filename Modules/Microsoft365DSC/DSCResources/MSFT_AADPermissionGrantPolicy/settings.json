@@ -39,9 +39,7 @@
   },
   "requiredModules": [
     "Microsoft.Graph.Applications",
-    "Microsoft.Graph.Authentication",
-    "Microsoft.Graph.Beta.Identity.SignIns",
-    "MSCloudLoginAssistant"
+    "Microsoft.Graph.Beta.Identity.SignIns"
   ],
   "supportedEnvironments": [
     "Global",
@@ -60,14 +58,12 @@
       "cmdlets": [
         "Get-MgBetaPolicyPermissionGrantPolicy",
         "New-MgBetaPolicyPermissionGrantPolicy",
-        "Update-MgBetaPolicyPermissionGrantPolicy",
-        "Remove-MgBetaPolicyPermissionGrantPolicy",
-        "Get-MgBetaPolicyPermissionGrantPolicyInclude",
-        "New-MgBetaPolicyPermissionGrantPolicyInclude",
-        "Remove-MgBetaPolicyPermissionGrantPolicyInclude",
-        "Get-MgBetaPolicyPermissionGrantPolicyExclude",
         "New-MgBetaPolicyPermissionGrantPolicyExclude",
-        "Remove-MgBetaPolicyPermissionGrantPolicyExclude"
+        "New-MgBetaPolicyPermissionGrantPolicyInclude",
+        "Remove-MgBetaPolicyPermissionGrantPolicy",
+        "Remove-MgBetaPolicyPermissionGrantPolicyExclude",
+        "Remove-MgBetaPolicyPermissionGrantPolicyInclude",
+        "Update-MgBetaPolicyPermissionGrantPolicy"
       ]
     }
   ]

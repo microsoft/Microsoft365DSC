@@ -62,5 +62,17 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Add-PnPSiteDesign",
+        "Get-PnPSiteDesign",
+        "Get-PnPSiteScript",
+        "Remove-PnPSiteDesign",
+        "Set-PnPSiteDesign"
+      ]
+    }
+  ]
 }

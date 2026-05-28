@@ -48,6 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowCallForwardingToPhone = $true
                     PreventTollBypass          = $true
                     BusyOnBusyEnabledType      = 'Enabled'
+                    ReportCall                 = 'Enabled'
                 }
             }
 
@@ -80,6 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowCallForwardingToPhone = $true
                     PreventTollBypass          = $true
                     BusyOnBusyEnabledType      = 'Enabled'
+                    ReportCall                 = 'Enabled'
                     Ensure                     = 'Present'
                     Credential                 = $Credential
                 }
@@ -115,6 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowCallForwardingToPhone = $true
                     PreventTollBypass          = $true
                     BusyOnBusyEnabledType      = 'Disabled' # Drift
+                    ReportCall                 = 'Enabled'
                     Ensure                     = 'Present'
                     Credential                 = $Credential
                 }
@@ -146,22 +149,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowCallForwardingToPhone = $true
                     PreventTollBypass          = $true
                     BusyOnBusyEnabledType      = 'Enabled'
+                    ReportCall                 = 'Enabled'
                     Ensure                     = 'Present'
                     Credential                 = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsCallingPolicy -MockWith {
-                    return @{
-                        Identity                   = 'Test Calling Policy'
-                        AllowPrivateCalling        = $false
-                        AllowVoicemail             = 'UserOverride'
-                        AllowCallGroups            = $true
-                        AllowDelegation            = $true
-                        AllowCallForwardingToUser  = $false
-                        AllowCallForwardingToPhone = $true
-                        PreventTollBypass          = $true
-                        BusyOnBusyEnabledType      = 'Enabled'
-                    }
                 }
             }
 
@@ -186,22 +176,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowCallForwardingToPhone = $true
                     PreventTollBypass          = $true
                     BusyOnBusyEnabledType      = 'Enabled'
+                    ReportCall                 = 'Enabled'
                     Ensure                     = 'Absent'
                     Credential                 = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsCallingPolicy -MockWith {
-                    return @{
-                        Identity                   = 'Test Calling Policy'
-                        AllowPrivateCalling        = $false
-                        AllowVoicemail             = 'UserOverride'
-                        AllowCallGroups            = $true
-                        AllowDelegation            = $true
-                        AllowCallForwardingToUser  = $false
-                        AllowCallForwardingToPhone = $true
-                        PreventTollBypass          = $true
-                        BusyOnBusyEnabledType      = 'Enabled'
-                    }
                 }
             }
 
@@ -225,19 +202,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-                Mock -CommandName Get-CsTeamsCallingPolicy -MockWith {
-                    return @{
-                        Identity                   = 'Test Calling Policy'
-                        AllowPrivateCalling        = $false
-                        AllowVoicemail             = 'UserOverride'
-                        AllowCallGroups            = $true
-                        AllowDelegation            = $true
-                        AllowCallForwardingToUser  = $false
-                        AllowCallForwardingToPhone = $true
-                        PreventTollBypass          = $true
-                        BusyOnBusyEnabledType      = 'Enabled'
-                    }
                 }
             }
 

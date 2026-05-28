@@ -30,7 +30,6 @@
   },
   "requiredModules": [
     "Microsoft.Graph.Applications",
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Search"
   ],
   "mode": "Configuration",

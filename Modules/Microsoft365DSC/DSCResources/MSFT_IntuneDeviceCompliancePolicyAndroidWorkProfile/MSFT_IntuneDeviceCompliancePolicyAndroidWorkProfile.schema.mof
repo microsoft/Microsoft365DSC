@@ -11,7 +11,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 };
 
 [ClassVersion("1.0.0.0")]
-class MSFT_scheduledActionConfigurations
+class MSFT_ScheduledActionConfigurations
 {
     [Write, Description("The unique identifier of the action configuration.")] String id;
     [Write, Description("Number of hours to wait till the action will be enforced. Valid values 0 to 8760.")] Uint32 gracePeriodHours;
@@ -20,10 +20,11 @@ class MSFT_scheduledActionConfigurations
     [Write, Description("A list of group IDs to specify who to CC this notification message to.")] String notificationMessageCCList[];
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceCompliancePolicyAndroidWorkProfile")]
+[ClassVersion("1.0.0.1"), FriendlyName("IntuneDeviceCompliancePolicyAndroidWorkProfile")]
 class MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile : OMI_BaseResource
 {
     [Key, Description("Display name of the AndroidWorkProfile device compliance policy.")] String DisplayName;
+    [Write, Description("The Id of the policy.")] String Id;
     [Write, Description("Description of the AndroidWorkProfile device compliance policy.")] String Description;
     [Write, Description("Assignments of the Intune Policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+."), ValueMap{"none", "low", "medium", "high"}, Values{"none", "low", "medium", "high"}] String RequiredPasswordComplexity;
@@ -36,7 +37,7 @@ class MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile : OMI_BaseResource
     [Write, Description("Defines the duration of inactivity (in minutes) after which the screen is locked.")] Uint32 WorkProfileInactiveBeforeScreenLockInMinutes;
     [Write, Description("Specifies the minimum number of characters required in a password for an Android Work Profile.")] Uint32 WorkProfilePasswordMinimumLength;
     [Write, Description("Specifies the number of days before a password expires for an Android Work Profile.")] Uint32 WorkProfilePasswordExpirationInDays;
-    [Write, Description("Specifies the non-compliance actions."), EmbeddedInstance("MSFT_scheduledActionConfigurations")] String ScheduledActionsForRule[];
+    [Write, Description("Specifies the non-compliance actions."), EmbeddedInstance("MSFT_ScheduledActionConfigurations")] String ScheduledActionsForRule[];
     [Write, Description("PasswordRequired of the AndroidWorkProfile device compliance policy.")] Boolean PasswordRequired;
     [Write, Description("PasswordMinimumLength of the AndroidWorkProfile device compliance policy.")] Uint32 PasswordMinimumLength;
     [Write, Description("PasswordRequiredType of the AndroidWorkProfile device compliance policy."), ValueMap{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}, Values{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}] String PasswordRequiredType;
@@ -61,13 +62,15 @@ class MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile : OMI_BaseResource
     [Write, Description("SecurityRequireUpToDateSecurityProviders of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireUpToDateSecurityProviders;
     [Write, Description("SecurityRequireCompanyPortalAppIntegrity of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireCompanyPortalAppIntegrity;
     [Write, Description("Require a specific SafetyNet evaluation type for compliance."), ValueMap{"basic","hardwareBacked"}, Values{"basic","hardwareBacked"}] String SecurityRequiredAndroidSafetyNetEvaluationType;
-    [Write, Description("RoleScopeTagIds of the AndroidWorkProfile device compliance policy.")] String RoleScopeTagIds;
+    [Write, Description("RoleScopeTagIds of the AndroidWorkProfile device compliance policy.")] String RoleScopeTagIds[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

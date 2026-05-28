@@ -29,6 +29,12 @@ class MSFT_MicrosoftGraphAccessReviewScope
     [Required, Description("The type of the entity."), ValueMap{"#microsoft.graph.accessReviewQueryScope","#microsoft.graph.accessReviewReviewerScope","#microsoft.graph.principalResourceMembershipsScope","#microsoft.graph.accessReviewInactiveUsersQueryScope"}, Values{"#microsoft.graph.accessReviewQueryScope","#microsoft.graph.accessReviewReviewerScope","#microsoft.graph.principalResourceMembershipsScope","#microsoft.graph.accessReviewInactiveUsersQueryScope"}] String odataType;
 };
 [ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphAccessReviewScope2
+{
+    [Write, Description("The query representing what will be reviewed in an access review.")] String Query;
+    [Write, Description("Indicates the type of query. Types include MicrosoftGraph and ARM.")] String QueryType;
+};
+[ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphAccessReviewScheduleSettings
 {
     [Write, Description("Optional field. Describes the  actions to take once a review is complete. There are two types that are currently supported: removeAccessApplyAction (default) and disableAndDeleteUserApplyAction. Field only needs to be specified in the case of disableAndDeleteUserApplyAction."), EmbeddedInstance("MSFT_MicrosoftGraphAccessReviewApplyAction")] String ApplyActions[];
@@ -102,14 +108,16 @@ class MSFT_AADAccessReviewDefinitionReviewer
     [Write, Description("Indicates the type of reviewer. Possible values: User, Group, Self, Manager, Sponsor, ResourceOwner, ManagerOrSponsor"), ValueMap{"User", "Group", "Self", "Manager", "Sponsor", "ResourceOwner", "ManagerOrSponsor"}, Values{"User", "Group", "Self", "Manager", "Sponsor", "ResourceOwner", "ManagerOrSponsor"}] String ScopeType;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("AADAccessReviewDefinition")]
+[ClassVersion("1.0.0.1"), FriendlyName("AADAccessReviewDefinition")]
 class MSFT_AADAccessReviewDefinition : OMI_BaseResource
 {
     [Key, Description("Name of the access review series. Supports $select and $orderby. Required on create.")] String DisplayName;
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Write, Description("Defines the list of additional users or group members to be notified of the access review progress."), EmbeddedInstance("MSFT_AADAccessReviewDefinitionReviewer")] String AdditionalNotificationRecipients[];
     [Write, Description("Description provided by review creators to provide more context of the review to admins. Supports $select.")] String DescriptionForAdmins;
     [Write, Description("Description provided  by review creators to provide more context of the review to reviewers. Reviewers see this description in the email sent to them requesting their review. Email notifications support up to 256 characters. Supports $select.")] String DescriptionForReviewers;
     [Write, Description("The fallback reviewers of the access review."), EmbeddedInstance("MSFT_AADAccessReviewDefinitionReviewer")] String FallbackReviewers[];
+    [Write, Description("In the case of an all groups review, this determines the scope of which groups will be reviewed."), EmbeddedInstance("MSFT_MicrosoftGraphAccessReviewScope2")] String InstanceEnumerationScope;
     [Write, Description("The reviewers of the access review."), EmbeddedInstance("MSFT_AADAccessReviewDefinitionReviewer")] String Reviewers[];
     [Write, Description("Defines the entities whose access is reviewed. For supported scopes, see accessReviewScope. Required on create. Supports $select and $filter (contains only). For examples of options for configuring scope, see Configure the scope of your access review definition using the Microsoft Graph API."), EmbeddedInstance("MSFT_MicrosoftGraphaccessReviewScope")] String ScopeValue;
     [Write, Description("The settings for an access review series, see type definition below. Supports $select. Required on create."), EmbeddedInstance("MSFT_MicrosoftGraphaccessReviewScheduleSettings")] String SettingsValue;
@@ -120,6 +128,8 @@ class MSFT_AADAccessReviewDefinition : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

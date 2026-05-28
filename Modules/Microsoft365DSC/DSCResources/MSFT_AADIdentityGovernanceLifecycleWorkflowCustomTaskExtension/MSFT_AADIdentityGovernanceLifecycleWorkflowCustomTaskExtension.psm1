@@ -56,6 +56,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -137,7 +145,7 @@ function Get-TargetResource
                 AuthorizedApps  = @()
             }
 
-            foreach ($app in $instance.CallbackConfiguration.AdditionalProperties.authorizedApps)
+            foreach ($app in $instance.CallbackConfiguration.authorizedApps)
             {
                 $appInstance = Get-MgApplication -Filter "AppId eq '$($app['id'])'" -ErrorAction SilentlyContinue
                 if ($null -ne $appInstance)
@@ -155,10 +163,10 @@ function Get-TargetResource
 
         # EndpointConfiguration
         $EndpointConfigurationValue = @{
-            SubscriptionId       = $instance.EndpointConfiguration.AdditionalProperties.subscriptionId
-            resourceGroupName    = $instance.EndpointConfiguration.AdditionalProperties.resourceGroupName
-            logicAppWorkflowName = $instance.EndpointConfiguration.AdditionalProperties.logicAppWorkflowName
-            url                  = $instance.EndpointConfiguration.AdditionalProperties.url
+            SubscriptionId       = $instance.EndpointConfiguration.subscriptionId
+            resourceGroupName    = $instance.EndpointConfiguration.resourceGroupName
+            logicAppWorkflowName = $instance.EndpointConfiguration.logicAppWorkflowName
+            url                  = $instance.EndpointConfiguration.url
         }
 
         $results = @{
@@ -174,6 +182,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -244,6 +254,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -448,6 +466,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -499,6 +525,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -558,6 +592,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

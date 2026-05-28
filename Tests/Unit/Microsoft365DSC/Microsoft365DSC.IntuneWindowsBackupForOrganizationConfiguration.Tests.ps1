@@ -44,10 +44,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                 return @{
-                        AdditionalProperties = @{
-                            state = "notConfigured"
-                            '@odata.type' = "#microsoft.graph.windowsRestoreDeviceEnrollmentConfiguration"
-                        }
+                        state = "notConfigured"
+                        '@odata.type' = "#microsoft.graph.windowsRestoreDeviceEnrollmentConfiguration"
                         Description = "This is the default Windows Restore configuration applied with the lowest priority to all users and all devices regardless of group membership."
                         DeviceEnrollmentConfigurationType = "windowsRestore"
                         DisplayName = "All users and all devices"

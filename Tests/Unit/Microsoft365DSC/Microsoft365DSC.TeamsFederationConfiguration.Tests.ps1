@@ -42,6 +42,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowFederatedUsers       = $True
                     AllowTeamsConsumer        = $False
                     AllowTeamsConsumerInbound = $False
+                    AllowedTrialTenantDomains = @()
+                    BlockAllSubdomains        = $False
                     Identity                  = 'Global'
                 }
             }
@@ -66,6 +68,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowFederatedUsers       = $True
                     AllowTeamsConsumer        = $False
                     AllowTeamsConsumerInbound = $False
+                    AllowedTrialTenantDomains = @()
+                    BlockAllSubdomains        = $False
                     IsSingleInstance          = 'Yes'
                     Credential                = $Credential
                 }
@@ -86,6 +90,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowFederatedUsers       = $True
                     AllowTeamsConsumer        = $True
                     AllowTeamsConsumerInbound = $True
+                    AllowedTrialTenantDomains = @()
+                    BlockAllSubdomains        = $False
                     IsSingleInstance          = 'Yes'
                     Credential                = $Credential
                 }

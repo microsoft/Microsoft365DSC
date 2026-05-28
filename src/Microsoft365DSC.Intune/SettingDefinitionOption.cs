@@ -4,7 +4,7 @@ namespace Microsoft365DSC.Intune
 {
     /// <summary>
     /// Represents a single option in a ChoiceSetting definition.
-    /// Maps from AdditionalProperties.options[] on Graph SettingDefinition objects.
+    /// Maps from options[] on Graph SettingDefinition objects.
     /// </summary>
     public class SettingDefinitionOption
     {
@@ -20,14 +20,14 @@ namespace Microsoft365DSC.Intune
 
         /// <summary>
         /// DependentOn entries specific to this option.
-        /// Maps from AdditionalProperties.options[].dependentOn[].parentSettingId.
+        /// Maps from options[].dependentOn[].parentSettingId.
         /// </summary>
         public List<string> DependentOnParentSettingIds { get; set; } = new List<string>();
     }
 
     /// <summary>
     /// Represents the value portion of a setting definition option.
-    /// Maps from AdditionalProperties.options[].optionValue.
+    /// Maps from options[].optionValue.
     /// </summary>
     public class OptionValue
     {
@@ -44,7 +44,7 @@ namespace Microsoft365DSC.Intune
 
     /// <summary>
     /// Represents the valueDefinition portion of a setting definition.
-    /// Maps from AdditionalProperties.valueDefinition on Graph SettingDefinition objects.
+    /// Maps from valueDefinition on Graph SettingDefinition objects.
     /// </summary>
     public class SettingValueDefinition
     {

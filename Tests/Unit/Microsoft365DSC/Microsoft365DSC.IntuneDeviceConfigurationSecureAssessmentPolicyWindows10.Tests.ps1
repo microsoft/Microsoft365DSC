@@ -43,17 +43,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        configurationAccountType = "azureADAccount"
-                        '@odata.type' = "#microsoft.graph.windows10SecureAssessmentConfiguration"
-                        allowTextSuggestion = $True
-                        launchUri = "FakeStringValue"
-                        assessmentAppUserModelId = "FakeStringValue"
-                        allowScreenCapture = $True
-                        localGuestAccountName = "FakeStringValue"
-                        configurationAccount = "FakeStringValue"
-                        allowPrinting = $True
-                    }
+                    configurationAccountType = "azureADAccount"
+                    '@odata.type' = "#microsoft.graph.windows10SecureAssessmentConfiguration"
+                    allowTextSuggestion = $True
+                    launchUri = "FakeStringValue"
+                    assessmentAppUserModelId = "FakeStringValue"
+                    allowScreenCapture = $True
+                    localGuestAccountName = "FakeStringValue"
+                    configurationAccount = "FakeStringValue"
+                    allowPrinting = $True
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
@@ -128,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

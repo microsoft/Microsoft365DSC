@@ -67,25 +67,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Notes                 = ""
                     PrivacyInformationUrl = ""
                     RoleScopeTagIds       = @()
-                    AdditionalProperties   = @{
-                        '@odata.type' = '#microsoft.graph.officeSuiteApp'
-                        excludedApps          = @{
-                            teams = $false
-                            sharePointDesigner = $true
-                            powerPoint = $false
-                            outlook = $false
-                            groove = $true
-                            word = $false
-                            lync = $true
-                            oneNote = $false
-                            oneDrive = $false
-                            publisher = $false
-                            bing = $false
-                            visio = $false
-                            access = $false
-                            infoPath = $true
-                            excel = $false
-                        }
+                    '@odata.type' = '#microsoft.graph.officeSuiteApp'
+                    excludedApps          = @{
+                        teams = $false
+                        sharePointDesigner = $true
+                        powerPoint = $false
+                        outlook = $false
+                        groove = $true
+                        word = $false
+                        lync = $true
+                        oneNote = $false
+                        oneDrive = $false
+                        publisher = $false
+                        bing = $false
+                        visio = $false
+                        access = $false
+                        infoPath = $true
+                        excel = $false
                     }
                 }
             }

@@ -175,6 +175,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -222,11 +230,8 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                         -All `
-                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
-                        -ErrorAction SilentlyContinue | Where-Object `
-                        -FilterScript {
-                            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsWiredNetworkConfiguration' `
-                    }
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.windowsWiredNetworkConfiguration')" `
+                        -ErrorAction SilentlyContinue
                 }
             }
             #endregion
@@ -245,33 +250,33 @@ function Get-TargetResource
 
         #region resource generator code
         $enumAuthenticationMethod = $null
-        if ($null -ne $getValue.AdditionalProperties.authenticationMethod)
+        if ($null -ne $getValue.authenticationMethod)
         {
-            $enumAuthenticationMethod = $getValue.AdditionalProperties.authenticationMethod.ToString()
+            $enumAuthenticationMethod = $getValue.authenticationMethod.ToString()
         }
 
         $enumAuthenticationType = $null
-        if ($null -ne $getValue.AdditionalProperties.authenticationType)
+        if ($null -ne $getValue.authenticationType)
         {
-            $enumAuthenticationType = $getValue.AdditionalProperties.authenticationType.ToString()
+            $enumAuthenticationType = $getValue.authenticationType.ToString()
         }
 
         $enumEapType = $null
-        if ($null -ne $getValue.AdditionalProperties.eapType)
+        if ($null -ne $getValue.eapType)
         {
-            $enumEapType = $getValue.AdditionalProperties.eapType.ToString()
+            $enumEapType = $getValue.eapType.ToString()
         }
 
         $enumInnerAuthenticationProtocolForEAPTTLS = $null
-        if ($null -ne $getValue.AdditionalProperties.innerAuthenticationProtocolForEAPTTLS)
+        if ($null -ne $getValue.innerAuthenticationProtocolForEAPTTLS)
         {
-            $enumInnerAuthenticationProtocolForEAPTTLS = $getValue.AdditionalProperties.innerAuthenticationProtocolForEAPTTLS.ToString()
+            $enumInnerAuthenticationProtocolForEAPTTLS = $getValue.innerAuthenticationProtocolForEAPTTLS.ToString()
         }
 
         $enumSecondaryAuthenticationMethod = $null
-        if ($null -ne $getValue.AdditionalProperties.secondaryAuthenticationMethod)
+        if ($null -ne $getValue.secondaryAuthenticationMethod)
         {
-            $enumSecondaryAuthenticationMethod = $getValue.AdditionalProperties.secondaryAuthenticationMethod.ToString()
+            $enumSecondaryAuthenticationMethod = $getValue.secondaryAuthenticationMethod.ToString()
         }
         #endregion
 
@@ -283,25 +288,25 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            AuthenticationBlockPeriodInMinutes                             = $getValue.AdditionalProperties.authenticationBlockPeriodInMinutes
+            AuthenticationBlockPeriodInMinutes                             = $getValue.authenticationBlockPeriodInMinutes
             AuthenticationMethod                                           = $enumAuthenticationMethod
-            AuthenticationPeriodInSeconds                                  = $getValue.AdditionalProperties.authenticationPeriodInSeconds
-            AuthenticationRetryDelayPeriodInSeconds                        = $getValue.AdditionalProperties.authenticationRetryDelayPeriodInSeconds
+            AuthenticationPeriodInSeconds                                  = $getValue.authenticationPeriodInSeconds
+            AuthenticationRetryDelayPeriodInSeconds                        = $getValue.authenticationRetryDelayPeriodInSeconds
             AuthenticationType                                             = $enumAuthenticationType
-            CacheCredentials                                               = $getValue.AdditionalProperties.cacheCredentials
-            DisableUserPromptForServerValidation                           = $getValue.AdditionalProperties.disableUserPromptForServerValidation
-            EapolStartPeriodInSeconds                                      = $getValue.AdditionalProperties.eapolStartPeriodInSeconds
+            CacheCredentials                                               = $getValue.cacheCredentials
+            DisableUserPromptForServerValidation                           = $getValue.disableUserPromptForServerValidation
+            EapolStartPeriodInSeconds                                      = $getValue.eapolStartPeriodInSeconds
             EapType                                                        = $enumEapType
-            Enforce8021X                                                   = $getValue.AdditionalProperties.enforce8021X
-            ForceFIPSCompliance                                            = $getValue.AdditionalProperties.forceFIPSCompliance
+            Enforce8021X                                                   = $getValue.enforce8021X
+            ForceFIPSCompliance                                            = $getValue.forceFIPSCompliance
             InnerAuthenticationProtocolForEAPTTLS                          = $enumInnerAuthenticationProtocolForEAPTTLS
-            MaximumAuthenticationFailures                                  = $getValue.AdditionalProperties.maximumAuthenticationFailures
-            MaximumEAPOLStartMessages                                      = $getValue.AdditionalProperties.maximumEAPOLStartMessages
-            OuterIdentityPrivacyTemporaryValue                             = $getValue.AdditionalProperties.outerIdentityPrivacyTemporaryValue
-            PerformServerValidation                                        = $getValue.AdditionalProperties.performServerValidation
-            RequireCryptographicBinding                                    = $getValue.AdditionalProperties.requireCryptographicBinding
+            MaximumAuthenticationFailures                                  = $getValue.maximumAuthenticationFailures
+            MaximumEAPOLStartMessages                                      = $getValue.maximumEAPOLStartMessages
+            OuterIdentityPrivacyTemporaryValue                             = $getValue.outerIdentityPrivacyTemporaryValue
+            PerformServerValidation                                        = $getValue.performServerValidation
+            RequireCryptographicBinding                                    = $getValue.requireCryptographicBinding
             SecondaryAuthenticationMethod                                  = $enumSecondaryAuthenticationMethod
-            TrustedServerCertificateNames                                  = $getValue.AdditionalProperties.trustedServerCertificateNames
+            TrustedServerCertificateNames                                  = $getValue.trustedServerCertificateNames
             RootCertificatesForServerValidationIds                         = Get-M365DSCArrayFromProperty -PropertyValue $rootCertificatesForServerValidation.Id -ElementType ([System.String])
             RootCertificatesForServerValidationDisplayNames                = Get-M365DSCArrayFromProperty -PropertyValue $rootCertificatesForServerValidation.DisplayName -ElementType ([System.String])
             IdentityCertificateForClientAuthenticationId                   = $identityCertificateForClientAuthentication.Id
@@ -322,6 +327,8 @@ function Get-TargetResource
             TenantId                                                       = $TenantId
             ApplicationSecret                                              = $ApplicationSecret
             CertificateThumbprint                                          = $CertificateThumbprint
+            CertificatePath                                                = $CertificatePath
+            CertificatePassword                                            = $CertificatePassword
             ManagedIdentity                                                = $ManagedIdentity.IsPresent
             AccessTokens                                                   = $AccessTokens
             #endregion
@@ -523,6 +530,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -954,6 +969,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1030,6 +1053,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1056,11 +1087,16 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsWiredNetworkConfiguration' `
+        $baseFilter = "isof('microsoft.graph.windowsWiredNetworkConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -1095,6 +1131,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -1274,7 +1312,7 @@ function Get-IntuneDeviceConfigurationCertificateId
         -DeviceConfigurationId $CertificateId `
         -ErrorAction SilentlyContinue | `
             Where-Object -FilterScript {
-            $_.AdditionalProperties.'@odata.type' -in $OdataTypes
+            $_.'@odata.type' -in $OdataTypes
         }
 
     if ($null -eq $Certificate)
@@ -1285,7 +1323,7 @@ function Get-IntuneDeviceConfigurationCertificateId
             -Filter "DisplayName eq '$($CertificateDisplayName -replace "'", "''")'" `
             -ErrorAction SilentlyContinue | `
                 Where-Object -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -in $OdataTypes
+                $_.'@odata.type' -in $OdataTypes
             }
 
         if ($null -eq $Certificate)

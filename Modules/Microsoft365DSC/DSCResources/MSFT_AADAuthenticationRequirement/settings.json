@@ -42,7 +42,7 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration",
+  "mode": "Data",
   "commands": [
     {
       "module": "Microsoft.Graph.Authentication",
@@ -54,6 +54,12 @@
       "module": "Microsoft.Graph.Users",
       "cmdlets": [
         "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

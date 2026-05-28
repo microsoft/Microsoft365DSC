@@ -77,44 +77,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         )
                         }
                     )
-                    AdditionalProperties = @{
-                        '@odata.type'                                      = '#microsoft.graph.androidWorkProfileCompliancePolicy'
-                        PasswordRequired                                   = $True
-                        PasswordMinimumLength                              = 6
-                        PasswordRequiredType                               = 'DeviceDefault'
-                        RequiredPasswordComplexity                         = 'low'
-                        PasswordMinutesOfInactivityBeforeLock              = 5
-                        PasswordExpirationDays                             = 365
-                        PasswordPreviousPasswordBlockCount                 = 10
-                        PasswordSignInFailureCountBeforeFactoryReset       = 11
-                        SecurityPreventInstallAppsFromUnknownSources       = $True
-                        SecurityDisableUsbDebugging                        = $True
-                        SecurityRequireVerifyApps                          = $True
-                        DeviceThreatProtectionEnabled                      = $True
-                        DeviceThreatProtectionRequiredSecurityLevel        = 'Unavailable'
-                        AdvancedThreatProtectionRequiredSecurityLevel      = 'Unavailable'
-                        SecurityBlockJailbrokenDevices                     = $True
-                        OsMinimumVersion                                   = 7
-                        OsMaximumVersion                                   = 11
-                        StorageRequireEncryption                           = $True
-                        SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-                        SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-                        SecurityRequireGooglePlayServices                  = $True
-                        SecurityRequireUpToDateSecurityProviders           = $True
-                        SecurityRequireCompanyPortalAppIntegrity           = $True
-                        RoleScopeTagIds                                    = '0'
-                        MinAndroidSecurityPatchLevel                       = "2024-01-01";
-                        SecurityRequiredAndroidSafetyNetEvaluationType     = "hardwareBacked"
-                        WorkProfileInactiveBeforeScreenLockInMinutes       = 480
-                        WorkProfilePasswordExpirationInDays                = 30
-                        WorkProfilePasswordMinimumLength                   = 12
-                        WorkProfilePasswordRequiredType                    = "atLeastNumeric"
-                        WorkProfilePreviousPasswordBlockCount              = 5
-                        WorkProfileRequiredPasswordComplexity              = "high"
-                        WorkProfileRequirePassword                         = $True
-                        SecurityBlockDeviceAdministratorManagedDevices     = $true
-                        RestrictedApps                                     = @('App1', 'App2', 'App3')
-                    }
+                    '@odata.type'                                      = '#microsoft.graph.androidWorkProfileCompliancePolicy'
+                    PasswordRequired                                   = $True
+                    PasswordMinimumLength                              = 6
+                    PasswordRequiredType                               = 'DeviceDefault'
+                    RequiredPasswordComplexity                         = 'low'
+                    PasswordMinutesOfInactivityBeforeLock              = 5
+                    PasswordExpirationDays                             = 365
+                    PasswordPreviousPasswordBlockCount                 = 10
+                    PasswordSignInFailureCountBeforeFactoryReset       = 11
+                    SecurityPreventInstallAppsFromUnknownSources       = $True
+                    SecurityDisableUsbDebugging                        = $True
+                    SecurityRequireVerifyApps                          = $True
+                    DeviceThreatProtectionEnabled                      = $True
+                    DeviceThreatProtectionRequiredSecurityLevel        = 'Unavailable'
+                    AdvancedThreatProtectionRequiredSecurityLevel      = 'Unavailable'
+                    SecurityBlockJailbrokenDevices                     = $True
+                    OsMinimumVersion                                   = 7
+                    OsMaximumVersion                                   = 11
+                    StorageRequireEncryption                           = $True
+                    SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
+                    SecurityRequireSafetyNetAttestationCertifiedDevice = $True
+                    SecurityRequireGooglePlayServices                  = $True
+                    SecurityRequireUpToDateSecurityProviders           = $True
+                    SecurityRequireCompanyPortalAppIntegrity           = $True
+                    RoleScopeTagIds                                    = '0'
+                    MinAndroidSecurityPatchLevel                       = "2024-01-01";
+                    SecurityRequiredAndroidSafetyNetEvaluationType     = "hardwareBacked"
+                    WorkProfileInactiveBeforeScreenLockInMinutes       = 480
+                    WorkProfilePasswordExpirationInDays                = 30
+                    WorkProfilePasswordMinimumLength                   = 12
+                    WorkProfilePasswordRequiredType                    = "atLeastNumeric"
+                    WorkProfilePreviousPasswordBlockCount              = 5
+                    WorkProfileRequiredPasswordComplexity              = "high"
+                    WorkProfileRequirePassword                         = $True
+                    SecurityBlockDeviceAdministratorManagedDevices     = $true
+                    RestrictedApps                                     = @('App1', 'App2', 'App3')
                 }
             }
 
@@ -472,7 +470,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

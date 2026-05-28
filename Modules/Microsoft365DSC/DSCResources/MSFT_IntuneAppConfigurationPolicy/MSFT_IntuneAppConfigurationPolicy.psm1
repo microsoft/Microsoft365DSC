@@ -71,6 +71,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -150,24 +158,24 @@ function Get-TargetResource
             {
                 if ($null -ne $currentValue)
                 {
-                    if ($null -ne $currentValue.mobileAppIdentifier.AdditionalProperties.bundleId)
+                    if ($null -ne $currentValue.mobileAppIdentifier.bundleId)
                     {
                         $complexMobileAppIdentifier = @{
-                            bundleID = $currentValue.mobileAppIdentifier.AdditionalProperties.bundleId
+                            bundleID = $currentValue.mobileAppIdentifier.bundleId
                         }
                     }
 
-                    if ($null -ne $currentValue.mobileAppIdentifier.AdditionalProperties.packageId)
+                    if ($null -ne $currentValue.mobileAppIdentifier.packageId)
                     {
                         $complexMobileAppIdentifier = @{
-                            packageId = $currentValue.mobileAppIdentifier.AdditionalProperties.packageId
+                            packageId = $currentValue.mobileAppIdentifier.packageId
                         }
                     }
 
-                    if ($null -ne $currentValue.mobileAppIdentifier.AdditionalProperties.windowsAppId)
+                    if ($null -ne $currentValue.mobileAppIdentifier.windowsAppId)
                     {
                         $complexMobileAppIdentifier = @{
-                            windowsAppId = $currentValue.mobileAppIdentifier.AdditionalProperties.windowsAppId
+                            windowsAppId = $currentValue.mobileAppIdentifier.windowsAppId
                         }
                     }
                     $complexAppsHash = [ordered]@{}
@@ -189,6 +197,8 @@ function Get-TargetResource
             TenantId                    = $TenantId
             ApplicationSecret           = $ApplicationSecret
             CertificateThumbprint       = $CertificateThumbprint
+            CertificatePath             = $CertificatePath
+            CertificatePassword         = $CertificatePassword
             ManagedIdentity             = $ManagedIdentity.IsPresent
             AccessTokens                = $AccessTokens
             RoleScopeTagIds             = $configPolicy.RoleScopeTagIds
@@ -291,6 +301,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -368,7 +386,7 @@ function Set-TargetResource
             $creationParams.Add('apps', $appsArray)
         }
 
-        $policy = New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration @creationParams
+        $policy = New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -BodyParameter $creationParams
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -386,7 +404,6 @@ function Set-TargetResource
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
 
         $updateParams = @{
-            targetedManagedAppConfigurationId = $currentconfigPolicy.Id
             displayName                       = $DisplayName
             description                       = $Description
         }
@@ -440,7 +457,7 @@ function Set-TargetResource
             Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $($appsBody | ConvertTo-Json -Depth 10)
         }
 
-        Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration @updateParams
+        Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $currentconfigPolicy.Id -BodyParameter $updateParams
 
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentconfigPolicy.Id `
@@ -525,6 +542,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -576,6 +601,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -638,6 +671,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -709,7 +744,6 @@ function Export-TargetResource
                     $Results.Remove('Assignments') | Out-Null
                 }
             }
-
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

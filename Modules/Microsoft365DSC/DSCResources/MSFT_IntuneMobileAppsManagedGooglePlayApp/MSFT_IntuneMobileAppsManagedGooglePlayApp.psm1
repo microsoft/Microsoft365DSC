@@ -54,6 +54,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -104,7 +112,7 @@ function Get-TargetResource
                     $getValue = Get-MgBetaDeviceAppManagementMobileApp `
                         -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.androidManagedStoreApp')" `
                         -ErrorAction SilentlyContinue | Where-Object -FilterScript {
-                            $_.AdditionalProperties.isSystemApp -eq $false
+                            $_.isSystemApp -eq $false
                         }
                 }
             }
@@ -127,7 +135,7 @@ function Get-TargetResource
         $results = @{
             #region resource generator code
             DisplayName           = $getValue.DisplayName
-            PackageId             = $getValue.AdditionalProperties.packageId
+            PackageId             = $getValue.packageId
             RoleScopeTagIds       = $getValue.RoleScopeTagIds
             Id                    = $getValue.Id
             Ensure                = 'Present'
@@ -136,6 +144,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
@@ -212,6 +222,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -342,6 +360,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -397,6 +423,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -436,7 +470,7 @@ function Export-TargetResource
             -Filter $Filter `
             -All `
             -ErrorAction Stop | Where-Object -FilterScript {
-                $_.AdditionalProperties.isSystemApp -eq $false
+                $_.isSystemApp -eq $false
             }
         #endregion
 
@@ -465,13 +499,15 @@ function Export-TargetResource
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.DisplayName
-                PackageId             = $config.AdditionalProperties.packageId
+                PackageId             = $config.packageId
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

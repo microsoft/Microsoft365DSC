@@ -1,6 +1,6 @@
 {
   "resourceName": "TeamsShiftsPolicy",
-  "description": "This resource configures an This resource allows you to create a new TeamsShiftPolicy instance and set it's properties.",
+  "description": "This resource configures a TeamsShiftPolicy instance and sets its properties.",
   "roles": {
     "read": [
       "Global Reader"
@@ -35,5 +35,16 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsShiftsPolicy",
+        "New-CsTeamsShiftsPolicy",
+        "Remove-CsTeamsShiftsPolicy",
+        "Set-CsTeamsShiftsPolicy"
+      ]
+    }
+  ]
 }

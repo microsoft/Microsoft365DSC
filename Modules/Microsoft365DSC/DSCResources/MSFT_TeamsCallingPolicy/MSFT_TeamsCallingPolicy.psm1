@@ -66,6 +66,11 @@ function Get-TargetResource
         $RealTimeText,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ReportCall,
+
+        [Parameter()]
         [System.Boolean]
         $ShowTeamsCallsInCallLog,
 
@@ -180,6 +185,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -250,6 +263,7 @@ function Get-TargetResource
             PopoutForIncomingPstnCalls           = $policy.PopoutForIncomingPstnCalls
             PreventTollBypass                    = $policy.PreventTollBypass
             RealTimeText                         = $policy.RealTimeText
+            ReportCall                           = $policy.ReportCall
             ShowTeamsCallsInCallLog              = $policy.ShowTeamsCallsInCallLog
             BusyOnBusyEnabledType                = $policy.BusyOnBusyEnabledType
             CallRecordingExpirationDays          = $policy.CallRecordingExpirationDays
@@ -266,6 +280,8 @@ function Get-TargetResource
             ApplicationId                        = $ApplicationId
             TenantId                             = $TenantId
             CertificateThumbprint                = $CertificateThumbprint
+            CertificatePath                      = $CertificatePath
+            CertificatePassword                  = $CertificatePassword
             ManagedIdentity                      = $ManagedIdentity.IsPresent
             AccessTokens                         = $AccessTokens
         }
@@ -347,6 +363,11 @@ function Set-TargetResource
         $RealTimeText,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ReportCall,
+
+        [Parameter()]
         [System.Boolean]
         $ShowTeamsCallsInCallLog,
 
@@ -459,6 +480,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -572,6 +601,11 @@ function Test-TargetResource
         $RealTimeText,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ReportCall,
+
+        [Parameter()]
         [System.Boolean]
         $ShowTeamsCallsInCallLog,
 
@@ -686,6 +720,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -735,6 +777,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -779,6 +829,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

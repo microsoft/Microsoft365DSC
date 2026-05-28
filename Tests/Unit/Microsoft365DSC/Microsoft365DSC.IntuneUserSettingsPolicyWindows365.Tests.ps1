@@ -63,15 +63,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     CrossRegionDisasterRecoverySetting = @{
                         DisasterRecoveryNetworkSetting = @{
-                            AdditionalProperties = @{
-                                onPremisesConnectionId = "FakeStringValue"
-                                '@odata.type' = "#microsoft.graph.cloudPcDisasterRecoveryAzureConnectionSetting"
-                            }
+                            onPremisesConnectionId = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.cloudPcDisasterRecoveryAzureConnectionSetting"
                         }
-                        AdditionalProperties = @{
-                            disasterRecoveryType = "crossRegion"
-                            userInitiatedDisasterRecoveryAllowed = $False
-                        }
+                        disasterRecoveryType = "crossRegion"
+                        userInitiatedDisasterRecoveryAllowed = $False
                         CrossRegionDisasterRecoveryEnabled = $True
                         MaintainCrossRegionRestorePointEnabled = $True
                     }

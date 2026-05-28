@@ -55,28 +55,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        outerIdentityPrivacyTemporaryValue      = 'FakeStringValue'
-                        eapType                                 = 'eapTls'
-                        forceFIPSCompliance                     = $True
-                        '@odata.type'                           = '#microsoft.graph.windowsWiredNetworkConfiguration'
-                        secondaryAuthenticationMethod           = 'certificate'
-                        cacheCredentials                        = $True
-                        innerAuthenticationProtocolForEAPTTLS   = 'unencryptedPassword'
-                        requireCryptographicBinding             = $True
-                        authenticationType                      = 'none'
-                        trustedServerCertificateNames           = @('FakeStringValue')
-                        enforce8021X                            = $True
-                        authenticationRetryDelayPeriodInSeconds = 25
-                        performServerValidation                 = $True
-                        authenticationBlockPeriodInMinutes      = 25
-                        maximumEAPOLStartMessages               = 25
-                        disableUserPromptForServerValidation    = $True
-                        authenticationPeriodInSeconds           = 25
-                        eapolStartPeriodInSeconds               = 25
-                        authenticationMethod                    = 'certificate'
-                        maximumAuthenticationFailures           = 25
-                    }
+                    outerIdentityPrivacyTemporaryValue      = 'FakeStringValue'
+                    eapType                                 = 'eapTls'
+                    forceFIPSCompliance                     = $True
+                    '@odata.type'                           = '#microsoft.graph.windowsWiredNetworkConfiguration'
+                    secondaryAuthenticationMethod           = 'certificate'
+                    cacheCredentials                        = $True
+                    innerAuthenticationProtocolForEAPTTLS   = 'unencryptedPassword'
+                    requireCryptographicBinding             = $True
+                    authenticationType                      = 'none'
+                    trustedServerCertificateNames           = @('FakeStringValue')
+                    enforce8021X                            = $True
+                    authenticationRetryDelayPeriodInSeconds = 25
+                    performServerValidation                 = $True
+                    authenticationBlockPeriodInMinutes      = 25
+                    maximumEAPOLStartMessages               = 25
+                    disableUserPromptForServerValidation    = $True
+                    authenticationPeriodInSeconds           = 25
+                    eapolStartPeriodInSeconds               = 25
+                    authenticationMethod                    = 'certificate'
+                    maximumAuthenticationFailures           = 25
                     Description          = 'FakeStringValue'
                     DisplayName          = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
@@ -199,7 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

@@ -38,8 +38,8 @@
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication",
-    "Microsoft.Graph.Beta.Identity.SignIns"
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups"
   ],
   "supportedEnvironments": [
     "Global",
@@ -52,6 +52,12 @@
       "cmdlets": [
         "Get-MgBetaPolicyAuthenticationMethodPolicy",
         "Update-MgBetaPolicyAuthenticationMethodPolicy"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
       ]
     }
   ]

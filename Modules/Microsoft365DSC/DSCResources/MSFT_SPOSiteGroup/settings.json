@@ -62,5 +62,19 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Get-PnPGroup",
+        "Get-PnPGroupPermissions",
+        "Get-PnPTenantSite",
+        "New-PnPGroup",
+        "Remove-PnPGroup",
+        "Set-PnPGroup",
+        "Set-PnPGroupPermissions"
+      ]
+    }
+  ]
 }

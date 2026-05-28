@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SCDLPSensitiveInformationType'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -44,6 +46,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -188,6 +198,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -220,20 +238,20 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new DLPSensitiveInformationType with:`r`n$(ConvertTo-Json $setParameters -Depth 5)"
+        Write-Verbose -Message "Creating a DLPSensitiveInformationType with Name {$Name}"
         $setParameters.Remove('Identity') | Out-Null
         New-DLPSensitiveInformationType @setParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating DLPSensitiveInformationType with:`r`n$(ConvertTo-Json $setParameters -Depth 5)"
+        Write-Verbose -Message "Updating the DLPSensitiveInformationType with Name {$Name}"
         Set-DLPSensitiveInformationType @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removig DLPSensitiveInformationType $Name"
+        Write-Verbose -Message "Removing the DLPSensitiveInformationType with Name {$Name}"
         Remove-DLPSensitiveInformationType -Identity $currentInstance.Identity
     }
 }
@@ -284,6 +302,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -337,6 +363,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -361,7 +395,11 @@ function Export-TargetResource
 
     try
     {
-        [array]$SITs = Get-DLPSensitiveInformationType -ErrorAction Stop
+        [array]$SITs = Get-DLPSensitiveInformationType -ErrorAction Stop | Where-Object {
+            # Only use information types that are not part of a rule package
+            # as those are handled in the SCDLPSensitiveInformationTypeRulePackage resource.
+            $_.RulePackId -like "0000*"
+        }
 
         $i = 1
         $dscContent = [System.Text.StringBuilder]::new()
@@ -373,7 +411,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($SIT in $SITS)
+        foreach ($SIT in $SITs)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -428,3 +466,4 @@ function Get-CompareParameters
 }
 
 Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')
+

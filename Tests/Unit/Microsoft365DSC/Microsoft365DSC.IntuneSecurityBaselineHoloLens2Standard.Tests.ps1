@@ -76,9 +76,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_mixedreality_aadgroupmembershipcachevalidityindays'
                                 Name = 'AADGroupMembershipCacheValidityInDays'
                                 OffsetUri = '/Config/MixedReality/AADGroupMembershipCacheValidityInDays'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                             }
                         )
                         SettingInstance = @{
@@ -86,12 +84,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '91dfa858-3c3a-4879-ade3-ae0083a619ab'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                simpleSettingValue = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                    value = 7
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                            simpleSettingValue = @{
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                value = 7
                             }
                          }
                     },
@@ -102,28 +98,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_microsoft_edge~policy~microsoft_edge~passwordmanager_passwordmanagerenabled'
                                 Name = 'PasswordManagerEnabled'
                                 OffsetUri = '/Config/microsoft_edge~Policy~microsoft_edge~PasswordManager/PasswordManagerEnabled'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name ='Disabled'
-                                            itemId = 'device_vendor_msft_policy_config_microsoft_edge~policy~microsoft_edge~passwordmanager_passwordmanagerenabled_0'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name ='Disabled'
+                                        itemId = 'device_vendor_msft_policy_config_microsoft_edge~policy~microsoft_edge~passwordmanager_passwordmanagerenabled_0'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
-                            AdditionalProperties = @{
-                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = "device_vendor_msft_policy_config_microsoft_edge~policy~microsoft_edge~passwordmanager_passwordmanagerenabled_0"
-                                }
+                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
+                            choiceSettingValue = @{
+                                children = @()
+                                value = "device_vendor_msft_policy_config_microsoft_edge~policy~microsoft_edge~passwordmanager_passwordmanagerenabled_0"
                             }
                             SettingDefinitionId = 'device_vendor_msft_policy_config_microsoft_edge~policy~microsoft_edge~passwordmanager_passwordmanagerenabled'
                             SettingInstanceTemplateReference = @{
@@ -138,19 +130,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_power_displayofftimeoutpluggedin'
                                 Name = 'VideoPowerDownTimeOutAC_2'
                                 OffsetUri = '/Config/Power/DisplayOffTimeoutPluggedIn'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name ='Enabled'
-                                            itemId = 'device_vendor_msft_policy_config_power_displayofftimeoutpluggedin_1'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name ='Enabled'
+                                        itemId = 'device_vendor_msft_policy_config_power_displayofftimeoutpluggedin_1'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -158,12 +148,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'bb55ad43-b5cc-4d70-9f39-e24ce7c32f4a'
                             }
-                            AdditionalProperties = @{
-                               '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = "device_vendor_msft_policy_config_power_displayofftimeoutpluggedin_1"
-                                }
+                           '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
+                            choiceSettingValue = @{
+                                children = @()
+                                value = "device_vendor_msft_policy_config_power_displayofftimeoutpluggedin_1"
                             }
                         }
                     }
@@ -191,12 +179,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -267,7 +251,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

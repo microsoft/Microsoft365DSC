@@ -52,29 +52,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
                     Id = "FakeStringValue"
-                    AdditionalProperties = @{
-                        packageId = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.androidManagedStoreApp"
-                    }
+                    packageId = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.androidManagedStoreApp"
                 }
             }
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        appSupportsOemConfig = $True
-                        '@odata.type' = "#microsoft.graph.androidManagedStoreAppConfiguration"
-                        payloadJson = "eyJ0ZXN0IjoidmFsdWUifQ=="
-                        profileApplicability = "default"
-                        permissionActions = @(
-                            @{
-                                permission = "FakeStringValue"
-                                action = "prompt"
-                            }
-                        )
-                        packageId = "FakeStringValue"
-                        connectedAppsEnabled = $True
-                    }
+                    appSupportsOemConfig = $True
+                    '@odata.type' = "#microsoft.graph.androidManagedStoreAppConfiguration"
+                    payloadJson = "eyJ0ZXN0IjoidmFsdWUifQ=="
+                    profileApplicability = "default"
+                    permissionActions = @(
+                        @{
+                            permission = "FakeStringValue"
+                            action = "prompt"
+                        }
+                    )
+                    packageId = "FakeStringValue"
+                    connectedAppsEnabled = $True
                     createdDateTime = "2023-01-01T00:00:00.0000000+01:00"
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
@@ -161,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

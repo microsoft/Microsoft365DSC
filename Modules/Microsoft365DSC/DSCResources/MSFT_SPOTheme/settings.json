@@ -62,5 +62,15 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Add-PnPTenantTheme",
+        "Get-PnPTenantTheme",
+        "Remove-PnPTenantTheme"
+      ]
+    }
+  ]
 }

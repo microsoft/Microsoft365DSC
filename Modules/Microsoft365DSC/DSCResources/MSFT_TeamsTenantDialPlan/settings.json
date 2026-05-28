@@ -35,5 +35,17 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTenantDialPlan",
+        "New-CsTenantDialPlan",
+        "New-CsVoiceNormalizationRule",
+        "Remove-CsTenantDialPlan",
+        "Set-CsTenantDialPlan"
+      ]
+    }
+  ]
 }

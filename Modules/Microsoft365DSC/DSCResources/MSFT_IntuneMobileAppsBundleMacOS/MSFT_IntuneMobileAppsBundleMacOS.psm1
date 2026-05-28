@@ -119,6 +119,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -204,11 +212,11 @@ function Get-TargetResource
         {
             $complexLargeIcon = [ordered]@{}
             $complexLargeIcon.Add('Type', $getValue.LargeIcon.Type)
-            $complexLargeIcon.Add('Value', [System.Convert]::ToBase64String($getValue.LargeIcon.Value))
+            $complexLargeIcon.Add('Value', $getValue.LargeIcon.Value)
         }
 
         $complexIncludedApps = @()
-        foreach ($complexApp in $getValue.AdditionalProperties.includedApps)
+        foreach ($complexApp in $getValue.includedApps)
         {
             $complexIncludedApp = @{
                 BundleId      = $complexApp.bundleId
@@ -218,20 +226,20 @@ function Get-TargetResource
         }
 
         $complexMinimumSupportedOperatingSystem = [ordered]@{}
-        $complexMinimumSupportedOperatingSystem.Add('V10_7', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v10_7)
-        $complexMinimumSupportedOperatingSystem.Add('V10_8', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v10_8)
-        $complexMinimumSupportedOperatingSystem.Add('V10_9', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v10_9)
-        $complexMinimumSupportedOperatingSystem.Add('V10_10', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v10_10)
-        $complexMinimumSupportedOperatingSystem.Add('V10_11', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v10_11)
-        $complexMinimumSupportedOperatingSystem.Add('V10_12', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v10_12)
-        $complexMinimumSupportedOperatingSystem.Add('V10_13', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v10_13)
-        $complexMinimumSupportedOperatingSystem.Add('V10_14', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v10_14)
-        $complexMinimumSupportedOperatingSystem.Add('V10_15', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v10_15)
-        $complexMinimumSupportedOperatingSystem.Add('V11_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v11_0)
-        $complexMinimumSupportedOperatingSystem.Add('V12_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v12_0)
-        $complexMinimumSupportedOperatingSystem.Add('V13_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v13_0)
-        $complexMinimumSupportedOperatingSystem.Add('V14_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v14_0)
-        $complexMinimumSupportedOperatingSystem.Add('V15_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v15_0)
+        $complexMinimumSupportedOperatingSystem.Add('V10_7', $getValue.minimumSupportedOperatingSystem.v10_7)
+        $complexMinimumSupportedOperatingSystem.Add('V10_8', $getValue.minimumSupportedOperatingSystem.v10_8)
+        $complexMinimumSupportedOperatingSystem.Add('V10_9', $getValue.minimumSupportedOperatingSystem.v10_9)
+        $complexMinimumSupportedOperatingSystem.Add('V10_10', $getValue.minimumSupportedOperatingSystem.v10_10)
+        $complexMinimumSupportedOperatingSystem.Add('V10_11', $getValue.minimumSupportedOperatingSystem.v10_11)
+        $complexMinimumSupportedOperatingSystem.Add('V10_12', $getValue.minimumSupportedOperatingSystem.v10_12)
+        $complexMinimumSupportedOperatingSystem.Add('V10_13', $getValue.minimumSupportedOperatingSystem.v10_13)
+        $complexMinimumSupportedOperatingSystem.Add('V10_14', $getValue.minimumSupportedOperatingSystem.v10_14)
+        $complexMinimumSupportedOperatingSystem.Add('V10_15', $getValue.minimumSupportedOperatingSystem.v10_15)
+        $complexMinimumSupportedOperatingSystem.Add('V11_0', $getValue.minimumSupportedOperatingSystem.v11_0)
+        $complexMinimumSupportedOperatingSystem.Add('V12_0', $getValue.minimumSupportedOperatingSystem.v12_0)
+        $complexMinimumSupportedOperatingSystem.Add('V13_0', $getValue.minimumSupportedOperatingSystem.v13_0)
+        $complexMinimumSupportedOperatingSystem.Add('V14_0', $getValue.minimumSupportedOperatingSystem.v14_0)
+        $complexMinimumSupportedOperatingSystem.Add('V15_0', $getValue.minimumSupportedOperatingSystem.v15_0)
         if ($complexMinimumSupportedOperatingSystem.Values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexMinimumSupportedOperatingSystem = $null
@@ -244,8 +252,8 @@ function Get-TargetResource
             Description                     = $getValue.Description
             Developer                       = $getValue.Developer
             DisplayName                     = $getValue.DisplayName
-            FileName                        = $getValue.AdditionalProperties.fileName
-            IgnoreVersionDetection          = $getValue.AdditionalProperties.ignoreVersionDetection
+            FileName                        = $getValue.fileName
+            IgnoreVersionDetection          = $getValue.ignoreVersionDetection
             IncludedApps                    = $complexIncludedApps
             InformationUrl                  = $getValue.InformationUrl
             IsFeatured                      = $getValue.IsFeatured
@@ -253,7 +261,7 @@ function Get-TargetResource
             MinimumSupportedOperatingSystem = $complexMinimumSupportedOperatingSystem
             Notes                           = $getValue.Notes
             Owner                           = $getValue.Owner
-            PackageFileType                 = $getValue.AdditionalProperties.'@odata.type'.Replace('#microsoft.graph.macOS', '').Replace('App', '')
+            PackageFileType                 = $getValue.'@odata.type'.Replace('#microsoft.graph.macOS', '').Replace('App', '')
             PrivacyInformationUrl           = $getValue.PrivacyInformationUrl
             Publisher                       = $getValue.Publisher
             RoleScopeTagIds                 = $getValue.RoleScopeTagIds
@@ -264,13 +272,15 @@ function Get-TargetResource
             TenantId                        = $TenantId
             ApplicationSecret               = $ApplicationSecret
             CertificateThumbprint           = $CertificateThumbprint
+            CertificatePath                 = $CertificatePath
+            CertificatePassword             = $CertificatePassword
             ManagedIdentity                 = $ManagedIdentity.IsPresent
             #endregion
         }
         if ($results.PackageFileType -eq 'Pkg')
         {
-            $results.PreInstallScript = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($getValue.AdditionalProperties.preInstallScript.scriptContent))
-            $results.PostInstallScript = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($getValue.AdditionalProperties.postInstallScript.scriptContent))
+            $results.PreInstallScript = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($getValue.preInstallScript.scriptContent))
+            $results.PostInstallScript = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($getValue.postInstallScript.scriptContent))
         }
         $assignmentsValues = Get-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $Id
         $assignmentResult = @()
@@ -410,6 +420,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -652,6 +670,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -710,6 +736,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -778,13 +812,15 @@ function Export-TargetResource
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.DisplayName
-                PackageFileType       = $config.AdditionalProperties.'@odata.type'.Replace('#microsoft.graph.macOS', '').Replace('App', '')
+                PackageFileType       = $config.'@odata.type'.Replace('#microsoft.graph.macOS', '').Replace('App', '')
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

@@ -112,6 +112,10 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -124,8 +128,12 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -230,20 +238,16 @@ function Get-TargetResource
             AllowDeleteChannels               = $team.AllowDeleteChannels
             ShowInTeamsSearchAndSuggestions   = $team.ShowInTeamsSearchAndSuggestions
             Ensure                            = 'Present'
+            Credential                        = $Credential
+            ApplicationId                     = $ApplicationId
+            TenantId                          = $TenantId
+            CertificateThumbprint             = $CertificateThumbprint
+            CertificatePath                   = $CertificatePath
+            CertificatePassword               = $CertificatePassword
             ManagedIdentity                   = $ManagedIdentity.IsPresent
             AccessTokens                      = $AccessTokens
         }
 
-        if ($ConnectionMode.StartsWith('ServicePrincipal'))
-        {
-            $result.Add('ApplicationId', $ApplicationId)
-            $result.Add('TenantId', $TenantId)
-            $result.Add('CertificateThumbprint', $CertificateThumbprint)
-        }
-        else
-        {
-            $result.Add('Credential', $Credential)
-        }
         return $result
     }
     catch
@@ -369,6 +373,10 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -381,8 +389,12 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -614,6 +626,10 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -626,8 +642,12 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -661,6 +681,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -673,8 +697,12 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -723,6 +751,8 @@ function Export-TargetResource
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                    CertificatePath       = $CertificatePath
+                    CertificatePassword   = $CertificatePassword
                     ManagedIdentity       = $ManagedIdentity.IsPresent
                     AccessTokens          = $AccessTokens
                 }

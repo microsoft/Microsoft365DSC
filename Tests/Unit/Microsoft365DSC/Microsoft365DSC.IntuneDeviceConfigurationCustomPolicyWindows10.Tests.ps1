@@ -44,21 +44,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.windows10CustomConfiguration"
-                        omaSettings = @(
-                            @{
-                                fileName = "FakeStringValue"
-                                description = "FakeStringValue"
-                                omaUri = "FakeStringValue"
-                                '@odata.type' = "#microsoft.graph.omaSettingBase64"
-                                secretReferenceValueId = "FakeStringValue"
-                                value = "FakeStringValue"
-                                isEncrypted = $True
-                                displayName = "FakeStringValue"
-                            }
-                        )
-                    }
+                    '@odata.type' = "#microsoft.graph.windows10CustomConfiguration"
+                    omaSettings = @(
+                        @{
+                            fileName = "FakeStringValue"
+                            description = "FakeStringValue"
+                            omaUri = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.omaSettingBase64"
+                            secretReferenceValueId = "FakeStringValue"
+                            value = "FakeStringValue"
+                            isEncrypted = $True
+                            displayName = "FakeStringValue"
+                        }
+                    )
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
                     id = "FakeStringValue"
@@ -142,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

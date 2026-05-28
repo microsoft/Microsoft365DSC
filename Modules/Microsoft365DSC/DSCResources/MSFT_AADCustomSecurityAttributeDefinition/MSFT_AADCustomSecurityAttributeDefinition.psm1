@@ -73,6 +73,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -153,6 +161,8 @@ function Get-TargetResource
             TenantId                = $TenantId
             ApplicationSecret       = $ApplicationSecret
             CertificateThumbprint   = $CertificateThumbprint
+            CertificatePath         = $CertificatePath
+            CertificatePassword     = $CertificatePassword
             ManagedIdentity         = $ManagedIdentity.IsPresent
             AccessTokens            = $AccessTokens
         }
@@ -242,6 +252,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -273,7 +291,7 @@ function Set-TargetResource
     {
         $setParameters.Remove('Id') | Out-Null
         Write-Verbose -Message "Creating new Atribute Definition {$Name}"
-        $attributeDefinition = New-MgBetaDirectoryCustomSecurityAttributeDefinition @SetParameters
+        $attributeDefinition = New-MgBetaDirectoryCustomSecurityAttributeDefinition -BodyParameter $setParameters
 
         foreach ($allowedValue in $AllowedValues)
         {
@@ -287,7 +305,6 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Atribute Definition {$Name}"
-        $setParameters.Add('CustomSecurityAttributeDefinitionId', $currentInstance.Id)
         $setParameters.Remove('Id') | Out-Null
         $setParameters.Remove('AttributeSet') | Out-Null
         $setParameters.Remove('IsCollection') | Out-Null
@@ -298,7 +315,7 @@ function Set-TargetResource
         {
             $setParameters.Remove('UsePreDefinedValuesOnly') | Out-Null
         }
-        Update-MgBetaDirectoryCustomSecurityAttributeDefinition @SetParameters
+        Update-MgBetaDirectoryCustomSecurityAttributeDefinition -CustomSecurityAttributeDefinitionId $currentInstance.Id -BodyParameter $setParameters
 
         # Allowed values cannot be removed, therefore we only need to add new ones or update existing ones
         foreach ($allowedValue in $AllowedValues)
@@ -309,16 +326,28 @@ function Set-TargetResource
                 # Add new allowed value
                 New-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue `
                     -CustomSecurityAttributeDefinitionId $currentInstance.Id `
-                    -Id $allowedValue.ValueId `
-                    -IsActive:$allowedValue.IsActive
+                    -BodyParameter @{
+                        'allowedValues@delta' = @(
+                            @{
+                                id       = $allowedValue.ValueId
+                                isActive = $allowedValue.IsActive
+                            }
+                        )
+                    }
             }
             elseif ($existingAllowedValue.IsActive -ne $allowedValue.IsActive)
             {
                 # Update existing allowed value
                 Update-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue `
                     -CustomSecurityAttributeDefinitionId $currentInstance.Id `
-                    -AllowedValueId $allowedValue.ValueId `
-                    -IsActive:$allowedValue.IsActive
+                    -BodyParameter @{
+                        'allowedValues@delta' = @(
+                            @{
+                                id       = $allowedValue.ValueId
+                                isActive = $allowedValue.IsActive
+                            }
+                        )
+                    }
             }
         }
     }
@@ -404,6 +433,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -453,6 +490,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -512,6 +557,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

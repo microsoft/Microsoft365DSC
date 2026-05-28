@@ -30,7 +30,6 @@
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Identity.SignIns",
     "MSCloudLoginAssistant"
   ],
@@ -57,6 +56,12 @@
         "Set-MgBetaIdentityB2XUserFlowPostAttributeCollectionByRef",
         "Set-MgBetaIdentityB2XUserFlowPostFederationSignupByRef",
         "Update-MgBetaIdentityB2XUserFlowUserAttributeAssignment"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

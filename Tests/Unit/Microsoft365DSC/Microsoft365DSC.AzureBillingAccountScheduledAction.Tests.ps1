@@ -35,7 +35,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName Invoke-AzRest -MockWith {
+            Mock -CommandName Invoke-AzRestMethod -MockWith {
                 return @{
                     content = ConvertTo-Json @{
                         value = @(
@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                Mock -CommandName Invoke-AzRest -MockWith {
+                Mock -CommandName Invoke-AzRestMethod -MockWith {
                     return @{
                         Content = ConvertTo-Json @{
                             value = @()
@@ -129,7 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Invoke-AzRest -Exactly 2
+                Should -Invoke -CommandName Invoke-AzRestMethod -Exactly 2
             }
         }
 
@@ -167,7 +167,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Invoke-AzRest -Exactly 2
+                Should -Invoke -CommandName Invoke-AzRestMethod -Exactly 2
             }
         }
 
@@ -238,7 +238,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Invoke-AzRest -Exactly 2
+                Should -Invoke -CommandName Invoke-AzRestMethod -Exactly 2
             }
         }
 

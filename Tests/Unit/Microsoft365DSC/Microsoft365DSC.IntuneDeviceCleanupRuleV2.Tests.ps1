@@ -50,9 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementManagedDeviceCleanupRule -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.ManagedDeviceCleanupRule"
-                    }
+                    '@odata.type' = "#microsoft.graph.ManagedDeviceCleanupRule"
                     Description = "FakeStringValue"
                     DeviceCleanupRulePlatformType = "all"
                     DeviceInactivityBeforeRetirementInDays = 25

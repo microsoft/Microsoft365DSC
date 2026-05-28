@@ -132,10 +132,18 @@
   "requiredModules": [
     "ExchangeOnlineManagement",
     "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Authentication",
     "MSCloudLoginAssistant"
   ],
   "mode": "Configuration",
   "commands": [
+    {
+      "module": "ExchangeOnlineManagement",
+      "cmdlets": [
+        "Get-DefaultTenantMyAnalyticsFeatureConfig",
+        "Set-DefaultTenantMyAnalyticsFeatureConfig"
+      ]
+    },
     {
       "module": "Microsoft.Graph.Applications",
       "cmdlets": [
@@ -147,8 +155,14 @@
     {
       "module": "Microsoft.Graph.Authentication",
       "cmdlets": [
-        "Connect-MgGraph",
         "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile",
+        "Reset-MSCloudLoginConnectionProfileContext"
       ]
     }
   ]

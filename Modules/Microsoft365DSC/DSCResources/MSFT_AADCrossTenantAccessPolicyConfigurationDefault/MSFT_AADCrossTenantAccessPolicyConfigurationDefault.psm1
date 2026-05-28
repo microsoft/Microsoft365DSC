@@ -65,6 +65,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -137,14 +145,17 @@ function Get-TargetResource
                 }
                 if ($valueEntry.TargetType -eq 'user')
                 {
-                    $user = Get-MgUser -UserId $valueEntry.Target -ErrorAction SilentlyContinue
-                    if ($null -ne $user)
+                    if ($valueEntry.Target -ne 'AllUsers')
                     {
-                        $currentEntry.Target = $user.UserPrincipalName
-                    }
-                    else
-                    {
-                        $currentEntry.Target = $valueEntry.Target
+                        $user = Get-MgUser -UserId $valueEntry.Target -ErrorAction SilentlyContinue
+                        if ($null -ne $user)
+                        {
+                            $currentEntry.Target = $user.UserPrincipalName
+                        }
+                        else
+                        {
+                            $currentEntry.Target = $valueEntry.Target
+                        }
                     }
                 }
                 else
@@ -196,14 +207,17 @@ function Get-TargetResource
                 }
                 if ($valueEntry.TargetType -eq 'user')
                 {
-                    $user = Get-MgUser -UserId $valueEntry.Target -ErrorAction SilentlyContinue
-                    if ($null -ne $user)
+                    if ($valueEntry.Target -ne 'AllUsers')
                     {
-                        $currentEntry.Target = $user.UserPrincipalName
-                    }
-                    else
-                    {
-                        $currentEntry.Target = $valueEntry.Target
+                        $user = Get-MgUser -UserId $valueEntry.Target -ErrorAction SilentlyContinue
+                        if ($null -ne $user)
+                        {
+                            $currentEntry.Target = $user.UserPrincipalName
+                        }
+                        else
+                        {
+                            $currentEntry.Target = $valueEntry.Target
+                        }
                     }
                 }
                 else
@@ -277,14 +291,17 @@ function Get-TargetResource
                 }
                 if ($valueEntry.TargetType -eq 'user')
                 {
-                    $user = Get-MgUser -UserId $valueEntry.Target -ErrorAction SilentlyContinue
-                    if ($null -ne $user)
+                    if ($valueEntry.Target -ne 'AllUsers')
                     {
-                        $currentEntry.Target = $user.UserPrincipalName
-                    }
-                    else
-                    {
-                        $currentEntry.Target = $valueEntry.Target
+                        $user = Get-MgUser -UserId $valueEntry.Target -ErrorAction SilentlyContinue
+                        if ($null -ne $user)
+                        {
+                            $currentEntry.Target = $user.UserPrincipalName
+                        }
+                        else
+                        {
+                            $currentEntry.Target = $valueEntry.Target
+                        }
                     }
                 }
                 else
@@ -363,6 +380,8 @@ function Get-TargetResource
             TenantId                                          = $TenantId
             ApplicationSecret                                 = $ApplicationSecret
             CertificateThumbprint                             = $CertificateThumbprint
+            CertificatePath                                   = $CertificatePath
+            CertificatePassword                               = $CertificatePassword
             ManagedIdentity                                   = $ManagedIdentity.IsPresent
             AccessTokens                                      = $AccessTokens
         }
@@ -443,6 +462,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -527,6 +554,8 @@ function Set-TargetResource
         $OperationParams.Add('tenantRestrictions', $temp)
     }
 
+    $OperationParams = Rename-M365DSCCimInstanceParameter -Properties $OperationParams
+
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         $body = ConvertTo-Json $OperationParams -Depth 10
@@ -606,6 +635,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -653,6 +690,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]

@@ -91,17 +91,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgGroupMember -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            UserPrincipalName = 'John.smith@contoso.onmicrosoft.com'
-                        }
+                        UserPrincipalName = 'John.smith@contoso.onmicrosoft.com'
                     }
                 }
 
                 Mock -CommandName Get-MgGroupOwner -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            UserPrincipalName = 'Bob.Houle@contoso.onmicrosoft.com'
-                        }
+                        UserPrincipalName = 'Bob.Houle@contoso.onmicrosoft.com'
                     }
                 }
             }
@@ -160,14 +156,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgGroupOwner
                 {
                     return @(@{
-                            AdditionalProperties = @{
-                                UserPrincipalName = 'JohnSmith@contoso.onmicrosoft.com'
-                            }
+                            UserPrincipalName = 'JohnSmith@contoso.onmicrosoft.com'
                         },
                         @{
-                            AdditionalProperties = @{
-                                UserPrincipalName = 'JohnSmith@contoso.onmicrosoft.com'
-                            }
+                            UserPrincipalName = 'JohnSmith@contoso.onmicrosoft.com'
                         })
                 }
 
@@ -194,11 +186,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 }
 
-                Mock -CommandName New-MgGroupMember -MockWith {
-
-                }
-
-                Mock -CommandName New-MgGroupMember -MockWith {
+                Mock -CommandName New-MgGroupMemberByRef -MockWith {
 
                 }
 
@@ -209,23 +197,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgGroupMember -MockWith {
                     return @(
                         @{
-                            AdditionalProperties = @{
-                                UserPrincipalName = 'JohnSmith@contoso.onmicrosoft.com'
-                            }
+                            UserPrincipalName = 'JohnSmith@contoso.onmicrosoft.com'
                         },
                         @{
-                            AdditionalProperties = @{
-                                UserPrincipalName = 'SecondUser@contoso.onmicrosoft.com'
-                            }
+                            UserPrincipalName = 'SecondUser@contoso.onmicrosoft.com'
                         }
                     )
                 }
 
                 Mock -CommandName Get-MgGroupOwner -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            UserPrincipalName = 'Bob.Houle@contoso.onmicrosoft.com'
-                        }
+                        UserPrincipalName = 'Bob.Houle@contoso.onmicrosoft.com'
                     }
                 }
             }
@@ -262,23 +244,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgGroupMember -MockWith {
                     return @(
                         @{
-                            AdditionalProperties = @{
-                                UserPrincipalName = 'JohnSmith@contoso.onmicrosoft.com'
-                            }
+                            UserPrincipalName = 'JohnSmith@contoso.onmicrosoft.com'
                         },
                         @{
-                            AdditionalProperties = @{
-                                UserPrincipalName = 'SecondUser@contoso.onmicrosoft.com'
-                            }
+                            UserPrincipalName = 'SecondUser@contoso.onmicrosoft.com'
                         }
                     )
                 }
 
                 Mock -CommandName Get-MgGroupOwner -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            UserPrincipalName = 'Bob.Houle@contoso.onmicrosoft.com'
-                        }
+                        UserPrincipalName = 'Bob.Houle@contoso.onmicrosoft.com'
                     }
                 }
             }

@@ -44,14 +44,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                 return @{
-                    AdditionalProperties              = @{
-                        '@odata.type'       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
-                        PlatformRestriction = @{
-                            PersonalDeviceEnrollmentBlocked = $False
-                            PlatformBlocked                 = $False
-                        }
-                        platformType        = 'ios'
+                    '@odata.type'       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
+                    PlatformRestriction = @{
+                        PersonalDeviceEnrollmentBlocked = $False
+                        PlatformBlocked                 = $False
                     }
+                    platformType        = 'ios'
                     id                                = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
                     DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                     Description                       = ''
@@ -91,14 +89,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        AdditionalProperties              = @{
-                            '@odata.type'       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
-                            PlatformRestriction = @{
-                                PersonalDeviceEnrollmentBlocked = $False
-                                PlatformBlocked                 = $False
-                            }
-                            platformType        = 'ios'
+                        '@odata.type'       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
+                        PlatformRestriction = @{
+                            PersonalDeviceEnrollmentBlocked = $False
+                            PlatformBlocked                 = $False
                         }
+                        platformType        = 'ios'
                         id                                = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
                         DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                         Description                       = ''

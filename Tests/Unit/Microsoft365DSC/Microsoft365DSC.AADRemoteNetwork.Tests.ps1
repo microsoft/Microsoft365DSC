@@ -66,9 +66,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             TunnelConfiguration     = @{
                                 PreSharedKey               = 'sdf'
                                 ZoneRedundancyPreSharedKey = 'asdf'
-                                AdditionalProperties       = @{
-                                    "@odata.type"              = '#microsoft.graph.networkaccess.tunnelConfigurationIKEv2Default'
-                                }
+                                "@odata.type"              = '#microsoft.graph.networkaccess.tunnelConfigurationIKEv2Default'
                             }
                         }
                     );

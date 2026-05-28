@@ -89,6 +89,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -156,7 +164,7 @@ function Get-TargetResource
 
         #region resource generator code
         $complexPermissionActions = @()
-        foreach ($currentpermissionActions in $getValue.AdditionalProperties.permissionActions)
+        foreach ($currentpermissionActions in $getValue.permissionActions)
         {
             $mypermissionActions = [ordered]@{}
             if ($null -ne $currentpermissionActions.action)
@@ -171,7 +179,7 @@ function Get-TargetResource
         }
 
         $complexSettings = @()
-        foreach ($currentsettings in $getValue.AdditionalProperties.settings)
+        foreach ($currentsettings in $getValue.settings)
         {
             $mysettings = [ordered]@{}
             $mysettings.Add('AppConfigKey', $currentsettings.appConfigKey)
@@ -189,14 +197,14 @@ function Get-TargetResource
 
         #region resource generator code
         $enumProfileApplicability = $null
-        if ($null -ne $getValue.AdditionalProperties.profileApplicability)
+        if ($null -ne $getValue.profileApplicability)
         {
-            $enumProfileApplicability = $getValue.AdditionalProperties.profileApplicability.ToString()
+            $enumProfileApplicability = $getValue.profileApplicability.ToString()
         }
         #endregion
 
         $platform = 'android'
-        if ($null -ne $getValue.AdditionalProperties.encodedSettingXml -or $null -ne $getValue.AdditionalProperties.settings)
+        if ($null -ne $getValue.encodedSettingXml -or $null -ne $getValue.settings)
         {
             $platform = 'ios'
         }
@@ -213,28 +221,28 @@ function Get-TargetResource
 
             if ($platform -eq 'android')
             {
-                $targetedApps += $app.AdditionalProperties.packageId
+                $targetedApps += $app.packageId
             }
             else
             {
-                $targetedApps += $app.AdditionalProperties.bundleId
+                $targetedApps += $app.bundleId
             }
         }
 
         $payloadJson = $null
-        if (-not [System.String]::IsNullOrEmpty($getValue.AdditionalProperties.payloadJson))
+        if (-not [System.String]::IsNullOrEmpty($getValue.payloadJson))
         {
-            $payloadJson = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($getValue.AdditionalProperties.payloadJson))
+            $payloadJson = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($getValue.payloadJson))
         }
 
         $results = @{
             #region resource generator code
-            ConnectedAppsEnabled  = $getValue.AdditionalProperties.connectedAppsEnabled
-            PackageId             = $getValue.AdditionalProperties.packageId
+            ConnectedAppsEnabled  = $getValue.connectedAppsEnabled
+            PackageId             = $getValue.packageId
             PayloadJson           = $payloadJson
             PermissionActions     = $complexPermissionActions
             ProfileApplicability  = $enumProfileApplicability
-            EncodedSettingXml     = $getValue.AdditionalProperties.encodedSettingXml
+            EncodedSettingXml     = $getValue.encodedSettingXml
             Settings              = $complexSettings
             Description           = $getValue.Description
             DisplayName           = $getValue.DisplayName
@@ -247,6 +255,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
@@ -360,6 +370,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -398,8 +416,8 @@ function Set-TargetResource
     foreach ($targetedApp in $TargetedMobileApps)
     {
         $app = $mobileApps | Where-Object -FilterScript {
-            ($platform -eq 'android' -and $_.AdditionalProperties.packageId -eq $targetedApp -and $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidManagedStoreApp') -or `
-            ($platform -eq 'ios' -and $_.AdditionalProperties.bundleId -eq $targetedApp)
+            ($platform -eq 'android' -and $_.packageId -eq $targetedApp -and $_.'@odata.type' -eq '#microsoft.graph.androidManagedStoreApp') -or `
+            ($platform -eq 'ios' -and $_.bundleId -eq $targetedApp)
         }
 
         if ($null -eq $app)
@@ -569,6 +587,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -620,6 +646,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -686,6 +720,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

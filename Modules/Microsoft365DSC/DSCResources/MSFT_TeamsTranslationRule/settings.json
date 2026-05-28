@@ -35,5 +35,16 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsTranslationRule",
+        "New-CsTeamsTranslationRule",
+        "Remove-CsTeamsTranslationRule",
+        "Set-CsTeamsTranslationRule"
+      ]
+    }
+  ]
 }

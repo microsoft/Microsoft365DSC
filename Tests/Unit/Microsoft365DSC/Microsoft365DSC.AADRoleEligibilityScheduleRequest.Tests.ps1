@@ -49,10 +49,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDirectoryObjectById -MockWith {
                 return @{
                     Id = '123456'
-                    AdditionalProperties = @{
-                        '@odata.type' = '#microsoft.graph.user'
-                        userPrincipalName = 'John.Smith@contoso.com'
-                    }
+                    '@odata.type' = '#microsoft.graph.user'
+                    userPrincipalName = 'John.Smith@contoso.com'
                 }
             }
 

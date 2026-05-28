@@ -443,182 +443,180 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            VolumeBlockAdjustment                                    = $True
-                            ScreenCaptureBlocked                                     = $True
-                            KioskModeMediaVolumeConfigurationEnabled                 = $True
-                            KioskModeManagedHomeScreenPinRequired                    = $True
-                            KioskModeBluetoothConfigurationEnabled                   = $True
-                            StorageBlockExternalMedia                                = $True
-                            WorkProfilePasswordMinimumLowerCaseCharacters            = 25
-                            WorkProfilePasswordRequireUnlock                         = 'deviceDefault'
-                            SystemUpdateFreezePeriods                                = @(
-                                @{
-                                    endMonth   = 25
-                                    startMonth = 25
-                                    startDay   = 25
-                                    endDay     = 25
-                                }
-                            )
-                            BluetoothBlockConfiguration                              = $True
-                            DeviceOwnerLockScreenMessage                             = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
+                        VolumeBlockAdjustment                                    = $True
+                        ScreenCaptureBlocked                                     = $True
+                        KioskModeMediaVolumeConfigurationEnabled                 = $True
+                        KioskModeManagedHomeScreenPinRequired                    = $True
+                        KioskModeBluetoothConfigurationEnabled                   = $True
+                        StorageBlockExternalMedia                                = $True
+                        WorkProfilePasswordMinimumLowerCaseCharacters            = 25
+                        WorkProfilePasswordRequireUnlock                         = 'deviceDefault'
+                        SystemUpdateFreezePeriods                                = @(
+                            @{
+                                endMonth   = 25
+                                startMonth = 25
+                                startDay   = 25
+                                endDay     = 25
                             }
-                            MicrosoftLauncherDockPresenceAllowUserModification       = $True
-                            GlobalProxy                                              = @{
-                                '@odata.type'      = '#microsoft.graph.androidDeviceOwnerGlobalProxyAutoConfig'
-                                proxyAutoConfigURL = 'FakeStringValue'
-                            }
-                            KioskModeExitCode                                        = 'FakeStringValue'
-                            CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $True
-                            StorageAllowUsb                                          = $True
-                            AppsDefaultPermissionPolicy                              = 'deviceDefault'
-                            AccountsBlockModification                                = $True
-                            KioskModeShowDeviceInfo                                  = $True
-                            KioskModeScreenSaverDetectMediaDisabled                  = $True
-                            PersonalProfileCameraBlocked                             = $True
-                            WifiBlockEditConfigurations                              = $True
-                            KioskModeScreenSaverImageUrl                             = 'FakeStringValue'
-                            GoogleAccountsBlocked                                    = $True
-                            KioskModeScreenSaverDisplayTimeInSeconds                 = 25
-                            MicrophoneForceMute                                      = $True
-                            PasswordMinimumNumericCharacters                         = 25
-                            CrossProfilePoliciesAllowDataSharing                     = 'notConfigured'
-                            DetailedHelpText                                         = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
-                            }
-                            WorkProfilePasswordMinimumLength                         = 25
-                            KioskModeManagedHomeScreenPinComplexity                  = 'notConfigured'
-                            PasswordMinimumUpperCaseCharacters                       = 25
-                            KioskModeFolderIcon                                      = 'notConfigured'
-                            KioskModeScreenSaverStartDelayInSeconds                  = 25
-                            MicrosoftLauncherCustomWallpaperAllowUserModification    = $True
-                            KioskModeAppOrderEnabled                                 = $True
-                            KioskModeVirtualHomeButtonEnabled                        = $True
-                            MicrosoftLauncherFeedEnabled                             = $True
-                            BluetoothBlockContactSharing                             = $True
-                            SecurityCommonCriteriaModeEnabled                        = $True
-                            KioskModeGridWidth                                       = 25
-                            PersonalProfilePlayStoreMode                             = 'notConfigured'
-                            KioskCustomizationStatusBar                              = 'notConfigured'
-                            KioskModeWallpaperUrl                                    = 'FakeStringValue'
-                            NetworkEscapeHatchAllowed                                = $True
-                            KioskModeFlashlightConfigurationEnabled                  = $True
-                            VpnAlwaysOnLockdownMode                                  = $True
-                            StatusBarBlocked                                         = $True
-                            SystemUpdateWindowStartMinutesAfterMidnight              = 25
-                            SecurityRequireVerifyApps                                = $True
-                            KioskModeManagedHomeScreenSignInBrandingLogo             = 'FakeStringValue'
-                            KioskModeDebugMenuEasyAccessEnabled                      = $True
-                            WifiBlockEditPolicyDefinedConfigurations                 = $True
-                            PasswordMinimumSymbolCharacters                          = 25
-                            KioskModeScreenOrientation                               = 'notConfigured'
-                            PersonalProfileAppsAllowInstallFromUnknownSources        = $True
-                            CameraBlocked                                            = $True
-                            WorkProfilePasswordMinimumSymbolCharacters               = 25
-                            KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = 25
-                            WorkProfilePasswordRequiredType                          = 'deviceDefault'
-                            CertificateCredentialConfigurationDisabled               = $True
-                            KioskCustomizationSystemNavigation                       = 'notConfigured'
-                            WorkProfilePasswordExpirationDays                        = 25
-                            WorkProfilePasswordMinimumLetterCharacters               = 25
-                            KioskCustomizationSystemErrorWarnings                    = $True
-                            WorkProfilePasswordMinimumNumericCharacters              = 25
-                            PasswordMinimumLength                                    = 25
-                            KioskModeWiFiConfigurationEnabled                        = $True
-                            PasswordMinimumLowerCaseCharacters                       = 25
-                            StorageBlockUsbFileTransfer                              = $True
-                            WorkProfilePasswordPreviousPasswordCountToBlock          = 25
-                            AppsAllowInstallFromUnknownSources                       = $True
-                            PersonalProfileScreenCaptureBlocked                      = $True
-                            KioskCustomizationPowerButtonActionsBlocked              = $True
-                            KioskModeManagedSettingsEntryDisabled                    = $True
-                            MicrosoftLauncherCustomWallpaperImageUrl                 = 'FakeStringValue'
-                            KioskModeAppsInFolderOrderedByName                       = $True
-                            DataRoamingBlocked                                       = $True
-                            MicrosoftLauncherCustomWallpaperEnabled                  = $True
-                            KioskCustomizationDeviceSettingsBlocked                  = $True
-                            UsersBlockAdd                                            = $True
-                            PasswordMinutesOfInactivityBeforeScreenTimeout           = 25
-                            AppsRecommendSkippingFirstUseHints                       = $True
-                            PasswordRequiredType                                     = 'deviceDefault'
-                            KioskModeManagedHomeScreenSignInEnabled                  = $True
-                            DateTimeConfigurationBlocked                             = $True
-                            KioskModeManagedHomeScreenSignInBackground               = 'FakeStringValue'
-                            FactoryResetBlocked                                      = $True
-                            KioskModeLockHomeScreen                                  = $True
-                            KioskModeShowAppNotificationBadge                        = $True
-                            SystemWindowsBlocked                                     = $True
-                            KioskModeAppPositions                                    = @()
-                            AzureAdSharedDeviceDataClearApps                         = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            PlayStoreMode                                            = 'notConfigured'
-                            WorkProfilePasswordMinimumUpperCaseCharacters            = 25
-                            PasswordPreviousPasswordCountToBlock                     = 25
-                            SystemUpdateInstallType                                  = 'deviceDefault'
-                            SecurityDeveloperSettingsEnabled                         = $True
-                            MicrosoftLauncherConfigurationEnabled                    = $True
-                            MicrosoftLauncherFeedAllowUserModification               = $True
-                            KioskModeGridHeight                                      = 25
-                            PasswordExpirationDays                                   = 25
-                            WorkProfilePasswordMinimumNonLetterCharacters            = 25
-                            WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = 25
-                            KioskModeManagedFolders                                  = @()
-                            ShortHelpText                                            = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
-                            }
-                            KioskModeIconSize                                        = 'notConfigured'
-                            AppsAutoUpdatePolicy                                     = 'notConfigured'
-                            KioskModeScreenSaverConfigurationEnabled                 = $True
-                            PasswordRequireUnlock                                    = 'deviceDefault'
-                            MicrosoftLauncherDockPresenceConfiguration               = 'notConfigured'
-                            KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = 25
-                            VpnAlwaysOnPackageIdentifier                             = 'FakeStringValue'
-                            CrossProfilePoliciesAllowCopyPaste                       = $True
-                            KioskModeApps                                            = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            KioskModeManagedHomeScreenAutoSignout                    = $True
-                            KioskModeUseManagedHomeScreenApp                         = 'notConfigured'
-                            KioskModeManagedHomeScreenPinRequiredToResume            = $True
-                            NfcBlockOutgoingBeam                                     = $True
-                            '@odata.type'                                            = '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration'
-                            PersonalProfilePersonalApplications                      = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            PasswordBlockKeyguard                                    = $True
-                            MicrosoftLauncherSearchBarPlacementConfiguration         = 'notConfigured'
-                            SystemUpdateWindowEndMinutesAfterMidnight                = 25
-                            PasswordMinimumLetterCharacters                          = 25
-                            KioskModeVirtualHomeButtonType                           = 'notConfigured'
-                            CellularBlockWiFiTethering                               = $True
-                            EnrollmentProfile                                        = 'notConfigured'
-                            PasswordSignInFailureCountBeforeFactoryReset             = 25
-                            PasswordMinimumNonLetterCharacters                       = 25
-                            UsersBlockRemove                                         = $True
+                        )
+                        BluetoothBlockConfiguration                              = $True
+                        DeviceOwnerLockScreenMessage                             = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
                         }
+                        MicrosoftLauncherDockPresenceAllowUserModification       = $True
+                        GlobalProxy                                              = @{
+                            '@odata.type'      = '#microsoft.graph.androidDeviceOwnerGlobalProxyAutoConfig'
+                            proxyAutoConfigURL = 'FakeStringValue'
+                        }
+                        KioskModeExitCode                                        = 'FakeStringValue'
+                        CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $True
+                        StorageAllowUsb                                          = $True
+                        AppsDefaultPermissionPolicy                              = 'deviceDefault'
+                        AccountsBlockModification                                = $True
+                        KioskModeShowDeviceInfo                                  = $True
+                        KioskModeScreenSaverDetectMediaDisabled                  = $True
+                        PersonalProfileCameraBlocked                             = $True
+                        WifiBlockEditConfigurations                              = $True
+                        KioskModeScreenSaverImageUrl                             = 'FakeStringValue'
+                        GoogleAccountsBlocked                                    = $True
+                        KioskModeScreenSaverDisplayTimeInSeconds                 = 25
+                        MicrophoneForceMute                                      = $True
+                        PasswordMinimumNumericCharacters                         = 25
+                        CrossProfilePoliciesAllowDataSharing                     = 'notConfigured'
+                        DetailedHelpText                                         = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
+                        }
+                        WorkProfilePasswordMinimumLength                         = 25
+                        KioskModeManagedHomeScreenPinComplexity                  = 'notConfigured'
+                        PasswordMinimumUpperCaseCharacters                       = 25
+                        KioskModeFolderIcon                                      = 'notConfigured'
+                        KioskModeScreenSaverStartDelayInSeconds                  = 25
+                        MicrosoftLauncherCustomWallpaperAllowUserModification    = $True
+                        KioskModeAppOrderEnabled                                 = $True
+                        KioskModeVirtualHomeButtonEnabled                        = $True
+                        MicrosoftLauncherFeedEnabled                             = $True
+                        BluetoothBlockContactSharing                             = $True
+                        SecurityCommonCriteriaModeEnabled                        = $True
+                        KioskModeGridWidth                                       = 25
+                        PersonalProfilePlayStoreMode                             = 'notConfigured'
+                        KioskCustomizationStatusBar                              = 'notConfigured'
+                        KioskModeWallpaperUrl                                    = 'FakeStringValue'
+                        NetworkEscapeHatchAllowed                                = $True
+                        KioskModeFlashlightConfigurationEnabled                  = $True
+                        VpnAlwaysOnLockdownMode                                  = $True
+                        StatusBarBlocked                                         = $True
+                        SystemUpdateWindowStartMinutesAfterMidnight              = 25
+                        SecurityRequireVerifyApps                                = $True
+                        KioskModeManagedHomeScreenSignInBrandingLogo             = 'FakeStringValue'
+                        KioskModeDebugMenuEasyAccessEnabled                      = $True
+                        WifiBlockEditPolicyDefinedConfigurations                 = $True
+                        PasswordMinimumSymbolCharacters                          = 25
+                        KioskModeScreenOrientation                               = 'notConfigured'
+                        PersonalProfileAppsAllowInstallFromUnknownSources        = $True
+                        CameraBlocked                                            = $True
+                        WorkProfilePasswordMinimumSymbolCharacters               = 25
+                        KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = 25
+                        WorkProfilePasswordRequiredType                          = 'deviceDefault'
+                        CertificateCredentialConfigurationDisabled               = $True
+                        KioskCustomizationSystemNavigation                       = 'notConfigured'
+                        WorkProfilePasswordExpirationDays                        = 25
+                        WorkProfilePasswordMinimumLetterCharacters               = 25
+                        KioskCustomizationSystemErrorWarnings                    = $True
+                        WorkProfilePasswordMinimumNumericCharacters              = 25
+                        PasswordMinimumLength                                    = 25
+                        KioskModeWiFiConfigurationEnabled                        = $True
+                        PasswordMinimumLowerCaseCharacters                       = 25
+                        StorageBlockUsbFileTransfer                              = $True
+                        WorkProfilePasswordPreviousPasswordCountToBlock          = 25
+                        AppsAllowInstallFromUnknownSources                       = $True
+                        PersonalProfileScreenCaptureBlocked                      = $True
+                        KioskCustomizationPowerButtonActionsBlocked              = $True
+                        KioskModeManagedSettingsEntryDisabled                    = $True
+                        MicrosoftLauncherCustomWallpaperImageUrl                 = 'FakeStringValue'
+                        KioskModeAppsInFolderOrderedByName                       = $True
+                        DataRoamingBlocked                                       = $True
+                        MicrosoftLauncherCustomWallpaperEnabled                  = $True
+                        KioskCustomizationDeviceSettingsBlocked                  = $True
+                        UsersBlockAdd                                            = $True
+                        PasswordMinutesOfInactivityBeforeScreenTimeout           = 25
+                        AppsRecommendSkippingFirstUseHints                       = $True
+                        PasswordRequiredType                                     = 'deviceDefault'
+                        KioskModeManagedHomeScreenSignInEnabled                  = $True
+                        DateTimeConfigurationBlocked                             = $True
+                        KioskModeManagedHomeScreenSignInBackground               = 'FakeStringValue'
+                        FactoryResetBlocked                                      = $True
+                        KioskModeLockHomeScreen                                  = $True
+                        KioskModeShowAppNotificationBadge                        = $True
+                        SystemWindowsBlocked                                     = $True
+                        KioskModeAppPositions                                    = @()
+                        AzureAdSharedDeviceDataClearApps                         = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        PlayStoreMode                                            = 'notConfigured'
+                        WorkProfilePasswordMinimumUpperCaseCharacters            = 25
+                        PasswordPreviousPasswordCountToBlock                     = 25
+                        SystemUpdateInstallType                                  = 'deviceDefault'
+                        SecurityDeveloperSettingsEnabled                         = $True
+                        MicrosoftLauncherConfigurationEnabled                    = $True
+                        MicrosoftLauncherFeedAllowUserModification               = $True
+                        KioskModeGridHeight                                      = 25
+                        PasswordExpirationDays                                   = 25
+                        WorkProfilePasswordMinimumNonLetterCharacters            = 25
+                        WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = 25
+                        KioskModeManagedFolders                                  = @()
+                        ShortHelpText                                            = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
+                        }
+                        KioskModeIconSize                                        = 'notConfigured'
+                        AppsAutoUpdatePolicy                                     = 'notConfigured'
+                        KioskModeScreenSaverConfigurationEnabled                 = $True
+                        PasswordRequireUnlock                                    = 'deviceDefault'
+                        MicrosoftLauncherDockPresenceConfiguration               = 'notConfigured'
+                        KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = 25
+                        VpnAlwaysOnPackageIdentifier                             = 'FakeStringValue'
+                        CrossProfilePoliciesAllowCopyPaste                       = $True
+                        KioskModeApps                                            = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        KioskModeManagedHomeScreenAutoSignout                    = $True
+                        KioskModeUseManagedHomeScreenApp                         = 'notConfigured'
+                        KioskModeManagedHomeScreenPinRequiredToResume            = $True
+                        NfcBlockOutgoingBeam                                     = $True
+                        '@odata.type'                                            = '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration'
+                        PersonalProfilePersonalApplications                      = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        PasswordBlockKeyguard                                    = $True
+                        MicrosoftLauncherSearchBarPlacementConfiguration         = 'notConfigured'
+                        SystemUpdateWindowEndMinutesAfterMidnight                = 25
+                        PasswordMinimumLetterCharacters                          = 25
+                        KioskModeVirtualHomeButtonType                           = 'notConfigured'
+                        CellularBlockWiFiTethering                               = $True
+                        EnrollmentProfile                                        = 'notConfigured'
+                        PasswordSignInFailureCountBeforeFactoryReset             = 25
+                        PasswordMinimumNonLetterCharacters                       = 25
+                        UsersBlockRemove                                         = $True
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
@@ -631,7 +629,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -827,182 +825,180 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            VolumeBlockAdjustment                                    = $True
-                            ScreenCaptureBlocked                                     = $True
-                            KioskModeMediaVolumeConfigurationEnabled                 = $True
-                            KioskModeManagedHomeScreenPinRequired                    = $True
-                            KioskModeBluetoothConfigurationEnabled                   = $True
-                            StorageBlockExternalMedia                                = $True
-                            WorkProfilePasswordMinimumLowerCaseCharacters            = 25
-                            WorkProfilePasswordRequireUnlock                         = 'deviceDefault'
-                            SystemUpdateFreezePeriods                                = @(
-                                @{
-                                    endMonth   = 25
-                                    startMonth = 25
-                                    startDay   = 25
-                                    endDay     = 25
-                                }
-                            )
-                            BluetoothBlockConfiguration                              = $True
-                            DeviceOwnerLockScreenMessage                             = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
+                        VolumeBlockAdjustment                                    = $True
+                        ScreenCaptureBlocked                                     = $True
+                        KioskModeMediaVolumeConfigurationEnabled                 = $True
+                        KioskModeManagedHomeScreenPinRequired                    = $True
+                        KioskModeBluetoothConfigurationEnabled                   = $True
+                        StorageBlockExternalMedia                                = $True
+                        WorkProfilePasswordMinimumLowerCaseCharacters            = 25
+                        WorkProfilePasswordRequireUnlock                         = 'deviceDefault'
+                        SystemUpdateFreezePeriods                                = @(
+                            @{
+                                endMonth   = 25
+                                startMonth = 25
+                                startDay   = 25
+                                endDay     = 25
                             }
-                            MicrosoftLauncherDockPresenceAllowUserModification       = $True
-                            GlobalProxy                                              = @{
-                                '@odata.type'      = '#microsoft.graph.androidDeviceOwnerGlobalProxyAutoConfig'
-                                proxyAutoConfigURL = 'FakeStringValue'
-                            }
-                            KioskModeExitCode                                        = 'FakeStringValue'
-                            CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $True
-                            StorageAllowUsb                                          = $True
-                            AppsDefaultPermissionPolicy                              = 'deviceDefault'
-                            AccountsBlockModification                                = $True
-                            KioskModeShowDeviceInfo                                  = $True
-                            KioskModeScreenSaverDetectMediaDisabled                  = $True
-                            PersonalProfileCameraBlocked                             = $True
-                            WifiBlockEditConfigurations                              = $True
-                            KioskModeScreenSaverImageUrl                             = 'FakeStringValue'
-                            GoogleAccountsBlocked                                    = $True
-                            KioskModeScreenSaverDisplayTimeInSeconds                 = 25
-                            MicrophoneForceMute                                      = $True
-                            PasswordMinimumNumericCharacters                         = 25
-                            CrossProfilePoliciesAllowDataSharing                     = 'notConfigured'
-                            DetailedHelpText                                         = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
-                            }
-                            WorkProfilePasswordMinimumLength                         = 25
-                            KioskModeManagedHomeScreenPinComplexity                  = 'notConfigured'
-                            PasswordMinimumUpperCaseCharacters                       = 25
-                            KioskModeFolderIcon                                      = 'notConfigured'
-                            KioskModeScreenSaverStartDelayInSeconds                  = 25
-                            MicrosoftLauncherCustomWallpaperAllowUserModification    = $True
-                            KioskModeAppOrderEnabled                                 = $True
-                            KioskModeVirtualHomeButtonEnabled                        = $True
-                            MicrosoftLauncherFeedEnabled                             = $True
-                            BluetoothBlockContactSharing                             = $True
-                            SecurityCommonCriteriaModeEnabled                        = $True
-                            KioskModeGridWidth                                       = 25
-                            PersonalProfilePlayStoreMode                             = 'notConfigured'
-                            KioskCustomizationStatusBar                              = 'notConfigured'
-                            KioskModeWallpaperUrl                                    = 'FakeStringValue'
-                            NetworkEscapeHatchAllowed                                = $True
-                            KioskModeFlashlightConfigurationEnabled                  = $True
-                            VpnAlwaysOnLockdownMode                                  = $True
-                            StatusBarBlocked                                         = $True
-                            SystemUpdateWindowStartMinutesAfterMidnight              = 25
-                            SecurityRequireVerifyApps                                = $True
-                            KioskModeManagedHomeScreenSignInBrandingLogo             = 'FakeStringValue'
-                            KioskModeDebugMenuEasyAccessEnabled                      = $True
-                            WifiBlockEditPolicyDefinedConfigurations                 = $True
-                            PasswordMinimumSymbolCharacters                          = 25
-                            KioskModeScreenOrientation                               = 'notConfigured'
-                            PersonalProfileAppsAllowInstallFromUnknownSources        = $True
-                            CameraBlocked                                            = $True
-                            WorkProfilePasswordMinimumSymbolCharacters               = 25
-                            KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = 25
-                            WorkProfilePasswordRequiredType                          = 'deviceDefault'
-                            CertificateCredentialConfigurationDisabled               = $True
-                            KioskCustomizationSystemNavigation                       = 'notConfigured'
-                            WorkProfilePasswordExpirationDays                        = 25
-                            WorkProfilePasswordMinimumLetterCharacters               = 25
-                            KioskCustomizationSystemErrorWarnings                    = $True
-                            WorkProfilePasswordMinimumNumericCharacters              = 25
-                            PasswordMinimumLength                                    = 25
-                            KioskModeWiFiConfigurationEnabled                        = $True
-                            PasswordMinimumLowerCaseCharacters                       = 25
-                            StorageBlockUsbFileTransfer                              = $True
-                            WorkProfilePasswordPreviousPasswordCountToBlock          = 25
-                            AppsAllowInstallFromUnknownSources                       = $True
-                            PersonalProfileScreenCaptureBlocked                      = $True
-                            KioskCustomizationPowerButtonActionsBlocked              = $True
-                            KioskModeManagedSettingsEntryDisabled                    = $True
-                            MicrosoftLauncherCustomWallpaperImageUrl                 = 'FakeStringValue'
-                            KioskModeAppsInFolderOrderedByName                       = $True
-                            DataRoamingBlocked                                       = $True
-                            MicrosoftLauncherCustomWallpaperEnabled                  = $True
-                            KioskCustomizationDeviceSettingsBlocked                  = $True
-                            UsersBlockAdd                                            = $True
-                            PasswordMinutesOfInactivityBeforeScreenTimeout           = 25
-                            AppsRecommendSkippingFirstUseHints                       = $True
-                            PasswordRequiredType                                     = 'deviceDefault'
-                            KioskModeManagedHomeScreenSignInEnabled                  = $True
-                            DateTimeConfigurationBlocked                             = $True
-                            KioskModeManagedHomeScreenSignInBackground               = 'FakeStringValue'
-                            FactoryResetBlocked                                      = $True
-                            KioskModeLockHomeScreen                                  = $True
-                            KioskModeShowAppNotificationBadge                        = $True
-                            SystemWindowsBlocked                                     = $True
-                            KioskModeAppPositions                                    = @()
-                            AzureAdSharedDeviceDataClearApps                         = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            PlayStoreMode                                            = 'notConfigured'
-                            WorkProfilePasswordMinimumUpperCaseCharacters            = 25
-                            PasswordPreviousPasswordCountToBlock                     = 25
-                            SystemUpdateInstallType                                  = 'deviceDefault'
-                            SecurityDeveloperSettingsEnabled                         = $True
-                            MicrosoftLauncherConfigurationEnabled                    = $True
-                            MicrosoftLauncherFeedAllowUserModification               = $True
-                            KioskModeGridHeight                                      = 25
-                            PasswordExpirationDays                                   = 25
-                            WorkProfilePasswordMinimumNonLetterCharacters            = 25
-                            WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = 25
-                            KioskModeManagedFolders                                  = @()
-                            ShortHelpText                                            = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
-                            }
-                            KioskModeIconSize                                        = 'notConfigured'
-                            AppsAutoUpdatePolicy                                     = 'notConfigured'
-                            KioskModeScreenSaverConfigurationEnabled                 = $True
-                            PasswordRequireUnlock                                    = 'deviceDefault'
-                            MicrosoftLauncherDockPresenceConfiguration               = 'notConfigured'
-                            KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = 25
-                            VpnAlwaysOnPackageIdentifier                             = 'FakeStringValue'
-                            CrossProfilePoliciesAllowCopyPaste                       = $True
-                            KioskModeApps                                            = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            KioskModeManagedHomeScreenAutoSignout                    = $True
-                            KioskModeUseManagedHomeScreenApp                         = 'notConfigured'
-                            KioskModeManagedHomeScreenPinRequiredToResume            = $True
-                            NfcBlockOutgoingBeam                                     = $True
-                            '@odata.type'                                            = '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration'
-                            PersonalProfilePersonalApplications                      = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            PasswordBlockKeyguard                                    = $True
-                            MicrosoftLauncherSearchBarPlacementConfiguration         = 'notConfigured'
-                            SystemUpdateWindowEndMinutesAfterMidnight                = 25
-                            PasswordMinimumLetterCharacters                          = 25
-                            KioskModeVirtualHomeButtonType                           = 'notConfigured'
-                            CellularBlockWiFiTethering                               = $True
-                            EnrollmentProfile                                        = 'notConfigured'
-                            PasswordSignInFailureCountBeforeFactoryReset             = 25
-                            PasswordMinimumNonLetterCharacters                       = 25
-                            UsersBlockRemove                                         = $True
+                        )
+                        BluetoothBlockConfiguration                              = $True
+                        DeviceOwnerLockScreenMessage                             = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
                         }
+                        MicrosoftLauncherDockPresenceAllowUserModification       = $True
+                        GlobalProxy                                              = @{
+                            '@odata.type'      = '#microsoft.graph.androidDeviceOwnerGlobalProxyAutoConfig'
+                            proxyAutoConfigURL = 'FakeStringValue'
+                        }
+                        KioskModeExitCode                                        = 'FakeStringValue'
+                        CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $True
+                        StorageAllowUsb                                          = $True
+                        AppsDefaultPermissionPolicy                              = 'deviceDefault'
+                        AccountsBlockModification                                = $True
+                        KioskModeShowDeviceInfo                                  = $True
+                        KioskModeScreenSaverDetectMediaDisabled                  = $True
+                        PersonalProfileCameraBlocked                             = $True
+                        WifiBlockEditConfigurations                              = $True
+                        KioskModeScreenSaverImageUrl                             = 'FakeStringValue'
+                        GoogleAccountsBlocked                                    = $True
+                        KioskModeScreenSaverDisplayTimeInSeconds                 = 25
+                        MicrophoneForceMute                                      = $True
+                        PasswordMinimumNumericCharacters                         = 25
+                        CrossProfilePoliciesAllowDataSharing                     = 'notConfigured'
+                        DetailedHelpText                                         = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
+                        }
+                        WorkProfilePasswordMinimumLength                         = 25
+                        KioskModeManagedHomeScreenPinComplexity                  = 'notConfigured'
+                        PasswordMinimumUpperCaseCharacters                       = 25
+                        KioskModeFolderIcon                                      = 'notConfigured'
+                        KioskModeScreenSaverStartDelayInSeconds                  = 25
+                        MicrosoftLauncherCustomWallpaperAllowUserModification    = $True
+                        KioskModeAppOrderEnabled                                 = $True
+                        KioskModeVirtualHomeButtonEnabled                        = $True
+                        MicrosoftLauncherFeedEnabled                             = $True
+                        BluetoothBlockContactSharing                             = $True
+                        SecurityCommonCriteriaModeEnabled                        = $True
+                        KioskModeGridWidth                                       = 25
+                        PersonalProfilePlayStoreMode                             = 'notConfigured'
+                        KioskCustomizationStatusBar                              = 'notConfigured'
+                        KioskModeWallpaperUrl                                    = 'FakeStringValue'
+                        NetworkEscapeHatchAllowed                                = $True
+                        KioskModeFlashlightConfigurationEnabled                  = $True
+                        VpnAlwaysOnLockdownMode                                  = $True
+                        StatusBarBlocked                                         = $True
+                        SystemUpdateWindowStartMinutesAfterMidnight              = 25
+                        SecurityRequireVerifyApps                                = $True
+                        KioskModeManagedHomeScreenSignInBrandingLogo             = 'FakeStringValue'
+                        KioskModeDebugMenuEasyAccessEnabled                      = $True
+                        WifiBlockEditPolicyDefinedConfigurations                 = $True
+                        PasswordMinimumSymbolCharacters                          = 25
+                        KioskModeScreenOrientation                               = 'notConfigured'
+                        PersonalProfileAppsAllowInstallFromUnknownSources        = $True
+                        CameraBlocked                                            = $True
+                        WorkProfilePasswordMinimumSymbolCharacters               = 25
+                        KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = 25
+                        WorkProfilePasswordRequiredType                          = 'deviceDefault'
+                        CertificateCredentialConfigurationDisabled               = $True
+                        KioskCustomizationSystemNavigation                       = 'notConfigured'
+                        WorkProfilePasswordExpirationDays                        = 25
+                        WorkProfilePasswordMinimumLetterCharacters               = 25
+                        KioskCustomizationSystemErrorWarnings                    = $True
+                        WorkProfilePasswordMinimumNumericCharacters              = 25
+                        PasswordMinimumLength                                    = 25
+                        KioskModeWiFiConfigurationEnabled                        = $True
+                        PasswordMinimumLowerCaseCharacters                       = 25
+                        StorageBlockUsbFileTransfer                              = $True
+                        WorkProfilePasswordPreviousPasswordCountToBlock          = 25
+                        AppsAllowInstallFromUnknownSources                       = $True
+                        PersonalProfileScreenCaptureBlocked                      = $True
+                        KioskCustomizationPowerButtonActionsBlocked              = $True
+                        KioskModeManagedSettingsEntryDisabled                    = $True
+                        MicrosoftLauncherCustomWallpaperImageUrl                 = 'FakeStringValue'
+                        KioskModeAppsInFolderOrderedByName                       = $True
+                        DataRoamingBlocked                                       = $True
+                        MicrosoftLauncherCustomWallpaperEnabled                  = $True
+                        KioskCustomizationDeviceSettingsBlocked                  = $True
+                        UsersBlockAdd                                            = $True
+                        PasswordMinutesOfInactivityBeforeScreenTimeout           = 25
+                        AppsRecommendSkippingFirstUseHints                       = $True
+                        PasswordRequiredType                                     = 'deviceDefault'
+                        KioskModeManagedHomeScreenSignInEnabled                  = $True
+                        DateTimeConfigurationBlocked                             = $True
+                        KioskModeManagedHomeScreenSignInBackground               = 'FakeStringValue'
+                        FactoryResetBlocked                                      = $True
+                        KioskModeLockHomeScreen                                  = $True
+                        KioskModeShowAppNotificationBadge                        = $True
+                        SystemWindowsBlocked                                     = $True
+                        KioskModeAppPositions                                    = @()
+                        AzureAdSharedDeviceDataClearApps                         = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        PlayStoreMode                                            = 'notConfigured'
+                        WorkProfilePasswordMinimumUpperCaseCharacters            = 25
+                        PasswordPreviousPasswordCountToBlock                     = 25
+                        SystemUpdateInstallType                                  = 'deviceDefault'
+                        SecurityDeveloperSettingsEnabled                         = $True
+                        MicrosoftLauncherConfigurationEnabled                    = $True
+                        MicrosoftLauncherFeedAllowUserModification               = $True
+                        KioskModeGridHeight                                      = 25
+                        PasswordExpirationDays                                   = 25
+                        WorkProfilePasswordMinimumNonLetterCharacters            = 25
+                        WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = 25
+                        KioskModeManagedFolders                                  = @()
+                        ShortHelpText                                            = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
+                        }
+                        KioskModeIconSize                                        = 'notConfigured'
+                        AppsAutoUpdatePolicy                                     = 'notConfigured'
+                        KioskModeScreenSaverConfigurationEnabled                 = $True
+                        PasswordRequireUnlock                                    = 'deviceDefault'
+                        MicrosoftLauncherDockPresenceConfiguration               = 'notConfigured'
+                        KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = 25
+                        VpnAlwaysOnPackageIdentifier                             = 'FakeStringValue'
+                        CrossProfilePoliciesAllowCopyPaste                       = $True
+                        KioskModeApps                                            = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        KioskModeManagedHomeScreenAutoSignout                    = $True
+                        KioskModeUseManagedHomeScreenApp                         = 'notConfigured'
+                        KioskModeManagedHomeScreenPinRequiredToResume            = $True
+                        NfcBlockOutgoingBeam                                     = $True
+                        '@odata.type'                                            = '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration'
+                        PersonalProfilePersonalApplications                      = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        PasswordBlockKeyguard                                    = $True
+                        MicrosoftLauncherSearchBarPlacementConfiguration         = 'notConfigured'
+                        SystemUpdateWindowEndMinutesAfterMidnight                = 25
+                        PasswordMinimumLetterCharacters                          = 25
+                        KioskModeVirtualHomeButtonType                           = 'notConfigured'
+                        CellularBlockWiFiTethering                               = $True
+                        EnrollmentProfile                                        = 'notConfigured'
+                        PasswordSignInFailureCountBeforeFactoryReset             = 25
+                        PasswordMinimumNonLetterCharacters                       = 25
+                        UsersBlockRemove                                         = $True
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
@@ -1201,119 +1197,117 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            WorkProfilePasswordMinimumUpperCaseCharacters            = 7
-                            WorkProfilePasswordRequireUnlock                         = 'deviceDefault'
-                            SystemUpdateFreezePeriods                                = @(
-                                @{
-                                    endMonth   = 25
-                                    startMonth = 25
-                                    startDay   = 25
-                                    endDay     = 25
-                                }
-                            )
-                            VpnAlwaysOnPackageIdentifier                             = 'FakeStringValue'
-                            DeviceOwnerLockScreenMessage                             = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
+                        WorkProfilePasswordMinimumUpperCaseCharacters            = 7
+                        WorkProfilePasswordRequireUnlock                         = 'deviceDefault'
+                        SystemUpdateFreezePeriods                                = @(
+                            @{
+                                endMonth   = 25
+                                startMonth = 25
+                                startDay   = 25
+                                endDay     = 25
                             }
-                            WorkProfilePasswordMinimumLowerCaseCharacters            = 7
-                            GlobalProxy                                              = @{
-                                '@odata.type'      = '#microsoft.graph.androidDeviceOwnerGlobalProxyAutoConfig'
-                                proxyAutoConfigURL = 'FakeStringValue'
-                            }
-                            WorkProfilePasswordRequiredType                          = 'deviceDefault'
-                            KioskModeVirtualHomeButtonType                           = 'notConfigured'
-                            AppsDefaultPermissionPolicy                              = 'deviceDefault'
-                            WorkProfilePasswordMinimumSymbolCharacters               = 7
-                            '@odata.type'                                            = '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration'
-                            KioskModeScreenSaverImageUrl                             = 'FakeStringValue'
-                            KioskModeScreenSaverDisplayTimeInSeconds                 = 7
-                            KioskModeGridWidth                                       = 7
-                            KioskModeFolderIcon                                      = 'notConfigured'
-                            PasswordMinimumUpperCaseCharacters                       = 7
-                            ShortHelpText                                            = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
-                            }
-                            PersonalProfilePlayStoreMode                             = 'notConfigured'
-                            KioskCustomizationStatusBar                              = 'notConfigured'
-                            PasswordPreviousPasswordCountToBlock                     = 7
-                            PasswordMinutesOfInactivityBeforeScreenTimeout           = 7
-                            KioskModeExitCode                                        = 'FakeStringValue'
-                            WorkProfilePasswordExpirationDays                        = 7
-                            KioskModeManagedHomeScreenSignInBrandingLogo             = 'FakeStringValue'
-                            PasswordMinimumSymbolCharacters                          = 7
-                            KioskModeScreenOrientation                               = 'notConfigured'
-                            KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = 7
-                            KioskCustomizationSystemNavigation                       = 'notConfigured'
-                            WorkProfilePasswordPreviousPasswordCountToBlock          = 7
-                            PasswordMinimumLength                                    = 7
-                            PasswordMinimumNumericCharacters                         = 7
-                            CrossProfilePoliciesAllowDataSharing                     = 'notConfigured'
-                            EnrollmentProfile                                        = 'notConfigured'
-                            PasswordSignInFailureCountBeforeFactoryReset             = 7
-                            PasswordMinimumNonLetterCharacters                       = 7
-                            WorkProfilePasswordMinimumNumericCharacters              = 7
-                            PasswordMinimumLowerCaseCharacters                       = 7
-                            KioskModeWallpaperUrl                                    = 'FakeStringValue'
-                            PasswordMinimumLetterCharacters                          = 7
-                            WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = 7
-                            KioskModeManagedHomeScreenSignInBackground               = 'FakeStringValue'
-                            MicrosoftLauncherCustomWallpaperImageUrl                 = 'FakeStringValue'
-                            SystemUpdateWindowStartMinutesAfterMidnight              = 7
-                            KioskModeAppPositions                                    = @()
-                            AzureAdSharedDeviceDataClearApps                         = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            PlayStoreMode                                            = 'notConfigured'
-                            PasswordRequiredType                                     = 'deviceDefault'
-                            SystemUpdateWindowEndMinutesAfterMidnight                = 7
-                            WorkProfilePasswordMinimumLength                         = 7
-                            PersonalProfilePersonalApplications                      = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            DetailedHelpText                                         = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
-                            }
-                            KioskModeManagedHomeScreenPinComplexity                  = 'notConfigured'
-                            KioskModeScreenSaverStartDelayInSeconds                  = 7
-                            SystemUpdateInstallType                                  = 'deviceDefault'
-                            KioskModeGridHeight                                      = 7
-                            PasswordExpirationDays                                   = 7
-                            WorkProfilePasswordMinimumNonLetterCharacters            = 7
-                            KioskModeManagedFolders                                  = @()
-                            KioskModeIconSize                                        = 'notConfigured'
-                            AppsAutoUpdatePolicy                                     = 'notConfigured'
-                            MicrosoftLauncherDockPresenceConfiguration               = 'notConfigured'
-                            KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = 7
-                            KioskModeApps                                            = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            MicrosoftLauncherSearchBarPlacementConfiguration         = 'notConfigured'
-                            KioskModeUseManagedHomeScreenApp                         = 'notConfigured'
-                            PasswordRequireUnlock                                    = 'deviceDefault'
-                            WorkProfilePasswordMinimumLetterCharacters               = 7
+                        )
+                        VpnAlwaysOnPackageIdentifier                             = 'FakeStringValue'
+                        DeviceOwnerLockScreenMessage                             = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
                         }
+                        WorkProfilePasswordMinimumLowerCaseCharacters            = 7
+                        GlobalProxy                                              = @{
+                            '@odata.type'      = '#microsoft.graph.androidDeviceOwnerGlobalProxyAutoConfig'
+                            proxyAutoConfigURL = 'FakeStringValue'
+                        }
+                        WorkProfilePasswordRequiredType                          = 'deviceDefault'
+                        KioskModeVirtualHomeButtonType                           = 'notConfigured'
+                        AppsDefaultPermissionPolicy                              = 'deviceDefault'
+                        WorkProfilePasswordMinimumSymbolCharacters               = 7
+                        '@odata.type'                                            = '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration'
+                        KioskModeScreenSaverImageUrl                             = 'FakeStringValue'
+                        KioskModeScreenSaverDisplayTimeInSeconds                 = 7
+                        KioskModeGridWidth                                       = 7
+                        KioskModeFolderIcon                                      = 'notConfigured'
+                        PasswordMinimumUpperCaseCharacters                       = 7
+                        ShortHelpText                                            = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
+                        }
+                        PersonalProfilePlayStoreMode                             = 'notConfigured'
+                        KioskCustomizationStatusBar                              = 'notConfigured'
+                        PasswordPreviousPasswordCountToBlock                     = 7
+                        PasswordMinutesOfInactivityBeforeScreenTimeout           = 7
+                        KioskModeExitCode                                        = 'FakeStringValue'
+                        WorkProfilePasswordExpirationDays                        = 7
+                        KioskModeManagedHomeScreenSignInBrandingLogo             = 'FakeStringValue'
+                        PasswordMinimumSymbolCharacters                          = 7
+                        KioskModeScreenOrientation                               = 'notConfigured'
+                        KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = 7
+                        KioskCustomizationSystemNavigation                       = 'notConfigured'
+                        WorkProfilePasswordPreviousPasswordCountToBlock          = 7
+                        PasswordMinimumLength                                    = 7
+                        PasswordMinimumNumericCharacters                         = 7
+                        CrossProfilePoliciesAllowDataSharing                     = 'notConfigured'
+                        EnrollmentProfile                                        = 'notConfigured'
+                        PasswordSignInFailureCountBeforeFactoryReset             = 7
+                        PasswordMinimumNonLetterCharacters                       = 7
+                        WorkProfilePasswordMinimumNumericCharacters              = 7
+                        PasswordMinimumLowerCaseCharacters                       = 7
+                        KioskModeWallpaperUrl                                    = 'FakeStringValue'
+                        PasswordMinimumLetterCharacters                          = 7
+                        WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = 7
+                        KioskModeManagedHomeScreenSignInBackground               = 'FakeStringValue'
+                        MicrosoftLauncherCustomWallpaperImageUrl                 = 'FakeStringValue'
+                        SystemUpdateWindowStartMinutesAfterMidnight              = 7
+                        KioskModeAppPositions                                    = @()
+                        AzureAdSharedDeviceDataClearApps                         = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        PlayStoreMode                                            = 'notConfigured'
+                        PasswordRequiredType                                     = 'deviceDefault'
+                        SystemUpdateWindowEndMinutesAfterMidnight                = 7
+                        WorkProfilePasswordMinimumLength                         = 7
+                        PersonalProfilePersonalApplications                      = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        DetailedHelpText                                         = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
+                        }
+                        KioskModeManagedHomeScreenPinComplexity                  = 'notConfigured'
+                        KioskModeScreenSaverStartDelayInSeconds                  = 7
+                        SystemUpdateInstallType                                  = 'deviceDefault'
+                        KioskModeGridHeight                                      = 7
+                        PasswordExpirationDays                                   = 7
+                        WorkProfilePasswordMinimumNonLetterCharacters            = 7
+                        KioskModeManagedFolders                                  = @()
+                        KioskModeIconSize                                        = 'notConfigured'
+                        AppsAutoUpdatePolicy                                     = 'notConfigured'
+                        MicrosoftLauncherDockPresenceConfiguration               = 'notConfigured'
+                        KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = 7
+                        KioskModeApps                                            = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        MicrosoftLauncherSearchBarPlacementConfiguration         = 'notConfigured'
+                        KioskModeUseManagedHomeScreenApp                         = 'notConfigured'
+                        PasswordRequireUnlock                                    = 'deviceDefault'
+                        WorkProfilePasswordMinimumLetterCharacters               = 7
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
@@ -1345,182 +1339,180 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            VolumeBlockAdjustment                                    = $True
-                            ScreenCaptureBlocked                                     = $True
-                            KioskModeMediaVolumeConfigurationEnabled                 = $True
-                            KioskModeManagedHomeScreenPinRequired                    = $True
-                            KioskModeBluetoothConfigurationEnabled                   = $True
-                            StorageBlockExternalMedia                                = $True
-                            WorkProfilePasswordMinimumLowerCaseCharacters            = 25
-                            WorkProfilePasswordRequireUnlock                         = 'deviceDefault'
-                            SystemUpdateFreezePeriods                                = @(
-                                @{
-                                    endMonth   = 25
-                                    startMonth = 25
-                                    startDay   = 25
-                                    endDay     = 25
-                                }
-                            )
-                            BluetoothBlockConfiguration                              = $True
-                            DeviceOwnerLockScreenMessage                             = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
+                        VolumeBlockAdjustment                                    = $True
+                        ScreenCaptureBlocked                                     = $True
+                        KioskModeMediaVolumeConfigurationEnabled                 = $True
+                        KioskModeManagedHomeScreenPinRequired                    = $True
+                        KioskModeBluetoothConfigurationEnabled                   = $True
+                        StorageBlockExternalMedia                                = $True
+                        WorkProfilePasswordMinimumLowerCaseCharacters            = 25
+                        WorkProfilePasswordRequireUnlock                         = 'deviceDefault'
+                        SystemUpdateFreezePeriods                                = @(
+                            @{
+                                endMonth   = 25
+                                startMonth = 25
+                                startDay   = 25
+                                endDay     = 25
                             }
-                            MicrosoftLauncherDockPresenceAllowUserModification       = $True
-                            GlobalProxy                                              = @{
-                                '@odata.type'      = '#microsoft.graph.androidDeviceOwnerGlobalProxyAutoConfig'
-                                proxyAutoConfigURL = 'FakeStringValue'
-                            }
-                            KioskModeExitCode                                        = 'FakeStringValue'
-                            CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $True
-                            StorageAllowUsb                                          = $True
-                            AppsDefaultPermissionPolicy                              = 'deviceDefault'
-                            AccountsBlockModification                                = $True
-                            KioskModeShowDeviceInfo                                  = $True
-                            KioskModeScreenSaverDetectMediaDisabled                  = $True
-                            PersonalProfileCameraBlocked                             = $True
-                            WifiBlockEditConfigurations                              = $True
-                            KioskModeScreenSaverImageUrl                             = 'FakeStringValue'
-                            GoogleAccountsBlocked                                    = $True
-                            KioskModeScreenSaverDisplayTimeInSeconds                 = 25
-                            MicrophoneForceMute                                      = $True
-                            PasswordMinimumNumericCharacters                         = 25
-                            CrossProfilePoliciesAllowDataSharing                     = 'notConfigured'
-                            DetailedHelpText                                         = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
-                            }
-                            WorkProfilePasswordMinimumLength                         = 25
-                            KioskModeManagedHomeScreenPinComplexity                  = 'notConfigured'
-                            PasswordMinimumUpperCaseCharacters                       = 25
-                            KioskModeFolderIcon                                      = 'notConfigured'
-                            KioskModeScreenSaverStartDelayInSeconds                  = 25
-                            MicrosoftLauncherCustomWallpaperAllowUserModification    = $True
-                            KioskModeAppOrderEnabled                                 = $True
-                            KioskModeVirtualHomeButtonEnabled                        = $True
-                            MicrosoftLauncherFeedEnabled                             = $True
-                            BluetoothBlockContactSharing                             = $True
-                            SecurityCommonCriteriaModeEnabled                        = $True
-                            KioskModeGridWidth                                       = 25
-                            PersonalProfilePlayStoreMode                             = 'notConfigured'
-                            KioskCustomizationStatusBar                              = 'notConfigured'
-                            KioskModeWallpaperUrl                                    = 'FakeStringValue'
-                            NetworkEscapeHatchAllowed                                = $True
-                            KioskModeFlashlightConfigurationEnabled                  = $True
-                            VpnAlwaysOnLockdownMode                                  = $True
-                            StatusBarBlocked                                         = $True
-                            SystemUpdateWindowStartMinutesAfterMidnight              = 25
-                            SecurityRequireVerifyApps                                = $True
-                            KioskModeManagedHomeScreenSignInBrandingLogo             = 'FakeStringValue'
-                            KioskModeDebugMenuEasyAccessEnabled                      = $True
-                            WifiBlockEditPolicyDefinedConfigurations                 = $True
-                            PasswordMinimumSymbolCharacters                          = 25
-                            KioskModeScreenOrientation                               = 'notConfigured'
-                            PersonalProfileAppsAllowInstallFromUnknownSources        = $True
-                            CameraBlocked                                            = $True
-                            WorkProfilePasswordMinimumSymbolCharacters               = 25
-                            KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = 25
-                            WorkProfilePasswordRequiredType                          = 'deviceDefault'
-                            CertificateCredentialConfigurationDisabled               = $True
-                            KioskCustomizationSystemNavigation                       = 'notConfigured'
-                            WorkProfilePasswordExpirationDays                        = 25
-                            WorkProfilePasswordMinimumLetterCharacters               = 25
-                            KioskCustomizationSystemErrorWarnings                    = $True
-                            WorkProfilePasswordMinimumNumericCharacters              = 25
-                            PasswordMinimumLength                                    = 25
-                            KioskModeWiFiConfigurationEnabled                        = $True
-                            PasswordMinimumLowerCaseCharacters                       = 25
-                            StorageBlockUsbFileTransfer                              = $True
-                            WorkProfilePasswordPreviousPasswordCountToBlock          = 25
-                            AppsAllowInstallFromUnknownSources                       = $True
-                            PersonalProfileScreenCaptureBlocked                      = $True
-                            KioskCustomizationPowerButtonActionsBlocked              = $True
-                            KioskModeManagedSettingsEntryDisabled                    = $True
-                            MicrosoftLauncherCustomWallpaperImageUrl                 = 'FakeStringValue'
-                            KioskModeAppsInFolderOrderedByName                       = $True
-                            DataRoamingBlocked                                       = $True
-                            MicrosoftLauncherCustomWallpaperEnabled                  = $True
-                            KioskCustomizationDeviceSettingsBlocked                  = $True
-                            UsersBlockAdd                                            = $True
-                            PasswordMinutesOfInactivityBeforeScreenTimeout           = 25
-                            AppsRecommendSkippingFirstUseHints                       = $True
-                            PasswordRequiredType                                     = 'deviceDefault'
-                            KioskModeManagedHomeScreenSignInEnabled                  = $True
-                            DateTimeConfigurationBlocked                             = $True
-                            KioskModeManagedHomeScreenSignInBackground               = 'FakeStringValue'
-                            FactoryResetBlocked                                      = $True
-                            KioskModeLockHomeScreen                                  = $True
-                            KioskModeShowAppNotificationBadge                        = $True
-                            SystemWindowsBlocked                                     = $True
-                            KioskModeAppPositions                                    = @()
-                            AzureAdSharedDeviceDataClearApps                         = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            PlayStoreMode                                            = 'notConfigured'
-                            WorkProfilePasswordMinimumUpperCaseCharacters            = 25
-                            PasswordPreviousPasswordCountToBlock                     = 25
-                            SystemUpdateInstallType                                  = 'deviceDefault'
-                            SecurityDeveloperSettingsEnabled                         = $True
-                            MicrosoftLauncherConfigurationEnabled                    = $True
-                            MicrosoftLauncherFeedAllowUserModification               = $True
-                            KioskModeGridHeight                                      = 25
-                            PasswordExpirationDays                                   = 25
-                            WorkProfilePasswordMinimumNonLetterCharacters            = 25
-                            WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = 25
-                            KioskModeManagedFolders                                  = @()
-                            ShortHelpText                                            = @{
-                                defaultMessage    = 'FakeStringValue'
-                                localizedMessages = @()
-                            }
-                            KioskModeIconSize                                        = 'notConfigured'
-                            AppsAutoUpdatePolicy                                     = 'notConfigured'
-                            KioskModeScreenSaverConfigurationEnabled                 = $True
-                            PasswordRequireUnlock                                    = 'deviceDefault'
-                            MicrosoftLauncherDockPresenceConfiguration               = 'notConfigured'
-                            KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = 25
-                            VpnAlwaysOnPackageIdentifier                             = 'FakeStringValue'
-                            CrossProfilePoliciesAllowCopyPaste                       = $True
-                            KioskModeApps                                            = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            KioskModeManagedHomeScreenAutoSignout                    = $True
-                            KioskModeUseManagedHomeScreenApp                         = 'notConfigured'
-                            KioskModeManagedHomeScreenPinRequiredToResume            = $True
-                            NfcBlockOutgoingBeam                                     = $True
-                            '@odata.type'                                            = '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration'
-                            PersonalProfilePersonalApplications                      = @(
-                                @{
-                                    name          = 'FakeStringValue'
-                                    appId         = 'FakeStringValue'
-                                    appStoreUrl   = 'FakeStringValue'
-                                    '@odata.type' = '#microsoft.graph.appleAppListItem'
-                                    publisher     = 'FakeStringValue'
-                                }
-                            )
-                            PasswordBlockKeyguard                                    = $True
-                            MicrosoftLauncherSearchBarPlacementConfiguration         = 'notConfigured'
-                            SystemUpdateWindowEndMinutesAfterMidnight                = 25
-                            PasswordMinimumLetterCharacters                          = 25
-                            KioskModeVirtualHomeButtonType                           = 'notConfigured'
-                            CellularBlockWiFiTethering                               = $True
-                            EnrollmentProfile                                        = 'notConfigured'
-                            PasswordSignInFailureCountBeforeFactoryReset             = 25
-                            PasswordMinimumNonLetterCharacters                       = 25
-                            UsersBlockRemove                                         = $True
+                        )
+                        BluetoothBlockConfiguration                              = $True
+                        DeviceOwnerLockScreenMessage                             = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
                         }
+                        MicrosoftLauncherDockPresenceAllowUserModification       = $True
+                        GlobalProxy                                              = @{
+                            '@odata.type'      = '#microsoft.graph.androidDeviceOwnerGlobalProxyAutoConfig'
+                            proxyAutoConfigURL = 'FakeStringValue'
+                        }
+                        KioskModeExitCode                                        = 'FakeStringValue'
+                        CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $True
+                        StorageAllowUsb                                          = $True
+                        AppsDefaultPermissionPolicy                              = 'deviceDefault'
+                        AccountsBlockModification                                = $True
+                        KioskModeShowDeviceInfo                                  = $True
+                        KioskModeScreenSaverDetectMediaDisabled                  = $True
+                        PersonalProfileCameraBlocked                             = $True
+                        WifiBlockEditConfigurations                              = $True
+                        KioskModeScreenSaverImageUrl                             = 'FakeStringValue'
+                        GoogleAccountsBlocked                                    = $True
+                        KioskModeScreenSaverDisplayTimeInSeconds                 = 25
+                        MicrophoneForceMute                                      = $True
+                        PasswordMinimumNumericCharacters                         = 25
+                        CrossProfilePoliciesAllowDataSharing                     = 'notConfigured'
+                        DetailedHelpText                                         = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
+                        }
+                        WorkProfilePasswordMinimumLength                         = 25
+                        KioskModeManagedHomeScreenPinComplexity                  = 'notConfigured'
+                        PasswordMinimumUpperCaseCharacters                       = 25
+                        KioskModeFolderIcon                                      = 'notConfigured'
+                        KioskModeScreenSaverStartDelayInSeconds                  = 25
+                        MicrosoftLauncherCustomWallpaperAllowUserModification    = $True
+                        KioskModeAppOrderEnabled                                 = $True
+                        KioskModeVirtualHomeButtonEnabled                        = $True
+                        MicrosoftLauncherFeedEnabled                             = $True
+                        BluetoothBlockContactSharing                             = $True
+                        SecurityCommonCriteriaModeEnabled                        = $True
+                        KioskModeGridWidth                                       = 25
+                        PersonalProfilePlayStoreMode                             = 'notConfigured'
+                        KioskCustomizationStatusBar                              = 'notConfigured'
+                        KioskModeWallpaperUrl                                    = 'FakeStringValue'
+                        NetworkEscapeHatchAllowed                                = $True
+                        KioskModeFlashlightConfigurationEnabled                  = $True
+                        VpnAlwaysOnLockdownMode                                  = $True
+                        StatusBarBlocked                                         = $True
+                        SystemUpdateWindowStartMinutesAfterMidnight              = 25
+                        SecurityRequireVerifyApps                                = $True
+                        KioskModeManagedHomeScreenSignInBrandingLogo             = 'FakeStringValue'
+                        KioskModeDebugMenuEasyAccessEnabled                      = $True
+                        WifiBlockEditPolicyDefinedConfigurations                 = $True
+                        PasswordMinimumSymbolCharacters                          = 25
+                        KioskModeScreenOrientation                               = 'notConfigured'
+                        PersonalProfileAppsAllowInstallFromUnknownSources        = $True
+                        CameraBlocked                                            = $True
+                        WorkProfilePasswordMinimumSymbolCharacters               = 25
+                        KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = 25
+                        WorkProfilePasswordRequiredType                          = 'deviceDefault'
+                        CertificateCredentialConfigurationDisabled               = $True
+                        KioskCustomizationSystemNavigation                       = 'notConfigured'
+                        WorkProfilePasswordExpirationDays                        = 25
+                        WorkProfilePasswordMinimumLetterCharacters               = 25
+                        KioskCustomizationSystemErrorWarnings                    = $True
+                        WorkProfilePasswordMinimumNumericCharacters              = 25
+                        PasswordMinimumLength                                    = 25
+                        KioskModeWiFiConfigurationEnabled                        = $True
+                        PasswordMinimumLowerCaseCharacters                       = 25
+                        StorageBlockUsbFileTransfer                              = $True
+                        WorkProfilePasswordPreviousPasswordCountToBlock          = 25
+                        AppsAllowInstallFromUnknownSources                       = $True
+                        PersonalProfileScreenCaptureBlocked                      = $True
+                        KioskCustomizationPowerButtonActionsBlocked              = $True
+                        KioskModeManagedSettingsEntryDisabled                    = $True
+                        MicrosoftLauncherCustomWallpaperImageUrl                 = 'FakeStringValue'
+                        KioskModeAppsInFolderOrderedByName                       = $True
+                        DataRoamingBlocked                                       = $True
+                        MicrosoftLauncherCustomWallpaperEnabled                  = $True
+                        KioskCustomizationDeviceSettingsBlocked                  = $True
+                        UsersBlockAdd                                            = $True
+                        PasswordMinutesOfInactivityBeforeScreenTimeout           = 25
+                        AppsRecommendSkippingFirstUseHints                       = $True
+                        PasswordRequiredType                                     = 'deviceDefault'
+                        KioskModeManagedHomeScreenSignInEnabled                  = $True
+                        DateTimeConfigurationBlocked                             = $True
+                        KioskModeManagedHomeScreenSignInBackground               = 'FakeStringValue'
+                        FactoryResetBlocked                                      = $True
+                        KioskModeLockHomeScreen                                  = $True
+                        KioskModeShowAppNotificationBadge                        = $True
+                        SystemWindowsBlocked                                     = $True
+                        KioskModeAppPositions                                    = @()
+                        AzureAdSharedDeviceDataClearApps                         = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        PlayStoreMode                                            = 'notConfigured'
+                        WorkProfilePasswordMinimumUpperCaseCharacters            = 25
+                        PasswordPreviousPasswordCountToBlock                     = 25
+                        SystemUpdateInstallType                                  = 'deviceDefault'
+                        SecurityDeveloperSettingsEnabled                         = $True
+                        MicrosoftLauncherConfigurationEnabled                    = $True
+                        MicrosoftLauncherFeedAllowUserModification               = $True
+                        KioskModeGridHeight                                      = 25
+                        PasswordExpirationDays                                   = 25
+                        WorkProfilePasswordMinimumNonLetterCharacters            = 25
+                        WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = 25
+                        KioskModeManagedFolders                                  = @()
+                        ShortHelpText                                            = @{
+                            defaultMessage    = 'FakeStringValue'
+                            localizedMessages = @()
+                        }
+                        KioskModeIconSize                                        = 'notConfigured'
+                        AppsAutoUpdatePolicy                                     = 'notConfigured'
+                        KioskModeScreenSaverConfigurationEnabled                 = $True
+                        PasswordRequireUnlock                                    = 'deviceDefault'
+                        MicrosoftLauncherDockPresenceConfiguration               = 'notConfigured'
+                        KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = 25
+                        VpnAlwaysOnPackageIdentifier                             = 'FakeStringValue'
+                        CrossProfilePoliciesAllowCopyPaste                       = $True
+                        KioskModeApps                                            = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        KioskModeManagedHomeScreenAutoSignout                    = $True
+                        KioskModeUseManagedHomeScreenApp                         = 'notConfigured'
+                        KioskModeManagedHomeScreenPinRequiredToResume            = $True
+                        NfcBlockOutgoingBeam                                     = $True
+                        '@odata.type'                                            = '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration'
+                        PersonalProfilePersonalApplications                      = @(
+                            @{
+                                name          = 'FakeStringValue'
+                                appId         = 'FakeStringValue'
+                                appStoreUrl   = 'FakeStringValue'
+                                '@odata.type' = '#microsoft.graph.appleAppListItem'
+                                publisher     = 'FakeStringValue'
+                            }
+                        )
+                        PasswordBlockKeyguard                                    = $True
+                        MicrosoftLauncherSearchBarPlacementConfiguration         = 'notConfigured'
+                        SystemUpdateWindowEndMinutesAfterMidnight                = 25
+                        PasswordMinimumLetterCharacters                          = 25
+                        KioskModeVirtualHomeButtonType                           = 'notConfigured'
+                        CellularBlockWiFiTethering                               = $True
+                        EnrollmentProfile                                        = 'notConfigured'
+                        PasswordSignInFailureCountBeforeFactoryReset             = 25
+                        PasswordMinimumNonLetterCharacters                       = 25
+                        UsersBlockRemove                                         = $True
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'
                         Id                   = 'FakeStringValue'

@@ -300,6 +300,10 @@ function Get-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -658,12 +662,6 @@ function Get-TargetResource
             LocaleSettings                                 = $localeSettingsValue
             Priority                                       = $label.Priority
             Tooltip                                        = $label.Tooltip
-            Credential                                     = $Credential
-            ApplicationId                                  = $ApplicationId
-            TenantId                                       = $TenantId
-            CertificateThumbprint                          = $CertificateThumbprint
-            CertificatePath                                = $CertificatePath
-            CertificatePassword                            = $CertificatePassword
             Ensure                                         = 'Present'
             ApplyContentMarkingFooterAlignment             = ($footer | Where-Object { $_.Key -eq 'alignment' }).Value
             ApplyContentMarkingFooterEnabled               = $footerEnabledValue
@@ -683,6 +681,7 @@ function Get-TargetResource
             ApplyWaterMarkingFontSize                      = ($watermark | Where-Object { $_.Key -eq 'fontsize' }).Value
             ApplyWaterMarkingLayout                        = ($watermark | Where-Object { $_.Key -eq 'layout' }).Value
             ApplyWaterMarkingText                          = $ApplyWaterMarkingTextValue
+            AutoLabelingSettings                           = $getConditions
             ContentType                                    = $currentContentType
             EncryptionContentExpiredOnDateInDaysOrNever    = $contentExpiredOnDateValue
             EncryptionDoNotForward                         = $encryptionDoNotForwardValue
@@ -701,8 +700,14 @@ function Get-TargetResource
             SiteAndGroupProtectionBlockAccess              = $siteAndGroupBlockAccess
             SiteAndGroupProtectionEnabled                  = $siteAndGroupEnabledValue
             SiteAndGroupExternalSharingControlType         = ($protectsite | Where-Object { $_.Key -eq 'externalsharingcontroltype' }).Value
+            Credential                                     = $Credential
+            ApplicationId                                  = $ApplicationId
+            TenantId                                       = $TenantId
+            CertificateThumbprint                          = $CertificateThumbprint
+            CertificatePath                                = $CertificatePath
+            CertificatePassword                            = $CertificatePassword
+            ManagedIdentity                                = $ManagedIdentity.IsPresent
             AccessTokens                                   = $AccessTokens
-            AutoLabelingSettings                           = $getConditions
         }
 
         return $result
@@ -935,6 +940,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -1468,6 +1477,10 @@ function Test-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -1566,6 +1579,10 @@ function Export-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -2106,7 +2123,6 @@ function Test-AutoLabelingSettings
                 $null = $driftedSetting.Add("Parameter 'confidencelevel' does not match for Sensitive Information Type '$($sensitiveinfotype.name)' in group '$($group.Name)'. Current: '$($currentSensitiveInfoType.confidencelevel)'. Desired: '$($sensitiveinfotype.confidencelevel)'.")
                 $foundSettings = $false
             }
-
 
             if ($sensitiveinfotype.ContainsKey('classifiertype') -and $sensitiveinfotype.classifiertype -ne $currentSensitiveInfoType.classifiertype)
             {

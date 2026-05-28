@@ -35,6 +35,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -86,6 +94,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -135,6 +145,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -273,6 +291,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -324,6 +350,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -383,6 +417,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -457,22 +493,21 @@ function Get-MicrosoftGraphNetworkAccessForwardingPolicyRules
     foreach ($rule in $PolicyRules)
     {
         [System.String[]]$destinations = @()
-        foreach ($destination in $rule.AdditionalProperties.destinations)
+        foreach ($destination in $rule.destinations)
         {
             $destinations += $destination.value
         }
         $newPolicyRules += [ordered]@{
             Name         = $rule.Name
-            ActionValue  = $rule.AdditionalProperties.action
-            RuleType     = $rule.AdditionalProperties.ruleType
-            Ports        = [System.Int32[]]$rule.AdditionalProperties.ports
-            Protocol     = $rule.AdditionalProperties.protocol
+            ActionValue  = $rule.action
+            RuleType     = $rule.ruleType
+            Ports        = [System.Int32[]]$rule.ports
+            Protocol     = $rule.protocol
             Destinations = $destinations
         }
     }
 
     ,$newPolicyRules
 }
-
 
 Export-ModuleMember -Function *-TargetResource

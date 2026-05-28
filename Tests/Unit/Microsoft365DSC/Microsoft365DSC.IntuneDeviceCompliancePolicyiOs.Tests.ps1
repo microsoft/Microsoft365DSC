@@ -44,24 +44,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName          = 'Test iOS Device Compliance Policy'
                     Description          = 'Test iOS Device Compliance Policy Description'
                     Id                   = '9c4e2ed7-706e-4874-a826-0c2778352d45'
-                    AdditionalProperties = @{
-                        PasscodeBlockSimple                         = $True
-                        PasscodeExpirationDays                      = 365
-                        PasscodeMinimumLength                       = 6
-                        PasscodeMinutesOfInactivityBeforeLock       = 5
-                        PasscodePreviousPasscodeBlockCount          = 3
-                        PasscodeMinimumCharacterSetCount            = 2
-                        PasscodeRequiredType                        = 'numeric'
-                        PasscodeRequired                            = $True
-                        OsMinimumVersion                            = 10
-                        OsMaximumVersion                            = 12
-                        SecurityBlockJailbrokenDevices              = $True
-                        DeviceThreatProtectionEnabled               = $True
-                        DeviceThreatProtectionRequiredSecurityLevel = 'medium'
-                        ManagedEmailProfileRequired                 = $True
-                        RoleScopeTagIds                             = '0'
-                        '@odata.type'                               = '#microsoft.graph.iosCompliancePolicy'
-                    }
+                    PasscodeBlockSimple                         = $True
+                    PasscodeExpirationDays                      = 365
+                    PasscodeMinimumLength                       = 6
+                    PasscodeMinutesOfInactivityBeforeLock       = 5
+                    PasscodePreviousPasscodeBlockCount          = 3
+                    PasscodeMinimumCharacterSetCount            = 2
+                    PasscodeRequiredType                        = 'numeric'
+                    PasscodeRequired                            = $True
+                    OsMinimumVersion                            = 10
+                    OsMaximumVersion                            = 12
+                    SecurityBlockJailbrokenDevices              = $True
+                    DeviceThreatProtectionEnabled               = $True
+                    DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+                    ManagedEmailProfileRequired                 = $True
+                    RoleScopeTagIds                             = '0'
+                    '@odata.type'                               = '#microsoft.graph.iosCompliancePolicy'
                 }
             }
 
@@ -215,7 +213,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

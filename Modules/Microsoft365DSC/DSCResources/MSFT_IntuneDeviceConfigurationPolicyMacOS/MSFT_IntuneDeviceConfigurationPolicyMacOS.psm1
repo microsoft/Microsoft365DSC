@@ -299,6 +299,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -340,11 +348,7 @@ function Get-TargetResource
             #region resource generator code
             if ($null -eq $getValue)
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSGeneralDeviceConfiguration' `
-                }
-
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")' and isof('microsoft.graph.macOSGeneralDeviceConfiguration')" -ErrorAction SilentlyContinue
             }
             #endregion
 
@@ -360,9 +364,9 @@ function Get-TargetResource
         }
 
         $updateDelayPolicyValue = @()
-        if (-not [System.String]::IsNullOrEmpty($getValue.AdditionalProperties.updateDelayPolicy))
+        if (-not [System.String]::IsNullOrEmpty($getValue.updateDelayPolicy))
         {
-            foreach ($policy in ($getValue.AdditionalProperties.updateDelayPolicy -split "," | Where-Object { -not [System.String]::IsNullOrEmpty($_) }))
+            foreach ($policy in ($getValue.updateDelayPolicy -split "," | Where-Object { -not [System.String]::IsNullOrEmpty($_) }))
             {
                 $updateDelayPolicyValue += $policy
             }
@@ -376,79 +380,81 @@ function Get-TargetResource
             Description                                     = $getValue.Description
             DisplayName                                     = $getValue.DisplayName
             RoleScopeTagIds                                 = $getValue.RoleScopeTagIds
-            AddingGameCenterFriendsBlocked                  = $getValue.AdditionalProperties.addingGameCenterFriendsBlocked
-            AirDropBlocked                                  = $getValue.AdditionalProperties.airDropBlocked
-            AppleWatchBlockAutoUnlock                       = $getValue.AdditionalProperties.appleWatchBlockAutoUnlock
-            CameraBlocked                                   = $getValue.AdditionalProperties.cameraBlocked
-            ClassroomAppBlockRemoteScreenObservation        = $getValue.AdditionalProperties.classroomAppBlockRemoteScreenObservation
-            ClassroomAppForceUnpromptedScreenObservation    = $getValue.AdditionalProperties.classroomAppForceUnpromptedScreenObservation
-            ClassroomForceAutomaticallyJoinClasses          = $getValue.AdditionalProperties.classroomForceAutomaticallyJoinClasses
-            ClassroomForceRequestPermissionToLeaveClasses   = $getValue.AdditionalProperties.classroomForceRequestPermissionToLeaveClasses
-            ClassroomForceUnpromptedAppAndDeviceLock        = $getValue.AdditionalProperties.classroomForceUnpromptedAppAndDeviceLock
-            CompliantAppListType                            = $getValue.AdditionalProperties.compliantAppListType
-            ContentCachingBlocked                           = $getValue.AdditionalProperties.contentCachingBlocked
-            DefinitionLookupBlocked                         = $getValue.AdditionalProperties.definitionLookupBlocked
-            EmailInDomainSuffixes                           = $getValue.AdditionalProperties.emailInDomainSuffixes
-            EraseContentAndSettingsBlocked                  = $getValue.AdditionalProperties.eraseContentAndSettingsBlocked
-            GameCenterBlocked                               = $getValue.AdditionalProperties.gameCenterBlocked
-            ICloudBlockActivityContinuation                 = $getValue.AdditionalProperties.iCloudBlockActivityContinuation
-            ICloudBlockAddressBook                          = $getValue.AdditionalProperties.iCloudBlockAddressBook
-            ICloudBlockBookmarks                            = $getValue.AdditionalProperties.iCloudBlockBookmarks
-            ICloudBlockCalendar                             = $getValue.AdditionalProperties.iCloudBlockCalendar
-            ICloudBlockDocumentSync                         = $getValue.AdditionalProperties.iCloudBlockDocumentSync
-            ICloudBlockMail                                 = $getValue.AdditionalProperties.iCloudBlockMail
-            ICloudBlockNotes                                = $getValue.AdditionalProperties.iCloudBlockNotes
-            ICloudBlockPhotoLibrary                         = $getValue.AdditionalProperties.iCloudBlockPhotoLibrary
-            ICloudBlockReminders                            = $getValue.AdditionalProperties.iCloudBlockReminders
-            ICloudDesktopAndDocumentsBlocked                = $getValue.AdditionalProperties.iCloudDesktopAndDocumentsBlocked
-            ICloudPrivateRelayBlocked                       = $getValue.AdditionalProperties.iCloudPrivateRelayBlocked
-            ITunesBlockFileSharing                          = $getValue.AdditionalProperties.iTunesBlockFileSharing
-            ITunesBlockMusicService                         = $getValue.AdditionalProperties.iTunesBlockMusicService
-            KeyboardBlockDictation                          = $getValue.AdditionalProperties.keyboardBlockDictation
-            KeychainBlockCloudSync                          = $getValue.AdditionalProperties.keychainBlockCloudSync
-            MultiplayerGamingBlocked                        = $getValue.AdditionalProperties.multiplayerGamingBlocked
-            PasswordBlockAirDropSharing                     = $getValue.AdditionalProperties.passwordBlockAirDropSharing
-            PasswordBlockAutoFill                           = $getValue.AdditionalProperties.passwordBlockAutoFill
-            PasswordBlockFingerprintUnlock                  = $getValue.AdditionalProperties.passwordBlockFingerprintUnlock
-            PasswordBlockModification                       = $getValue.AdditionalProperties.passwordBlockModification
-            PasswordBlockProximityRequests                  = $getValue.AdditionalProperties.passwordBlockProximityRequests
-            PasswordBlockSimple                             = $getValue.AdditionalProperties.passwordBlockSimple
-            PasswordExpirationDays                          = $getValue.AdditionalProperties.passwordExpirationDays
-            PasswordMaximumAttemptCount                     = $getValue.AdditionalProperties.passwordMaximumAttemptCount
-            PasswordMinimumCharacterSetCount                = $getValue.AdditionalProperties.passwordMinimumCharacterSetCount
-            PasswordMinimumLength                           = $getValue.AdditionalProperties.passwordMinimumLength
-            PasswordMinutesOfInactivityBeforeLock           = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeLock
-            PasswordMinutesOfInactivityBeforeScreenTimeout  = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
-            PasswordMinutesUntilFailedLoginReset            = $getValue.AdditionalProperties.passwordMinutesUntilFailedLoginReset
-            PasswordPreviousPasswordBlockCount              = $getValue.AdditionalProperties.passwordPreviousPasswordBlockCount
-            PasswordRequired                                = $getValue.AdditionalProperties.passwordRequired
-            PasswordRequiredType                            = $getValue.AdditionalProperties.passwordRequiredType
-            SafariBlockAutofill                             = $getValue.AdditionalProperties.safariBlockAutofill
-            ScreenCaptureBlocked                            = $getValue.AdditionalProperties.screenCaptureBlocked
-            SoftwareUpdateMajorOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateMajorOSDeferredInstallDelayInDays
-            SoftwareUpdateMinorOSDeferredInstallDelayInDays = $getValue.AdditionalProperties.softwareUpdateMinorOSDeferredInstallDelayInDays
-            SoftwareUpdateNonOSDeferredInstallDelayInDays   = $getValue.AdditionalProperties.softwareUpdateNonOSDeferredInstallDelayInDays
-            SoftwareUpdatesEnforcedDelayInDays              = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays
-            SpotlightBlockInternetResults                   = $getValue.AdditionalProperties.spotlightBlockInternetResults
-            TouchIdTimeoutInHours                           = $getValue.AdditionalProperties.touchIdTimeoutInHours
+            AddingGameCenterFriendsBlocked                  = $getValue.addingGameCenterFriendsBlocked
+            AirDropBlocked                                  = $getValue.airDropBlocked
+            AppleWatchBlockAutoUnlock                       = $getValue.appleWatchBlockAutoUnlock
+            CameraBlocked                                   = $getValue.cameraBlocked
+            ClassroomAppBlockRemoteScreenObservation        = $getValue.classroomAppBlockRemoteScreenObservation
+            ClassroomAppForceUnpromptedScreenObservation    = $getValue.classroomAppForceUnpromptedScreenObservation
+            ClassroomForceAutomaticallyJoinClasses          = $getValue.classroomForceAutomaticallyJoinClasses
+            ClassroomForceRequestPermissionToLeaveClasses   = $getValue.classroomForceRequestPermissionToLeaveClasses
+            ClassroomForceUnpromptedAppAndDeviceLock        = $getValue.classroomForceUnpromptedAppAndDeviceLock
+            CompliantAppListType                            = $getValue.compliantAppListType
+            ContentCachingBlocked                           = $getValue.contentCachingBlocked
+            DefinitionLookupBlocked                         = $getValue.definitionLookupBlocked
+            EmailInDomainSuffixes                           = $getValue.emailInDomainSuffixes
+            EraseContentAndSettingsBlocked                  = $getValue.eraseContentAndSettingsBlocked
+            GameCenterBlocked                               = $getValue.gameCenterBlocked
+            ICloudBlockActivityContinuation                 = $getValue.iCloudBlockActivityContinuation
+            ICloudBlockAddressBook                          = $getValue.iCloudBlockAddressBook
+            ICloudBlockBookmarks                            = $getValue.iCloudBlockBookmarks
+            ICloudBlockCalendar                             = $getValue.iCloudBlockCalendar
+            ICloudBlockDocumentSync                         = $getValue.iCloudBlockDocumentSync
+            ICloudBlockMail                                 = $getValue.iCloudBlockMail
+            ICloudBlockNotes                                = $getValue.iCloudBlockNotes
+            ICloudBlockPhotoLibrary                         = $getValue.iCloudBlockPhotoLibrary
+            ICloudBlockReminders                            = $getValue.iCloudBlockReminders
+            ICloudDesktopAndDocumentsBlocked                = $getValue.iCloudDesktopAndDocumentsBlocked
+            ICloudPrivateRelayBlocked                       = $getValue.iCloudPrivateRelayBlocked
+            ITunesBlockFileSharing                          = $getValue.iTunesBlockFileSharing
+            ITunesBlockMusicService                         = $getValue.iTunesBlockMusicService
+            KeyboardBlockDictation                          = $getValue.keyboardBlockDictation
+            KeychainBlockCloudSync                          = $getValue.keychainBlockCloudSync
+            MultiplayerGamingBlocked                        = $getValue.multiplayerGamingBlocked
+            PasswordBlockAirDropSharing                     = $getValue.passwordBlockAirDropSharing
+            PasswordBlockAutoFill                           = $getValue.passwordBlockAutoFill
+            PasswordBlockFingerprintUnlock                  = $getValue.passwordBlockFingerprintUnlock
+            PasswordBlockModification                       = $getValue.passwordBlockModification
+            PasswordBlockProximityRequests                  = $getValue.passwordBlockProximityRequests
+            PasswordBlockSimple                             = $getValue.passwordBlockSimple
+            PasswordExpirationDays                          = $getValue.passwordExpirationDays
+            PasswordMaximumAttemptCount                     = $getValue.passwordMaximumAttemptCount
+            PasswordMinimumCharacterSetCount                = $getValue.passwordMinimumCharacterSetCount
+            PasswordMinimumLength                           = $getValue.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeLock           = $getValue.passwordMinutesOfInactivityBeforeLock
+            PasswordMinutesOfInactivityBeforeScreenTimeout  = $getValue.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordMinutesUntilFailedLoginReset            = $getValue.passwordMinutesUntilFailedLoginReset
+            PasswordPreviousPasswordBlockCount              = $getValue.passwordPreviousPasswordBlockCount
+            PasswordRequired                                = $getValue.passwordRequired
+            PasswordRequiredType                            = $getValue.passwordRequiredType
+            SafariBlockAutofill                             = $getValue.safariBlockAutofill
+            ScreenCaptureBlocked                            = $getValue.screenCaptureBlocked
+            SoftwareUpdateMajorOSDeferredInstallDelayInDays = $getValue.softwareUpdateMajorOSDeferredInstallDelayInDays
+            SoftwareUpdateMinorOSDeferredInstallDelayInDays = $getValue.softwareUpdateMinorOSDeferredInstallDelayInDays
+            SoftwareUpdateNonOSDeferredInstallDelayInDays   = $getValue.softwareUpdateNonOSDeferredInstallDelayInDays
+            SoftwareUpdatesEnforcedDelayInDays              = $getValue.softwareUpdatesEnforcedDelayInDays
+            SpotlightBlockInternetResults                   = $getValue.spotlightBlockInternetResults
+            TouchIdTimeoutInHours                           = $getValue.touchIdTimeoutInHours
             UpdateDelayPolicy                               = $updateDelayPolicyValue
-            WallpaperModificationBlocked                    = $getValue.AdditionalProperties.wallpaperModificationBlocked
+            WallpaperModificationBlocked                    = $getValue.wallpaperModificationBlocked
             Ensure                                          = 'Present'
             Credential                                      = $Credential
             ApplicationId                                   = $ApplicationId
             TenantId                                        = $TenantId
             ApplicationSecret                               = $ApplicationSecret
             CertificateThumbprint                           = $CertificateThumbprint
+            CertificatePath                                 = $CertificatePath
+            CertificatePassword                             = $CertificatePassword
             ManagedIdentity                                 = $ManagedIdentity.IsPresent
             AccessTokens                                    = $AccessTokens
         }
-        if ($getValue.additionalProperties.compliantAppsList)
+        if ($getValue.compliantAppsList)
         {
-            $results.Add('CompliantAppsList', $getValue.additionalProperties.compliantAppsList)
+            $results.Add('CompliantAppsList', $getValue.compliantAppsList)
         }
-        if ($getValue.additionalProperties.privacyAccessControls)
+        if ($getValue.privacyAccessControls)
         {
-            $results.Add('PrivacyAccessControls', $getValue.additionalProperties.privacyAccessControls)
+            $results.Add('PrivacyAccessControls', $getValue.privacyAccessControls)
         }
 
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
@@ -767,6 +773,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -809,11 +823,6 @@ function Set-TargetResource
         $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $CreateParameters
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
-
-        <#if ($AdditionalProperties)
-        {
-            $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
-        }#>
         $CreateParameters.Add('@odata.type', '#microsoft.graph.macOSGeneralDeviceConfiguration')
 
         #region resource generator code
@@ -1154,6 +1163,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1207,6 +1224,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1233,11 +1258,16 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.macOS*' `
+        $baseFilter = "isof('microsoft.graph.macOSGeneralDeviceConfiguration')"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -1267,6 +1297,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

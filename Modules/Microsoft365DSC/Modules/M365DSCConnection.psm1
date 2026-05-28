@@ -1,7 +1,5 @@
 [hashtable]$Script:M365DSCTelemetryConnectionToGraphParams = @{}
 
-Initialize-M365DSCDllLoader -ErrorAction SilentlyContinue
-
 <#
 .DESCRIPTION
     This function gets all resources that support the specified authentication method and
@@ -13,7 +11,7 @@ Initialize-M365DSCDllLoader -ErrorAction SilentlyContinue
 function Get-M365DSCComponentsWithMostSecureAuthenticationType
 {
     [CmdletBinding()]
-        [OutputType([System.Collections.Generic.List[System.Collections.Hashtable]])]
+    [OutputType([System.Collections.Generic.List[System.Collections.Hashtable]])]
     param
     (
         [Parameter()]
@@ -25,6 +23,8 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
         [System.String[]]
         $Resources
     )
+
+    Initialize-M365DSCDllLoader -ErrorAction Stop
 
     $dscResourcesPath = Join-Path -Path $PSScriptRoot -ChildPath '../DSCResources'
     return [Microsoft365DSC.Connection.ConnectionHelper]::GetComponentsWithMostSecureAuthenticationType(

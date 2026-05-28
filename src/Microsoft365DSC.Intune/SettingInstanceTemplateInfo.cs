@@ -13,9 +13,6 @@ namespace Microsoft365DSC.Intune
     ///
     /// The PowerShell code accesses these as <c>$settingTemplate.SettingInstanceTemplate</c> objects
     /// returned by <c>Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate</c>.
-    ///
-    /// Key properties live in <c>AdditionalProperties</c> on Graph SDK objects, requiring reflection
-    /// to access. This model normalizes the data at the boundary layer.
     /// </summary>
     public class SettingInstanceTemplateInfo
     {
@@ -27,7 +24,7 @@ namespace Microsoft365DSC.Intune
 
         /// <summary>
         /// The OData type of the instance template (e.g., <c>#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate</c>).
-        /// Extracted from <c>AdditionalProperties['@odata.type']</c>.
+        /// Extracted from <c>'@odata.type'</c>.
         /// </summary>
         public string ODataType { get; set; }
 
@@ -93,7 +90,7 @@ namespace Microsoft365DSC.Intune
         /// True for root-level templates where OData type and value templates are in AdditionalProperties.
         /// False for child templates where data is at the top level.
         /// </param>
-        public static SettingInstanceTemplateInfo FromGraphObject(object template, bool isRoot = true)
+        public static SettingInstanceTemplateInfo FromGraphObject(object template)
         {
             if (template is null)
                 return null;
@@ -103,9 +100,7 @@ namespace Microsoft365DSC.Intune
                 SettingDefinitionId = SettingDefinitionMapper.TryGetProperty(template, "settingDefinitionId"),
                 SettingInstanceTemplateId = SettingDefinitionMapper.TryGetProperty(template, "settingInstanceTemplateId"),
                 // Extract OData type
-                ODataType = isRoot
-                    ? GetAdditionalPropertyString(template, "@odata.type")
-                    : SettingDefinitionMapper.TryGetProperty(template, "@odata.type")
+                ODataType = SettingDefinitionMapper.TryGetProperty(template, "@odata.type")
             };
 
             if (string.IsNullOrEmpty(info.ODataType))
@@ -125,9 +120,7 @@ namespace Microsoft365DSC.Intune
             string valueTemplateKey = settingValueName + "Template";
 
             // Extract the value template object
-            object valueTemplateRaw = isRoot
-                ? GetAdditionalPropertyRaw(template, valueTemplateKey)
-                : SettingDefinitionMapper.TryGetPropertyRaw(template, valueTemplateKey);
+            object valueTemplateRaw = SettingDefinitionMapper.TryGetPropertyRaw(template, valueTemplateKey);
 
             // Collection types (GroupSettingCollection, SimpleSettingCollection, ChoiceSettingCollection)
             // return an array of value templates. Unwrap to the first element which defines the repeating structure.
@@ -171,7 +164,7 @@ namespace Microsoft365DSC.Intune
                 {
                     foreach (var child in childrenRaw)
                     {
-                        var childInfo = FromGraphObject(child, false);
+                        var childInfo = FromGraphObject(child);
                         if (childInfo is not null)
                         {
                             info.Children.Add(childInfo);
@@ -189,58 +182,6 @@ namespace Microsoft365DSC.Intune
             return info;
         }
 
-        #region AdditionalProperties access for root templates
-
-        private static string GetAdditionalPropertyString(object obj, string key)
-        {
-            return GetAdditionalPropertyRaw(obj, key)?.ToString();
-        }
-
-        private static object GetAdditionalPropertyRaw(object obj, string key)
-        {
-            if (obj is null)
-                return null;
-
-            if (obj is PSObject psobject)
-                obj = psobject.BaseObject;
-
-            // Hashtable: look for AdditionalProperties sub-dictionary
-            if (obj is Hashtable ht)
-            {
-                if (ht.ContainsKey("AdditionalProperties"))
-                {
-                    var ap = ht["AdditionalProperties"];
-                    if (ap is IDictionary<string, object> apDict && apDict.TryGetValue(key, out object val))
-                        return val;
-                    if (ap is Hashtable apHt && apHt.ContainsKey(key))
-                        return apHt[key];
-                }
-                // Flattened hashtable fallback
-                return ht.ContainsKey(key) ? ht[key] : null;
-            }
-
-            // Graph SDK object: use reflection for NonPublic AdditionalProperties
-            try
-            {
-                var propertyInfos = obj.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance);
-                var apProp = propertyInfos
-                    .FirstOrDefault(p => p.Name.IndexOf("AdditionalProperties", StringComparison.OrdinalIgnoreCase) >= 0);
-                if (apProp is not null)
-                {
-                    var apValue = apProp.GetValue(obj);
-                    if (apValue is IDictionary<string, object> apDict && apDict.TryGetValue(key, out object val))
-                        return val;
-                }
-            }
-            catch
-            {
-                // Reflection failed
-            }
-
-            return null;
-        }
-
-        #endregion
     }
 
     /// <summary>
@@ -264,7 +205,7 @@ namespace Microsoft365DSC.Intune
             var instanceTemplateRaw = SettingDefinitionMapper.TryGetPropertyRaw(settingTemplate, "SettingInstanceTemplate");
             if (instanceTemplateRaw is not null)
             {
-                info.SettingInstanceTemplate = SettingInstanceTemplateMapper.FromGraphObject(instanceTemplateRaw, true);
+                info.SettingInstanceTemplate = SettingInstanceTemplateMapper.FromGraphObject(instanceTemplateRaw);
             }
 
             // Extract SettingDefinitions

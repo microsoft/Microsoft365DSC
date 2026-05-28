@@ -56,6 +56,10 @@ function Get-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -132,6 +136,9 @@ function Get-TargetResource
             ApplicationId                          = $ApplicationId
             TenantId                               = $TenantId
             CertificateThumbprint                  = $CertificateThumbprint
+            CertificatePath                        = $CertificatePath
+            CertificatePassword                    = $CertificatePassword
+            ManagedIdentity                        = $ManagedIdentity.IsPresent
             AccessTokens                           = $AccessTokens
         }
     }
@@ -202,6 +209,10 @@ function Set-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -233,7 +244,6 @@ function Set-TargetResource
 
     #region Item Insights
     $ItemInsightsUpdateParams = @{
-        OrganizationId          = $TenantId
         IsEnabledInOrganization = $ItemInsightsIsEnabledInOrganization
     }
     if ($PSBoundParameters.ContainsKey('ItemInsightsDisabledForGroup'))
@@ -255,13 +265,12 @@ function Set-TargetResource
         $ItemInsightsUpdateParams.Add('DisabledForGroup', $disabledForGroupValue)
     }
     Write-Verbose -Message 'Updating settings for Item Insights'
-    Update-MgBetaOrganizationSettingItemInsight @ItemInsightsUpdateParams | Out-Null
+    Update-MgBetaOrganizationSettingItemInsight -OrganizationId $TenantId -BodyParameter $ItemInsightsUpdateParams | Out-Null
     #endregion
 
     #region Person Insights
     $PersonInsightsUpdateParams = @{
-        OrganizationId          = $TenantId
-        IsEnabledInOrganization = $ItemInsightsIsEnabledInOrganization
+        IsEnabledInOrganization = $PersonInsightsIsEnabledInOrganization
     }
     if ($PSBoundParameters.ContainsKey('PersonInsightsDisabledForGroup'))
     {
@@ -283,7 +292,7 @@ function Set-TargetResource
     }
 
     Write-Verbose -Message 'Updating settings for Person Insights'
-    Update-MgBetaOrganizationSettingPersonInsight @PersonInsightsUpdateParams | Out-Null
+    Update-MgBetaOrganizationSettingPersonInsight -OrganizationId $TenantId -BodyParameter $PersonInsightsUpdateParams | Out-Null
     #endregion
 
     if ($null -ne $MeetingInsightsIsEnabledInOrganization)
@@ -348,6 +357,10 @@ function Test-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -397,6 +410,10 @@ function Export-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -426,10 +443,13 @@ function Export-TargetResource
         $Params = @{
             IsSingleInstance      = 'Yes'
             Credential            = $Credential
-            AccessTokens          = $AccessTokens
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params

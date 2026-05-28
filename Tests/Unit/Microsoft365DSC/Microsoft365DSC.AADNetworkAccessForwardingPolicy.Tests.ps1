@@ -50,31 +50,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PolicyRules = @(
                         @{
                             Name = "Custom policy internet rule"
-                            AdditionalProperties = @{
-                                ruleType = "fqdn"
-                                action   = "bypass"
-                                ports    = @(80,443)
-                                protocol = "tcp"
-                                destinations = @(
-                                    @{
-                                        value = "www.google.com"
-                                    }
-                                )
-                            }
+                            ruleType = "fqdn"
+                            action   = "bypass"
+                            ports    = @(80,443)
+                            protocol = "tcp"
+                            destinations = @(
+                                @{
+                                    value = "www.google.com"
+                                }
+                            )
                         },
                         @{
                             Name = "Custom policy internet rule"
-                            AdditionalProperties = @{
-                                ruleType = "ipSubnet"
-                                action   = "bypass"
-                                ports    = @(80,443)
-                                protocol = "tcp"
-                                destinations = @(
-                                    @{
-                                        value = "192.164.0.0/24"
-                                    }
-                                )
-                            }
+                            ruleType = "ipSubnet"
+                            action   = "bypass"
+                            ports    = @(80,443)
+                            protocol = "tcp"
+                            destinations = @(
+                                @{
+                                    value = "192.164.0.0/24"
+                                }
+                            )
                         }
                     )
                 }

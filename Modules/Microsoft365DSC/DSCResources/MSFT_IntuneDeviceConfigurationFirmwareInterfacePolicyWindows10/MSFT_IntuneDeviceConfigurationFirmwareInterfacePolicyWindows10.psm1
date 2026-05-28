@@ -159,6 +159,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -206,11 +214,8 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                         -All `
-                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
-                        -ErrorAction SilentlyContinue | Where-Object `
-                        -FilterScript {
-                            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10DeviceFirmwareConfigurationInterface' `
-                    }
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.windows10DeviceFirmwareConfigurationInterface')" `
+                        -ErrorAction SilentlyContinue
                 }
             }
             #endregion
@@ -229,129 +234,129 @@ function Get-TargetResource
 
         #region resource generator code
         $enumBluetooth = $null
-        if ($null -ne $getValue.AdditionalProperties.bluetooth)
+        if ($null -ne $getValue.bluetooth)
         {
-            $enumBluetooth = $getValue.AdditionalProperties.bluetooth.ToString()
+            $enumBluetooth = $getValue.bluetooth.ToString()
         }
 
         $enumBootFromBuiltInNetworkAdapters = $null
-        if ($null -ne $getValue.AdditionalProperties.bootFromBuiltInNetworkAdapters)
+        if ($null -ne $getValue.bootFromBuiltInNetworkAdapters)
         {
-            $enumBootFromBuiltInNetworkAdapters = $getValue.AdditionalProperties.bootFromBuiltInNetworkAdapters.ToString()
+            $enumBootFromBuiltInNetworkAdapters = $getValue.bootFromBuiltInNetworkAdapters.ToString()
         }
 
         $enumBootFromExternalMedia = $null
-        if ($null -ne $getValue.AdditionalProperties.bootFromExternalMedia)
+        if ($null -ne $getValue.bootFromExternalMedia)
         {
-            $enumBootFromExternalMedia = $getValue.AdditionalProperties.bootFromExternalMedia.ToString()
+            $enumBootFromExternalMedia = $getValue.bootFromExternalMedia.ToString()
         }
 
         $enumCameras = $null
-        if ($null -ne $getValue.AdditionalProperties.cameras)
+        if ($null -ne $getValue.cameras)
         {
-            $enumCameras = $getValue.AdditionalProperties.cameras.ToString()
+            $enumCameras = $getValue.cameras.ToString()
         }
 
         $enumChangeUefiSettingsPermission = $null
-        if ($null -ne $getValue.AdditionalProperties.changeUefiSettingsPermission)
+        if ($null -ne $getValue.changeUefiSettingsPermission)
         {
-            $enumChangeUefiSettingsPermission = $getValue.AdditionalProperties.changeUefiSettingsPermission.ToString()
+            $enumChangeUefiSettingsPermission = $getValue.changeUefiSettingsPermission.ToString()
         }
 
         $enumFrontCamera = $null
-        if ($null -ne $getValue.AdditionalProperties.frontCamera)
+        if ($null -ne $getValue.frontCamera)
         {
-            $enumFrontCamera = $getValue.AdditionalProperties.frontCamera.ToString()
+            $enumFrontCamera = $getValue.frontCamera.ToString()
         }
 
         $enumInfraredCamera = $null
-        if ($null -ne $getValue.AdditionalProperties.infraredCamera)
+        if ($null -ne $getValue.infraredCamera)
         {
-            $enumInfraredCamera = $getValue.AdditionalProperties.infraredCamera.ToString()
+            $enumInfraredCamera = $getValue.infraredCamera.ToString()
         }
 
         $enumMicrophone = $null
-        if ($null -ne $getValue.AdditionalProperties.microphone)
+        if ($null -ne $getValue.microphone)
         {
-            $enumMicrophone = $getValue.AdditionalProperties.microphone.ToString()
+            $enumMicrophone = $getValue.microphone.ToString()
         }
 
         $enumMicrophonesAndSpeakers = $null
-        if ($null -ne $getValue.AdditionalProperties.microphonesAndSpeakers)
+        if ($null -ne $getValue.microphonesAndSpeakers)
         {
-            $enumMicrophonesAndSpeakers = $getValue.AdditionalProperties.microphonesAndSpeakers.ToString()
+            $enumMicrophonesAndSpeakers = $getValue.microphonesAndSpeakers.ToString()
         }
 
         $enumNearFieldCommunication = $null
-        if ($null -ne $getValue.AdditionalProperties.nearFieldCommunication)
+        if ($null -ne $getValue.nearFieldCommunication)
         {
-            $enumNearFieldCommunication = $getValue.AdditionalProperties.nearFieldCommunication.ToString()
+            $enumNearFieldCommunication = $getValue.nearFieldCommunication.ToString()
         }
 
         $enumRadios = $null
-        if ($null -ne $getValue.AdditionalProperties.radios)
+        if ($null -ne $getValue.radios)
         {
-            $enumRadios = $getValue.AdditionalProperties.radios.ToString()
+            $enumRadios = $getValue.radios.ToString()
         }
 
         $enumRearCamera = $null
-        if ($null -ne $getValue.AdditionalProperties.rearCamera)
+        if ($null -ne $getValue.rearCamera)
         {
-            $enumRearCamera = $getValue.AdditionalProperties.rearCamera.ToString()
+            $enumRearCamera = $getValue.rearCamera.ToString()
         }
 
         $enumSdCard = $null
-        if ($null -ne $getValue.AdditionalProperties.sdCard)
+        if ($null -ne $getValue.sdCard)
         {
-            $enumSdCard = $getValue.AdditionalProperties.sdCard.ToString()
+            $enumSdCard = $getValue.sdCard.ToString()
         }
 
         $enumSimultaneousMultiThreading = $null
-        if ($null -ne $getValue.AdditionalProperties.simultaneousMultiThreading)
+        if ($null -ne $getValue.simultaneousMultiThreading)
         {
-            $enumSimultaneousMultiThreading = $getValue.AdditionalProperties.simultaneousMultiThreading.ToString()
+            $enumSimultaneousMultiThreading = $getValue.simultaneousMultiThreading.ToString()
         }
 
         $enumUsbTypeAPort = $null
-        if ($null -ne $getValue.AdditionalProperties.usbTypeAPort)
+        if ($null -ne $getValue.usbTypeAPort)
         {
-            $enumUsbTypeAPort = $getValue.AdditionalProperties.usbTypeAPort.ToString()
+            $enumUsbTypeAPort = $getValue.usbTypeAPort.ToString()
         }
 
         $enumVirtualizationOfCpuAndIO = $null
-        if ($null -ne $getValue.AdditionalProperties.virtualizationOfCpuAndIO)
+        if ($null -ne $getValue.virtualizationOfCpuAndIO)
         {
-            $enumVirtualizationOfCpuAndIO = $getValue.AdditionalProperties.virtualizationOfCpuAndIO.ToString()
+            $enumVirtualizationOfCpuAndIO = $getValue.virtualizationOfCpuAndIO.ToString()
         }
 
         $enumWakeOnLAN = $null
-        if ($null -ne $getValue.AdditionalProperties.wakeOnLAN)
+        if ($null -ne $getValue.wakeOnLAN)
         {
-            $enumWakeOnLAN = $getValue.AdditionalProperties.wakeOnLAN.ToString()
+            $enumWakeOnLAN = $getValue.wakeOnLAN.ToString()
         }
 
         $enumWakeOnPower = $null
-        if ($null -ne $getValue.AdditionalProperties.wakeOnPower)
+        if ($null -ne $getValue.wakeOnPower)
         {
-            $enumWakeOnPower = $getValue.AdditionalProperties.wakeOnPower.ToString()
+            $enumWakeOnPower = $getValue.wakeOnPower.ToString()
         }
 
         $enumWiFi = $null
-        if ($null -ne $getValue.AdditionalProperties.wiFi)
+        if ($null -ne $getValue.wiFi)
         {
-            $enumWiFi = $getValue.AdditionalProperties.wiFi.ToString()
+            $enumWiFi = $getValue.wiFi.ToString()
         }
 
         $enumWindowsPlatformBinaryTable = $null
-        if ($null -ne $getValue.AdditionalProperties.windowsPlatformBinaryTable)
+        if ($null -ne $getValue.windowsPlatformBinaryTable)
         {
-            $enumWindowsPlatformBinaryTable = $getValue.AdditionalProperties.windowsPlatformBinaryTable.ToString()
+            $enumWindowsPlatformBinaryTable = $getValue.windowsPlatformBinaryTable.ToString()
         }
 
         $enumWirelessWideAreaNetwork = $null
-        if ($null -ne $getValue.AdditionalProperties.wirelessWideAreaNetwork)
+        if ($null -ne $getValue.wirelessWideAreaNetwork)
         {
-            $enumWirelessWideAreaNetwork = $getValue.AdditionalProperties.wirelessWideAreaNetwork.ToString()
+            $enumWirelessWideAreaNetwork = $getValue.wirelessWideAreaNetwork.ToString()
         }
         #endregion
 
@@ -388,6 +393,8 @@ function Get-TargetResource
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
+            CertificatePath                = $CertificatePath
+            CertificatePassword            = $CertificatePassword
             ManagedIdentity                = $ManagedIdentity.IsPresent
             AccessTokens                   = $AccessTokens
             #endregion
@@ -572,6 +579,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -808,6 +823,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -861,6 +884,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -887,11 +918,16 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10DeviceFirmwareConfigurationInterface' `
+        $baseFilter = "isof('microsoft.graph.windows10DeviceFirmwareConfigurationInterface')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -926,6 +962,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

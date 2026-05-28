@@ -45,6 +45,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -92,6 +100,8 @@ function Get-TargetResource
             ApplicationId                               = $ApplicationId
             TenantId                                    = $TenantId
             CertificateThumbprint                       = $CertificateThumbprint
+            CertificatePath                             = $CertificatePath
+            CertificatePassword                         = $CertificatePassword
             ManagedIdentity                             = $ManagedIdentity.IsPresent
             AccessTokens                                = $AccessTokens
         }
@@ -153,6 +163,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -181,7 +199,7 @@ function Set-TargetResource
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $setParameters.Remove('IsSingleInstance') | Out-Null
     Write-Verbose -Message 'Updating B2C Authentication Methods Policy'
-    Update-MgBetaPolicyB2CAuthenticationMethodPolicy @setParameters
+    Update-MgBetaPolicyB2CAuthenticationMethodPolicy -BodyParameter $setParameters
 }
 
 function Test-TargetResource
@@ -227,6 +245,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -278,6 +304,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -310,6 +344,8 @@ function Export-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }

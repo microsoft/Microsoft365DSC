@@ -36,5 +36,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsAIPolicy",
+        "New-CsTeamsAIPolicy",
+        "Remove-CsTeamsAIPolicy",
+        "Set-CsTeamsAIPolicy"
+      ]
+    }
+  ]
 }

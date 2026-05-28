@@ -42,10 +42,9 @@
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement",
     "Microsoft.Graph.Beta.Devices.CorporateManagement",
-    "Microsoft.Graph.Groups",
-    "MSCloudLoginAssistant"
+    "Microsoft.Graph.Groups"
   ],
   "supportedEnvironments": [
     "Global",

@@ -24,12 +24,12 @@
         ]
       }
     },
-    "purview":{
+    "purview": {
       "requiredroles": [
         "Security Reader",
         "Supervisory Review Administrator"
       ],
-      "requiredrolegroups":[
+      "requiredrolegroups": [
         "Global Reader",
         "Supervisory Review"
       ]

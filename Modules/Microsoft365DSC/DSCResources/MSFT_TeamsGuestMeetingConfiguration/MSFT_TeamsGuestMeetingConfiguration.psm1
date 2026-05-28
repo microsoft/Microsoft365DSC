@@ -26,6 +26,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowMultipleScreenshare,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowTranscription,
 
         [Parameter(Mandatory = $true)]
@@ -48,6 +52,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -80,18 +92,21 @@ function Get-TargetResource
         $config = Get-CsTeamsGuestMeetingConfiguration -ErrorAction Stop
 
         $result = @{
-            AllowIPVideo            = $config.AllowIPVideo
-            LiveCaptionsEnabledType = $config.LiveCaptionsEnabledType
-            ScreenSharingMode       = $config.ScreenSharingMode
-            AllowMeetNow            = $config.AllowMeetNow
-            AllowTranscription      = $config.AllowTranscription
-            IsSingleInstance        = 'Yes'
-            Credential              = $Credential
-            ApplicationId           = $ApplicationId
-            TenantId                = $TenantId
-            CertificateThumbprint   = $CertificateThumbprint
-            ManagedIdentity         = $ManagedIdentity.IsPresent
-            AccessTokens            = $AccessTokens
+            AllowIPVideo             = $config.AllowIPVideo
+            LiveCaptionsEnabledType  = $config.LiveCaptionsEnabledType
+            ScreenSharingMode        = $config.ScreenSharingMode
+            AllowMeetNow             = $config.AllowMeetNow
+            AllowMultipleScreenshare = $config.AllowMultipleScreenshare
+            AllowTranscription       = $config.AllowTranscription
+            IsSingleInstance         = 'Yes'
+            Credential               = $Credential
+            ApplicationId            = $ApplicationId
+            TenantId                 = $TenantId
+            CertificateThumbprint    = $CertificateThumbprint
+            CertificatePath          = $CertificatePath
+            CertificatePassword      = $CertificatePassword
+            ManagedIdentity          = $ManagedIdentity.IsPresent
+            AccessTokens             = $AccessTokens
         }
         return $result
     }
@@ -132,6 +147,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowMultipleScreenshare,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowTranscription,
 
         [Parameter(Mandatory = $true)]
@@ -154,6 +173,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -213,6 +240,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowMultipleScreenshare,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowTranscription,
 
         [Parameter(Mandatory = $true)]
@@ -235,6 +266,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -282,6 +321,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -314,6 +361,8 @@ function Export-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }

@@ -90,30 +90,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'defender_disablerestorepoint'
                                 Name = 'DisableRestorePoint'
                                 OffsetUri = '/Defender/DisableRestorePoint'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'defender_disablerestorepoint_1'
-                                            name = 'Yes'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'defender_disablerestorepoint_1'
+                                        name = 'Yes'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
                             SettingDefinitionId = 'defender_disablerestorepoint'
                             SettingInstanceTemplateReference = $null
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'defender_disablerestorepoint_1'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'defender_disablerestorepoint_1'
                             }
                         }
                     },
@@ -124,20 +120,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_defender_securityintelligencelocation'
                                 Name = 'SecurityIntelligenceLocation'
                                 OffsetUri = '/Config/Defender/SecurityIntelligenceLocation'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                             }
                         )
                         SettingInstance = @{
                             SettingDefinitionId = 'device_vendor_msft_policy_config_defender_securityintelligencelocation'
                             SettingInstanceTemplateReference = $null
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                simpleSettingValue = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                    value = 'FakeStringValue'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                            simpleSettingValue = @{
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                value = 'FakeStringValue'
                             }
                         }
                     },
@@ -148,38 +140,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_defender_submitsamplesconsent'
                                 Name = 'SubmitSamplesConsent'
                                 OffsetUri = '/Config/Defender/SubmitSamplesConsent'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_config_defender_submitsamplesconsent_2'
-                                            name = 'Never send'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 2
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_config_defender_submitsamplesconsent_2'
+                                        name = 'Never send'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 2
                                         }
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_config_defender_submitsamplesconsent_3'
-                                            name = 'Send all samples automatically'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 3
-                                            }
+                                    }
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_config_defender_submitsamplesconsent_3'
+                                        name = 'Send all samples automatically'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 3
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
                             SettingDefinitionId = 'device_vendor_msft_policy_config_defender_submitsamplesconsent'
                             SettingInstanceTemplateReference = $null
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'device_vendor_msft_policy_config_defender_submitsamplesconsent_3'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'device_vendor_msft_policy_config_defender_submitsamplesconsent_3'
                             }
                         }
                     },
@@ -190,25 +178,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_defender_excludedpaths'
                                 Name = 'ExcludedPaths'
                                 OffsetUri = '/Config/Defender/ExcludedPaths'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 0
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 0
                             }
                         )
                         SettingInstance = @{
                             SettingDefinitionId = 'device_vendor_msft_policy_config_defender_excludedpaths'
                             SettingInstanceTemplateReference = $null
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                                simpleSettingCollectionValue = @(
-                                    @{
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                        value = 'FakeStringValue'
-                                    }
-                                )
-                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
+                            simpleSettingCollectionValue = @(
+                                @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                    value = 'FakeStringValue'
+                                }
+                            )
                         }
                     }
                 )
@@ -223,9 +207,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_defender_securityintelligencelocation'
                                 Name = 'SecurityIntelligenceLocation'
                                 OffsetUri = '/Config/Defender/SecurityIntelligenceLocation'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                             }
                         )
                         SettingInstance = @{
@@ -239,27 +221,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_defender_submitsamplesconsent'
                                 Name = 'SubmitSamplesConsent'
                                 OffsetUri = '/Config/Defender/SubmitSamplesConsent'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_config_defender_submitsamplesconsent_2'
-                                            name = 'Never send'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 2
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_config_defender_submitsamplesconsent_2'
+                                        name = 'Never send'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 2
                                         }
-                                        @{
-                                            itemId = 'device_vendor_msft_policy_config_defender_submitsamplesconsent_3'
-                                            name = 'Send all samples automatically'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                                value = 3
-                                            }
+                                    }
+                                    @{
+                                        itemId = 'device_vendor_msft_policy_config_defender_submitsamplesconsent_3'
+                                        name = 'Send all samples automatically'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                            value = 3
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -273,11 +253,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'device_vendor_msft_policy_config_defender_excludedpaths'
                                 Name = 'ExcludedPaths'
                                 OffsetUri = '/Config/Defender/ExcludedPaths'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 0
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 0
                             }
                         )
                         SettingInstance = @{

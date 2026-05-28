@@ -77,83 +77,75 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Id = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_trust_apps'
                             Name = 'ConfigureApplicationControlSelectAdditionalRulesForTrustingApps'
                             OffsetUri = '/{0}/Policy'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionDefinition'
-                                maximumCount = 100
-                                minimumCount = 0
-                                options = @(
-                                    @{
-                                        dependentOn = @(
-                                            @{
-                                                dependentOn = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls'
-                                                parentSettingId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls'
-                                            }
-                                        )
-                                        itemId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_trust_apps_0'
-                                        name = 'Trust apps with good reputation'
-                                        optionValue = @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                            value = 1
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionDefinition'
+                            maximumCount = 100
+                            minimumCount = 0
+                            options = @(
+                                @{
+                                    dependentOn = @(
+                                        @{
+                                            dependentOn = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls'
+                                            parentSettingId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls'
                                         }
+                                    )
+                                    itemId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_trust_apps_0'
+                                    name = 'Trust apps with good reputation'
+                                    optionValue = @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                        value = 1
                                     }
-                                )
-                            }
+                                }
+                            )
                         },
                         @{
                             Id = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls'
                             Name = 'ConfigureApplicationControlBuiltInControls'
                             OffsetUri = '/{0}/Policy'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                'childIds' = @(
-                                    'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_enable_app_control'
-                                    'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_trust_apps'
-                                )
-                                minimumCount = 0
-                                maximumCount = 1
-                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                            'childIds' = @(
+                                'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_enable_app_control'
+                                'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_trust_apps'
+                            )
+                            minimumCount = 0
+                            maximumCount = 1
                         },
                         @{
                             Id = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_enable_app_control'
                             Name = 'ConfigureApplicationControlEnableAppControlPolicy'
                             OffsetUri = '/{0}/Policy'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                options = @(
-                                    @{
-                                        dependentOn = @(
-                                            @{
-                                                dependentOn = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls'
-                                                parentSettingId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls'
-                                            }
-                                        )
-                                        itemId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_enable_app_control_0'
-                                        name = 'Enforce'
-                                        optionValue = @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                            value = 0
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                            options = @(
+                                @{
+                                    dependentOn = @(
+                                        @{
+                                            dependentOn = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls'
+                                            parentSettingId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls'
                                         }
+                                    )
+                                    itemId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_enable_app_control_0'
+                                    name = 'Enforce'
+                                    optionValue = @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                        value = 0
                                     }
-                                )
-                            }
+                                }
+                            )
                         },
                         @{
                             Id = 'device_vendor_msft_policy_config_applicationcontrol_policies_{policyguid}_policiesoptions'
                             Name = 'ConfigureApplicationControlOptions'
                             OffsetUri = '/{0}/Policy'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                options = @(
-                                    @{
-                                        itemId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_selected'
-                                        name = 'Use built-in controls'
-                                        optionValue = @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                            value = 1
-                                        }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                            options = @(
+                                @{
+                                    itemId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_selected'
+                                    name = 'Use built-in controls'
+                                    optionValue = @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                        value = 1
                                     }
-                                )
-                            }
+                                }
+                            )
                         }
                     )
                     SettingInstance      = @{
@@ -161,44 +153,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SettingInstanceTemplateReference = @{
                             SettingInstanceTemplateId = '1de98212-6949-42dc-a89c-e0ff6e5da04b'
                         }
-                        AdditionalProperties             = @{
-                            '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                            choiceSettingValue = @{
-                                children = @(
-                                    @{
-                                        "@odata.type" = "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance"
-                                        "settingDefinitionId" = "device_vendor_msft_policy_config_applicationcontrol_built_in_controls"
-                                        "groupSettingCollectionValue" = @(
-                                            @{
-                                                children = @(
-                                                    @{
-                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionInstance'
-                                                        choiceSettingCollectionValue = @(
-                                                            @{
-                                                                children = @()
-                                                                value = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_trust_apps_0'
-                                                            }
-                                                        )
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_trust_apps'
-                                                    }
-                                                    @{
-                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_enable_app_control'
-                                                        choiceSettingValue = @{
+                        '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                        choiceSettingValue = @{
+                            children = @(
+                                @{
+                                    "@odata.type" = "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance"
+                                    "settingDefinitionId" = "device_vendor_msft_policy_config_applicationcontrol_built_in_controls"
+                                    "groupSettingCollectionValue" = @(
+                                        @{
+                                            children = @(
+                                                @{
+                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionInstance'
+                                                    choiceSettingCollectionValue = @(
+                                                        @{
                                                             children = @()
-                                                            value = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_enable_app_control_0'
+                                                            value = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_trust_apps_0'
                                                         }
+                                                    )
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_trust_apps'
+                                                }
+                                                @{
+                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_enable_app_control'
+                                                    choiceSettingValue = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_enable_app_control_0'
                                                     }
-                                                )
-                                            }
-                                        )
-                                    }
-                                )
-                                value = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_selected'
-                            }
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                            value = 'device_vendor_msft_policy_config_applicationcontrol_built_in_controls_selected'
                         }
                     }
-                    AdditionalProperties = $null
                 }
             }
 
@@ -219,12 +208,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SourceId = '12345-12345-12345-12345-12345'
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
-                                collectionId  = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                        collectionId  = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }

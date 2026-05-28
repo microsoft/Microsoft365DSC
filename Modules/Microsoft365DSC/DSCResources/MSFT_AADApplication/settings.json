@@ -52,6 +52,7 @@
     "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Applications",
     "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+    "Microsoft.Graph.Beta.Identity.SignIns",
     "Microsoft.Graph.Users",
     "MSCloudLoginAssistant"
   ],
@@ -71,7 +72,7 @@
         "New-MgApplicationTokenLifetimePolicyByRef",
         "Remove-MgApplication",
         "Remove-MgApplicationOwnerDirectoryObjectByRef",
-        "Remove-MgApplicationTokenLifetimePolicyByRef",
+        "Remove-MgApplicationTokenLifetimePolicyTokenLifetimePolicyByRef",
         "Update-MgApplication"
       ]
     },
@@ -106,6 +107,12 @@
       "module": "Microsoft.Graph.Users",
       "cmdlets": [
         "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

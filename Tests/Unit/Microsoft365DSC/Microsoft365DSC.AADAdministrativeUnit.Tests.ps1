@@ -258,10 +258,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
                     return @(@{
                             Id = '1234567890'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.user'
-                                userPrincipalName = 'John.Doe@mytenant.com'
-                            }
+                            '@odata.type' = '#microsoft.graph.user'
+                            userPrincipalName = 'John.Doe@mytenant.com'
                         })
                 }
                 Mock -CommandName Get-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
@@ -271,9 +269,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             RoleMemberInfo = @{
                                 DisplayName = 'John Doe'
                                 Id          = '1234567890'
-                                AdditionalProperties = @{
-                                    UserPrincipalName = 'John.Doe@mytenant.com'
-                                }
+                                UserPrincipalName = 'John.Doe@mytenant.com'
                             }
                         }
                     )
@@ -324,10 +320,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @(
                         @{
                             Id = '1234567890'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.user'
-                                userPrincipalName = 'John.Doe@mytenant.com'
-                            }
+                            '@odata.type' = '#microsoft.graph.user'
+                            userPrincipalName = 'John.Doe@mytenant.com'
                         }
                     )
                 }
@@ -338,9 +332,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             RoleMemberInfo = @{
                                 DisplayName = 'John Doe'
                                 Id          = '1234567890'
-                                AdditionalProperties = @{
-                                    UserPrincipalName = 'John.Doe@mytenant.com'
-                                }
+                                UserPrincipalName = 'John.Doe@mytenant.com'
                             }
                         }
                     )
@@ -692,10 +684,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
                     return [pscustomobject]@{
                         Id = '1234567890'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.user'
-                            userPrincipalName = 'John.Doe@mytenant.com'
-                        }
+                        '@odata.type' = '#microsoft.graph.user'
+                        userPrincipalName = 'John.Doe@mytenant.com'
                     }
                 }
 
@@ -705,9 +695,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             RoleMemberInfo = @{
                                 DisplayName = 'John Doe'
                                 Id          = '1234567890'
-                                AdditionalProperties = @{
-                                    UserPrincipalName = 'John.Doe@mytenant.com'
-                                }
+                                UserPrincipalName = 'John.Doe@mytenant.com'
                             }
                         },
                         [pscustomobject]@{

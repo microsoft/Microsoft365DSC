@@ -64,6 +64,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -76,7 +84,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance -or $Script:exportedInstance.PartnerTenantId -ne $PartnerTenantId)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.TenantId -ne $PartnerTenantId)
         {
             $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
@@ -174,6 +182,8 @@ function Get-TargetResource
             TenantId                     = $TenantId
             ApplicationSecret            = $ApplicationSecret
             CertificateThumbprint        = $CertificateThumbprint
+            CertificatePath              = $CertificatePath
+            CertificatePassword          = $CertificatePassword
             ManagedIdentity              = $ManagedIdentity.IsPresent
             AccessTokens                 = $AccessTokens
         }
@@ -255,6 +265,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -310,23 +328,55 @@ function Set-TargetResource
     }
     if ($null -ne $OperationParams.IdentitySynchronization)
     {
-        $OperationParams.IdentitySynchronization = (Get-M365DSCAADCrossTenantAccessPolicyIdentitySynchronization -Setting $OperationParams.IdentitySynchronization)
+        $identitySynchronizationValue = (Get-M365DSCAADCrossTenantAccessPolicyIdentitySynchronization -Setting $OperationParams.IdentitySynchronization)
+        $OperationParams.Remove('IdentitySynchronization') | Out-Null
     }
+
+    $OperationParams = Rename-M365DSCCimInstanceParameter -Properties $OperationParams
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Cross Tenant Access Policy Configuration Partner entry for TenantId {$PartnerTenantId}"
-        Write-Verbose -Message (Convert-M365DscHashtableToString -Hashtable $OperationParams)
-        $OperationParams.Add('TenantId', $PartnerTenantId)
+        $OperationParams.Add('tenantId', $PartnerTenantId)
         $OperationParams.Remove('PartnerTenantId') | Out-Null
-        New-MgBetaPolicyCrossTenantAccessPolicyPartner @OperationParams
+        $newPartner = New-MgBetaPolicyCrossTenantAccessPolicyPartner -BodyParameter $OperationParams
+        Start-Sleep -Seconds 2
+        if ($newPartner.TenantId -and $null -ne $identitySynchronizationValue)
+        {
+            try
+            {
+                Invoke-MgGraphRequest -Uri "/beta/policies/crossTenantAccessPolicy/partners/$($newPartner.TenantId)/identitySynchronization" -Method PUT -Body $identitySynchronizationValue
+            }
+            catch
+            {
+                if ($_.ErrorDetails.Message -notlike '*Conflict*')
+                {
+                    throw
+                }
+                Invoke-MgGraphRequest -Uri "/beta/policies/crossTenantAccessPolicy/partners/$($newPartner.TenantId)/identitySynchronization" -Method PATCH -Body $identitySynchronizationValue
+            }
+        }
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Cross Tenant Access Policy Configuration Partner entry with TenantId {$PartnerTenantId}"
-        $OperationParams.Add('-CrossTenantAccessPolicyConfigurationPartnerTenantId', $PartnerTenantId)
         $OperationParams.Remove('PartnerTenantId') | Out-Null
-        Update-MgBetaPolicyCrossTenantAccessPolicyPartner @OperationParams
+        Update-MgBetaPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId -BodyParameter $OperationParams
+        if ($null -ne $identitySynchronizationValue)
+        {
+            try
+            {
+                Invoke-MgGraphRequest -Uri "/beta/policies/crossTenantAccessPolicy/partners/$($PartnerTenantId)/identitySynchronization" -Method PATCH -Body $identitySynchronizationValue
+            }
+            catch
+            {
+                if ($_.ErrorDetails.Message -notlike '*Not Found*')
+                {
+                    throw
+                }
+                Invoke-MgGraphRequest -Uri "/beta/policies/crossTenantAccessPolicy/partners/$($PartnerTenantId)/identitySynchronization" -Method PUT -Body $identitySynchronizationValue
+            }
+        }
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -399,6 +449,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -450,6 +508,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]

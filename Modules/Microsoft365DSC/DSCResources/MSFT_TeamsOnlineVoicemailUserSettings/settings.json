@@ -35,5 +35,15 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsOnlineUser",
+        "Get-CsOnlineVoicemailUserSettings",
+        "Set-CsOnlineVoicemailUserSettings"
+      ]
+    }
+  ]
 }

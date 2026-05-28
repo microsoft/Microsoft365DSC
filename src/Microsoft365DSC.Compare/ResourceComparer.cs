@@ -166,15 +166,18 @@ namespace Microsoft365DSC.Compare
                     var primaryKeyNames = GetPrimaryKeys(cimName, schemaLookup);
                     bool isIntunePolicyAssignment = IsIntunePolicyAssignmentType(cimName);
 
-                    // For Intune policy assignments that have group-specific targets,
+                    // For Intune policy assignments,
                     // add groupDisplayName as an alignment key
                     if (isIntunePolicyAssignment)
                     {
-                        bool hasGroupTargets = HasGroupTargets(desiredArray) || HasGroupTargets(currentArray);
-                        if (hasGroupTargets && !primaryKeyNames.Contains("groupDisplayName", StringComparer.OrdinalIgnoreCase))
+                        List<Dictionary<string, object>> drifts = [];
+                        bool compResult = IntunePolicyAssignmentComparer.Compare(desiredArray, currentArray, drifts);
+                        if (!compResult)
                         {
-                            primaryKeyNames.Add("groupDisplayName");
+                            result.TestResult = false;
+                            result.DriftInfo.AddRange(drifts.Select(drift => new Hashtable(drift)));
                         }
+                        continue;
                     }
 
                     if (primaryKeyNames.Count > 0)
@@ -194,8 +197,8 @@ namespace Microsoft365DSC.Compare
                             }
 
                             // Clone both sides to avoid mutating normalized data
-                            var desiredCopy = CloneHashtable((Hashtable)desiredItem);
-                            var currentCopy = CloneHashtable((Hashtable)currentItem);
+                            var desiredCopy = CloneHashtable(desiredItem);
+                            var currentCopy = CloneHashtable(currentItem);
 
                             // Remove PKs from both sides to avoid false casing drifts
                             RemovePrimaryKeysFromHashtable(desiredCopy, primaryKeyNames, includedSet, isIntunePolicyAssignment);
@@ -423,7 +426,7 @@ namespace Microsoft365DSC.Compare
             foreach (object param in paramList)
             {
                 string? option = GetStringProperty(param, "Option");
-                if (string.Equals(option, "Required", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(option, "Required", StringComparison.OrdinalIgnoreCase) || string.Equals(option, "Key", StringComparison.OrdinalIgnoreCase))
                 {
                     string? name = GetStringProperty(param, "Name");
                     if (!string.IsNullOrEmpty(name))
@@ -562,31 +565,12 @@ namespace Microsoft365DSC.Compare
 
             bool matchesIntune = cimName.IndexOf("Intune", StringComparison.OrdinalIgnoreCase) > -1 &&
                                  cimName.EndsWith("PolicyAssignments", StringComparison.OrdinalIgnoreCase);
+            bool matchesAppMgmt = cimName.IndexOf("DeviceManagement", StringComparison.OrdinalIgnoreCase) > -1 &&
+                                  cimName.EndsWith("AppAssignment", StringComparison.OrdinalIgnoreCase);
             bool matchesDevMgmt = cimName.IndexOf("DeviceManagementConfigurationPolicyAssignments", StringComparison.OrdinalIgnoreCase) > -1;
 
-            return matchesIntune || matchesDevMgmt;
+            return matchesIntune || matchesDevMgmt || matchesAppMgmt;
         }
-
-        /// <summary>
-        /// Checks if any item in the array has a dataType that is group-specific
-        /// (not allLicensedUsers or allDevices).
-        /// </summary>
-        private static bool HasGroupTargets(object[] items)
-        {
-            if (items is null || items.Length == 0)
-                return false;
-
-            if (items[0] is not Hashtable first)
-                return false;
-
-            string dataType = GetHashtableStringValue(first, "dataType");
-            if (string.IsNullOrEmpty(dataType))
-                return false;
-
-            return !string.Equals(dataType, "#microsoft.graph.allLicensedUsersAssignmentTarget", StringComparison.OrdinalIgnoreCase) &&
-                   !string.Equals(dataType, "#microsoft.graph.allDevicesAssignmentTarget", StringComparison.OrdinalIgnoreCase);
-        }
-
         #endregion
 
         #region Property access helpers

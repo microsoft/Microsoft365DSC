@@ -55,6 +55,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -144,6 +152,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -213,6 +223,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -256,7 +274,7 @@ function Set-TargetResource
                 Description = $Description
             }
 
-            New-MgBetaPolicyPermissionGrantPolicy @createParameters | Out-Null
+            New-MgBetaPolicyPermissionGrantPolicy -BodyParameter $createParameters | Out-Null
 
             # Add Includes
             if ($null -ne $Includes -and $Includes.Count -gt 0)
@@ -265,7 +283,7 @@ function Set-TargetResource
                 {
                     Write-Verbose -Message "Adding include condition set {$($include.Id)}"
                     $includeParams = Get-PermissionGrantConditionSetAsParameters -ConditionSet $include
-                    New-MgBetaPolicyPermissionGrantPolicyInclude -PermissionGrantPolicyId $Id @includeParams | Out-Null
+                    New-MgBetaPolicyPermissionGrantPolicyInclude -PermissionGrantPolicyId $Id -BodyParameter $includeParams | Out-Null
                 }
             }
 
@@ -276,7 +294,7 @@ function Set-TargetResource
                 {
                     Write-Verbose -Message "Adding exclude condition set {$($exclude.Id)}"
                     $excludeParams = Get-PermissionGrantConditionSetAsParameters -ConditionSet $exclude
-                    New-MgBetaPolicyPermissionGrantPolicyExclude -PermissionGrantPolicyId $Id @excludeParams | Out-Null
+                    New-MgBetaPolicyPermissionGrantPolicyExclude -PermissionGrantPolicyId $Id -BodyParameter $excludeParams | Out-Null
                 }
             }
         }
@@ -285,10 +303,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Updating Entra Permission Grant Policy with Id {$Id} and DisplayName {$DisplayName}"
 
-            $updateParameters = @{
-                PermissionGrantPolicyId = $Id
-            }
-
+            $updateParameters = @{}
             if ($PSBoundParameters.ContainsKey('DisplayName') -and $DisplayName -ne $currentPolicy.DisplayName)
             {
                 $updateParameters.Add('DisplayName', $DisplayName)
@@ -301,7 +316,7 @@ function Set-TargetResource
 
             if ($updateParameters.Count -gt 1)
             {
-                Update-MgBetaPolicyPermissionGrantPolicy @updateParameters | Out-Null
+                Update-MgBetaPolicyPermissionGrantPolicy -PermissionGrantPolicyId $Id -BodyParameter $updateParameters | Out-Null
             }
 
             # Sync Includes - use content-based matching since desired state
@@ -330,7 +345,7 @@ function Set-TargetResource
                     {
                         Write-Verbose -Message "Adding include condition set"
                         $includeParams = Get-PermissionGrantConditionSetAsParameters -ConditionSet $desiredInclude
-                        New-MgBetaPolicyPermissionGrantPolicyInclude -PermissionGrantPolicyId $Id @includeParams | Out-Null
+                        New-MgBetaPolicyPermissionGrantPolicyInclude -PermissionGrantPolicyId $Id -BodyParameter $includeParams | Out-Null
                     }
                 }
 
@@ -373,7 +388,7 @@ function Set-TargetResource
                     {
                         Write-Verbose -Message "Adding exclude condition set"
                         $excludeParams = Get-PermissionGrantConditionSetAsParameters -ConditionSet $desiredExclude
-                        New-MgBetaPolicyPermissionGrantPolicyExclude -PermissionGrantPolicyId $Id @excludeParams | Out-Null
+                        New-MgBetaPolicyPermissionGrantPolicyExclude -PermissionGrantPolicyId $Id -BodyParameter $excludeParams | Out-Null
                     }
                 }
 
@@ -461,6 +476,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -520,6 +543,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -576,6 +607,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -1236,7 +1269,7 @@ System.Collections.Hashtable
 
 .EXAMPLE
 $params = Get-PermissionGrantConditionSetAsParameters -ConditionSet $cimInstance
-New-MgBetaPolicyPermissionGrantPolicyInclude @params
+New-MgBetaPolicyPermissionGrantPolicyInclude -BodyParameter $params
 #>
 function Get-PermissionGrantConditionSetAsParameters
 {

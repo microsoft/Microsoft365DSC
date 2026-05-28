@@ -44,5 +44,13 @@
   "requiredModules": [
     "DSCParser"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "DSCParser",
+      "cmdlets": [
+        "ConvertTo-DSCObject"
+      ]
+    }
+  ]
 }

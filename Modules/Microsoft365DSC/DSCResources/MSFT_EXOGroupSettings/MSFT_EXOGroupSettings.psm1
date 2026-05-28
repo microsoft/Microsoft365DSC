@@ -1084,7 +1084,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n"-DeferWrite
         }
-        $dscContent = [System.Text.StringBuilder]::New()
+        $dscContent = [System.Text.StringBuilder]::new()
         foreach ($group in $exportedInstances)
         {
             Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Length)] $($group.DisplayName)" -DeferWrite

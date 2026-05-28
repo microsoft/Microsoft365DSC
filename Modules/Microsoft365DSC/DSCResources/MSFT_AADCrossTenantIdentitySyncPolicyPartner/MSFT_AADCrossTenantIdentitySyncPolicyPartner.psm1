@@ -40,6 +40,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -96,6 +104,8 @@ function Get-TargetResource
             ApplicationId                                       = $ApplicationId
             TenantId                                            = $TenantId
             CertificateThumbprint                               = $CertificateThumbprint
+            CertificatePath                                     = $CertificatePath
+            CertificatePassword                                 = $CertificatePassword
             ManagedIdentity                                     = $ManagedIdentity.IsPresent
             AccessTokens                                        = $AccessTokens
         }
@@ -152,6 +162,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -177,13 +195,13 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         $params = @{
-            DisplayName     = $DisplayName
-            UserSyncInbound = @{
+            displayName     = $DisplayName
+            userSyncInbound = @{
                 isSyncAllowed = $IsSyncAllowed
             }
         }
         Write-Verbose -Message "Creating Cross-Tenant Identity Sync Policy for Tenant {$CrossTenantAccessPolicyConfigurationPartnerTenantId} with:`r`n$(ConvertTo-Json $params -Depth 10)"
-        Set-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization @params `
+        Set-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization -BodyParameter $params `
             -CrossTenantAccessPolicyConfigurationPartnerTenantId $CrossTenantAccessPolicyConfigurationPartnerTenantId
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -249,6 +267,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -300,6 +326,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]

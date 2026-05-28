@@ -44,6 +44,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -96,6 +104,8 @@ function Get-TargetResource
             TenantId                        = $TenantId
             ApplicationSecret               = $ApplicationSecret
             CertificateThumbprint           = $CertificateThumbprint
+            CertificatePath                 = $CertificatePath
+            CertificatePassword             = $CertificatePassword
             ManagedIdentity                 = $ManagedIdentity.IsPresent
             AccessTokens                    = $AccessTokens
         }
@@ -156,6 +166,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -182,14 +200,14 @@ function Set-TargetResource
     #endregion
 
     $updateSettings = @{
-        WorkflowScheduleIntervalInHours = $WorkflowScheduleIntervalInHours
-        EmailSettings                   = @{
-            SenderDomain       = $SenderDomain
-            UseCompanyBranding = $UseCompanyBranding
+        workflowScheduleIntervalInHours = $WorkflowScheduleIntervalInHours
+        emailSettings                   = @{
+            senderDomain       = $SenderDomain
+            useCompanyBranding = $UseCompanyBranding
         }
     }
     Write-Verbose -Message "Updating the lifecycle workflow settings with payload: $payload"
-    Update-MgBetaIdentityGovernanceLifecycleWorkflowSetting @updateSettings
+    Update-MgBetaIdentityGovernanceLifecycleWorkflowSetting -BodyParameter $updateSettings
 }
 
 function Test-TargetResource
@@ -234,6 +252,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -283,6 +309,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -338,6 +372,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

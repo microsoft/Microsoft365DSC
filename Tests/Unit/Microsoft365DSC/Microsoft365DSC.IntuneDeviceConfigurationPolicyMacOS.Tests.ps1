@@ -49,64 +49,62 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties                            = @{
-                        '@odata.type' = '#microsoft.graph.macosGeneralDeviceConfiguration'
-                        TouchIdTimeoutInHours                           = 25
-                        AirDropBlocked                                  = $True
-                        ClassroomAppForceUnpromptedScreenObservation    = $True
-                        KeychainBlockCloudSync                          = $True
-                        AppleWatchBlockAutoUnlock                       = $True
-                        ScreenCaptureBlocked                            = $True
-                        MultiplayerGamingBlocked                        = $True
-                        WallpaperModificationBlocked                    = $True
-                        CameraBlocked                                   = $True
-                        ICloudBlockActivityContinuation                 = $True
-                        SpotlightBlockInternetResults                   = $True
-                        SafariBlockAutofill                             = $True
-                        PasswordBlockAutoFill                           = $True
-                        PasswordRequiredType                            = 'deviceDefault'
-                        PasswordMaximumAttemptCount                     = 25
-                        ClassroomForceAutomaticallyJoinClasses          = $True
-                        ICloudPrivateRelayBlocked                       = $True
-                        PasswordBlockModification                       = $True
-                        ICloudBlockCalendar                             = $True
-                        ICloudBlockAddressBook                          = $True
-                        SoftwareUpdatesEnforcedDelayInDays              = 25
-                        ICloudBlockReminders                            = $True
-                        PasswordBlockSimple                             = $True
-                        PasswordBlockAirDropSharing                     = $True
-                        ICloudBlockBookmarks                            = $True
-                        PasswordRequired                                = $True
-                        KeyboardBlockDictation                          = $True
-                        SoftwareUpdateMajorOSDeferredInstallDelayInDays = 25
-                        ContentCachingBlocked                           = $True
-                        ICloudDesktopAndDocumentsBlocked                = $True
-                        UpdateDelayPolicy                               = 'delayMajorOsUpdateVisibility'
-                        PasswordPreviousPasswordBlockCount              = 25
-                        AddingGameCenterFriendsBlocked                  = $True
-                        PasswordMinimumLength                           = 25
-                        EraseContentAndSettingsBlocked                  = $True
-                        ICloudBlockNotes                                = $True
-                        ICloudBlockPhotoLibrary                         = $True
-                        ICloudBlockMail                                 = $True
-                        PasswordMinutesOfInactivityBeforeScreenTimeout  = 25
-                        PasswordExpirationDays                          = 25
-                        PasswordBlockFingerprintUnlock                  = $True
-                        PasswordBlockProximityRequests                  = $True
-                        SoftwareUpdateNonOSDeferredInstallDelayInDays   = 25
-                        ITunesBlockMusicService                         = $True
-                        DefinitionLookupBlocked                         = $True
-                        ClassroomForceRequestPermissionToLeaveClasses   = $True
-                        ClassroomAppBlockRemoteScreenObservation        = $True
-                        SoftwareUpdateMinorOSDeferredInstallDelayInDays = 25
-                        ITunesBlockFileSharing                          = $True
-                        GameCenterBlocked                               = $True
-                        ICloudBlockDocumentSync                         = $True
-                        PasswordMinimumCharacterSetCount                = 25
-                        PasswordMinutesOfInactivityBeforeLock           = 25
-                        ClassroomForceUnpromptedAppAndDeviceLock        = $True
-                        PasswordMinutesUntilFailedLoginReset            = 25
-                    }
+                    '@odata.type' = '#microsoft.graph.macosGeneralDeviceConfiguration'
+                    TouchIdTimeoutInHours                           = 25
+                    AirDropBlocked                                  = $True
+                    ClassroomAppForceUnpromptedScreenObservation    = $True
+                    KeychainBlockCloudSync                          = $True
+                    AppleWatchBlockAutoUnlock                       = $True
+                    ScreenCaptureBlocked                            = $True
+                    MultiplayerGamingBlocked                        = $True
+                    WallpaperModificationBlocked                    = $True
+                    CameraBlocked                                   = $True
+                    ICloudBlockActivityContinuation                 = $True
+                    SpotlightBlockInternetResults                   = $True
+                    SafariBlockAutofill                             = $True
+                    PasswordBlockAutoFill                           = $True
+                    PasswordRequiredType                            = 'deviceDefault'
+                    PasswordMaximumAttemptCount                     = 25
+                    ClassroomForceAutomaticallyJoinClasses          = $True
+                    ICloudPrivateRelayBlocked                       = $True
+                    PasswordBlockModification                       = $True
+                    ICloudBlockCalendar                             = $True
+                    ICloudBlockAddressBook                          = $True
+                    SoftwareUpdatesEnforcedDelayInDays              = 25
+                    ICloudBlockReminders                            = $True
+                    PasswordBlockSimple                             = $True
+                    PasswordBlockAirDropSharing                     = $True
+                    ICloudBlockBookmarks                            = $True
+                    PasswordRequired                                = $True
+                    KeyboardBlockDictation                          = $True
+                    SoftwareUpdateMajorOSDeferredInstallDelayInDays = 25
+                    ContentCachingBlocked                           = $True
+                    ICloudDesktopAndDocumentsBlocked                = $True
+                    UpdateDelayPolicy                               = 'delayMajorOsUpdateVisibility'
+                    PasswordPreviousPasswordBlockCount              = 25
+                    AddingGameCenterFriendsBlocked                  = $True
+                    PasswordMinimumLength                           = 25
+                    EraseContentAndSettingsBlocked                  = $True
+                    ICloudBlockNotes                                = $True
+                    ICloudBlockPhotoLibrary                         = $True
+                    ICloudBlockMail                                 = $True
+                    PasswordMinutesOfInactivityBeforeScreenTimeout  = 25
+                    PasswordExpirationDays                          = 25
+                    PasswordBlockFingerprintUnlock                  = $True
+                    PasswordBlockProximityRequests                  = $True
+                    SoftwareUpdateNonOSDeferredInstallDelayInDays   = 25
+                    ITunesBlockMusicService                         = $True
+                    DefinitionLookupBlocked                         = $True
+                    ClassroomForceRequestPermissionToLeaveClasses   = $True
+                    ClassroomAppBlockRemoteScreenObservation        = $True
+                    SoftwareUpdateMinorOSDeferredInstallDelayInDays = 25
+                    ITunesBlockFileSharing                          = $True
+                    GameCenterBlocked                               = $True
+                    ICloudBlockDocumentSync                         = $True
+                    PasswordMinimumCharacterSetCount                = 25
+                    PasswordMinutesOfInactivityBeforeLock           = 25
+                    ClassroomForceUnpromptedAppAndDeviceLock        = $True
+                    PasswordMinutesUntilFailedLoginReset            = 25
                     Description                                     = 'FakeStringValue'
                     DisplayName                                     = 'FakeStringValue'
                     Id                                              = 'FakeStringValue'
@@ -275,7 +273,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

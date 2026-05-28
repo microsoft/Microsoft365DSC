@@ -155,6 +155,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -239,11 +247,11 @@ function Get-TargetResource
         {
             $complexLargeIcon = [ordered]@{}
             $complexLargeIcon.Add('Type', $getValue.LargeIcon.Type)
-            $complexLargeIcon.Add('Value', [System.Convert]::ToBase64String($getValue.LargeIcon.Value))
+            $complexLargeIcon.Add('Value', $getValue.LargeIcon.Value)
         }
 
         $complexRules = @()
-        foreach ($rule in $getValue.AdditionalProperties.rules)
+        foreach ($rule in $getValue.rules)
         {
             $ruleType = $rule.'@odata.type'.Replace('#microsoft.graph.win32LobApp', '').Replace('Rule', '')
             $baseRule = @{
@@ -289,16 +297,16 @@ function Get-TargetResource
             $complexRules += $baseRule
         }
 
-        if ($null -ne $getValue.AdditionalProperties.installExperience)
+        if ($null -ne $getValue.installExperience)
         {
             $complexInstallExperience = [ordered]@{}
-            $complexInstallExperience.Add('DeviceRestartBehavior', $getValue.AdditionalProperties.installExperience.deviceRestartBehavior)
-            $complexInstallExperience.Add('MaxRunTimeInMinutes', $getValue.AdditionalProperties.installExperience.maxRunTimeInMinutes)
-            $complexInstallExperience.Add('RunAsAccount', $getValue.AdditionalProperties.installExperience.runAsAccount)
+            $complexInstallExperience.Add('DeviceRestartBehavior', $getValue.installExperience.deviceRestartBehavior)
+            $complexInstallExperience.Add('MaxRunTimeInMinutes', $getValue.installExperience.maxRunTimeInMinutes)
+            $complexInstallExperience.Add('RunAsAccount', $getValue.installExperience.runAsAccount)
         }
 
         $complexReturnCodes = @()
-        foreach ($returnCode in $getValue.AdditionalProperties.returnCodes)
+        foreach ($returnCode in $getValue.returnCodes)
         {
             $complexReturnCodes += @{
                 ReturnCode = $returnCode.returnCode
@@ -306,21 +314,21 @@ function Get-TargetResource
             }
         }
 
-        if ($null -ne $getValue.AdditionalProperties.msiInformation)
+        if ($null -ne $getValue.msiInformation)
         {
             $complexMsiInformation = [ordered]@{}
-            $complexMsiInformation.Add('ProductCode', $getValue.AdditionalProperties.msiInformation.productCode)
-            $complexMsiInformation.Add('ProductVersion', $getValue.AdditionalProperties.msiInformation.productVersion)
-            $complexMsiInformation.Add('UpgradeCode', $getValue.AdditionalProperties.msiInformation.upgradeCode)
-            $complexMsiInformation.Add('RequiresReboot', $getValue.AdditionalProperties.msiInformation.requiresReboot)
-            $complexMsiInformation.Add('PackageType', $getValue.AdditionalProperties.msiInformation.packageType)
-            $complexMsiInformation.Add('ProductName', $getValue.AdditionalProperties.msiInformation.productName)
-            $complexMsiInformation.Add('Publisher', $getValue.AdditionalProperties.msiInformation.publisher)
+            $complexMsiInformation.Add('ProductCode', $getValue.msiInformation.productCode)
+            $complexMsiInformation.Add('ProductVersion', $getValue.msiInformation.productVersion)
+            $complexMsiInformation.Add('UpgradeCode', $getValue.msiInformation.upgradeCode)
+            $complexMsiInformation.Add('RequiresReboot', $getValue.msiInformation.requiresReboot)
+            $complexMsiInformation.Add('PackageType', $getValue.msiInformation.packageType)
+            $complexMsiInformation.Add('ProductName', $getValue.msiInformation.productName)
+            $complexMsiInformation.Add('Publisher', $getValue.msiInformation.publisher)
         }
         #endregion
 
         [System.String[]]$allowedArchitecturesValue = @()
-        foreach ($arch in ($getValue.AdditionalProperties.allowedArchitectures -split ',' | Where-Object { -not [System.String]::IsNullOrEmpty($_) }))
+        foreach ($arch in ($getValue.allowedArchitectures -split ',' | Where-Object { -not [System.String]::IsNullOrEmpty($_) }))
         {
             $allowedArchitecturesValue += $arch
         }
@@ -332,22 +340,22 @@ function Get-TargetResource
             Description                    = $getValue.Description
             Developer                      = $getValue.Developer
             DisplayName                    = $getValue.DisplayName
-            FileName                       = $getValue.AdditionalProperties.fileName
+            FileName                       = $getValue.fileName
             InformationUrl                 = $getValue.InformationUrl
-            InstallCommandLine             = $getValue.AdditionalProperties.installCommandLine
-            UninstallCommandLine           = $getValue.AdditionalProperties.uninstallCommandLine
-            MinimumFreeDiskSpaceInMB       = $getValue.AdditionalProperties.minimumFreeDiskSpaceInMB
-            MinimumMemoryInMB              = $getValue.AdditionalProperties.minimumMemoryInMB
-            MinimumNumberOfProcessors      = $getValue.AdditionalProperties.minimumNumberOfProcessors
-            MinimumCpuSpeedInMHz           = $getValue.AdditionalProperties.minimumCpuSpeedInMHz
+            InstallCommandLine             = $getValue.installCommandLine
+            UninstallCommandLine           = $getValue.uninstallCommandLine
+            MinimumFreeDiskSpaceInMB       = $getValue.minimumFreeDiskSpaceInMB
+            MinimumMemoryInMB              = $getValue.minimumMemoryInMB
+            MinimumNumberOfProcessors      = $getValue.minimumNumberOfProcessors
+            MinimumCpuSpeedInMHz           = $getValue.minimumCpuSpeedInMHz
             InstallExperience              = $complexInstallExperience
             ReturnCodes                    = $complexReturnCodes
             Rules                          = $complexRules
             MsiInformation                 = $complexMsiInformation
-            SetupFilePath                  = $getValue.AdditionalProperties.setupFilePath
-            MinimumSupportedWindowsRelease = $getValue.AdditionalProperties.minimumSupportedWindowsRelease
-            DisplayVersion                 = $getValue.AdditionalProperties.displayVersion
-            AllowAvailableUninstall        = $getValue.AdditionalProperties.allowAvailableUninstall
+            SetupFilePath                  = $getValue.setupFilePath
+            MinimumSupportedWindowsRelease = $getValue.minimumSupportedWindowsRelease
+            DisplayVersion                 = $getValue.displayVersion
+            AllowAvailableUninstall        = $getValue.allowAvailableUninstall
             IsFeatured                     = $getValue.IsFeatured
             LargeIcon                      = $complexLargeIcon
             Notes                          = $getValue.Notes
@@ -362,6 +370,8 @@ function Get-TargetResource
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
+            CertificatePath                = $CertificatePath
+            CertificatePassword            = $CertificatePassword
             ManagedIdentity                = $ManagedIdentity.IsPresent
             #endregion
         }
@@ -370,6 +380,17 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntuneMobileAppAssignment -Assignments $assignmentsValues -IncludeDeviceFilter $true
+        }
+        foreach ($assignment in $assignmentResult)
+        {
+            if ($assignment.assignmentSettings.installTimeSettings.deadlineDateTime -is [System.DateTime])
+            {
+                $assignment.assignmentSettings.installTimeSettings.deadlineDateTime = $assignment.assignmentSettings.installTimeSettings.deadlineDateTime.ToString("yyyy-MM-ddTHH:mm:ssZ")
+            }
+            if ($assignment.assignmentSettings.installTimeSettings.startDateTime -is [System.DateTime])
+            {
+                $assignment.assignmentSettings.installTimeSettings.startDateTime = $assignment.assignmentSettings.installTimeSettings.startDateTime.ToString("yyyy-MM-ddTHH:mm:ssZ")
+            }
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -541,6 +562,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -575,13 +604,13 @@ function Set-TargetResource
         }
 
         $boundParameters.Remove('AllowedArchitectures') | Out-Null
-        $boundParameters.Add('AllowedArchitectures', ($PSBoundParameters.AllowedArchitectures -join ','))
-        $PSBoundParameters.Add('ApplicableArchitectures', 'none')
-        $boundParameters.Add('ApplicableArchitectures', 'none')
+        $boundParameters.Add('allowedArchitectures', ($PSBoundParameters.AllowedArchitectures -join ','))
+        $PSBoundParameters.Add('applicableArchitectures', 'none')
+        $boundParameters.Add('applicableArchitectures', 'none')
 
-        if ([System.String]::IsNullOrEmpty($boundParameters.AllowedArchitectures))
+        if ([System.String]::IsNullOrEmpty($boundParameters.allowedArchitectures))
         {
-            $boundParameters.AllowedArchitectures = $null
+            $boundParameters.allowedArchitectures = $null
         }
     }
 
@@ -874,6 +903,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -925,6 +962,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -999,6 +1044,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

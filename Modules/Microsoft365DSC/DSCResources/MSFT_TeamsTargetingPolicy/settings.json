@@ -1,0 +1,30 @@
+{
+  "resourceName":"TeamsTargetingPolicy",
+  "description":"This resource configures a Teams Targeting Policy.",
+  "roles":{
+    "read":[
+      "Teams Reader"
+    ],
+    "update":[
+      "Teams Administrator"
+    ]
+  },
+  "permissions":[],
+  "requiredModules":[
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments":[
+    "Global",
+    "USGov"
+  ],
+  "mode":"Configuration",
+  "commands":[
+    {
+      "module":"MicrosoftTeams",
+      "cmdlets":[
+        "Get-CsTeamsTargetingPolicy",
+        "Set-CsTeamsTargetingPolicy"
+      ]
+    }
+  ]
+}

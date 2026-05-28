@@ -80,6 +80,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -171,6 +179,8 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -265,6 +275,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -417,6 +435,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -464,6 +490,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -611,7 +645,7 @@ function Get-M365DSCSentinelWatchlist
         $hostUrl = Get-M365DSCAPIEndpoint -TenantId $TenantId
         $uri = $hostUrl.AzureManagement + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
         $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/watchlists?api-version=2022-06-01-preview"
-        $response = Invoke-AzRest -Uri $uri -Method 'GET'
+        $response = Invoke-AzRestMethod -Uri $uri -Method 'GET'
         $result = ConvertFrom-Json $response.Content
         return $result.value
     }
@@ -664,7 +698,7 @@ function Set-M365DSCSentinelWatchlist
 
         Write-Verbose -Message "Calling Url: {$($uri)}"
         Write-Verbose -Message "Payload: {$payload}"
-        $response = Invoke-AzRest -Uri $uri -Method 'PUT' -Payload $payload
+        $response = Invoke-AzRestMethod -Uri $uri -Method 'PUT' -Payload $payload
         if ($response.StatusCode -ne 200 -and $response.StatusCode -ne 201)
         {
             Write-Verbose -Message $($response | Out-String)
@@ -713,7 +747,7 @@ function Remove-M365DSCSentinelWatchlist
         $hostUrl = Get-M365DSCAPIEndpoint -TenantId $TenantId
         $uri = $hostUrl.AzureManagement + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
         $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/watchlists/$($WatchListAlias)?api-version=2022-06-01-preview"
-        Invoke-AzRest -Uri $uri -Method 'DELETE'
+        Invoke-AzRestMethod -Uri $uri -Method 'DELETE'
     }
     catch
     {

@@ -13,17 +13,25 @@
     },
     "AADApplication": {
       "HasCustomComparison": true,
-      "Description": "Excludes properties: AppId, ObjectId"
+      "Description": "Excludes properties: AppId, ObjectId, ApplicationTemplateId, AdminConsentGranted"
     },
     "AADCustomSecurityAttributeDefinition": {
       "HasCustomComparison": true,
       "Description": "Includes properties: ValueId, IsActive; Uses PostProcessing scriptblock"
+    },
+    "AADEntitlementManagementAccessPackageAssignmentPolicy": {
+      "HasCustomComparison": true,
+      "Description": "Uses PostProcessing scriptblock"
     },
     "AADEntitlementManagementAccessPackageCatalogResource": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: AddedBy, AddedOn, IsPendingOnboarding"
     },
     "AADGroup": {
+      "HasCustomComparison": true,
+      "Description": "Uses PostProcessing scriptblock"
+    },
+    "AADGroupEligibilitySchedule": {
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
     },
@@ -45,7 +53,11 @@
     },
     "AADRoleEligibilityScheduleRequest": {
       "HasCustomComparison": true,
-      "Description": "Excludes properties: Action, IsValidationOnly, Justification"
+      "Description": "Excludes properties: Action, IsValidationOnly, Justification; Uses PostProcessing scriptblock"
+    },
+    "AADRoleManagementPolicyRule": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: PolicyId"
     },
     "AADServicePrincipal": {
       "HasCustomComparison": true,
@@ -54,6 +66,10 @@
     "AADSocialIdentityProvider": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: ClientSecret"
+    },
+    "AADTenantAppManagementPolicy": {
+      "HasCustomComparison": true,
+      "Description": "Uses PostProcessing scriptblock"
     },
     "DefenderDeviceAuthenticatedScanDefinition": {
       "HasCustomComparison": true,
@@ -192,6 +208,10 @@
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
     },
+    "IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: TokenExpirationDateTime"
+    },
     "IntuneDeviceRemediation": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: IsGlobalScript; Uses PostProcessing scriptblock"
@@ -288,6 +308,10 @@
       "HasCustomComparison": true,
       "Description": "Excludes properties: LastHeartbeatDateTime"
     },
+    "IntunePolicySets": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: PayloadId"
+    },
     "IntuneRoleAssignment": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: ResourceScopesDisplayNames, MembersDisplayNames"
@@ -336,6 +360,10 @@
       "HasCustomComparison": true,
       "Description": "Excludes properties: PreSharedKey"
     },
+    "IntuneWindowsAutopilotDeploymentProfileAzureADJoined": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: DeviceType"
+    },
     "PlannerTask": {
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
@@ -351,6 +379,14 @@
     "SCDeviceConfigurationRule": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: Name"
+    },
+    "SCDLPSensitiveInformationType": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: Identity, FileData"
+    },
+    "SCDLPSensitiveInformationTypeRulePackage": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: Identity"
     },
     "SCRoleGroupMember": {
       "HasCustomComparison": true,

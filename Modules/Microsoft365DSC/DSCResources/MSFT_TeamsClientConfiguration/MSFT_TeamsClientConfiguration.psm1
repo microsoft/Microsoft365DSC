@@ -60,6 +60,10 @@ function Get-TargetResource
         $ContentPin = 'RequiredOutsideScheduledMeeting',
 
         [Parameter()]
+        [System.Boolean]
+        $ExtendedWorkInfoInPeopleSearch,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
@@ -67,6 +71,11 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $RestrictedSenderList = $null,
+
+        [Parameter()]
+        [ValidateSet('MicrosoftDefault', 'Disabled')]
+        [System.String]
+        $UseUnifiedDomain,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
@@ -88,6 +97,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -136,13 +153,17 @@ function Get-TargetResource
             AllowShareFile                   = $config.AllowShareFile
             AllowSkypeBusinessInterop        = $config.AllowSkypeBusinessInterop
             ContentPin                       = $config.ContentPin
+            ExtendedWorkInfoInPeopleSearch   = $config.ExtendedWorkInfoInPeopleSearch
             ResourceAccountContentAccess     = $config.ResourceAccountContentAccess
             RestrictedSenderList             = $config.RestrictedSenderList
+            UseUnifiedDomain                 = $config.UseUnifiedDomain
             IsSingleInstance                 = 'Yes'
             Credential                       = $Credential
             ApplicationId                    = $ApplicationId
             TenantId                         = $TenantId
             CertificateThumbprint            = $CertificateThumbprint
+            CertificatePath                  = $CertificatePath
+            CertificatePassword              = $CertificatePassword
             ManagedIdentity                  = $ManagedIdentity.IsPresent
             AccessTokens                     = $AccessTokens
         }
@@ -223,6 +244,10 @@ function Set-TargetResource
         $ContentPin = 'RequiredOutsideScheduledMeeting',
 
         [Parameter()]
+        [System.Boolean]
+        $ExtendedWorkInfoInPeopleSearch,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
@@ -230,6 +255,11 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $RestrictedSenderList = $null,
+
+        [Parameter()]
+        [ValidateSet('MicrosoftDefault', 'Disabled')]
+        [System.String]
+        $UseUnifiedDomain,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
@@ -251,6 +281,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -356,6 +394,10 @@ function Test-TargetResource
         $ContentPin = 'RequiredOutsideScheduledMeeting',
 
         [Parameter()]
+        [System.Boolean]
+        $ExtendedWorkInfoInPeopleSearch,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
@@ -363,6 +405,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $RestrictedSenderList = $null,
+
+        [Parameter()]
+        [ValidateSet('MicrosoftDefault', 'Disabled')]
+        [System.String]
+        $UseUnifiedDomain,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
@@ -384,6 +431,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -437,6 +492,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -469,6 +532,8 @@ function Export-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }

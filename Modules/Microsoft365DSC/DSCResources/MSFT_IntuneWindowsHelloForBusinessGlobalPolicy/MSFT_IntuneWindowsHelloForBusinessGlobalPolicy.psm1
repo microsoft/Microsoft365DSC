@@ -96,6 +96,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -129,7 +137,7 @@ function Get-TargetResource
             $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
                 -ErrorAction SilentlyContinue | Where-Object `
                 -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentWindowsHelloForBusinessConfiguration'
+                $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentWindowsHelloForBusinessConfiguration'
             }
             #endregion
         }
@@ -142,39 +150,39 @@ function Get-TargetResource
 
         #region resource generator code
         $enumEnhancedBiometricsState = $null
-        if ($null -ne $getValue.AdditionalProperties.enhancedBiometricsState)
+        if ($null -ne $getValue.enhancedBiometricsState)
         {
-            $enumEnhancedBiometricsState = $getValue.AdditionalProperties.enhancedBiometricsState.ToString()
+            $enumEnhancedBiometricsState = $getValue.enhancedBiometricsState.ToString()
         }
 
         $enumPinLowercaseCharactersUsage = $null
-        if ($null -ne $getValue.AdditionalProperties.pinLowercaseCharactersUsage)
+        if ($null -ne $getValue.pinLowercaseCharactersUsage)
         {
-            $enumPinLowercaseCharactersUsage = $getValue.AdditionalProperties.pinLowercaseCharactersUsage.ToString()
+            $enumPinLowercaseCharactersUsage = $getValue.pinLowercaseCharactersUsage.ToString()
         }
 
         $enumPinSpecialCharactersUsage = $null
-        if ($null -ne $getValue.AdditionalProperties.pinSpecialCharactersUsage)
+        if ($null -ne $getValue.pinSpecialCharactersUsage)
         {
-            $enumPinSpecialCharactersUsage = $getValue.AdditionalProperties.pinSpecialCharactersUsage.ToString()
+            $enumPinSpecialCharactersUsage = $getValue.pinSpecialCharactersUsage.ToString()
         }
 
         $enumPinUppercaseCharactersUsage = $null
-        if ($null -ne $getValue.AdditionalProperties.pinUppercaseCharactersUsage)
+        if ($null -ne $getValue.pinUppercaseCharactersUsage)
         {
-            $enumPinUppercaseCharactersUsage = $getValue.AdditionalProperties.pinUppercaseCharactersUsage.ToString()
+            $enumPinUppercaseCharactersUsage = $getValue.pinUppercaseCharactersUsage.ToString()
         }
 
         $enumSecurityKeyForSignIn = $null
-        if ($null -ne $getValue.AdditionalProperties.securityKeyForSignIn)
+        if ($null -ne $getValue.securityKeyForSignIn)
         {
-            $enumSecurityKeyForSignIn = $getValue.AdditionalProperties.securityKeyForSignIn.ToString()
+            $enumSecurityKeyForSignIn = $getValue.securityKeyForSignIn.ToString()
         }
 
         $enumState = $null
-        if ($null -ne $getValue.AdditionalProperties.state)
+        if ($null -ne $getValue.state)
         {
-            $enumState = $getValue.AdditionalProperties.state.ToString()
+            $enumState = $getValue.state.ToString()
         }
         #endregion
 
@@ -182,24 +190,26 @@ function Get-TargetResource
             #region resource generator code
             IsSingleInstance            = 'Yes'
             EnhancedBiometricsState     = $enumEnhancedBiometricsState
-            EnhancedSignInSecurity      = $getValue.AdditionalProperties.enhancedSignInSecurity
-            PinExpirationInDays         = $getValue.AdditionalProperties.pinExpirationInDays
+            EnhancedSignInSecurity      = $getValue.enhancedSignInSecurity
+            PinExpirationInDays         = $getValue.pinExpirationInDays
             PinLowercaseCharactersUsage = $enumPinLowercaseCharactersUsage
-            PinMaximumLength            = $getValue.AdditionalProperties.pinMaximumLength
-            PinMinimumLength            = $getValue.AdditionalProperties.pinMinimumLength
-            PinPreviousBlockCount       = $getValue.AdditionalProperties.pinPreviousBlockCount
+            PinMaximumLength            = $getValue.pinMaximumLength
+            PinMinimumLength            = $getValue.pinMinimumLength
+            PinPreviousBlockCount       = $getValue.pinPreviousBlockCount
             PinSpecialCharactersUsage   = $enumPinSpecialCharactersUsage
             PinUppercaseCharactersUsage = $enumPinUppercaseCharactersUsage
-            RemotePassportEnabled       = $getValue.AdditionalProperties.remotePassportEnabled
-            SecurityDeviceRequired      = $getValue.AdditionalProperties.securityDeviceRequired
+            RemotePassportEnabled       = $getValue.remotePassportEnabled
+            SecurityDeviceRequired      = $getValue.securityDeviceRequired
             SecurityKeyForSignIn        = $enumSecurityKeyForSignIn
             State                       = $enumState
-            UnlockWithBiometricsEnabled = $getValue.AdditionalProperties.unlockWithBiometricsEnabled
+            UnlockWithBiometricsEnabled = $getValue.unlockWithBiometricsEnabled
             Credential                  = $Credential
             ApplicationId               = $ApplicationId
             TenantId                    = $TenantId
             ApplicationSecret           = $ApplicationSecret
             CertificateThumbprint       = $CertificateThumbprint
+            CertificatePath             = $CertificatePath
+            CertificatePassword         = $CertificatePassword
             ManagedIdentity             = $ManagedIdentity.IsPresent
             #endregion
         }
@@ -313,6 +323,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -344,7 +362,7 @@ function Set-TargetResource
     #region resource generator code
     $updateParameters.Add('@odata.type', '#microsoft.graph.deviceEnrollmentWindowsHelloForBusinessConfiguration')
     $policy = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration | Where-Object -FilterScript {
-        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentWindowsHelloForBusinessConfiguration'
+        $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentWindowsHelloForBusinessConfiguration'
     }
     Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
         -DeviceEnrollmentConfigurationId $policy.Id `
@@ -447,6 +465,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -500,6 +526,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -526,10 +560,8 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentWindowsHelloForBusinessConfiguration'
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter $Filter -All -ErrorAction Stop | Where-Object {
+            $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentWindowsHelloForBusinessConfiguration'
         }
         #endregion
 
@@ -562,6 +594,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

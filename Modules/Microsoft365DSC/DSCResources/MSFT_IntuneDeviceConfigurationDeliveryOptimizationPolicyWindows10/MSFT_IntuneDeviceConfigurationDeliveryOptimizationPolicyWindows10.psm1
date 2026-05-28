@@ -125,6 +125,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -200,33 +208,33 @@ function Get-TargetResource
 
         #region resource generator code
         $complexBandwidthMode = [ordered]@{}
-        $complexBandwidthMode.Add('MaximumDownloadBandwidthInKilobytesPerSecond', $getValue.AdditionalProperties.bandwidthMode.maximumDownloadBandwidthInKilobytesPerSecond)
-        $complexBandwidthMode.Add('MaximumUploadBandwidthInKilobytesPerSecond', $getValue.AdditionalProperties.bandwidthMode.maximumUploadBandwidthInKilobytesPerSecond)
+        $complexBandwidthMode.Add('MaximumDownloadBandwidthInKilobytesPerSecond', $getValue.bandwidthMode.maximumDownloadBandwidthInKilobytesPerSecond)
+        $complexBandwidthMode.Add('MaximumUploadBandwidthInKilobytesPerSecond', $getValue.bandwidthMode.maximumUploadBandwidthInKilobytesPerSecond)
         $complexBandwidthBackgroundPercentageHours = [ordered]@{}
-        $complexBandwidthBackgroundPercentageHours.Add('BandwidthBeginBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthBeginBusinessHours)
-        $complexBandwidthBackgroundPercentageHours.Add('BandwidthEndBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthEndBusinessHours)
-        $complexBandwidthBackgroundPercentageHours.Add('BandwidthPercentageDuringBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthPercentageDuringBusinessHours)
-        $complexBandwidthBackgroundPercentageHours.Add('BandwidthPercentageOutsideBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthPercentageOutsideBusinessHours)
+        $complexBandwidthBackgroundPercentageHours.Add('BandwidthBeginBusinessHours', $getValue.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthBeginBusinessHours)
+        $complexBandwidthBackgroundPercentageHours.Add('BandwidthEndBusinessHours', $getValue.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthEndBusinessHours)
+        $complexBandwidthBackgroundPercentageHours.Add('BandwidthPercentageDuringBusinessHours', $getValue.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthPercentageDuringBusinessHours)
+        $complexBandwidthBackgroundPercentageHours.Add('BandwidthPercentageOutsideBusinessHours', $getValue.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthPercentageOutsideBusinessHours)
         if ($complexBandwidthBackgroundPercentageHours.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexBandwidthBackgroundPercentageHours = $null
         }
         $complexBandwidthMode.Add('BandwidthBackgroundPercentageHours', $complexBandwidthBackgroundPercentageHours)
         $complexBandwidthForegroundPercentageHours = [ordered]@{}
-        $complexBandwidthForegroundPercentageHours.Add('BandwidthBeginBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthBeginBusinessHours)
-        $complexBandwidthForegroundPercentageHours.Add('BandwidthEndBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthEndBusinessHours)
-        $complexBandwidthForegroundPercentageHours.Add('BandwidthPercentageDuringBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthPercentageDuringBusinessHours)
-        $complexBandwidthForegroundPercentageHours.Add('BandwidthPercentageOutsideBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthPercentageOutsideBusinessHours)
+        $complexBandwidthForegroundPercentageHours.Add('BandwidthBeginBusinessHours', $getValue.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthBeginBusinessHours)
+        $complexBandwidthForegroundPercentageHours.Add('BandwidthEndBusinessHours', $getValue.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthEndBusinessHours)
+        $complexBandwidthForegroundPercentageHours.Add('BandwidthPercentageDuringBusinessHours', $getValue.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthPercentageDuringBusinessHours)
+        $complexBandwidthForegroundPercentageHours.Add('BandwidthPercentageOutsideBusinessHours', $getValue.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthPercentageOutsideBusinessHours)
         if ($complexBandwidthForegroundPercentageHours.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexBandwidthForegroundPercentageHours = $null
         }
         $complexBandwidthMode.Add('BandwidthForegroundPercentageHours', $complexBandwidthForegroundPercentageHours)
-        $complexBandwidthMode.Add('MaximumBackgroundBandwidthPercentage', $getValue.AdditionalProperties.bandwidthMode.maximumBackgroundBandwidthPercentage)
-        $complexBandwidthMode.Add('MaximumForegroundBandwidthPercentage', $getValue.AdditionalProperties.bandwidthMode.maximumForegroundBandwidthPercentage)
-        if ($null -ne $getValue.AdditionalProperties.bandwidthMode.'@odata.type')
+        $complexBandwidthMode.Add('MaximumBackgroundBandwidthPercentage', $getValue.bandwidthMode.maximumBackgroundBandwidthPercentage)
+        $complexBandwidthMode.Add('MaximumForegroundBandwidthPercentage', $getValue.bandwidthMode.maximumForegroundBandwidthPercentage)
+        if ($null -ne $getValue.bandwidthMode.'@odata.type')
         {
-            $complexBandwidthMode.Add('odataType', $getValue.AdditionalProperties.bandwidthMode.'@odata.type'.ToString())
+            $complexBandwidthMode.Add('odataType', $getValue.bandwidthMode.'@odata.type'.ToString())
         }
         if ($complexBandwidthMode.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -234,14 +242,14 @@ function Get-TargetResource
         }
 
         $complexGroupIdSource = [ordered]@{}
-        $complexGroupIdSource.Add('GroupIdCustom', $getValue.AdditionalProperties.groupIdSource.groupIdCustom)
-        if ($null -ne $getValue.AdditionalProperties.groupIdSource.groupIdSourceOption)
+        $complexGroupIdSource.Add('GroupIdCustom', $getValue.groupIdSource.groupIdCustom)
+        if ($null -ne $getValue.groupIdSource.groupIdSourceOption)
         {
-            $complexGroupIdSource.Add('GroupIdSourceOption', $getValue.AdditionalProperties.groupIdSource.groupIdSourceOption.ToString())
+            $complexGroupIdSource.Add('GroupIdSourceOption', $getValue.groupIdSource.groupIdSourceOption.ToString())
         }
-        if ($null -ne $getValue.AdditionalProperties.groupIdSource.'@odata.type')
+        if ($null -ne $getValue.groupIdSource.'@odata.type')
         {
-            $complexGroupIdSource.Add('odataType', $getValue.AdditionalProperties.groupIdSource.'@odata.type'.ToString())
+            $complexGroupIdSource.Add('odataType', $getValue.groupIdSource.'@odata.type'.ToString())
         }
         if ($complexGroupIdSource.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -249,11 +257,11 @@ function Get-TargetResource
         }
 
         $complexMaximumCacheSize = [ordered]@{}
-        $complexMaximumCacheSize.Add('MaximumCacheSizeInGigabytes', $getValue.AdditionalProperties.maximumCacheSize.maximumCacheSizeInGigabytes)
-        $complexMaximumCacheSize.Add('MaximumCacheSizePercentage', $getValue.AdditionalProperties.maximumCacheSize.maximumCacheSizePercentage)
-        if ($null -ne $getValue.AdditionalProperties.maximumCacheSize.'@odata.type')
+        $complexMaximumCacheSize.Add('MaximumCacheSizeInGigabytes', $getValue.maximumCacheSize.maximumCacheSizeInGigabytes)
+        $complexMaximumCacheSize.Add('MaximumCacheSizePercentage', $getValue.maximumCacheSize.maximumCacheSizePercentage)
+        if ($null -ne $getValue.maximumCacheSize.'@odata.type')
         {
-            $complexMaximumCacheSize.Add('odataType', $getValue.AdditionalProperties.maximumCacheSize.'@odata.type'.ToString())
+            $complexMaximumCacheSize.Add('odataType', $getValue.maximumCacheSize.'@odata.type'.ToString())
         }
         if ($complexMaximumCacheSize.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -264,42 +272,42 @@ function Get-TargetResource
 
         #region resource generator code
         $enumDeliveryOptimizationMode = $null
-        if ($null -ne $getValue.AdditionalProperties.deliveryOptimizationMode)
+        if ($null -ne $getValue.deliveryOptimizationMode)
         {
-            $enumDeliveryOptimizationMode = $getValue.AdditionalProperties.deliveryOptimizationMode.ToString()
+            $enumDeliveryOptimizationMode = $getValue.deliveryOptimizationMode.ToString()
         }
 
         $enumRestrictPeerSelectionBy = $null
-        if ($null -ne $getValue.AdditionalProperties.restrictPeerSelectionBy)
+        if ($null -ne $getValue.restrictPeerSelectionBy)
         {
-            $enumRestrictPeerSelectionBy = $getValue.AdditionalProperties.restrictPeerSelectionBy.ToString()
+            $enumRestrictPeerSelectionBy = $getValue.restrictPeerSelectionBy.ToString()
         }
 
         $enumVpnPeerCaching = $null
-        if ($null -ne $getValue.AdditionalProperties.vpnPeerCaching)
+        if ($null -ne $getValue.vpnPeerCaching)
         {
-            $enumVpnPeerCaching = $getValue.AdditionalProperties.vpnPeerCaching.ToString()
+            $enumVpnPeerCaching = $getValue.vpnPeerCaching.ToString()
         }
 
         #endregion
 
         $results = @{
             #region resource generator code
-            BackgroundDownloadFromHttpDelayInSeconds                  = $getValue.AdditionalProperties.backgroundDownloadFromHttpDelayInSeconds
+            BackgroundDownloadFromHttpDelayInSeconds                  = $getValue.backgroundDownloadFromHttpDelayInSeconds
             BandwidthMode                                             = $complexBandwidthMode
-            CacheServerBackgroundDownloadFallbackToHttpDelayInSeconds = $getValue.AdditionalProperties.cacheServerBackgroundDownloadFallbackToHttpDelayInSeconds
-            CacheServerForegroundDownloadFallbackToHttpDelayInSeconds = $getValue.AdditionalProperties.cacheServerForegroundDownloadFallbackToHttpDelayInSeconds
-            CacheServerHostNames                                      = $getValue.AdditionalProperties.cacheServerHostNames
+            CacheServerBackgroundDownloadFallbackToHttpDelayInSeconds = $getValue.cacheServerBackgroundDownloadFallbackToHttpDelayInSeconds
+            CacheServerForegroundDownloadFallbackToHttpDelayInSeconds = $getValue.cacheServerForegroundDownloadFallbackToHttpDelayInSeconds
+            CacheServerHostNames                                      = $getValue.cacheServerHostNames
             DeliveryOptimizationMode                                  = $enumDeliveryOptimizationMode
-            ForegroundDownloadFromHttpDelayInSeconds                  = $getValue.AdditionalProperties.foregroundDownloadFromHttpDelayInSeconds
+            ForegroundDownloadFromHttpDelayInSeconds                  = $getValue.foregroundDownloadFromHttpDelayInSeconds
             GroupIdSource                                             = $complexGroupIdSource
-            MaximumCacheAgeInDays                                     = $getValue.AdditionalProperties.maximumCacheAgeInDays
+            MaximumCacheAgeInDays                                     = $getValue.maximumCacheAgeInDays
             MaximumCacheSize                                          = $complexMaximumCacheSize
-            MinimumBatteryPercentageAllowedToUpload                   = $getValue.AdditionalProperties.minimumBatteryPercentageAllowedToUpload
-            MinimumDiskSizeAllowedToPeerInGigabytes                   = $getValue.AdditionalProperties.minimumDiskSizeAllowedToPeerInGigabytes
-            MinimumFileSizeToCacheInMegabytes                         = $getValue.AdditionalProperties.minimumFileSizeToCacheInMegabytes
-            MinimumRamAllowedToPeerInGigabytes                        = $getValue.AdditionalProperties.minimumRamAllowedToPeerInGigabytes
-            ModifyCacheLocation                                       = $getValue.AdditionalProperties.modifyCacheLocation
+            MinimumBatteryPercentageAllowedToUpload                   = $getValue.minimumBatteryPercentageAllowedToUpload
+            MinimumDiskSizeAllowedToPeerInGigabytes                   = $getValue.minimumDiskSizeAllowedToPeerInGigabytes
+            MinimumFileSizeToCacheInMegabytes                         = $getValue.minimumFileSizeToCacheInMegabytes
+            MinimumRamAllowedToPeerInGigabytes                        = $getValue.minimumRamAllowedToPeerInGigabytes
+            ModifyCacheLocation                                       = $getValue.modifyCacheLocation
             RestrictPeerSelectionBy                                   = $enumRestrictPeerSelectionBy
             VpnPeerCaching                                            = $enumVpnPeerCaching
             Description                                               = $getValue.Description
@@ -312,6 +320,8 @@ function Get-TargetResource
             TenantId                                                  = $TenantId
             ApplicationSecret                                         = $ApplicationSecret
             CertificateThumbprint                                     = $CertificateThumbprint
+            CertificatePath                                           = $CertificatePath
+            CertificatePassword                                       = $CertificatePassword
             ManagedIdentity                                           = $ManagedIdentity.IsPresent
             AccessTokens                                              = $AccessTokens
             #endregion
@@ -460,6 +470,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -663,6 +681,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -718,6 +744,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -744,11 +778,17 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsDeliveryOptimizationConfiguration' `
+        $baseFilter = "isof('microsoft.graph.windowsDeliveryOptimizationConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
+            -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -783,6 +823,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

@@ -62,6 +62,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -208,6 +216,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -259,17 +275,17 @@ function Set-TargetResource
             if ($property.Name -eq 'LockoutThreshold')
             {
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
-                $entry.Value = $LockoutThreshold
+                $entry.Value = [System.String]$LockoutThreshold
             }
             elseif ($property.Name -eq 'LockoutDurationInSeconds')
             {
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
-                $entry.Value = $LockoutDurationInSeconds
+                $entry.Value = [System.String]$LockoutDurationInSeconds
             }
             elseif ($property.Name -eq 'EnableBannedPasswordCheck')
             {
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
-                $entry.Value = [System.Boolean]$EnableBannedPasswordCheck
+                $entry.Value = [System.String]$EnableBannedPasswordCheck
             }
             elseif ($property.Name -eq 'BannedPasswordList')
             {
@@ -279,7 +295,7 @@ function Set-TargetResource
             elseif ($property.Name -eq 'EnableBannedPasswordCheckOnPremises')
             {
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
-                $entry.Value = [System.Boolean]$EnableBannedPasswordCheckOnPremises
+                $entry.Value = [System.String]$EnableBannedPasswordCheckOnPremises
             }
             elseif ($property.Name -eq 'BannedPasswordCheckOnPremisesMode')
             {
@@ -288,7 +304,7 @@ function Set-TargetResource
             }
         }
 
-        Write-Verbose -Message "Updating Policy's Values with $($Policy.Values | Out-String)"
+        Write-Verbose -Message "Updating Policy's Values with $($Policy.Values | ConvertTo-Json -Depth 10)"
         Update-MgBetaDirectorySetting -DirectorySettingId $Policy.id -Values $Policy.Values | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
@@ -360,6 +376,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -407,6 +431,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]

@@ -84,6 +84,20 @@
         "Get-MgAdminSharepointSetting",
         "Update-MgAdminSharepointSetting"
       ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    },
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Get-PnPTenant",
+        "Invoke-PnPSPRestMethod",
+        "Set-PnPTenant"
+      ]
     }
   ]
 }

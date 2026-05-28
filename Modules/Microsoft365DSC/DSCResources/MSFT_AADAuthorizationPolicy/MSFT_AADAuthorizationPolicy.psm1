@@ -100,6 +100,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -152,6 +160,8 @@ function Get-TargetResource
             ApplicationId                                           = $ApplicationId
             TenantId                                                = $TenantId
             CertificateThumbprint                                   = $CertificateThumbprint
+            CertificatePath                                         = $CertificatePath
+            CertificatePassword                                     = $CertificatePassword
             ManagedIdentity                                         = $ManagedIdentity.IsPresent
             AccessTokens                                            = $AccessTokens
         }
@@ -269,6 +279,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -292,18 +310,13 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-
     $desiredParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $desiredParameters.Remove('IsSingleInstance') | Out-Null
 
-    $UpdateParameters = @{
-        AuthorizationPolicyId = 'authorizationPolicy'
-    }
-    # update policy with supplied parameters that are different from existing policy
+    $UpdateParameters = @{}
 
     # prepare object for default user role permissions
     $defaultUserRolePermissions = @{}
-
     foreach ($param in $desiredParameters.Keys)
     {
         $desiredParam = $desiredParameters.$param
@@ -319,12 +332,10 @@ function Set-TargetResource
                 if ($param -like 'Permission*')
                 {
                     $UpdateParameters.Add($param, $desiredParam)
-                    Write-Verbose -Message "Added '$param' to UpdateParameters"
                 }
                 else
                 {
                     $defaultUserRolePermissions.Add(($param -replace '^DefaultUserRole'), $desiredParam)
-                    Write-Verbose -Message "Added '$($param -replace '^DefaultUserRole')' ($param) to defaultUserRolePermissions"
                 }
             }
             else
@@ -333,33 +344,26 @@ function Set-TargetResource
                 {
                     # translate displayvalue to corresponding GUID
                     $guestUserRoleId = Get-GuestUserRoleIdFromName -GuestUserRole $desiredParam
-                    Write-Verbose -Message "Translated GuestUserRole '$param' to '$guestUserRoleId'"
-                    $UpdateParameters.Add($param, $guestUserRoleId)
-                    Write-Verbose -Message "Added '$param' to UpdateParameters"
+                    $UpdateParameters.Add('GuestUserRoleId', $guestUserRoleId)
                 }
                 else
                 {
                     $UpdateParameters.Add($param, $desiredParam)
-                    Write-Verbose -Message "added '$param' to UpdateParameters"
                 }
             }
-        }
-        else
-        {
-            Write-Verbose -Message "'$param' is unchanged"
         }
     }
 
     if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
-        Write-Verbose -Message "Add 'DefaultUserRolePermissions' to UpdateParameters"
         $UpdateParameters.Add('DefaultUserRolePermissions', $defaultUserRolePermissions.Clone())
     }
 
     try
     {
-        Write-Verbose -Message "Updating existing authorization policy with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
-        $null = Update-MgBetaPolicyAuthorizationPolicy @updateParameters -ErrorAction Stop
+        Write-Verbose -Message "Updating existing authorization policy"
+        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+        $null = Update-MgBetaPolicyAuthorizationPolicy -AuthorizationPolicyId 'authorizationPolicy' -BodyParameter $UpdateParameters -ErrorAction Stop
     }
     catch
     {
@@ -369,7 +373,6 @@ function Set-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        Write-Verbose -Message "Failed to update authorization policy $DisplayName"
         throw $_
     }
 }
@@ -473,6 +476,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -520,6 +531,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]

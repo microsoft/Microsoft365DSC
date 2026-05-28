@@ -111,6 +111,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -152,10 +160,7 @@ function Get-TargetResource
             #region resource generator code
             if ($null -eq $getValue)
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.aospDeviceOwnerDeviceConfiguration' `
-                }
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")' and isof('microsoft.graph.aospDeviceOwnerDeviceConfiguration')" -ErrorAction SilentlyContinue
             }
             #endregion
 
@@ -186,26 +191,28 @@ function Get-TargetResource
             Description                                    = $getValue.Description
             DisplayName                                    = $getValue.DisplayName
             RoleScopeTagIds                                = $getValue.RoleScopeTagIds
-            AppsBlockInstallFromUnknownSources             = $getValue.AdditionalProperties.appsBlockInstallFromUnknownSources
-            BluetoothBlockConfiguration                    = $getValue.AdditionalProperties.bluetoothBlockConfiguration
-            BluetoothBlocked                               = $getValue.AdditionalProperties.bluetoothBlocked
-            CameraBlocked                                  = $getValue.AdditionalProperties.cameraBlocked
-            FactoryResetBlocked                            = $getValue.AdditionalProperties.factoryResetBlocked
-            PasswordMinimumLength                          = $getValue.AdditionalProperties.passwordMinimumLength
-            PasswordMinutesOfInactivityBeforeScreenTimeout = $getValue.AdditionalProperties.passwordMinutesOfInactivityBeforeScreenTimeout
-            PasswordRequiredType                           = $getValue.AdditionalProperties.passwordRequiredType
-            PasswordSignInFailureCountBeforeFactoryReset   = $getValue.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
-            ScreenCaptureBlocked                           = $getValue.AdditionalProperties.screenCaptureBlocked
-            SecurityAllowDebuggingFeatures                 = $getValue.AdditionalProperties.securityAllowDebuggingFeatures
-            StorageBlockExternalMedia                      = $getValue.AdditionalProperties.storageBlockExternalMedia
-            StorageBlockUsbFileTransfer                    = $getValue.AdditionalProperties.storageBlockUsbFileTransfer
-            WifiBlockEditConfigurations                    = $getValue.AdditionalProperties.wifiBlockEditConfigurations
+            AppsBlockInstallFromUnknownSources             = $getValue.appsBlockInstallFromUnknownSources
+            BluetoothBlockConfiguration                    = $getValue.bluetoothBlockConfiguration
+            BluetoothBlocked                               = $getValue.bluetoothBlocked
+            CameraBlocked                                  = $getValue.cameraBlocked
+            FactoryResetBlocked                            = $getValue.factoryResetBlocked
+            PasswordMinimumLength                          = $getValue.passwordMinimumLength
+            PasswordMinutesOfInactivityBeforeScreenTimeout = $getValue.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordRequiredType                           = $getValue.passwordRequiredType
+            PasswordSignInFailureCountBeforeFactoryReset   = $getValue.passwordSignInFailureCountBeforeFactoryReset
+            ScreenCaptureBlocked                           = $getValue.screenCaptureBlocked
+            SecurityAllowDebuggingFeatures                 = $getValue.securityAllowDebuggingFeatures
+            StorageBlockExternalMedia                      = $getValue.storageBlockExternalMedia
+            StorageBlockUsbFileTransfer                    = $getValue.storageBlockUsbFileTransfer
+            WifiBlockEditConfigurations                    = $getValue.wifiBlockEditConfigurations
             Ensure                                         = 'Present'
             Credential                                     = $Credential
             ApplicationId                                  = $ApplicationId
             TenantId                                       = $TenantId
             ApplicationSecret                              = $ApplicationSecret
             CertificateThumbprint                          = $CertificateThumbprint
+            CertificatePath                                = $CertificatePath
+            CertificatePassword                            = $CertificatePassword
             ManagedIdentity                                = $ManagedIdentity.IsPresent
             AccessTokens                                   = $AccessTokens
         }
@@ -344,6 +351,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -375,25 +390,11 @@ function Set-TargetResource
 
         $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
-                $CreateParameters.Remove($keyName)
-            }
-        }
         $CreateParameters.Remove('Id') | Out-Null
-
-        if ($AdditionalProperties)
-        {
-            $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
-        }
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.aospDeviceOwnerDeviceConfiguration')
 
         #region resource generator code
-        $policy = New-MgBetaDeviceManagementDeviceConfiguration @CreateParameters
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
@@ -411,25 +412,10 @@ function Set-TargetResource
 
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
-                $UpdateParameters.Remove($keyName)
-            }
-        }
         $UpdateParameters.Remove('Id') | Out-Null
 
-        if ($AdditionalProperties)
-        {
-            $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
-        }
-
         #region resource generator code
-        Update-MgBetaDeviceManagementDeviceConfiguration @UpdateParameters `
+        Update-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
@@ -558,6 +544,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -611,6 +605,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -637,11 +639,16 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.aospDeviceOwnerDeviceConfiguration' `
+        $baseFilter = "isof('microsoft.graph.aospDeviceOwnerDeviceConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -671,6 +678,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -724,78 +733,6 @@ function Export-TargetResource
             throw
         }
     }
-}
-
-
-
-function Get-M365DSCAdditionalProperties
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $additionalProperties = @(
-        'AppsBlockInstallFromUnknownSources'
-        'BluetoothBlockConfiguration'
-        'BluetoothBlocked'
-        'CameraBlocked'
-        'FactoryResetBlocked'
-        'PasswordMinimumLength'
-        'PasswordMinutesOfInactivityBeforeScreenTimeout'
-        'PasswordRequiredType'
-        'PasswordSignInFailureCountBeforeFactoryReset'
-        'ScreenCaptureBlocked'
-        'SecurityAllowDebuggingFeatures'
-        'StorageBlockExternalMedia'
-        'StorageBlockUsbFileTransfer'
-        'WifiBlockEditConfigurations'
-
-    )
-    $results = @{'@odata.type' = '#microsoft.graph.aospDeviceOwnerDeviceConfiguration' }
-    $cloneProperties = $Properties.Clone()
-    foreach ($property in $cloneProperties.Keys)
-    {
-        if ($property -in ($additionalProperties) )
-        {
-            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            if ($properties.$property -and $properties.$property.GetType().FullName -like '*CIMInstance*')
-            {
-                if ($properties.$property.GetType().FullName -like '*[[\]]')
-                {
-                    $array = @()
-                    foreach ($item in $properties.$property)
-                    {
-                        $array += Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-
-                    }
-                    $propertyValue = $array
-                }
-                else
-                {
-                    $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
-                }
-
-            }
-            else
-            {
-                $propertyValue = $properties.$property
-            }
-
-
-            $results.Add($propertyName, $propertyValue)
-
-        }
-    }
-    if ($results.Count -eq 1)
-    {
-        return $null
-    }
-    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

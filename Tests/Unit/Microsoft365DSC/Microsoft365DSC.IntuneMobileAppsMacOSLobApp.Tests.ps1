@@ -47,6 +47,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-DeviceAppManagementAppCategory -MockWith {
             }
 
+            Mock -CommandName Invoke-M365DSCIntuneMobileAppInitialUpload -MockWith {
+            }
+
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
             }
             Mock -CommandName New-MgBetaDeviceAppManagementMobileApp -MockWith {
@@ -64,11 +67,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Publisher             = "Contoso"
                     RoleScopeTagIds       = @()
                     IgnoreVersionDetection = $True
-                    AdditionalProperties   = @{
-                        '@odata.type' = '#microsoft.graph.macOSLobApp'
-                        minimumSupportedOperatingSystem = @{
-                            v11_0 = $true
-                        }
+                    '@odata.type' = '#microsoft.graph.macOSLobApp'
+                    minimumSupportedOperatingSystem = @{
+                        v11_0 = $true
                     }
                 }
             }
@@ -92,11 +93,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Publisher             = "Contoso"
                     RoleScopeTagIds       = @()
                     IgnoreVersionDetection = $True
-                    AdditionalProperties   = @{
-                        '@odata.type' = '#microsoft.graph.macOSLobApp'
-                        minimumSupportedOperatingSystem = @{
-                            v11_0 = $true
-                        }
+                    '@odata.type' = '#microsoft.graph.macOSLobApp'
+                    minimumSupportedOperatingSystem = @{
+                        v11_0 = $true
                     }
                     Ensure                = 'Present'
                 }

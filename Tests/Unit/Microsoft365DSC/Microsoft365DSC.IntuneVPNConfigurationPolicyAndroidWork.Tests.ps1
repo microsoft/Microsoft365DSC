@@ -44,46 +44,44 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                                          = 'FakeStringValue'
                     DisplayName                                 = 'FakeStringValue'
                     Description                                 = 'FakeStringValue'
-                    AdditionalProperties                        = @{
-                        '@odata.type'                           = '#microsoft.graph.androidWorkProfileVpnConfiguration'
-                        authenticationMethod                    = 'usernameAndPassword'
-                        connectionName                          = 'FakeStringValue'
-                        connectionType                          = 'ciscoAnyConnect'
-                        proxyServer                             = @(
-                            @{
-                                port                            = 80
-                                automaticConfigurationScriptUrl = 'https://www.test.com'
-                                address                         = 'proxy.test.com'
-                            }
-                        )
-                        servers                                  = @(
-                            @{
-                                isDefaultServer                 = $True
-                                description                     = 'server'
-                                address                         = 'vpn.test.com'
-                            }
-                        )
-                        customData                              = @(
-                            @{
-                                key                             = 'FakeStringValue'
-                                value                           = 'FakeStringValue'
-                            }
-                        )
-                        customKeyValueData                      = @(
-                            @{
-                                name                            = 'FakeStringValue'
-                                value                           = 'FakeStringValue'
-                            }
-                        )
-                        targetedMobileApps                    = @(
-                            @{
-                                name                            = 'FakeStringValue'
-                                publisher                       = 'FakeStringValue'
-                                appStoreUrl                     = 'FakeStringValue'
-                                appId                           = 'FakeStringValue'
-                            }
-                        )
-                    }
+                    '@odata.type'                           = '#microsoft.graph.androidWorkProfileVpnConfiguration'
+                    authenticationMethod                    = 'usernameAndPassword'
+                    connectionName                          = 'FakeStringValue'
+                    connectionType                          = 'ciscoAnyConnect'
+                    proxyServer                             = @(
+                        @{
+                            port                            = 80
+                            automaticConfigurationScriptUrl = 'https://www.test.com'
+                            address                         = 'proxy.test.com'
+                        }
+                    )
+                    servers                                  = @(
+                        @{
+                            isDefaultServer                 = $True
+                            description                     = 'server'
+                            address                         = 'vpn.test.com'
+                        }
+                    )
+                    customData                              = @(
+                        @{
+                            key                             = 'FakeStringValue'
+                            value                           = 'FakeStringValue'
+                        }
+                    )
+                    customKeyValueData                      = @(
+                        @{
+                            name                            = 'FakeStringValue'
+                            value                           = 'FakeStringValue'
+                        }
+                    )
+                    targetedMobileApps                    = @(
+                        @{
+                            name                            = 'FakeStringValue'
+                            publisher                       = 'FakeStringValue'
+                            appStoreUrl                     = 'FakeStringValue'
+                            appId                           = 'FakeStringValue'
+                        }
+                    )
                 }
             }
 
@@ -345,7 +343,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

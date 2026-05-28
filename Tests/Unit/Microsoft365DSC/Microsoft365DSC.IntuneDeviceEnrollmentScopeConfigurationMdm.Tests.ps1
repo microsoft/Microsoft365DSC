@@ -47,9 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaPolicyMobileDeviceManagementPolicy -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        isMdmEnrollmentDuringRegistrationDisabled = $True
-                    }
+                    isMdmEnrollmentDuringRegistrationDisabled = $True
                     AppliesTo = "Selected"
                     ComplianceUrl = "FakeStringValue"
                     Description = "FakeStringValue"

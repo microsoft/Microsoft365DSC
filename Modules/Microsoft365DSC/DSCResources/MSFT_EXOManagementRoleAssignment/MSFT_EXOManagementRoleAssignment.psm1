@@ -539,7 +539,7 @@ function Export-TargetResource
                 $_.RoleAssigneeType -eq 'User' -or $_.RoleAssigneeType -eq 'RoleAssignmentPolicy' -or $_.RoleAssigneeType -eq 'SecurityGroup' `
                 -or $_.RoleAssigneeType -eq 'RoleGroup' }
 
-        $dscContent = [System.Text.StringBuilder]::New()
+        $dscContent = [System.Text.StringBuilder]::new()
 
         if ($exportedInstances.Length -eq 0)
         {

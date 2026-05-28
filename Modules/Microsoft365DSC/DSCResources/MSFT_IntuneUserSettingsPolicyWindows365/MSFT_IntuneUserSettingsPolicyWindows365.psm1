@@ -66,6 +66,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -135,39 +143,39 @@ function Get-TargetResource
         #region resource generator code
         $complexCrossRegionDisasterRecoverySetting = @{}
         $complexDisasterRecoveryNetworkSetting = @{}
-        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.AdditionalProperties.onPremisesConnectionId)
+        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.onPremisesConnectionId)
         {
-            $onPremisesConnectionDisplayName = (Get-MgBetaDeviceManagementVirtualEndpointOnPremiseConnection -CloudPcOnPremisesConnectionId $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.AdditionalProperties.onPremisesConnectionId -ErrorAction SilentlyContinue).DisplayName
+            $onPremisesConnectionDisplayName = (Get-MgBetaDeviceManagementVirtualEndpointOnPremiseConnection -CloudPcOnPremisesConnectionId $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.onPremisesConnectionId -ErrorAction SilentlyContinue).DisplayName
             $complexDisasterRecoveryNetworkSetting.Add('OnPremisesConnectionId', $onPremisesConnectionDisplayName)
         }
-        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.AdditionalProperties.regionGroup)
+        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.regionGroup)
         {
-            $complexDisasterRecoveryNetworkSetting.Add('RegionGroup', $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.AdditionalProperties.regionGroup)
+            $complexDisasterRecoveryNetworkSetting.Add('RegionGroup', $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.regionGroup)
         }
-        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.AdditionalProperties.regionName)
+        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.regionName)
         {
-            $complexDisasterRecoveryNetworkSetting.Add('RegionName', $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.AdditionalProperties.regionName)
+            $complexDisasterRecoveryNetworkSetting.Add('RegionName', $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.regionName)
         }
-        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.AdditionalProperties.'@odata.type')
+        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.'@odata.type')
         {
-            $complexDisasterRecoveryNetworkSetting.Add('odataType', $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.AdditionalProperties.'@odata.type'.ToString())
+            $complexDisasterRecoveryNetworkSetting.Add('odataType', $getValue.CrossRegionDisasterRecoverySetting.DisasterRecoveryNetworkSetting.'@odata.type'.ToString())
         }
         if ($complexDisasterRecoveryNetworkSetting.Values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexDisasterRecoveryNetworkSetting = $null
         }
         $complexCrossRegionDisasterRecoverySetting.Add('DisasterRecoveryNetworkSetting', $complexDisasterRecoveryNetworkSetting)
-        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.AdditionalProperties.disasterRecoveryType)
+        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.disasterRecoveryType)
         {
-            $complexCrossRegionDisasterRecoverySetting.Add('DisasterRecoveryType', $getValue.CrossRegionDisasterRecoverySetting.AdditionalProperties.disasterRecoveryType)
+            $complexCrossRegionDisasterRecoverySetting.Add('DisasterRecoveryType', $getValue.CrossRegionDisasterRecoverySetting.disasterRecoveryType)
         }
         if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.MaintainCrossRegionRestorePointEnabled)
         {
             $complexCrossRegionDisasterRecoverySetting.Add('MaintainCrossRegionRestorePointEnabled', $getValue.CrossRegionDisasterRecoverySetting.MaintainCrossRegionRestorePointEnabled)
         }
-        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.AdditionalProperties.userInitiatedDisasterRecoveryAllowed)
+        if ($null -ne $getValue.CrossRegionDisasterRecoverySetting.userInitiatedDisasterRecoveryAllowed)
         {
-            $complexCrossRegionDisasterRecoverySetting.Add('UserInitiatedDisasterRecoveryAllowed', $getValue.CrossRegionDisasterRecoverySetting.AdditionalProperties.userInitiatedDisasterRecoveryAllowed)
+            $complexCrossRegionDisasterRecoverySetting.Add('UserInitiatedDisasterRecoveryAllowed', $getValue.CrossRegionDisasterRecoverySetting.userInitiatedDisasterRecoveryAllowed)
         }
         if ($complexCrossRegionDisasterRecoverySetting.Values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -208,6 +216,8 @@ function Get-TargetResource
             TenantId                           = $TenantId
             ApplicationSecret                  = $ApplicationSecret
             CertificateThumbprint              = $CertificateThumbprint
+            CertificatePath                    = $CertificatePath
+            CertificatePassword                = $CertificatePassword
             ManagedIdentity                    = $ManagedIdentity.IsPresent
             #endregion
         }
@@ -295,6 +305,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -478,6 +496,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -534,6 +560,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -600,6 +634,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

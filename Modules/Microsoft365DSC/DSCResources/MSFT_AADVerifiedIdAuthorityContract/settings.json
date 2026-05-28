@@ -37,10 +37,20 @@
       }
     }
   },
-  "requiredModules": [],
+  "requiredModules": [
+    "MSCloudLoginAssistant"
+  ],
   "supportedEnvironments": [
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
 }

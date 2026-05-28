@@ -66,6 +66,12 @@
         "Get-MgBetaIdentityConditionalAccessNamedLocation",
         "Remove-MgBetaIdentityConditionalAccessNamedLocation"
       ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
     }
   ]
 }

@@ -1,6 +1,5 @@
 Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceFeaturesConfigurationPolicyIOS'
 
-
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -120,6 +119,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -160,10 +167,7 @@ function Get-TargetResource
             #region resource generator code
             if ($null -eq $getValue)
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosDeviceFeaturesConfiguration' `
-                    }
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")' and isof('microsoft.graph.iosDeviceFeaturesConfiguration')" -ErrorAction SilentlyContinue
             }
             #endregion
 
@@ -183,7 +187,7 @@ function Get-TargetResource
         }
 
         #value could be bool, string or int - export as a string and handle later
-        $complexIosSingleSignonExtension = Convert-ComplexObjectToHashtableArray_ExportDataType $getValue.AdditionalProperties.iosSingleSignOnExtension
+        $complexIosSingleSignonExtension = Convert-ComplexObjectToHashtableArray_ExportDataType $getValue.iosSingleSignOnExtension
         foreach ($configuration in $complexIosSingleSignonExtension.configurations)
         {
             $configuration.value = [string]$configuration.value
@@ -200,20 +204,22 @@ function Get-TargetResource
             TenantId                 = $TenantId
             ApplicationSecret        = $ApplicationSecret
             CertificateThumbprint    = $CertificateThumbprint
+            CertificatePath          = $CertificatePath
+            CertificatePassword      = $CertificatePassword
             ManagedIdentity          = $ManagedIdentity.IsPresent
             AccessTokens             = $AccessTokens
-            AirPrintDestinations     = Convert-ComplexObjectToHashtableArray $getValue.AdditionalProperties.airPrintDestinations
-            AssetTagTemplate         = $getValue.AdditionalProperties.assetTagTemplate
-            ContentFilterSettings    = Convert-ComplexObjectToHashtableArray_ExportDataType $getValue.AdditionalProperties.contentFilterSettings
-            LockScreenFootnote       = $getValue.AdditionalProperties.lockScreenFootnote
-            HomeScreenDockIcons      = Convert-ComplexObjectToHashtableArray $getValue.AdditionalProperties.homeScreenDockIcons
-            HomeScreenPages          = Convert-ComplexObjectToHashtableArray $getValue.AdditionalProperties.homeScreenPages
-            HomeScreenGridWidth      = $getValue.AdditionalProperties.homeScreenGridWidth
-            HomeScreenGridHeight     = $getValue.AdditionalProperties.homeScreenGridHeight
-            NotificationSettings     = Convert-ComplexObjectToHashtableArray $getValue.AdditionalProperties.notificationSettings
-            SingleSignOnSettings     = Convert-ComplexObjectToHashtableArray $getValue.AdditionalProperties.singleSignOnSettings
-            WallpaperDisplayLocation = $getValue.AdditionalProperties.wallpaperDisplayLocation
-            WallpaperImage           = Convert-ComplexObjectToHashtableArray $getValue.AdditionalProperties.wallpaperImage
+            AirPrintDestinations     = Convert-ComplexObjectToHashtableArray $getValue.airPrintDestinations
+            AssetTagTemplate         = $getValue.assetTagTemplate
+            ContentFilterSettings    = Convert-ComplexObjectToHashtableArray_ExportDataType $getValue.contentFilterSettings
+            LockScreenFootnote       = $getValue.lockScreenFootnote
+            HomeScreenDockIcons      = Convert-ComplexObjectToHashtableArray $getValue.homeScreenDockIcons
+            HomeScreenPages          = Convert-ComplexObjectToHashtableArray $getValue.homeScreenPages
+            HomeScreenGridWidth      = $getValue.homeScreenGridWidth
+            HomeScreenGridHeight     = $getValue.homeScreenGridHeight
+            NotificationSettings     = Convert-ComplexObjectToHashtableArray $getValue.notificationSettings
+            SingleSignOnSettings     = Convert-ComplexObjectToHashtableArray $getValue.singleSignOnSettings
+            WallpaperDisplayLocation = $getValue.wallpaperDisplayLocation
+            WallpaperImage           = Convert-ComplexObjectToHashtableArray $getValue.wallpaperImage
             IosSingleSignOnExtension = $complexIosSingleSignonExtension
         }
 
@@ -226,7 +232,6 @@ function Get-TargetResource
                 -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
-        Write-Verbose -Message "Returning {$DisplayName}"
         return $results
     }
     catch
@@ -357,6 +362,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -658,6 +671,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -711,6 +732,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -737,11 +766,16 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosDeviceFeaturesConfiguration' `
+        $baseFilter = "isof('microsoft.graph.iosDeviceFeaturesConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
         }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -771,6 +805,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -1028,7 +1064,7 @@ function Convert-ComplexObjectToHashtableArray
                 if ($keyValue -is [array])
                 {
                     $elementTypes = $keyValue | ForEach-Object { $_.GetType().Name }
-                    if ($elementTypes -contains 'Dictionary`2') #another embedded complex type, not a string array
+                    if ($elementTypes -contains 'Hashtable') #another embedded complex type, not a string array
                     {
                         $keyValue = Convert-ComplexObjectToHashtableArray $keyValue #recurse the function
                     }
@@ -1069,7 +1105,7 @@ function Convert-ComplexObjectToHashtableArray_ExportDataType
                 if ($keyValue -is [array])
                 {
                     $elementTypes = $keyValue | ForEach-Object { $_.GetType().Name }
-                    if ($elementTypes -contains 'Dictionary`2') #another embedded complex type, not a string array
+                    if ($elementTypes -contains 'Hashtable') #another embedded complex type, not a string array
                     {
                         $keyValue = Convert-ComplexObjectToHashtableArray_ExportDataType $keyValue #recurse the function
                     }

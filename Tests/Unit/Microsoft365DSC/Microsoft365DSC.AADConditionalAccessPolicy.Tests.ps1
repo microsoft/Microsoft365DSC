@@ -106,17 +106,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 guestOrExternalUserTypes = 'b2bCollaborationGuest'
                                 externalTenants          = @{
                                     membershipKind       = 'enumerated'
-                                    AdditionalProperties = @{
-                                        members = @('11111111-1111-1111-1111-111111111111')
-                                    }
+                                    members = @('11111111-1111-1111-1111-111111111111')
                                 }
                             }
                             ExcludeGuestsOrExternalUsers = @{
                                 guestOrExternalUserTypes = 'internalGuest,b2bCollaborationMember'
                                 externalTenants          = @{
                                     membershipKind       = 'all'
-                                    AdditionalProperties = @{
-                                    }
                                 }
                             }
                         }

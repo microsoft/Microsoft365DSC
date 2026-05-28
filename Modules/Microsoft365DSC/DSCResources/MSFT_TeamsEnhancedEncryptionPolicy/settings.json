@@ -35,5 +35,16 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsEnhancedEncryptionPolicy",
+        "New-CsTeamsEnhancedEncryptionPolicy",
+        "Remove-CsTeamsEnhancedEncryptionPolicy",
+        "Set-CsTeamsEnhancedEncryptionPolicy"
+      ]
+    }
+  ]
 }

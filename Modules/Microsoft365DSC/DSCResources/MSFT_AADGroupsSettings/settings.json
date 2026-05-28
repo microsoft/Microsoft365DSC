@@ -48,7 +48,6 @@
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Identity.DirectoryManagement",
     "Microsoft.Graph.Groups"
   ],

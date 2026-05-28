@@ -48,9 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -MockWith {
                 return @{
-                    AdditionalProperties           = @{
-                        '@odata.type' = '#microsoft.graph.azureADWindowsAutopilotDeploymentProfile'
-                    }
+                    '@odata.type' = '#microsoft.graph.azureADWindowsAutopilotDeploymentProfile'
                     Description                    = 'FakeStringValue'
                     DeviceNameTemplate             = 'FakeStringValue'
                     DeviceType                     = 'windowsPc'
@@ -69,13 +67,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                             = 'FakeStringValue'
                     Language                       = 'FakeStringValue'
                     ManagementServiceAppId         = 'FakeStringValue'
-                    OutOfBoxExperienceSettings     = @{
-                        HideEULA                  = $True
-                        HideEscapeLink            = $True
-                        HidePrivacySettings       = $True
-                        DeviceUsageType           = 'singleUser'
-                        SkipKeyboardSelectionPage = $True
-                        UserType                  = 'administrator'
+                    OutOfBoxExperienceSetting     = @{
+                        eulaHidden                   = $True
+                        escapeLinkHidden             = $True
+                        privacySettingsHidden        = $True
+                        deviceUsageType              = 'singleUser'
+                        keyboardSelectionPageSkipped = $True
+                        userType                     = 'administrator'
                     }
 
                 }
@@ -180,7 +178,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

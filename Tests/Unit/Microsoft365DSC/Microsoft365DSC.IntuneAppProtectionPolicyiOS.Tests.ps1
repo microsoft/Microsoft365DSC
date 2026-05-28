@@ -115,10 +115,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MaximumPinRetries                              = 5
                     MinimumPinLength                               = 4
                     OrganizationalCredentialsRequired              = $False
-                    PeriodBeforePinReset                           = New-TimeSpan -Days 90
-                    PeriodOfflineBeforeAccessCheck                 = New-TimeSpan -Hours 12
-                    PeriodOfflineBeforeWipeIsEnforced              = New-TimeSpan -Days 90
-                    PeriodOnlineBeforeAccessCheck                  = New-TimeSpan -Minutes 30
+                    PeriodBeforePinReset                           = 'P90D'
+                    PeriodOfflineBeforeAccessCheck                 = 'PT12H'
+                    PeriodOfflineBeforeWipeIsEnforced              = 'P90D'
+                    PeriodOnlineBeforeAccessCheck                  = 'PT30M'
                     PinCharacterSet                                = 'alphanumericAndSymbol'
                     PinRequired                                    = $True
                     DisableAppPinIfDevicePinIsSet                  = $False
@@ -135,28 +135,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     @{
                         id                  = 'com.cisco.jabberimintune.ios.ios'
                         mobileAppIdentifier = @{
-                            additionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
-                                bundleId      = 'com.cisco.jabberimintune.ios'
-                            }
+                            '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
+                            bundleId      = 'com.cisco.jabberimintune.ios'
                         }
                     },
                     @{
                         id                  = 'com.pervasent.boardpapers.ios.ios'
                         mobileAppIdentifier = @{
-                            additionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
-                                bundleId      = 'com.pervasent.boardpapers.ios'
-                            }
+                            '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
+                            bundleId      = 'com.pervasent.boardpapers.ios'
                         }
                     },
                     @{
                         id                  = 'com.sharefile.mobile.intune.ios.ios'
                         mobileAppIdentifier = @{
-                            additionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
-                                bundleId      = 'com.sharefile.mobile.intune.ios'
-                            }
+                            '@odata.type' = '#microsoft.graph.iosMobileAppIdentifier'
+                            bundleId      = 'com.sharefile.mobile.intune.ios'
                         }
                     }
                 )
@@ -579,7 +573,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

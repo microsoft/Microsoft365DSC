@@ -113,6 +113,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -184,37 +192,37 @@ function Get-TargetResource
 
         #region resource generator code
         $complexApplicableDeviceType = [ordered]@{}
-        $complexApplicableDeviceType.Add('IPad', $getValue.AdditionalProperties.applicableDeviceType.iPad)
-        $complexApplicableDeviceType.Add('IPhoneAndIPod', $getValue.AdditionalProperties.applicableDeviceType.iPhoneAndIPod)
+        $complexApplicableDeviceType.Add('IPad', $getValue.applicableDeviceType.iPad)
+        $complexApplicableDeviceType.Add('IPhoneAndIPod', $getValue.applicableDeviceType.iPhoneAndIPod)
         if ($complexApplicableDeviceType.Values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexApplicableDeviceType = $null
         }
 
         $complexMinimumSupportedOperatingSystem = [ordered]@{}
-        $complexMinimumSupportedOperatingSystem.Add('V4_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v4_0)
-        $complexMinimumSupportedOperatingSystem.Add('V4_0_3', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v4_0_3)
-        $complexMinimumSupportedOperatingSystem.Add('V4_1', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v4_1)
-        $complexMinimumSupportedOperatingSystem.Add('V4_2', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v4_2)
-        $complexMinimumSupportedOperatingSystem.Add('V4_3', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v4_3)
-        $complexMinimumSupportedOperatingSystem.Add('V4_4', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v4_4)
-        $complexMinimumSupportedOperatingSystem.Add('V5_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v5_0)
-        $complexMinimumSupportedOperatingSystem.Add('V5_1', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v5_1)
-        $complexMinimumSupportedOperatingSystem.Add('V6_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v6_0)
-        $complexMinimumSupportedOperatingSystem.Add('V7_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v7_0)
-        $complexMinimumSupportedOperatingSystem.Add('V7_1', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v7_1)
-        $complexMinimumSupportedOperatingSystem.Add('V8_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v8_0)
-        $complexMinimumSupportedOperatingSystem.Add('V8_1', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v8_1)
-        $complexMinimumSupportedOperatingSystem.Add('V9_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v9_0)
-        $complexMinimumSupportedOperatingSystem.Add('V10_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v10_0)
-        $complexMinimumSupportedOperatingSystem.Add('V11_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v11_0)
-        $complexMinimumSupportedOperatingSystem.Add('V12_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v12_0)
-        $complexMinimumSupportedOperatingSystem.Add('V13_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v13_0)
-        $complexMinimumSupportedOperatingSystem.Add('V14_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v14_0)
-        $complexMinimumSupportedOperatingSystem.Add('V15_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v15_0)
-        $complexMinimumSupportedOperatingSystem.Add('V16_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v16_0)
-        $complexMinimumSupportedOperatingSystem.Add('V17_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v17_0)
-        $complexMinimumSupportedOperatingSystem.Add('V18_0', $getValue.AdditionalProperties.minimumSupportedOperatingSystem.v18_0)
+        $complexMinimumSupportedOperatingSystem.Add('V4_0', $getValue.minimumSupportedOperatingSystem.v4_0)
+        $complexMinimumSupportedOperatingSystem.Add('V4_0_3', $getValue.minimumSupportedOperatingSystem.v4_0_3)
+        $complexMinimumSupportedOperatingSystem.Add('V4_1', $getValue.minimumSupportedOperatingSystem.v4_1)
+        $complexMinimumSupportedOperatingSystem.Add('V4_2', $getValue.minimumSupportedOperatingSystem.v4_2)
+        $complexMinimumSupportedOperatingSystem.Add('V4_3', $getValue.minimumSupportedOperatingSystem.v4_3)
+        $complexMinimumSupportedOperatingSystem.Add('V4_4', $getValue.minimumSupportedOperatingSystem.v4_4)
+        $complexMinimumSupportedOperatingSystem.Add('V5_0', $getValue.minimumSupportedOperatingSystem.v5_0)
+        $complexMinimumSupportedOperatingSystem.Add('V5_1', $getValue.minimumSupportedOperatingSystem.v5_1)
+        $complexMinimumSupportedOperatingSystem.Add('V6_0', $getValue.minimumSupportedOperatingSystem.v6_0)
+        $complexMinimumSupportedOperatingSystem.Add('V7_0', $getValue.minimumSupportedOperatingSystem.v7_0)
+        $complexMinimumSupportedOperatingSystem.Add('V7_1', $getValue.minimumSupportedOperatingSystem.v7_1)
+        $complexMinimumSupportedOperatingSystem.Add('V8_0', $getValue.minimumSupportedOperatingSystem.v8_0)
+        $complexMinimumSupportedOperatingSystem.Add('V8_1', $getValue.minimumSupportedOperatingSystem.v8_1)
+        $complexMinimumSupportedOperatingSystem.Add('V9_0', $getValue.minimumSupportedOperatingSystem.v9_0)
+        $complexMinimumSupportedOperatingSystem.Add('V10_0', $getValue.minimumSupportedOperatingSystem.v10_0)
+        $complexMinimumSupportedOperatingSystem.Add('V11_0', $getValue.minimumSupportedOperatingSystem.v11_0)
+        $complexMinimumSupportedOperatingSystem.Add('V12_0', $getValue.minimumSupportedOperatingSystem.v12_0)
+        $complexMinimumSupportedOperatingSystem.Add('V13_0', $getValue.minimumSupportedOperatingSystem.v13_0)
+        $complexMinimumSupportedOperatingSystem.Add('V14_0', $getValue.minimumSupportedOperatingSystem.v14_0)
+        $complexMinimumSupportedOperatingSystem.Add('V15_0', $getValue.minimumSupportedOperatingSystem.v15_0)
+        $complexMinimumSupportedOperatingSystem.Add('V16_0', $getValue.minimumSupportedOperatingSystem.v16_0)
+        $complexMinimumSupportedOperatingSystem.Add('V17_0', $getValue.minimumSupportedOperatingSystem.v17_0)
+        $complexMinimumSupportedOperatingSystem.Add('V18_0', $getValue.minimumSupportedOperatingSystem.v18_0)
         if ($complexMinimumSupportedOperatingSystem.Values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexMinimumSupportedOperatingSystem = $null
@@ -233,15 +241,15 @@ function Get-TargetResource
         {
             $complexLargeIcon = [ordered]@{}
             $complexLargeIcon.Add('Type', $getValue.LargeIcon.Type)
-            $complexLargeIcon.Add('Value', [System.Convert]::ToBase64String($getValue.LargeIcon.Value))
+            $complexLargeIcon.Add('Value', $getValue.LargeIcon.Value)
         }
         #endregion
 
         $results = @{
             #region resource generator code
             ApplicableDeviceType            = $complexApplicableDeviceType
-            AppStoreUrl                     = $getValue.AdditionalProperties.appStoreUrl
-            BundleId                        = $getValue.AdditionalProperties.bundleId
+            AppStoreUrl                     = $getValue.appStoreUrl
+            BundleId                        = $getValue.bundleId
             Categories                      = $complexCategories
             MinimumSupportedOperatingSystem = $complexMinimumSupportedOperatingSystem
             Description                     = $getValue.Description
@@ -255,7 +263,7 @@ function Get-TargetResource
             PrivacyInformationUrl           = $getValue.PrivacyInformationUrl
             Publisher                       = $getValue.Publisher
             RoleScopeTagIds                 = $getValue.RoleScopeTagIds
-            TargetPlatform                  = $getValue.AdditionalProperties.'@odata.type'.Replace('#microsoft.graph.', '').Replace('StoreApp', '')
+            TargetPlatform                  = $getValue.'@odata.type'.Replace('#microsoft.graph.', '').Replace('StoreApp', '')
             Id                              = $getValue.Id
             Ensure                          = 'Present'
             Credential                      = $Credential
@@ -263,6 +271,8 @@ function Get-TargetResource
             TenantId                        = $TenantId
             ApplicationSecret               = $ApplicationSecret
             CertificateThumbprint           = $CertificateThumbprint
+            CertificatePath                 = $CertificatePath
+            CertificatePassword             = $CertificatePassword
             ManagedIdentity                 = $ManagedIdentity.IsPresent
             #endregion
         }
@@ -409,6 +419,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -464,10 +482,10 @@ function Set-TargetResource
         {
             if (-not [System.Guid]::TryParse($assignment.assignmentSettings.vpnConfigurationId, [ref][System.Guid]::Empty))
             {
-                $vpnConfiguration = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "displayName eq '$($assignment.assignmentSettings.vpnConfigurationId)'" | Where-Object -FilterScript {
-                    $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.*VpnConfiguration'
+                [array]$vpnConfiguration = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "displayName eq '$($assignment.assignmentSettings.vpnConfigurationId)'" | Where-Object {
+                    $_.'@odata.type' -like "#microsoft.graph.*VpnConfiguration"
                 }
-                if ($null -eq $vpnConfiguration)
+                if ($null -eq $vpnConfiguration -or $vpnConfiguration.Count -eq 0)
                 {
                     throw "Could not find a VPN Configuration Policy with DisplayName '$($assignment.assignmentSettings.vpnConfigurationId)'."
                 }
@@ -516,7 +534,6 @@ function Set-TargetResource
         $updateParameters = ([Hashtable]$boundParameters).Clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
         $updateParameters.Remove('Id') | Out-Null
-
 
         #region resource generator code
         $updateParameters.Add('@odata.type', "#microsoft.graph.$($TargetPlatform)StoreApp")
@@ -653,6 +670,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -733,6 +758,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -799,13 +832,15 @@ function Export-TargetResource
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.DisplayName
-                TargetPlatform        = $config.AdditionalProperties.'@odata.type'.Replace('#microsoft.graph.', '').Replace('StoreApp', '')
+                TargetPlatform        = $config.'@odata.type'.Replace('#microsoft.graph.', '').Replace('StoreApp', '')
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

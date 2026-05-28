@@ -44,47 +44,45 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        cacheServerForegroundDownloadFallbackToHttpDelayInSeconds = 25
-                        maximumCacheAgeInDays                                     = 25
-                        cacheServerHostNames                                      = @('FakeStringValue')
-                        groupIdSource                                             = @{
-                            groupIdCustom       = 'FakeStringValue'
-                            groupIdSourceOption = 'notConfigured'
-                            '@odata.type'       = '#microsoft.graph.deliveryOptimizationGroupIdCustom'
-                        }
-                        vpnPeerCaching                                            = 'notConfigured'
-                        minimumFileSizeToCacheInMegabytes                         = 25
-                        maximumCacheSize                                          = @{
-                            '@odata.type'              = '#microsoft.graph.deliveryOptimizationMaxCacheSizeAbsolute'
-                            maximumCacheSizePercentage = 25
-                        }
-                        '@odata.type'                                             = '#microsoft.graph.windowsDeliveryOptimizationConfiguration'
-                        minimumBatteryPercentageAllowedToUpload                   = 25
-                        minimumRamAllowedToPeerInGigabytes                        = 25
-                        cacheServerBackgroundDownloadFallbackToHttpDelayInSeconds = 25
-                        deliveryOptimizationMode                                  = 'userDefined'
-                        modifyCacheLocation                                       = 'FakeStringValue'
-                        bandwidthMode                                             = @{
-                            maximumBackgroundBandwidthPercentage = 25
-                            bandwidthForegroundPercentageHours   = @{
-                                bandwidthBeginBusinessHours             = 25
-                                bandwidthPercentageOutsideBusinessHours = 25
-                                bandwidthPercentageDuringBusinessHours  = 25
-                                bandwidthEndBusinessHours               = 25
-                            }
-                            bandwidthBackgroundPercentageHours   = @{
-                                bandwidthBeginBusinessHours             = 25
-                                bandwidthPercentageOutsideBusinessHours = 25
-                                bandwidthPercentageDuringBusinessHours  = 25
-                                bandwidthEndBusinessHours               = 25
-                            }
-                            maximumForegroundBandwidthPercentage = 25
-                            '@odata.type'                        = '#microsoft.graph.deliveryOptimizationBandwidthAbsolute'
-                        }
-                        minimumDiskSizeAllowedToPeerInGigabytes                   = 25
-                        restrictPeerSelectionBy                                   = 'notConfigured'
+                    cacheServerForegroundDownloadFallbackToHttpDelayInSeconds = 25
+                    maximumCacheAgeInDays                                     = 25
+                    cacheServerHostNames                                      = @('FakeStringValue')
+                    groupIdSource                                             = @{
+                        groupIdCustom       = 'FakeStringValue'
+                        groupIdSourceOption = 'notConfigured'
+                        '@odata.type'       = '#microsoft.graph.deliveryOptimizationGroupIdCustom'
                     }
+                    vpnPeerCaching                                            = 'notConfigured'
+                    minimumFileSizeToCacheInMegabytes                         = 25
+                    maximumCacheSize                                          = @{
+                        '@odata.type'              = '#microsoft.graph.deliveryOptimizationMaxCacheSizeAbsolute'
+                        maximumCacheSizePercentage = 25
+                    }
+                    '@odata.type'                                             = '#microsoft.graph.windowsDeliveryOptimizationConfiguration'
+                    minimumBatteryPercentageAllowedToUpload                   = 25
+                    minimumRamAllowedToPeerInGigabytes                        = 25
+                    cacheServerBackgroundDownloadFallbackToHttpDelayInSeconds = 25
+                    deliveryOptimizationMode                                  = 'userDefined'
+                    modifyCacheLocation                                       = 'FakeStringValue'
+                    bandwidthMode                                             = @{
+                        maximumBackgroundBandwidthPercentage = 25
+                        bandwidthForegroundPercentageHours   = @{
+                            bandwidthBeginBusinessHours             = 25
+                            bandwidthPercentageOutsideBusinessHours = 25
+                            bandwidthPercentageDuringBusinessHours  = 25
+                            bandwidthEndBusinessHours               = 25
+                        }
+                        bandwidthBackgroundPercentageHours   = @{
+                            bandwidthBeginBusinessHours             = 25
+                            bandwidthPercentageOutsideBusinessHours = 25
+                            bandwidthPercentageDuringBusinessHours  = 25
+                            bandwidthEndBusinessHours               = 25
+                        }
+                        maximumForegroundBandwidthPercentage = 25
+                        '@odata.type'                        = '#microsoft.graph.deliveryOptimizationBandwidthAbsolute'
+                    }
+                    minimumDiskSizeAllowedToPeerInGigabytes                   = 25
+                    restrictPeerSelectionBy                                   = 'notConfigured'
                     description          = 'FakeStringValue'
                     displayName          = 'FakeStringValue'
                     id                   = 'FakeStringValue'
@@ -224,7 +222,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

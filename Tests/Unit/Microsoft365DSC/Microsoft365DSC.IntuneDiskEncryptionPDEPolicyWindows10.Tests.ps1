@@ -72,91 +72,83 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'user_vendor_msft_pde_enablepersonaldataencryption'
                                 Name = 'EnablePersonalDataEncryption'
                                 OffsetUri = '/EnablePersonalDataEncryption'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'Enable Personal Data Encryption.'
-                                            itemId = 'user_vendor_msft_pde_enablepersonaldataencryption_1'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 1
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'Enable Personal Data Encryption.'
+                                        itemId = 'user_vendor_msft_pde_enablepersonaldataencryption_1'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 1
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'user_vendor_msft_pde_protectfolders_protectdesktop'
                                 Name = 'ProtectDesktop'
                                 OffsetUri = '/ProtectFolders/ProtectDesktop'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'Disable PDE on the folder. If the folder is currently protected by PDE, this will result in unprotecting the folder.'
-                                            itemId = 'user_vendor_msft_pde_protectfolders_protectdesktop_0'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'user_vendor_msft_pde_enablepersonaldataencryption_1'
-                                                    parentSettingId = 'user_vendor_msft_pde_enablepersonaldataencryption'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'Disable PDE on the folder. If the folder is currently protected by PDE, this will result in unprotecting the folder.'
+                                        itemId = 'user_vendor_msft_pde_protectfolders_protectdesktop_0'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'user_vendor_msft_pde_enablepersonaldataencryption_1'
+                                                parentSettingId = 'user_vendor_msft_pde_enablepersonaldataencryption'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'user_vendor_msft_pde_protectfolders_protectpictures'
                                 Name = 'ProtectPictures'
                                 OffsetUri = '/ProtectFolders/ProtectPictures'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'Disable PDE on the folder. If the folder is currently protected by PDE, this will result in unprotecting the folder.'
-                                            itemId = 'user_vendor_msft_pde_protectfolders_protectpictures_0'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'user_vendor_msft_pde_enablepersonaldataencryption_1'
-                                                    parentSettingId = 'user_vendor_msft_pde_enablepersonaldataencryption'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'Disable PDE on the folder. If the folder is currently protected by PDE, this will result in unprotecting the folder.'
+                                        itemId = 'user_vendor_msft_pde_protectfolders_protectpictures_0'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'user_vendor_msft_pde_enablepersonaldataencryption_1'
+                                                parentSettingId = 'user_vendor_msft_pde_enablepersonaldataencryption'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'user_vendor_msft_pde_protectfolders_protectdocuments'
                                 Name = 'ProtectDocuments'
                                 OffsetUri = '/ProtectFolders/ProtectDocuments'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'Disable PDE on the folder. If the folder is currently protected by PDE, this will result in unprotecting the folder.'
-                                            itemId = 'user_vendor_msft_pde_protectfolders_protectdocuments_0'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'user_vendor_msft_pde_enablepersonaldataencryption_1'
-                                                    parentSettingId = 'user_vendor_msft_pde_enablepersonaldataencryption'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 0
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'Disable PDE on the folder. If the folder is currently protected by PDE, this will result in unprotecting the folder.'
+                                        itemId = 'user_vendor_msft_pde_protectfolders_protectdocuments_0'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'user_vendor_msft_pde_enablepersonaldataencryption_1'
+                                                parentSettingId = 'user_vendor_msft_pde_enablepersonaldataencryption'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 0
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -164,37 +156,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '1ba5dce6-3ba0-40f3-bde3-811ed766c14a'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    value = 'user_vendor_msft_pde_enablepersonaldataencryption_1'
-                                    children = @(
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'user_vendor_msft_pde_protectfolders_protectdesktop'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'user_vendor_msft_pde_protectfolders_protectdesktop_0'
-                                            }
-                                        },
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'user_vendor_msft_pde_protectfolders_protectpictures'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'user_vendor_msft_pde_protectfolders_protectpictures_0'
-                                            }
-                                        },
-                                        @{
-                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                            settingDefinitionId = 'user_vendor_msft_pde_protectfolders_protectdocuments'
-                                            choiceSettingValue = @{
-                                                children = @()
-                                                value = 'user_vendor_msft_pde_protectfolders_protectdocuments_0'
-                                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                value = 'user_vendor_msft_pde_enablepersonaldataencryption_1'
+                                children = @(
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'user_vendor_msft_pde_protectfolders_protectdesktop'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'user_vendor_msft_pde_protectfolders_protectdesktop_0'
                                         }
-                                    )
-                                }
+                                    },
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'user_vendor_msft_pde_protectfolders_protectpictures'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'user_vendor_msft_pde_protectfolders_protectpictures_0'
+                                        }
+                                    },
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                        settingDefinitionId = 'user_vendor_msft_pde_protectfolders_protectdocuments'
+                                        choiceSettingValue = @{
+                                            children = @()
+                                            value = 'user_vendor_msft_pde_protectfolders_protectdocuments_0'
+                                        }
+                                    }
+                                )
                             }
                         }
                     }
@@ -225,12 +215,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -303,7 +289,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

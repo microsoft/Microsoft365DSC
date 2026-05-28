@@ -1,10 +1,13 @@
 $Script:IsPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
 $Script:IsPsResourceGetAvailable = $null -ne (Get-Module -Name Microsoft.PowerShell.PSResourceGet -ListAvailable)
 $Script:M365DSCDependenciesValidated = $false
+$Script:M365DSCGraphShimLoaded = $false
 if ($null -eq $Script:M365DSCDependencies)
 {
     $Script:M365DSCDependencies = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    $Script:M365DSCDevDependencies = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
     $dependencies = (Import-PowerShellDataFile "$PSScriptRoot/../Dependencies/Manifest.psd1").Dependencies
+    $devDependencies = (Import-PowerShellDataFile "$PSScriptRoot/../Dependencies/DevManifest.psd1").Dependencies
     foreach ($dependency in $dependencies)
     {
         # TODO: Review again once ModuleFast can work with additional properties
@@ -17,24 +20,29 @@ if ($null -eq $Script:M365DSCDependencies)
         $Script:M365DSCDependencies.Add($dependency.ModuleName, $dependency)
     }
 
+    foreach ($devDependency in $devDependencies)
+    {
+        $Script:M365DSCDevDependencies.Add($devDependency.ModuleName, $devDependency)
+    }
+
     $commandToModuleMap = @{}
     $Script:M365DSCResourceSettings = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
     foreach ($file in (Get-ChildItem -Path "$PSScriptRoot/../DSCResources" -Filter 'settings.json' -Recurse)) {
         Write-Verbose -Message "Processing settings.json file at path: $($file.FullName)"
         $jsonContent = [System.IO.File]::ReadAllText($file.FullName) | ConvertFrom-Json
-        foreach ($commandMap in $jsonContent.commands) {
+        foreach ($commandMap in ($jsonContent.commands | Where-Object { $_.module -notin $Script:M365DSCDevDependencies.Keys })) {
             $commandToModuleMap[$commandMap.module] += @($commandMap.cmdlets)
         }
         $directoryName = (Split-Path -Path $file.DirectoryName -Leaf).Replace('MSFT_', '')
         $Script:M365DSCResourceSettings.Add($directoryName, @{
-            requiredModules = $jsonContent.requiredModules
-            commands = $jsonContent.commands
+            requiredModules = $jsonContent.requiredModules | Where-Object { $_ -notin $Script:M365DSCDevDependencies.Keys }
+            commands = $jsonContent.commands | Where-Object { $_.module -notin $Script:M365DSCDevDependencies.Keys }
             mode = $jsonContent.mode
         })
     }
 
     Write-Verbose -Message "Loading current configuration from config.json"
-    $Script:M365DSCValidatedDependencies = [System.Collections.Generic.List[System.String]]::new($Script:M365DSCDependencies.Count)
+    $Script:M365DSCValidatedDependencies = [System.Collections.Generic.List[System.String]]::new($Script:M365DSCDependencies.Count + $Script:M365DSCDevDependencies.Count)
     $configAsPsCustomObject = Get-Content -Path "$PSScriptRoot/../config.json" | ConvertFrom-Json
     $configAsHashtable = @{}
     foreach ($property in $configAsPsCustomObject.PSObject.Properties)
@@ -189,6 +197,31 @@ function Confirm-M365DSCLoadedModule
         return
     }
 
+    # Graph Shim intercept: Replace typed Graph SDK
+    # sub-modules with the lightweight M365DSCGraphShim module that wraps
+    # Invoke-MgGraphRequest. Microsoft.Graph.Authentication is always loaded
+    # natively because it provides Connect-MgGraph and the underlying HTTP client.
+    if ($ModuleName -like 'Microsoft.Graph.*' -and
+        $ModuleName -ne 'Microsoft.Graph.Authentication')
+    {
+        if (-not $Script:M365DSCGraphShimLoaded)
+        {
+            Write-Verbose -Message "Graph Shim enabled: importing M365DSCGraphShim instead of '$ModuleName'."
+            # Ensure Microsoft.Graph.Authentication is loaded first
+            Confirm-M365DSCLoadedModule -ModuleName 'Microsoft.Graph.Authentication'
+
+            Import-Module -Name "$PSScriptRoot/M365DSCGraphShim.psm1" -Global -Force -DisableNameChecking
+            $Script:M365DSCGraphShimLoaded = $true
+        }
+        else
+        {
+            Write-Verbose -Message "Graph Shim already loaded, skipping import for '$ModuleName'."
+        }
+
+        $Script:M365DSCValidatedDependencies.Add($ModuleName)
+        return
+    }
+
     $manifestModule = $Script:M365DSCDependencies[$ModuleName]
 
     if ($null -ne $manifestModule.DependsOn -and $manifestModule.DependsOn.Count -gt 0)
@@ -221,6 +254,22 @@ function Confirm-M365DSCLoadedModule
         if ($ModuleName -eq 'PnP.PowerShell' -and $manifestModule.RequiredVersion -eq '1.12.0' -and $Script:IsPowerShellCore)
         {
             $importModuleSplat.Add('UseWindowsPowerShell', $true)
+            if ($importModuleSplat.ContainsKey('Function'))
+            {
+                $importModuleSplat.Remove('Function')
+            }
+            if ($importModuleSplat.ContainsKey('Cmdlet'))
+            {
+                $importModuleSplat.Remove('Cmdlet')
+            }
+            if ($importModuleSplat.ContainsKey('Alias'))
+            {
+                $importModuleSplat.Remove('Alias')
+            }
+            if ($importModuleSplat.ContainsKey('Variable'))
+            {
+                $importModuleSplat.Remove('Variable')
+            }
         }
         Import-Module @importModuleSplat
         Write-Verbose -Message "Module '$ModuleName' with version '$($manifestModule.RequiredVersion)' has been imported."
@@ -583,7 +632,11 @@ function Update-M365DSCDependencies
 
         [Parameter()]
         [switch]
-        $UsePowerShellGet
+        $UsePowerShellGet,
+
+        [Parameter()]
+        [Switch]
+        $Development
     )
 
     try
@@ -621,9 +674,15 @@ function Update-M365DSCDependencies
             $scopedIsPsResourceGetAvailable = $false
         }
 
-        foreach ($dependency in $Script:M365DSCDependencies.Values.GetEnumerator())
+        $dependencies = [System.Object[]]::new($Script:M365DSCDependencies.Count + $Script:M365DSCDevDependencies.Count)
+        $Script:M365DSCDependencies.Values.CopyTo($dependencies, 0)
+        if ($Development)
         {
-            Write-Progress -Activity 'Scanning dependencies' -PercentComplete ($i / $Script:M365DSCDependencies.Count * 100)
+            $Script:M365DSCDevDependencies.Values.CopyTo($dependencies, $Script:M365DSCDependencies.Count)
+        }
+        foreach ($dependency in ($dependencies | Where-Object { $null -ne $_ }))
+        {
+            Write-Progress -Activity 'Scanning dependencies' -PercentComplete ($i / $dependencies.Count * 100)
             try
             {
                 if (-not $Force)

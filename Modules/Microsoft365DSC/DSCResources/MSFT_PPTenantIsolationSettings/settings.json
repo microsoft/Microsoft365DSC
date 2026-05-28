@@ -45,6 +45,12 @@
       "cmdlets": [
         "Get-MgContext"
       ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
     }
   ]
 }

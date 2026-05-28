@@ -113,6 +113,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowMultipleScreenshare,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowNDIStreaming,
 
         [Parameter()]
@@ -218,6 +222,11 @@ function Get-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $AutoRecording,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $BackroomChat,
 
         [Parameter()]
         [System.String]
@@ -342,6 +351,11 @@ function Get-TargetResource
         $ParticipantSlideControl,
 
         [Parameter()]
+        [ValidateSet('Default', 'NumericOnly')]
+        [System.String]
+        $PasscodeComplexity,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('TeamsAndSfb', 'Teams')]
         $PreferredMeetingProviderForIslandsMode,
@@ -370,6 +384,11 @@ function Get-TargetResource
         [System.String]
         [ValidateSet('SingleApplication', 'EntireScreen', 'Disabled')]
         $ScreenSharingMode,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $SetRecordingAndTranscriptOwnership,
 
         [Parameter()]
         [ValidateSet('OnAllowOrganizerOverride', 'OffAllowOrganizerOverride', 'Off')]
@@ -463,6 +482,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -523,6 +550,7 @@ function Get-TargetResource
             AllowChannelMeetingScheduling               = $policy.AllowChannelMeetingScheduling
             AllowCloudRecording                         = $policy.AllowCloudRecording
             AllowDocumentCollaboration                  = $policy.AllowDocumentCollaboration
+            AllowMultipleScreenshare                    = $policy.AllowMultipleScreenshare
             AllowedStreamingMediaInput                  = $policy.AllowedStreamingMediaInput
             AllowedUsersForMeetingDetails               = $policy.AllowedUsersForMeetingDetails
             AllowEngagementReport                       = $policy.AllowEngagementReport
@@ -560,6 +588,7 @@ function Get-TargetResource
             AutoAdmittedUsers                           = $policy.AutoAdmittedUsers
             AutomaticallyStartCopilot                   = $policy.AutomaticallyStartCopilot
             AutoRecording                               = $policy.AutoRecording
+            BackroomChat                                = $policy.BackroomChat
             BlockedAnonymousJoinClientTypes             = $policy.BlockedAnonymousJoinClientTypes
             CaptchaVerificationForMeetingJoin           = $policy.CaptchaVerificationForMeetingJoin
             ChannelRecordingDownload                    = $policy.ChannelRecordingDownload
@@ -586,12 +615,14 @@ function Get-TargetResource
             NoiseSuppressionForDialInParticipants       = $policy.NoiseSuppressionForDialInParticipants
             ParticipantNameChange                       = $policy.ParticipantNameChange
             ParticipantSlideControl                     = $policy.ParticipantSlideControl
+            PasscodeComplexity                          = $policy.PasscodeComplexity
             PreferredMeetingProviderForIslandsMode      = $policy.PreferredMeetingProviderForIslandsMode
             QnAEngagementMode                           = $policy.QnAEngagementMode
             RealTimeText                                = $policy.RealTimeText
             RoomAttributeUserOverride                   = $policy.RoomAttributeUserOverride
             RoomPeopleNameUserOverride                  = $policy.RoomPeopleNameUserOverride
             ScreenSharingMode                           = $policy.ScreenSharingMode
+            SetRecordingAndTranscriptOwnership          = $policy.SetRecordingAndTranscriptOwnership
             SmsNotifications                            = $policy.SmsNotifications
             SpeakerAttributionMode                      = $policy.SpeakerAttributionMode
             StreamingAttendeeMode                       = $policy.StreamingAttendeeMode
@@ -611,6 +642,8 @@ function Get-TargetResource
             ApplicationId                               = $ApplicationId
             TenantId                                    = $TenantId
             CertificateThumbprint                       = $CertificateThumbprint
+            CertificatePath                             = $CertificatePath
+            CertificatePassword                         = $CertificatePassword
             ManagedIdentity                             = $ManagedIdentity.IsPresent
             AccessTokens                                = $AccessTokens
         }
@@ -739,6 +772,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowMultipleScreenshare,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowNDIStreaming,
 
         [Parameter()]
@@ -844,6 +881,11 @@ function Set-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $AutoRecording,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $BackroomChat,
 
         [Parameter()]
         [System.String]
@@ -968,6 +1010,11 @@ function Set-TargetResource
         $ParticipantSlideControl,
 
         [Parameter()]
+        [ValidateSet('Default', 'NumericOnly')]
+        [System.String]
+        $PasscodeComplexity,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('TeamsAndSfb', 'Teams')]
         $PreferredMeetingProviderForIslandsMode,
@@ -996,6 +1043,11 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('SingleApplication', 'EntireScreen', 'Disabled')]
         $ScreenSharingMode,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $SetRecordingAndTranscriptOwnership,
 
         [Parameter()]
         [ValidateSet('OnAllowOrganizerOverride', 'OffAllowOrganizerOverride', 'Off')]
@@ -1087,6 +1139,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -1277,6 +1337,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowMultipleScreenshare,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowNDIStreaming,
 
         [Parameter()]
@@ -1382,6 +1446,11 @@ function Test-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $AutoRecording,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $BackroomChat,
 
         [Parameter()]
         [System.String]
@@ -1506,6 +1575,11 @@ function Test-TargetResource
         $ParticipantSlideControl,
 
         [Parameter()]
+        [ValidateSet('Default', 'NumericOnly')]
+        [System.String]
+        $PasscodeComplexity,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('TeamsAndSfb', 'Teams')]
         $PreferredMeetingProviderForIslandsMode,
@@ -1534,6 +1608,11 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('SingleApplication', 'EntireScreen', 'Disabled')]
         $ScreenSharingMode,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $SetRecordingAndTranscriptOwnership,
 
         [Parameter()]
         [ValidateSet('OnAllowOrganizerOverride', 'OffAllowOrganizerOverride', 'Off')]
@@ -1627,6 +1706,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1691,6 +1778,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1734,6 +1829,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

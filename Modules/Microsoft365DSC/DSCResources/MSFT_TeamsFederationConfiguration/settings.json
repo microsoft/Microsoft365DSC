@@ -35,5 +35,15 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTenantFederationConfiguration",
+        "New-CsEdgeAllowAllKnownDomains",
+        "Set-CsTenantFederationConfiguration"
+      ]
+    }
+  ]
 }

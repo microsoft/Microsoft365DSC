@@ -35,5 +35,16 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsMobilityPolicy",
+        "New-CsTeamsMobilityPolicy",
+        "Remove-CsTeamsMobilityPolicy",
+        "Set-CsTeamsMobilityPolicy"
+      ]
+    }
+  ]
 }

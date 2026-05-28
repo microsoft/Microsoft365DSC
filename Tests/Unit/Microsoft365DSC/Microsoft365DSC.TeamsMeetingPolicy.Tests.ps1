@@ -47,6 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowExternalParticipantGiveRequestControl = $False
                     AllowIPVideo                               = $True
                     AllowMeetNow                               = $True
+                    AllowMultipleScreenshare                   = $True
                     AllowOutlookAddIn                          = $True
                     AllowParticipantGiveRequestControl         = $True
                     AllowPowerPointSharing                     = $True
@@ -58,6 +59,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AutoAdmittedUsers                          = 'Everyone'
                     AutomaticallyStartCopilot                  = 'Disabled'
                     AutoRecording                              = 'Enabled'
+                    BackroomChat                               = 'Disabled'
                     ChannelRecordingDownload                   = 'Allow'
                     ConnectToMeetingControls                   = 'Enabled'
                     ContentSharingInExternalMeetings           = 'EnabledForAnyone'
@@ -68,7 +70,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                = $null
                     MediaBitRateKb                             = 50000
                     ParticipantNameChange                      = 'Enabled'
+                    PasscodeComplexity                         = 'NumericOnly'
                     ScreenSharingMode                          = 'EntireScreen'
+                    SetRecordingAndTranscriptOwnership         = 'Disabled'
                     VoiceIsolation                             = 'Disabled'
                     WhoCanRegister                             = 'EveryoneInCompany'
                     RoomAttributeUserOverride                  = 'OFF'
@@ -102,6 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowExternalParticipantGiveRequestControl = $False
                     AllowIPVideo                               = $True
                     AllowMeetNow                               = $True
+                    AllowMultipleScreenshare                   = $True
                     AllowOutlookAddIn                          = $True
                     AllowParticipantGiveRequestControl         = $True
                     AllowPowerPointSharing                     = $True
@@ -110,9 +115,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowTranscription                         = $False
                     AllowWhiteboard                            = $True
                     AutoAdmittedUsers                          = 'Everyone'
+                    BackroomChat                               = 'Disabled'
                     Description                                = $null
                     MediaBitRateKb                             = 50000
+                    PasscodeComplexity                         = 'NumericOnly'
                     ScreenSharingMode                          = 'EntireScreen'
+                    SetRecordingAndTranscriptOwnership         = 'Disabled'
                     WhoCanRegister                             = 'EveryoneInCompany'
                     Ensure                                     = 'Present'
                     Credential                                 = $Credential
@@ -148,6 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowExternalParticipantGiveRequestControl = $False
                     AllowIPVideo                               = $True
                     AllowMeetNow                               = $True
+                    AllowMultipleScreenshare                   = $True
                     AllowOutlookAddIn                          = $True
                     AllowParticipantGiveRequestControl         = $True
                     AllowPowerPointSharing                     = $True
@@ -159,6 +168,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AutoAdmittedUsers                          = 'Everyone'
                     AutomaticallyStartCopilot                  = 'Disabled'
                     AutoRecording                              = 'Enabled'
+                    BackroomChat                               = 'Disabled'
                     ChannelRecordingDownload                   = 'Allow'
                     ConnectToMeetingControls                   = 'Enabled'
                     ContentSharingInExternalMeetings           = 'EnabledForAnyone'
@@ -169,7 +179,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExternalMeetingJoin                        = 'EnabledForAnyone'
                     MediaBitRateKb                             = 50000
                     ParticipantNameChange                      = 'Disabled'
+                    PasscodeComplexity                         = 'NumericOnly'
                     ScreenSharingMode                          = 'EntireScreen'
+                    SetRecordingAndTranscriptOwnership         = 'Disabled'
                     VoiceIsolation                             = 'Enabled'
                     WhoCanRegister                             = 'EveryoneInCompany'
                     Ensure                                     = 'Present'
@@ -202,6 +214,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowExternalParticipantGiveRequestControl = $False
                     AllowIPVideo                               = $True
                     AllowMeetNow                               = $True
+                    AllowMultipleScreenshare                   = $True
                     AllowOutlookAddIn                          = $True
                     AllowParticipantGiveRequestControl         = $True
                     AllowPowerPointSharing                     = $True
@@ -210,11 +223,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowTranscription                         = $False
                     AllowWhiteboard                            = $True
                     AutoAdmittedUsers                          = 'Everyone'
+                    BackroomChat                               = 'Disabled'
                     Description                                = $null
                     MediaBitRateKb                             = 50000
                     ScreenSharingMode                          = 'EntireScreen'
+                    SetRecordingAndTranscriptOwnership         = 'Disabled'
                     WhoCanRegister                             = 'EveryoneInCompany'
                     RoomAttributeUserOverride                  = 'OFF'
+                    PasscodeComplexity                         = 'NumericOnly'
                     Ensure                                     = 'Present'
                     Credential                                 = $Credential
                 }
@@ -239,6 +255,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowExternalParticipantGiveRequestControl = $False
                     AllowIPVideo                               = $True
                     AllowMeetNow                               = $True
+                    AllowMultipleScreenshare                   = $True
                     AllowOutlookAddIn                          = $True
                     AllowParticipantGiveRequestControl         = $True
                     AllowPowerPointSharing                     = $True
@@ -247,10 +264,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowTranscription                         = $False
                     AllowWhiteboard                            = $True
                     AutoAdmittedUsers                          = 'Everyone'
+                    BackroomChat                               = 'Disabled'
                     Description                                = $null
                     MediaBitRateKb                             = 50000
                     ScreenSharingMode                          = 'EntireScreen'
+                    SetRecordingAndTranscriptOwnership         = 'Disabled'
                     WhoCanRegister                             = 'EveryoneInCompany'
+                    PasscodeComplexity                         = 'NumericOnly'
                     Ensure                                     = 'Absent'
                     Credential                                 = $Credential
                 }

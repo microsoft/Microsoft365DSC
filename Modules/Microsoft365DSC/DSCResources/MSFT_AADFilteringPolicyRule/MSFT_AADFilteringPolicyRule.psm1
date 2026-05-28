@@ -52,6 +52,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -106,15 +114,15 @@ function Get-TargetResource
         }
 
         $DestinationsValue = @()
-        foreach ($destination in $instance.AdditionalProperties.destinations)
+        foreach ($destination in $instance.destinations)
         {
-            if ($instance.AdditionalProperties.ruleType -eq 'fqdn')
+            if ($instance.ruleType -eq 'fqdn')
             {
                 $DestinationsValue += @{
                     value = $destination.value
                 }
             }
-            elseif ($instance.AdditionalProperties.ruleType -eq 'webCategory')
+            elseif ($instance.ruleType -eq 'webCategory')
             {
                 $DestinationsValue += @{
                     name = $destination.name
@@ -126,7 +134,7 @@ function Get-TargetResource
             Name                  = $instance.Name
             Policy                = $Policy
             Id                    = $instance.Id
-            RuleType              = $instance.AdditionalProperties.ruleType
+            RuleType              = $instance.ruleType
             Destinations          = $DestinationsValue
             Ensure                = 'Present'
             Credential            = $Credential
@@ -134,6 +142,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -200,6 +210,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -339,6 +357,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -390,6 +416,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -467,7 +501,6 @@ function Export-TargetResource
                 }
 
                 $Results = Get-TargetResource @Params
-
 
                 if ($Results.Destinations)
                 {

@@ -52,12 +52,20 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -121,8 +129,10 @@ function Get-TargetResource
             Credential                                      = $Credential
             ApplicationId                                   = $ApplicationId
             TenantId                                        = $TenantId
-            CertificateThumbprint                           = $CertificateThumbprint
             ApplicationSecret                               = $ApplicationSecret
+            CertificateThumbprint                           = $CertificateThumbprint
+            CertificatePath                                 = $CertificatePath
+            CertificatePassword                             = $CertificatePassword
             ManagedIdentity                                 = $ManagedIdentity.IsPresent
             AccessTokens                                    = $AccessTokens
         }
@@ -193,12 +203,20 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -223,7 +241,6 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -265,7 +282,6 @@ function Set-TargetResource
             ownerOrganizationName                           = $OwnerOrganizationName;
             ownerUserPrincipalName                          = $OwnerUserPrincipalName;
         }
-
 
         Write-Verbose -Message "Updating Intune Device Management Android Google Play Enrollment with values:`r`n$(ConvertTo-Json $UpdateParameters -Depth 10)"
         Invoke-MgGraphRequest -Uri $uri `
@@ -334,12 +350,20 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -387,12 +411,20 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -450,8 +482,10 @@ function Export-TargetResource
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
                 ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

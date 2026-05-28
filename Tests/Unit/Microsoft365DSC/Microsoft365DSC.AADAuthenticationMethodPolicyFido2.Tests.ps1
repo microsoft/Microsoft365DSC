@@ -35,38 +35,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        IncludeTargets        = @(
-                            @{
-                                TargetType = 'group'
-                                Id         = 'Fakegroup'
-                            }
-                        )
-                        isAttestationEnforced = $True
-                        '@odata.type' = "#microsoft.graph.fido2AuthenticationMethodConfiguration"
-                        isSelfServiceRegistrationAllowed = $True
-                        keyRestrictions = @{
-                            aaGuids = @("FakeStringValue")
-                            enforcementType = "allow"
-                            isEnforced = $True
+                    IncludeTargets        = @(
+                        @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         }
-                        PasskeyProfiles = @(
-                            @{
-                                AttestationEnforcement = "registrationOnly"
-                                Id = "00000000-0000-0000-0000-000000000001"
-                                KeyRestrictions = @{
-                                    AaGuids = @(
-                                        "90a3ccdf-635c-4729-a248-9b709135078f"
-                                        "de1e552d-db1d-4423-a619-566b625cdc84"
-                                    )
-                                    EnforcementType = "block"
-                                    IsEnforced = $True
-                                }
-                                Name = "Default passkey profile"
-                                PasskeyTypes = "deviceBound"
-                            }
-                        )
+                    )
+                    isAttestationEnforced = $True
+                    '@odata.type' = "#microsoft.graph.fido2AuthenticationMethodConfiguration"
+                    isSelfServiceRegistrationAllowed = $True
+                    keyRestrictions = @{
+                        aaGuids = @("FakeStringValue")
+                        enforcementType = "allow"
+                        isEnforced = $True
                     }
+                    PasskeyProfiles = @(
+                        @{
+                            AttestationEnforcement = "registrationOnly"
+                            Id = "00000000-0000-0000-0000-000000000001"
+                            KeyRestrictions = @{
+                                AaGuids = @(
+                                    "90a3ccdf-635c-4729-a248-9b709135078f"
+                                    "de1e552d-db1d-4423-a619-566b625cdc84"
+                                )
+                                EnforcementType = "block"
+                                IsEnforced = $True
+                            }
+                            Name = "Default passkey profile"
+                            PasskeyTypes = "deviceBound"
+                        }
+                    )
                     ExcludeTargets = @(
                         @{
                             TargetType = "group"
@@ -190,7 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

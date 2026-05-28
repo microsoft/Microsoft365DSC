@@ -15,13 +15,18 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $AllowWebinars,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
+        $BackroomChat,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $BroadcastPremiumApps,
 
         [Parameter()]
@@ -59,33 +64,48 @@ function Get-TargetResource
         $AllowedTownhallTypesForRecordingPublish,
 
         [Parameter()]
+        [ValidateSet('eOTP', 'None')]
         [System.String]
+        $ExternalPresenterJoinVerification,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $ImmersiveEvents,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $RecordingForTownhall,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $RecordingForWebinar,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
         [System.String]
+        $Registration,
+
+        [Parameter()]
         [ValidateSet('Everyone', 'EveryoneInOrganizationAndGuests')]
+        [System.String]
         $TownhallEventAttendeeAccess,
 
         [Parameter()]
+        [ValidateSet('Max720p', 'Max1080p', 'MicrosoftManaged')]
         [System.String]
+        $TownhallMaxResolution,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $TranscriptionForTownhall,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $TranscriptionForWebinar,
 
         [Parameter()]
@@ -117,6 +137,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -164,13 +192,17 @@ function Get-TargetResource
             Write-Verbose -Message "Could not find Teams Events Policy {$Identity}"
             return $nullReturn
         }
+
         Write-Verbose -Message "Found Teams Events Policy {$Identity}"
+
         $result = @{
             Identity                                = $Identity
             Description                             = $policy.Description
             AllowWebinars                           = $policy.AllowWebinars
+            BackroomChat                            = $policy.BackroomChat
             BroadcastPremiumApps                    = $policy.BroadcastPremiumApps
             EventAccessType                         = $policy.EventAccessType
+            ExternalPresenterJoinVerification       = $policy.ExternalPresenterJoinVerification
             AllowEmailEditing                       = $policy.AllowEmailEditing
             AllowEventIntegrations                  = $policy.AllowEventIntegrations
             AllowTownhalls                          = $policy.AllowTownhalls
@@ -180,8 +212,10 @@ function Get-TargetResource
             ImmersiveEvents                         = $policy.ImmersiveEvents
             RecordingForTownhall                    = $policy.RecordingForTownhall
             RecordingForWebinar                     = $policy.RecordingForWebinar
+            Registration                            = $policy.Registration
             TownhallChatExperience                  = $policy.TownhallChatExperience
             TownhallEventAttendeeAccess             = $policy.TownhallEventAttendeeAccess
+            TownhallMaxResolution                   = $policy.TownhallMaxResolution
             TranscriptionForTownhall                = $policy.TranscriptionForTownhall
             TranscriptionForWebinar                 = $policy.TranscriptionForWebinar
             UseMicrosoftECDN                        = $policy.UseMicrosoftECDN
@@ -190,6 +224,8 @@ function Get-TargetResource
             ApplicationId                           = $ApplicationId
             TenantId                                = $TenantId
             CertificateThumbprint                   = $CertificateThumbprint
+            CertificatePath                         = $CertificatePath
+            CertificatePassword                     = $CertificatePassword
             ManagedIdentity                         = $ManagedIdentity.IsPresent
             AccessTokens                            = $AccessTokens
         }
@@ -222,13 +258,18 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $AllowWebinars,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
+        $BackroomChat,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $BroadcastPremiumApps,
 
         [Parameter()]
@@ -266,33 +307,48 @@ function Set-TargetResource
         $AllowedTownhallTypesForRecordingPublish,
 
         [Parameter()]
+        [ValidateSet('eOTP', 'None')]
         [System.String]
+        $ExternalPresenterJoinVerification,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $ImmersiveEvents,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $RecordingForTownhall,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $RecordingForWebinar,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
         [System.String]
+        $Registration,
+
+        [Parameter()]
         [ValidateSet('Everyone', 'EveryoneInOrganizationAndGuests')]
+        [System.String]
         $TownhallEventAttendeeAccess,
 
         [Parameter()]
+        [ValidateSet('Max720p', 'Max1080p', 'MicrosoftManaged')]
         [System.String]
+        $TownhallMaxResolution,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $TranscriptionForTownhall,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $TranscriptionForWebinar,
 
         [Parameter()]
@@ -324,6 +380,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -383,13 +447,18 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $AllowWebinars,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
+        $BackroomChat,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $BroadcastPremiumApps,
 
         [Parameter()]
@@ -427,33 +496,48 @@ function Test-TargetResource
         $AllowedTownhallTypesForRecordingPublish,
 
         [Parameter()]
+        [ValidateSet('eOTP', 'None')]
         [System.String]
+        $ExternalPresenterJoinVerification,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $ImmersiveEvents,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $RecordingForTownhall,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $RecordingForWebinar,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
         [System.String]
+        $Registration,
+
+        [Parameter()]
         [ValidateSet('Everyone', 'EveryoneInOrganizationAndGuests')]
+        [System.String]
         $TownhallEventAttendeeAccess,
 
         [Parameter()]
+        [ValidateSet('Max720p', 'Max1080p', 'MicrosoftManaged')]
         [System.String]
+        $TownhallMaxResolution,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $TranscriptionForTownhall,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
         $TranscriptionForWebinar,
 
         [Parameter()]
@@ -485,6 +569,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -536,6 +628,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -579,6 +679,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

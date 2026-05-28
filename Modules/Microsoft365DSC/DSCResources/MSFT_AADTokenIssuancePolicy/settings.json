@@ -34,7 +34,6 @@
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Identity.SignIns"
   ],
   "supportedEnvironments": [

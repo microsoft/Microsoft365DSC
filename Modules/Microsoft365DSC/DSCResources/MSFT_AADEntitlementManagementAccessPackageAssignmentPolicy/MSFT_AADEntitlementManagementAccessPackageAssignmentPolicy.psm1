@@ -80,6 +80,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -140,7 +148,6 @@ function Get-TargetResource
         $formattedAccessReviewSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings
         if ($null -ne $formattedAccessReviewSettings -and $formattedAccessReviewSettings.Count -ne 0)
         {
-            $formattedAccessReviewSettings.Remove('additionalProperties') | Out-Null
             if (-not [System.String]::IsNullOrEmpty($formattedAccessReviewSettings.StartDateTime))
             {
                 $formattedAccessReviewSettings.StartDateTime = $getValue.AccessReviewSettings.StartDateTime.ToString("o")
@@ -155,31 +162,22 @@ function Get-TargetResource
         {
             foreach ($setting in $formattedAccessReviewSettings.Reviewers)
             {
-                $setting.Add('odataType', $setting.AdditionalProperties.'@odata.type')
-                if (-not [System.String]::IsNullOrEmpty($setting.AdditionalProperties.id))
+                $setting.Add('odataType', $setting.'@odata.type')
+                $setting.Remove('@odata.type') | Out-Null
+                if (-not [System.String]::IsNullOrEmpty($setting.id))
                 {
-                    $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
-
+                    $user = Get-MgUser -UserId $setting.id -ErrorAction SilentlyContinue
                     if ($null -ne $user)
                     {
-                        $setting.Add('Id', $user.UserPrincipalName)
+                        $setting.Id = $user.UserPrincipalName
                     }
                 }
-                if (-not [System.String]::IsNullOrEmpty($setting.AdditionalProperties.managerLevel))
-                {
-                    $setting.Add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
-                }
-                $setting.Remove('AdditionalProperties') | Out-Null
             }
         }
         #endregion
 
         #region Format RequestApprovalSettings
         $formattedRequestApprovalSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestApprovalSettings
-        if ($null -ne $formattedRequestApprovalSettings)
-        {
-            $formattedRequestApprovalSettings.Remove('additionalProperties') | Out-Null
-        }
         if ($null -ne $formattedRequestApprovalSettings.approvalStages -and $formattedRequestApprovalSettings.approvalStages.Count -gt 0 )
         {
             foreach ($approvalStage in $formattedRequestApprovalSettings.approvalStages)
@@ -188,20 +186,17 @@ function Get-TargetResource
                 {
                     foreach ($setting in $approvalStage.PrimaryApprovers)
                     {
-                        $setting.Add('odataType', $setting.AdditionalProperties.'@odata.type')
-                        if (-not [System.String]::IsNullOrEmpty($setting.AdditionalProperties.id))
+                        $setting.Add('odataType', $setting.'@odata.type')
+                        $setting.Remove('@odata.type') | Out-Null
+                        $setting.Remove('description') | Out-Null
+                        if (-not [System.String]::IsNullOrEmpty($setting.id))
                         {
-                            $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
+                            $user = Get-MgUser -UserId $setting.id -ErrorAction SilentlyContinue
                             if ($null -ne $user)
                             {
-                                $setting.Add('Id', $user.UserPrincipalName)
+                                $setting.Id = $user.UserPrincipalName
                             }
                         }
-                        if (-not [System.String]::IsNullOrEmpty($setting.AdditionalProperties.managerLevel))
-                        {
-                            $setting.Add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
-                        }
-                        $setting.Remove('additionalProperties') | Out-Null
                     }
                 }
 
@@ -209,85 +204,57 @@ function Get-TargetResource
                 {
                     foreach ($setting in $approvalStage.EscalationApprovers)
                     {
-                        $setting.Add('odataType', $setting.AdditionalProperties.'@odata.type')
-                        if (-not [System.String]::IsNullOrEmpty($setting.AdditionalProperties.id))
+                        $setting.Add('odataType', $setting.'@odata.type')
+                        $setting.Remove('@odata.type') | Out-Null
+                        $setting.Remove('description') | Out-Null
+                        if (-not [System.String]::IsNullOrEmpty($setting.id))
                         {
-                            $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
+                            $user = Get-MgUser -UserId $setting.id -ErrorAction SilentlyContinue
                             if ($null -ne $user)
                             {
-                                $setting.Add('Id', $user.UserPrincipalName)
+                                $setting.Id = $user.UserPrincipalName
                             }
                         }
-                        if (-not [System.String]::IsNullOrEmpty($setting.AdditionalProperties.managerLevel))
-                        {
-                            $setting.Add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
-                        }
-                        $setting.Remove('additionalProperties') | Out-Null
                     }
                 }
-                $approvalStage.Remove('additionalProperties') | Out-Null
             }
         }
         #endregion
 
         #region Format RequestorSettings
         $formattedRequestorSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestorSettings
-        if ($null -ne $formattedRequestorSettings)
-        {
-            $formattedRequestorSettings.Remove('additionalProperties') | Out-Null
-        }
         if ($null -ne $formattedRequestorSettings.allowedRequestors -and $formattedRequestorSettings.allowedRequestors.Count -gt 0 )
         {
             foreach ($setting in $formattedRequestorSettings.allowedRequestors)
             {
                 if (-not $setting.ContainsKey('odataType'))
                 {
-                    $setting.Add('odataType', $setting.AdditionalProperties.'@odata.type')
+                    $setting.Add('odataType', $setting.'@odata.type')
+                    $setting.Remove('@odata.type') | Out-Null
                 }
-                if (-not [System.String]::IsNullOrEmpty($setting.AdditionalProperties.id))
+                if (-not [System.String]::IsNullOrEmpty($setting.id))
                 {
                     # Check the @odata.type to determine if this is a user or group
-                    $odataType = $setting.AdditionalProperties.'@odata.type'
-
+                    $odataType = $setting.'odataType'
                     if ($odataType -eq '#microsoft.graph.singleUser')
                     {
                         # Handle single user - try to resolve to UserPrincipalName
-                        $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
+                        $user = Get-MgUser -UserId $setting.id -ErrorAction SilentlyContinue
                         if ($null -ne $user)
                         {
-                            $setting.Add('Id', $user.UserPrincipalName)
-                        }
-                        else
-                        {
-                            # If user not found, keep the original ID (could be UPN already)
-                            $setting.Add('Id', $setting.AdditionalProperties.id)
+                            $setting.Id = $user.UserPrincipalName
                         }
                     }
                     elseif ($odataType -eq '#microsoft.graph.groupMembers')
                     {
                         # Handle group members - try to resolve group to DisplayName, fallback to GUID
-                        $group = Get-MgGroup -GroupId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
+                        $group = Get-MgGroup -GroupId $setting.id -ErrorAction SilentlyContinue
                         if ($null -ne $group)
                         {
-                            $setting.Add('Id', $group.DisplayName)
-                        }
-                        else
-                        {
-                            # If group not found, keep the GUID
-                            $setting.Add('Id', $setting.AdditionalProperties.id)
+                            $setting.Id = $group.DisplayName
                         }
                     }
-                    else
-                    {
-                        # For other types (requestorManager, etc.), keep the original ID
-                        $setting.Add('Id', $setting.AdditionalProperties.id)
-                    }
                 }
-                if (-not [System.String]::IsNullOrEmpty($setting.AdditionalProperties.managerLevel))
-                {
-                    $setting.Add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
-                }
-                $setting.Remove('additionalProperties') | Out-Null
             }
         }
         #endregion
@@ -298,31 +265,14 @@ function Get-TargetResource
         {
             if (-not $question.ContainsKey('odataType'))
             {
-                $question.Add('odataType', $question.AdditionalProperties.'@odata.type')
+                $question.Add('odataType', $question.'@odata.type')
+                $question.Remove('@odata.type') | Out-Null
             }
             if ($null -ne $question.Text)
             {
                 $question.Add('QuestionText', $question.Text)
                 $question.Remove('Text') | Out-Null
-                $question.QuestionText.Remove('additionalProperties') | Out-Null
-                foreach ($localizedText in $question.QuestionText.localizedTexts)
-                {
-                    $localizedText.Remove('additionalProperties') | Out-Null
-                }
             }
-            if ($null -ne $question.AdditionalProperties.isSingleLineQuestion)
-            {
-                $question.Add('IsSingleLineQuestion', $question.AdditionalProperties.isSingleLineQuestion)
-            }
-            if ($null -ne $question.AdditionalProperties.choices)
-            {
-                $question.Add('Choices', [Array]$question.AdditionalProperties.choices)
-            }
-            if ($null -ne $question.AdditionalProperties.allowsMultipleSelection)
-            {
-                $question.Add('AllowsMultipleSelection', $question.AdditionalProperties.allowsMultipleSelection)
-            }
-            $question.Remove('additionalProperties') | Out-Null
         }
         #endregion
 
@@ -366,6 +316,8 @@ function Get-TargetResource
             TenantId                = $TenantId
             ApplicationSecret       = $ApplicationSecret
             CertificateThumbprint   = $CertificateThumbprint
+            CertificatePath         = $CertificatePath
+            CertificatePassword     = $CertificatePassword
             ManagedIdentity         = $ManagedIdentity.IsPresent
             AccessTokens            = $AccessTokens
         }
@@ -461,6 +413,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -614,6 +574,16 @@ function Set-TargetResource
         $commonParameters.AccessPackageId = $AccessPackageId
     }
 
+    if ($null -ne $commonParameters.AccessReviewSettings -and $null -ne $commonParameters.AccessReviewSettings.StartDateTime)
+    {
+        $parsedTime = [System.DateTimeOffset]::Parse($commonParameters.AccessReviewSettings.StartDateTime)
+        if ($parsedTime -lt [System.DateTimeOffset]::UtcNow)
+        {
+            Write-Verbose -Message "The provided AccessReviewSettings.StartDateTime {$($commonParameters.AccessReviewSettings.StartDateTime)} is in the past. Setting it to 1 minute in the future from now."
+            $commonParameters.AccessReviewSettings.StartDateTime = ([System.DateTimeOffset]::UtcNow).AddMinutes(1).ToString("o")
+        }
+    }
+
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating a new access package assignment policy {$DisplayName}"
@@ -722,6 +692,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -739,8 +717,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $ResourceName
+        -ResourceName $ResourceName `
+        @compareParameters
     return $result
 }
 
@@ -773,6 +753,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -837,6 +825,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -1010,4 +1000,37 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        PostProcessing = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
+            if (-not [System.String]::IsNullOrEmpty($DesiredValues.AccessReviewSettings.StartDateTime))
+            {
+                $parsedDesiredDate = [System.DateTime]::MinValue
+                $parseResultDesired = [System.DateTime]::TryParse($DesiredValues.AccessReviewSettings.StartDateTime, [ref]$parsedDesiredDate)
+
+                $parsedCurrentDate = [System.DateTime]::MinValue
+                $parseResultCurrent = [System.DateTime]::TryParse($CurrentValues.AccessReviewSettings.StartDateTime, [ref]$parsedCurrentDate)
+
+                if ($parseResultDesired -and $parseResultCurrent)
+                {
+                    Write-Verbose -Message "Parsed Desired StartDateTime: $parsedDesiredDate, Parsed Current StartDateTime: $parsedCurrentDate"
+                    if ($parsedDesiredDate -ne $parsedCurrentDate -and $parsedDesiredDate -lt [System.DateTime]::UtcNow)
+                    {
+                        Write-Verbose -Message 'Ignoring StartDateTime in ScheduleInfo as it is in the past. StartDateTime cannot be set to a past date.'
+                        Write-Verbose -Message 'Aligning the Desired and Current StartDateTime values for comparison.'
+                        $DesiredValues.AccessReviewSettings.StartDateTime = $CurrentValues.AccessReviewSettings.StartDateTime
+                    }
+                }
+            }
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

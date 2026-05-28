@@ -72,6 +72,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -132,6 +140,8 @@ function Get-TargetResource
             TenantId                         = $TenantId
             ApplicationSecret                = $ApplicationSecret
             CertificateThumbprint            = $CertificateThumbprint
+            CertificatePath                  = $CertificatePath
+            CertificatePassword              = $CertificatePassword
             ManagedIdentity                  = $ManagedIdentity.IsPresent
             AccessTokens                     = $AccessTokens
         }
@@ -220,6 +230,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -266,7 +284,7 @@ function Set-TargetResource
 
         $payload = ConvertTo-Json $setParameters -Depth 10 -Compress
         Write-Verbose -Message "Creating new custom domain name {$Id} with payload: `r`n$payload"
-        $domain = New-MgBetaDomain @setParameters
+        $domain = New-MgBetaDomain -BodyParameter $setParameters
 
         if ($NeedAdditionalUpdate)
         {
@@ -282,17 +300,16 @@ function Set-TargetResource
                 $UpdateParams.Add('PasswordValidityPeriodInDays', $PasswordValidityPeriodInDays)
             }
 
-            Update-MgBetaDomain -DomainId $domain.Id @UpdateParams
+            Update-MgBetaDomain -DomainId $domain.Id -BodyParameter $UpdateParams
         }
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        $setParameters.Add('DomainId', $Id)
         $setParameters.Remove('Id') | Out-Null
         $setParameters.Remove('IsVerified') | Out-Null
         Write-Verbose -Message "Updating custom domain name {$Id} with:`r`n$(ConvertTo-Json $SetParameters -Depth 5)"
-        Update-MgBetaDomain @SetParameters
+        Update-MgBetaDomain -DomainId $Id -BodyParameter $setParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -374,6 +391,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -425,6 +450,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -483,6 +516,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

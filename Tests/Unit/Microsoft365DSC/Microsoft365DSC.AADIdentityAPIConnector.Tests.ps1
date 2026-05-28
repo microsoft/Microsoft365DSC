@@ -48,16 +48,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TargetUrl = 'FakeStringValue'
                     Id = 'FakeStringValue'
                     AuthenticationConfiguration = @{
-                        AdditionalProperties = @{
-                            certificateList = @(
-                                @{
-                                    Thumbprint = 'FakeStringValue'
-                                    IsActive = $true
-                                }
-                            )
-                            Username = 'FakeStringValue'
-                            Password = $Cred
-                        }
+                        certificateList = @(
+                            @{
+                                Thumbprint = 'FakeStringValue'
+                                IsActive = $true
+                            }
+                        )
+                        Username = 'FakeStringValue'
+                        Password = $Cred
                     }
                 }
             }

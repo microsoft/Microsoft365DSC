@@ -38,16 +38,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.windowsDefenderAdvancedThreatProtectionConfiguration"
-                        advancedThreatProtectionOffboardingBlob = "FakeStringValue"
-                        allowSampleSharing = $True
-                        advancedThreatProtectionOffboardingFilename = "FakeStringValue"
-                        enableExpeditedTelemetryReporting = $True
-                        advancedThreatProtectionAutoPopulateOnboardingBlob = $True
-                        advancedThreatProtectionOnboardingBlob = "FakeStringValue"
-                        advancedThreatProtectionOnboardingFilename = "FakeStringValue"
-                    }
+                    '@odata.type' = "#microsoft.graph.windowsDefenderAdvancedThreatProtectionConfiguration"
+                    advancedThreatProtectionOffboardingBlob = "FakeStringValue"
+                    allowSampleSharing = $True
+                    advancedThreatProtectionOffboardingFilename = "FakeStringValue"
+                    enableExpeditedTelemetryReporting = $True
+                    advancedThreatProtectionAutoPopulateOnboardingBlob = $True
+                    advancedThreatProtectionOnboardingBlob = "FakeStringValue"
+                    advancedThreatProtectionOnboardingFilename = "FakeStringValue"
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
@@ -126,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

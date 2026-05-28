@@ -30,8 +30,7 @@
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication",
-    "Microsoft.Graph.Beta.DeviceManagement"
+    "Microsoft.Graph.Authentication"
   ],
   "supportedEnvironments": [
     "Global",

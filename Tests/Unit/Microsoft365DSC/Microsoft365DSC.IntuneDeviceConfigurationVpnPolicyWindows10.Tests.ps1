@@ -41,113 +41,111 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        dnsRules = @(
-                            @{
-                                servers = @("FakeStringValue")
-                                proxyServerUri = "FakeStringValue"
-                                name = "FakeStringValue"
-                                persistent = $True
-                                autoTrigger = $True
-                            }
-                        )
-                        authenticationMethod = "certificate"
-                        proxyServer = @{
-                            bypassProxyServerForLocalAddress = $True
-                            '@odata.type' = "#microsoft.graph.windows10VpnProxyServer"
-                            address = "FakeStringValue"
-                            automaticConfigurationScriptUrl = "FakeStringValue"
-                            automaticallyDetectProxySettings = $True
-                            port = 25
-                        }
-                        rememberUserCredentials = $True
-                        enableDnsRegistration = $True
-                        associatedApps = @(
-                            @{
-                                identifier = "FakeStringValue"
-                                appType = "desktop"
-                            }
-                        )
-                        routes = @(
-                            @{
-                                prefixSize = 25
-                                destinationPrefix = "FakeStringValue"
-                            }
-                        )
-                        trustedNetworkDomains = @("FakeStringValue")
-                        enableDeviceTunnel = $True
-                        singleSignOnIssuerHash = "FakeStringValue"
-                        singleSignOnEku = @{
-                            objectIdentifier = "FakeStringValue"
+                    dnsRules = @(
+                        @{
+                            servers = @("FakeStringValue")
+                            proxyServerUri = "FakeStringValue"
                             name = "FakeStringValue"
+                            persistent = $True
+                            autoTrigger = $True
                         }
-                        microsoftTunnelSiteId = "FakeStringValue"
-                        enableSingleSignOnWithAlternateCertificate = $True
-                        onlyAssociatedAppsCanUseConnection = $True
-                        dnsSuffixes = @("FakeStringValue")
-                        profileTarget = "user"
-                        enableAlwaysOn = $True
-                        servers = @(
-                            @{
-                                isDefaultServer = $True
-                                description = "FakeStringValue"
-                                address = "FakeStringValue"
-                            }
-                        )
-                        connectionType = "pulseSecure"
-                        connectionName = "FakeStringValue"
-                        cryptographySuite = @{
-                            cipherTransformConstants = "aes256"
-                            encryptionMethod = "aes256"
-                            pfsGroup = "pfs1"
-                            dhGroup = "group1"
-                            integrityCheckMethod = "sha2_256"
-                            authenticationTransformConstants = "md5_96"
-                        }
-                        trafficRules = @(
-                            @{
-                                remotePortRanges = @(
-                                    @{
-                                        lowerNumber = 25
-                                        upperNumber = 25
-                                    }
-                                )
-                                name = "FakeStringValue"
-                                appId = "FakeStringValue"
-                                localPortRanges = @(
-                                    @{
-                                        lowerNumber = 25
-                                        upperNumber = 25
-                                    }
-                                )
-                                appType = "none"
-                                localAddressRanges = @(
-                                    @{
-                                        cidrAddress = "FakeStringValue"
-                                        upperAddress = "FakeStringValue"
-                                        lowerAddress = "FakeStringValue"
-                                        '@odata.type' = "#microsoft.graph.iPv4CidrRange"
-                                    }
-                                )
-                                remoteAddressRanges = @(
-                                    @{
-                                        cidrAddress = "FakeStringValue"
-                                        upperAddress = "FakeStringValue"
-                                        lowerAddress = "FakeStringValue"
-                                        '@odata.type' = "#microsoft.graph.iPv4CidrRange"
-                                    }
-                                )
-                                claims = "FakeStringValue"
-                                protocols = 25
-                                routingPolicyType = "none"
-                                vpnTrafficDirection = "outbound"
-                            }
-                        )
-                        windowsInformationProtectionDomain = "FakeStringValue"
-                        enableConditionalAccess = $True
-                        '@odata.type' = "#microsoft.graph.windows10VpnConfiguration"
-                        enableSplitTunneling = $True
+                    )
+                    authenticationMethod = "certificate"
+                    proxyServer = @{
+                        bypassProxyServerForLocalAddress = $True
+                        '@odata.type' = "#microsoft.graph.windows10VpnProxyServer"
+                        address = "FakeStringValue"
+                        automaticConfigurationScriptUrl = "FakeStringValue"
+                        automaticallyDetectProxySettings = $True
+                        port = 25
                     }
+                    rememberUserCredentials = $True
+                    enableDnsRegistration = $True
+                    associatedApps = @(
+                        @{
+                            identifier = "FakeStringValue"
+                            appType = "desktop"
+                        }
+                    )
+                    routes = @(
+                        @{
+                            prefixSize = 25
+                            destinationPrefix = "FakeStringValue"
+                        }
+                    )
+                    trustedNetworkDomains = @("FakeStringValue")
+                    enableDeviceTunnel = $True
+                    singleSignOnIssuerHash = "FakeStringValue"
+                    singleSignOnEku = @{
+                        objectIdentifier = "FakeStringValue"
+                        name = "FakeStringValue"
+                    }
+                    microsoftTunnelSiteId = "FakeStringValue"
+                    enableSingleSignOnWithAlternateCertificate = $True
+                    onlyAssociatedAppsCanUseConnection = $True
+                    dnsSuffixes = @("FakeStringValue")
+                    profileTarget = "user"
+                    enableAlwaysOn = $True
+                    servers = @(
+                        @{
+                            isDefaultServer = $True
+                            description = "FakeStringValue"
+                            address = "FakeStringValue"
+                        }
+                    )
+                    connectionType = "pulseSecure"
+                    connectionName = "FakeStringValue"
+                    cryptographySuite = @{
+                        cipherTransformConstants = "aes256"
+                        encryptionMethod = "aes256"
+                        pfsGroup = "pfs1"
+                        dhGroup = "group1"
+                        integrityCheckMethod = "sha2_256"
+                        authenticationTransformConstants = "md5_96"
+                    }
+                    trafficRules = @(
+                        @{
+                            remotePortRanges = @(
+                                @{
+                                    lowerNumber = 25
+                                    upperNumber = 25
+                                }
+                            )
+                            name = "FakeStringValue"
+                            appId = "FakeStringValue"
+                            localPortRanges = @(
+                                @{
+                                    lowerNumber = 25
+                                    upperNumber = 25
+                                }
+                            )
+                            appType = "none"
+                            localAddressRanges = @(
+                                @{
+                                    cidrAddress = "FakeStringValue"
+                                    upperAddress = "FakeStringValue"
+                                    lowerAddress = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.iPv4CidrRange"
+                                }
+                            )
+                            remoteAddressRanges = @(
+                                @{
+                                    cidrAddress = "FakeStringValue"
+                                    upperAddress = "FakeStringValue"
+                                    lowerAddress = "FakeStringValue"
+                                    '@odata.type' = "#microsoft.graph.iPv4CidrRange"
+                                }
+                            )
+                            claims = "FakeStringValue"
+                            protocols = 25
+                            routingPolicyType = "none"
+                            vpnTrafficDirection = "outbound"
+                        }
+                    )
+                    windowsInformationProtectionDomain = "FakeStringValue"
+                    enableConditionalAccess = $True
+                    '@odata.type' = "#microsoft.graph.windows10VpnConfiguration"
+                    enableSplitTunneling = $True
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
                     id = "FakeStringValue"
@@ -416,7 +414,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

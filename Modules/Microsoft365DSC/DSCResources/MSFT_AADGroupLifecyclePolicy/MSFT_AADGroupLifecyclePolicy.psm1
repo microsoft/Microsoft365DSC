@@ -50,6 +50,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -178,6 +186,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -203,38 +219,38 @@ function Set-TargetResource
     $null = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "The Group Lifecycle Policy should exist but it doesn't. Creating it."
-        $creationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+        $creationParams = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
         $creationParams.Remove('IsSingleInstance') | Out-Null
 
         $emails = ''
-        foreach ($email in $creationParams.AlternateNotificationEmails)
+        foreach ($email in $creationParams.alternateNotificationEmails)
         {
             $emails += $email + ';'
         }
         $emails = $emails.TrimEnd(';')
-        $creationParams.AlternateNotificationEmails = $emails
-        New-MgGroupLifecyclePolicy @creationParams
+        $creationParams.alternateNotificationEmails = $emails
+        New-MgGroupLifecyclePolicy -BodyParameter $creationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
-        $updateParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+        $updateParams = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
         $updateParams.Remove('IsSingleInstance') | Out-Null
 
         $emails = ''
-        foreach ($email in $updateParams.AlternateNotificationEmails)
+        foreach ($email in $updateParams.alternateNotificationEmails)
         {
             $emails += $email + ';'
         }
         $emails = $emails.TrimEnd(';')
-        $updateParams.AlternateNotificationEmails = $emails
-        $updateParams.Add('GroupLifecyclePolicyId', (Get-MgGroupLifecyclePolicy).Id)
+        $updateParams.alternateNotificationEmails = $emails
 
         Write-Verbose -Message "The Group Lifecycle Policy exists but it's not in the Desired State. Updating it."
-        Update-MgGroupLifecyclePolicy @updateParams
+        Update-MgGroupLifecyclePolicy -GroupLifecyclePolicyId (Get-MgGroupLifecyclePolicy).Id -BodyParameter $updateParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -293,6 +309,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -342,6 +366,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -382,6 +414,8 @@ function Export-TargetResource
             ApplicationSecret           = $ApplicationSecret
             TenantId                    = $TenantId
             CertificateThumbprint       = $CertificateThumbprint
+            CertificatePath             = $CertificatePath
+            CertificatePassword         = $CertificatePassword
             ManagedIdentity             = $ManagedIdentity.IsPresent
             AccessTokens                = $AccessTokens
         }

@@ -62,5 +62,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Add-PnPSiteScript",
+        "Get-PnPSiteScript",
+        "Remove-PnPSiteScript",
+        "Set-PnPSiteScript"
+      ]
+    }
+  ]
 }

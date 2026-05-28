@@ -88,10 +88,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             id                   = 'FakeStringValue'
                             isRequired           = $True
                             sequence             = 25
-                            AdditionalProperties = @{
-                                '@odata.type'           = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
-                                allowsMultipleSelection = $True
-                            }
+                            '@odata.type'           = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
+                            allowsMultipleSelection = $True
                         }
                     )
                     RequestApprovalSettings = @{

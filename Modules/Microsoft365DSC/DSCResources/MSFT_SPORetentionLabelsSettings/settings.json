@@ -43,10 +43,20 @@
       }
     }
   },
-  "requiredModules": [],
+  "requiredModules": [
+    "PnP.PowerShell"
+  ],
   "supportedEnvironments": [
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Invoke-PnPSPRestMethod"
+      ]
+    }
+  ]
 }

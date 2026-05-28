@@ -144,6 +144,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -319,6 +327,8 @@ function Get-TargetResource
             ApplicationId             = $ApplicationId
             TenantId                  = $TenantId
             CertificateThumbprint     = $CertificateThumbprint
+            CertificatePath           = $CertificatePath
+            CertificatePassword       = $CertificatePassword
             ManagedIdentity           = $ManagedIdentity.IsPresent
             AccessTokens              = $AccessTokens
         }
@@ -477,6 +487,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -873,6 +891,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -920,6 +946,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -1207,14 +1241,14 @@ function Get-M365DSCSentinelAlertRule
         if (-not [System.String]::IsNullOrEmpty($Id))
         {
             $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/alertrules/$($Id)?api-version=2023-12-01-preview"
-            $response = Invoke-AzRest -Uri $uri -Method 'GET'
+            $response = Invoke-AzRestMethod -Uri $uri -Method 'GET'
             $result = ConvertFrom-Json $response.Content
             return $result
         }
         else
         {
             $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/alertrules?api-version=2023-12-01-preview"
-            $response = Invoke-AzRest -Uri $uri -Method 'GET'
+            $response = Invoke-AzRestMethod -Uri $uri -Method 'GET'
             $result = ConvertFrom-Json $response.Content
             return $result.value
         }
@@ -1274,7 +1308,7 @@ function New-M365DSCSentinelAlertRule
         }
         $payload = ConvertTo-Json $Body -Depth 10 -Compress
         Write-Verbose -Message "Creating new rule against URL:`r`n$($uri)`r`nWith payload:`r`n$payload"
-        $response = Invoke-AzRest -Uri $uri -Method 'PUT' -Payload $payload
+        $response = Invoke-AzRestMethod -Uri $uri -Method 'PUT' -Payload $payload
         Write-Verbose -Message $response.Content
     }
     catch
@@ -1319,7 +1353,7 @@ function Remove-M365DSCSentinelAlertRule
         $uri = $hostUrl.AzureManagement + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
 
         $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/alertRules/$($Id)?api-version=2024-04-01-preview"
-        Invoke-AzRest -Uri $uri -Method 'DELETE' | Out-Null
+        Invoke-AzRestMethod -Uri $uri -Method 'DELETE' | Out-Null
     }
     catch
     {

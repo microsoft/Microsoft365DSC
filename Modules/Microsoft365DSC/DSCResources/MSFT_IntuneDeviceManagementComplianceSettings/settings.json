@@ -57,6 +57,12 @@
       "cmdlets": [
         "Update-MgBetaDeviceManagement"
       ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
     }
   ]
 }

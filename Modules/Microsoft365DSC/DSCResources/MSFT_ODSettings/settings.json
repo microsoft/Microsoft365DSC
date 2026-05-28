@@ -58,5 +58,16 @@
   "requiredModules": [
     "PnP.PowerShell"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Get-PnPTenant",
+        "Get-PnPTenantSyncClientRestriction",
+        "Set-PnPTenant",
+        "Set-PnPTenantSyncClientRestriction"
+      ]
+    }
+  ]
 }

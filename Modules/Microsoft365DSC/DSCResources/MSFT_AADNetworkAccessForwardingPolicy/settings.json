@@ -52,6 +52,12 @@
         "New-MgBetaNetworkAccessForwardingPolicyRule",
         "Remove-MgBetaNetworkAccessForwardingPolicyRule"
       ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
     }
   ]
 }

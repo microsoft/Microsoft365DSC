@@ -59,6 +59,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -115,9 +123,9 @@ function Get-TargetResource
         Write-Verbose 'Processing FeatureSettings > companionAppAllowedState > excludeTarget'
         $complexCompanionAppAllowedState = [ordered]@{}
         $complexExcludeTarget = [ordered]@{}
-        if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+        if ($getValue.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id
+            $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.featureSettings.companionAppAllowedState.excludeTarget.id
             if ($null -eq $myExcludeTargetsDisplayName)
             {
                 continue
@@ -126,7 +134,7 @@ function Get-TargetResource
         }
         else
         {
-            if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            if ($getValue.featureSettings.companionAppAllowedState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
             {
                 $complexExcludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
             }
@@ -136,9 +144,9 @@ function Get-TargetResource
             }
         }
 
-        if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType)
+        if ($null -ne $getValue.featureSettings.companionAppAllowedState.excludeTarget.targetType)
         {
-            $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType.ToString())
+            $complexExcludeTarget.Add('TargetType', $getValue.featureSettings.companionAppAllowedState.excludeTarget.targetType.ToString())
         }
 
         if ($complexExcludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
@@ -149,9 +157,9 @@ function Get-TargetResource
 
         Write-Verbose 'Processing FeatureSettings > companionAppAllowedState > includeTarget'
         $complexIncludeTarget = [ordered]@{}
-        if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+        if ($getValue.featureSettings.companionAppAllowedState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myIncludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id
+            $myIncludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.featureSettings.companionAppAllowedState.includeTarget.id
             if ($null -eq $myIncludeTargetsDisplayName)
             {
                 continue
@@ -160,7 +168,7 @@ function Get-TargetResource
         }
         else
         {
-            if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            if ($getValue.featureSettings.companionAppAllowedState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
             {
                 $complexIncludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
             }
@@ -170,9 +178,9 @@ function Get-TargetResource
             }
         }
 
-        if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType)
+        if ($null -ne $getValue.featureSettings.companionAppAllowedState.includeTarget.targetType)
         {
-            $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType.ToString())
+            $complexIncludeTarget.Add('TargetType', $getValue.featureSettings.companionAppAllowedState.includeTarget.targetType.ToString())
         }
 
         if ($complexIncludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
@@ -182,9 +190,9 @@ function Get-TargetResource
         $complexCompanionAppAllowedState.Add('IncludeTarget', $complexIncludeTarget)
 
         Write-Verbose 'Processing FeatureSettings > companionAppAllowedState > state'
-        if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.state)
+        if ($null -ne $getValue.featureSettings.companionAppAllowedState.state)
         {
-            $complexCompanionAppAllowedState.Add('State', $getValue.additionalProperties.featureSettings.companionAppAllowedState.state.ToString())
+            $complexCompanionAppAllowedState.Add('State', $getValue.featureSettings.companionAppAllowedState.state.ToString())
         }
 
         if ($complexCompanionAppAllowedState.values.Where({ $null -ne $_ }).Count -eq 0)
@@ -197,9 +205,9 @@ function Get-TargetResource
 
         Write-Verbose 'Processing FeatureSettings > displayAppInformationRequiredState > excludeTarget'
         $complexExcludeTarget = [ordered]@{}
-        if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+        if ($getValue.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id
+            $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.featureSettings.displayAppInformationRequiredState.excludeTarget.id
             if ($null -eq $myExcludeTargetsDisplayName)
             {
                 continue
@@ -208,7 +216,7 @@ function Get-TargetResource
         }
         else
         {
-            if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            if ($getValue.featureSettings.displayAppInformationRequiredState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
             {
                 $complexExcludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
             }
@@ -218,9 +226,9 @@ function Get-TargetResource
             }
         }
 
-        if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType)
+        if ($null -ne $getValue.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType)
         {
-            $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType.ToString())
+            $complexExcludeTarget.Add('TargetType', $getValue.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType.ToString())
         }
         if ($complexExcludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -230,9 +238,9 @@ function Get-TargetResource
 
         Write-Verbose 'Processing FeatureSettings > displayAppInformationRequiredState > includeTarget'
         $complexIncludeTarget = [ordered]@{}
-        if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+        if ($getValue.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myIncludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id
+            $myIncludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.featureSettings.displayAppInformationRequiredState.includeTarget.id
             if ($null -eq $myIncludeTargetsDisplayName)
             {
                 continue
@@ -241,7 +249,7 @@ function Get-TargetResource
         }
         else
         {
-            if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            if ($getValue.featureSettings.displayAppInformationRequiredState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
             {
                 $complexIncludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
             }
@@ -251,9 +259,9 @@ function Get-TargetResource
             }
         }
 
-        if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType)
+        if ($null -ne $getValue.featureSettings.displayAppInformationRequiredState.includeTarget.targetType)
         {
-            $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType.ToString())
+            $complexIncludeTarget.Add('TargetType', $getValue.featureSettings.displayAppInformationRequiredState.includeTarget.targetType.ToString())
         }
 
         if ($complexIncludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
@@ -263,9 +271,9 @@ function Get-TargetResource
         $complexDisplayAppInformationRequiredState.Add('IncludeTarget', $complexIncludeTarget)
 
         Write-Verbose 'Processing FeatureSettings > displayAppInformationRequiredState > state'
-        if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.state)
+        if ($null -ne $getValue.featureSettings.displayAppInformationRequiredState.state)
         {
-            $complexDisplayAppInformationRequiredState.Add('State', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.state.ToString())
+            $complexDisplayAppInformationRequiredState.Add('State', $getValue.featureSettings.displayAppInformationRequiredState.state.ToString())
         }
 
         if ($complexDisplayAppInformationRequiredState.values.Where({ $null -ne $_ }).Count -eq 0)
@@ -278,9 +286,9 @@ function Get-TargetResource
         Write-Verbose 'Processing FeatureSettings > displayLocationInformationRequiredState > excludeTarget'
         $complexDisplayLocationInformationRequiredState = [ordered]@{}
         $complexExcludeTarget = [ordered]@{}
-        if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+        if ($getValue.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id
+            $myExcludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.featureSettings.displayLocationInformationRequiredState.excludeTarget.id
             if ($null -eq $myExcludeTargetsDisplayName)
             {
                 continue
@@ -289,7 +297,7 @@ function Get-TargetResource
         }
         else
         {
-            if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            if ($getValue.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
             {
                 $complexExcludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
             }
@@ -299,9 +307,9 @@ function Get-TargetResource
             }
         }
 
-        if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType)
+        if ($null -ne $getValue.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType)
         {
-            $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType.ToString())
+            $complexExcludeTarget.Add('TargetType', $getValue.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType.ToString())
         }
 
         if ($complexExcludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
@@ -313,9 +321,9 @@ function Get-TargetResource
 
         Write-Verbose 'Processing FeatureSettings > displayLocationInformationRequiredState > includeTarget'
         $complexIncludeTarget = [ordered]@{}
-        if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+        if ($getValue.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myIncludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id
+            $myIncludeTargetsDisplayName = Get-M365DSCGroupDisplayNameById -GroupId $getValue.featureSettings.displayLocationInformationRequiredState.includeTarget.id
             if ($null -eq $myIncludeTargetsDisplayName)
             {
                 continue
@@ -324,7 +332,7 @@ function Get-TargetResource
         }
         else
         {
-            if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            if ($getValue.featureSettings.displayLocationInformationRequiredState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
             {
                 $complexIncludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
             }
@@ -334,9 +342,9 @@ function Get-TargetResource
             }
         }
 
-        if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType)
+        if ($null -ne $getValue.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType)
         {
-            $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType.ToString())
+            $complexIncludeTarget.Add('TargetType', $getValue.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType.ToString())
         }
 
         if ($complexIncludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
@@ -347,9 +355,9 @@ function Get-TargetResource
         $complexDisplayLocationInformationRequiredState.Add('IncludeTarget', $complexIncludeTarget)
 
         Write-Verbose 'Processing FeatureSettings > displayLocationInformationRequiredState > state'
-        if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.state)
+        if ($null -ne $getValue.featureSettings.displayLocationInformationRequiredState.state)
         {
-            $complexDisplayLocationInformationRequiredState.Add('State', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.state.ToString())
+            $complexDisplayLocationInformationRequiredState.Add('State', $getValue.featureSettings.displayLocationInformationRequiredState.state.ToString())
         }
 
         if ($complexDisplayLocationInformationRequiredState.values.Where({ $null -ne $_ }).Count -eq 0)
@@ -390,7 +398,7 @@ function Get-TargetResource
         #endregion
 
         $complexIncludeTargets = @()
-        foreach ($currentIncludeTargets in $getValue.AdditionalProperties.includeTargets)
+        foreach ($currentIncludeTargets in $getValue.includeTargets)
         {
             $myIncludeTargets = [ordered]@{}
             if ($currentIncludeTargets.id -ne 'all_users')
@@ -429,7 +437,7 @@ function Get-TargetResource
         $results = @{
             #region resource generator code
             FeatureSettings       = $complexFeatureSettings
-            IsSoftwareOathEnabled = $getValue.AdditionalProperties.isSoftwareOathEnabled
+            IsSoftwareOathEnabled = $getValue.isSoftwareOathEnabled
             ExcludeTargets        = $complexExcludeTargets
             IncludeTargets        = $complexIncludeTargets
             State                 = $enumState
@@ -440,6 +448,8 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
             #endregion
@@ -515,6 +525,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -636,6 +654,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -683,6 +709,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -747,6 +781,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

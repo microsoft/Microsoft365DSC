@@ -129,6 +129,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -266,8 +274,8 @@ function Get-TargetResource
         if ($claimsPolicyResponse -and $claimsPolicyResponse.status -eq 200 -and $claimsPolicyResponse.body)
         {
             $claimsPolicyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $claimsPolicyResponse.body
-            $claimsPolicyValue.Remove('Id') | Out-Null
             $claimsPolicyValue.Remove('@odata.context') | Out-Null
+            $claimsPolicyValue.Remove('id') | Out-Null
         }
 
         #Managed Identities in AzureGov return exception when pulling delegatedPermissionClassifications
@@ -296,7 +304,7 @@ function Get-TargetResource
             $mykeyCredentials = [ordered]@{}
             if ($null -ne $currentkeyCredentials.customKeyIdentifier)
             {
-                $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
+                $mykeyCredentials.Add('CustomKeyIdentifier', $currentkeyCredentials.customKeyIdentifier)
             }
             $mykeyCredentials.Add('DisplayName', $currentkeyCredentials.displayName)
             if ($null -ne $currentkeyCredentials.endDateTime)
@@ -305,10 +313,9 @@ function Get-TargetResource
             }
             $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
 
-
             if ($null -ne $currentkeyCredentials.Key)
             {
-                $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
+                $mykeyCredentials.Add('Key', $currentkeyCredentials.Key)
             }
 
             if ($null -ne $currentkeyCredentials.startDateTime)
@@ -417,6 +424,8 @@ function Get-TargetResource
             ApplicationSecret                  = $ApplicationSecret
             TenantId                           = $TenantId
             CertificateThumbprint              = $CertificateThumbprint
+            CertificatePath                    = $CertificatePath
+            CertificatePassword                = $CertificatePassword
             ManagedIdentity                    = $ManagedIdentity.IsPresent
             AccessTokens                       = $AccessTokens
         }
@@ -561,6 +570,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -592,6 +609,7 @@ function Set-TargetResource
     $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
     $AppRoleAssignedToSpecified = $currentParameters.ContainsKey('AppRoleAssignedTo')
     $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
+    $currentParameters.Remove('LogoutUrl') | Out-Null
 
     # update the custom security attributes to be cmdlet comsumable
     if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes.Count -gt 0)
@@ -609,15 +627,25 @@ function Set-TargetResource
         Write-Verbose -Message 'AppId was provided as a DisplayName. Translating it to an a GUID.'
         $appInstance = Get-MgApplication -Filter "DisplayName eq '$($AppId -replace "'", "''")'"
         $currentParameters.AppId = $appInstance.AppId
+        $oldAppId = $AppId
+        $AppId = $appInstance.AppId
         Write-Verbose -Message "Translated to AppId {$($currentParameters.AppId)}"
+    }
+    else
+    {
+        $appInstance = Get-MgApplication -Filter "AppId eq '$($AppId)'"
+        if ($null -eq $appInstance)
+        {
+            throw "No application found with AppId or DisplayName matching '$AppId'."
+        }
     }
 
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
     {
         Write-Verbose -Message 'Creating new Service Principal'
-        Write-Verbose -Message "With Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
-        $newSP = New-MgServicePrincipal @currentParameters
+        $newSP = New-MgServicePrincipal -BodyParameter $currentParameters
+        Start-Sleep -Seconds 4
 
         # Assign Owners
         foreach ($owner in $Owners)
@@ -627,7 +655,7 @@ function Set-TargetResource
                 '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($userInfo.Id)"
             }
             Write-Verbose -Message "Adding new owner {$owner}"
-            $null = New-MgServicePrincipalOwnerByRef -ServicePrincipalId $newSP.Id -BodyParameter $body
+            Invoke-M365DSCCommand -ScriptBlock { New-MgServicePrincipalOwnerByRef -ServicePrincipalId $newSP.Id -BodyParameter $body -ErrorAction Stop } -RetryOnNotFoundError -MaxRetries 4
         }
 
         # Adding delegated permissions classifications
@@ -640,7 +668,7 @@ function Set-TargetResource
                     permissionName = $permissionClassification.permissionName
                 }
                 $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
-                Invoke-MgGraphRequest -Uri $Uri -Method Post -Body $params
+                Invoke-M365DSCCommand -ScriptBlock { Invoke-MgGraphRequest -Uri $Uri -Method Post -Body $params -ErrorAction Stop } -RetryOnNotFoundError -MaxRetries 4
             }
         }
 
@@ -663,14 +691,14 @@ function Set-TargetResource
                     $PrincipalIdValue = $group.Id
                 }
 
+                $appRoleId = ($newSP.AppRoles | Where-Object -FilterScript { $_.DisplayName -eq $assignment.PrincipalType }).Id
                 $bodyParam = @{
                     principalId = $PrincipalIdValue
                     resourceId  = $newSP.Id
-                    appRoleId   = '00000000-0000-0000-0000-000000000000'
+                    appRoleId   = $appRoleId
                 }
                 Write-Verbose -Message "Adding Service Principal AppRoleAssignedTo with values:`r`n$(ConvertTo-Json $bodyParam -Depth 3)"
-                New-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $newSP.Id `
-                    -BodyParameter $bodyParam | Out-Null
+                Invoke-M365DSCCommand -ScriptBlock { New-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $newSP.Id -BodyParameter $bodyParam -ErrorAction Stop } -RetryOnNotFoundError -MaxRetries 4
             }
         }
 
@@ -678,7 +706,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message 'Adding Claims Policy to the Service Principal'
             $claimsPolicyBody = Rename-M365DSCCimInstanceParameter -Properties $ClaimsPolicy
-            $null = Invoke-MgGraphRequest -Uri "/beta/servicePrincipals/$($newSP.Id)/claimsPolicy" -Method Put -Body $($claimsPolicyBody | ConvertTo-Json -Depth 20)
+            Invoke-M365DSCCommand -ScriptBlock { Invoke-MgGraphRequest -Uri "/beta/servicePrincipals/$($newSP.Id)/claimsPolicy" -Method Put -Body $($claimsPolicyBody | ConvertTo-Json -Depth 20) -ErrorAction Stop } -RetryOnNotFoundError
         }
     }
     # ServicePrincipal should exist and will be configured to desired state
@@ -691,7 +719,7 @@ function Set-TargetResource
 
         if ($PreferredSingleSignOnMode -eq 'saml')
         {
-            $IdentifierUris = $ServicePrincipalNames | Where-Object { $_ -notmatch $AppId }
+            $IdentifierUris = $ServicePrincipalNames | Where-Object { $_ -notmatch $AppId -and $_ -notmatch $oldAppId }
             $currentParameters.Remove('ServicePrincipalNames')
         }
 
@@ -705,7 +733,7 @@ function Set-TargetResource
             Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/servicePrincipals(appId='$($currentParameters.AppId)')") -Method Patch -Body $CSAParams
         }
 
-        Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
+        Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID -BodyParameter $currentParameters
 
         if ($PSBoundParameters.ContainsKey('ClaimsPolicy'))
         {
@@ -767,10 +795,11 @@ function Set-TargetResource
                             $PrincipalIdValue = $group.Id
                         }
 
+                        $appRoleId = ($appInstance.AppRoles | Where-Object -FilterScript { $_.DisplayName -eq $assignment.PrincipalType }).Id
                         $bodyParam = @{
                             principalId = $PrincipalIdValue
                             resourceId  = $currentAADServicePrincipal.ObjectID
-                            appRoleId   = '00000000-0000-0000-0000-000000000000'
+                            appRoleId   = $appRoleId
                         }
                         Write-Verbose -Message "Adding member {$($member.InputObject.ToString())}"
                         New-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID `
@@ -1008,6 +1037,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1069,6 +1106,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -1116,8 +1161,10 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
-                AppID                 = $AADServicePrincipal.AppId
+                AppID                 = $AADServicePrincipal.DisplayName
                 AccessTokens          = $AccessTokens
             }
             $Script:exportedInstance = $AADServicePrincipal
@@ -1149,6 +1196,16 @@ function Export-TargetResource
                         @{
                             Name            = 'claims'
                             CimInstanceName = 'AADServicePrincipalCustomClaim'
+                            IsRequired      = $False
+                        },
+                        @{
+                            Name            = 'groupFilter'
+                            CimInstanceName = 'AADServicePrincipalClaimsPolicyGroupFilter'
+                            IsRequired      = $False
+                        },
+                        @{
+                            Name            = 'input'
+                            CimInstanceName = 'MSFT_AADServicePrincipalTransformationAttribute'
                             IsRequired      = $False
                         },
                         @{
@@ -1444,7 +1501,7 @@ function Get-CompareParameters
     param()
 
     return @{
-        ExcludedProperties = @('ObjectId', 'KeyCredentials', 'PasswordCredentials', 'ReplyUrls')
+        ExcludedProperties = @('ObjectId', 'KeyCredentials', 'PasswordCredentials', 'ReplyUrls', 'LogoutUrl')
     }
 }
 

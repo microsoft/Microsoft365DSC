@@ -30,11 +30,16 @@ Configuration Example
             Publisher             = "Microsoft";
             RoleScopeTagIds       = @("0")
             Assignments           = @(
-                MSFT_DeviceManagementMobileAppAssignment {
+                MSFT_DeviceManagementSystemMobileAppAssignment {
                     groupDisplayName = 'All devices'
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                     intent = 'required'
+                    assignmentSettings = MSFT_DeviceManagementSystemMobileAppAssignmentSettings{
+                        odataType = "#microsoft.graph.androidManagedStoreAppAssignmentSettings"
+                        androidManagedStoreAppTrackIds = @()
+                        autoUpdateMode = "default"
+                    }
                 }
             );
             ApplicationId         = $ApplicationId;

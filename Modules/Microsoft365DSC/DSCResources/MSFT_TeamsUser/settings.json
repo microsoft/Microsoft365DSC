@@ -42,5 +42,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Add-TeamUser",
+        "Get-Team",
+        "Get-TeamUser",
+        "Remove-TeamUser"
+      ]
+    }
+  ]
 }

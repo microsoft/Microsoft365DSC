@@ -39,6 +39,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
+                    LinksInTeams           = 'OfferBrowserOptions'
                     Identity               = 'FakeStringValue'
                 }
             }
@@ -71,6 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
+                    LinksInTeams           = 'OfferBrowserOptions'
                     Identity               = 'FakeStringValue'
                     Ensure                 = 'Present'
                     Credential             = $Credential
@@ -102,6 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
+                    LinksInTeams           = 'OfferBrowserOptions'
                     Identity               = 'FakeStringValue'
                     Ensure                 = 'Absent'
                     Credential             = $Credential
@@ -112,7 +115,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -129,6 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
+                    LinksInTeams           = 'OfferBrowserOptions'
                     Identity               = 'FakeStringValue'
                     Ensure                 = 'Present'
                     Credential             = $Credential
@@ -147,6 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description            = 'Updated Description' # Drift
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
+                    LinksInTeams           = 'OfferBrowserOptions'
                     Identity               = 'FakeStringValue'
                     Ensure                 = 'Present'
                     Credential             = $Credential

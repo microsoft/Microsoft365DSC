@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgApplicationTokenLifetimePolicyByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgApplicationTokenLifetimePolicyByRef -MockWith {
+            Mock -CommandName Remove-MgApplicationTokenLifetimePolicyTokenLifetimePolicyByRef -MockWith {
             }
 
             Mock -CommandName New-MgApplication -MockWith {

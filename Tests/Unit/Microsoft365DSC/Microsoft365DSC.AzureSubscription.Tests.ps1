@@ -41,7 +41,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Disable-AzSubscription -MockWith {
             }
 
-            Mock -CommandName Invoke-AzRest -MockWith {
+            Mock -CommandName Invoke-AzRestMethod -MockWith {
                 return @{
                     Content = ConvertTo-Json (@{
                         value = @(
@@ -75,14 +75,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                Mock -CommandName Invoke-AzRest -MockWith {
+                Mock -CommandName Invoke-AzRestMethod -MockWith {
                     return @{
                         Content = "{}"
                     }
                 }
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
         }
@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Invoke-AzRest -Exactly 1
+                Should -Invoke -CommandName Invoke-AzRestMethod -Exactly 1
             }
         }
 

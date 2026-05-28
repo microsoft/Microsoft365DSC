@@ -71,6 +71,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -290,6 +298,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -352,29 +368,22 @@ function Set-TargetResource
             -ChannelId $ChannelInstance.Id `
             -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
 
-        $CurrentParameters.TeamId = $tab.TeamId
-        $CurrentParameters.Add('ChannelId', $ChannelInstance.Id)
+        $CurrentParameters.Remove('TeamId') | Out-Null
         $CurrentParameters.Remove('TeamName') | Out-Null
         $CurrentParameters.Remove('ChannelName') | Out-Null
-        $CurrentParameters.Add('TeamsTabId', $tabInstance.Id)
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
-        Update-MgBetaTeamChannelTab @CurrentParameters | Out-Null
+        Update-MgBetaTeamChannelTab -TeamId $tab.TeamId -ChannelId $ChannelInstance.Id -TeamsTabId $tabInstance.Id -BodyParameter $CurrentParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and ($tab.Ensure -eq 'Absent'))
     {
         Write-Verbose -Message "Creating new tab {$DisplayName}"
-        $CurrentParameters.TeamId = $tab.TeamId
-        $CurrentParameters.Add('ChannelId', $ChannelInstance.Id)
+        $CurrentParameters.Remove('TeamId') | Out-Null
         $CurrentParameters.Remove('TeamName') | Out-Null
         $CurrentParameters.Remove('ChannelName') | Out-Null
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
 
-        $additionalProperties = @{
-            'teamsApp@odata.bind' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)v1.0/appCatalogs/teamsApps/$TeamsApp"
-        }
-        $CurrentParameters.Add('AdditionalProperties', $additionalProperties)
-
-        New-MgBetaTeamChannelTab @CurrentParameters
+        $CurrentParameters.Add('teamsApp@odata.bind', "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)v1.0/appCatalogs/teamsApps/$TeamsApp")
+        New-MgBetaTeamChannelTab -ChannelId $ChannelInstance.Id -TeamId $tab.TeamId -BodyParameter $CurrentParameters
     }
     elseif ($Ensure -eq 'Absent' -and ($tab.Ensure -eq 'Present'))
     {
@@ -383,12 +392,7 @@ function Set-TargetResource
             -ChannelId $ChannelInstance.Id `
             -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
         Write-Verbose -Message "Removing existing tab {$DisplayName}"
-        $RemoveParams = @{
-            ChannelId  = $ChannelInstance.Id
-            TeamId     = $tab.TeamId
-            TeamsTabId = $tabInstance.Id
-        }
-        Remove-MgBetaTeamChannelTab @RemoveParams | Out-Null
+        Remove-MgBetaTeamChannelTab -TeamId $tab.TeamId -ChannelId $ChannelInstance.Id -TeamsTabId $tabInstance.Id | Out-Null
     }
 }
 
@@ -461,6 +465,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]

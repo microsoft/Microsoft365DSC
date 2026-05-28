@@ -50,9 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.macOSOfficeSuiteApp"
-                    }
+                    '@odata.type' = "#microsoft.graph.macOSOfficeSuiteApp"
                     DependentAppCount = 25
                     Description = "FakeStringValue"
                     Developer = "FakeStringValue"
@@ -62,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -81,9 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        '@odata.type' = "#microsoft.graph.macOSOfficeSuiteApp"
-                    }
+                    '@odata.type' = "#microsoft.graph.macOSOfficeSuiteApp"
                     Categories = @(
                         @{
                             Id = "FakeStringValue"
@@ -99,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -130,10 +126,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Source = "direct"
                         Target = @{
                             DeviceAndAppManagementAssignmentFilterType = "none"
-                            AdditionalProperties = @{
-                                '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
-                            }
+                            '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+                            groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
                         }
                         intent = "required"
                     }

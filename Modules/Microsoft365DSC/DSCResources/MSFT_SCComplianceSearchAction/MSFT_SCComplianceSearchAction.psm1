@@ -75,6 +75,10 @@ function Get-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -140,13 +144,14 @@ function Get-TargetResource
                 IncludeSharePointDocumentVersions   = $IncludeSP
                 RetryOnError                        = $currentAction.Retry
                 ActionScope                         = $ScopeValue
+                Ensure                              = 'Present'
                 Credential                          = $Credential
                 ApplicationId                       = $ApplicationId
                 TenantId                            = $TenantId
                 CertificateThumbprint               = $CertificateThumbprint
                 CertificatePath                     = $CertificatePath
                 CertificatePassword                 = $CertificatePassword
-                Ensure                              = 'Present'
+                ManagedIdentity                     = $ManagedIdentity.IsPresent
                 AccessTokens                        = $AccessTokens
             }
             if ($ActionName -eq 'Preview')
@@ -286,6 +291,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -473,6 +482,10 @@ function Test-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -520,6 +533,10 @@ function Export-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]

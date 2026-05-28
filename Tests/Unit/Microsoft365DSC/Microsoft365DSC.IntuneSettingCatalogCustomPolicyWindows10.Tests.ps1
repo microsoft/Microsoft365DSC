@@ -55,78 +55,68 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Settings     = @(
                         @{
                             SettingInstance = @{
-                                AdditionalProperties = @{
-                                    simpleSettingValue = @{
-                                        value   = 'fakeValue'
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                    }
-                                    '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                simpleSettingValue = @{
+                                    value   = 'fakeValue'
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
                                 }
+                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
                                 SettingDefinitionId  = 'stringSettingDefinitionId'
                             }
                         }
                         @{
                             SettingInstance = @{
-                                AdditionalProperties = @{
-                                    simpleSettingValue = @{
-                                        valueState    = 'invalid'
-                                        value   = 'fakeValue'
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSecretSettingValue'
-                                    }
-                                    '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                simpleSettingValue = @{
+                                    valueState    = 'invalid'
+                                    value   = 'fakeValue'
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSecretSettingValue'
                                 }
+                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
                                 SettingDefinitionId  = 'secretSettingDefinitionId'
                             }
                         }
                         @{
                             SettingInstance = @{
-                                AdditionalProperties = @{
-                                    simpleSettingValue = @{
-                                        value      = 25
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                    }
-                                    '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                simpleSettingValue = @{
+                                    value      = 25
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
                                 }
+                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
                                 SettingDefinitionId  = 'integerSettingDefinitionId'
                             }
                         }
                         @{
                             SettingInstance = @{
-                                AdditionalProperties = @{
-                                    choiceSettingValue = @{
-                                        value    = 'choiceSettingValue'
-                                        children = @()
-                                    }
-                                    '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                choiceSettingValue = @{
+                                    value    = 'choiceSettingValue'
+                                    children = @()
                                 }
+                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
                                 SettingDefinitionId  = 'choiceSettingDefinitionId'
                             }
                         }
                         @{
                             SettingInstance = @{
-                                AdditionalProperties = @{
-                                    '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationGroupSettingInstance'
-                                    groupSettingValue = @{
-                                        children = @(
-                                            @{
-                                                simpleSettingValue  = @{
-                                                    value   = 'fakeValue'
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                }
-                                                SettingDefinitionId = 'stringSettingDefinitionId'
-                                                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationGroupSettingInstance'
+                                groupSettingValue = @{
+                                    children = @(
+                                        @{
+                                            simpleSettingValue  = @{
+                                                value   = 'fakeValue'
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
                                             }
-                                            @{
-                                                simpleSettingValue  = @{
-                                                    valueState    = 'invalid'
-                                                    value   = 'fakeValue'
-                                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSecretSettingValue'
-                                                }
-                                                SettingDefinitionId = 'secretSettingDefinitionId'
-                                                '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            SettingDefinitionId = 'stringSettingDefinitionId'
+                                            '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                        }
+                                        @{
+                                            simpleSettingValue  = @{
+                                                valueState    = 'invalid'
+                                                value   = 'fakeValue'
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSecretSettingValue'
                                             }
-                                        )
-                                    }
+                                            SettingDefinitionId = 'secretSettingDefinitionId'
+                                            '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                        }
+                                    )
                                 }
                                 SettingDefinitionId  = 'groupSettingDefinitionId'
                             }
@@ -336,7 +326,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

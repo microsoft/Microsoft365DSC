@@ -56,37 +56,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        packageId = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.androidLobApp"
-                        minimumSupportedOperatingSystem = @{
-                            v4_3 = $True
-                            v7_0 = $True
-                            v15_0 = $True
-                            v10_0 = $True
-                            v14_0 = $True
-                            v12_0 = $True
-                            v9_0 = $True
-                            v4_0 = $True
-                            v6_0 = $True
-                            v5_0 = $True
-                            v4_0_3 = $True
-                            v13_0 = $True
-                            v4_2 = $True
-                            v8_0 = $True
-                            v7_1 = $True
-                            v4_1 = $True
-                            v5_1 = $True
-                            v11_0 = $True
-                            v8_1 = $True
-                            v4_4 = $True
-                        }
-                        fileName = "FakeStringValue.apk"
-                        committedContentVersion = "FakeStringValue"
-                        targetedPlatforms = "androidDeviceAdministrator"
-                        versionName = "FakeStringValue"
-                        versionCode = "FakeStringValue"
+                    packageId = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.androidLobApp"
+                    minimumSupportedOperatingSystem = @{
+                        v4_3 = $True
+                        v7_0 = $True
+                        v15_0 = $True
+                        v10_0 = $True
+                        v14_0 = $True
+                        v12_0 = $True
+                        v9_0 = $True
+                        v4_0 = $True
+                        v6_0 = $True
+                        v5_0 = $True
+                        v4_0_3 = $True
+                        v13_0 = $True
+                        v4_2 = $True
+                        v8_0 = $True
+                        v7_1 = $True
+                        v4_1 = $True
+                        v5_1 = $True
+                        v11_0 = $True
+                        v8_1 = $True
+                        v4_4 = $True
                     }
+                    fileName = "FakeStringValue.apk"
+                    committedContentVersion = "FakeStringValue"
+                    targetedPlatforms = "androidDeviceAdministrator"
+                    versionName = "FakeStringValue"
+                    versionCode = "FakeStringValue"
                     Categories = @(
                         @{
                             Id = "FakeStringValue"
@@ -102,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     isFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -118,37 +116,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        packageId = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.androidLobApp"
-                        minimumSupportedOperatingSystem = @{
-                            v4_3 = $True
-                            v7_0 = $True
-                            v15_0 = $True
-                            v10_0 = $True
-                            v14_0 = $True
-                            v12_0 = $True
-                            v9_0 = $True
-                            v4_0 = $True
-                            v6_0 = $True
-                            v5_0 = $True
-                            v4_0_3 = $True
-                            v13_0 = $True
-                            v4_2 = $True
-                            v8_0 = $True
-                            v7_1 = $True
-                            v4_1 = $True
-                            v5_1 = $True
-                            v11_0 = $True
-                            v8_1 = $True
-                            v4_4 = $True
-                        }
-                        fileName = "FakeStringValue.apk"
-                        committedContentVersion = "FakeStringValue"
-                        targetedPlatforms = "androidDeviceAdministrator"
-                        versionName = "FakeStringValue"
-                        versionCode = "FakeStringValue"
+                    packageId = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.androidLobApp"
+                    minimumSupportedOperatingSystem = @{
+                        v4_3 = $True
+                        v7_0 = $True
+                        v15_0 = $True
+                        v10_0 = $True
+                        v14_0 = $True
+                        v12_0 = $True
+                        v9_0 = $True
+                        v4_0 = $True
+                        v6_0 = $True
+                        v5_0 = $True
+                        v4_0_3 = $True
+                        v13_0 = $True
+                        v4_2 = $True
+                        v8_0 = $True
+                        v7_1 = $True
+                        v4_1 = $True
+                        v5_1 = $True
+                        v11_0 = $True
+                        v8_1 = $True
+                        v4_4 = $True
                     }
+                    fileName = "FakeStringValue.apk"
+                    committedContentVersion = "FakeStringValue"
+                    targetedPlatforms = "androidDeviceAdministrator"
+                    versionName = "FakeStringValue"
+                    versionCode = "FakeStringValue"
                     Categories = @(
                         @{
                             Id = "FakeStringValue"
@@ -164,7 +160,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     isFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -196,10 +192,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Source = "direct"
                         SourceId = "12345-12345-12345-12345-12345"
                         Target = @{
-                            AdditionalProperties = @{
-                                "@odata.type" = "#microsoft.graph.groupAssignmentTarget"
-                                groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
-                            }
+                            "@odata.type" = "#microsoft.graph.groupAssignmentTarget"
+                            groupId = "26d60dd1-fab6-47bf-8656-358194c1a49d"
                             "deviceAndAppManagementAssignmentFilterId" = '12345-12345-12345-12345-12345'
                             "deviceAndAppManagementAssignmentFilterType" = "none"
                         }

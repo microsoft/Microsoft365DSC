@@ -42,7 +42,6 @@
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.DeviceManagement",
     "Microsoft.Graph.Groups"
   ],
@@ -57,7 +56,6 @@
       "cmdlets": [
         "Get-MgBetaDeviceManagementAssignmentFilter",
         "Get-MgBetaDeviceManagementDeviceShellScript",
-        "Get-MgBetaDeviceManagementDeviceShellScriptAssignment",
         "New-MgBetaDeviceManagementDeviceShellScript",
         "Remove-MgBetaDeviceManagementDeviceShellScript",
         "Update-MgBetaDeviceManagementDeviceShellScript"

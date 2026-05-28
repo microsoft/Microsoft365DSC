@@ -53,27 +53,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        appStoreUrl = "FakeStringValue"
-                        minimumSupportedOperatingSystem = @{
-                            v15_0 = $True
-                            v12_0 = $True
-                            v16_0 = $True
-                            v10_0 = $True
-                            v11_0 = $True
-                            v17_0 = $True
-                            v9_0 = $True
-                            v18_0 = $True
-                            v13_0 = $True
-                            v8_0 = $True
-                            v14_0 = $True
-                        }
-                        bundleId = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.iosStoreApp"
-                        applicableDeviceType = @{
-                            iPad = $True
-                            iPhoneAndIPod = $True
-                        }
+                    appStoreUrl = "FakeStringValue"
+                    minimumSupportedOperatingSystem = @{
+                        v15_0 = $True
+                        v12_0 = $True
+                        v16_0 = $True
+                        v10_0 = $True
+                        v11_0 = $True
+                        v17_0 = $True
+                        v9_0 = $True
+                        v18_0 = $True
+                        v13_0 = $True
+                        v8_0 = $True
+                        v14_0 = $True
+                    }
+                    bundleId = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.iosStoreApp"
+                    applicableDeviceType = @{
+                        iPad = $True
+                        iPhoneAndIPod = $True
                     }
                     description = "FakeStringValue"
                     developer = "FakeStringValue"
@@ -83,7 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     isFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"
@@ -99,27 +97,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                 return @{
-                    AdditionalProperties = @{
-                        appStoreUrl = "FakeStringValue"
-                        minimumSupportedOperatingSystem = @{
-                            v15_0 = $True
-                            v12_0 = $True
-                            v16_0 = $True
-                            v10_0 = $True
-                            v11_0 = $True
-                            v17_0 = $True
-                            v9_0 = $True
-                            v18_0 = $True
-                            v13_0 = $True
-                            v8_0 = $True
-                            v14_0 = $True
-                        }
-                        bundleId = "FakeStringValue"
-                        '@odata.type' = "#microsoft.graph.iosStoreApp"
-                        applicableDeviceType = @{
-                            iPad = $True
-                            iPhoneAndIPod = $True
-                        }
+                    appStoreUrl = "FakeStringValue"
+                    minimumSupportedOperatingSystem = @{
+                        v15_0 = $True
+                        v12_0 = $True
+                        v16_0 = $True
+                        v10_0 = $True
+                        v11_0 = $True
+                        v17_0 = $True
+                        v9_0 = $True
+                        v18_0 = $True
+                        v13_0 = $True
+                        v8_0 = $True
+                        v14_0 = $True
+                    }
+                    bundleId = "FakeStringValue"
+                    '@odata.type' = "#microsoft.graph.iosStoreApp"
+                    applicableDeviceType = @{
+                        iPad = $True
+                        iPhoneAndIPod = $True
                     }
                     Categories = @(
                         @{
@@ -135,7 +131,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     isFeatured = $True
                     LargeIcon = @{
                         Type = "FakeStringValue"
-                        Value = [System.Convert]::FromBase64String("VGVzdA==")
+                        Value = "VGVzdA=="
                     }
                     Notes = "FakeStringValue"
                     Owner = "FakeStringValue"

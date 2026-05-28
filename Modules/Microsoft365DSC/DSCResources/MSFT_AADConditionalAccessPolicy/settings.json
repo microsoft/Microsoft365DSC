@@ -128,7 +128,7 @@
     {
       "module": "Microsoft.Graph.Applications",
       "cmdlets": [
-        "Get-MgApplication"
+        "Get-MgServicePrincipal"
       ]
     },
     {
@@ -169,6 +169,12 @@
       "module": "Microsoft.Graph.Users",
       "cmdlets": [
         "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

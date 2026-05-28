@@ -66,6 +66,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -137,14 +145,14 @@ function Get-TargetResource
         }
         Write-Verbose "Found existing AAD Named Location {$($NamedLocation.DisplayName)}"
         $Result = @{
-            OdataType                         = $NamedLocation.AdditionalProperties.'@odata.type'
+            OdataType                         = $NamedLocation.'@odata.type'
             Id                                = $NamedLocation.Id
             DisplayName                       = $NamedLocation.DisplayName
-            IpRanges                          = $NamedLocation.AdditionalProperties.ipRanges.cidrAddress
-            IsTrusted                         = $NamedLocation.AdditionalProperties.isTrusted
-            CountriesAndRegions               = [String[]]$NamedLocation.AdditionalProperties.countriesAndRegions
-            CountryLookupMethod               = $NamedLocation.AdditionalProperties.countryLookupMethod
-            IncludeUnknownCountriesAndRegions = $NamedLocation.AdditionalProperties.includeUnknownCountriesAndRegions
+            IpRanges                          = $NamedLocation.ipRanges.cidrAddress
+            IsTrusted                         = $NamedLocation.isTrusted
+            CountriesAndRegions               = [String[]]$NamedLocation.countriesAndRegions
+            CountryLookupMethod               = $NamedLocation.countryLookupMethod
+            IncludeUnknownCountriesAndRegions = $NamedLocation.includeUnknownCountriesAndRegions
             Ensure                            = 'Present'
             ApplicationSecret                 = $ApplicationSecret
             ApplicationId                     = $ApplicationId
@@ -232,6 +240,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -412,6 +428,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -463,6 +487,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]

@@ -49,14 +49,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Name = 'MyFQDN'
                     Id   = '12345-12345-12345-12345-12345'
-                    AdditionalProperties = @{
-                        ruleType = 'fqdn'
-                        destinations = @(
-                            @{
-                                value = 'Microsoft365DSC.com'
-                            }
-                        )
-                    }
+                    ruleType = 'fqdn'
+                    destinations = @(
+                        @{
+                            value = 'Microsoft365DSC.com'
+                        }
+                    )
                 }
             }
 

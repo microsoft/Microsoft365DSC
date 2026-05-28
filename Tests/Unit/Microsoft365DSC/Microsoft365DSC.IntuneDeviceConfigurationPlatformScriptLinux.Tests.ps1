@@ -79,27 +79,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_customconfig_executioncontext'
                                 Name = 'CustomConfigExecutionContext'
                                 OffsetUri = 'CustomConfig/ExecutionContext'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'Root'
-                                            itemId = 'linux_customconfig_executioncontext_root'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'root'
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'Root'
+                                        itemId = 'linux_customconfig_executioncontext_root'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'root'
                                         }
-                                        @{
-                                            name = 'User'
-                                            itemId = 'linux_customconfig_executioncontext_user'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                value = 'user'
-                                            }
+                                    }
+                                    @{
+                                        name = 'User'
+                                        itemId = 'linux_customconfig_executioncontext_user'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                            value = 'user'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -107,12 +105,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '2c59a6c5-e874-445b-ac5a-d53688ef838e'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'linux_customconfig_executioncontext_user'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'linux_customconfig_executioncontext_user'
                             }
                         }
                     }
@@ -123,19 +119,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_customconfig_executionfrequency'
                                 Name = 'CustomConfigExecutionFrequency'
                                 OffsetUri = 'CustomConfig/ExecutionFrequency'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = 'Every 15 minutes'
-                                            itemId = 'linux_customconfig_executionfrequency_15minutes'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 15
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = 'Every 15 minutes'
+                                        itemId = 'linux_customconfig_executionfrequency_15minutes'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 15
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -143,12 +137,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'f42b866f-ff2b-4d19-bef8-63e7c763d49b'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'linux_customconfig_executionfrequency_15minutes'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'linux_customconfig_executionfrequency_15minutes'
                             }
                         }
                     }
@@ -159,19 +151,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_customconfig_executionretries'
                                 Name = 'CustomConfigExecutionRetries'
                                 OffsetUri = 'CustomConfig/ExecutionRetries'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            name = '2 times'
-                                            itemId = 'linux_customconfig_executionretries_2'
-                                            optionValue = @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
-                                                value = 2
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        name = '2 times'
+                                        itemId = 'linux_customconfig_executionretries_2'
+                                        optionValue = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue'
+                                            value = 2
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -179,12 +169,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'a3326517-152b-4b32-bc11-8772b5b4fe6a'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'linux_customconfig_executionretries_2'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'linux_customconfig_executionretries_2'
                             }
                         }
                     }
@@ -195,9 +183,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'linux_customconfig_script'
                                 Name = 'CustomConfig_Script'
                                 OffsetUri = '/CustomConfig/Script'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                             }
                         )
                         SettingInstance = @{
@@ -205,12 +191,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'add4347a-f9aa-4202-a497-34a4c178d013'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                simpleSettingValue = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                    value = 'IyEvYmluL3NoDQoNCmVjaG8gYWJj'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                            simpleSettingValue = @{
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                value = 'IyEvYmluL3NoDQoNCmVjaG8gYWJj'
                             }
                         }
                     }
@@ -234,12 +218,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }

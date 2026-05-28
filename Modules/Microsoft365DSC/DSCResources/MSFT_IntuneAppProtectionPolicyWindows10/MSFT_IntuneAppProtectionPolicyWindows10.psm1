@@ -144,6 +144,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -214,7 +222,7 @@ function Get-TargetResource
         $appsArray = @()
         foreach ($app in $policyApps)
         {
-            $appsArray += $app.MobileAppIdentifier.AdditionalProperties.windowsAppId
+            $appsArray += $app.MobileAppIdentifier.windowsAppId
         }
 
         #region resource generator code
@@ -275,8 +283,8 @@ function Get-TargetResource
             MinimumWipeOsVersion                    = $getValue.minimumWipeOsVersion
             MinimumWipeSdkVersion                   = $getValue.minimumWipeSdkVersion
             MobileThreatDefenseRemediationAction    = $enumMobileThreatDefenseRemediationAction
-            PeriodOfflineBeforeAccessCheck          = [System.Xml.XmlConvert]::ToString($getValue.periodOfflineBeforeAccessCheck)
-            PeriodOfflineBeforeWipeIsEnforced       = [System.Xml.XmlConvert]::ToString($getValue.periodOfflineBeforeWipeIsEnforced)
+            PeriodOfflineBeforeAccessCheck          = $getValue.periodOfflineBeforeAccessCheck
+            PeriodOfflineBeforeWipeIsEnforced       = $getValue.periodOfflineBeforeWipeIsEnforced
             PrintBlocked                            = $getValue.printBlocked
             Description                             = $getValue.Description
             DisplayName                             = $getValue.DisplayName
@@ -288,10 +296,12 @@ function Get-TargetResource
             TenantId                                = $TenantId
             ApplicationSecret                       = $ApplicationSecret
             CertificateThumbprint                   = $CertificateThumbprint
+            CertificatePath                         = $CertificatePath
+            CertificatePassword                     = $CertificatePassword
             ManagedIdentity                         = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceAppManagementWindowsManagedAppProtectionAssignment -WindowsManagedAppProtectionId $Id
+        $assignmentsValues = Get-MgBetaDeviceAppManagementWindowsManagedAppProtectionAssignment -WindowsManagedAppProtectionId $Id -All
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)
         {
@@ -456,6 +466,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -480,31 +498,28 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
     $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    if ($boundParameters.ContainsKey('Apps'))
+    {
+        $targetApps = @()
+        foreach ($app in $boundParameters.Apps)
+        {
+            $targetApps += @{
+                mobileAppIdentifier = @{
+                    '@odata.type' = '#microsoft.graph.windowsAppIdentifier'
+                    windowsAppId   = $app
+                }
+            }
+        }
+        $boundParameters.Remove('Apps') | Out-Null
+        $boundParameters.Add('apps', $targetApps)
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune App Protection Policy for Windows10 with DisplayName {$DisplayName}"
         $boundParameters.Remove("Assignments") | Out-Null
-
-        $createParameters = ([Hashtable]$boundParameters).Clone()
-        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
+        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
         $createParameters.Remove('Id') | Out-Null
-
-        if ($createParameters.ContainsKey('Apps'))
-        {
-            $targetApps = @()
-            foreach ($app in $createParameters.Apps)
-            {
-                $targetApps += @{
-                    mobileAppIdentifier = @{
-                        '@odata.type' = '#microsoft.graph.windowsAppIdentifier'
-                        windowsAppId   = $app
-                    }
-                }
-            }
-            $createParameters.Remove('Apps') | Out-Null
-            $createParameters.Add('Apps', $targetApps)
-        }
 
         #region resource generator code
         $createParameters.Add('@odata.type', '#microsoft.graph.windowsManagedAppProtection')
@@ -525,28 +540,17 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the Intune App Protection Policy for Windows10 with Id {$($currentInstance.Id)}"
         $boundParameters.Remove("Assignments") | Out-Null
 
-        $updateParameters = ([Hashtable]$boundParameters).Clone()
-        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
+        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
         $updateParameters.Remove('Id') | Out-Null
 
         #region resource generator code
-        if ($updateParameters.ContainsKey('Apps'))
+        if ($updateParameters.ContainsKey('apps'))
         {
-            $targetApps = @()
-            foreach ($app in $updateParameters.Apps)
-            {
-                $targetApps += @{
-                    mobileAppIdentifier = @{
-                        '@odata.type' = '#microsoft.graph.windowsAppIdentifier'
-                        windowsAppId   = $app
-                    }
-                }
-            }
             $targetAppsBody = @{
                 appGroupType = 'selectedPublicApps'
-                apps = $targetApps
+                apps = $updateParameters.apps
             }
-            $updateParameters.Remove('Apps') | Out-Null
+            $updateParameters.Remove('apps') | Out-Null
             Invoke-MgGraphRequest -Method POST `
                 -Uri "beta/deviceAppManagement/windowsManagedAppProtections('$($currentInstance.Id)')/targetApps" `
                 -Body $($targetAppsBody | ConvertTo-Json -Depth 10)
@@ -715,6 +719,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -766,6 +778,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -831,6 +851,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

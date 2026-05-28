@@ -49,8 +49,7 @@
   "requiredModules": [
     "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Identity.Governance",
-    "Microsoft.Graph.Groups",
-    "Microsoft.Graph.Users"
+    "Microsoft.Graph.Groups"
   ],
   "supportedEnvironments": [
     "Global",
@@ -77,12 +76,6 @@
       "module": "Microsoft.Graph.Groups",
       "cmdlets": [
         "Get-MgGroup"
-      ]
-    },
-    {
-      "module": "Microsoft.Graph.Users",
-      "cmdlets": [
-        "Get-MgUser"
       ]
     }
   ]

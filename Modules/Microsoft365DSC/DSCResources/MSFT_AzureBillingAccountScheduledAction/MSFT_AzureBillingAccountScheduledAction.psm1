@@ -56,6 +56,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -87,7 +95,7 @@ function Get-TargetResource
         $nullResult.Ensure = 'Absent'
 
         $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/Microsoft.Billing/billingAccounts/$($BillingAccount)/providers/Microsoft.CostManagement/scheduledActions?api-version=2023-11-01"
-        $response = Invoke-AzRest -Uri $uri -Method GET
+        $response = Invoke-AzRestMethod -Uri $uri -Method GET
         $actions = (ConvertFrom-Json ($response.Content)).value
 
         $instance = $actions | Where-Object -FilterScript { $_.properties.displayName -eq $DisplayName }
@@ -134,6 +142,8 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -206,6 +216,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -269,7 +287,7 @@ function Set-TargetResource
             Write-Verbose -Message "Updating scheduled action {$DisplayName} with payload:`r`n$($payload)"
         }
 
-        $response = Invoke-AzRest -Uri $uri -Method PUT -Payload $payload
+        $response = Invoke-AzRestMethod -Uri $uri -Method PUT -Payload $payload
         Write-Verbose -Message "Response:`r`n$($response.Content)"
     }
     # REMOVE
@@ -277,7 +295,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing scheduled action {$DisplayName} with payload:`r`n$($payload)"
         $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/Microsoft.Billing/billingAccounts/$($BillingAccount)/providers/Microsoft.CostManagement/scheduledActions/$($DisplayName)?api-version=2023-11-01"
-        $response = Invoke-AzRest -Uri $uri -Method DELETE
+        $response = Invoke-AzRestMethod -Uri $uri -Method DELETE
     }
 }
 
@@ -337,6 +355,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -386,6 +412,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -430,7 +464,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message "    |---[$i/$($accounts.value.Length)] $displayedKey" -DeferWrite
 
             $uri = "$((Get-MSCloudLoginConnectionProfile -Workload Azure).ManagementUrl)providers/Microsoft.Billing/billingAccounts/$($account.name)/providers/Microsoft.CostManagement/scheduledActions?api-version=2023-11-01"
-            $response = Invoke-AzRest -Uri $uri -Method GET
+            $response = Invoke-AzRestMethod -Uri $uri -Method GET
             $actions = (ConvertFrom-Json ($response.Content)).value
             $j = 1
             if ($actions.Length -eq 0)

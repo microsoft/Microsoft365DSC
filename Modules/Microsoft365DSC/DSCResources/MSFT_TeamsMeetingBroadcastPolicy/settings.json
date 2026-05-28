@@ -35,5 +35,16 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsMeetingBroadcastPolicy",
+        "New-CsTeamsMeetingBroadcastPolicy",
+        "Remove-CsTeamsMeetingBroadcastPolicy",
+        "Set-CsTeamsMeetingBroadcastPolicy"
+      ]
+    }
+  ]
 }

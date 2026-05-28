@@ -19,41 +19,41 @@ namespace Microsoft365DSC.Intune
         public string OffsetUri { get; set; }
 
         /// <summary>
-        /// Flattened list of unique parentSettingId values from AdditionalProperties.dependentOn[].parentSettingId.
+        /// Flattened list of unique parentSettingId values from dependentOn[].parentSettingId.
         /// </summary>
         public List<string> DependentOnParentSettingIds { get; set; } = [];
 
         /// <summary>
-        /// Flattened list of unique parentSettingId values from AdditionalProperties.options[].dependentOn[].parentSettingId.
+        /// Flattened list of unique parentSettingId values from options[].dependentOn[].parentSettingId.
         /// </summary>
         public List<string> OptionsDependentOnParentSettingIds { get; set; } = [];
 
         /// <summary>
-        /// The OData type from AdditionalProperties['@odata.type'].
+        /// The OData type from ['@odata.type'].
         /// Used to determine the setting type (e.g., ChoiceSettingDefinition, GroupSettingCollectionDefinition).
         /// </summary>
         public string ODataType { get; set; }
 
         /// <summary>
-        /// Maximum number of instances allowed for this setting (from AdditionalProperties.maximumCount).
+        /// Maximum number of instances allowed for this setting (from maximumCount).
         /// Used in GroupSettingCollection logic to determine single vs. multi-instance handling.
         /// </summary>
         public int MaximumCount { get; set; }
 
         /// <summary>
-        /// Child setting definition IDs (from AdditionalProperties.childIds).
+        /// Child setting definition IDs (from childIds).
         /// Used in Export to find child definitions of a GroupSettingCollection.
         /// </summary>
         public List<string> ChildIds { get; set; } = [];
 
         /// <summary>
-        /// Options for ChoiceSetting definitions (from AdditionalProperties.options[]).
+        /// Options for ChoiceSetting definitions (from options[]).
         /// Each option has an itemId and an optionValue with a value and OData type.
         /// </summary>
         public List<SettingDefinitionOption> Options { get; set; } = [];
 
         /// <summary>
-        /// Value definition metadata (from AdditionalProperties.valueDefinition).
+        /// Value definition metadata (from valueDefinition).
         /// Contains the OData type and isSecret flag.
         /// </summary>
         public SettingValueDefinition ValueDefinition { get; set; }
@@ -69,8 +69,7 @@ namespace Microsoft365DSC.Intune
 
         /// <summary>
         /// Maps a single Graph SettingDefinition (typically a PSObject or Hashtable) to <see cref="SettingDefinitionInfo"/>.
-        /// Extracts Id, Name, OffsetUri, and the parentSettingId collections from AdditionalProperties.
-        /// Uses reflection to access properties, avoiding a compile-time dependency on the Graph SDK or Microsoft.CSharp.
+        /// Extracts Id, Name, OffsetUri, and the parentSettingId collections.
         /// </summary>
         public static SettingDefinitionInfo FromGraphObject(object settingDefinition)
         {
@@ -84,34 +83,14 @@ namespace Microsoft365DSC.Intune
             // Extract AdditionalProperties - this is an IDictionary<string, object> on the Graph SDK objects
             // Accessing the property is only possible through reflection with BindingFlags NonPublic and Instance
             IDictionary<string, object>? additionalProperties = null;
-            try
+            List<string> defaultProperties = ["Id", "Name", "OffsetUri"];
+            additionalProperties = new Dictionary<string, object>();
+            foreach (DictionaryEntry entry in settingDefinition as Hashtable)
             {
-                if (settingDefinition is Hashtable hashtable)
+                if (!defaultProperties.Contains(entry.Key.ToString(), StringComparer.OrdinalIgnoreCase))
                 {
-                    if (hashtable.ContainsKey("AdditionalProperties"))
-                    {
-                        var apRaw = hashtable["AdditionalProperties"] as IDictionary;
-                        if (apRaw is not null)
-                        {
-                            additionalProperties = new Dictionary<string, object>();
-                            foreach (DictionaryEntry entry in apRaw)
-                            {
-                                additionalProperties[entry.Key.ToString()] = entry.Value;
-                            }
-                        }
-                    }
+                    additionalProperties[entry.Key.ToString()] = entry.Value;
                 }
-                else
-                {
-                    var propertyInfo = settingDefinition.GetType().GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    var singleProperty = propertyInfo.Where(info => info.Name.Contains("AdditionalProperties"))?.FirstOrDefault();
-                    var apRaw = singleProperty?.GetValue(settingDefinition);
-                    additionalProperties = apRaw as IDictionary<string, object>;
-                }
-            }
-            catch
-            {
-                // No AdditionalProperties available - leave lists empty
             }
 
             if (additionalProperties is not null)

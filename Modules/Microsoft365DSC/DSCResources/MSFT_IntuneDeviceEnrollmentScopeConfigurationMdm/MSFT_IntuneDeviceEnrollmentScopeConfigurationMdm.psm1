@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceEnrollmentScopeConfigurationMdm'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -100,7 +102,7 @@ function Get-TargetResource
         $results = @{
             #region resource generator code
             IsSingleInstance                          = 'Yes'
-            IsMdmEnrollmentDuringRegistrationDisabled = $getValue.AdditionalProperties.isMdmEnrollmentDuringRegistrationDisabled
+            IsMdmEnrollmentDuringRegistrationDisabled = $getValue.isMdmEnrollmentDuringRegistrationDisabled
             AppliesTo                                 = $enumAppliesTo
             ComplianceUrl                             = $getValue.ComplianceUrl
             DiscoveryUrl                              = $getValue.DiscoveryUrl
@@ -454,3 +456,4 @@ function Get-CompareParameters
 }
 
 Export-ModuleMember -Function *-TargetResource
+

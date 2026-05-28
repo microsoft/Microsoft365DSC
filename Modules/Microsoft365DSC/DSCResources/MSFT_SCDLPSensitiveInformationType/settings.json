@@ -1,4 +1,4 @@
-﻿{
+{
   "resourceName": "SCDLPSensitiveInformationType",
   "description": "Manages sensitive information types in Purview.",
   "roles": {

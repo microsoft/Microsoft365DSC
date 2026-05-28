@@ -15,18 +15,23 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPAudioMobileMode,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPVideoMobileMode,
 
         [Parameter()]
+        [ValidateSet('OfferBrowserOptions', 'UseSystemDefaults')]
         [System.String]
+        $LinksInTeams,
+
+        [Parameter()]
         [ValidateSet('Teams', 'Native', 'UserOverride')]
+        [System.String]
         $MobileDialerPreference,
 
         [Parameter()]
@@ -49,6 +54,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -101,6 +114,7 @@ function Get-TargetResource
             Description            = $instance.Description
             IPAudioMobileMode      = $instance.IPAudioMobileMode
             IPVideoMobileMode      = $instance.IPVideoMobileMode
+            LinksInTeams           = $instance.LinksInTeams
             MobileDialerPreference = $instance.MobileDialerPreference
             Ensure                 = 'Present'
             Credential             = $Credential
@@ -138,18 +152,23 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPAudioMobileMode,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPVideoMobileMode,
 
         [Parameter()]
+        [ValidateSet('OfferBrowserOptions', 'UseSystemDefaults')]
         [System.String]
+        $LinksInTeams,
+
+        [Parameter()]
         [ValidateSet('Teams', 'Native', 'UserOverride')]
+        [System.String]
         $MobileDialerPreference,
 
         [Parameter()]
@@ -172,6 +191,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -231,18 +258,23 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPAudioMobileMode,
 
         [Parameter()]
-        [System.String]
         [ValidateSet('WifiOnly', 'AllNetworks')]
+        [System.String]
         $IPVideoMobileMode,
 
         [Parameter()]
+        [ValidateSet('OfferBrowserOptions', 'UseSystemDefaults')]
         [System.String]
+        $LinksInTeams,
+
+        [Parameter()]
         [ValidateSet('Teams', 'Native', 'UserOverride')]
+        [System.String]
         $MobileDialerPreference,
 
         [Parameter()]
@@ -265,6 +297,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -318,6 +358,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]

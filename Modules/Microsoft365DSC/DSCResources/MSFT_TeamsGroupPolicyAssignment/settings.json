@@ -35,5 +35,16 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Find-CsGroup",
+        "Get-CsGroupPolicyAssignment",
+        "New-CsGroupPolicyAssignment",
+        "Remove-CsGroupPolicyAssignment"
+      ]
+    }
+  ]
 }

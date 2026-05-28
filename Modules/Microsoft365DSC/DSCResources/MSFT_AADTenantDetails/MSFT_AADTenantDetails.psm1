@@ -48,6 +48,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -89,6 +97,8 @@ function Get-TargetResource
             TenantId                             = $TenantId
             ApplicationSecret                    = $ApplicationSecret
             CertificateThumbprint                = $CertificateThumbprint
+            CertificatePath                      = $CertificatePath
+            CertificatePassword                  = $CertificatePassword
             ManagedIdentity                      = $ManagedIdentity.IsPresent
             AccessTokens                         = $AccessTokens
         }
@@ -153,6 +163,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -178,16 +196,14 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-
     $currentParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $currentParameters.Remove('IsSingleInstance') | Out-Null
-    $currentParameters.Add('OrganizationId', $(Get-MgBetaOrganization).Id)
 
     try
     {
         Write-Verbose -Message 'Calling Update-MGBetaOrganization with parameters:'
         Write-Verbose -Message "$(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
-        Update-MgBetaOrganization @currentParameters
+        Update-MgBetaOrganization -OrganizationId (Get-MgBetaOrganization).Id -BodyParameter $currentParameters
     }
     catch
     {
@@ -243,6 +259,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -292,6 +316,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -335,6 +367,8 @@ function Export-TargetResource
             ApplicationSecret                    = $ApplicationSecret
             TenantId                             = $TenantId
             CertificateThumbprint                = $CertificateThumbprint
+            CertificatePath                      = $CertificatePath
+            CertificatePassword                  = $CertificatePassword
             ManagedIdentity                      = $ManagedIdentity.IsPresent
             IsSingleInstance                     = 'Yes'
             AccessTokens                         = $AccessTokens

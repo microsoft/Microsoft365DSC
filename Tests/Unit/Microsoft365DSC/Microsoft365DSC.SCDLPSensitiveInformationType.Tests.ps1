@@ -51,11 +51,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultCulture = 'en-US'
                     Description    = "This is my description"
                     FingerPrints = @('{"Value":"Hello World"}')
+                    RulePackId     = '00000000-0000-0000-0000-000000000000'
                 }
             }
-
-            
-
 
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
@@ -72,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
-                
+
                 Mock -CommandName Get-DLPSensitiveInformationType -MockWith {
                     return $null
                 }

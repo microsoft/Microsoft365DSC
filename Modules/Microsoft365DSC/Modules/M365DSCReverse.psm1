@@ -203,9 +203,33 @@ function Start-M365DSCConfigurationExtract
 
         if ($null -ne $Components)
         {
+            $allM365DscResources = Get-M365DSCAllResources
+            $newComponents = @()
+            foreach ($component in $Components)
+            {
+                if ($component.Contains('*'))
+                {
+                    $matchingResources = $allM365DscResources | Where-Object { $_ -like $component }
+                    if ($matchingResources.Count -eq 0)
+                    {
+                        Write-Warning -Message "The component filter '$component' did not match any resources and will be ignored."
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "The component filter '$component' matched the following resources: $($matchingResources -join ',')"
+                        $newComponents += ($matchingResources | Where-Object { $ComponentsToSkip -notcontains $_ })
+                    }
+                }
+                else
+                {
+                    $newComponents += $component
+                }
+            }
+            $Components = $newComponents | Select-Object -Unique
             $resourcesInBothIncludeAndExclude = Compare-Object -ReferenceObject $Components `
                 -DifferenceObject $ComponentsToSkip -ExcludeDifferent -IncludeEqual
         }
+
         if ($resourcesInBothIncludeAndExclude.Count -gt 0)
         {
             foreach ($resource in $resourcesInBothIncludeAndExclude)
@@ -394,7 +418,7 @@ function Start-M365DSCConfigurationExtract
 
         [array] $version = Get-Module 'Microsoft365DSC'
         $version = $version[0].Version
-        $DSCContent = [System.Text.StringBuilder]::New()
+        $DSCContent = [System.Text.StringBuilder]::new()
         $DSCContent.Append("# Generated with Microsoft365DSC version $version`r`n") | Out-Null
         $DSCContent.Append("# For additional information on how to use Microsoft365DSC, please visit https://aka.ms/M365DSC`r`n") | Out-Null
         $DSCContent.Append("param (`r`n") | Out-Null
@@ -450,7 +474,7 @@ function Start-M365DSCConfigurationExtract
         $DSCContent.Append("    param (`r`n") | Out-Null
 
         $newline = $false
-        $postParamContent = [System.Text.StringBuilder]::New()
+        $postParamContent = [System.Text.StringBuilder]::new()
         switch ($AuthMethods)
         {
             { $_ -in 'CertificateThumbprint', 'CertificatePath', 'ApplicationWithSecret' }
@@ -730,7 +754,7 @@ function Start-M365DSCConfigurationExtract
             if ($using:ComponentsToSkip -notcontains $resourceName)
             {
                 $counter = ($using:synchronizedHashtable).ResourceCounter++
-                Write-M365DSCHost -Message "[$counter/$($using:ResourcesToExport.Length)] Extracting [" -DeferWrite
+                Write-M365DSCHost -Message "[$counter/$($using:ResourcesToExport.Length - $using:ComponentsToSkip.Count)] Extracting [" -DeferWrite
                 Write-M365DSCHost -Message $resourceName -ForegroundColor Green -DeferWrite
                 Write-M365DSCHost -Message '] using {' -DeferWrite
                 Write-M365DSCHost -Message $mostSecureAuthMethod -ForegroundColor Cyan -DeferWrite

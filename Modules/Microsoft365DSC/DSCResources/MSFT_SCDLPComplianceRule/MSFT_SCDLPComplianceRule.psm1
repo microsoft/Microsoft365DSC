@@ -320,6 +320,10 @@ function Get-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -498,6 +502,7 @@ function Get-TargetResource
             CertificateThumbprint                        = $CertificateThumbprint
             CertificatePath                              = $CertificatePath
             CertificatePassword                          = $CertificatePassword
+            ManagedIdentity                            = $ManagedIdentity.IsPresent
             AccessTokens                                 = $AccessTokens
         }
 
@@ -846,6 +851,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -1323,6 +1332,10 @@ function Test-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -1429,6 +1442,10 @@ function Export-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -2091,7 +2108,9 @@ function Add-AdvancedRuleConditionId
             $sensitiveTypesValue = $Condition.Value.Groups.Sensitivetypes
             foreach ($stype in $sensitiveTypesValue)
             {
-                if ($null -eq $stype.Id)
+                # Do not attempt to resolve trainable classifiers that have a classifier type set, e.g. MLModel
+                # See https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7156
+                if ($null -eq $stype.Id -and [System.String]::IsNullOrEmpty($stype.Classifiertype))
                 {
                     $stype.Id = $Script:SensitiveInformationTypes | Where-Object -FilterScript { $_.Name -eq $stype.Name } | Select-Object -ExpandProperty Id
                 }

@@ -81,10 +81,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     @{
                         Id                  = 'com.microsoft.edge.windows'
                         MobileAppIdentifier = @{
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.windowsAppIdentifier'
-                                windowsAppId  = 'com.microsoft.edge'
-                            }
+                            '@odata.type' = '#microsoft.graph.windowsAppIdentifier'
+                            windowsAppId  = 'com.microsoft.edge'
                         }
                     }
                 )
@@ -123,12 +121,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }

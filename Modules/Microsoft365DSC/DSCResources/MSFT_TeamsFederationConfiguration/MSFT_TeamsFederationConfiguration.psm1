@@ -15,6 +15,10 @@ function Get-TargetResource
         $BlockedDomains,
 
         [Parameter()]
+        [System.String[]]
+        $AllowedTrialTenantDomains,
+
+        [Parameter()]
         [System.Boolean]
         $AllowFederatedUsers,
 
@@ -25,6 +29,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAllSubdomains,
 
         [Parameter()]
         [ValidateSet('Disabled', 'Enabled')]
@@ -68,6 +76,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -127,9 +143,11 @@ function Get-TargetResource
         return @{
             AllowedDomains                              = $AllowedDomainsValues
             BlockedDomains                              = $BlockedDomainsValues
+            AllowedTrialTenantDomains                   = [System.String[]]$config.AllowedTrialTenantDomains
             AllowFederatedUsers                         = $config.AllowFederatedUsers
             AllowTeamsConsumer                          = $config.AllowTeamsConsumer
             AllowTeamsConsumerInbound                   = $config.AllowTeamsConsumerInbound
+            BlockAllSubdomains                          = $config.BlockAllSubdomains
             DomainBlockingForMDOAdminsInTeams           = $config.DomainBlockingForMDOAdminsInTeams
             ExternalAccessWithTrialTenants              = $config.ExternalAccessWithTrialTenants
             TreatDiscoveredPartnersAsUnverified         = $config.TreatDiscoveredPartnersAsUnverified
@@ -140,6 +158,8 @@ function Get-TargetResource
             ApplicationId                               = $ApplicationId
             TenantId                                    = $TenantId
             CertificateThumbprint                       = $CertificateThumbprint
+            CertificatePath                             = $CertificatePath
+            CertificatePassword                         = $CertificatePassword
             ManagedIdentity                             = $ManagedIdentity.IsPresent
             AccessTokens                                = $AccessTokens
         }
@@ -170,6 +190,10 @@ function Set-TargetResource
         $BlockedDomains,
 
         [Parameter()]
+        [System.String[]]
+        $AllowedTrialTenantDomains,
+
+        [Parameter()]
         [System.Boolean]
         $AllowFederatedUsers,
 
@@ -180,6 +204,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAllSubdomains,
 
         [Parameter()]
         [ValidateSet('Disabled', 'Enabled')]
@@ -223,6 +251,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -285,6 +321,10 @@ function Test-TargetResource
         $BlockedDomains,
 
         [Parameter()]
+        [System.String[]]
+        $AllowedTrialTenantDomains,
+
+        [Parameter()]
         [System.Boolean]
         $AllowFederatedUsers,
 
@@ -295,6 +335,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAllSubdomains,
 
         [Parameter()]
         [ValidateSet('Disabled', 'Enabled')]
@@ -338,6 +382,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -385,6 +437,14 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -417,6 +477,8 @@ function Export-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }

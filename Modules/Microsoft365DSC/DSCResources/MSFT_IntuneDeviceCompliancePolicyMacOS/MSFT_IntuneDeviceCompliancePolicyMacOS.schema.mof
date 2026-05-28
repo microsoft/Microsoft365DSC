@@ -10,10 +10,21 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceCompliancePolicyMacOS")]
+[ClassVersion("1.0.0.0")]
+class MSFT_ScheduledActionConfigurations
+{
+    [Write, Description("The unique identifier of the action configuration.")] String id;
+    [Write, Description("Number of hours to wait till the action will be enforced. Valid values 0 to 8760.")] Uint32 gracePeriodHours;
+    [Write, Description("The action to take."), ValueMap{"notification", "block", "retire", "remoteLock", "pushNotification"}, Values{"notification", "block", "retire", "remoteLock", "pushNotification"}] String actionType;
+    [Write, Description("The notification Message template to use.")] String notificationTemplateId;
+    [Write, Description("A list of group IDs to specify who to CC this notification message to.")] String notificationMessageCCList[];
+};
+
+[ClassVersion("1.0.0.2"), FriendlyName("IntuneDeviceCompliancePolicyMacOS")]
 class MSFT_IntuneDeviceCompliancePolicyMacOS : OMI_BaseResource
 {
     [Key, Description("Display name of the MacOS device compliance policy.")] String DisplayName;
+    [Write, Description("The id of the MacOS device compliance policy.")] String Id;
     [Write, Description("Description of the MacOS device compliance policy.")] String Description;
     [Write, Description("List of Scope Tags for this Entity instance.")] String RoleScopeTagIds[];
     [Write, Description("Assignments of the Intune Policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
@@ -24,6 +35,7 @@ class MSFT_IntuneDeviceCompliancePolicyMacOS : OMI_BaseResource
     [Write, Description("PasswordMinutesOfInactivityBeforeLock of the MacOS device compliance policy.")] Uint32 PasswordMinutesOfInactivityBeforeLock;
     [Write, Description("PasswordPreviousPasswordBlockCount of the MacOS device compliance policy.")] Uint32 PasswordPreviousPasswordBlockCount;
     [Write, Description("PasswordMinimumCharacterSetCount of the MacOS device compliance policy.")] Uint32 PasswordMinimumCharacterSetCount;
+    [Write, Description("Specifies the non-compliance actions."), EmbeddedInstance("MSFT_ScheduledActionConfigurations")] String ScheduledActionsForRule[];
     [Write, Description("PasswordRequiredType of the MacOS device compliance policy."), ValueMap{"DeviceDefault","Alphanumeric","Numeric"}, Values{"DeviceDefault","Alphanumeric","Numeric"}] String PasswordRequiredType;
     [Write, Description("OsMinimumVersion of the MacOS device compliance policy.")] String OsMinimumVersion;
     [Write, Description("OsMaximumVersion of the MacOS device compliance policy.")] String OsMaximumVersion;
@@ -44,6 +56,8 @@ class MSFT_IntuneDeviceCompliancePolicyMacOS : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

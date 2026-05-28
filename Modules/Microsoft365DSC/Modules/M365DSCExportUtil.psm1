@@ -699,7 +699,7 @@ function Get-M365DSCExportContentForResource
     $instanceName = $tempName
     [void]$Global:M365DSCExportedResourceInstancesNames.Add($tempName)
 
-    $content = [System.Text.StringBuilder]::New()
+    $content = [System.Text.StringBuilder]::new()
     [void]$content.Append("        $ResourceName `"$instanceName`"`r`n")
     [void]$content.Append("        {`r`n")
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath -NoEscape $NoEscape -AllowVariablesInStrings:$AllowVariablesInStrings

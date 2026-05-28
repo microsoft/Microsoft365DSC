@@ -493,7 +493,6 @@ function Test-TargetResource
     return $result
 }
 
-
 function Export-TargetResource
 {
     [CmdletBinding()]

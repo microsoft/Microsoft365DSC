@@ -59,8 +59,7 @@
     {
       "module": "Microsoft.Graph.Beta.Identity.SignIns",
       "cmdlets": [
-        "Get-MgBetaPolicyCrossTenantAccessPolicyDefault",
-        "Update-MgBetaPolicyCrossTenantAccessPolicyDefault"
+        "Get-MgBetaPolicyCrossTenantAccessPolicyDefault"
       ]
     },
     {
@@ -73,6 +72,12 @@
       "module": "Microsoft.Graph.Users",
       "cmdlets": [
         "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
       ]
     }
   ]

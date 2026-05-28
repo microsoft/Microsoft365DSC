@@ -139,6 +139,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -181,7 +189,7 @@ function Get-TargetResource
 
             if (-not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
+                [array]$getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
                     -All `
                     -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                     -ErrorAction SilentlyContinue
@@ -240,12 +248,12 @@ function Get-TargetResource
             foreach ($currentRanges in $currentEnterpriseIPRanges.ranges)
             {
                 $myRanges = [ordered]@{}
-                $myRanges.Add('CidrAddress', $currentRanges.AdditionalProperties.cidrAddress)
-                $myRanges.Add('LowerAddress', $currentRanges.AdditionalProperties.lowerAddress)
-                $myRanges.Add('UpperAddress', $currentRanges.AdditionalProperties.upperAddress)
-                if ($null -ne $currentRanges.AdditionalProperties.'@odata.type')
+                $myRanges.Add('CidrAddress', $currentRanges.cidrAddress)
+                $myRanges.Add('LowerAddress', $currentRanges.lowerAddress)
+                $myRanges.Add('UpperAddress', $currentRanges.upperAddress)
+                if ($null -ne $currentRanges.'@odata.type')
                 {
-                    $myRanges.Add('odataType', $currentRanges.AdditionalProperties.'@odata.type'.ToString())
+                    $myRanges.Add('odataType', $currentRanges.'@odata.type'.ToString())
                 }
                 if ($myRanges.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
@@ -327,12 +335,12 @@ function Get-TargetResource
             $myExemptApps.Add('DisplayName', $currentExemptApps.displayName)
             $myExemptApps.Add('ProductName', $currentExemptApps.productName)
             $myExemptApps.Add('PublisherName', $currentExemptApps.publisherName)
-            $myExemptApps.Add('BinaryName', $currentExemptApps.AdditionalProperties.binaryName)
-            $myExemptApps.Add('BinaryVersionHigh', $currentExemptApps.AdditionalProperties.binaryVersionHigh)
-            $myExemptApps.Add('BinaryVersionLow', $currentExemptApps.AdditionalProperties.binaryVersionLow)
-            if ($null -ne $currentExemptApps.AdditionalProperties.'@odata.type')
+            $myExemptApps.Add('BinaryName', $currentExemptApps.binaryName)
+            $myExemptApps.Add('BinaryVersionHigh', $currentExemptApps.binaryVersionHigh)
+            $myExemptApps.Add('BinaryVersionLow', $currentExemptApps.binaryVersionLow)
+            if ($null -ne $currentExemptApps.'@odata.type')
             {
-                $myExemptApps.Add('odataType', $currentExemptApps.AdditionalProperties.'@odata.type'.ToString())
+                $myExemptApps.Add('odataType', $currentExemptApps.'@odata.type'.ToString())
             }
             if ($myExemptApps.values.Where({ $null -ne $_ }).Count -gt 0)
             {
@@ -361,12 +369,12 @@ function Get-TargetResource
             $myProtectedApps.Add('DisplayName', $currentProtectedApps.displayName)
             $myProtectedApps.Add('ProductName', $currentProtectedApps.productName)
             $myProtectedApps.Add('PublisherName', $currentProtectedApps.publisherName)
-            $myProtectedApps.Add('BinaryName', $currentProtectedApps.AdditionalProperties.binaryName)
-            $myProtectedApps.Add('BinaryVersionHigh', $currentProtectedApps.AdditionalProperties.binaryVersionHigh)
-            $myProtectedApps.Add('BinaryVersionLow', $currentProtectedApps.AdditionalProperties.binaryVersionLow)
-            if ($null -ne $currentProtectedApps.AdditionalProperties.'@odata.type')
+            $myProtectedApps.Add('BinaryName', $currentProtectedApps.binaryName)
+            $myProtectedApps.Add('BinaryVersionHigh', $currentProtectedApps.binaryVersionHigh)
+            $myProtectedApps.Add('BinaryVersionLow', $currentProtectedApps.binaryVersionLow)
+            if ($null -ne $currentProtectedApps.'@odata.type')
             {
-                $myProtectedApps.Add('odataType', $currentProtectedApps.AdditionalProperties.'@odata.type'.ToString())
+                $myProtectedApps.Add('odataType', $currentProtectedApps.'@odata.type'.ToString())
             }
             if ($myProtectedApps.values.Where({ $null -ne $_ }).Count -gt 0)
             {
@@ -428,6 +436,8 @@ function Get-TargetResource
             TenantId                               = $TenantId
             ApplicationSecret                      = $ApplicationSecret
             CertificateThumbprint                  = $CertificateThumbprint
+            CertificatePath                        = $CertificatePath
+            CertificatePassword                    = $CertificatePassword
             ManagedIdentity                        = $ManagedIdentity.IsPresent
             AccessTokens                           = $AccessTokens
             #endregion
@@ -589,6 +599,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -620,7 +638,6 @@ function Set-TargetResource
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
         $createParameters.Remove('Id') | Out-Null
 
-
         #region resource generator code
         $policy = New-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -BodyParameter $CreateParameters
         #endregion
@@ -642,7 +659,6 @@ function Set-TargetResource
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
         $UpdateParameters.Remove('Id') | Out-Null
-
 
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.MdmWindowsInformationProtectionPolicy')
@@ -804,6 +820,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -855,6 +879,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -924,6 +956,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

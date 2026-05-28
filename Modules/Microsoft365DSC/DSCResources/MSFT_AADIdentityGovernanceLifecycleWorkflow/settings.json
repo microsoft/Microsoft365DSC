@@ -38,7 +38,6 @@
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Identity.Governance"
   ],
   "supportedEnvironments": [
@@ -53,8 +52,7 @@
         "Get-MgBetaIdentityGovernanceLifecycleWorkflowTask",
         "New-MgBetaIdentityGovernanceLifecycleWorkflow",
         "New-MgBetaIdentityGovernanceLifecycleWorkflowNewVersion",
-        "Remove-MgBetaIdentityGovernanceLifecycleWorkflow",
-        "Update-MgBetaIdentityGovernanceLifecycleWorkflow"
+        "Remove-MgBetaIdentityGovernanceLifecycleWorkflow"
       ]
     }
   ]

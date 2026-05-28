@@ -48,6 +48,12 @@
       "cmdlets": [
         "Invoke-MgGraphRequest"
       ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
     }
   ]
 }

@@ -144,6 +144,14 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -189,6 +197,8 @@ function Get-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 ApplicationSecret     = $ApplicationSecret
                 Ensure                = 'Absent'
@@ -458,6 +468,14 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -507,6 +525,7 @@ function Set-TargetResource
             }
         }
         $creationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
+        $creationParams = Rename-M365DSCCimInstanceParameter -Properties $creationParams
 
         #region Licenses
         if ($null -ne $LicenseAssignment)
@@ -519,18 +538,18 @@ function Set-TargetResource
             [Array]$licenseDifferences = Compare-Object -ReferenceObject $LicenseAssignment -DifferenceObject $currentLicenses
             if ($licenseDifferences.Length -gt 0)
             {
-                $licenses = @{AddLicenses = @(); RemoveLicenses = @(); }
+                $licenses = @{addLicenses = @(); removeLicenses = @(); }
 
                 $SubscribedSku = Get-MgBetaSubscribedSku
                 foreach ($licenseSkuPart in $LicenseAssignment)
                 {
                     Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
                     $license = @{
-                        SkuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
+                        skuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
                     }
 
                     # Set the Office license as the license we want to add in the $licenses object
-                    $licenses.AddLicenses += $license
+                    $licenses.addLicenses += $license
                 }
 
                 foreach ($currentLicense in $user.LicenseAssignment)
@@ -539,9 +558,9 @@ function Set-TargetResource
                     {
                         Write-Verbose -Message "Removing {$currentLicense} from user {$UserPrincipalName}"
                         $license = @{
-                            SkuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
+                            skuId = ($SubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
                         }
-                        $licenses.RemoveLicenses += $license
+                        $licenses.removeLicenses += $license
                     }
                 }
             }
@@ -557,8 +576,7 @@ function Set-TargetResource
                 Write-Verbose -Message 'PasswordProfile property will not be updated'
             }
 
-            $creationParams.Add('UserId', $UserPrincipalName)
-            Update-MgUser @creationParams
+            Update-MgUser -UserId $UserPrincipalName -BodyParameter $creationParams
             $userId = (Get-MgUser -UserId $UserPrincipalName).Id
         }
         else
@@ -597,18 +615,18 @@ function Set-TargetResource
             }
 
             $PasswordProfile = @{
-                Password = $passwordValue
+                password = $passwordValue
             }
-            $creationParams.Add('PasswordProfile', $PasswordProfile)
+            $creationParams.Add('passwordProfile', $PasswordProfile)
 
             Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
-            if (-not $creationParams.ContainsKey('AccountEnabled') -or $null -eq $creationParams.AccountEnabled)
+            if (-not $creationParams.ContainsKey('accountEnabled') -or $null -eq $creationParams.accountEnabled)
             {
-                $creationParams.AccountEnabled = $true
+                $creationParams.accountEnabled = $true
             }
-            $creationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
+            $creationParams.Add('mailNickName', $UserPrincipalName.Split('@')[0])
             Write-Verbose -Message "Creating new user with values: $(Convert-M365DscHashtableToString -Hashtable $creationParams)"
-            $user = New-MgUser @creationParams
+            $user = New-MgUser -BodyParameter $creationParams
             $userId = $user.Id
         }
 
@@ -618,7 +636,7 @@ function Set-TargetResource
             if ($licenseDifferences.Length -gt 0)
             {
                 Write-Verbose -Message "Updating License assignments with values: $(Convert-M365DscHashtableToString -Hashtable $licenses)"
-                Set-MgUserLicense -UserId $user.UserPrincipalName -AddLicenses $licenses.AddLicenses -RemoveLicenses $licenses.RemoveLicenses
+                Set-MgUserLicense -UserId $user.UserPrincipalName -AddLicenses $licenses.addLicenses -RemoveLicenses $licenses.removeLicenses
             }
         }
         catch
@@ -662,7 +680,9 @@ function Set-TargetResource
 
                         throw "Cannot add user $UserPrincipalName to group '$memberOfGroup' because it is a dynamic group"
                     }
-                    New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $userId
+                    New-MgGroupMemberByRef -GroupId $group.Id -BodyParameter @{
+                        '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$userId"
+                    }
                 }
             }
             else
@@ -693,7 +713,9 @@ function Set-TargetResource
 
                             throw "Cannot add user $UserPrincipalName to group '$($_.InputObject)' because it is a dynamic group"
                         }
-                        New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $userId
+                        New-MgGroupMemberByRef -GroupId $group.Id -BodyParameter @{
+                            '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$userId"
+                        } | Out-Null
                     }
                     else
                     {
@@ -891,6 +913,14 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -942,6 +972,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]

@@ -71,6 +71,12 @@
         "Get-MgBetaDeviceManagementApplePushNotificationCertificate",
         "Update-MgBetaDeviceManagementApplePushNotificationCertificate"
       ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
     }
   ]
 }

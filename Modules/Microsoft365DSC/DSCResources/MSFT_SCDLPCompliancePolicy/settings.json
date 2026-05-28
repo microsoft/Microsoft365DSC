@@ -45,7 +45,7 @@
     "purview": {
       "requiredroles": {
         "read": [
-        "Security Reader"
+          "Security Reader"
         ],
         "update": [
           "Organization Configuration"

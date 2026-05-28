@@ -27,5 +27,15 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsOnlineApplicationInstance",
+        "New-CsOnlineApplicationInstance",
+        "Set-CsOnlineApplicationInstance"
+      ]
+    }
+  ]
 }

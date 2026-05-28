@@ -72,19 +72,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'com.apple.managedclient.preferences_enabled'
                                 Name = 'enabled'
                                 OffsetUri = 'enabled'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'com.apple.managedclient.preferences_enabled_true'
-                                            name = 'Enabled'
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'true'
-                                            }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'com.apple.managedclient.preferences_enabled_true'
+                                        name = 'Enabled'
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'true'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -92,12 +90,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '9e424cc6-35b9-48ef-863c-73295aa9d2d7'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = 'com.apple.managedclient.preferences_enabled_true'
-                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            choiceSettingValue = @{
+                                children = @()
+                                value = 'com.apple.managedclient.preferences_enabled_true'
                             }
                         }
                     },
@@ -108,11 +104,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'com.apple.managedclient.preferences_disallowedthreatactions'
                                 Name = 'disallowedThreatActions'
                                 OffsetUri = 'disallowedThreatActions'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 0
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 0
                             }
                         )
                         SettingInstance = @{
@@ -120,15 +114,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'd1673a55-f037-4eca-b037-89392341d1b8'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                                simpleSettingCollectionValue = @(
-                                    @{
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                        value = 'disallowed action 1'
-                                    }
-                                )
-                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
+                            simpleSettingCollectionValue = @(
+                                @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                    value = 'disallowed action 1'
+                                }
+                            )
                         }
                     },
                     @{
@@ -138,82 +130,74 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'com.apple.managedclient.preferences_exclusions'
                                 Name = 'exclusions'
                                 OffsetUri = 'exclusions'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    maximumCount = 2147483647
-                                    minimumCount = 1
-                                    childIds = @(
-                                        'com.apple.managedclient.preferences_exclusions_item_$type',
-                                        'com.apple.managedclient.preferences_exclusions_item_extension',
-                                        'com.apple.managedclient.preferences_exclusions_item_name'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                maximumCount = 2147483647
+                                minimumCount = 1
+                                childIds = @(
+                                    'com.apple.managedclient.preferences_exclusions_item_$type',
+                                    'com.apple.managedclient.preferences_exclusions_item_extension',
+                                    'com.apple.managedclient.preferences_exclusions_item_name'
+                                )
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_exclusions_item_$type'
                                 Name = 'exclusions_item_$type'
                                 OffsetUri = 'exclusions_item_$type'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'com.apple.managedclient.preferences_exclusions_item_$type_1'
-                                            name = 'File extension'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.managedclient.preferences_exclusions'
-                                                    parentSettingId = 'com.apple.managedclient.preferences_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'excludedFileExtension'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'com.apple.managedclient.preferences_exclusions_item_$type_1'
+                                        name = 'File extension'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.managedclient.preferences_exclusions'
+                                                parentSettingId = 'com.apple.managedclient.preferences_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'excludedFileExtension'
                                         }
-                                        @{
-                                            itemId = 'com.apple.managedclient.preferences_exclusions_item_$type_2'
-                                            name = 'Process name'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.managedclient.preferences_exclusions'
-                                                    parentSettingId = 'com.apple.managedclient.preferences_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'excludedFileName'
+                                    }
+                                    @{
+                                        itemId = 'com.apple.managedclient.preferences_exclusions_item_$type_2'
+                                        name = 'Process name'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.managedclient.preferences_exclusions'
+                                                parentSettingId = 'com.apple.managedclient.preferences_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'excludedFileName'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_exclusions_item_extension'
                                 Name = 'exclusions_item_extension'
                                 OffsetUri = 'exclusions/[{0}]/extension'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'com.apple.managedclient.preferences_exclusions_item_$type_1'
-                                            parentSettingId = 'com.apple.managedclient.preferences_exclusions_item_$type'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'com.apple.managedclient.preferences_exclusions_item_$type_1'
+                                        parentSettingId = 'com.apple.managedclient.preferences_exclusions_item_$type'
+                                    }
+                                )
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_exclusions_item_name'
                                 Name = 'exclusions_item_name'
                                 OffsetUri = 'exclusions/[{0}]/name'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'com.apple.managedclient.preferences_exclusions_item_$type_2'
-                                            parentSettingId = 'com.apple.managedclient.preferences_exclusions_item_$type'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'com.apple.managedclient.preferences_exclusions_item_$type_2'
+                                        parentSettingId = 'com.apple.managedclient.preferences_exclusions_item_$type'
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -221,53 +205,51 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = 'e2d557ab-357e-4727-978e-0d655facbb23'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'com.apple.managedclient.preferences_exclusions_item_$type'
-                                                choiceSettingValue = @{
-                                                    children = @(
-                                                        @{
-                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                            settingDefinitionId = 'com.apple.managedclient.preferences_exclusions_item_extension'
-                                                            simpleSettingValue = @{
-                                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                value = '.dmg'
-                                                            }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'com.apple.managedclient.preferences_exclusions_item_$type'
+                                            choiceSettingValue = @{
+                                                children = @(
+                                                    @{
+                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                                        settingDefinitionId = 'com.apple.managedclient.preferences_exclusions_item_extension'
+                                                        simpleSettingValue = @{
+                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                            value = '.dmg'
                                                         }
-                                                    )
-                                                    value = 'com.apple.managedclient.preferences_exclusions_item_$type_1'
-                                                }
+                                                    }
+                                                )
+                                                value = 'com.apple.managedclient.preferences_exclusions_item_$type_1'
                                             }
-                                        )
-                                    },
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'com.apple.managedclient.preferences_exclusions_item_$type'
-                                                choiceSettingValue = @{
-                                                    children = @(
-                                                        @{
-                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                                                            settingDefinitionId = 'com.apple.managedclient.preferences_exclusions_item_name'
-                                                            simpleSettingValue = @{
-                                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                                                                value = 'Test'
-                                                            }
+                                        }
+                                    )
+                                },
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'com.apple.managedclient.preferences_exclusions_item_$type'
+                                            choiceSettingValue = @{
+                                                children = @(
+                                                    @{
+                                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                                        settingDefinitionId = 'com.apple.managedclient.preferences_exclusions_item_name'
+                                                        simpleSettingValue = @{
+                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                            value = 'Test'
                                                         }
-                                                    )
-                                                    value = 'com.apple.managedclient.preferences_exclusions_item_$type_2'
-                                                }
+                                                    }
+                                                )
+                                                value = 'com.apple.managedclient.preferences_exclusions_item_$type_2'
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     },
                     @{
@@ -277,63 +259,57 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'com.apple.managedclient.preferences_threattypesettings'
                                 Name = 'threatTypeSettings'
                                 OffsetUri = 'threatTypeSettings'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    maximumCount = 2147483647
-                                    minimumCount = 1
-                                    childIds = @(
-                                        'com.apple.managedclient.preferences_threattypesettings_item_key'
-                                        'com.apple.managedclient.preferences_threattypesettings_item_value'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                maximumCount = 2147483647
+                                minimumCount = 1
+                                childIds = @(
+                                    'com.apple.managedclient.preferences_threattypesettings_item_key'
+                                    'com.apple.managedclient.preferences_threattypesettings_item_value'
+                                )
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_threattypesettings_item_key'
                                 Name = 'threatTypeSettings_item_key'
                                 OffsetUri = 'threatTypeSettings/[{0}]/key'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'com.apple.managedclient.preferences_threattypesettings_item_key_0'
-                                            name = 'potentially_unwanted_application'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.managedclient.preferences_threattypesettings'
-                                                    parentSettingId = 'com.apple.managedclient.preferences_threattypesettings'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'potentially_unwanted_application'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'com.apple.managedclient.preferences_threattypesettings_item_key_0'
+                                        name = 'potentially_unwanted_application'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.managedclient.preferences_threattypesettings'
+                                                parentSettingId = 'com.apple.managedclient.preferences_threattypesettings'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'potentially_unwanted_application'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_threattypesettings_item_value'
                                 Name = 'threatTypeSettings_item_value'
                                 OffsetUri = 'threatTypeSettings/[{0}]/value'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'com.apple.managedclient.preferences_threattypesettings_item_value_0'
-                                            name = 'audit'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.managedclient.preferences_threattypesettings'
-                                                    parentSettingId = 'com.apple.managedclient.preferences_threattypesettings'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'audit'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'com.apple.managedclient.preferences_threattypesettings_item_value_0'
+                                        name = 'audit'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.managedclient.preferences_threattypesettings'
+                                                parentSettingId = 'com.apple.managedclient.preferences_threattypesettings'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'audit'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -341,31 +317,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SettingInstanceTemplateReference = @{
                                 SettingInstanceTemplateId = '2e407734-2d3a-4cc2-9a81-4d1c54718096'
                             }
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(
-                                    @{
-                                        children = @(
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'com.apple.managedclient.preferences_threattypesettings_item_key'
-                                                choiceSettingValue = @{
-                                                    children = @()
-                                                    value = 'com.apple.managedclient.preferences_threattypesettings_item_key_0'
-                                                }
-                                            },
-                                            @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                settingDefinitionId = 'com.apple.managedclient.preferences_threattypesettings_item_value'
-                                                choiceSettingValue = @{
-                                                    children = @()
-                                                    value = 'com.apple.managedclient.preferences_threattypesettings_item_value_0'
-                                                }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(
+                                @{
+                                    children = @(
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'com.apple.managedclient.preferences_threattypesettings_item_key'
+                                            choiceSettingValue = @{
+                                                children = @()
+                                                value = 'com.apple.managedclient.preferences_threattypesettings_item_key_0'
                                             }
-                                        )
-                                    }
-                                )
-                            }
+                                        },
+                                        @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                            settingDefinitionId = 'com.apple.managedclient.preferences_threattypesettings_item_value'
+                                            choiceSettingValue = @{
+                                                children = @()
+                                                value = 'com.apple.managedclient.preferences_threattypesettings_item_value_0'
+                                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     }
                 )
@@ -380,9 +354,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'com.apple.managedclient.preferences_enabled'
                                 Name = 'enabled'
                                 OffsetUri = 'enabled'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                             }
                         )
                         SettingInstance = @{
@@ -396,11 +368,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'com.apple.managedclient.preferences_disallowedthreatactions'
                                 Name = 'disallowedThreatActions'
                                 OffsetUri = 'disallowedThreatActions'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 0
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 0
                             }
                         )
                         SettingInstance = @{
@@ -414,67 +384,61 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'com.apple.managedclient.preferences_exclusions'
                                 Name = 'exclusions'
                                 OffsetUri = 'exclusions'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    maximumCount = 600
-                                    minimumCount = 0
-                                    childIds = @(
-                                        'com.apple.managedclient.preferences_exclusions_item_$type',
-                                        'com.apple.managedclient.preferences_exclusions_item_extension'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                maximumCount = 600
+                                minimumCount = 0
+                                childIds = @(
+                                    'com.apple.managedclient.preferences_exclusions_item_$type',
+                                    'com.apple.managedclient.preferences_exclusions_item_extension'
+                                )
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_exclusions_item_$type'
                                 Name = 'exclusions_item_$type'
                                 OffsetUri = 'exclusions_item_$type'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'com.apple.managedclient.preferences_exclusions_item_$type_1'
-                                            name = 'File extension'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.managedclient.preferences_exclusions'
-                                                    parentSettingId = 'com.apple.managedclient.preferences_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'excludedFileExtension'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'com.apple.managedclient.preferences_exclusions_item_$type_1'
+                                        name = 'File extension'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.managedclient.preferences_exclusions'
+                                                parentSettingId = 'com.apple.managedclient.preferences_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'excludedFileExtension'
                                         }
-                                        @{
-                                            itemId = 'com.apple.managedclient.preferences_exclusions_item_$type_2'
-                                            name = 'Process name'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.managedclient.preferences_exclusions'
-                                                    parentSettingId = 'com.apple.managedclient.preferences_exclusions'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'excludedFileName'
+                                    }
+                                    @{
+                                        itemId = 'com.apple.managedclient.preferences_exclusions_item_$type_2'
+                                        name = 'Process name'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.managedclient.preferences_exclusions'
+                                                parentSettingId = 'com.apple.managedclient.preferences_exclusions'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'excludedFileName'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_exclusions_item_extension'
                                 Name = 'exclusions_item_extension'
                                 OffsetUri = 'exclusions/[{0}]/extension'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
-                                    dependentOn = @(
-                                        @{
-                                            dependentOn = 'com.apple.managedclient.preferences_exclusions_item_$type_1'
-                                            parentSettingId = 'com.apple.managedclient.preferences_exclusions_item_$type'
-                                        }
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                dependentOn = @(
+                                    @{
+                                        dependentOn = 'com.apple.managedclient.preferences_exclusions_item_$type_1'
+                                        parentSettingId = 'com.apple.managedclient.preferences_exclusions_item_$type'
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -488,63 +452,57 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = 'com.apple.managedclient.preferences_threattypesettings'
                                 Name = 'threatTypeSettings'
                                 OffsetUri = 'threatTypeSettings'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
-                                    maximumCount = 2147483647
-                                    minimumCount = 0
-                                    childIds = @(
-                                        'com.apple.managedclient.preferences_threattypesettings_item_key'
-                                        'com.apple.managedclient.preferences_threattypesettings_item_value'
-                                    )
-                                }
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                maximumCount = 2147483647
+                                minimumCount = 0
+                                childIds = @(
+                                    'com.apple.managedclient.preferences_threattypesettings_item_key'
+                                    'com.apple.managedclient.preferences_threattypesettings_item_value'
+                                )
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_threattypesettings_item_key'
                                 Name = 'threatTypeSettings_item_key'
                                 OffsetUri = 'threatTypeSettings/[{0}]/key'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'com.apple.managedclient.preferences_threattypesettings_item_key_0'
-                                            name = 'potentially_unwanted_application'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.managedclient.preferences_threattypesettings'
-                                                    parentSettingId = 'com.apple.managedclient.preferences_threattypesettings'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'potentially_unwanted_application'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'com.apple.managedclient.preferences_threattypesettings_item_key_0'
+                                        name = 'potentially_unwanted_application'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.managedclient.preferences_threattypesettings'
+                                                parentSettingId = 'com.apple.managedclient.preferences_threattypesettings'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'potentially_unwanted_application'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             },
                             @{
                                 Id = 'com.apple.managedclient.preferences_threattypesettings_item_value'
                                 Name = 'threatTypeSettings_item_value'
                                 OffsetUri = 'threatTypeSettings/[{0}]/value'
-                                AdditionalProperties = @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                    options = @(
-                                        @{
-                                            itemId = 'com.apple.managedclient.preferences_threattypesettings_item_value_0'
-                                            name = 'audit'
-                                            dependentOn = @(
-                                                @{
-                                                    dependentOn = 'com.apple.managedclient.preferences_threattypesettings'
-                                                    parentSettingId = 'com.apple.managedclient.preferences_threattypesettings'
-                                                }
-                                            )
-                                            optionValue = @{
-                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
-                                                value = 'audit'
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                options = @(
+                                    @{
+                                        itemId = 'com.apple.managedclient.preferences_threattypesettings_item_value_0'
+                                        name = 'audit'
+                                        dependentOn = @(
+                                            @{
+                                                dependentOn = 'com.apple.managedclient.preferences_threattypesettings'
+                                                parentSettingId = 'com.apple.managedclient.preferences_threattypesettings'
                                             }
+                                        )
+                                        optionValue = @{
+                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                            value = 'audit'
                                         }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         )
                         SettingInstance = @{
@@ -585,12 +543,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -692,7 +646,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

@@ -36,5 +36,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsAppPermissionPolicy",
+        "New-CsTeamsAppPermissionPolicy",
+        "Remove-CsTeamsAppPermissionPolicy",
+        "Set-CsTeamsAppPermissionPolicy"
+      ]
+    }
+  ]
 }

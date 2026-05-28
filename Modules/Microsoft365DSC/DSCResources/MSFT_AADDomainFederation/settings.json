@@ -40,7 +40,6 @@
     }
   },
   "requiredModules": [
-    "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Identity.DirectoryManagement"
   ],
   "supportedEnvironments": [
@@ -55,8 +54,8 @@
         "Get-MgBetaDomain",
         "Get-MgBetaDomainFederationConfiguration",
         "New-MgBetaDomainFederationConfiguration",
-        "Update-MgBetaDomainFederationConfiguration",
-        "Remove-MgBetaDomainFederationConfiguration"
+        "Remove-MgBetaDomainFederationConfiguration",
+        "Update-MgBetaDomainFederationConfiguration"
       ]
     }
   ]

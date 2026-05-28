@@ -70,6 +70,7 @@ namespace Microsoft365DSC.Intune
             // Collect all definitions across all templates
             List<SettingDefinitionInfo> allDefinitions = settingTemplates.SelectMany(t => t.SettingDefinitions).ToList();
             List<Hashtable> settingInstances = [];
+            List<string> processedSettingDefinitionIds = [];
 
             foreach (var settingTemplate in settingTemplates)
             {
@@ -87,6 +88,9 @@ namespace Microsoft365DSC.Intune
 
                 if (settingDefinition is null)
                     continue;
+
+                if (processedSettingDefinitionIds.Contains(settingDefinition.Id))
+                    continue; // Skip if we've already processed this definition via another template
 
                 // Derive setting type: InstanceTemplate -> Instance
                 string settingType = instanceTemplate.ODataType?.Replace("InstanceTemplate", "Instance") ?? string.Empty;
@@ -156,6 +160,7 @@ namespace Microsoft365DSC.Intune
                     ["@odata.type"] = SettingODataType,
                     ["settingInstance"] = settingInstance
                 });
+                processedSettingDefinitionIds.Add(settingDefinition.Id);
             }
 
             return settingInstances.ToArray();
@@ -547,6 +552,11 @@ namespace Microsoft365DSC.Intune
             string settingValueType)
         {
             var result = new Hashtable(StringComparer.OrdinalIgnoreCase);
+
+            if (string.IsNullOrEmpty(settingValueType))
+            {
+                settingValueType = "microsoft.graph.deviceManagementConfigurationChoiceSettingCollection";
+            }
 
             var valueResult = SettingValueResolver.Resolve(
                 settingValueType, settingDefinition, allDefinitions, dscParams);

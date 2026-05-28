@@ -69,19 +69,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Id = 'device_vendor_msft_laps_policies_backupdirectory'
                             Name = 'BackupDirectory'
                             OffsetUri = '/Policies/BackupDirectory'
-                            AdditionalProperties = @{
-                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                                options = @(
-                                    @{
-                                        itemId = 'device_vendor_msft_laps_policies_backupdirectory_1'
-                                        name   = 'Backup the password to Azure AD only'
-                                        optionValue = @{
-                                            '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
-                                            value = 1
-                                        }
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                            options = @(
+                                @{
+                                    itemId = 'device_vendor_msft_laps_policies_backupdirectory_1'
+                                    name   = 'Backup the password to Azure AD only'
+                                    optionValue = @{
+                                        '@odata.type' = "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue"
+                                        value = 1
                                     }
-                                )
-                            }
+                                }
+                            )
                         }
                     )
                     SettingInstance      = @{
@@ -89,15 +87,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SettingInstanceTemplateReference = @{
                             SettingInstanceTemplateId = 'a3270f64-e493-499d-8900-90290f61ed8a'
                         }
-                        AdditionalProperties             = @{
-                            '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                            choiceSettingValue = @{
-                                children = @()
-                                value = "device_vendor_msft_laps_policies_backupdirectory_1"
-                            }
+                        '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                        choiceSettingValue = @{
+                            children = @()
+                            value = "device_vendor_msft_laps_policies_backupdirectory_1"
                         }
                     }
-                    AdditionalProperties = $null
                 }
             }
 
@@ -119,12 +114,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Target   = @{
                         DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
                         DeviceAndAppManagementAssignmentFilterType = 'none'
-                        AdditionalProperties                       = @(
-                            @{
-                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                            }
-                        )
+                        '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                     }
                 })
             }
@@ -255,7 +246,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

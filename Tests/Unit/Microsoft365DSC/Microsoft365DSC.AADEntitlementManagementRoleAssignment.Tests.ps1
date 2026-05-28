@@ -74,10 +74,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AppScopeId       = "/"
                     PrincipalId      = '12345-12345-12345-12345-12345'
                     Principal        = @{
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.user'
-                            userPrincipalName = "John.Smith@contoso.com"
-                        }
+                        '@odata.type' = '#microsoft.graph.user'
+                        userPrincipalName = "John.Smith@contoso.com"
                     }
                     RoleDefinitionId = '12345-12345-12345-12345-12345'
                     DirectoryScopeId = ''

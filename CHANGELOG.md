@@ -1,5 +1,129 @@
 # Change log for Microsoft365DSC
 
+# 1.26.527.1
+
+* AADAccessReviewDefinition
+  * Added new properties `AdditionalNotificationRecipients` and `InstanceEnumerationScope`.
+  * Fixed issues when creating and updating instances of this resource.
+* AADAuthenticationRequirement
+  * Changed resource type from `Configuration` to `Data`.
+* AADCustomAuthenticationExtension
+  * Added missing application update permission `CustomAuthenticationExtension.ReadWrite.All`.
+* AADEntitlementManagementConnectedOrganization
+  * Removed required value `ExternalTenantId`.
+    FIXES [#7102](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7102)
+* AADEntitlementManagementAccessPackageCatalogResource
+  * Changed properties `CatalogId` and `OriginId` to their display name equivalent.
+* AADGroup
+  * Added pause / wait after creating or restoring a group until group is provisioned.
+  * Removed a duplicate update call if a group was newly created.
+* AADPIMGroupSetting
+  * Changed resource type from `Configuration` to `Data`.
+* AADServicePrincipal
+  * Added additional schema definitions for more claims information.
+  * Added support for `groupFilter` in the claims policy.
+    FIXES [#7102](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7102)
+* AADTenantAppManagementPolicy
+  * Changed the `MaxLifetime` property in application + service principal restrictions
+    --> key and password credentials to only include necessary date and time information.
+* EXOCASMailboxSettings
+  * Changed resource type from `Configuration` to `Data`.
+* EXOMailboxCalendarConfiguration
+  * Changed resource type from `Configuration` to `Data`.
+* EXOMailboxIRMAccess
+  * Changed resource type from `Configuration` to `Data`.
+* EXORecipientPermission
+  * Changed resource type from `Configuration` to `Data`.
+* EXOSharedMailbox
+  * Changed resource type from `Configuration` to `Data`.
+* EXOSweepRule
+  * Changed resource type from `Configuration` to `Data`.
+* IntuneAndroidManagedStoreAppConfiguration
+  * Changed property `targetedMobileApps` to use display name instead of app id.
+* IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * Added support for the property `RoleScopeTagIds`.
+* IntuneDeviceCompliancePolicyiOs
+  * Added support for the property `ScheduledActionsForRule`.
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fixed an issue where profiles that didn't match the filter were being exported.
+* IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile
+  * Standardized time format of `TokenExpirationDateTime` and excluded it from comparison.
+* IntunePolicySets
+  * Updated resource to work with multitenants.
+* O365OrgSettings
+  * Fixed handling of Office on the Web SPN in new tenants
+* SCDLPComplianceRule
+  * Fixed an issue where an attempt was made to resolve trainable classifiers with a null Id.
+    FIXES [#7156](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7156)
+* SCDLPSensitiveInformationType
+  * Removed the parameter verbose output to prevent screen cluttering.
+    FIXES [#7145](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7145)
+  * Removed exporting instances that belong to the `SCDLPSensitiveInformationTypeRulePackage`
+    resource type.
+    FIXES [#7144](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7144)
+* SCDLPSensitiveInformationTypeRulePackage
+  * Initial release.
+    FIXES [#7144](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7144)
+* SCInsiderRiskPolicy
+  * Fixed an issue where notification values were tried to be set
+    even though the feature was neither configured nor enabled.
+    FIXES [#7162](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7162)
+* SPOStorageEntity
+  * Fixed an issue where applying entries to a protected app catalog failed.
+    FIXES [#6895](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/6895)
+* SPOTenantCdnPolicy
+  * Fixed an issue where property values were not being returned.
+* TeamsAIPolicy
+  * Added property `PassiveVoiceEnrollment`.
+* TeamsCallQueue
+  * Added properties `TextAnnouncementForCR`, `TextAnnouncementForCRFailure`
+    and `HideAuthorizedUsers`.
+* TeamsCallingPolicy
+  * Added property `ReportCall`.
+* TeamsClientConfiguration
+  * Added properties `ExtendedWorkInfoInPeopleSearch` and `UseUnifiedDomain`.
+* TeamsEventsPolicy
+  * Added properties `BackroomChat`, `ExternalPresenterJoinVerification`, `Registration`
+    and `TownhallMaxResolution`.
+* TeamsFederationConfiguration
+  * Added properties `AllowedTrialTenantDomains` and `BlockAllSubdomains`.
+* TeamsFilesPolicy
+  * Fixed an issue where `DefaultFileUploadAppId` was not exported.
+* TeamsGuestMeetingConfiguration
+  * Added property `AllowMultipleScreenshare`.
+* TeamsMeetingPolicy
+  * Added properties `AllowMultipleScreenshare`, `BackroomChat`, `PasscodeComplexity`
+    and `SetRecordingAndTranscriptOwnership`.
+* TeamsMobilityPolicy
+  * Added property `LinksInTeams`.
+* TeamsNotificationAndFeedsPolicy
+  * Initial release.
+* TeamsTargetingPolicy
+  * Initial release.
+* M365DSCDllLoader
+  * Fixed an issue where an attempt was made to read the `HKLM:` drive on non-Windows systems.
+    FIXES [#7157](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7157)
+* M365DSCReverse
+  * Added functionality to use wildcards in the `-Components` parameter when exporting.
+  * Fixed an issue where the resources to export counter did not match the actual value.
+* C# - SettingCatalogPolicySettingBuilder
+  * Fixed an issue if a setting definition appears multiple times in the same instance template.
+* MISC
+  * Introduced Microsoft Graph shim layer.
+  * Refactored filters on Graph calls to be done on the server side instead of locally.
+  * Streamlined authentication parameters across all resources and added `CertificatePath`
+    and `CertificatePassword` to supported resources.
+    FIXES [#7147](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7147)
+* Dependencies
+  * Removed all `Microsoft.Graph.*` dependencies except for `Microsoft.Graph.Authentication`.
+  * Updated `MSCloudLoginAssistant` to version 1.1.66.
+    FIXES [#7154](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7154)
+  * Updated `Az.Accounts` to version 5.3.2.
+    FIXES [#7143](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7143)
+  * Updated `Az.Resources` to version 9.0.1.
+  * Updated `Az.Security` to version 1.8.0.
+  * Updated `Az.SecurityInsights` to version 3.2.1.
+
 # 1.26.520.1
 
 * AADConditionalAccessPolicy

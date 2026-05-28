@@ -75,6 +75,10 @@ function Get-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -99,7 +103,6 @@ function Get-TargetResource
                 -Parameters $PSBoundParameters
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
-
 
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
@@ -132,13 +135,14 @@ function Get-TargetResource
             RetentionComplianceAction    = $RetentionComplianceActionValue
             RetentionDurationDisplayHint = $RuleObject.RetentionDurationDisplayHint
             ExpirationDateOption         = $RuleObject.ExpirationDateOption
+            Ensure                       = 'Present'
             Credential                   = $Credential
             ApplicationId                = $ApplicationId
             TenantId                     = $TenantId
             CertificateThumbprint        = $CertificateThumbprint
             CertificatePath              = $CertificatePath
             CertificatePassword          = $CertificatePassword
-            Ensure                       = 'Present'
+            ManagedIdentity              = $ManagedIdentity.IsPresent
             AccessTokens                 = $AccessTokens
         }
         if (-not $associatedPolicy.TeamsPolicy)
@@ -234,6 +238,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
@@ -455,6 +463,10 @@ function Test-TargetResource
         $CertificatePassword,
 
         [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -502,6 +514,10 @@ function Export-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
 
         [Parameter()]
         [System.String[]]
