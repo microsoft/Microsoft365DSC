@@ -42,6 +42,7 @@
       "module": "MicrosoftTeams",
       "cmdlets": [
         "Get-CsCallQueue",
+        "Get-CsOnlineUser",
         "New-CsCallQueue",
         "Remove-CsCallQueue",
         "Set-CsCallQueue"

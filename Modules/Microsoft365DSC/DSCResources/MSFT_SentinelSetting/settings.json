@@ -32,11 +32,19 @@
     }
   },
   "requiredModules": [
+    "Az.Accounts",
     "Az.Resources",
     "Az.SecurityInsights"
   ],
   "mode": "Data",
   "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Connect-AzAccount",
+        "Register-AzModule"
+      ]
+    },
     {
       "module": "Az.Resources",
       "cmdlets": [

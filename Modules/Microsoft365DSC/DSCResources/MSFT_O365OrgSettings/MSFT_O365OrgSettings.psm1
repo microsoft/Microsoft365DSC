@@ -619,7 +619,7 @@ function Set-TargetResource
         $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
         $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
         Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
-            -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
+            -BodyParameter @{ accountEnabled = $M365WebEnableUsersToOpenFilesFrom3PStorage }
     }
     if (($PSBoundParameters.ContainsKey('PlannerAllowCalendarSharing') -and `
             ($PlannerAllowCalendarSharing -ne $currentValues.PlannerAllowCalendarSharing)) -or `
@@ -643,7 +643,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Updating the Cortana setting to {$CortanaEnabled}"
             Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
-                -AccountEnabled:$CortanaEnabled
+                -BodyParameter @{ accountEnabled = $CortanaEnabled }
         }
     }
 

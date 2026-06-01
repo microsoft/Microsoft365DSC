@@ -47,6 +47,7 @@
     "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.DirectoryObjects",
     "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Groups",
     "Microsoft.Graph.Users",
     "MSCloudLoginAssistant"
   ],

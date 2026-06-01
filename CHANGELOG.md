@@ -2,6 +2,37 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Improved handling of multiple custom security attributes instead of just one
+    in `ServicePrincipalFilterRule`.
+* AADFilteringPolicyRule
+  * Fixed an issue where an incorrect number of instances to export was shown.
+* AzureRoleDefinition
+  * Initial Release
+    FIXES [#7077](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7077)
+* EXOReportSubmissionPolicy
+  * Removed export line for the configuration because it is single instance.
+* IntuneDeviceCompliancePolicyiOS
+  * Fixed an issue when omitting `ScheduledActionsForRule` during creation.
+* IntuneDeviceCompliancePolicyMacOS
+  * Fixed an issue when omitting `ScheduledActionsForRule` during creation.
+* IntuneDeviceConfigurationPolicyAndroidOpenSourceProject
+  * Fixed an issue when updating an instance of the resource.
+* IntuneRoleDefinition
+  * Fixed an issue when omitting `notAllowedResourceActions`.
+* O365OrgSettings
+  * Fixed an issue when updating the `Office Online Unused API` service principal.
+    FIXES [#7175](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7175)
+* M365DSCPermissions
+  * Fixed an issue when updating app permissions.
+    FIXES [#7182](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7182)
+* M365DSCReverse
+  * Fixed an issue where the number of resources to export could be wrong.
+* MISC
+  * Fixed an issue where `Az.Accounts` failed to import.
+
+# 1.26.527.1
+
 * AADAccessReviewDefinition
   * Added new properties `AdditionalNotificationRecipients` and `InstanceEnumerationScope`.
   * Fixed issues when creating and updating instances of this resource.

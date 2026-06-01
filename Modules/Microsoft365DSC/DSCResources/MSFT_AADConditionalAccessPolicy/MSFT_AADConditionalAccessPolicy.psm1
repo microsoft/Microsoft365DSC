@@ -1536,28 +1536,40 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process servicePrincipalFilter'
         if ($currentParameters.ContainsKey('ServicePrincipalFilterMode') -and $currentParameters.ContainsKey('ServicePrincipalFilterRule'))
         {
-            #check if the custom attribute exist.
-            $customattribute = Invoke-MgGraphRequest -Method GET -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'v1.0/directory/customSecurityAttributeDefinitions')
-            $ServicePrincipalFilterRule -match 'CustomSecurityAttribute.(?<attribute>.*) -.*'
-            $attrinrule = $matches.attribute
-            if ($customattribute.value.id -contains $attrinrule)
-            {
-                if (-not $conditions.ContainsKey('clientApplications'))
-                {
+            $attributeMatches = [regex]::Matches($ServicePrincipalFilterRule, 'CustomSecurityAttribute\.(\w+)')
+            $referencedAttributes = $attributeMatches | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
+
+            $missingAttributes = @()
+            if ($referencedAttributes.Count -gt 0) {
+                try {
+                    $customAttributeResponse = Invoke-MgGraphRequest -Method GET `
+                        -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'v1.0/directory/customSecurityAttributeDefinitions')
+                    $missingAttributes = $referencedAttributes | Where-Object { $_ -notin $customAttributeResponse.value.id }
+                }
+                catch {
+                    $message = "Failed to retrieve custom security attribute definitions: $_"
+                    Write-Verbose -Message $message
+                    New-M365DSCLogEntry -Message $message -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId -Credential $Credential
+                    throw $message
+                }
+            }
+
+            if ($missingAttributes.Count -gt 0) {
+                $message = "Couldn't find custom attribute(s) '$($missingAttributes -join "', '")' in the tenant. Filter not applied to policy '$DisplayName'."
+                Write-Verbose -Message $message
+                New-M365DSCLogEntry -Message $message -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId -Credential $Credential
+                throw $message
+            }
+            else {
+                # Only reachable when ALL referenced attributes are validated
+                if (-not $conditions.ContainsKey('clientApplications')) {
                     $conditions.Add('clientApplications', @{})
                 }
                 $conditions.clientApplications.Add('servicePrincipalFilter', @{})
                 $conditions.clientApplications.servicePrincipalFilter.Add('mode', $ServicePrincipalFilterMode)
                 $conditions.clientApplications.servicePrincipalFilter.Add('rule', $ServicePrincipalFilterRule)
-            }
-            else
-            {
-                $message = "Couldn't find the custom attribute $attrinrule in the tenant, couldn't add the filter to policy $DisplayName"
-                Write-Verbose -Message $message
-                New-M365DSCLogEntry -Message $message `
-                    -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $TenantId `
-                    -Credential $Credential
             }
         }
 

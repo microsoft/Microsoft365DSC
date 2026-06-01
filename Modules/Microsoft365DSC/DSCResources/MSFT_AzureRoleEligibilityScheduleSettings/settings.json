@@ -73,7 +73,9 @@
     {
       "module": "Az.Accounts",
       "cmdlets": [
-        "Invoke-AzRestMethod"
+        "Connect-AzAccount",
+        "Invoke-AzRestMethod",
+        "Register-AzModule"
       ]
     },
     {

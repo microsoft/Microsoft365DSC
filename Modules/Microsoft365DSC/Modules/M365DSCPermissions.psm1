@@ -960,8 +960,8 @@ function Update-M365DSCAzureAdApplication
                     if ([System.Guid]::TryParse($permission.PermissionName , [ref][System.Guid]::Empty))
                     {
                         $appPermission = @{
-                            Id   = $permission.PermissionName
-                            Type = 'Role'
+                            id   = $permission.PermissionName
+                            type = 'Role'
                         }
                     }
                     else
@@ -972,8 +972,8 @@ function Update-M365DSCAzureAdApplication
                 else
                 {
                     $appPermission = @{
-                        Id   = $role.Id
-                        Type = 'Role'
+                        id   = $role.Id
+                        type = 'Role'
                     }
                 }
                 $allRequiredAccess.($svcprincipal.AppId) += $appPermission
@@ -988,23 +988,23 @@ function Update-M365DSCAzureAdApplication
         foreach ($provider in $allRequiredAccess.Keys)
         {
             $valueToAdd = @{
-                ResourceAppId  = $provider
-                ResourceAccess = @()
+                resourceAppId  = $provider
+                resourceAccess = @()
             }
 
             foreach ($permissionEntry in $allRequiredAccess.$provider)
             {
                 $permissionToAdd = @{
-                    Type = $permissionEntry.Type
-                    Id   = $permissionEntry.Id
+                    type = $permissionEntry.type
+                    id   = $permissionEntry.id
                 }
-                $valueToAdd.ResourceAccess += $permissionToAdd
+                $valueToAdd.resourceAccess += $permissionToAdd
             }
             $requiredResourceAccess += $valueToAdd
         }
 
         Update-MgApplication -ApplicationId ($azureADApp.Id) `
-            -RequiredResourceAccess $requiredResourceAccess | Out-Null
+            -BodyParameter @{ requiredResourceAccess = $requiredResourceAccess } | Out-Null
 
         Write-LogEntry '    Permission updated for application'
 
@@ -1096,7 +1096,9 @@ function Update-M365DSCAzureAdApplication
                         displayName = 'Created by Microsoft365DSC'
                         endDateTime = $endDate
                     }
-                    $appCred = Add-MgApplicationPassword -ApplicationId $azureADApp.Id -PasswordCredential $passwordCred
+                    $appCred = Add-MgApplicationPassword -ApplicationId $azureADApp.Id -BodyParameter @{
+                        passwordCredential = $passwordCred
+                    }
                 }
             }
             'Certificate'
@@ -1159,9 +1161,9 @@ function Update-M365DSCAzureAdApplication
 
                     Write-LogEntry "    Certificate details: $($cerCert.Subject) ($($cerCert.Thumbprint))"
                     $params = @{
-                        Type  = 'AsymmetricX509Cert'
-                        Usage = 'Verify'
-                        Key   = $cerCert.GetRawCertData()
+                        type  = 'AsymmetricX509Cert'
+                        usage = 'Verify'
+                        key   = $cerCert.GetRawCertData()
                     }
 
                     $maxRetries = 3
@@ -1172,7 +1174,9 @@ function Update-M365DSCAzureAdApplication
                     {
                         try
                         {
-                            $appCred = Update-MgApplication -ApplicationId $azureAdApp.Id -KeyCredentials $params -ErrorAction Stop
+                            $appCred = Update-MgApplication -ApplicationId $azureAdApp.Id -BodyParameter @{
+                                keyCredentials = $params
+                            } -ErrorAction Stop
                             break # exit the loop if the operation succeeds
                         }
                         catch

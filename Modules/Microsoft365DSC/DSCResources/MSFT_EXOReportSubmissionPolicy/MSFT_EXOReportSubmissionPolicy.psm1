@@ -659,18 +659,8 @@ function Export-TargetResource
     try
     {
         $ReportSubmissionPolicy = Get-ReportSubmissionPolicy -ErrorAction Stop
-        if ($ReportSubmissionPolicy.Length -eq 0)
-        {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-        }
-        else
-        {
-            Write-M365DSCHost -Message "`r`n" -DeferWrite
-        }
+
         $dscContent = [System.Text.StringBuilder]::new()
-
-        Write-M365DSCHost -Message '    |---Export Default ReportSubmissionPolicy' -DeferWrite
-
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
             $Global:M365DSCExportResourceInstancesCount++
