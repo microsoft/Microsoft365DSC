@@ -47,7 +47,9 @@
     {
       "module": "Az.Accounts",
       "cmdlets": [
-        "Get-AzSubscription"
+        "Connect-AzAccount",
+        "Get-AzSubscription",
+        "Register-AzModule"
       ]
     },
     {

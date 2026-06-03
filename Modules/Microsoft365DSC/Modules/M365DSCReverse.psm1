@@ -754,7 +754,7 @@ function Start-M365DSCConfigurationExtract
             if ($using:ComponentsToSkip -notcontains $resourceName)
             {
                 $counter = ($using:synchronizedHashtable).ResourceCounter++
-                Write-M365DSCHost -Message "[$counter/$($using:ResourcesToExport.Length - $using:ComponentsToSkip.Count)] Extracting [" -DeferWrite
+                Write-M365DSCHost -Message "[$counter/$($using:ResourcesToExport.Length)] Extracting [" -DeferWrite
                 Write-M365DSCHost -Message $resourceName -ForegroundColor Green -DeferWrite
                 Write-M365DSCHost -Message '] using {' -DeferWrite
                 Write-M365DSCHost -Message $mostSecureAuthMethod -ForegroundColor Cyan -DeferWrite

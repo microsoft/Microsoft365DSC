@@ -25,6 +25,17 @@
       }
     }
   },
-  "requiredModules": [],
-  "mode": "Configuration"
+  "requiredModules": [
+    "Az.Accounts"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Connect-AzAccount",
+        "Register-AzModule"
+      ]
+    }
+  ]
 }

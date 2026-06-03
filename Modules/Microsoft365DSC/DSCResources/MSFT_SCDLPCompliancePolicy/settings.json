@@ -61,7 +61,9 @@
       }
     }
   },
-  "requiredModules": [],
+  "requiredModules": [
+    "Microsoft.Graph.Groups"
+  ],
   "supportedEnvironments": [
     "Global",
     "USGov"

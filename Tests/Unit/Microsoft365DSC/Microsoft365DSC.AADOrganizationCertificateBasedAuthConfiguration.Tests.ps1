@@ -46,7 +46,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             IsRootAuthority = $True
                             CertificateRevocationListUrl = "FakeStringValue"
                             Issuer = "FakeStringValue"
-                            Certificate = [byte[]] @(84, 101, 115, 116) # "Test"
+                            Certificate = "VGVzdA==" # "Test"
                         }
                     )
                     Id = "FakeStringValue"

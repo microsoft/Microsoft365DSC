@@ -274,8 +274,14 @@ function Set-TargetResource
         }
         $resourceActions = @{
             '@odata.type'             = 'microsoft.graph.resourceAction'
-            notAllowedResourceActions = $notAllowedResourceActions
-            allowedResourceActions    = $allowedResourceActions
+        }
+        if ($PSBoundParameters.ContainsKey('allowedResourceActions'))
+        {
+            $resourceActions.Add('allowedResourceActions', $allowedResourceActions)
+        }
+        if ($PSBoundParameters.ContainsKey('notAllowedResourceActions'))
+        {
+            $resourceActions.Add('notAllowedResourceActions', $notAllowedResourceActions)
         }
         $rolepermission = @{
             '@odata.type'   = 'microsoft.graph.rolePermission'
@@ -291,7 +297,6 @@ function Set-TargetResource
         }
 
         $policy = New-MgBetaDeviceManagementRoleDefinition -BodyParameter $CreateParameters
-
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -310,8 +315,14 @@ function Set-TargetResource
         }
         $resourceActions = @{
             '@odata.type'             = 'microsoft.graph.resourceAction'
-            notAllowedResourceActions = $notAllowedResourceActions
-            allowedResourceActions    = $allowedResourceActions
+        }
+        if ($PSBoundParameters.ContainsKey('allowedResourceActions'))
+        {
+            $resourceActions.Add('allowedResourceActions', $allowedResourceActions)
+        }
+        if ($PSBoundParameters.ContainsKey('notAllowedResourceActions'))
+        {
+            $resourceActions.Add('notAllowedResourceActions', $notAllowedResourceActions)
         }
         $rolepermission = @{
             '@odata.type'   = 'microsoft.graph.rolePermission'

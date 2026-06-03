@@ -1,9 +1,15 @@
 {
-  "resourceName": "SentinelAlertRule",
-  "description": "Configures alert rules in Azure Sentinel.",
+  "resourceName": "AzureRoleDefinition",
+  "description": "Manages Azure RBAC custom role definitions across management group, subscription, and resource group scopes.",
   "roles": {
-    "read": [],
-    "update": []
+    "read": [
+      "User Access Administrator",
+      "Owner"
+    ],
+    "update": [
+      "User Access Administrator",
+      "Owner"
+    ]
   },
   "permissions": {
     "Azure Service Management": {
@@ -23,32 +29,33 @@
         "read": [],
         "update": []
       }
-    },
-    "azure": {
-      "requiredRoles": [
-        "Microsoft Sentinel Reader",
-        "Microsoft Sentinel Contributor"
-      ]
     }
   },
   "requiredModules": [
     "Az.Accounts",
     "Az.Resources"
   ],
-  "mode": "Configuration",
+  "supportedEnvironments": [
+    "Global",
+    "USGov",
+    "USGovDoD"
+  ],
+  "mode": "Data",
   "commands": [
     {
       "module": "Az.Accounts",
       "cmdlets": [
         "Connect-AzAccount",
-        "Invoke-AzRestMethod",
         "Register-AzModule"
       ]
     },
     {
       "module": "Az.Resources",
       "cmdlets": [
-        "Get-AzResource"
+        "Get-AzRoleDefinition",
+        "New-AzRoleDefinition",
+        "Remove-AzRoleDefinition",
+        "Set-AzRoleDefinition"
       ]
     }
   ]

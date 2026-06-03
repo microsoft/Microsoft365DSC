@@ -451,7 +451,7 @@ function Export-TargetResource
 
     try
     {
-        $policies = Get-MgBetaNetworkAccessFilteringPolicy -All -Filter $Filter -ErrorAction Stop
+        [array]$policies = Get-MgBetaNetworkAccessFilteringPolicy -All -Filter $Filter -ErrorAction Stop
 
         $i = 1
         $dscContent = [System.Text.StringBuilder]::new()
@@ -467,7 +467,7 @@ function Export-TargetResource
         {
             $displayedKey = $policy.Name
             Write-M365DSCHost -Message "    |---[$i/$($policies.Count)] $displayedKey" -DeferWrite
-            $rules = Get-MgBetaNetworkAccessFilteringPolicyRule -FilteringPolicyId $policy.Id `
+            [array]$rules = Get-MgBetaNetworkAccessFilteringPolicyRule -FilteringPolicyId $policy.Id `
                 -ErrorAction SilentlyContinue
             if ($rules.Length -eq 0)
             {

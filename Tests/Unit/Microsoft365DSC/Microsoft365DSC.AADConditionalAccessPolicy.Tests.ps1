@@ -455,6 +455,308 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'ServicePrincipal filter with a single custom security attribute that exists in the tenant' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName                  = 'Allin'
+                    Ensure                       = 'Present'
+                    Credential                   = $Credscredential
+                    State                        = 'disabled'
+                    IncludeApplications          = @('All')
+                    IncludeUsers                 = 'All'
+                    ServicePrincipalFilterMode   = 'include'
+                    ServicePrincipalFilterRule   = "CustomSecurityAttribute.AttributeSet_MyAttribute -eq 'Value1'"
+                }
+
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
+                    return @{
+                        Id          = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                        DisplayName = 'Allin'
+                        State       = 'disabled'
+                        Conditions  = @{
+                            Applications        = @{
+                                IncludeApplications = @('All')
+                            }
+                            Users               = @{
+                                IncludeUsers = 'All'
+                            }
+                            ClientApplications  = @{
+                                IncludeServicePrincipals = @()
+                                ExcludeServicePrincipals = @()
+                                ServicePrincipalFilter   = @{
+                                    Mode = 'include'
+                                    Rule = "CustomSecurityAttribute.AttributeSet_MyAttribute -eq 'Value1'"
+                                }
+                            }
+                        }
+                        GrantControls   = $null
+                        SessionControls = $null
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return @{
+                        value = @(
+                            @{ id = 'AttributeSet_MyAttribute' }
+                        )
+                    }
+                }
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return the correct ServicePrincipalFilterMode from Get' {
+                (Get-TargetResource @testParams).ServicePrincipalFilterMode | Should -Be 'include'
+            }
+
+            It 'Should return the correct ServicePrincipalFilterRule from Get' {
+                (Get-TargetResource @testParams).ServicePrincipalFilterRule | Should -Be "CustomSecurityAttribute.AttributeSet_MyAttribute -eq 'Value1'"
+            }
+
+            It 'Should return true from the Test method when in desired state' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+
+            It 'Should call Invoke-MgGraphRequest for validation and update when applying the filter' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1 -ParameterFilter { $Method -eq 'GET' }
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1 -ParameterFilter { $Method -eq 'PATCH' }
+            }
+        }
+
+        Context -Name 'ServicePrincipal filter with multiple custom security attributes that all exist in the tenant' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName                  = 'Allin'
+                    Ensure                       = 'Present'
+                    Credential                   = $Credscredential
+                    State                        = 'disabled'
+                    IncludeApplications          = @('All')
+                    IncludeUsers                 = 'All'
+                    ServicePrincipalFilterMode   = 'exclude'
+                    ServicePrincipalFilterRule   = "CustomSecurityAttribute.Set1_AttrA -eq 'Foo' -or CustomSecurityAttribute.Set2_AttrB -eq 'Bar'"
+                }
+
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
+                    return @{
+                        Id          = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                        DisplayName = 'Allin'
+                        State       = 'disabled'
+                        Conditions  = @{
+                            Applications        = @{
+                                IncludeApplications = @('All')
+                            }
+                            Users               = @{
+                                IncludeUsers = 'All'
+                            }
+                            ClientApplications  = @{
+                                IncludeServicePrincipals = @()
+                                ExcludeServicePrincipals = @()
+                                ServicePrincipalFilter   = @{
+                                    Mode = 'exclude'
+                                    Rule = "CustomSecurityAttribute.Set1_AttrA -eq 'Foo' -or CustomSecurityAttribute.Set2_AttrB -eq 'Bar'"
+                                }
+                            }
+                        }
+                        GrantControls   = $null
+                        SessionControls = $null
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return @{
+                        value = @(
+                            @{ id = 'Set1_AttrA' }
+                            @{ id = 'Set2_AttrB' }
+                        )
+                    }
+                }
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return the correct ServicePrincipalFilterMode from Get' {
+                (Get-TargetResource @testParams).ServicePrincipalFilterMode | Should -Be 'exclude'
+            }
+
+            It 'Should return the correct ServicePrincipalFilterRule from Get' {
+                (Get-TargetResource @testParams).ServicePrincipalFilterRule | Should -Be "CustomSecurityAttribute.Set1_AttrA -eq 'Foo' -or CustomSecurityAttribute.Set2_AttrB -eq 'Bar'"
+            }
+
+            It 'Should return true from the Test method when in desired state' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+
+            It 'Should call Invoke-MgGraphRequest for validation and update when applying the filter' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1 -ParameterFilter { $Method -eq 'GET' }
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1 -ParameterFilter { $Method -eq 'PATCH' }
+            }
+        }
+
+        Context -Name 'ServicePrincipal filter with a custom security attribute that does not exist in the tenant' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName                  = 'Allin'
+                    Ensure                       = 'Present'
+                    Credential                   = $Credscredential
+                    State                        = 'disabled'
+                    IncludeApplications          = @('All')
+                    IncludeUsers                 = 'All'
+                    ServicePrincipalFilterMode   = 'include'
+                    ServicePrincipalFilterRule   = "CustomSecurityAttribute.AttributeSet_NonExistent -eq 'Value1'"
+                }
+
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
+                    return $null
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return @{
+                        value = @()
+                    }
+                }
+            }
+
+            It 'Should return absent from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
+            }
+
+            It 'Should throw when applying a filter that references a missing custom attribute' {
+                { Set-TargetResource @testParams } | Should -Throw
+            }
+        }
+
+        Context -Name 'ServicePrincipal filter drift - mode changed' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName                  = 'Allin'
+                    Ensure                       = 'Present'
+                    Credential                   = $Credscredential
+                    State                        = 'disabled'
+                    IncludeApplications          = @('All')
+                    IncludeUsers                 = 'All'
+                    ServicePrincipalFilterMode   = 'exclude'
+                    ServicePrincipalFilterRule   = "CustomSecurityAttribute.AttributeSet_MyAttribute -eq 'Value1'"
+                }
+
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
+                    return @{
+                        Id          = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                        DisplayName = 'Allin'
+                        State       = 'disabled'
+                        Conditions  = @{
+                            Applications        = @{
+                                IncludeApplications = @('All')
+                            }
+                            Users               = @{
+                                IncludeUsers = 'All'
+                            }
+                            ClientApplications  = @{
+                                IncludeServicePrincipals = @()
+                                ExcludeServicePrincipals = @()
+                                ServicePrincipalFilter   = @{
+                                    Mode = 'include'  # drifted - policy has 'include', desired is 'exclude'
+                                    Rule = "CustomSecurityAttribute.AttributeSet_MyAttribute -eq 'Value1'"
+                                }
+                            }
+                        }
+                        GrantControls   = $null
+                        SessionControls = $null
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return @{
+                        value = @(
+                            @{ id = 'AttributeSet_MyAttribute' }
+                        )
+                    }
+                }
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method when ServicePrincipalFilterMode has drifted' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should validate attributes and update the policy from the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1 -ParameterFilter { $Method -eq 'GET' }
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1 -ParameterFilter { $Method -eq 'PATCH' }
+            }
+        }
+
+        Context -Name 'ServicePrincipal filter drift - rule changed' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName                  = 'Allin'
+                    Ensure                       = 'Present'
+                    Credential                   = $Credscredential
+                    State                        = 'disabled'
+                    IncludeApplications          = @('All')
+                    IncludeUsers                 = 'All'
+                    ServicePrincipalFilterMode   = 'include'
+                    ServicePrincipalFilterRule   = "CustomSecurityAttribute.AttributeSet_MyAttribute -eq 'NewValue'"
+                }
+
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
+                    return @{
+                        Id          = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                        DisplayName = 'Allin'
+                        State       = 'disabled'
+                        Conditions  = @{
+                            Applications        = @{
+                                IncludeApplications = @('All')
+                            }
+                            Users               = @{
+                                IncludeUsers = 'All'
+                            }
+                            ClientApplications  = @{
+                                IncludeServicePrincipals = @()
+                                ExcludeServicePrincipals = @()
+                                ServicePrincipalFilter   = @{
+                                    Mode = 'include'
+                                    Rule = "CustomSecurityAttribute.AttributeSet_MyAttribute -eq 'OldValue'"  # drifted
+                                }
+                            }
+                        }
+                        GrantControls   = $null
+                        SessionControls = $null
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return @{
+                        value = @(
+                            @{ id = 'AttributeSet_MyAttribute' }
+                        )
+                    }
+                }
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method when ServicePrincipalFilterRule has drifted' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should validate attributes and update the policy from the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1 -ParameterFilter { $Method -eq 'GET' }
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1 -ParameterFilter { $Method -eq 'PATCH' }
+            }
+        }
+
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true

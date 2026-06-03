@@ -168,11 +168,11 @@ function Get-TargetResource
             {
                 if (-not [String]::IsNullOrEmpty($Id))
                 {
-                    Write-Verbose -Message "Nothing with id {$Id} was found"
+                    Write-Verbose -Message "No Intune Device Configuration Policy Android Open Source Project with Id {$Id} was found"
                 }
                 else
                 {
-                    Write-Verbose -Message "Nothing with display name {$DisplayName} was found"
+                    Write-Verbose -Message "No Intune Device Configuration Policy Android Open Source Project with DisplayName {$DisplayName} was found"
                 }
 
                 return $nullResult
@@ -183,9 +183,8 @@ function Get-TargetResource
             $getValue = $Script:exportedInstance
         }
 
-        Write-Verbose -Message "Found something with id {$($getValue.Id)}"
+        Write-Verbose -Message "An Intune Device Configuration Policy Android Open Source Project with Id {$($getValue.Id)} and DisplayName {$($getValue.DisplayName)} was found"
         $results = @{
-
             #region resource generator code
             Id                                             = $getValue.Id
             Description                                    = $getValue.Description
@@ -382,19 +381,19 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating {$DisplayName}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        Write-Verbose -Message "Creating an Intune Device Configuration Policy Android Open Source Project with DisplayName {$DisplayName}"
+        $boundParameters.Remove('Assignments') | Out-Null
 
-        $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Remove('Id') | Out-Null
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.aospDeviceOwnerDeviceConfiguration')
+        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
+        $createParameters.Remove('Id') | Out-Null
+        $createParameters.Add('@odata.type', '#microsoft.graph.aospDeviceOwnerDeviceConfiguration')
 
         #region resource generator code
-        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $createParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
@@ -407,15 +406,16 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$DisplayName}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        Write-Verbose -Message "Updating an Intune Device Configuration Policy Android Open Source Project with DisplayName {$DisplayName}"
+        $boundParameters.Remove('Assignments') | Out-Null
 
-        $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-        $UpdateParameters.Remove('Id') | Out-Null
+        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
+        $updateParameters.Remove('Id') | Out-Null
+        $updateParameters.Add('@odata.type', '#microsoft.graph.aospDeviceOwnerDeviceConfiguration')
 
         #region resource generator code
-        Update-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
+        Write-Verbose $($updateParameters | convertto-json -Depth 10) -Verbose
+        Update-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $updateParameters `
             -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `

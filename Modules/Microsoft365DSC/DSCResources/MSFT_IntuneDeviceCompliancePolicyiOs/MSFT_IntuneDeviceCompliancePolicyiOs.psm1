@@ -465,6 +465,16 @@ function Set-TargetResource
             scheduledActionConfigurations = @()
         }
     )
+    $baseScheduledActionConfiguration = @{
+        ActionType       = 'block'
+        GracePeriodHours = 0
+        NotificationMessageCCList = @()
+        NotificationTemplateId = ""
+    }
+    if ($null -eq $boundParameters.ScheduledActionsForRule -or $boundParameters.ScheduledActionsForRule.Count -eq 0)
+    {
+        $boundParameters.ScheduledActionsForRule = @($baseScheduledActionConfiguration)
+    }
     foreach ($scheduledAction in $boundParameters.ScheduledActionsForRule)
     {
         $actionConfiguration = @{

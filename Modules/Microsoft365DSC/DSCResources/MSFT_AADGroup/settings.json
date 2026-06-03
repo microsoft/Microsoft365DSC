@@ -160,6 +160,7 @@
     {
       "module": "Microsoft.Graph.Groups",
       "cmdlets": [
+        "Get-MgGroupMember",
         "New-MgGroup",
         "New-MgGroupMemberByRef",
         "New-MgGroupOwnerByRef",
