@@ -7,6 +7,8 @@
     in `ServicePrincipalFilterRule`.
 * AADFilteringPolicyRule
   * Fixed an issue where an incorrect number of instances to export was shown.
+* AADOrganizationCertificateBasedAuthConfiguration
+  * Fixed an issue where the `Certificate` property was incorrectly converted using `ToBase64String` when the Graph SDK already returns it as a Base64 string. FIXES [#7193]                                       
 * AzureRoleDefinition
   * Initial Release
     FIXES [#7077](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7077)
