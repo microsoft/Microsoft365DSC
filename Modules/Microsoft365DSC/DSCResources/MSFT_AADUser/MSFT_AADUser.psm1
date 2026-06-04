@@ -225,14 +225,14 @@ function Get-TargetResource
                 method = 'GET'
                 url    = "/users/$($UserPrincipalName)/licenseDetails"
             }
-            @{
-                id      = 'MemberOf'
-                method  = 'GET'
-                url     = "/users/$($UserPrincipalName)/memberOf?`$select=displayName&`$filter=not(groupTypes/any(c:c eq 'DynamicMembership'))"
-                headers = @{
-                    'ConsistencyLevel' = 'eventual'
-                }
+        @{
+            id      = 'MemberOf'
+            method  = 'GET'
+            url     = "/users/$($UserPrincipalName)/memberOf/microsoft.graph.group?`$select=displayName,groupTypes"
+            headers = @{
+            'ConsistencyLevel' = 'eventual'
             }
+        }
         )
         $batchResponse = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests
 
@@ -253,8 +253,10 @@ function Get-TargetResource
             $currentLicenseAssignment += $sku.SkuPartNumber
         }
 
-        # return membership of static groups only
-        [array]$currentMemberOf = ($batchResponse | Where-Object -FilterScript { $_.id -eq 'MemberOf' }).body.value.DisplayName
+        # return membership of static groups only, excluding dynamic groups and Administrative Units
+        [array]$currentMemberOf = ($batchResponse | Where-Object -FilterScript { $_.id -eq 'MemberOf' }).body.value |
+            Where-Object { $_.groupTypes -notcontains 'DynamicMembership' } |
+            Select-Object -ExpandProperty DisplayName
 
         $userPasswordPolicyInfo = $user | Select-Object UserprincipalName, @{
             N = 'PasswordNeverExpires'; E = { $_.PasswordPolicies -contains 'DisablePasswordExpiration' }
@@ -719,10 +721,21 @@ function Set-TargetResource
                     }
                     else
                     {
-
-                        # Group that user is a member of is not present in MemberOf, remove user from group
-                        # (no need to test for dynamic groups as they are ignored in Get-TargetResource)
-                        Remove-MgGroupMemberDirectoryObjectByRef -GroupId $group.Id -DirectoryObjectId $userId
+                    # Group that user is a member of is not present in MemberOf, remove user from group
+                    # (no need to test for dynamic groups as they are ignored in Get-TargetResource)
+                    if ($null -ne $group)
+                    {
+                    Remove-MgGroupMemberDirectoryObjectByRef -GroupId $group.Id -DirectoryObjectId $userId
+                    }
+                    else
+                    {
+                    Write-Verbose -Message "Skipping removal of '$($_.InputObject)': not found as a group object (may be an Administrative Unit)."
+                    New-M365DSCLogEntry -Message 'Error updating data:' `
+                    -Exception "Skipping non-group object during member removal: '$($_.InputObject)'" `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+                    }
                     }
                 }
             }
