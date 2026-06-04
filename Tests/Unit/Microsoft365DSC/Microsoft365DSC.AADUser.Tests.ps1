@@ -257,15 +257,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
-                    return @(
-                        @{
-                            id = "MemberOf"
-                            body = @{
-                                value = @()
-                            }
-                        }
-                    )
+                return @(
+                @{
+                   id   = 'License'
+                   body = @{
+                   value = @()
+                   }
                 }
+                @{
+                   id   = 'MemberOf'
+                   body = @{
+                   value = @()
+                   }
+                 }
+                )
+              }
             }
 
             It 'Should return present from the Get method' {
