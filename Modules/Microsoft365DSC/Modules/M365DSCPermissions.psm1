@@ -1160,7 +1160,8 @@ function Update-M365DSCAzureAdApplication
                     }
 
                     Write-LogEntry "    Certificate details: $($cerCert.Subject) ($($cerCert.Thumbprint))"
-                    $params = @{
+                    $params = @()
+                    $params += @{
                         type  = 'AsymmetricX509Cert'
                         usage = 'Verify'
                         key   = $cerCert.GetRawCertData()
