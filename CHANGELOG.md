@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Fixed an issue where the delegated permissions were not returned as an array.
+    FIXES [#7190] (https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7190)
 * M365DSCPermissions
   * Fixed an issue when updating app certs.
 

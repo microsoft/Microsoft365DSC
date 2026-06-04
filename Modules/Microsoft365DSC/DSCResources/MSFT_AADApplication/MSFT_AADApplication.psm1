@@ -887,7 +887,7 @@ function Set-TargetResource
             }
             $PreAuthorizedApplicationsValue += @{
                 appId                  = $preAuthApp.AppId
-                delegatedPermissionIds = $preAuthApp.PermissionIds | Foreach-Object {
+                delegatedPermissionIds = @($preAuthApp.PermissionIds | Foreach-Object {
                     if ($_ -match "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
                     {
                         $_
@@ -901,7 +901,7 @@ function Set-TargetResource
                         }
                         $permission.Id
                     }
-                }
+                })
             }
         }
         $apiValue.Add('PreAuthorizedApplications', $PreAuthorizedApplicationsValue)
