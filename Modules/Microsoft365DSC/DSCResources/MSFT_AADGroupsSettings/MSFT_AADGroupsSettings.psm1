@@ -294,7 +294,9 @@ function Set-TargetResource
         $needToUpdate = $true
     }
 
-    $Policy = Get-MgBetaDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq 'Group.Unified' }
+    $Policy = Invoke-M365DSCCommand -ScriptBlock {
+        Get-MgBetaDirectorySetting -DirectorySettingId $Policy.id
+    } -RetryOnNotFoundError
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
         $groupObject = $null

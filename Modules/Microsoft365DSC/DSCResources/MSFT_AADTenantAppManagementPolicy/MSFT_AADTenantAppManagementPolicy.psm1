@@ -325,7 +325,8 @@ function Set-TargetResource
         $appRestrictionsValue.keyCredentials += $newItem
     }
 
-    $setParameters.ApplicationRestrictions = $appRestrictionsValue
+    $setParameters.Remove('ApplicationRestrictions') | Out-Null
+    $setParameters.applicationRestrictions = $appRestrictionsValue
 
     $spnRestrictionsValue = @{
         passwordCredentials = @()
@@ -364,7 +365,8 @@ function Set-TargetResource
         $spnRestrictionsValue.keyCredentials += $newItem
     }
 
-    $setParameters.ServicePrincipalRestrictions = $spnRestrictionsValue
+    $setParameters.Remove('ServicePrincipalRestrictions') | Out-Null
+    $setParameters.servicePrincipalRestrictions = $spnRestrictionsValue
     $setParameters.Remove('IsSingleInstance') | Out-Null
 
     Write-Verbose -Message 'Updating the Default App Management Policy'

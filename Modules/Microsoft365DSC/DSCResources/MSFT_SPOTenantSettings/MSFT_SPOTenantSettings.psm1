@@ -638,6 +638,11 @@ function Set-TargetResource
         Write-Warning -Message "The property 'OneDriveSharingCapability' is deprecated and will be ignored. Please use 'MySiteSharingCapability' in the SPOSharingSettings resource."
     }
 
+    if ($PSBoundParameters.ContainsKey('IsFluidEnabled') -and $PSBoundParameters.ContainsKey('IsLoopEnabled') -and $IsFluidEnabled -ne $IsLoopEnabled)
+    {
+        Write-Warning -Message "The 'IsFluidEnabled' property is present together with the 'IsLoopEnabled' property but they have different values. Both parameters refer to the same functionality and should be set to the same value if both are specified. Please update your configuration to ensure only one of the parameters is specified in order to avoid unexpected results."
+    }
+
     Write-Verbose -Message 'Updating configuration for the SPO Tenant Settings'
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -660,6 +665,7 @@ function Set-TargetResource
     $null = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
     $CurrentParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
     $spoRestParameters = @(
         'ExemptNativeUsersFromTenantLevelRestricedAccessControl',
         'AllowSelectSGsInODBListInTenant',
@@ -681,14 +687,20 @@ function Set-TargetResource
     $spoRestParametersSplat = @{}
     foreach ($param in $spoRestParameters)
     {
-        $spoRestParametersSplat.Add($param, $CurrentParameters[$param])
-        $CurrentParameters.Remove($param) | Out-Null
+        if ($currentParameters.ContainsKey($param))
+        {
+            $spoRestParametersSplat.Add($param, $CurrentParameters[$param])
+            $CurrentParameters.Remove($param) | Out-Null
+        }
     }
     $spoGraphParametersSplat = @{}
     foreach ($param in $spoGraphParameters)
     {
-        $spoGraphParametersSplat.Add($param, $CurrentParameters[$param])
-        $CurrentParameters.Remove($param) | Out-Null
+        if ($CurrentParameters.ContainsKey($param))
+        {
+            $spoGraphParametersSplat.Add($param, $CurrentParameters[$param])
+            $CurrentParameters.Remove($param) | Out-Null
+        }
     }
 
     if ($PublicCdnEnabled -eq $false)

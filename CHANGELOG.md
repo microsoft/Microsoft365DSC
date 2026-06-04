@@ -5,6 +5,17 @@
 * AADApplication
   * Fixed an issue where the delegated permissions were not returned as an array.
     FIXES [#7190] (https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7190)
+* AADGroup
+  * Various timing-related fixes for new group
+* AADTenantAppManagementPolicy
+  * Fixed an issue when updating the resource.
+  FIXES [#7201](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7201)
+* AADUser
+  * Fixes for timing-related new user
+* O365OrgSettings
+  * Fixes intermittent exception comparing install-options
+* SPOTenantSettings
+  * Improve handling of parameters when updating settings
 * M365DSCPermissions
   * Fixed an issue when updating app certs.
 

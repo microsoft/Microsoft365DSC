@@ -636,7 +636,9 @@ function Set-TargetResource
             if ($licenseDifferences.Length -gt 0)
             {
                 Write-Verbose -Message "Updating License assignments with values: $(Convert-M365DscHashtableToString -Hashtable $licenses)"
-                Set-MgUserLicense -UserId $user.UserPrincipalName -AddLicenses $licenses.addLicenses -RemoveLicenses $licenses.removeLicenses
+                Invoke-M365DSCCommand -ScriptBlock {
+                    Set-MgUserLicense -UserId $user.UserPrincipalName -AddLicenses $licenses.addLicenses -RemoveLicenses $licenses.removeLicenses
+                } -RetryOnNotFoundError
             }
         }
         catch
@@ -680,9 +682,11 @@ function Set-TargetResource
 
                         throw "Cannot add user $UserPrincipalName to group '$memberOfGroup' because it is a dynamic group"
                     }
-                    New-MgGroupMemberByRef -GroupId $group.Id -BodyParameter @{
-                        '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$userId"
-                    }
+                    Invoke-M365DSCCommand -ScriptBlock {
+                        New-MgGroupMemberByRef -GroupId $group.Id -BodyParameter @{
+                            '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$userId"
+                        }
+                    } -RetryOnNotFoundError
                 }
             }
             else
@@ -762,9 +766,11 @@ function Set-TargetResource
                 elseif ($roleDifference.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Creating role assignment for user {$($user.UserPrincipalName) for role {$($roleDifference.InputObject)}"
-                    New-MgBetaRoleManagementDirectoryRoleAssignment -PrincipalId $userId `
-                        -RoleDefinitionId $roleDefinitionId `
-                        -DirectoryScopeId '/' | Out-Null
+                    Invoke-M365DSCCommand -ScriptBlock {
+                        New-MgBetaRoleManagementDirectoryRoleAssignment -PrincipalId $userId `
+                            -RoleDefinitionId $roleDefinitionId `
+                            -DirectoryScopeId '/' | Out-Null
+                    } -RetryOnNotFoundError
                 }
             }
         }
