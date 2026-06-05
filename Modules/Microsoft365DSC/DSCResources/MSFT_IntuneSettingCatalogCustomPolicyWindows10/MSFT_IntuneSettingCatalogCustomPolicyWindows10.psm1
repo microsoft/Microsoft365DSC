@@ -346,6 +346,40 @@ function Set-TargetResource
         'StringValue' = 'value'
         'IntValue'    = 'value'
     }
+    # Fix: Repair IntValue=0 on StringSettingValue types before sending to API
+foreach ($setting in $BoundParameters.Settings)
+{
+    $instance = $setting.SettingInstance
+    if ($null -ne $instance)
+    {
+        if ($null -ne $instance.SimpleSettingValue)
+        {
+            $sv = $instance.SimpleSettingValue
+            if ($sv.odataType -eq '#microsoft.graph.deviceManagementConfigurationStringSettingValue' -and
+                $null -eq $sv.StringValue -and $null -ne $sv.IntValue)
+            {
+                $sv.StringValue = [string]$sv.IntValue
+                $sv.IntValue    = $null
+            }
+        }
+        if ($null -ne $instance.ChoiceSettingValue -and $null -ne $instance.ChoiceSettingValue.Children)
+        {
+            foreach ($child in $instance.ChoiceSettingValue.Children)
+            {
+                if ($null -ne $child.SimpleSettingValue)
+                {
+                    $sv = $child.SimpleSettingValue
+                    if ($sv.odataType -eq '#microsoft.graph.deviceManagementConfigurationStringSettingValue' -and
+                        $null -eq $sv.StringValue -and $null -ne $sv.IntValue)
+                    {
+                        $sv.StringValue = [string]$sv.IntValue
+                        $sv.IntValue    = $null
+                    }
+                }
+            }
+        }
+    }
+}
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -823,16 +857,24 @@ function Get-SettingValue
             {
                 $hash['odataType'] = $SettingValue.'@odata.type'
             }
-            if ($SettingValue.Keys -contains 'value' -and -not([string]::IsNullOrEmpty($SettingValue.value)) )
+            if ($SettingValue.Keys -contains 'value' -and $null -ne $SettingValue.value)
             {
-                try
-                {
-                    $hash['IntValue'] = [UInt32]($SettingValue.value)
-                }
-                catch
-                {
-                    $hash['StringValue'] = [string]($SettingValue.value)
-                }
+            if ([string]::IsNullOrWhiteSpace($SettingValue.value))
+            {
+            # Empty or whitespace must stay as StringValue, not cast to IntValue=0
+            $hash['StringValue'] = [string]($SettingValue.value)
+            }
+            else
+            {
+               try
+            {
+               $hash['IntValue'] = [UInt32]($SettingValue.value)
+            }
+            catch
+            {
+               $hash['StringValue'] = [string]($SettingValue.value)
+            }
+            }
             }
             if ($SettingValue.Keys -contains 'ValueState' -and -not([string]::IsNullOrEmpty($SettingValue.ValueState)) )
             {
