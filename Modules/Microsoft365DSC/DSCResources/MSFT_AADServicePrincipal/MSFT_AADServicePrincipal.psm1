@@ -351,7 +351,7 @@ function Get-TargetResource
             }
         }
 
-        $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -ServicePrincipal $ServicePrincipal)
+        $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -ServicePrincipal $AADServicePrincipal)
         if ($null -eq $complexCustomSecurityAttributes)
         {
             $complexCustomSecurityAttributes = @()
@@ -614,7 +614,9 @@ function Set-TargetResource
     # update the custom security attributes to be cmdlet comsumable
     if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes.Count -gt 0)
     {
-        $currentParameters.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable -CustomSecurityAttributes $currentParameters.CustomSecurityAttributes
+        $currentSCAValue = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable -CustomSecurityAttributes $currentParameters.CustomSecurityAttributes
+        $currentParameters.Remove('CustomSecurityAttributes') | Out-Null
+        $currentParameters.Add('customSecurityAttributes', $currentSCAValue)
     }
     else
     {
@@ -732,7 +734,6 @@ function Set-TargetResource
             }
             Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/servicePrincipals(appId='$($currentParameters.AppId)')") -Method Patch -Body $CSAParams
         }
-
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID -BodyParameter $currentParameters
 
         if ($PSBoundParameters.ContainsKey('ClaimsPolicy'))

@@ -268,26 +268,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         EnableRegionBlockList                = $true
                         EnableLanguageBlockList              = $true
                         BulkThreshold                        = 5
-                        AllowedSenders                       = @{
-                            Sender = @(
-                                [PSCustomObject]@{Address = 'test@contoso.com' },
-                                [PSCustomObject]@{Address = 'test@fabrikam.com' }
-                            )
-                        }
-                        AllowedSenderDomains                 = @(
-                            [PSCustomObject]@{Domain = 'contoso.com' },
-                            [PSCustomObject]@{Domain = 'fabrikam.com' }
-                        )
-                        BlockedSenders                       = @{
-                            Sender = @(
-                                [PSCustomObject]@{Address = 'me@privacy.net' },
-                                [PSCustomObject]@{Address = 'thedude@contoso.com' }
-                            )
-                        }
-                        BlockedSenderDomains                 = @(
-                            [PSCustomObject]@{Domain = 'privacy.net' },
-                            [PSCustomObject]@{Domain = 'facebook.com' }
-                        )
+                        AllowedSenders                       = @('test@contoso.com','test@fabrikam.com')
+                        AllowedSenderDomains                 = @('contoso.com', 'fabrikam.com')
+                        BlockedSenders                       = @('me@privacy.net', 'thedude@contoso.com')
+                        BlockedSenderDomains                 = @('privacy.net', 'facebook.com')
                         PhishZapEnabled                      = $true
                         SpamZapEnabled                       = $true
                         InlineSafetyTipsEnabled              = $true

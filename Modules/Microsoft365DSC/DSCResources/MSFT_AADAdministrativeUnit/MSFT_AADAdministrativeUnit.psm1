@@ -511,7 +511,7 @@ function Set-TargetResource
                 }
                 if ($roleMember.RoleMemberInfo.Type -eq 'User')
                 {
-                    $roleMemberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($roleMember.RoleMemberInfo.Identity -replace "'", "''")'" -ErrorAction Stop
+                    [System.Array]$roleMemberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($roleMember.RoleMemberInfo.Identity -replace "'", "''")'" -ErrorAction Stop
                     if ($null -eq $roleMemberIdentity)
                     {
                         throw "AU {$($DisplayName)}:  Scoped Role User {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
@@ -519,7 +519,7 @@ function Set-TargetResource
                 }
                 elseif ($roleMember.RoleMemberInfo.Type -eq 'Group')
                 {
-                    $roleMemberIdentity = Get-MgGroup -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity -replace "'", "''")'" -ErrorAction Stop
+                    [System.Array]$roleMemberIdentity = Get-MgGroup -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity -replace "'", "''")'" -ErrorAction Stop
                     if ($null -eq $roleMemberIdentity)
                     {
                         throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
@@ -531,7 +531,7 @@ function Set-TargetResource
                 }
                 elseif ($roleMember.RoleMemberInfo.Type -eq 'ServicePrincipal')
                 {
-                    $roleMemberIdentity = Get-MgServicePrincipal -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity -replace "'", "''")'" -ErrorAction Stop
+                    [System.Array]$roleMemberIdentity = Get-MgServicePrincipal -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity -replace "'", "''")'" -ErrorAction Stop
                     if ($null -eq $roleMemberIdentity)
                     {
                         throw "AU {$($DisplayName)}: Scoped Role ServicePrincipal {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
@@ -548,7 +548,7 @@ function Set-TargetResource
                 $scopedRoleMemberSpecification += [ordered]@{
                     RoleId         = $roleObject.Id
                     RoleMemberInfo = @{
-                        Id = $roleMemberIdentity.Id
+                        Id = $roleMemberIdentity[0].Id
                     }
                 }
             }

@@ -227,6 +227,7 @@ function Get-TargetResource
         {
             foreach ($setting in $formattedRequestorSettings.allowedRequestors)
             {
+                $setting.Remove('description') | Out-Null
                 if (-not $setting.ContainsKey('odataType'))
                 {
                     $setting.Add('odataType', $setting.'@odata.type')
