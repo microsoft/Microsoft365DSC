@@ -27,7 +27,16 @@ class MSFT_MicrosoftGraphIntuneSettingsCatalogthreatTypeSettings
     [Write, Description("Action to take - Depends on threatTypeSettings (audit, block, off)"), ValueMap{"audit", "block", "off"}, Values{"audit", "block", "off"}] String threatTypeSettings_item_value;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneAntivirusPolicyMacOS")]
+[ClassVersion("1.0.0.0")]
+class MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions_tamperProtection
+{
+    [Write, Description("Process's arguments")] String exclusions_item_args_tamperProtection[];
+    [Write, Description("Process path")] String exclusions_item_path_tamperProtection;
+    [Write, Description("Process's Signing Identifier")] String exclusions_item_signingId_tamperProtection;
+    [Write, Description("Process's TeamIdentifier")] String exclusions_item_teamId_tamperProtection;
+};
+
+[ClassVersion("1.0.0.1"), FriendlyName("IntuneAntivirusPolicyMacOS")]
 class MSFT_IntuneAntivirusPolicyMacOS : OMI_BaseResource
 {
     [Write, Description("Policy description")] String Description;
@@ -36,12 +45,31 @@ class MSFT_IntuneAntivirusPolicyMacOS : OMI_BaseResource
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Enable / disable cloud delivered protection (false: Disabled, true: Enabled)"), ValueMap{"false", "true"}, Values{"false", "true"}] String enabled;
     [Write, Description("Enable / disable automatic sample submissions (false: Disabled, true: Enabled)"), ValueMap{"false", "true"}, Values{"false", "true"}] String automaticSampleSubmission;
+    [Write, Description("Automatic sample submission Consent (none: none, safe: safe, all: all)"), ValueMap{"none","safe","all"}, Values{"none","safe","all"}] String automaticSampleSubmissionConsent;
     [Write, Description("Diagnostic collection level (0: optional, 1: required)"), ValueMap{"0", "1"}, Values{"0", "1"}] String diagnosticLevel;
     [Write, Description("Automatic security intelligence updates (false: Disabled, true: Enabled)"), ValueMap{"false", "true"}, Values{"false", "true"}] String automaticDefinitionUpdateEnabled;
+    [Write, Description("Behavior Monitoring (enabled: enabled, disabled: disabled)"), ValueMap{"enabled","disabled"}, Values{"enabled","disabled"}] String behaviorMonitoring;
+    [Write, Description("Check for definitions update (false: Disabled, true: Enabled)"), ValueMap{"false", "true"}, Values{"false", "true"}] String checkForDefinitionsUpdate;
+    [Write, Description("Start time. Must be between 0 and 24.")] SInt32 dailyConfiguration_interval;
+    [Write, Description("Time of day. Must be between 0 and 1440.")] SInt32 dailyConfiguration_timeOfDay;
+    [Write, Description("Security intelligence update due (in days). Must be between 1 and 30.")] SInt32 definitionUpdateDue;
+    [Write, Description("Security intelligence update interval (in seconds). Must be between 60 and 86400.")] SInt32 definitionUpdatesInterval;
     [Write, Description("Enable real-time protection (deprecated) (false: Disabled, true: Enabled)"), ValueMap{"false", "true"}, Values{"false", "true"}] String enableRealTimeProtection;
+    [Write, Description("Process exclusions"), EmbeddedInstance("MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions_tamperProtection")] String exclusions_tamperProtection[];
+    [Write, Description("Group identifier")] String groupIds;
+    [Write, Description("Ignore exclusions (false: Disabled, true: Enabled)"), ValueMap{"false", "true"}, Values{"false", "true"}] String ignoreExclusions;
+    [Write, Description("Low priority scheduled scan (false: Disabled, true: Enabled)"), ValueMap{"false", "true"}, Values{"false", "true"}] String lowPriorityScheduledScan;
+    [Write, Description("Enable offline security intelligence updates (enabled: enabled, disabled: disabled)"), ValueMap{"enabled","disabled"}, Values{"enabled","disabled"}] String offlineDefinitionUpdate;
+    [Write, Description("Fallback to Microsoft cloud updates (false: Disabled, true: Enabled)"), ValueMap{"false", "true"}, Values{"false", "true"}] String offlineDefinitionUpdateFallbackToCloud;
+    [Write, Description("URL for a security intelligence updates mirror server")] String offlineDefinitionUpdateUrl;
+    [Write, Description("offline security intelligence updates signature verification (enabled: enabled, disabled: disabled)"), ValueMap{"enabled","disabled"}, Values{"enabled","disabled"}] String offlineDefinitionUpdateVerifySig;
     [Write, Description("Enable passive mode (deprecated) (false: Disabled, true: Enabled)"), ValueMap{"false", "true"}, Values{"false", "true"}] String passiveMode;
+    [Write, Description("Performance Profiles (enabled: enabled, disabled: disabled)"), ValueMap{"enabled","disabled"}, Values{"enabled","disabled"}] String performanceProfiles;
+    [Write, Description("Randomize scheduled scan start time. Must be between 0 and 23 hours.")] SInt32 randomizeScanStartTime;
+    [Write, Description("Run scheduled scan when idle (false: Disabled, true: Enabled)"), ValueMap{"false", "true"}, Values{"false", "true"}] String runScanWhenIdle;
     [Write, Description("Scan history size")] SInt32 scanHistoryMaximumItems;
     [Write, Description("Scan results retention")] SInt32 scanResultsRetentionDays;
+    [Write, Description("Scheduled Scan (enabled: enabled, disabled: disabled)"), ValueMap{"enabled","disabled"}, Values{"enabled","disabled"}] String scheduledScan;
     [Write, Description("Exclusions merge (0: merge, 1: admin_only)"), ValueMap{"0", "1"}, Values{"0", "1"}] String exclusionsMergePolicy;
     [Write, Description("Scan exclusions"), EmbeddedInstance("MSFT_MicrosoftGraphIntuneSettingsCatalogexclusions")] String exclusions[];
     [Write, Description("Threat type settings"), EmbeddedInstance("MSFT_MicrosoftGraphIntuneSettingsCatalogthreatTypeSettings")] String threatTypeSettings[];

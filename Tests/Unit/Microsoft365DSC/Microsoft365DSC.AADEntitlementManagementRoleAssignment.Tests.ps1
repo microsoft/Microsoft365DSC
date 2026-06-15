@@ -51,10 +51,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     @{
                         id = 'user'
                         body = @{
-                            value = @{
-                                userPrincipalName = "John.Smith@contoso.com"
-                                id                = "12345-12345-12345-12345-12345"
-                            }
+                            userPrincipalName = "John.Smith@contoso.com"
+                            id                = "12345-12345-12345-12345-12345"
                         }
                     }
                 )

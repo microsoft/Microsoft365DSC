@@ -624,15 +624,17 @@ function Export-TargetResource
 
             Write-M365DSCHost -Message "    |---[$i/$($groups.Length)] $($group.DisplayName)" -DeferWrite
             $Params = @{
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                ApplicationSecret     = $ApplicationSecret
                 DisplayName           = $group.DisplayName
                 ManagedBy             = 'DummyUser'
                 MailNickName          = $group.MailNickName
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
             $Script:exportedInstance = $group

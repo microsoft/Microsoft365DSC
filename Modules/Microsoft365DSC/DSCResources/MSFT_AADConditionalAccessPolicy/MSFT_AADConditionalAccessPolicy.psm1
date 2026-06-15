@@ -312,7 +312,7 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-            if ($PSBoundParameters.ContainsKey('Id'))
+            if ($PSBoundParameters.ContainsKey('Id') -and -not [System.String]::IsNullOrEmpty($Id))
             {
                 Write-Verbose -Message 'PolicyID was specified'
                 try
@@ -395,18 +395,18 @@ function Get-TargetResource
         $ExcludeUsers = @()
         if ($Policy.Conditions.Users.ExcludeUsers)
         {
-            foreach ($ExcludeUserGUID in $Policy.Conditions.Users.ExcludeUsers)
+            foreach ($ExcludedUser in $Policy.Conditions.Users.ExcludeUsers)
             {
-                if ($ExcludeUserGUID -notin 'GuestsOrExternalUsers', 'All', 'None')
+                if ($ExcludedUser -notin 'GuestsOrExternalUsers', 'All', 'None')
                 {
                     $ExcludeUser = $null
                     try
                     {
-                        $ExcludeUser = (Get-MgUser -UserId $ExcludeUserGUID -ErrorAction Stop).userprincipalname
+                        $ExcludeUser = (Get-MgUser -UserId $ExcludedUser -ErrorAction Stop).UserPrincipalName
                     }
                     catch
                     {
-                        Write-Warning -Message "Couldn't find ExcludedUser '$ExcludeUserGUID', that is defined in policy '$PolicyDisplayName'. Skipping user."
+                        Write-Warning -Message "Couldn't find ExcludedUser '$ExcludedUser', that is defined in policy '$PolicyDisplayName'. Skipping user."
                         continue
                     }
                     if ($ExcludeUser)
@@ -416,7 +416,7 @@ function Get-TargetResource
                 }
                 else
                 {
-                    $ExcludeUsers += $ExcludeUserGUID
+                    $ExcludeUsers += $ExcludedUser
                 }
             }
         }
@@ -2003,7 +2003,7 @@ function Set-TargetResource
         Write-Verbose -Message "Set-Targetresource: delete policy $DisplayName"
         try
         {
-            Remove-MgBetaIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $currentPolicy.ID
+            Remove-MgBetaIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $currentPolicy.Id
         }
         catch
         {
@@ -2415,6 +2415,8 @@ function Export-TargetResource
                     ApplicationSecret     = $ApplicationSecret
                     CertificateThumbprint = $CertificateThumbprint
                     Credential            = $Credential
+                    CertificatePath       = $CertificatePath
+                    CertificatePassword   = $CertificatePassword
                     ManagedIdentity       = $ManagedIdentity.IsPresent
                     AccessTokens          = $AccessTokens
                 }

@@ -733,11 +733,13 @@ function Export-TargetResource
         $dscContent = [System.Text.StringBuilder]::new()
         $Params = @{
             IsSingleInstance      = 'Yes'
-            ApplicationSecret     = $ApplicationSecret
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
-            Credential            = $Credential
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }

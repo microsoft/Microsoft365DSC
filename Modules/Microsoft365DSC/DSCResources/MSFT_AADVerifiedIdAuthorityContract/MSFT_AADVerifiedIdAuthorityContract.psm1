@@ -466,11 +466,13 @@ function Export-TargetResource
                 $Params = @{
                     linkedDomainUrl       = $authority.didModel.linkedDomainUrls[0]
                     name                  = $contract.name
+                    Credential            = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
                     ApplicationSecret     = $ApplicationSecret
-                    Credential            = $Credential
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePath       = $CertificatePath
+                    CertificatePassword   = $CertificatePassword
                     ManagedIdentity       = $ManagedIdentity.IsPresent
                     AccessTokens          = $AccessTokens
                 }

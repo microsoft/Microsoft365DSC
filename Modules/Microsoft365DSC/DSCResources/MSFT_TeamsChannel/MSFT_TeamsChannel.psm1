@@ -453,10 +453,12 @@ function Export-TargetResource
                         TeamName              = $team.DisplayName
                         GroupId               = $team.GroupId
                         DisplayName           = $channel.DisplayName
+                        Credential            = $Credential
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
                         CertificateThumbprint = $CertificateThumbprint
-                        Credential            = $Credential
+                        CertificatePath       = $CertificatePath
+                        CertificatePassword   = $CertificatePassword
                         ManagedIdentity       = $ManagedIdentity.IsPresent
                         AccessTokens          = $AccessTokens
                     }

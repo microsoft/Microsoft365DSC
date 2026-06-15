@@ -120,23 +120,19 @@ function Get-TargetResource
         }
 
         $B2BCollaborationInboundValue = $null
-        if ($null -ne $getValue.B2BCollaborationInbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BCollaborationInbound) -eq $false `
-            -and $getValue.B2BCollaborationInbound.Keys.Count -gt 0)
+        if ($null -ne $getValue.B2BCollaborationInbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BCollaborationInbound) -eq $false)
         {
             $B2BCollaborationInboundValue = $getValue.B2BCollaborationInbound
         }
-        if ($null -ne $getValue.B2BCollaborationOutbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BCollaborationOutbound) -eq $false `
-            -and $getValue.B2BCollaborationOutbound.Keys.Count -gt 0)
+        if ($null -ne $getValue.B2BCollaborationOutbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BCollaborationOutbound) -eq $false)
         {
             $B2BCollaborationOutboundValue = $getValue.B2BCollaborationOutbound
         }
-        if ($null -ne $getValue.B2BDirectConnectInbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BDirectConnectInbound) -eq $false `
-            -and $getValue.B2BDirectConnectInbound.Keys.Count -gt 0)
+        if ($null -ne $getValue.B2BDirectConnectInbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BDirectConnectInbound) -eq $false)
         {
             $B2BDirectConnectInboundValue = $getValue.B2BDirectConnectInbound
         }
-        if ($null -ne $getValue.B2BDirectConnectOutbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BDirectConnectOutbound) -eq $false `
-            -and $getValue.B2BDirectConnectOutbound.Keys.Count -gt 0)
+        if ($null -ne $getValue.B2BDirectConnectOutbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BDirectConnectOutbound) -eq $false)
         {
             $B2BDirectConnectOutboundValue = $getValue.B2BDirectConnectOutbound
         }
@@ -567,6 +563,8 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 Credential            = $Credential
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

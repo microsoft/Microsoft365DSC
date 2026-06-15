@@ -532,11 +532,13 @@ function Export-TargetResource
                         GroupDisplayName      = $group.DisplayName
                         Id                    = $rule.Id
                         PIMGroupRole          = $PIMRole
+                        Credential            = $Credential
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
-                        CertificateThumbprint = $CertificateThumbprint
                         ApplicationSecret     = $ApplicationSecret
-                        Credential            = $Credential
+                        CertificateThumbprint = $CertificateThumbprint
+                        CertificatePath       = $CertificatePath
+                        CertificatePassword   = $CertificatePassword
                         ManagedIdentity       = $ManagedIdentity.IsPresent
                         AccessTokens          = $AccessTokens
                     }

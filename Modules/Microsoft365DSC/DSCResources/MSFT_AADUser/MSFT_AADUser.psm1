@@ -228,7 +228,7 @@ function Get-TargetResource
             @{
                 id      = 'MemberOf'
                 method  = 'GET'
-                url     = "/users/$($UserPrincipalName)/memberOf?`$select=displayName&`$filter=not(groupTypes/any(c:c eq 'DynamicMembership'))"
+                url     = "/users/$($UserPrincipalName)/memberOf/microsoft.graph.group?`$select=displayName&`$filter=not(groupTypes/any(c:c eq 'DynamicMembership'))"
                 headers = @{
                     'ConsistencyLevel' = 'eventual'
                 }
@@ -726,6 +726,16 @@ function Set-TargetResource
 
                         # Group that user is a member of is not present in MemberOf, remove user from group
                         # (no need to test for dynamic groups as they are ignored in Get-TargetResource)
+                        if ($null -eq $group)
+                        {
+                            New-M365DSCLogEntry -Message 'Error updating data:' `
+                                -Exception "Attempting to add a user to a group that doesn't exist" `
+                                -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $TenantId `
+                                -Credential $Credential
+
+                            throw "Group '$($_.InputObject)' does not exist in tenant"
+                        }
                         Remove-MgGroupMemberDirectoryObjectByRef -GroupId $group.Id -DirectoryObjectId $userId
                     }
                 }

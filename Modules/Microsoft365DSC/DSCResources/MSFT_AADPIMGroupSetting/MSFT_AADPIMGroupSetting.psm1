@@ -1607,12 +1607,14 @@ function Export-TargetResource
                     Id                    = $config.Id
                     RoleDefinitionId      = $config.roleDefinitionId
                     DisplayName           = $group.DisplayName
+                    Credential            = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                    ManagedIdentity       = $ManagedIdentity.IsPresent
                     ApplicationSecret     = $ApplicationSecret
-                    Credential            = $Credential
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePath       = $CertificatePath
+                    CertificatePassword   = $CertificatePassword
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
                     AccessTokens          = $AccessTokens
                 }
 

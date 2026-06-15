@@ -362,15 +362,15 @@ function Export-TargetResource
             SecurityComplianceNotificationMails  = $aadTenantDetails.SecurityComplianceNotificationMails
             SecurityComplianceNotificationPhones = $aadTenantDetails.SecurityComplianceNotificationPhones
             TechnicalNotificationMails           = $aadTenantDetails.TechnicalNotificationMails
+            IsSingleInstance                     = 'Yes'
             Credential                           = $Credential
             ApplicationId                        = $ApplicationId
-            ApplicationSecret                    = $ApplicationSecret
             TenantId                             = $TenantId
+            ApplicationSecret                    = $ApplicationSecret
             CertificateThumbprint                = $CertificateThumbprint
             CertificatePath                      = $CertificatePath
             CertificatePassword                  = $CertificatePassword
             ManagedIdentity                      = $ManagedIdentity.IsPresent
-            IsSingleInstance                     = 'Yes'
             AccessTokens                         = $AccessTokens
         }
 

@@ -472,12 +472,14 @@ function Export-TargetResource
         }
 
         $Params = @{
+            IsSingleInstance      = 'Yes'
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
-            Credential            = $Credential
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }

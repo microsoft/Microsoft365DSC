@@ -452,12 +452,14 @@ function Export-TargetResource
                 NotificationType           = $config.NotificationType.ToString()
                 RenewalThresholdPercentage = $config.RenewalThresholdPercentage
                 Credential                 = $Credential
-                AccessTokens               = $AccessTokens
                 ApplicationId              = $ApplicationId
                 TenantId                   = $TenantId
                 ApplicationSecret          = $ApplicationSecret
                 CertificateThumbprint      = $CertificateThumbprint
+                CertificatePath            = $CertificatePath
+                CertificatePassword        = $CertificatePassword
                 ManagedIdentity            = $ManagedIdentity.IsPresent
+                AccessTokens               = $AccessTokens
             }
 
             $Script:exportedInstance = $config

@@ -4,26 +4,81 @@
 
 * AADAdministrativeUnit
   * Fixed validation of scoped role members' uniqueness
+* AADApplication
+  * Fixed an issue where the delegated permissions were not returned as an array.
+    FIXES [#7190] (https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7190)
+* AADConditionalAccessPolicy
+  * Fixed an issue where an empty `Id` would result in all policies being returned.
+    FIXES [#7225](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7225)
+* AADCrossTenantAccessPolicyConfigurationPartner
+  * Fixed an issue where not all properties were exported.
+    FIXES [#7203](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7203)
+* AADCustomSecurityAttributeDefinition
+  * Fixed an issue when adding a new value to an existing definition.
+    FIXES [#7191](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7191)
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Fixed comparison in New-M365DSCDeltaReport.
+  * Fixed an issue where a `description` property was exported within a reviewer.
+* AADEntitlementManagementRoleAssignment
+  * Fixed an issue when resolving a user principal during the Set operation.
+    FIXES [#7223](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7223)
 * AADGroup
   * Various timing-related fixes for new group
-* AADEntitlementManagementAccessPackageAssignmentPolicy
-  * Fixed comparison in New-M365DSCDeltaReport
+  * Fixed an issue with invalid casing of properties.
+    FIXES [#7224](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7224)
+  * Fixed an issue when updating the `MemberOf` property.
+  * Fixed an issue where an empty `Id` would result in all groups being returned.
+    FIXES [#7225](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7225)
+  * Fixed an issue where `MemberOf` and `GroupAsMembers` could not be set if both
+    properties were set to an empty array.
+* AADGroupsSettings
+  * Fixed issue with handling of existing DirectorySetting-object during update
 * AADServicePrincipal
   * Fixed and issue where Custom SecurityAttributes were not handled properly.
     FIXES [#7192](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7192)
 * AADTenantAppManagementPolicy
   * Fixed an issue when updating the resource.
-  FIXES [#7201](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7201)
+    FIXES [#7201](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7201)
 * AADUser
-  * Fixes for timing-related new user
+  * Fixed issues for timing-related new user
+  * Fixed an issue where Administrative Units were exported in the `MemberOf` collection.
+    FIXES [#7198](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7198)
 * EXOHostedContentFilterPolicy
-  * Fixes export of AllowedSenderDomains, AllowedSenders, BlockedSenderDomains, BlockedSenders
+  * Fixed export of AllowedSenderDomains, AllowedSenders, BlockedSenderDomains, BlockedSenders
+* IntuneAntivirusPolicyLinux
+  * Added support for new properties and fixed an issue where values were not exported correctly.
+    FIXES [#7185](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7185)
+* IntuneAntivirusPolicyMacOS
+  * Added support for new properties and fixed an issue where values were not exported correctly.
+    FIXES [#7218](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7218)
+* IntuneDeviceCompliancePolicyMacOS
+  * Fixed an issue where `ScheduledActionsForRule` was exported as a String array.
+    FIXES [#7220](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7220)
+* IntuneDeviceConfigurationPolicyAndroidDeviceOwner
+  * Fixed an issue where a wrong instance name was used for `KioskModeAppPositions`.
+    FIXES [#7186](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7186)
 * O365OrgSettings
-  * Fixes intermittent exception comparing install-options
+  * Fixed intermittent exception comparing install-options
+* SCDLPCompliancePolicy
+  * Fixed a parameter binding issue when resolving groups.
+    FIXES [#7209](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7209)
 * SPOTenantSettings
-  * Improve handling of parameters when updating settings
+  * Improved handling of parameters when updating settings.
+  * Fixed an issue where Graph parameters were skipped.
+    FIXES [#7227](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7227)
+* M365DSCGraphShim
+  * Fixed an issue where uris with a # were not resolved properly.
 * M365DSCPermissions
-  * Fixed an issue when updating app certs.
+  * Fixed an issue when updating app certificates.
+    FIXES [#7205](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7205)
+* SettingsCatalogHelper - C#
+  * Added forward slash character replacement in property names.
+* MISC
+  * Fixed an issue where `CertificatePath` and `CertificatePassword` parameters
+    were omitted during export of several resources.
+    FIXES [#7208](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7208)
+  * Fixed an issue where `-Force` was not used for `Set-PnPTenant`.
+    FIXES [#7226](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7226)
 
 # 1.26.603.1
 
@@ -33,7 +88,9 @@
 * AADFilteringPolicyRule
   * Fixed an issue where an incorrect number of instances to export was shown.
 * AADOrganizationCertificateBasedAuthConfiguration
-  * Fixed an issue where the `Certificate` property was incorrectly converted using `ToBase64String` when the Graph SDK already returns it as a Base64 string. FIXES [#7193](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7193)
+  * Fixed an issue where the `Certificate` property was incorrectly converted using `ToBase64String`
+    when the Graph SDK already returns it as a Base64 string.
+    FIXES [#7193](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7193)
 * AzureRoleDefinition
   * Initial Release
     FIXES [#7077](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7077)

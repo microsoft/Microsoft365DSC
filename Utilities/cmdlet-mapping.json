@@ -6264,17 +6264,6 @@
       }
     ]
   },
-  "Update-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue": {
-    "SourceModule": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
-    "ApiVersion": "beta",
-    "Variants": [
-      {
-        "Method": "PATCH",
-        "URI": "/directory/customSecurityAttributeDefinitions/{customSecurityAttributeDefinition-id}/allowedValues/{allowedValue-id}",
-        "ApiVersion": "beta"
-      }
-    ]
-  },
   "Update-MgBetaDirectorySetting": {
     "SourceModule": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
     "ApiVersion": "beta",

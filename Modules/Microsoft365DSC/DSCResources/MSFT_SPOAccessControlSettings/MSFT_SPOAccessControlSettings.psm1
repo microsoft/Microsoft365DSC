@@ -295,17 +295,17 @@ function Set-TargetResource
         $CurrentParameters.Remove('EnableRestrictedAccessControl') | Out-Null
     }
 
-    Set-PnPTenant @CurrentParameters | Out-Null
+    Set-PnPTenant @CurrentParameters -Force | Out-Null
 
     try
     {
-        Set-PnPTenant -EnableRestrictedAccessControl $EnableRestrictedAccessControlValue -ErrorAction Stop | Out-Null
+        Set-PnPTenant -EnableRestrictedAccessControl $EnableRestrictedAccessControlValue -Force -ErrorAction Stop | Out-Null
     }
     catch
     {
         if ($_.ErrorDetails.Message.Contains("This operation can't be performed as the tenant doesn't have the required license"))
         {
-            Write-Warning -Message "The tenant doesn't have the required license to configure Restrcited Access Control."
+            Write-Warning -Message "The tenant doesn't have the required license to configure Restricted Access Control."
         }
         else
         {

@@ -139,6 +139,46 @@ function Get-TargetResource
         $antivirusengine_enforcementLevel,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $antivirusengine_offlineDefinitionUpdate,
+
+        [Parameter()]
+        [ValidateRange(0, 86400)]
+        [System.Int32]
+        $definitionUpdatesInterval,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_checkForDefinitionsUpdate,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '3', '4', '5', '6', '7', '8')]
+        [System.String]
+        $scheduledScan_dayOfWeek,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_ignoreExclusions,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_lowPriorityScheduledScan,
+
+        [Parameter()]
+        [ValidateRange(0, 23)]
+        [System.Int32]
+        $scheduledScan_randomizeScanStartTime,
+
+        [Parameter()]
+        [ValidateSet('quick', 'full')]
+        [System.String]
+        $scheduledScan_scanType,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
@@ -314,6 +354,66 @@ function Get-TargetResource
         }
         $policySettings.Remove('threatTypeSettings') | Out-Null
         #endregion
+
+        # TODO: Remove during next breaking change and update mof schema
+        if ($policySettings.ContainsKey('diagnosticLevel'))
+        {
+            switch ($policySettings.diagnosticLevel)
+            {
+                'optional' { $policySettings.diagnosticLevel = '0' }
+                'required' { $policySettings.diagnosticLevel = '1' }
+            }
+        }
+        if ($policySettings.ContainsKey('exclusionsMergePolicy'))
+        {
+            switch ($policySettings.exclusionsMergePolicy)
+            {
+                'merge' { $policySettings.exclusionsMergePolicy = '0' }
+                'admin_only' { $policySettings.exclusionsMergePolicy = '1' }
+            }
+        }
+        if ($policySettings.ContainsKey('threatTypeSettingsMergePolicy'))
+        {
+            switch ($policySettings.threatTypeSettingsMergePolicy)
+            {
+                'merge' { $policySettings.threatTypeSettingsMergePolicy = '0' }
+                'admin_only' { $policySettings.threatTypeSettingsMergePolicy = '1' }
+            }
+        }
+        if ($policySettings.ContainsKey('behaviorMonitoring'))
+        {
+            switch ($policySettings.behaviorMonitoring)
+            {
+                'disabled' { $policySettings.behaviorMonitoring = '0' }
+                'enabled' { $policySettings.behaviorMonitoring = '1' }
+            }
+        }
+        if ($policySettings.ContainsKey('networkprotection_enforcementLevel'))
+        {
+            switch ($policySettings.networkprotection_enforcementLevel)
+            {
+                'disabled' { $policySettings.networkprotection_enforcementLevel = '0' }
+                'audit' { $policySettings.networkprotection_enforcementLevel = '1' }
+                'block' { $policySettings.networkprotection_enforcementLevel = '2' }
+            }
+        }
+        if ($policySettings.ContainsKey('nonExecMountPolicy'))
+        {
+            switch ($policySettings.nonExecMountPolicy)
+            {
+                'unmute' { $policySettings.nonExecMountPolicy = '0' }
+                'mute' { $policySettings.nonExecMountPolicy = '1' }
+            }
+        }
+        if ($policySettings.ContainsKey('antivirusengine_enforcementLevel'))
+        {
+            switch ($policySettings.antivirusengine_enforcementLevel)
+            {
+                'real_time' { $policySettings.antivirusengine_enforcementLevel = '0' }
+                'on_demand' { $policySettings.antivirusengine_enforcementLevel = '1' }
+                'passive' { $policySettings.antivirusengine_enforcementLevel = '2' }
+            }
+        }
 
         $results = @{
             #region resource generator code
@@ -496,6 +596,46 @@ function Set-TargetResource
         $antivirusengine_enforcementLevel,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $antivirusengine_offlineDefinitionUpdate,
+
+        [Parameter()]
+        [ValidateRange(0, 86400)]
+        [System.Int32]
+        $definitionUpdatesInterval,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_checkForDefinitionsUpdate,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '3', '4', '5', '6', '7', '8')]
+        [System.String]
+        $scheduledScan_dayOfWeek,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_ignoreExclusions,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_lowPriorityScheduledScan,
+
+        [Parameter()]
+        [ValidateRange(0, 23)]
+        [System.Int32]
+        $scheduledScan_randomizeScanStartTime,
+
+        [Parameter()]
+        [ValidateSet('quick', 'full')]
+        [System.String]
+        $scheduledScan_scanType,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
@@ -555,11 +695,71 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $templateReferenceId = '4cfd164c-5e8a-4ea9-b15d-9aa71e4ffff4_1'
     $platforms = 'linux'
     $technologies = 'microsoftSense'
+
+    # TODO: Remove during next breaking change and update mof schema
+    if ($boundParameters.ContainsKey('diagnosticLevel'))
+    {
+        switch ($boundParameters.diagnosticLevel)
+        {
+            '0' { $boundParameters.diagnosticLevel = 'optional' }
+            '1' { $boundParameters.diagnosticLevel = 'required' }
+        }
+    }
+    if ($boundParameters.ContainsKey('exclusionsMergePolicy'))
+    {
+        switch ($boundParameters.exclusionsMergePolicy)
+        {
+            '0' { $boundParameters.exclusionsMergePolicy = 'merge' }
+            '1' { $boundParameters.exclusionsMergePolicy = 'admin_only' }
+        }
+    }
+    if ($boundParameters.ContainsKey('threatTypeSettingsMergePolicy'))
+    {
+        switch ($boundParameters.threatTypeSettingsMergePolicy)
+        {
+            '0' { $boundParameters.threatTypeSettingsMergePolicy = 'merge' }
+            '1' { $boundParameters.threatTypeSettingsMergePolicy = 'admin_only' }
+        }
+    }
+    if ($boundParameters.ContainsKey('behaviorMonitoring'))
+    {
+        switch ($boundParameters.behaviorMonitoring)
+        {
+            '0' { $boundParameters.behaviorMonitoring = 'disabled' }
+            '1' { $boundParameters.behaviorMonitoring = 'enabled' }
+        }
+    }
+    if ($boundParameters.ContainsKey('networkprotection_enforcementLevel'))
+    {
+        switch ($boundParameters.networkprotection_enforcementLevel)
+        {
+            '0' { $boundParameters.networkprotection_enforcementLevel = 'disabled' }
+            '1' { $boundParameters.networkprotection_enforcementLevel = 'audit' }
+            '2' { $boundParameters.networkprotection_enforcementLevel = 'block' }
+        }
+    }
+    if ($boundParameters.ContainsKey('nonExecMountPolicy'))
+    {
+        switch ($boundParameters.nonExecMountPolicy)
+        {
+            '0' { $boundParameters.nonExecMountPolicy = 'unmute' }
+            '1' { $boundParameters.nonExecMountPolicy = 'mute' }
+        }
+    }
+    if ($boundParameters.ContainsKey('antivirusengine_enforcementLevel'))
+    {
+        switch ($boundParameters.antivirusengine_enforcementLevel)
+        {
+            '0' { $boundParameters.antivirusengine_enforcementLevel = 'real_time' }
+            '1' { $boundParameters.antivirusengine_enforcementLevel = 'on_demand' }
+            '2' { $boundParameters.antivirusengine_enforcementLevel = 'passive' }
+        }
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -766,6 +966,46 @@ function Test-TargetResource
         [ValidateSet('0', '1', '2')]
         [System.String]
         $antivirusengine_enforcementLevel,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $antivirusengine_offlineDefinitionUpdate,
+
+        [Parameter()]
+        [ValidateRange(0, 86400)]
+        [System.Int32]
+        $definitionUpdatesInterval,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_checkForDefinitionsUpdate,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '3', '4', '5', '6', '7', '8')]
+        [System.String]
+        $scheduledScan_dayOfWeek,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_ignoreExclusions,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_lowPriorityScheduledScan,
+
+        [Parameter()]
+        [ValidateRange(0, 23)]
+        [System.Int32]
+        $scheduledScan_randomizeScanStartTime,
+
+        [Parameter()]
+        [ValidateSet('quick', 'full')]
+        [System.String]
+        $scheduledScan_scanType,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]

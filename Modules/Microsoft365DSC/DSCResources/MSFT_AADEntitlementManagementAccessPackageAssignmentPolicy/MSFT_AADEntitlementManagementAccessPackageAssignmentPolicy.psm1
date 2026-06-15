@@ -164,6 +164,7 @@ function Get-TargetResource
             {
                 $setting.Add('odataType', $setting.'@odata.type')
                 $setting.Remove('@odata.type') | Out-Null
+                $setting.Remove('description') | Out-Null
                 if (-not [System.String]::IsNullOrEmpty($setting.id))
                 {
                     $user = Get-MgUser -UserId $setting.id -ErrorAction SilentlyContinue

@@ -384,7 +384,7 @@ function Invoke-M365DSCGraphShimGetResource
     # Single-item retrieval when a resolved SingleItemUri is supplied
     if (-not [System.String]::IsNullOrEmpty($SingleItemUri))
     {
-        $uri = $SingleItemUri
+        $uri = $SingleItemUri.Replace("#", "%23") # Encode '#' in IDs to prevent confusion with URI fragments
         $queryParts = @()
         if ($BoundParameters['Property']) { $queryParts += "`$select=$($BoundParameters['Property'] -join ',')" }
         if ($BoundParameters['ExpandProperty']) { $queryParts += "`$expand=$($BoundParameters['ExpandProperty'] -join ',')" }
@@ -29196,14 +29196,6 @@ function New-MgGroup
         $RenewedDateTime,
 
         [Parameter()]
-        [System.String[]]
-        $ResourceBehaviorOptions,
-
-        [Parameter()]
-        [System.String[]]
-        $ResourceProvisioningOptions,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $SecurityEnabled,
 
@@ -44435,74 +44427,6 @@ function Update-MgBetaDirectoryCustomSecurityAttributeDefinition
     return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/directory/customSecurityAttributeDefinitions/$($CustomSecurityAttributeDefinitionId)" -Method 'PATCH' -ExtraExcludeParams @('CustomSecurityAttributeDefinitionId') -ErrorAction $ErrorActionPreference
 }
 
-function Update-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $AllowedValueId,
-
-        [Parameter()]
-        [System.String]
-        $CustomSecurityAttributeDefinitionId,
-
-        [Parameter()]
-        [System.Object]
-        $InputObject,
-
-        [Parameter()]
-        [System.Object]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsActive,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.Collections.IDictionary]
-        $Headers,
-
-        [Parameter()]
-        [System.Object[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Object[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials
-    )
-
-    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/directory/customSecurityAttributeDefinitions/$($CustomSecurityAttributeDefinitionId)/allowedValues/$($AllowedValueId)" -Method 'PATCH' -ExtraExcludeParams @('CustomSecurityAttributeDefinitionId', 'AllowedValueId') -ErrorAction $ErrorActionPreference
-}
-
 function Update-MgBetaDirectorySetting
 {
     [CmdletBinding()]
@@ -49608,14 +49532,6 @@ function Update-MgGroup
         $RenewedDateTime,
 
         [Parameter()]
-        [System.String[]]
-        $ResourceBehaviorOptions,
-
-        [Parameter()]
-        [System.String[]]
-        $ResourceProvisioningOptions,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $SecurityEnabled,
 
@@ -51232,7 +51148,6 @@ Export-ModuleMember -Function @(
     'Update-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfiguration',
     'Update-MgBetaDirectoryCertificateAuthorityCertificateBasedApplicationConfigurationTrustedCertificateAuthority',
     'Update-MgBetaDirectoryCustomSecurityAttributeDefinition',
-    'Update-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue',
     'Update-MgBetaDirectorySetting',
     'Update-MgBetaDomain',
     'Update-MgBetaDomainFederationConfiguration',

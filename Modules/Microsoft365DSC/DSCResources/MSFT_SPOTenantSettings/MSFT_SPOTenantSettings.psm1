@@ -657,13 +657,6 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if (-not [string]::IsNullOrEmpty($TenantDefaultTimezone))
-    {
-        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-    }
-    $null = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
-
     $CurrentParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $spoRestParameters = @(
@@ -698,7 +691,8 @@ function Set-TargetResource
     {
         if ($CurrentParameters.ContainsKey($param))
         {
-            $spoGraphParametersSplat.Add($param, $CurrentParameters[$param])
+            $paramWithLowerCase = $param.Substring(0, 1).ToLower() + $param.Substring(1)
+            $spoGraphParametersSplat.Add($paramWithLowerCase, $CurrentParameters[$param])
             $CurrentParameters.Remove($param) | Out-Null
         }
     }
@@ -708,12 +702,17 @@ function Set-TargetResource
         Write-Verbose -Message 'The use of the public CDN is not enabled, for that the PublicCdnAllowedFileTypes parameter can not be configured and will be removed'
         $CurrentParameters.Remove('PublicCdnAllowedFileTypes') | Out-Null
     }
-    $null = Set-PnPTenant @CurrentParameters
 
     if ($spoGraphParametersSplat.Keys.Count -gt 0)
     {
+        Reset-MSCloudLoginConnectionProfileContext -Workload 'MicrosoftGraph'
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
         $null = Update-MgAdminSharepointSetting -BodyParameter $spoGraphParametersSplat -ErrorAction Stop
     }
+
+    $null = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
+    $null = Set-PnPTenant @CurrentParameters -Force
 
     # Updating via REST
     try

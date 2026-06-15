@@ -34,6 +34,41 @@ function Get-TargetResource
         $automaticSampleSubmission,
 
         [Parameter()]
+        [ValidateSet('none', 'safe', 'all')]
+        [System.String]
+        $automaticSampleSubmissionConsent,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $behaviorMonitoring,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $checkForDefinitionsUpdate,
+
+        [Parameter()]
+        [ValidateRange(0, 24)]
+        [System.Int32]
+        $dailyConfiguration_interval,
+
+        [Parameter()]
+        [ValidateRange(0, 1440)]
+        [System.Int32]
+        $dailyConfiguration_timeOfDay,
+
+        [Parameter()]
+        [ValidateRange(1, 30)]
+        [System.Int32]
+        $definitionUpdateDue,
+
+        [Parameter()]
+        [ValidateRange(60, 86400)]
+        [System.Int32]
+        $definitionUpdatesInterval,
+
+        [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
         $diagnosticLevel,
@@ -49,9 +84,61 @@ function Get-TargetResource
         $enableRealTimeProtection,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $exclusions_tamperProtection,
+
+        [Parameter()]
+        [System.String]
+        $groupIds,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $ignoreExclusions,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $lowPriorityScheduledScan,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $offlineDefinitionUpdate,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $offlineDefinitionUpdateFallbackToCloud,
+
+        [Parameter()]
+        [System.String]
+        $offlineDefinitionUpdateUrl,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $offlineDefinitionUpdateVerifySig,
+
+        [Parameter()]
         [ValidateSet('false', 'true')]
         [System.String]
         $passiveMode,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $performanceProfiles,
+
+        [Parameter()]
+        [ValidateRange(0, 23)]
+        [System.Int32]
+        $randomizeScanStartTime,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $runScanWhenIdle,
 
         [Parameter()]
         [ValidateRange(5000, 15000)]
@@ -62,6 +149,11 @@ function Get-TargetResource
         [ValidateRange(1, 180)]
         [System.Int32]
         $scanResultsRetentionDays,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $scheduledScan,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -310,25 +402,122 @@ function Get-TargetResource
             }
         }
         $policySettings.Remove('threatTypeSettings')
+
+        $complexExclusionsTamperProtection = @()
+        foreach ($currentExclusionsTamperProtection in $policySettings.exclusions_tamperProtection)
+        {
+            $myExclusionsTamperProtection = [ordered]@{}
+            if ($null -ne $currentExclusionsTamperProtection.exclusions_item_args_tamperProtection)
+            {
+                $myExclusionsTamperProtection.Add('exclusions_item_args_tamperProtection', $currentExclusionsTamperProtection.exclusions_item_args_tamperProtection)
+            }
+            if ($null -ne $currentExclusionsTamperProtection.exclusions_item_path_tamperProtection)
+            {
+                $myExclusionsTamperProtection.Add('exclusions_item_path_tamperProtection', $currentExclusionsTamperProtection.exclusions_item_path_tamperProtection)
+            }
+            if ($null -ne $currentExclusionsTamperProtection.exclusions_item_signingId_tamperProtection)
+            {
+                $myExclusionsTamperProtection.Add('exclusions_item_signingId_tamperProtection', $currentExclusionsTamperProtection.exclusions_item_signingId_tamperProtection)
+            }
+            if ($null -ne $currentExclusionsTamperProtection.exclusions_item_teamId_tamperProtection)
+            {
+                $myExclusionsTamperProtection.Add('exclusions_item_teamId_tamperProtection', $currentExclusionsTamperProtection.exclusions_item_teamId_tamperProtection)
+            }
+            if ($myExclusionsTamperProtection.values.Where({ $null -ne $_ }).Count -gt 0)
+            {
+                $complexExclusionsTamperProtection += $myExclusionsTamperProtection
+            }
+        }
+        $policySettings.Remove('exclusions_tamperProtection')
         #endregion
+
+        # TODO: Remove during next breaking change and update mof schema
+        if ($policySettings.ContainsKey('diagnosticLevel'))
+        {
+            switch ($policySettings.diagnosticLevel)
+            {
+                'optional' { $policySettings.diagnosticLevel = '0' }
+                'required' { $policySettings.diagnosticLevel = '1' }
+            }
+        }
+        if ($policySettings.ContainsKey('exclusionsMergePolicy'))
+        {
+            switch ($policySettings.exclusionsMergePolicy)
+            {
+                'merge' { $policySettings.exclusionsMergePolicy = '0' }
+                'admin_only' { $policySettings.exclusionsMergePolicy = '1' }
+            }
+        }
+        if ($policySettings.ContainsKey('threatTypeSettingsMergePolicy'))
+        {
+            switch ($policySettings.threatTypeSettingsMergePolicy)
+            {
+                'merge' { $policySettings.threatTypeSettingsMergePolicy = '0' }
+                'admin_only' { $policySettings.threatTypeSettingsMergePolicy = '1' }
+            }
+        }
+        if ($policySettings.ContainsKey('enforcementLevel'))
+        {
+            switch ($policySettings.enforcementLevel)
+            {
+                'disabled' { $policySettings.enforcementLevel = '0' }
+                'audit' { $policySettings.enforcementLevel = '1' }
+                'block' { $policySettings.enforcementLevel = '2' }
+            }
+        }
+        if ($policySettings.ContainsKey('enforcementLevel_tamperProtection'))
+        {
+            switch ($policySettings.enforcementLevel_tamperProtection)
+            {
+                'disabled' { $policySettings.enforcementLevel_tamperProtection = '0' }
+                'audit' { $policySettings.enforcementLevel_tamperProtection = '1' }
+                'block' { $policySettings.enforcementLevel_tamperProtection = '2' }
+            }
+        }
+        if ($policySettings.ContainsKey('consumerExperience'))
+        {
+            switch ($policySettings.consumerExperience)
+            {
+                'enabled' { $policySettings.consumerExperience = '0' }
+                'disabled' { $policySettings.consumerExperience = '1' }
+            }
+        }
+        if ($policySettings.ContainsKey('userInitiatedFeedback'))
+        {
+            switch ($policySettings.userInitiatedFeedback)
+            {
+                'enabled' { $policySettings.userInitiatedFeedback = '0' }
+                'disabled' { $policySettings.userInitiatedFeedback = '1' }
+            }
+        }
+        if ($policySettings.ContainsKey('antivirusengine_enforcementLevel'))
+        {
+            switch ($policySettings.antivirusengine_enforcementLevel)
+            {
+                'real_time' { $policySettings.antivirusengine_enforcementLevel = '0' }
+                'on_demand' { $policySettings.antivirusengine_enforcementLevel = '1' }
+                'passive' { $policySettings.antivirusengine_enforcementLevel = '2' }
+            }
+        }
 
         $results = @{
             #region resource generator code
-            Description           = $getValue.Description
-            DisplayName           = $getValue.Name
-            RoleScopeTagIds       = $getValue.RoleScopeTagIds
-            Id                    = $getValue.Id
-            exclusions            = $complexExclusions
-            threatTypeSettings    = $complexThreatTypeSettings
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePath       = $CertificatePath
-            CertificatePassword   = $CertificatePassword
-            ManagedIdentity       = $ManagedIdentity.IsPresent
+            Description                 = $getValue.Description
+            DisplayName                 = $getValue.Name
+            RoleScopeTagIds             = $getValue.RoleScopeTagIds
+            Id                          = $getValue.Id
+            exclusions                  = $complexExclusions
+            threatTypeSettings          = $complexThreatTypeSettings
+            exclusions_tamperProtection = $complexExclusionsTamperProtection
+            Ensure                      = 'Present'
+            Credential                  = $Credential
+            ApplicationId               = $ApplicationId
+            TenantId                    = $TenantId
+            ApplicationSecret           = $ApplicationSecret
+            CertificateThumbprint       = $CertificateThumbprint
+            CertificatePath             = $CertificatePath
+            CertificatePassword         = $CertificatePassword
+            ManagedIdentity             = $ManagedIdentity.IsPresent
             #endregion
         }
         $results += $policySettings
@@ -388,6 +577,41 @@ function Set-TargetResource
         $automaticSampleSubmission,
 
         [Parameter()]
+        [ValidateSet('none', 'safe', 'all')]
+        [System.String]
+        $automaticSampleSubmissionConsent,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $behaviorMonitoring,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $checkForDefinitionsUpdate,
+
+        [Parameter()]
+        [ValidateRange(0, 24)]
+        [System.Int32]
+        $dailyConfiguration_interval,
+
+        [Parameter()]
+        [ValidateRange(0, 1440)]
+        [System.Int32]
+        $dailyConfiguration_timeOfDay,
+
+        [Parameter()]
+        [ValidateRange(1, 30)]
+        [System.Int32]
+        $definitionUpdateDue,
+
+        [Parameter()]
+        [ValidateRange(60, 86400)]
+        [System.Int32]
+        $definitionUpdatesInterval,
+
+        [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
         $diagnosticLevel,
@@ -403,9 +627,61 @@ function Set-TargetResource
         $enableRealTimeProtection,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $exclusions_tamperProtection,
+
+        [Parameter()]
+        [System.String]
+        $groupIds,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $ignoreExclusions,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $lowPriorityScheduledScan,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $offlineDefinitionUpdate,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $offlineDefinitionUpdateFallbackToCloud,
+
+        [Parameter()]
+        [System.String]
+        $offlineDefinitionUpdateUrl,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $offlineDefinitionUpdateVerifySig,
+
+        [Parameter()]
         [ValidateSet('false', 'true')]
         [System.String]
         $passiveMode,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $performanceProfiles,
+
+        [Parameter()]
+        [ValidateRange(0, 23)]
+        [System.Int32]
+        $randomizeScanStartTime,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $runScanWhenIdle,
 
         [Parameter()]
         [ValidateRange(5000, 15000)]
@@ -416,6 +692,11 @@ function Set-TargetResource
         [ValidateRange(1, 180)]
         [System.Int32]
         $scanResultsRetentionDays,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $scheduledScan,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -499,6 +780,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
@@ -554,11 +836,80 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $templateReferenceId = '2d345ec2-c817-49e5-9156-3ed416dc972a_1'
     $platforms = 'macOS'
     $technologies = 'mdm,microsoftSense'
+
+    # TODO: Remove during next breaking change and update mof schema
+    if ($boundParameters.ContainsKey('diagnosticLevel'))
+    {
+        switch ($boundParameters.diagnosticLevel)
+        {
+            '0' { $boundParameters.diagnosticLevel = 'optional' }
+            '1' { $boundParameters.diagnosticLevel = 'required' }
+        }
+    }
+    if ($boundParameters.ContainsKey('exclusionsMergePolicy'))
+    {
+        switch ($boundParameters.exclusionsMergePolicy)
+        {
+            '0' { $boundParameters.exclusionsMergePolicy = 'merge' }
+            '1' { $boundParameters.exclusionsMergePolicy = 'admin_only' }
+        }
+    }
+    if ($boundParameters.ContainsKey('threatTypeSettingsMergePolicy'))
+    {
+        switch ($boundParameters.threatTypeSettingsMergePolicy)
+        {
+            '0' { $boundParameters.threatTypeSettingsMergePolicy = 'merge' }
+            '1' { $boundParameters.threatTypeSettingsMergePolicy = 'admin_only' }
+        }
+    }
+    if ($boundParameters.ContainsKey('enforcementLevel'))
+    {
+        switch ($boundParameters.enforcementLevel)
+        {
+            '0' { $boundParameters.enforcementLevel = 'disabled' }
+            '1' { $boundParameters.enforcementLevel = 'audit' }
+            '2' { $boundParameters.enforcementLevel = 'block' }
+        }
+    }
+    if ($boundParameters.ContainsKey('enforcementLevel_tamperProtection'))
+    {
+        switch ($boundParameters.enforcementLevel_tamperProtection)
+        {
+            '0' { $boundParameters.enforcementLevel_tamperProtection = 'disabled' }
+            '1' { $boundParameters.enforcementLevel_tamperProtection = 'audit' }
+            '2' { $boundParameters.enforcementLevel_tamperProtection = 'block' }
+        }
+    }
+    if ($boundParameters.ContainsKey('consumerExperience'))
+    {
+        switch ($boundParameters.consumerExperience)
+        {
+            '0' { $boundParameters.consumerExperience = 'enabled' }
+            '1' { $boundParameters.consumerExperience = 'disabled' }
+        }
+    }
+    if ($boundParameters.ContainsKey('userInitiatedFeedback'))
+    {
+        switch ($boundParameters.userInitiatedFeedback)
+        {
+            '0' { $boundParameters.userInitiatedFeedback = 'enabled' }
+            '1' { $boundParameters.userInitiatedFeedback = 'disabled' }
+        }
+    }
+    if ($boundParameters.ContainsKey('antivirusengine_enforcementLevel'))
+    {
+        switch ($boundParameters.antivirusengine_enforcementLevel)
+        {
+            '0' { $boundParameters.antivirusengine_enforcementLevel = 'real_time' }
+            '1' { $boundParameters.antivirusengine_enforcementLevel = 'on_demand' }
+            '2' { $boundParameters.antivirusengine_enforcementLevel = 'passive' }
+        }
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -662,6 +1013,41 @@ function Test-TargetResource
         $automaticSampleSubmission,
 
         [Parameter()]
+        [ValidateSet('none', 'safe', 'all')]
+        [System.String]
+        $automaticSampleSubmissionConsent,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $behaviorMonitoring,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $checkForDefinitionsUpdate,
+
+        [Parameter()]
+        [ValidateRange(0, 24)]
+        [System.Int32]
+        $dailyConfiguration_interval,
+
+        [Parameter()]
+        [ValidateRange(0, 1440)]
+        [System.Int32]
+        $dailyConfiguration_timeOfDay,
+
+        [Parameter()]
+        [ValidateRange(1, 30)]
+        [System.Int32]
+        $definitionUpdateDue,
+
+        [Parameter()]
+        [ValidateRange(60, 86400)]
+        [System.Int32]
+        $definitionUpdatesInterval,
+
+        [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
         $diagnosticLevel,
@@ -677,9 +1063,61 @@ function Test-TargetResource
         $enableRealTimeProtection,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $exclusions_tamperProtection,
+
+        [Parameter()]
+        [System.String]
+        $groupIds,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $ignoreExclusions,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $lowPriorityScheduledScan,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $offlineDefinitionUpdate,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $offlineDefinitionUpdateFallbackToCloud,
+
+        [Parameter()]
+        [System.String]
+        $offlineDefinitionUpdateUrl,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $offlineDefinitionUpdateVerifySig,
+
+        [Parameter()]
         [ValidateSet('false', 'true')]
         [System.String]
         $passiveMode,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $performanceProfiles,
+
+        [Parameter()]
+        [ValidateRange(0, 23)]
+        [System.Int32]
+        $randomizeScanStartTime,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $runScanWhenIdle,
 
         [Parameter()]
         [ValidateRange(5000, 15000)]
@@ -690,6 +1128,11 @@ function Test-TargetResource
         [ValidateRange(1, 180)]
         [System.Int32]
         $scanResultsRetentionDays,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $scheduledScan,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -980,7 +1423,20 @@ function Export-TargetResource
                     $Results.Remove('threatTypeSettings') | Out-Null
                 }
             }
-
+            if ($null -ne $Results.exclusions_tamperProtection)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.exclusions_tamperProtection `
+                    -CIMInstanceName 'MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions_tamperProtection'
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.exclusions_tamperProtection = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('exclusions_tamperProtection') | Out-Null
+                }
+            }
             if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
@@ -999,7 +1455,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('exclusions', 'threatTypeSettings', 'Assignments')
+                -NoEscape @('exclusions', 'exclusions_tamperProtection', 'threatTypeSettings', 'Assignments')
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

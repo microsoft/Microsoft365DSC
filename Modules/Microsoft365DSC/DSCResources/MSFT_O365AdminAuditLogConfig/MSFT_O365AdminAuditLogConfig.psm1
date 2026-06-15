@@ -356,8 +356,8 @@ function Export-TargetResource
             TenantId                        = $TenantId
             CertificateThumbprint           = $CertificateThumbprint
             CertificatePassword             = $CertificatePassword
-            ManagedIdentity                 = $ManagedIdentity.IsPresent
             CertificatePath                 = $CertificatePath
+            ManagedIdentity                 = $ManagedIdentity.IsPresent
             AccessTokens                    = $AccessTokens
         }
         $Results = Get-TargetResource @Params
