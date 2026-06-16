@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.26.617.1
 
 * AADAdministrativeUnit
   * Fixed validation of scoped role members' uniqueness
