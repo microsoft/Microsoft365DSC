@@ -1040,7 +1040,7 @@ function Update-M365DSCAzureAdApplication
                     -DeviceCode
 
                 $headers = @{
-                    Authorization            = "Bearer $($token.access_token)"
+                    authorization            = "Bearer $($token.access_token)"
                     'x-ms-client-request-id' = [guid]::NewGuid().ToString()
                     'x-ms-client-session-id' = [guid]::NewGuid().ToString()
                 }
@@ -1160,10 +1160,11 @@ function Update-M365DSCAzureAdApplication
                     }
 
                     Write-LogEntry "    Certificate details: $($cerCert.Subject) ($($cerCert.Thumbprint))"
-                    $params = @{
+                    $params = @()
+                    $params += @{
                         type  = 'AsymmetricX509Cert'
                         usage = 'Verify'
-                        key   = $cerCert.GetRawCertData()
+                        key   = [System.Convert]::ToBase64String($cerCert.GetRawCertData())
                     }
 
                     $maxRetries = 3

@@ -605,6 +605,8 @@ function Export-TargetResource
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
                         CertificateThumbprint = $CertificateThumbprint
+                        CertificatePath       = $CertificatePath
+                        CertificatePassword   = $CertificatePassword
                         ManagedIdentity       = $ManagedIdentity.IsPresent
                         AccessTokens          = $AccessTokens
                     }

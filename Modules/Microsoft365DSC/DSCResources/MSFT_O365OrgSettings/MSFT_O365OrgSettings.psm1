@@ -618,8 +618,10 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
         $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
         $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
-        Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
+        Invoke-M365DSCCommand -ScriptBlock {
+            Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
             -BodyParameter @{ accountEnabled = $M365WebEnableUsersToOpenFilesFrom3PStorage }
+        } -RetryOnNotFoundError
     }
     if (($PSBoundParameters.ContainsKey('PlannerAllowCalendarSharing') -and `
             ($PlannerAllowCalendarSharing -ne $currentValues.PlannerAllowCalendarSharing)) -or `
@@ -696,10 +698,10 @@ function Set-TargetResource
     }
 
     # Apps Installation
-    if (($PSBoundParameters.ContainsKey('InstallationOptionsAppsForWindows') -or `
-                $PSBoundParameters.ContainsKey('InstallationOptionsAppsForMac')) -and `
-        ($null -ne (Compare-Object -ReferenceObject $currentValues.InstallationOptionsAppsForWindows -DifferenceObject $InstallationOptionsAppsForWindows) -or `
-                $null -ne (Compare-Object -ReferenceObject $currentValues.InstallationOptionsAppsForMac -DifferenceObject $InstallationOptionsAppsForMac)))
+    if (($PSBoundParameters.ContainsKey('InstallationOptionsAppsForWindows') -and `
+        ($null -ne (Compare-Object -ReferenceObject $currentValues.InstallationOptionsAppsForWindows -DifferenceObject $InstallationOptionsAppsForWindows))) `
+    -or ($PSBoundParameters.ContainsKey('InstallationOptionsAppsForMac') -and `
+        ($null -ne (Compare-Object -ReferenceObject $currentValues.InstallationOptionsAppsForMac -DifferenceObject $InstallationOptionsAppsForMac))))
     {
         $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
             -InboundParameters $PSBoundParameters

@@ -152,7 +152,7 @@ function Get-TargetResource
             $nullReturn.AssignedToRole = @()
             $nullReturn.AssignedLicenses = @()
 
-            if ($PSBoundParameters.ContainsKey('Id'))
+            if ($PSBoundParameters.ContainsKey('Id') -and -not [System.String]::IsNullOrEmpty($Id))
             {
                 Write-Verbose -Message 'GroupID was specified'
                 try
@@ -237,7 +237,7 @@ function Get-TargetResource
         $GroupAsMembersValues = [System.Collections.Generic.List[System.String]]::new()
 
         # If the Members and GroupAsMembers parameters are not specified, do not attempt to retrieve them as part of the Get-TargetResource.
-        if ($Group.MembershipRuleProcessingState -ne 'On' -and (($PSBoundParameters.ContainsKey('Members') -and $Members.Count -gt 0) -or ($PSBoundParameters.ContainsKey('GroupAsMembers') -and $GroupAsMembers.Count -gt 0)))
+        if ($Group.MembershipRuleProcessingState -ne 'On' -and ($PSBoundParameters.ContainsKey('Members') -or $PSBoundParameters.ContainsKey('GroupAsMembers')))
         {
             # Members
             $groupMembers = $Group.Members
@@ -591,8 +591,8 @@ function Set-TargetResource
 
                 $skuInfo = $allSkus | Where-Object -FilterScript { ($_.SkuPartNumber -replace [char]0xFEFF, '') -eq $assignedLicense.SkuId }
                 $licensesToAdd += @{
-                    DisabledPlans = $disabledPlansValues
-                    SkuId         = $skuInfo.SkuId
+                    disabledPlans = $disabledPlansValues
+                    skuId         = $skuInfo.SkuId
                 }
             }
             elseif ($toRemove.Contains($assignedLicense.SkuId))
@@ -933,7 +933,7 @@ function Set-TargetResource
                     if ($diff.SideIndicator -eq '=>')
                     {
                         # see if memberOfGroup contains property SecurityEnabled (it can be true or false)
-                        if ($memberOfGroup.psobject.Typenames -match 'Group')
+                        if ($memberOfGroup.SecurityEnabled)
                         {
                             Write-Verbose -Message "Adding AAD group {$($currentGroup.DisplayName)} as member of AAD group {$($memberOfGroup.DisplayName)}"
                             New-MgGroupMemberByRef -GroupId ($memberOfGroup.Id) -BodyParameter @{
@@ -947,7 +947,7 @@ function Set-TargetResource
                     }
                     elseif ($diff.SideIndicator -eq '<=')
                     {
-                        if ($memberOfGroup.psobject.Typenames -match 'Group')
+                        if ($memberOfGroup.SecurityEnabled)
                         {
                             Write-Verbose -Message "Removing AAD Group {$($currentGroup.DisplayName)} from AAD group {$($memberOfGroup.DisplayName)}"
                             Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($memberOfGroup.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
@@ -1308,10 +1308,12 @@ function Export-TargetResource
                 SecurityEnabled       = $true
                 MailEnabled           = $true
                 Id                    = $group.Id
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                Credential            = $Credential
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
@@ -1410,8 +1412,8 @@ function Get-M365DSCAzureADGroupLicenses
             $disabledPlansValues += $foundItem.ServicePlanName
         }
         $currentLicense = @{
-            DisabledPlans = $disabledPlansValues
-            SkuId         = $skuPartNumber.SkuPartNumber -replace [char]0xFEFF
+            disabledPlans = $disabledPlansValues
+            skuId         = $skuPartNumber.SkuPartNumber -replace [char]0xFEFF
         }
         $returnValue += $currentLicense
     }
@@ -1440,8 +1442,8 @@ function Get-M365DSCCombinedLicenses
         {
             Write-Verbose -Message "Including Current $license"
             $result += @{
-                SkuId         = $license.SkuId
-                DisabledPlans = $license.DisabledPlans
+                skuId         = $license.SkuId
+                disabledPlans = $license.DisabledPlans
             }
         }
     }
@@ -1454,17 +1456,17 @@ function Get-M365DSCCombinedLicenses
             if ($result.Length -eq 0)
             {
                 $result += @{
-                    SkuId         = $licenseSkuId
-                    DisabledPlans = $license.DisabledPlans
+                    skuId         = $licenseSkuId
+                    disabledPlans = $license.DisabledPlans
                 }
             }
             else
             {
-                if (-not $result.SkuId.Contains($licenseSkuId))
+                if (-not $result.skuId.Contains($licenseSkuId))
                 {
                     $result += @{
-                        SkuId         = $licenseSkuId
-                        DisabledPlans = $license.DisabledPlans
+                        skuId         = $licenseSkuId
+                        disabledPlans = $license.DisabledPlans
                     }
                 }
                 else
@@ -1472,9 +1474,9 @@ function Get-M365DSCCombinedLicenses
                     # Set the Desired Disabled Plans if the sku is already added to the list
                     foreach ($item in $result)
                     {
-                        if ($item.SkuId -eq $licenseSkuId)
+                        if ($item.skuId -eq $licenseSkuId)
                         {
-                            $item.DisabledPlans = $license.DisabledPlans
+                            $item.disabledPlans = $license.disabledPlans
                         }
                     }
                 }

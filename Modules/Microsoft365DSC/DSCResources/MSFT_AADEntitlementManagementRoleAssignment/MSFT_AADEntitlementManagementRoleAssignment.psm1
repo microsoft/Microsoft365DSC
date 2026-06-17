@@ -293,7 +293,23 @@ function Set-TargetResource
     )
     $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests
 
-    $objectId = $batchResponses.body.value.id
+    $objectId = $null
+    foreach ($response in $batchResponses)
+    {
+        if ($response.body.id)
+        {
+            # Direct GET response (user)
+            $objectId = $response.body.id
+            break
+        }
+        elseif ($response.body.value.Count -gt 0)
+        {
+            # Filter response (group/servicePrincipal)
+            $objectId = $response.body.value[0].id
+            break
+        }
+    }
+
     if ($null -eq $objectId)
     {
         throw "Principal '$Principal' not found. Ensure the Principal exists and is correctly specified."

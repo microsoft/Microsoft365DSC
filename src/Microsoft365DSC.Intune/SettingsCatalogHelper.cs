@@ -230,7 +230,7 @@ namespace Microsoft365DSC.Intune
 
             if (obj is PSObject psobject)
                 obj = psobject.BaseObject;
-    
+
             if (obj is IDictionary<string, object> dict && dict.TryGetValue(propertyName, out object? value))
                 return value as IEnumerable<object>;
             if (obj is Hashtable ht && ht.ContainsKey(propertyName))
@@ -372,10 +372,10 @@ namespace Microsoft365DSC.Intune
         /// </summary>
         public static string GetSettingName(SettingDefinitionInfo settingDefinition, List<SettingDefinitionInfo> allSettingDefinitions)
         {
-
             // Remove invalid characters and replace spaces with underscores
             string settingName = Regex.Replace(settingDefinition.Name, @"[\{\}\$]", "");
             settingName = settingName.Replace(' ', '_');
+            settingName = settingName.Replace("/", "_");
 
             var settingsWithSameName = allSettingDefinitions.Where(s => s.Name.Equals(settingName, StringComparison.OrdinalIgnoreCase)).ToList();
 

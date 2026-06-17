@@ -291,8 +291,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MailEnabled     = $True
                         MailNickname    = 'M365DSCM'
                     }
-                    # Set-TargetResource expects data-type of answer to contain 'group'
-                    $returnData.psobject.TypeNames.Insert(0, 'Group')
                     return $returnData
                 }
             }
@@ -444,9 +442,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MailNickname    = 'M365DSC'
                         GroupTypes      = @()
                     }
-
-                    # Set-TargetResource expects object-type of answer to contain 'group'
-                    $returnData.psobject.TypeNames.Insert(0, 'Group')
                     return $returnData
                 }
                 Mock -CommandName Get-MgBetaGroup -ParameterFilter { $Id -eq '67890-67890-67890-67890' -or $Filter -eq "DisplayName -eq 'DSCMemberOfGroup'" } -MockWith {
@@ -459,8 +454,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GroupTypes      = @()
                         MailNickname    = 'M365DSCM'
                     }
-                    # Set-TargetResource expects object-type of answer to contain 'group'
-                    $returnData.psobject.TypeNames.Insert(0, 'Group')
                     return $returnData
                 }
             }

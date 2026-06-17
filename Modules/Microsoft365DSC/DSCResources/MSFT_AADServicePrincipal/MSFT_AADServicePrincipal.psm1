@@ -351,7 +351,7 @@ function Get-TargetResource
             }
         }
 
-        $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -ServicePrincipal $ServicePrincipal)
+        $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -ServicePrincipal $AADServicePrincipal)
         if ($null -eq $complexCustomSecurityAttributes)
         {
             $complexCustomSecurityAttributes = @()
@@ -614,7 +614,9 @@ function Set-TargetResource
     # update the custom security attributes to be cmdlet comsumable
     if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes.Count -gt 0)
     {
-        $currentParameters.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable -CustomSecurityAttributes $currentParameters.CustomSecurityAttributes
+        $currentSCAValue = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable -CustomSecurityAttributes $currentParameters.CustomSecurityAttributes
+        $currentParameters.Remove('CustomSecurityAttributes') | Out-Null
+        $currentParameters.Add('customSecurityAttributes', $currentSCAValue)
     }
     else
     {
@@ -691,7 +693,7 @@ function Set-TargetResource
                     $PrincipalIdValue = $group.Id
                 }
 
-                $appRoleId = ($newSP.AppRoles | Where-Object -FilterScript { $_.DisplayName -eq $assignment.PrincipalType }).Id
+                $appRoleId = Get-M365DSCAADServicePrincipalAppRoleId -AppRoles $newSP.AppRoles -PrincipalType $assignment.PrincipalType
                 $bodyParam = @{
                     principalId = $PrincipalIdValue
                     resourceId  = $newSP.Id
@@ -732,7 +734,6 @@ function Set-TargetResource
             }
             Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/servicePrincipals(appId='$($currentParameters.AppId)')") -Method Patch -Body $CSAParams
         }
-
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID -BodyParameter $currentParameters
 
         if ($PSBoundParameters.ContainsKey('ClaimsPolicy'))
@@ -795,7 +796,7 @@ function Set-TargetResource
                             $PrincipalIdValue = $group.Id
                         }
 
-                        $appRoleId = ($appInstance.AppRoles | Where-Object -FilterScript { $_.DisplayName -eq $assignment.PrincipalType }).Id
+                        $appRoleId = Get-M365DSCAADServicePrincipalAppRoleId -AppRoles $appInstance.AppRoles -PrincipalType $assignment.PrincipalType
                         $bodyParam = @{
                             principalId = $PrincipalIdValue
                             resourceId  = $currentAADServicePrincipal.ObjectID
@@ -1503,6 +1504,30 @@ function Get-CompareParameters
     return @{
         ExcludedProperties = @('ObjectId', 'KeyCredentials', 'PasswordCredentials', 'ReplyUrls', 'LogoutUrl')
     }
+}
+
+function Get-M365DSCAADServicePrincipalAppRoleId
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter()]
+        [AllowNull()]
+        [System.Object[]]
+        $AppRoles,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $PrincipalType
+    )
+
+    $appRoleId = ($AppRoles | Where-Object -FilterScript { $_.DisplayName -eq $PrincipalType } | Select-Object -First 1).Id
+    if ([System.String]::IsNullOrEmpty($appRoleId))
+    {
+        $appRoleId = '00000000-0000-0000-0000-000000000000'
+    }
+
+    return $appRoleId
 }
 
 Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

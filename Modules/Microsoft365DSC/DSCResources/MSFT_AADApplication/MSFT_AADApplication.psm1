@@ -887,7 +887,7 @@ function Set-TargetResource
             }
             $PreAuthorizedApplicationsValue += @{
                 appId                  = $preAuthApp.AppId
-                delegatedPermissionIds = $preAuthApp.PermissionIds | Foreach-Object {
+                delegatedPermissionIds = Get-M365DSCArrayFromProperty -PropertyValue ($preAuthApp.PermissionIds | Foreach-Object {
                     if ($_ -match "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
                     {
                         $_
@@ -901,7 +901,7 @@ function Set-TargetResource
                         }
                         $permission.Id
                     }
-                }
+                }) -ElementType ([System.String])
             }
         }
         $apiValue.Add('PreAuthorizedApplications', $PreAuthorizedApplicationsValue)
@@ -1711,6 +1711,8 @@ function Export-TargetResource
                 DisplayName           = $AADApp.DisplayName
                 ObjectID              = $AADApp.Id
                 Credential            = $Credential
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

@@ -228,7 +228,7 @@ function Get-TargetResource
             @{
                 id      = 'MemberOf'
                 method  = 'GET'
-                url     = "/users/$($UserPrincipalName)/memberOf?`$select=displayName&`$filter=not(groupTypes/any(c:c eq 'DynamicMembership'))"
+                url     = "/users/$($UserPrincipalName)/memberOf/microsoft.graph.group?`$select=displayName&`$filter=not(groupTypes/any(c:c eq 'DynamicMembership'))"
                 headers = @{
                     'ConsistencyLevel' = 'eventual'
                 }
@@ -636,7 +636,9 @@ function Set-TargetResource
             if ($licenseDifferences.Length -gt 0)
             {
                 Write-Verbose -Message "Updating License assignments with values: $(Convert-M365DscHashtableToString -Hashtable $licenses)"
-                Set-MgUserLicense -UserId $user.UserPrincipalName -AddLicenses $licenses.addLicenses -RemoveLicenses $licenses.removeLicenses
+                Invoke-M365DSCCommand -ScriptBlock {
+                    Set-MgUserLicense -UserId $user.UserPrincipalName -AddLicenses $licenses.addLicenses -RemoveLicenses $licenses.removeLicenses
+                } -RetryOnNotFoundError
             }
         }
         catch
@@ -680,9 +682,11 @@ function Set-TargetResource
 
                         throw "Cannot add user $UserPrincipalName to group '$memberOfGroup' because it is a dynamic group"
                     }
-                    New-MgGroupMemberByRef -GroupId $group.Id -BodyParameter @{
-                        '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$userId"
-                    }
+                    Invoke-M365DSCCommand -ScriptBlock {
+                        New-MgGroupMemberByRef -GroupId $group.Id -BodyParameter @{
+                            '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$userId"
+                        }
+                    } -RetryOnNotFoundError
                 }
             }
             else
@@ -722,6 +726,16 @@ function Set-TargetResource
 
                         # Group that user is a member of is not present in MemberOf, remove user from group
                         # (no need to test for dynamic groups as they are ignored in Get-TargetResource)
+                        if ($null -eq $group)
+                        {
+                            New-M365DSCLogEntry -Message 'Error updating data:' `
+                                -Exception "Attempting to add a user to a group that doesn't exist" `
+                                -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $TenantId `
+                                -Credential $Credential
+
+                            throw "Group '$($_.InputObject)' does not exist in tenant"
+                        }
                         Remove-MgGroupMemberDirectoryObjectByRef -GroupId $group.Id -DirectoryObjectId $userId
                     }
                 }
@@ -762,9 +776,11 @@ function Set-TargetResource
                 elseif ($roleDifference.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Creating role assignment for user {$($user.UserPrincipalName) for role {$($roleDifference.InputObject)}"
-                    New-MgBetaRoleManagementDirectoryRoleAssignment -PrincipalId $userId `
-                        -RoleDefinitionId $roleDefinitionId `
-                        -DirectoryScopeId '/' | Out-Null
+                    Invoke-M365DSCCommand -ScriptBlock {
+                        New-MgBetaRoleManagementDirectoryRoleAssignment -PrincipalId $userId `
+                            -RoleDefinitionId $roleDefinitionId `
+                            -DirectoryScopeId '/' | Out-Null
+                    } -RetryOnNotFoundError
                 }
             }
         }

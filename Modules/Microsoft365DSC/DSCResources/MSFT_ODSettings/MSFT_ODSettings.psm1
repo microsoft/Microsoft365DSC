@@ -440,7 +440,7 @@ function Set-TargetResource
     }
 
     Write-Verbose -Message 'Configuring OneDrive settings.'
-    Set-PnPTenant @CurrentParameters
+    Set-PnPTenant @CurrentParameters -Force
 
     ## Configure Sync Client restrictions
     ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:

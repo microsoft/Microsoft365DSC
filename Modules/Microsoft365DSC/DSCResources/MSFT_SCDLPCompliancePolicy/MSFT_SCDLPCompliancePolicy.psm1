@@ -458,7 +458,7 @@ function Set-TargetResource
         $groupIds = @()
         foreach ($group in $OneDriveSharedByMemberOf)
         {
-            $groupObject = Get-MgGroup -Filter "displayName eq '$group'" -Select Id -ErrorAction Stop
+            $groupObject = Get-MgGroup -Filter "displayName eq '$group'" -Property Id -ErrorAction Stop
             if ($null -ne $groupObject)
             {
                 $groupIds += $groupObject.Id
@@ -477,7 +477,7 @@ function Set-TargetResource
         $exceptGroupIds = @()
         foreach ($group in $ExceptIfOneDriveSharedByMemberOf)
         {
-            $groupObject = Get-MgGroup -Filter "displayName eq '$group'" -Select Id -ErrorAction Stop
+            $groupObject = Get-MgGroup -Filter "displayName eq '$group'" -Property Id -ErrorAction Stop
             if ($null -ne $groupObject)
             {
                 $exceptGroupIds += $groupObject.Id

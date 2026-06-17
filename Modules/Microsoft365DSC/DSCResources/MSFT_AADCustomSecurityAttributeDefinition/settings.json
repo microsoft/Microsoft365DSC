@@ -52,8 +52,7 @@
         "Get-MgBetaDirectoryCustomSecurityAttributeDefinition",
         "New-MgBetaDirectoryCustomSecurityAttributeDefinition",
         "New-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue",
-        "Update-MgBetaDirectoryCustomSecurityAttributeDefinition",
-        "Update-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue"
+        "Update-MgBetaDirectoryCustomSecurityAttributeDefinition"
       ]
     }
   ]

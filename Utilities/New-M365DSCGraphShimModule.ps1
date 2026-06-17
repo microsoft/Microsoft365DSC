@@ -28,10 +28,29 @@
 #>
 #Requires -PSEdition Core
 param(
-    [string]$CmdletMappingPath = "$PSScriptRoot\cmdlet-mapping.json",
-    [string]$FunctionSignaturesPath = "$PSScriptRoot\function-signatures.json",
-    [string]$OutputModulePath = "$PSScriptRoot\..\Modules\Microsoft365DSC\Modules\M365DSCGraphShim.psm1",
-    [string]$OutputManifestPath = "$PSScriptRoot\..\Modules\Microsoft365DSC\Modules\M365DSCGraphShim.psd1"
+    [Parameter()]
+    [System.String]
+    $CmdletMappingPath = "$PSScriptRoot\cmdlet-mapping.json",
+
+    [Parameter()]
+    [System.String]
+    $FunctionSignaturesPath = "$PSScriptRoot\function-signatures.json",
+
+    [Parameter()]
+    [System.String]
+    $OutputModulePath = "$PSScriptRoot\..\Modules\Microsoft365DSC\Modules\M365DSCGraphShim.psm1",
+
+    [Parameter()]
+    [System.String]
+    $OutputManifestPath = "$PSScriptRoot\..\Modules\Microsoft365DSC\Modules\M365DSCGraphShim.psd1",
+
+    [Parameter()]
+    [switch]
+    $SkipCmdletMappingGeneration,
+
+    [Parameter()]
+    [switch]
+    $SkipFunctionSignatureGeneration
 )
 
 $ErrorActionPreference = 'Stop'
@@ -62,9 +81,13 @@ foreach ($file in $settingsFiles)
 }
 $map | ConvertTo-Json -Depth 10 | Out-File -FilePath "$PSScriptRoot\cmdlet-source-modules.json" -Encoding UTF8
 
-#& "$PSScriptRoot\Build-CmdletMapping.ps1" -CmdletSourceModulesPath "$PSScriptRoot\cmdlet-source-modules.json" -OutputPath $CmdletMappingPath
+if (-not $SkipCmdletMappingGeneration) {
+    & "$PSScriptRoot\Build-CmdletMapping.ps1" -CmdletSourceModulesPath "$PSScriptRoot\cmdlet-source-modules.json" -OutputPath $CmdletMappingPath
+}
 
-#& "$PSScriptRoot\Extract-FunctionSignatures.ps1" -CmdletSourceModulesPath "$PSScriptRoot\cmdlet-source-modules.json" -OutputPath $FunctionSignaturesPath
+if (-not $SkipFunctionSignatureGeneration) {
+    & "$PSScriptRoot\Extract-FunctionSignatures.ps1" -CmdletSourceModulesPath "$PSScriptRoot\cmdlet-source-modules.json" -OutputPath $FunctionSignaturesPath
+}
 
 #region Load data sources
 Write-Host 'Loading cmdlet mapping...'
@@ -546,7 +569,7 @@ function Invoke-M365DSCGraphShimGetResource
     # Single-item retrieval when a resolved SingleItemUri is supplied
     if (-not [System.String]::IsNullOrEmpty($SingleItemUri))
     {
-        $uri = $SingleItemUri
+        $uri = $SingleItemUri.Replace("#", "%23") # Encode '#' in IDs to prevent confusion with URI fragments
         $queryParts = @()
         if ($BoundParameters['Property']) { $queryParts += "`$select=$($BoundParameters['Property'] -join ',')" }
         if ($BoundParameters['ExpandProperty']) { $queryParts += "`$expand=$($BoundParameters['ExpandProperty'] -join ',')" }

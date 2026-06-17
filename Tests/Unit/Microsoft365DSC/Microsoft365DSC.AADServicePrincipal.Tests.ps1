@@ -440,6 +440,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $result | Should -Not -BeNullOrEmpty
             }
         }
+
+        Context -Name 'AppRoleAssignedTo AppRoleId resolution' -Fixture {
+            It 'Should return the matching app role id' {
+                $appRoles = @(
+                    @{
+                        DisplayName = 'Group'
+                        Id          = '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                    }
+                )
+
+                Get-M365DSCAADServicePrincipalAppRoleId -AppRoles $appRoles -PrincipalType 'Group' | Should -Be '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+            }
+
+            It 'Should return the default access app role id when no role matches the principal type' {
+                $appRoles = @(
+                    @{
+                        DisplayName = 'Read.All'
+                        Id          = '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                    }
+                )
+
+                Get-M365DSCAADServicePrincipalAppRoleId -AppRoles $appRoles -PrincipalType 'Group' | Should -Be '00000000-0000-0000-0000-000000000000'
+            }
+        }
     }
 }
 

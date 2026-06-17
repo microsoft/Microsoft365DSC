@@ -26625,14 +26625,6 @@
       "Type": "System.DateTime"
     },
     {
-      "Name": "ResourceBehaviorOptions",
-      "Type": "System.String[]"
-    },
-    {
-      "Name": "ResourceProvisioningOptions",
-      "Type": "System.String[]"
-    },
-    {
       "Name": "SecurityEnabled",
       "Type": "System.Management.Automation.SwitchParameter"
     },
@@ -40805,68 +40797,6 @@
       "Type": "System.Management.Automation.SwitchParameter"
     }
   ],
-  "Update-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue": [
-    {
-      "Name": "AllowedValueId",
-      "Type": "System.String"
-    },
-    {
-      "Name": "CustomSecurityAttributeDefinitionId",
-      "Type": "System.String"
-    },
-    {
-      "Name": "InputObject",
-      "Type": "System.Object"
-    },
-    {
-      "Name": "BodyParameter",
-      "Type": "System.Object"
-    },
-    {
-      "Name": "ResponseHeadersVariable",
-      "Type": "System.String"
-    },
-    {
-      "Name": "AdditionalProperties",
-      "Type": "System.Collections.Hashtable"
-    },
-    {
-      "Name": "Id",
-      "Type": "System.String"
-    },
-    {
-      "Name": "IsActive",
-      "Type": "System.Management.Automation.SwitchParameter"
-    },
-    {
-      "Name": "Break",
-      "Type": "System.Management.Automation.SwitchParameter"
-    },
-    {
-      "Name": "Headers",
-      "Type": "System.Collections.IDictionary"
-    },
-    {
-      "Name": "HttpPipelineAppend",
-      "Type": "System.Object[]"
-    },
-    {
-      "Name": "HttpPipelinePrepend",
-      "Type": "System.Object[]"
-    },
-    {
-      "Name": "Proxy",
-      "Type": "System.Uri"
-    },
-    {
-      "Name": "ProxyCredential",
-      "Type": "System.Management.Automation.PSCredential"
-    },
-    {
-      "Name": "ProxyUseDefaultCredentials",
-      "Type": "System.Management.Automation.SwitchParameter"
-    }
-  ],
   "Update-MgBetaDirectorySetting": [
     {
       "Name": "DirectorySettingId",
@@ -45631,14 +45561,6 @@
     {
       "Name": "RenewedDateTime",
       "Type": "System.DateTime"
-    },
-    {
-      "Name": "ResourceBehaviorOptions",
-      "Type": "System.String[]"
-    },
-    {
-      "Name": "ResourceProvisioningOptions",
-      "Type": "System.String[]"
     },
     {
       "Name": "SecurityEnabled",

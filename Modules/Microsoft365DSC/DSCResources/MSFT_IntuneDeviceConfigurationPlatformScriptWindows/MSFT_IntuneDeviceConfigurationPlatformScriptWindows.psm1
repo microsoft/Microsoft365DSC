@@ -40,7 +40,7 @@ function Get-TargetResource
         [System.String]
         $ScriptContent,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -115,7 +115,10 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementScript -DeviceManagementScriptId $Id -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($Id))
+        {
+            $getValue = Get-MgBetaDeviceManagementScript -DeviceManagementScriptId $Id -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
@@ -238,7 +241,7 @@ function Set-TargetResource
         [System.String]
         $ScriptContent,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -399,7 +402,7 @@ function Test-TargetResource
         [System.String]
         $ScriptContent,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 

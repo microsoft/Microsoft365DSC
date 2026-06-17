@@ -1748,11 +1748,13 @@ function Export-TargetResource
                 $Params = @{
                     RoleDefinitionDisplayName = $instance.RoleDisplayName
                     ScopeId                   = $currentScope
+                    Credential                = $Credential
                     ApplicationId             = $ApplicationId
                     TenantId                  = $TenantId
-                    CertificateThumbprint     = $CertificateThumbprint
                     ApplicationSecret         = $ApplicationSecret
-                    Credential                = $Credential
+                    CertificateThumbprint     = $CertificateThumbprint
+                    CertificatePath           = $CertificatePath
+                    CertificatePassword       = $CertificatePassword
                     ManagedIdentity           = $ManagedIdentity.IsPresent
                     AccessTokens              = $AccessTokens
                 }

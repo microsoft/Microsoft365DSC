@@ -494,7 +494,7 @@ function Set-TargetResource
         $CurrentParameters['DefaultLinkPermission'] = 'Edit'
     }
 
-    Set-PnPTenant @CurrentParameters | Out-Null
+    Set-PnPTenant @CurrentParameters -Force | Out-Null
     if ($SetMySharingCapability)
     {
         $mysite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -notmatch '^RedirectSite#' }

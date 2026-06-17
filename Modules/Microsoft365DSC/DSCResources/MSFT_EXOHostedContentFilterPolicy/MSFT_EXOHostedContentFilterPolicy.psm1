@@ -297,8 +297,8 @@ function Get-TargetResource
             $HostedContentFilterPolicy = $Script:exportedInstance
         }
 
-        [System.String[]]$AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders.Sender | Select-Object Address -ExpandProperty Address
-        [System.String[]]$BlockedSendersValues = $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
+        [System.String[]]$AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders
+        [System.String[]]$BlockedSendersValues = $HostedContentFilterPolicy.BlockedSenders
         # Check if the values are null and assign them an empty string array if they are
         if ($null -eq $AllowedSendersValues)
         {
@@ -309,8 +309,8 @@ function Get-TargetResource
             $BlockedSendersValues = @()
         }
 
-        [System.String[]]$AllowedSenderDomains = $HostedContentFilterPolicy.AllowedSenderDomains.Domain
-        [System.String[]]$BlockedSenderDomains = $HostedContentFilterPolicy.BlockedSenderDomains.Domain
+        [System.String[]]$AllowedSenderDomains = $HostedContentFilterPolicy.AllowedSenderDomains
+        [System.String[]]$BlockedSenderDomains = $HostedContentFilterPolicy.BlockedSenderDomains
         # Check if the values are null and assign them an empty string array if they are
         if ($null -eq $AllowedSenderDomains)
         {

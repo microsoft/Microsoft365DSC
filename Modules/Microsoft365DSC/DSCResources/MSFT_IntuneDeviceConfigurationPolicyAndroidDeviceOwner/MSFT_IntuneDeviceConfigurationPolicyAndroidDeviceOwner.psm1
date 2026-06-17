@@ -2608,7 +2608,7 @@ function Export-TargetResource
                     }
                     @{
                         Name            = 'item'
-                        CimInstanceName = 'MicrosoftGraphandroiddeviceownerkioskmodefolderitem'
+                        CimInstanceName = 'MicrosoftGraphandroiddeviceownerkioskmodehomescreenitem'
                         isRequired      = $true
                     }
                 )

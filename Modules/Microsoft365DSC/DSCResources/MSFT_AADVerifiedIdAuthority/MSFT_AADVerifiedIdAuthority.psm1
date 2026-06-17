@@ -421,11 +421,13 @@ function Export-TargetResource
             Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $($authority.didModel.linkedDomainUrls[0])" -DeferWrite
             $Params = @{
                 LinkedDomainUrl       = $authority.didModel.linkedDomainUrls[0]
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
                 ApplicationSecret     = $ApplicationSecret
-                Credential            = $Credential
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
