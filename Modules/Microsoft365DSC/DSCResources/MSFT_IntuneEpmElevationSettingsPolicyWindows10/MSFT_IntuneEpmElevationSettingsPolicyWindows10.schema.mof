@@ -19,7 +19,7 @@ class MSFT_IntuneEpmElevationSettingsPolicyWindows10 : OMI_BaseResource
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Endpoint Privilege Management (1: Enabled, 0: Disabled)"), ValueMap{"1", "0"}, Values{"1", "0"}] SInt32 EndpointPrivilegeManagement;
     [Write, Description("Default elevation response - Depends on EndpointPrivilegeManagement (0: DenyAllRequests, 1: RequireUserConfirmation, 2: RequireSupportApproval)"), ValueMap{"0", "1", "2"}, Values{"0", "1", "2"}] SInt32 DefaultElevationResponse;
-    [Write, Description("Validation (0: Business Justification, 1: Windows Authentication)"), ValueMap{"0", "1"}, Values{"0", "1"}] SInt32 DefaultBehaviorValidation[];
+    [Write, Description("Validation (1: Business Justification, 2: Windows Authentication)"), ValueMap{"1", "2"}, Values{"1", "2"}] SInt32 DefaultBehaviorValidation[];
     [Write, Description("(Preview) Automatically detect elevations - Depends on EndpointPrivilegeManagement (0: No, 1: Yes)"), ValueMap{"0", "1"}, Values{"0", "1"}] SInt32 AllowElevationDetection;
     [Write, Description("Send elevation data for reporting - Depends on EndpointPrivilegeManagement (1: Yes, 0: No)"), ValueMap{"1", "0"}, Values{"1", "0"}] SInt32 SendDataToMicrosoft;
     [Write, Description("Reporting scope (1: DiagnosticDataAndManagedElevationsOnly, 2: DiagnosticDataAndAllEndpointElevations, 0: DiagnosticDataOnly)"), ValueMap{"1", "2", "0"}, Values{"1", "2", "0"}] SInt32 ReportingScope;

@@ -11,7 +11,7 @@ if (Test-Path $CmdletSourceModulesPath) {
     Write-Host "Filtering to $($cmdletFilter.Count) cmdlets from settings.json"
 }
 
-$allFunctions = Get-Command | Where-Object { $_.Name -match "^(Add|Get|New|Update|Remove|Restore|Set|Invoke)-Mg" -and $_.Name -ne 'Invoke-MgGraphRequest' -and $_.Name -ne 'Get-MgContext' }
+$allFunctions = Get-Command | Where-Object { $_.Name -match "^(Add|Clear|Get|New|Update|Remove|Restore|Set|Invoke)-Mg" -and $_.Name -ne 'Invoke-MgGraphRequest' -and $_.Name -ne 'Get-MgContext' }
 Write-Host "Found $($allFunctions.Count) Mg* function definitions"
 
 # If we have a filter, only process functions that are in our cmdlet list

@@ -642,6 +642,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
             if ($null -ne $Results.CrossRegionDisasterRecoverySetting)
             {
                 $complexMapping = @(
@@ -717,7 +719,9 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('Assignments', 'CrossRegionDisasterRecoverySetting', 'NotificationSetting', 'RestorePointSetting')
+                -NoEscape @('Assignments', 'CrossRegionDisasterRecoverySetting', 'NotificationSetting', 'RestorePointSetting') `
+                -RawResults $rawResults
+
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

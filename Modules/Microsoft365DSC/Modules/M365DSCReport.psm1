@@ -995,7 +995,7 @@ function New-M365DSCReportFromConfiguration
         Confirm-M365DSCDependencies
 
         #region Telemetry
-        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data = [System.Collections.Generic.Dictionary[[System.String], [System.Object]]]::new()
         $data.Add('Event', 'Report')
         $data.Add('Type', $Type)
         Add-M365DSCTelemetryEvent -Data $data -Type 'NewReport'
@@ -1421,7 +1421,7 @@ function New-M365DSCDeltaReport
     }
 
     #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data = [System.Collections.Generic.Dictionary[[System.String], [System.Object]]]::new()
     $data.Add('Event', 'DeltaReport')
     Add-M365DSCTelemetryEvent -Data $data -Type 'CompareConfigurations'
     #endregion

@@ -1,70 +1,89 @@
 $Script:M365DSCStringReplacementMap = @{}
 $Script:M365DSCMandatoryKeyCache = @{}
 $Script:M365DSCCompiledRegexCache = @{}
+$Script:M365DSCAuthenticationParameterSet = @{
+    ServicePrincipalWithThumbprint = @('ApplicationId', 'CertificateThumbprint', 'TenantId')
+    ServicePrincipalWithSecret = @('ApplicationId', 'ApplicationSecret', 'TenantId')
+    ServicePrincipalWithPath = @('ApplicationId', 'CertificatePath', 'CertificatePassword', 'TenantId')
+    CredentialsWithTenantId = @('Credential', 'TenantId')
+    CredentialsWithApplicationId = @('Credential', 'ApplicationId')
+    Credentials = @('Credential')
+    ManagedIdentity = @('ManagedIdentity', 'TenantId')
+    AccessTokens = @('AccessTokens', 'TenantId')
+}
+$templatesPath = Join-Path -Path $PSScriptRoot -ChildPath 'M365DSCRelationTemplates.json'
+$jsonContent = Get-Content -Path $templatesPath -Raw | ConvertFrom-Json
+$Script:RelationTemplates = @{
+    templates = @{}
+}
+foreach ($template in $jsonContent.templates.psobject.Properties)
+{
+    $Script:RelationTemplates.templates[$template.Name] = $template.Value
+}
 
 <#
-.Description
-This is the main Microsoft365DSC.Reverse function that extracts the DSC configuration from an existing Microsoft 365 Tenant.
+.DESCRIPTION
+    This is the main Microsoft365DSC.Reverse function that extracts the DSC configuration from an existing Microsoft 365 Tenant.
 
-.Parameter LaunchWebUI
-Adding this parameter will open the WebUI in a browser.
+.PARAMETER LaunchWebUI
+    Adding this parameter will open the WebUI in a browser.
 
-.Parameter Path
-Specifies the path in which the exported DSC configuration should be stored.
+.PARAMETER Path
+    Specifies the path in which the exported DSC configuration should be stored.
 
-.Parameter FileName
-Specifies the name of the file in which the exported DSC configuration should be stored.
+.PARAMETER FileName
+    Specifies the name of the file in which the exported DSC configuration should be stored.
 
-.Parameter ConfigurationName
-Specifies the name of the configuration that will be generated.
+.PARAMETER ConfigurationName
+    Specifies the name of the configuration that will be generated.
 
-.Parameter Components
-Specifies the components for which an export should be created.
+.PARAMETER Components
+    Specifies the components for which an export should be created.
 
-.Parameter ExcludeComponents
-Specifies the components to skip when creating the export
+.PARAMETER ExcludeComponents
+    Specifies the components to skip when creating the export
 
-.Parameter Workloads
-Specifies the workload for which an export should be created for all resources.
+.PARAMETER Workloads
+    Specifies the workload for which an export should be created for all resources.
 
-.Parameter Mode
-Specifies the mode of the export: Default or Full.
+.PARAMETER Mode
+    Specifies the mode of the export: Default or Full.
 
-.Parameter GenerateInfo
-Specifies if each exported resource should get a link to the Wiki article of the resource.
+.PARAMETER GenerateInfo
+    Specifies if each exported resource should get a link to the Wiki article of the resource.
 
-.Parameter ApplicationId
-Specifies the application id to be used for authentication.
+.PARAMETER ApplicationId
+    Specifies the application id to be used for authentication.
 
-.Parameter ApplicationSecret
-Specifies the application secret of the application to be used for authentication.
+.PARAMETER ApplicationSecret
+    Specifies the application secret of the application to be used for authentication.
 
-.Parameter TenantId
-Specifies the id of the tenant.
+.PARAMETER TenantId
+    Specifies the id of the tenant.
 
-.Parameter CertificateThumbprint
-Specifies the thumbprint to be used for authentication.
+.PARAMETER CertificateThumbprint
+    Specifies the thumbprint to be used for authentication.
 
-.Parameter Credential
-Specifies the credentials to be used for authentication.
+.PARAMETER Credential
+    Specifies the credentials to be used for authentication.
 
-.Parameter CertificatePassword
-Specifies the password of the PFX file which is used for authentication.
+.PARAMETER CertificatePassword
+    Specifies the password of the PFX file which is used for authentication.
 
-.Parameter CertificatePath
-Specifies the path of the PFX file which is used for authentication.
+.PARAMETER CertificatePath
+    Specifies the path of the PFX file which is used for authentication.
 
-.Parameter Filters
-Specifies resource level filters to apply in order to reduce the number of instances exported.
+.PARAMETER Filters
+    Specifies resource level filters to apply in order to reduce the number of instances exported.
 
 .PARAMETER AccessTokens
     Specifies the access token to use for authentication.
 
-.Parameter ManagedIdentity
-Specifies use of managed identity for authentication.
+.PARAMETER ManagedIdentity
+    Specifies use of managed identity for authentication.
 
-.Parameter Validate
-Specifies that the configuration needs to be validated for conflicts or issues after its extraction is completed.
+.PARAMETER Validate
+    Specifies that the configuration needs to be validated for conflicts or issues after its extraction is completed.
 
 .PARAMETER Parallel
     Specifies that the export is executed in parallel.
@@ -75,23 +94,29 @@ Specifies that the configuration needs to be validated for conflicts or issues a
 .PARAMETER WithStatistics
     Specifies that statistics about the export should be shown after completion.
 
-.Example
-Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
+.PARAMETER IncludeDependencies
+    Specifies that resource dependencies should be included in the export.
 
-.Example
-Export-M365DSCConfiguration -Mode 'Default' -ApplicationId '2560bb7c-bc85-415f-a799-841e10ec4f9a' -TenantId 'contoso.sharepoint.com' -ApplicationSecret 'abcdefghijkl'
+.EXAMPLE
+    PS> Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
 
-.Example
-Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC' -FileName 'MyConfig.ps1'
+.EXAMPLE
+    PS> Export-M365DSCConfiguration -Mode 'Default' -ApplicationId '2560bb7c-bc85-415f-a799-841e10ec4f9a' -TenantId 'contoso.sharepoint.com' -ApplicationSecret 'abcdefghijkl'
 
-.Example
-Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"} -TokenReplacement @{ 'alternate-email.onmicrosoft.com' = 'AlternateEmail' }
+.EXAMPLE
+    PS> Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC' -FileName 'MyConfig.ps1'
 
-.Example
-Export-M365DSCConfiguration -Workloads @("SPO") -ExcludeComponents @("SPOPropertyBag") -Credential $Credential
+.EXAMPLE
+    PS> Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"} -TokenReplacement @{ 'alternate-email.onmicrosoft.com' = 'AlternateEmail' }
 
-.Functionality
-Public
+.EXAMPLE
+    PS> Export-M365DSCConfiguration -Workloads @("SPO") -ExcludeComponents @("SPOPropertyBag") -Credential $Credential
+
+.EXAMPLE
+    PS> Export-M365DSCConfiguration -Workloads @("SPO") -ApplicationId $clientId -TenantId $tenantName -CertificateThumbprint $certThumbprint -IncludeDependencies
+
+.FUNCTIONALITY
+    Public
 #>
 function Export-M365DSCConfiguration
 {
@@ -203,8 +228,18 @@ function Export-M365DSCConfiguration
 
         [Parameter(ParameterSetName = 'Export')]
         [Switch]
-        $WithStatistics
+        $WithStatistics,
+
+        [Parameter(ParameterSetName = 'Export')]
+        [Switch]
+        $IncludeDependencies
     )
+
+    if ($IncludeDependencies.IsPresent)
+    {
+        Write-Warning -Message "The -IncludeDependencies parameter is currently in preview. Please review the generated configuration to ensure it captures the dependencies as expected.
+         If you encounter any issues or have feedback, please report it at https://github.com/Microsoft365DSC/Microsoft365DSC."
+    }
 
     $currentStartDateTime = [System.DateTime]::Now
     $Global:M365DSCExportInProgress = $true
@@ -218,6 +253,12 @@ function Export-M365DSCConfiguration
     # Clear performance caches for fresh export
     $Script:M365DSCMandatoryKeyCache = @{}
     $Script:M365DSCCompiledRegexCache = @{}
+
+    # Define the exported resource instances registry for DependsOn tracking
+    $Global:M365DSCExportedResourceInstances = @{}
+
+    # Define the export dependencies collector
+    $Global:M365DSCExportDependencies = @()
 
     # LaunchWebUI specified, launching that now
     if ($LaunchWebUI)
@@ -295,7 +336,7 @@ function Export-M365DSCConfiguration
     }
 
     #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data = [System.Collections.Generic.Dictionary[[System.String], [System.Object]]]::new()
 
     $data.Add('Path', [System.String]::IsNullOrEmpty($Path))
     $data.Add('FileName', $null -ne [System.String]::IsNullOrEmpty($FileName))
@@ -323,11 +364,11 @@ function Export-M365DSCConfiguration
     }
 
     $Tenant = Get-M365DSCTenantNameFromParameterSet -ParameterSet $PSBoundParameters
-    $ConnectionMode = Get-M365DSCAuthenticationMode $PSBoundParameters
+    $Script:ConnectionMode = Get-M365DSCAuthenticationMode $PSBoundParameters
     $data.Add('Tenant', $Tenant)
     $currentExportID = (New-Guid).ToString()
     $data.Add('M365DSCExportId', $currentExportID)
-    $data.Add('ConnectionMode', $ConnectionMode)
+    $data.Add('ConnectionMode', $Script:ConnectionMode)
 
     $telemetryParams = Get-M365DSCTelemetryConnectionParameter
     # Define connection to Graph parameters because it is required by the telemetry.
@@ -380,7 +421,8 @@ function Export-M365DSCConfiguration
             -Parallel:$Parallel `
             -ResourceSettings $resourceSettings `
             -ErrorAction $ErrorActionPreference `
-            -WithStatistics:$WithStatistics
+            -WithStatistics:$WithStatistics `
+            -IncludeDependencies:$IncludeDependencies
     }
     elseif ($null -ne $Components)
     {
@@ -404,7 +446,8 @@ function Export-M365DSCConfiguration
             -Parallel:$Parallel `
             -ResourceSettings $resourceSettings `
             -ErrorAction $ErrorActionPreference `
-            -WithStatistics:$WithStatistics
+            -WithStatistics:$WithStatistics `
+            -IncludeDependencies:$IncludeDependencies
     }
     elseif ($null -ne $Mode)
     {
@@ -429,14 +472,17 @@ function Export-M365DSCConfiguration
             -Parallel:$Parallel `
             -ResourceSettings $resourceSettings `
             -ErrorAction $ErrorActionPreference `
-            -WithStatistics:$WithStatistics
+            -WithStatistics:$WithStatistics `
+            -IncludeDependencies:$IncludeDependencies
     }
 
     # Clear the exported resource instances' names Global variable
     $Global:M365DSCExportedResourceInstancesNames = $null
+    $Global:M365DSCExportedResourceInstances = $null
+    $Global:M365DSCExportDependencies = $null
     $Global:M365DSCExportInProgress = $false
 
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data = [System.Collections.Generic.Dictionary[[System.String], [System.Object]]]::new()
     if ([System.String]::IsNullOrEmpty($data.Tenant) -and -not [System.String]::IsNullOrEmpty($TenantId))
     {
         $data.Add('Tenant', $TenantId)
@@ -446,7 +492,7 @@ function Export-M365DSCConfiguration
         $data.Add('Tenant', $Tenant)
     }
     $data.Add('M365DSCExportId', $currentExportID)
-    $data.Add('ConnectionMode', $ConnectionMode)
+    $data.Add('ConnectionMode', $Script:ConnectionMode)
     $timeTaken = [System.DateTime]::Now.Subtract($currentStartDateTime)
     $data.Add('TotalSeconds', $timeTaken.TotalSeconds)
     Add-M365DSCTelemetryEvent -Type 'ExportCompleted' -Data $data
@@ -561,7 +607,11 @@ function Get-M365DSCExportContentForResource
 
         [Parameter()]
         [switch]
-        $AllowVariablesInStrings
+        $AllowVariablesInStrings,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $RawResults
     )
 
     $OrganizationName = ''
@@ -698,6 +748,31 @@ function Get-M365DSCExportContentForResource
     }
     $instanceName = $tempName
     [void]$Global:M365DSCExportedResourceInstancesNames.Add($tempName)
+
+    # Register this instance in the dependency tracking registry
+    if ($null -ne $Global:M365DSCExportedResourceInstances)
+    {
+        $registryKey = "[$ResourceName]$instanceName"
+        $Global:M365DSCExportedResourceInstances[$registryKey] = @{
+            InstanceName = $instanceName
+            ResourceName = $ResourceName
+            PrimaryKey   = $primaryKey
+            Results      = $Results
+        }
+    }
+
+    # Resolve cross-resource relations and register dependencies
+    if ($null -ne $Global:M365DSCExportDependencies)
+    {
+        $resolveResults = $Results
+        if ($null -ne $RawResults)
+        {
+            $resolveResults = $RawResults
+        }
+        Resolve-M365DSCExportRelations -ResourceName $ResourceName `
+            -InstanceName $instanceName `
+            -Results $resolveResults
+    }
 
     $content = [System.Text.StringBuilder]::new()
     [void]$content.Append("        $ResourceName `"$instanceName`"`r`n")
@@ -1152,6 +1227,528 @@ function Update-M365DSCExportAuthenticationResults
     }
 }
 
+<#
+.Description
+    Registers an export dependency between a source instance and a target resource.
+
+.Functionality
+    Internal
+#>
+function Register-M365DSCExportDependency
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SourceInstanceName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SourceResourceName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TargetResourceType,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TargetKey
+    )
+
+    if ($null -ne $Global:M365DSCExportDependencies)
+    {
+        $Global:M365DSCExportDependencies += @{
+            SourceInstanceName = $SourceInstanceName
+            SourceResourceName = $SourceResourceName
+            TargetResourceType = $TargetResourceType
+            TargetKey          = $TargetKey
+        }
+    }
+}
+
+<#
+.Description
+    Resolves relation declarations from a resource's settings.json and registers
+    any cross-resource dependencies found in the exported Results hashtable.
+
+.Functionality
+    Internal
+#>
+function Resolve-M365DSCExportRelations
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ResourceName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $InstanceName,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Results
+    )
+
+    # Determine relations from template
+    $relations = @()
+    foreach ($template in $Script:RelationTemplates.templates.GetEnumerator())
+    {
+        if ($template.Value.resources.Contains($ResourceName))
+        {
+            $resourceRelations = $template.Value.relations
+            foreach ($relation in $resourceRelations)
+            {
+                if ($null -ne $relation.'$ref')
+                {
+                    $templateName = $relation.'$ref'.Split("/")[-1]
+                    $relations += $Script:RelationTemplates.templates.$templateName.relations
+                    continue
+                }
+                $relations += $relation
+            }
+        }
+    }
+
+    if ($relations.Count -eq 0)
+    {
+        return
+    }
+
+    foreach ($relation in $relations)
+    {
+        $propertyValue = $Results
+        $splittedProperty = $relation.property.Split('.')
+        for ($i = 0; $i -lt $splittedProperty.Count; $i++)
+        {
+            $propertyName = $splittedProperty[$i]
+            if ($propertyValue -is [System.Array])
+            {
+                if ($propertyValue.Count -eq 0)
+                {
+                    continue
+                }
+
+                $found = $false
+                $propertyValue | Foreach-Object {
+                    if ($_ -is [System.Collections.IDictionary] -and $_.Contains($propertyName))
+                    {
+                        $found = $true
+                    }
+                }
+                if (-not $found)
+                {
+                    continue
+                }
+            }
+            else
+            {
+                if (-not $propertyValue.ContainsKey($propertyName))
+                {
+                    continue
+                }
+            }
+
+            $propertyValue = $propertyValue.$propertyName
+            if ($null -eq $propertyValue)
+            {
+                continue
+            }
+        }
+
+        # Handle array of complex objects (e.g., Assignments)
+        if ($propertyValue -is [System.Array])
+        {
+            foreach ($item in $propertyValue)
+            {
+                $targetKey = Get-M365DSCRelationTargetKey -Item $item -Relation $relation
+                if (-not [System.String]::IsNullOrEmpty($targetKey))
+                {
+                    Register-M365DSCExportDependency -SourceInstanceName $InstanceName `
+                        -SourceResourceName $ResourceName `
+                        -TargetResourceType $relation.targetResource `
+                        -TargetKey $targetKey
+                }
+            }
+        }
+        elseif ($propertyValue -is [System.Collections.IDictionary] -or $propertyValue -is [Microsoft.Management.Infrastructure.CimInstance])
+        {
+            $targetKey = Get-M365DSCRelationTargetKey -Item $propertyValue -Relation $relation
+            if (-not [System.String]::IsNullOrEmpty($targetKey))
+            {
+                Register-M365DSCExportDependency -SourceInstanceName $InstanceName `
+                    -SourceResourceName $ResourceName `
+                    -TargetResourceType $relation.targetResource `
+                    -TargetKey $targetKey
+            }
+        }
+        else
+        {
+            # Simple string property referencing a target resource key directly
+            Register-M365DSCExportDependency -SourceInstanceName $InstanceName `
+                -SourceResourceName $ResourceName `
+                -TargetResourceType $relation.targetResource `
+                -TargetKey $propertyValue.ToString()
+        }
+    }
+}
+
+<#
+.Description
+    Extracts the target key value from a complex item based on the relation definition.
+
+.Functionality
+    Internal
+#>
+function Get-M365DSCRelationTargetKey
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $Item,
+
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $Relation
+    )
+
+    # If there's a condition, check it first
+    if (-not [System.String]::IsNullOrEmpty($Relation.condition))
+    {
+        $conditionMet = Test-M365DSCRelationCondition -Item $Item -Condition $Relation.condition
+        if (-not $conditionMet)
+        {
+            return $null
+        }
+    }
+
+    # Extract the child property value
+    $childProperty = $Relation.childProperty
+    $value = $null
+
+    if ($Item -is [System.Collections.IDictionary])
+    {
+        if ($Item.Contains($childProperty))
+        {
+            $value = $Item[$childProperty]
+        }
+    }
+    elseif ($null -ne $Item)
+    {
+        $value = $Item.$childProperty
+    }
+
+    if ([System.String]::IsNullOrEmpty($value))
+    {
+        return $null
+    }
+
+    return $value.ToString()
+}
+
+<#
+.Description
+    Evaluates a simple condition expression against a complex object item.
+    Supports: "propertyName in ['value1', 'value2']"
+
+.Functionality
+    Internal
+#>
+function Test-M365DSCRelationCondition
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $Item,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Condition
+    )
+
+    # Parse "propertyName in ['value1', 'value2']" pattern
+    if ($Condition -match "^(\w+)\s+in\s+\[(.+)\]$")
+    {
+        $propName = $Matches[1]
+        $valuesString = $Matches[2]
+        $allowedValues = $valuesString -split ',\s*' | ForEach-Object { $_.Trim().Trim("'").Trim('"') }
+
+        $itemValue = $null
+        if ($Item -is [System.Collections.Hashtable])
+        {
+            if ($Item.ContainsKey($propName))
+            {
+                $itemValue = $Item[$propName]
+            }
+        }
+        elseif ($null -ne $Item)
+        {
+            $itemValue = $Item.$propName
+        }
+
+        if ($null -eq $itemValue)
+        {
+            return $false
+        }
+
+        return ($allowedValues -contains $itemValue.ToString())
+    }
+
+    # Unknown condition format - default to true
+    return $true
+}
+
+<#
+.Description
+    Post-processes the exported DSC content to inject DependsOn declarations and
+    generate minimal stub blocks for referenced resources not already exported.
+
+.Functionality
+    Internal
+#>
+function Add-M365DSCExportDependsOn
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DSCContent
+    )
+
+    if ($null -eq $Global:M365DSCExportDependencies -or $Global:M365DSCExportDependencies.Count -eq 0)
+    {
+        return $DSCContent
+    }
+
+    if ($null -eq $Global:M365DSCExportedResourceInstances)
+    {
+        return $DSCContent
+    }
+
+    # Build a lookup from target resource+key to instance reference
+    $targetLookup = @{}
+    foreach ($entry in $Global:M365DSCExportedResourceInstances.GetEnumerator())
+    {
+        $inst = $entry.Value
+        $lookupKey = "$($inst.ResourceName)|$($inst.PrimaryKey)"
+        $targetLookup[$lookupKey] = $entry.Key
+    }
+
+    # Group dependencies by source instance
+    $dependenciesBySource = @{}
+    $unresolvedTargets = @{}
+
+    foreach ($dep in $Global:M365DSCExportDependencies)
+    {
+        $lookupKey = "$($dep.TargetResourceType)|$($dep.TargetKey)"
+        $targetRef = $targetLookup[$lookupKey]
+
+        if ($null -ne $targetRef)
+        {
+            # Target was exported - add DependsOn reference
+            $sourceRef = "[$($dep.SourceResourceName)]$($dep.SourceInstanceName)"
+            if (-not $dependenciesBySource.ContainsKey($sourceRef))
+            {
+                $dependenciesBySource[$sourceRef] = @()
+            }
+            if ($dependenciesBySource[$sourceRef] -notcontains $targetRef)
+            {
+                $dependenciesBySource[$sourceRef] += $targetRef
+            }
+        }
+        else
+        {
+            # Target was NOT exported - needs a stub
+            $stubKey = "$($dep.TargetResourceType)|$($dep.TargetKey)"
+            if (-not $unresolvedTargets.ContainsKey($stubKey))
+            {
+                $unresolvedTargets[$stubKey] = @{
+                    ResourceType = $dep.TargetResourceType
+                    TargetKey    = $dep.TargetKey
+                }
+            }
+
+            # Still record the dependency for injection after stub is created
+            $sourceRef = "[$($dep.SourceResourceName)]$($dep.SourceInstanceName)"
+            if (-not $dependenciesBySource.ContainsKey($sourceRef))
+            {
+                $dependenciesBySource[$sourceRef] = @()
+            }
+            $stubInstanceName = "$($dep.TargetResourceType)-$($dep.TargetKey)"
+            $stubRef = "[$($dep.TargetResourceType)]$stubInstanceName"
+            if ($dependenciesBySource[$sourceRef] -notcontains $stubRef)
+            {
+                $dependenciesBySource[$sourceRef] += $stubRef
+            }
+        }
+    }
+
+    # Inject DependsOn into each source block
+    foreach ($sourceEntry in $dependenciesBySource.GetEnumerator())
+    {
+        $sourceRef = $sourceEntry.Key
+        $targets = $sourceEntry.Value
+
+        # Parse resource name and instance name from "[ResourceName]InstanceName"
+        if ($sourceRef -match '^\[([^\]]+)\](.+)$')
+        {
+            $srcResourceName = $Matches[1]
+            $srcInstanceName = $Matches[2]
+
+            # Build DependsOn line
+            $dependsOnEntries = Get-M365DSCArrayFromProperty -PropertyValue ($targets | ForEach-Object { "`"$_`"" }) -ElementType ([System.String])
+            if ($dependsOnEntries.Count -eq 1)
+            {
+                $dependsOnLine = "            DependsOn = @($($dependsOnEntries[0]))"
+            }
+            else
+            {
+                $dependsOnLine = "            DependsOn = @($($dependsOnEntries -join ', '))"
+            }
+
+            # Find the closing brace of this resource block and inject DependsOn before it
+            $blockPattern = "        $srcResourceName `"$srcInstanceName`""
+            $blockStart = $DSCContent.IndexOf($blockPattern)
+            if ($blockStart -ge 0)
+            {
+                # Find the closing "        }" for this block
+                $searchFrom = $blockStart + $blockPattern.Length
+                $closingBrace = $DSCContent.IndexOf("`r`n        }`r`n", $searchFrom)
+                if ($closingBrace -gt 0)
+                {
+                    $DSCContent = $DSCContent.Insert($closingBrace + 1, $dependsOnLine)
+                }
+            }
+        }
+    }
+
+    # Generate stub blocks for unresolved targets
+    if ($unresolvedTargets.Count -gt 0)
+    {
+        $stubContent = Get-M365DSCMinimalExportBlocks -UnresolvedTargets $unresolvedTargets
+        if (-not [System.String]::IsNullOrEmpty($stubContent))
+        {
+            # Insert stubs before the closing "    }" of the Node block
+            # Just after the last resource block's closing brace
+            $nodeClose = $DSCContent.LastIndexOf("        }`r`n")
+            if ($nodeClose -gt 0)
+            {
+                $DSCContent = $DSCContent.Insert($nodeClose + 11, $stubContent)
+            }
+        }
+    }
+
+    return $DSCContent
+}
+
+<#
+.Description
+    Generates minimal DSC resource blocks for dependency targets that were not
+    part of the main export. Only includes key/mandatory properties and Ensure.
+
+.Functionality
+    Internal
+#>
+function Get-M365DSCMinimalExportBlocks
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $UnresolvedTargets
+    )
+
+    $stubBuilder = [System.Text.StringBuilder]::new()
+    [void]$stubBuilder.Append("`r`n        # Dependency stubs - minimal resource blocks for referenced resources`r`n")
+
+    $dictionary = $null
+    try
+    {
+        $dictionary = Get-M365DSCAllResourcesDictionary
+    }
+    catch
+    {
+        Write-Verbose -Message "Unable to load resource dictionary for stub generation: $_"
+        return ''
+    }
+
+    foreach ($target in $UnresolvedTargets.GetEnumerator())
+    {
+        $resourceType = $target.Value.ResourceType
+        $targetKey = $target.Value.TargetKey
+        $instanceName = "$resourceType-$targetKey"
+
+        # Get key properties from the resource dictionary
+        $resourceInfo = $null
+        if ($null -ne $dictionary -and $dictionary.ContainsKey($resourceType))
+        {
+            $resourceInfo = $dictionary[$resourceType]
+        }
+
+        [void]$stubBuilder.Append("        $resourceType `"$instanceName`"`r`n")
+        [void]$stubBuilder.Append("        {`r`n")
+
+        if ($null -ne $resourceInfo)
+        {
+            $keyProps = $resourceInfo.Properties | Where-Object -FilterScript { $_.IsMandatory }
+            foreach ($prop in $keyProps)
+            {
+                if ($prop.Name -eq 'IsSingleInstance')
+                {
+                    [void]$stubBuilder.Append("            IsSingleInstance = `"Yes`"`r`n")
+                }
+                elseif ($prop.Name -eq 'MailEnabled')
+                {
+                    [void]$stubBuilder.Append("            $($prop.Name) = `$false`r`n")
+                }
+                elseif ($prop.Name -eq 'SecurityEnabled')
+                {
+                    [void]$stubBuilder.Append("            $($prop.Name) = `$true`r`n")
+                }
+                elseif ($prop.Name -in @('DisplayName', 'MailNickName', 'Name', 'Title', 'Identity', 'Id'))
+                {
+                    [void]$stubBuilder.Append("            $($prop.Name) = `"$targetKey`"`r`n")
+                }
+            }
+
+            foreach ($prop in $Script:M365DSCAuthenticationParameterSet.$($Script:ConnectionMode))
+            {
+                if ($prop -eq 'ManagedIdentity')
+                {
+                    [void]$stubBuilder.Append("            $($prop) = `$true`r`n")
+                }
+                else
+                {
+                    [void]$stubBuilder.Append("            $($prop) = `$ConfigurationData.NonNodeData.$($prop)`r`n")
+                }
+            }
+        }
+        else
+        {
+            # Fallback: assume DisplayName is the key
+            [void]$stubBuilder.Append("            DisplayName = `"$targetKey`"`r`n")
+        }
+
+        [void]$stubBuilder.Append("            Ensure      = `"Present`"`r`n")
+        [void]$stubBuilder.Append("        }`r`n")
+    }
+
+    return $stubBuilder.ToString()
+}
+
 Export-ModuleMember -Function @(
     'Export-M365DSCConfiguration',
     'Get-M365DSCExportContentForResource',
@@ -1160,5 +1757,9 @@ Export-ModuleMember -Function @(
     'Split-M365DSCConfiguration',
     'Set-M365DSCStringReplacementMap',
     'Get-M365DSCStringReplacementMap',
-    'Update-M365DSCExportAuthenticationResults'
+    'Update-M365DSCExportAuthenticationResults',
+    'Register-M365DSCExportDependency',
+    'Resolve-M365DSCExportRelations',
+    'Add-M365DSCExportDependsOn',
+    'Get-M365DSCMinimalExportBlocks'
 )

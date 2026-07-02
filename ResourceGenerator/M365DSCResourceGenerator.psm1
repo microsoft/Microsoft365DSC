@@ -98,8 +98,9 @@ function New-M365DSCResource
     if ($Workload -in $graphWorkloads)
     {
         Write-Verbose -Message "Import Intune Settings Catalog Helper module"
-        Import-Module Microsoft365DSC -Force
-        Import-Module ..\Modules\Microsoft365DSC\Modules\M365DSCIntuneSettingsCatalogUtil.psm1 -Force
+        Import-Module -Name Microsoft365DSC -Force
+        Import-Module -Name ..\Modules\Microsoft365DSC\Modules\M365DSCIntuneSettingsCatalogUtil.psm1 -Force
+        Remove-Module -Name M365DSCGraphShim -Force -ErrorAction SilentlyContinue
 
         $Global:CIMInstancesAlreadyFound = @()
         $GetcmdletName = "Get-$CmdLetNoun"
@@ -536,12 +537,13 @@ $($userDefinitionSettings.MOF -join "`r`n")
         $getAlternativeFilterString = [System.Text.StringBuilder]::new()
         if ($getListIdentifier -contains 'Filter')
         {
-            $getAlternativeFilterString.AppendLine("                    -Filter `"$alternativeKey eq '`$(`$$alternativeKey -replace `"'`", `"''`")'`" and isof('microsoft.graph.$SelectedODataType')``") | Out-Null
+            $getAlternativeFilterString.AppendLine("                    -Filter `"$alternativeKey eq '`$(`$$alternativeKey -replace `"'`", `"''`")' and isof('microsoft.graph.$SelectedODataType')`" ``") | Out-Null
             $getAlternativeFilterString.AppendLine("                        -ErrorAction SilentlyContinue") | Out-Null
         }
         else
         {
             $getAlternativeFilterString.AppendLine("                    -ErrorAction SilentlyContinue | Where-Object ``") | Out-Null
+            $getAlternativeFilterString.AppendLine("                    -All ``") | Out-Null
             $getAlternativeFilterString.AppendLine("                    -FilterScript {") | Out-Null
             $getAlternativeFilterString.AppendLine("                        `$_.$alternativeKey -eq `"`$(`$$alternativeKey -replace `"'`", `"''`")`" ``") | Out-Null
             $getAlternativeFilterString.AppendLine("                        -and `$_.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`"") | Out-Null
@@ -701,7 +703,18 @@ $($userDefinitionSettings.MOF -join "`r`n")
         $exportGetCommand = [System.Text.StringBuilder]::new()
         if ($CmdLetNoun -like "*DeviceManagementConfigurationPolicy")
         {
-            $exportGetCommand.AppendLine("        `$policyTemplateID = `"<TemplateId>`"") | Out-Null
+            $exportGetCommand.AppendLine(@'
+        $policyTemplateID = "<TemplateReferenceId>"
+        $baseFilter = "templateReference/templateId eq '$policyTemplateID'"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($Filter) and ($baseFilter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
+'@) | Out-Null
         }
         $exportGetCommand.AppendLine("        [array]`$getValue = Get-$CmdLetNoun ``") | Out-Null
         if ($getDefaultParameterSet.Parameters.Name -contains "Filter")
@@ -717,13 +730,6 @@ $($userDefinitionSettings.MOF -join "`r`n")
             $exportGetCommand.AppendLine("            -ErrorAction Stop | Where-Object ``") | Out-Null
             $exportGetCommand.AppendLine("            -FilterScript {") | Out-Null
             $exportGetCommand.AppendLine("                `$_.'@odata.type' -eq '#microsoft.graph.$($selectedODataType)'") | Out-Null
-            $exportGetCommand.AppendLine("            }") | Out-Null
-        }
-        elseif ($CmdletNoun -like "*DeviceManagementConfigurationPolicy")
-        {
-            $exportGetCommand.AppendLine("            -ErrorAction Stop | Where-Object ``") | Out-Null
-            $exportGetCommand.AppendLine("            -FilterScript {") | Out-Null
-            $exportGetCommand.AppendLine("                `$_.TemplateReference.TemplateId -eq `$policyTemplateID") | Out-Null
             $exportGetCommand.AppendLine("            }") | Out-Null
         }
         else
@@ -817,7 +823,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
             -TemplateReferenceId `$templateReferenceId ``
             -Platforms `$platforms ``
             -Technologies `$technologies ``
-            -Settings `$settings`r`n ``
+            -Settings `$settings ``
             -RoleScopeTagIds `$RoleScopeTagIds`r`n
 "@
         }
@@ -948,6 +954,15 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                 -FilePath $moduleFilePath
         }
         Write-TokenReplacement -Token '<#DefaultTestValuesToCheck#>' -Value $defaultTestValuesToCheck -FilePath $moduleFilePath
+        if ($IsSingleInstance)
+        {
+            Write-TokenReplacement -Token '<ExportParams>' -Value "IsSingleInstance      = 'Yes'" -FilePath $moduleFilePath
+        }
+        else
+        {
+            Write-TokenReplacement -Token '<ExportParams>' -Value "$primaryKey                    = `$config.$primaryKey$requiredKey
+                Ensure                = 'Present'" -FilePath $moduleFilePath
+        }
 
         # Remove comments
         Write-TokenReplacement -Token '<#ResourceGenerator' -Value '' -FilePath $moduleFilePath

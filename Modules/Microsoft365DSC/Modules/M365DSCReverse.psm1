@@ -1,10 +1,10 @@
 <#
-.Description
-This function orchestrate the export process between Export-M365DSCConfiguration
-and the ReverseDSC module.
+.DESCRIPTION
+    This function orchestrate the export process between Export-M365DSCConfiguration
+    and the ReverseDSC module.
 
-.Functionality
-Internal
+.FUNCTIONALITY
+    Internal
 #>
 function Start-M365DSCConfigurationExtract
 {
@@ -106,7 +106,11 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [Switch]
-        $WithStatistics
+        $WithStatistics,
+
+        [Parameter()]
+        [Switch]
+        $IncludeDependencies
     )
 
     # Start by checking to see if a new version of the tool is available in the PowerShell Gallery
@@ -847,6 +851,14 @@ function Start-M365DSCConfigurationExtract
             [void]$DSCContent.Append($synchronizedHashtable.ResourcesResult[$resource])
         }
 
+        # Post-process: inject DependsOn declarations and generate stub blocks
+        if ($IncludeDependencies.IsPresent)
+        {
+            $processedContent = Add-M365DSCExportDependsOn -DSCContent $DSCContent.ToString()
+            $DSCContent = [System.Text.StringBuilder]::new()
+            $DSCContent.Append($processedContent) | Out-Null
+        }
+
         foreach ($pair in (Get-M365DSCStringReplacementMap).GetEnumerator())
         {
             Add-ConfigurationDataEntry -Node 'NonNodeData' `
@@ -922,12 +934,15 @@ function Start-M365DSCConfigurationExtract
         Write-M365DSCHost -Message "Failed exports: {$($synchronizedHashtable.FailedResources)}"
         if ($($synchronizedHashtable.FailedResources) -eq 0)
         {
-            Write-M365DSCHost -Message "$($Global:M365DSCEmojiGreenCheckmark) Export completed successfully." -ForegroundColor Green
+            $Message = "$($Global:M365DSCEmojiGreenCheckmark) Export completed successfully."
+            Write-M365DSCHost -Message $Message -ForegroundColor Green
         }
         else
         {
-            Write-M365DSCHost -Message "$($Global:M365DSCEmojiRedX) Export completed with errors." -ForegroundColor Red
+            $Message = "$($Global:M365DSCEmojiRedX) Export completed with errors."
+            Write-M365DSCHost -Message $Message -ForegroundColor Red
         }
+        Send-M365DSCPushNotification -Body $Message
         #endregion
 
         $sessions = Get-PSSession | Where-Object -FilterScript { $_.Name -like 'SfBPowerShellSessionViaTeamsModule_*' -or `

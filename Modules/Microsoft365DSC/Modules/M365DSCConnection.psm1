@@ -126,7 +126,7 @@ function New-M365DSCConnection
     Write-Verbose -Message "$($InboundParameters | Out-String)"
 
     #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data = [System.Collections.Generic.Dictionary[[System.String], [System.Object]]]::new()
     $data.Add('Source', 'M365DSCUtil')
     $data.Add('Workload', $Workload)
 

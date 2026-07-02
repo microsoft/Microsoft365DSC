@@ -831,6 +831,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @params
+            $rawResults = $Results.Clone()
 
             if ( $null -ne $Results.BandwidthMode)
             {
@@ -910,7 +911,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('BandwidthMode', 'GroupIdSource', 'MaximumCacheSize', 'Assignments')
+                -NoEscape @('BandwidthMode', 'GroupIdSource', 'MaximumCacheSize', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

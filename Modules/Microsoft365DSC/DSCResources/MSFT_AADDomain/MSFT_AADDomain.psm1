@@ -282,8 +282,7 @@ function Set-TargetResource
             $setParameters.Remove('PasswordValidityPeriodInDays') | Out-Null
         }
 
-        $payload = ConvertTo-Json $setParameters -Depth 10 -Compress
-        Write-Verbose -Message "Creating new custom domain name {$Id} with payload: `r`n$payload"
+        Write-Verbose -Message "Creating new custom domain name {$Id}"
         $domain = New-MgBetaDomain -BodyParameter $setParameters
 
         if ($NeedAdditionalUpdate)
@@ -292,12 +291,12 @@ function Set-TargetResource
             if ($UpdatePasswordNotificationWindowInDays)
             {
                 Write-Verbose -Message "Updating PasswordNotificationWindowInDays for domain {$Id}"
-                $UpdateParams.Add('PasswordNotificationWindowInDays', $PasswordNotificationWindowInDays)
+                $UpdateParams.Add('passwordNotificationWindowInDays', $PasswordNotificationWindowInDays)
             }
             if ($UpdatePasswordValidityPeriodInDays)
             {
                 Write-Verbose -Message "Updating PasswordValidityPeriodInDays for domain {$Id}"
-                $UpdateParams.Add('PasswordValidityPeriodInDays', $PasswordValidityPeriodInDays)
+                $UpdateParams.Add('passwordValidityPeriodInDays', $PasswordValidityPeriodInDays)
             }
 
             Update-MgBetaDomain -DomainId $domain.Id -BodyParameter $UpdateParams
@@ -308,7 +307,7 @@ function Set-TargetResource
     {
         $setParameters.Remove('Id') | Out-Null
         $setParameters.Remove('IsVerified') | Out-Null
-        Write-Verbose -Message "Updating custom domain name {$Id} with:`r`n$(ConvertTo-Json $SetParameters -Depth 5)"
+        Write-Verbose -Message "Updating custom domain name {$Id}"
         Update-MgBetaDomain -DomainId $Id -BodyParameter $setParameters
     }
     # REMOVE

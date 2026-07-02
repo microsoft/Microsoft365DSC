@@ -151,7 +151,21 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('false', 'true')]
         [System.String]
+        $offlinedefinitionupdatefallbacktocloud,
+
+        [Parameter()]
+        [System.String]
+        $offlinedefinitionupdateurl,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
         $scheduledScan_checkForDefinitionsUpdate,
+
+        [Parameter()]
+        [ValidateRange(0, 1380)]
+        [System.Int32]
+        $scheduledScan_dailyConfiguration_timeOfDay,
 
         [Parameter()]
         [ValidateSet('0', '1', '2', '3', '4', '5', '6', '7', '8')]
@@ -164,6 +178,11 @@ function Get-TargetResource
         $scheduledScan_ignoreExclusions,
 
         [Parameter()]
+        [ValidateRange(0, 24)]
+        [System.Int32]
+        $scheduledScan_interval,
+
+        [Parameter()]
         [ValidateSet('false', 'true')]
         [System.String]
         $scheduledScan_lowPriorityScheduledScan,
@@ -174,9 +193,19 @@ function Get-TargetResource
         $scheduledScan_randomizeScanStartTime,
 
         [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_runScanWhenIdle,
+
+        [Parameter()]
         [ValidateSet('quick', 'full')]
         [System.String]
         $scheduledScan_scanType,
+
+        [Parameter()]
+        [ValidateRange(0, 1380)]
+        [System.Int32]
+        $scheduledScan_weeklyConfiguration_timeOfDay,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -608,7 +637,21 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('false', 'true')]
         [System.String]
+        $offlinedefinitionupdatefallbacktocloud,
+
+        [Parameter()]
+        [System.String]
+        $offlinedefinitionupdateurl,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
         $scheduledScan_checkForDefinitionsUpdate,
+
+        [Parameter()]
+        [ValidateRange(0, 1380)]
+        [System.Int32]
+        $scheduledScan_dailyConfiguration_timeOfDay,
 
         [Parameter()]
         [ValidateSet('0', '1', '2', '3', '4', '5', '6', '7', '8')]
@@ -621,6 +664,11 @@ function Set-TargetResource
         $scheduledScan_ignoreExclusions,
 
         [Parameter()]
+        [ValidateRange(0, 24)]
+        [System.Int32]
+        $scheduledScan_interval,
+
+        [Parameter()]
         [ValidateSet('false', 'true')]
         [System.String]
         $scheduledScan_lowPriorityScheduledScan,
@@ -631,9 +679,19 @@ function Set-TargetResource
         $scheduledScan_randomizeScanStartTime,
 
         [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_runScanWhenIdle,
+
+        [Parameter()]
         [ValidateSet('quick', 'full')]
         [System.String]
         $scheduledScan_scanType,
+
+        [Parameter()]
+        [ValidateRange(0, 1380)]
+        [System.Int32]
+        $scheduledScan_weeklyConfiguration_timeOfDay,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -980,7 +1038,21 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('false', 'true')]
         [System.String]
+        $offlinedefinitionupdatefallbacktocloud,
+
+        [Parameter()]
+        [System.String]
+        $offlinedefinitionupdateurl,
+
+        [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
         $scheduledScan_checkForDefinitionsUpdate,
+
+        [Parameter()]
+        [ValidateRange(0, 1380)]
+        [System.Int32]
+        $scheduledScan_dailyConfiguration_timeOfDay,
 
         [Parameter()]
         [ValidateSet('0', '1', '2', '3', '4', '5', '6', '7', '8')]
@@ -993,6 +1065,11 @@ function Test-TargetResource
         $scheduledScan_ignoreExclusions,
 
         [Parameter()]
+        [ValidateRange(0, 24)]
+        [System.Int32]
+        $scheduledScan_interval,
+
+        [Parameter()]
         [ValidateSet('false', 'true')]
         [System.String]
         $scheduledScan_lowPriorityScheduledScan,
@@ -1003,9 +1080,19 @@ function Test-TargetResource
         $scheduledScan_randomizeScanStartTime,
 
         [Parameter()]
+        [ValidateSet('false', 'true')]
+        [System.String]
+        $scheduledScan_runScanWhenIdle,
+
+        [Parameter()]
         [ValidateSet('quick', 'full')]
         [System.String]
         $scheduledScan_scanType,
+
+        [Parameter()]
+        [ValidateRange(0, 1380)]
+        [System.Int32]
+        $scheduledScan_weeklyConfiguration_timeOfDay,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -1190,6 +1277,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
             if ($null -ne $Results.exclusions)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1237,7 +1326,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('exclusions', 'threatTypeSettings', 'Assignments')
+                -NoEscape @('exclusions', 'threatTypeSettings', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

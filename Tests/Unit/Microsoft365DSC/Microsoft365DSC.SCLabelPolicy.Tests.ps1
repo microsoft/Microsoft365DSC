@@ -27,9 +27,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Convert-ArrayList -MockWith {
-            }
-
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -171,6 +168,267 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $null
                 }
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
+            }
+        }
+
+        Context -Name 'Label policy locations match desired state' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name                         = 'TestLabelPolicy'
+                    Comment                      = 'This is a test label policy'
+                    Labels                       = @('Personal', 'General')
+                    ExchangeLocation             = @('user1@contoso.com')
+                    ExchangeLocationException    = @('except1@contoso.com')
+                    ModernGroupLocation          = @('group1@contoso.com')
+                    ModernGroupLocationException = @('exceptgroup1@contoso.com')
+                    Credential                   = $Credential
+                    Ensure                       = 'Present'
+                }
+
+                Mock -CommandName Get-LabelPolicy -MockWith {
+                    return @{
+                        Name                         = 'TestLabelPolicy'
+                        Comment                      = 'This is a test label policy'
+                        Labels                       = @('Personal', 'General')
+                        ExchangeLocation             = @(@{ Name = 'user1@contoso.com' })
+                        ExchangeLocationException    = @(@{ Name = 'except1@contoso.com' })
+                        ModernGroupLocation          = @(@{ Name = 'group1@contoso.com' })
+                        ModernGroupLocationException = @(@{ Name = 'exceptgroup1@contoso.com' })
+                        Ensure                       = 'Present'
+                    }
+                }
+            }
+
+            It 'Should return true from the Test method when all four location properties match current state' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
+        Context -Name 'Label policy ExchangeLocation drift detected' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name             = 'TestLabelPolicy'
+                    Comment          = 'This is a test label policy'
+                    Labels           = @('Personal', 'General')
+                    ExchangeLocation = @('new-user@contoso.com')
+                    Credential       = $Credential
+                    Ensure           = 'Present'
+                }
+
+                Mock -CommandName Get-LabelPolicy -MockWith {
+                    return @{
+                        Name             = 'TestLabelPolicy'
+                        Comment          = 'This is a test label policy'
+                        Labels           = @('Personal', 'General')
+                        ExchangeLocation = @(@{ Name = 'old-user@contoso.com' })
+                        Ensure           = 'Present'
+                    }
+                }
+            }
+
+            It 'Should return false from the Test method when ExchangeLocation drifts' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call Set-LabelPolicy with synthesized AddExchangeLocation and RemoveExchangeLocation' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Set-LabelPolicy -Exactly 1 -Scope It -ParameterFilter {
+                    $AddExchangeLocation -contains 'new-user@contoso.com' -and `
+                    $RemoveExchangeLocation -contains 'old-user@contoso.com'
+                }
+            }
+        }
+
+        Context -Name 'Label policy ExchangeLocationException drift detected' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name                      = 'TestLabelPolicy'
+                    Comment                   = 'This is a test label policy'
+                    Labels                    = @('Personal', 'General')
+                    ExchangeLocationException = @('new-except@contoso.com')
+                    Credential                = $Credential
+                    Ensure                    = 'Present'
+                }
+
+                Mock -CommandName Get-LabelPolicy -MockWith {
+                    return @{
+                        Name                      = 'TestLabelPolicy'
+                        Comment                   = 'This is a test label policy'
+                        Labels                    = @('Personal', 'General')
+                        ExchangeLocationException = @(@{ Name = 'old-except@contoso.com' })
+                        Ensure                    = 'Present'
+                    }
+                }
+            }
+
+            It 'Should return false from the Test method when ExchangeLocationException drifts' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call Set-LabelPolicy with synthesized AddExchangeLocationException and RemoveExchangeLocationException' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Set-LabelPolicy -Exactly 1 -Scope It -ParameterFilter {
+                    $AddExchangeLocationException -contains 'new-except@contoso.com' -and `
+                    $RemoveExchangeLocationException -contains 'old-except@contoso.com'
+                }
+            }
+        }
+
+        Context -Name 'Label policy ModernGroupLocation drift detected' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name                = 'TestLabelPolicy'
+                    Comment             = 'This is a test label policy'
+                    Labels              = @('Personal', 'General')
+                    ModernGroupLocation = @('newgroup@contoso.com')
+                    Credential          = $Credential
+                    Ensure              = 'Present'
+                }
+
+                Mock -CommandName Get-LabelPolicy -MockWith {
+                    return @{
+                        Name                = 'TestLabelPolicy'
+                        Comment             = 'This is a test label policy'
+                        Labels              = @('Personal', 'General')
+                        ModernGroupLocation = @(@{ Name = 'oldgroup@contoso.com' })
+                        Ensure              = 'Present'
+                    }
+                }
+            }
+
+            It 'Should return false from the Test method when ModernGroupLocation drifts' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call Set-LabelPolicy with synthesized AddModernGroupLocation and RemoveModernGroupLocation' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Set-LabelPolicy -Exactly 1 -Scope It -ParameterFilter {
+                    $AddModernGroupLocation -contains 'newgroup@contoso.com' -and `
+                    $RemoveModernGroupLocation -contains 'oldgroup@contoso.com'
+                }
+            }
+        }
+
+        Context -Name 'Label policy ModernGroupLocationException drift detected' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name                         = 'TestLabelPolicy'
+                    Comment                      = 'This is a test label policy'
+                    Labels                       = @('Personal', 'General')
+                    ModernGroupLocationException = @('newexceptgroup@contoso.com')
+                    Credential                   = $Credential
+                    Ensure                       = 'Present'
+                }
+
+                Mock -CommandName Get-LabelPolicy -MockWith {
+                    return @{
+                        Name                         = 'TestLabelPolicy'
+                        Comment                      = 'This is a test label policy'
+                        Labels                       = @('Personal', 'General')
+                        ModernGroupLocationException = @(@{ Name = 'oldexceptgroup@contoso.com' })
+                        Ensure                       = 'Present'
+                    }
+                }
+            }
+
+            It 'Should return false from the Test method when ModernGroupLocationException drifts' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call Set-LabelPolicy with synthesized AddModernGroupLocationException and RemoveModernGroupLocationException' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Set-LabelPolicy -Exactly 1 -Scope It -ParameterFilter {
+                    $AddModernGroupLocationException -contains 'newexceptgroup@contoso.com' -and `
+                    $RemoveModernGroupLocationException -contains 'oldexceptgroup@contoso.com'
+                }
+            }
+        }
+
+        Context -Name 'Label policy AddExchangeLocation only - entry already present' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name                = 'TestLabelPolicy'
+                    Comment             = 'This is a test label policy'
+                    Labels              = @('Personal', 'General')
+                    AddExchangeLocation = @('user1@contoso.com')
+                    Credential          = $Credential
+                    Ensure              = 'Present'
+                }
+
+                Mock -CommandName Get-LabelPolicy -MockWith {
+                    return @{
+                        Name             = 'TestLabelPolicy'
+                        Comment          = 'This is a test label policy'
+                        Labels           = @('Personal', 'General')
+                        ExchangeLocation = @(@{ Name = 'user1@contoso.com' })
+                        Ensure           = 'Present'
+                    }
+                }
+            }
+
+            It 'Should return true when AddExchangeLocation entry is already present in current state' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
+        Context -Name 'Label policy RemoveExchangeLocation only - entry still present' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name                   = 'TestLabelPolicy'
+                    Comment                = 'This is a test label policy'
+                    Labels                 = @('Personal', 'General')
+                    RemoveExchangeLocation = @('user1@contoso.com')
+                    Credential             = $Credential
+                    Ensure                 = 'Present'
+                }
+
+                Mock -CommandName Get-LabelPolicy -MockWith {
+                    return @{
+                        Name             = 'TestLabelPolicy'
+                        Comment          = 'This is a test label policy'
+                        Labels           = @('Personal', 'General')
+                        ExchangeLocation = @(@{ Name = 'user1@contoso.com' })
+                        Ensure           = 'Present'
+                    }
+                }
+            }
+
+            It 'Should return false when RemoveExchangeLocation entry still exists in current state' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+        }
+
+        Context -Name 'AdvancedSettings defaultlabel resolution uses bulk Get-Label cache' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name       = 'TestLabelPolicy'
+                    Credential = $Credential
+                    Ensure     = 'Present'
+                }
+
+                Mock -CommandName Get-LabelPolicy -MockWith {
+                    return @{
+                        Name     = 'TestLabelPolicy'
+                        Settings = @(
+                            '[defaultlabel,00000000-0000-0000-0000-000000000001]',
+                            '[siodefaultlabelid,00000000-0000-0000-0000-000000000002]'
+                        )
+                    }
+                }
+
+                Mock -CommandName Get-Label -MockWith {
+                    return @(
+                        [pscustomobject]@{ ImmutableId = [Guid]'00000000-0000-0000-0000-000000000001'; DisplayName = 'Confidential' },
+                        [pscustomobject]@{ ImmutableId = [Guid]'00000000-0000-0000-0000-000000000002'; DisplayName = 'Public' }
+                    )
+                }
+            }
+
+            It 'Should call Get-Label exactly once with no -Identity argument when resolving multiple defaultlabel settings' {
+                $null = Get-TargetResource @testParams
+                Should -Invoke -CommandName Get-Label -Exactly 1 -Scope It -ParameterFilter {
+                    $null -eq $Identity
+                }
             }
         }
 

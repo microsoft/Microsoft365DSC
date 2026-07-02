@@ -496,8 +496,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('')
+                -Credential $Credential
+
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

@@ -82,10 +82,12 @@ foreach ($file in $settingsFiles)
 $map | ConvertTo-Json -Depth 10 | Out-File -FilePath "$PSScriptRoot\cmdlet-source-modules.json" -Encoding UTF8
 
 if (-not $SkipCmdletMappingGeneration) {
+    Write-Host "Build Cmdlet Mapping..."
     & "$PSScriptRoot\Build-CmdletMapping.ps1" -CmdletSourceModulesPath "$PSScriptRoot\cmdlet-source-modules.json" -OutputPath $CmdletMappingPath
 }
 
 if (-not $SkipFunctionSignatureGeneration) {
+    Write-Host "Extract Function Signatures..."
     & "$PSScriptRoot\Extract-FunctionSignatures.ps1" -CmdletSourceModulesPath "$PSScriptRoot\cmdlet-source-modules.json" -OutputPath $FunctionSignaturesPath
 }
 
@@ -235,6 +237,10 @@ function Invoke-M365DSCGraphShimRequest
     }
     if ($PSBoundParameters.ContainsKey('Body') -and $null -ne $Body)
     {
+        if ($Body -isnot [string])
+        {
+            $Body = $Body | ConvertTo-Json -Depth 99
+        }
         $invokeParams['Body'] = $Body
         $invokeParams['ContentType'] = 'application/json'
     }
@@ -289,6 +295,10 @@ function Invoke-M365DSCGraphShimRequest
                 $delay = [Math]::Max($retryAfter, [Math]::Pow(2, $attempt))
                 Write-Verbose "Graph API returned $statusCode. Retrying in $delay seconds (attempt $attempt/$maxRetries)..."
                 Start-Sleep -Seconds $delay
+            }
+            elseif ($statusCode -eq 400 -and $_.ErrorDetails.Message -match 'Header ''x-msft-approval-justification'' is required to request approval')
+            {
+                throw [System.InvalidOperationException] 'Multi Admin Approval (MAA) is enabled for this resource type. Microsoft365DSC does not support running with MAA enabled. Please exclude the app registration from MAA or disable MAA for this resource type.'
             }
             else
             {

@@ -751,6 +751,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
             if ($null -ne $Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
@@ -901,7 +903,8 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('Assignments', 'IosRestriction', 'WindowsRestriction', 'WindowsHomeSkuRestriction',
                 'WindowsMobileRestriction', 'AndroidRestriction', 'AndroidForWorkRestriction',
-                'MacRestriction', 'MacOSRestriction', 'TvosRestriction', 'VisionOSRestriction')
+                'MacRestriction', 'MacOSRestriction', 'TvosRestriction', 'VisionOSRestriction') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

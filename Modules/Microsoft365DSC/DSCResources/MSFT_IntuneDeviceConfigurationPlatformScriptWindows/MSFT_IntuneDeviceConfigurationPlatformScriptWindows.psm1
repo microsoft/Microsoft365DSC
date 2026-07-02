@@ -304,21 +304,21 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Platform Script Windows with DisplayName {$DisplayName}"
-        $BoundParameters.Remove('Assignments') | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
-        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.ScriptContent = [System.Convert]::FromBase64String($CreateParameters.ScriptContent)
-        $CreateParameters.Remove('Id') | Out-Null
+        $createParameters = ([Hashtable]$boundParameters).Clone()
+        $createParameters.scriptContent = [System.Convert]::FromBase64String($createParameters.scriptContent)
+        $createParameters.Remove('Id') | Out-Null
 
         #region resource generator code
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.DeviceManagementScript')
-        $policy = New-MgBetaDeviceManagementScript -BodyParameter $CreateParameters
+        $createParameters.Add('@odata.type', '#microsoft.graph.DeviceManagementScript')
+        $policy = New-MgBetaDeviceManagementScript -BodyParameter $createParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.Id)
@@ -333,18 +333,17 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Platform Script Windows with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove('Assignments') | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
-        $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
-        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-        $UpdateParameters.ScriptContent = [System.Convert]::FromBase64String($UpdateParameters.ScriptContent)
-        $UpdateParameters.Remove('Id') | Out-Null
+        $updateParameters = ([Hashtable]$boundParameters).Clone()
+        $updateParameters.scriptContent = [System.Convert]::FromBase64String($updateParameters.scriptContent)
+        $updateParameters.Remove('Id') | Out-Null
 
         #region resource generator code
-        $UpdateParameters.Add('@odata.type', '#microsoft.graph.DeviceManagementScript')
+        $updateParameters.Add('@odata.type', '#microsoft.graph.DeviceManagementScript')
         Update-MgBetaDeviceManagementScript `
             -DeviceManagementScriptId $currentInstance.Id `
-            -BodyParameter $UpdateParameters
+            -BodyParameter $updateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.id `
@@ -577,6 +576,8 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
             if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
@@ -594,7 +595,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('Assignments')
+                -NoEscape @('Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

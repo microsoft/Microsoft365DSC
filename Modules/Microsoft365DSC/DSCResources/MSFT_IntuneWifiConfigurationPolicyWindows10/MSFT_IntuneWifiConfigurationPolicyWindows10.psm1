@@ -756,6 +756,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
 
             if ($Results.DeviceManagementApplicabilityRuleOsEdition)
             {
@@ -802,6 +803,7 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('Assignments', 'DeviceManagementApplicabilityRuleOsEdition', 'DeviceManagementApplicabilityRuleOsVersion') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

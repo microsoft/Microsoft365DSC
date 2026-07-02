@@ -241,7 +241,8 @@ function Get-TargetResource
         {
             # Members
             $groupMembers = $Group.Members
-            if ($Group.Members.Count -eq 20 -or $Script:requireGroupMemberFetching -eq $true)
+            if ((($Members.Count -gt 0 -or $GroupAsMembers.Count -gt 0) -and $Group.Members.Count -eq 20) -or `
+                $Script:requireGroupMemberFetching -eq $true)
             {
                 # Fetch all group members
                 $groupMembers = Get-MgGroupMember -GroupId $Group.Id -All -Top 999

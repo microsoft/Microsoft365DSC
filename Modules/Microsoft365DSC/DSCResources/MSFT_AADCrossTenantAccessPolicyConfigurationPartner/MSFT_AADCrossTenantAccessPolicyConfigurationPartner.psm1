@@ -328,7 +328,12 @@ function Set-TargetResource
         $OperationParams.Remove('IdentitySynchronization') | Out-Null
     }
 
-    $OperationParams = Rename-M365DSCCimInstanceParameter -Properties $OperationParams
+    $OperationParams = Rename-M365DSCCimInstanceParameter -Properties $OperationParams -KeyMapping @{
+        B2BCollaborationInbound  = 'b2bCollaborationInbound'
+        B2BCollaborationOutbound = 'b2bCollaborationOutbound'
+        B2BDirectConnectInbound  = 'b2bDirectConnectInbound'
+        B2BDirectConnectOutbound = 'b2bDirectConnectOutbound'
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {

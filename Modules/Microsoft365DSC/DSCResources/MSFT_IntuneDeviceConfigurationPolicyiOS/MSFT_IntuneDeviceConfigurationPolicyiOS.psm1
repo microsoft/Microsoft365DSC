@@ -3040,6 +3040,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
 
             if ($Results.AppsSingleAppModeList)
             {
@@ -3255,10 +3256,10 @@ function Export-TargetResource
                 -NoEscape @('AppsSingleAppModeList', 'AppsVisibilityList', 'CompliantAppsList', 'MediaContentRatingAustralia',
                 'MediaContentRatingCanada', 'MediaContentRatingFrance', 'MediaContentRatingGermany', 'MediaContentRatingIreland',
                 'MediaContentRatingJapan', 'MediaContentRatingNewZealand', 'MediaContentRatingUnitedKingdom',
-                'MediaContentRatingUnitedStates', 'NetworkUsageRules', 'Assignments')
+                'MediaContentRatingUnitedStates', 'NetworkUsageRules', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
-
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++

@@ -870,6 +870,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
 
             #region complex types
             if ($null -ne $Results.Categories)
@@ -945,7 +946,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('Categories', 'ExcludedApps', 'Assignments')
+                -NoEscape @('Categories', 'ExcludedApps', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

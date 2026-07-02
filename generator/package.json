@@ -6,17 +6,17 @@
   "dependencies": {
     "@fluentui/merge-styles": "^8.6.14",
     "@fluentui/react": "^8.125.6",
-    "@fluentui/react-components": "^9.73.8",
+    "@fluentui/react-components": "^9.74.3",
     "@fluentui/react-hooks": "^8.10.2",
-    "@microsoft/applicationinsights-react-js": "^19.4.0",
-    "@microsoft/applicationinsights-web": "^3.4.1",
+    "@microsoft/applicationinsights-react-js": "^19.4.1",
+    "@microsoft/applicationinsights-web": "^3.4.2",
     "@monaco-editor/react": "^4.7.0",
     "@uifabric/icons": "^7.9.6",
-    "react": "^19.2.6",
+    "react": "^19.2.7",
     "react-copy-to-clipboard": "^5.1.1",
-    "react-dom": "^19.2.6",
-    "react-router-dom": "^7.15.1",
-    "zustand": "^5.0.13"
+    "react-dom": "^19.2.7",
+    "react-router-dom": "^7.18.1",
+    "zustand": "^5.0.14"
   },
   "scripts": {
     "start": "pwsh -command '.\\scripts\\Build-Workloads.ps1' && vite",
@@ -28,16 +28,16 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^25.9.1",
-    "@types/react": "^19.2.15",
+    "@types/node": "^25.9.4",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@types/react-router-dom": "^5.3.3",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-react": "^6.0.3",
     "jsdom": "^29.1.1",
-    "prettier": "^3.8.3",
-    "sass": "^1.100.0",
+    "prettier": "^3.9.4",
+    "sass": "^1.101.0",
     "typescript": "^6.0.3",
-    "vite": "^8.0.14",
-    "vitest": "^4.1.7"
+    "vite": "^8.1.1",
+    "vitest": "^4.1.9"
   }
 }

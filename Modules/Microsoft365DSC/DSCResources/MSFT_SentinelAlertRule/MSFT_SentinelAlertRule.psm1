@@ -1300,7 +1300,7 @@ function New-M365DSCSentinelAlertRule
         $hostUrl = Get-M365DSCAPIEndpoint -TenantId $TenantId
         $uri = $hostUrl.AzureManagement + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
 
-        if ($null -eq $Id)
+        if ([string]::IsNullOrEmpty($Id))
         {
             $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/alertrules/$((New-Guid).ToString())?api-version=2024-04-01-preview"
         }

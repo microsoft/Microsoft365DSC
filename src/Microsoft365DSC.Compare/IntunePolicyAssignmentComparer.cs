@@ -82,7 +82,7 @@ namespace Microsoft365DSC.Compare
                     }
 
                     // If not found by groupId, try by groupDisplayName
-                    if (!testResult)
+                    if (!testResult || (testResult && assignmentTarget is null))
                     {
                         var assignmentGroupDisplayName = GetPropertyValue<string>(assignment, "groupDisplayName");
                         assignmentTarget = FindAssignmentTarget(target, "groupDisplayName", assignmentGroupDisplayName);
@@ -152,7 +152,7 @@ namespace Microsoft365DSC.Compare
                     {
                         drifts.Add(new Dictionary<string, object>
                         {
-                            { "PropertyName", $"Assignments[{i}].DataType" },
+                            { "PropertyName", $"Assignments[{i}].dataType" },
                             { "CurrentValue", dataType },
                             { "DesiredValue", null }
                         });

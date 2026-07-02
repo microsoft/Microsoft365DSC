@@ -878,6 +878,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $configDeviceMacOsPolicy
             $Results = Get-TargetResource @params
+            $rawResults = $Results.Clone()
 
             if ($Results.Assignments)
             {
@@ -913,10 +914,10 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('Assignments', 'ScheduledActionsForRule')
+                -NoEscape @('Assignments', 'ScheduledActionsForRule') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
-
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++

@@ -804,6 +804,8 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
             if ($null -ne $Results.DetectionScriptParameters)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -865,7 +867,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('DetectionScriptParameters', 'RemediationScriptParameters', 'Assignments')
+                -NoEscape @('DetectionScriptParameters', 'RemediationScriptParameters', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

@@ -10,6 +10,17 @@
       }
     ]
   },
+  "Clear-MgBetaDeviceManagementConfigurationPolicyEnrollmentTimeDeviceMembershipTarget": {
+    "SourceModule": "Microsoft.Graph.Beta.DeviceManagement",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "POST",
+        "URI": "/deviceManagement/configurationPolicies/{deviceManagementConfigurationPolicy-id}/clearEnrollmentTimeDeviceMembershipTarget",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
   "Get-MgAdminSharepointSetting": {
     "SourceModule": "Microsoft.Graph.Sites",
     "ApiVersion": "v1.0",
@@ -487,6 +498,17 @@
       {
         "Method": "GET",
         "URI": "/deviceManagement/configurationPolicies/{deviceManagementConfigurationPolicy-id}/assignments",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "Get-MgBetaDeviceManagementConfigurationPolicyEnrollmentTimeDeviceMembershipTarget": {
+    "SourceModule": "Microsoft.Graph.Beta.DeviceManagement",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "GET",
+        "URI": "/deviceManagement/configurationPolicies/{deviceManagementConfigurationPolicy-id}/retrieveEnrollmentTimeDeviceMembershipTarget",
         "ApiVersion": "beta"
       }
     ]
@@ -5699,6 +5721,17 @@
       {
         "Method": "POST",
         "URI": "/directory/deletedItems/{directoryObject-id}/restore",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "Set-MgBetaDeviceManagementConfigurationPolicyEnrollmentTimeDeviceMembershipTarget": {
+    "SourceModule": "Microsoft.Graph.Beta.DeviceManagement",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "POST",
+        "URI": "/deviceManagement/configurationPolicies/{deviceManagementConfigurationPolicy-id}/setEnrollmentTimeDeviceMembershipTarget",
         "ApiVersion": "beta"
       }
     ]

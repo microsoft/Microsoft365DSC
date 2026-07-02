@@ -1502,7 +1502,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
     $ValuesToCheck.Remove('AutoLabelingSettings') | Out-Null

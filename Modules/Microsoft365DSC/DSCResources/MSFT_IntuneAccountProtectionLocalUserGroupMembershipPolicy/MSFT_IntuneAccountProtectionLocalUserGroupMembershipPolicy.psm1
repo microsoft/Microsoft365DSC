@@ -617,6 +617,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $policy
             $Results = Get-TargetResource @params
+            $rawResults = $Results.Clone()
 
             if ($Results.AccessGroup)
             {
@@ -651,7 +652,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('AccessGroup', 'Assignments')
+                -NoEscape @('AccessGroup', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

@@ -40,6 +40,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgGroup -MockWith {
             }
 
+            Mock -CommandName Get-MgGroupMember -MockWith {
+            }
+
             Mock -CommandName Get-MgBetaGroup -MockWith {
             }
 
@@ -235,6 +238,60 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
+        Context -Name 'The Group Exists with empty desired members' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName     = 'DSCGroup'
+                    ID              = '12345-12345-12345-12345-12345'
+                    Description     = 'Microsoft DSC Group'
+                    SecurityEnabled = $True
+                    MailEnabled     = $True
+                    MailNickname    = 'M365DSC'
+                    GroupTypes      = @('Unified')
+                    Members         = @()
+                    GroupAsMembers  = @()
+                    Visibility      = 'Private'
+                    Ensure          = 'Present'
+                    Credential      = $Credential
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return 'Credentials'
+                }
+
+                Mock -CommandName Get-MgBetaGroup -MockWith {
+                    return @{
+                        DisplayName     = 'DSCGroup'
+                        ID              = '12345-12345-12345-12345-12345'
+                        Description     = 'Microsoft DSC Group'
+                        SecurityEnabled = $True
+                        MailEnabled     = $True
+                        MailNickname    = 'M365DSC'
+                        GroupTypes      = @('Unified')
+                        Visibility      = 'Private'
+                        Members         = 1..20 | ForEach-Object {
+                            @{
+                                '@odata.type'      = '#microsoft.graph.user'
+                                userPrincipalName = "user$_.contoso.com"
+                            }
+                        }
+                    }
+                }
+            }
+
+            It 'Should not retrieve all group members from the Get method' {
+                Get-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroupMember' -Exactly 0
+            }
+
+            It 'Should return existing group members so empty desired members can detect drift' {
+                $result = Get-TargetResource @testParams
+
+                $result.Members | Should -Contain 'user1.contoso.com'
+                Should -Invoke -CommandName 'Get-MgGroupMember' -Exactly 0
             }
         }
 

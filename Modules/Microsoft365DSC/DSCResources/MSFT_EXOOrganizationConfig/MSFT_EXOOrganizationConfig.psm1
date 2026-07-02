@@ -530,39 +530,48 @@ function Get-TargetResource
         }
 
         # DelayedDelicensingEnabledState
-        $DelayedDelicensingEnabledStateParsed = $configSettings.DelayedDelicensingEnabledState.ToString().Split(';')[0].Replace('Enabled: ', '')
-        $DelayedDelicensingEnabledStateValue = $false
-        if ($DelayedDelicensingEnabledStateParsed -eq 'True')
+        if ($null -ne $configSettings.DelayedDelicensingEnabledState)
         {
-            $DelayedDelicensingEnabledStateValue = $true
-        }
-        else
-        {
+            $DelayedDelicensingEnabledStateParsed = $configSettings.DelayedDelicensingEnabledState.ToString().Split(';')[0].Replace('Enabled: ', '')
             $DelayedDelicensingEnabledStateValue = $false
+            if ($DelayedDelicensingEnabledStateParsed -eq 'True')
+            {
+                $DelayedDelicensingEnabledStateValue = $true
+            }
+            else
+            {
+                $DelayedDelicensingEnabledStateValue = $false
+            }
         }
 
         # EndUserMailNotificationForDelayedDelicensingEnabled
-        $EndUserMailNotificationForDelayedDelicensingEnabledParsed = $configSettings.EndUserMailNotificationForDelayedDelicensingState.ToString().Split(';')[0].Replace('Enabled: ', '')
-        $EndUserMailNotificationForDelayedDelicensingEnabledValue = $false
-        if ($EndUserMailNotificationForDelayedDelicensingEnabledParsed -eq 'True')
+        if ($null -ne $configSettings.EndUserMailNotificationForDelayedDelicensingState)
         {
-            $EndUserMailNotificationForDelayedDelicensingEnabledValue = $true
-        }
-        else
-        {
+            $EndUserMailNotificationForDelayedDelicensingEnabledParsed = $configSettings.EndUserMailNotificationForDelayedDelicensingState.ToString().Split(';')[0].Replace('Enabled: ', '')
             $EndUserMailNotificationForDelayedDelicensingEnabledValue = $false
+            if ($EndUserMailNotificationForDelayedDelicensingEnabledParsed -eq 'True')
+            {
+                $EndUserMailNotificationForDelayedDelicensingEnabledValue = $true
+            }
+            else
+            {
+                $EndUserMailNotificationForDelayedDelicensingEnabledValue = $false
+            }
         }
 
         # TenantAdminNotificationForDelayedDelicensingEnabled
-        $TenantAdminNotificationForDelayedDelicensingEnabledParsed = $configSettings.TenantAdminNotificationForDelayedDelicensingState.ToString().Split(';')[0].Replace('Enabled: ', '')
-        $TenantAdminNotificationForDelayedDelicensingEnabledValue = $false
-        if ($TenantAdminNotificationForDelayedDelicensingEnabledParsed -eq 'True')
+        if ($null -ne $configSettings.TenantAdminNotificationForDelayedDelicensingState)
         {
-            $TenantAdminNotificationForDelayedDelicensingEnabledValue = $true
-        }
-        else
-        {
+            $TenantAdminNotificationForDelayedDelicensingEnabledParsed = $configSettings.TenantAdminNotificationForDelayedDelicensingState.ToString().Split(';')[0].Replace('Enabled: ', '')
             $TenantAdminNotificationForDelayedDelicensingEnabledValue = $false
+            if ($TenantAdminNotificationForDelayedDelicensingEnabledParsed -eq 'True')
+            {
+                $TenantAdminNotificationForDelayedDelicensingEnabledValue = $true
+            }
+            else
+            {
+                $TenantAdminNotificationForDelayedDelicensingEnabledValue = $false
+            }
         }
 
         $results = @{

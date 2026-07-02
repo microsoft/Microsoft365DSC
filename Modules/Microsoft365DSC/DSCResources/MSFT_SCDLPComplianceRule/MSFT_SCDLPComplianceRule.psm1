@@ -1355,7 +1355,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of DLPComplianceRule for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     #region Test Sensitive Information Type
     # For each Desired SIT check to see if there is an existing rule with the same name

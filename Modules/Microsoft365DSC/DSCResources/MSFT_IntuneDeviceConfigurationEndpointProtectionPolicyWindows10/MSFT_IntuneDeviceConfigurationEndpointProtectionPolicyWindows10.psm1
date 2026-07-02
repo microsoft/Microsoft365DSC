@@ -4969,6 +4969,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @params
+            $rawResults = $Results.Clone()
 
             if ( $null -ne $Results.BitLockerFixedDrivePolicy)
             {
@@ -5948,7 +5949,9 @@ function Export-TargetResource
                 'UserRightsImpersonateClient', 'UserRightsIncreaseSchedulingPriority', 'UserRightsLoadUnloadDrivers', 'UserRightsLocalLogOn',
                 'UserRightsLockMemory', 'UserRightsManageAuditingAndSecurityLogs', 'UserRightsManageVolumes', 'UserRightsModifyFirmwareEnvironment',
                 'UserRightsModifyObjectLabels', 'UserRightsProfileSingleProcess', 'UserRightsRemoteDesktopServicesLogOn', 'UserRightsRemoteShutdown',
-                'UserRightsRestoreData', 'UserRightsTakeOwnership', 'Assignments')
+                'UserRightsRestoreData', 'UserRightsTakeOwnership', 'Assignments') `
+                -RawResults $rawResults
+
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

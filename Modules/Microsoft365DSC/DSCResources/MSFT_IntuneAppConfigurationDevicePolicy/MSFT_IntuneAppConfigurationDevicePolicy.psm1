@@ -728,6 +728,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
             if ($null -ne $Results.PermissionActions)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -773,7 +775,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('PermissionActions', 'Settings', 'Assignments')
+                -NoEscape @('PermissionActions', 'Settings', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

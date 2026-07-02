@@ -403,34 +403,42 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating an Intune Role Assignment with DisplayName {$DisplayName}"
 
-        $CreateParameters = @{
+        $createParameters = @{
             description                 = $Description
             displayName                 = $DisplayName
-            resourceScopes              = $resourceScopesValue
             scopeType                   = $scopeTypeValue
             members                     = $membersValue
             '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
             'roleDefinition@odata.bind' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceManagement/roleDefinitions('$RoleDefinition')"
         }
 
-        $null = New-MgBetaDeviceManagementRoleAssignment -BodyParameter $CreateParameters
+        if ($null -ne $resourceScopesValue)
+        {
+            $createParameters['resourceScopes'] = $resourceScopesValue
+        }
+
+        $null = New-MgBetaDeviceManagementRoleAssignment -BodyParameter $createParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Role Assignment with Id {$($currentInstance.Id)} and DisplayName {$DisplayName}"
 
-        $UpdateParameters = @{
+        $updateParameters = @{
             description                 = $Description
             displayName                 = $DisplayName
-            resourceScopes              = $resourceScopesValue
             scopeType                   = $scopeTypeValue
             members                     = $membersValue
             '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
             'roleDefinition@odata.bind' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceManagement/roleDefinitions('$RoleDefinition')"
         }
 
+        if ($null -ne $resourceScopesValue)
+        {
+            $updateParameters['resourceScopes'] = $resourceScopesValue
+        }
+
         $null = Update-MgBetaDeviceManagementRoleAssignment `
-            -BodyParameter $UpdateParameters `
+            -BodyParameter $updateParameters `
             -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -665,6 +673,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

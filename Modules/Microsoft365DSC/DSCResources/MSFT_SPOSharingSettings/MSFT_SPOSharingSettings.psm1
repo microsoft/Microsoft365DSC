@@ -175,12 +175,52 @@ function Get-TargetResource
             $Script:SPOSharingSettings = Get-PnPTenant -ErrorAction Stop
         }
 
-        # Local filtering because server side filtering intermittently fails
-        $MySite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -match '^SPSMSITEHOST#' }
-
-        if ($null -ne $MySite)
+        # Resolve the My Site Host directly at its deterministic URL
+        # (https://<tenant>-my.<spo-domain>/) instead of enumerating every site
+        # collection in the tenant just to read its SharingCapability.
+        # Derive host from the active connection URL, which may be the
+        # root URL (app/cert/managed-identity auth) or the -admin URL (credential auth)
+        $MySite = $null
+        $MySiteHostUrl = $null
+        try
         {
-            $MySiteSharingCapability = (Get-PnPTenantSite -Identity $MySite.Url).SharingCapability
+            $connectionUrl = (Get-PnPConnection).Url
+            if (-not [System.String]::IsNullOrEmpty($connectionUrl))
+            {
+                $spoHost = ([System.Uri]$connectionUrl).Host
+                $hostParts = $spoHost.Split('.')
+                $tenantLabel = $hostParts[0] -replace '-admin$', ''
+                $domainSuffix = ($hostParts[1..($hostParts.Length - 1)]) -join '.'
+                $MySiteHostUrl = 'https://{0}-my.{1}/' -f $tenantLabel, $domainSuffix
+            }
+        }
+        catch
+        {
+            $MySiteHostUrl = $null
+        }
+
+        # Track whether the direct lookup resolved the My Site Host
+        $resolvedFromDirectLookup = $false
+        if (-not [System.String]::IsNullOrEmpty($MySiteHostUrl))
+        {
+            $directSite = Get-PnPTenantSite -Identity $MySiteHostUrl -ErrorAction SilentlyContinue
+            if ($null -ne $directSite -and $directSite.Template -match '^SPSMSITEHOST#')
+            {
+                $MySiteSharingCapability = $directSite.SharingCapability
+                $resolvedFromDirectLookup = $true
+            }
+        }
+
+        # Fallback to the original enumeration when the direct lookup didn't resolve.
+        # Local filtering because server side filtering intermittently fails.
+        if (-not $resolvedFromDirectLookup)
+        {
+            $MySite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -match '^SPSMSITEHOST#' }
+
+            if ($null -ne $MySite)
+            {
+                $MySiteSharingCapability = (Get-PnPTenantSite -Identity $MySite.Url).SharingCapability
+            }
         }
 
         if ($null -ne $SPOSharingSettings.SharingAllowedDomainList)

@@ -34,7 +34,7 @@ function Get-TargetResource
         $DefaultElevationResponse,
 
         [Parameter()]
-        [ValidateSet(0, 1)]
+        [ValidateSet(1, 2)]
         [System.Int32[]]
         $DefaultBehaviorValidation,
 
@@ -242,7 +242,7 @@ function Set-TargetResource
         $DefaultElevationResponse,
 
         [Parameter()]
-        [ValidateSet(0, 1)]
+        [ValidateSet(1, 2)]
         [System.Int32[]]
         $DefaultBehaviorValidation,
 
@@ -431,7 +431,7 @@ function Test-TargetResource
         $DefaultElevationResponse,
 
         [Parameter()]
-        [ValidateSet(0, 1)]
+        [ValidateSet(1, 2)]
         [System.Int32[]]
         $DefaultBehaviorValidation,
 
@@ -633,6 +633,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
 
             if ($Results.Assignments)
             {
@@ -652,7 +653,9 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('Assignments')
+                -NoEscape @('Assignments') `
+                -RawResults $rawResults
+
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

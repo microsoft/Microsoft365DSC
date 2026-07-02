@@ -439,6 +439,7 @@ function Set-TargetResource
         #region new Intune assignment management
         $currentAssignments = @()
         $currentAssignments += Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $currentInstance.id
+        $currentAssignments = $currentAssignments | Where-Object -FilterScript { $_.source -eq 'direct' }
 
         $intuneAssignments = @()
         if ($null -ne $Assignments -and $Assignments.Count -gt 0)
@@ -721,6 +722,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
             if ($null -ne $Results.EnrollmentStatusScreenSettings)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -766,7 +769,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('EnrollmentStatusScreenSettings', 'OutOfBoxExperienceSettings', 'Assignments')
+                -NoEscape @('EnrollmentStatusScreenSettings', 'OutOfBoxExperienceSettings', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

@@ -1084,6 +1084,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
             if ($null -ne $Results.AssociatedApps)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1243,7 +1245,8 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('AssociatedApps', 'CryptographySuite', 'DnsRules', 'ProxyServer', 'Routes',
-                'SingleSignOnEku', 'TrafficRules', 'ServerCollection', 'Assignments')
+                'SingleSignOnEku', 'TrafficRules', 'ServerCollection', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

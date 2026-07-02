@@ -54,7 +54,21 @@ jobs:
         run: |
           Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
           New-M365DSCIntegrationTest -Workload INTUNE -Step '3-Remove'
+      - name: Check Integration Test Certificate
+        shell: powershell
+        run: |
+          $thumbprint = '${{ secrets.RUNNERCERTIFICATETHUMBPRINT }}'
+          if ([System.String]::IsNullOrWhiteSpace($thumbprint) -or -not (Test-Path -Path "Cert:\LocalMachine\My\$thumbprint"))
+          {
+            Write-Warning 'Skipping integration test execution because the configured runner certificate is not installed.'
+            'M365DSC_RUN_INTEGRATION_TESTS=false' | Out-File -FilePath $env:GITHUB_ENV -Append
+          }
+          else
+          {
+            'M365DSC_RUN_INTEGRATION_TESTS=true' | Out-File -FilePath $env:GITHUB_ENV -Append
+          }
       - name: Execute {Create} Integration Tests
+        if: env.M365DSC_RUN_INTEGRATION_TESTS == 'true'
         shell: powershell
         run: |
             .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.INTUNE.Create.Tests.ps1 -ApplicationID ${{ secrets.RUNNERAPPID }} -TenantId ${{ secrets.RUNNERTENANTID }} -CertificateThumbprint ${{ secrets.RUNNERCERTIFICATETHUMBPRINT }}

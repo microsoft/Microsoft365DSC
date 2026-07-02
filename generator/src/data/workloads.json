@@ -134,5 +134,13 @@
     "extractionModes": {
       "full": []
     }
+  },
+  {
+    "id": "Viva",
+    "title": "Viva",
+    "iconName": "VivaLogo",
+    "extractionModes": {
+      "full": []
+    }
   }
 ]

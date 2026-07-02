@@ -2,6 +2,12 @@
 $Global:SessionSecurityCompliance = $null
 #endregion
 
+#region Push Notifications
+$Global:M365DSCPushNotificationsURI = $null
+$Global:M365DSCPushNotificationsHeaders = $null
+$Global:M365DSCPushNotificationsBody = $null
+#endregion
+
 $Script:M365DSCWorkloads = @('AAD', 'ADO', 'AZURE', 'COMMERCE', 'DEFENDER', 'EXO', 'FABRIC', 'INTUNE', 'O365', 'OD', 'PLANNER', 'PP', 'SC', 'SENTINEL', 'SH', 'SPO', 'TEAMS')
 
 <#
@@ -207,11 +213,7 @@ function Test-M365DSCParameterState
     #region Telemetry
     if (Test-IsM365DSCTelemetryEnabled)
     {
-        $data = [System.Collections.Generic.Dictionary[[System.String], [System.String]]]::new()
-        $data.Add('Resource', "$Source")
-        $data.Add('Method', 'Test-TargetResource')
-
-        $dataEvaluation = [System.Collections.Generic.Dictionary[[System.String], [System.String]]]::new()
+        $dataEvaluation = [System.Collections.Generic.Dictionary[[System.String], [System.Object]]]::new()
         $dataEvaluation.Add('Resource', "$Source")
         $dataEvaluation.Add('Method', 'Test-TargetResource')
         $dataEvaluation.Add('Tenant', $TenantName)
@@ -301,7 +303,7 @@ function Test-M365DSCParameterState
 
         if (Test-IsM365DSCTelemetryEnabled)
         {
-            $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+            $driftedData = [System.Collections.Generic.Dictionary[[System.String], [System.Object]]]::new()
             $driftedData.Add('Resource', $source.Split('_')[1])
             $driftedData.Add('Tenant', $TenantName)
 
@@ -384,7 +386,7 @@ function Test-M365DSCParameterState
     if (Test-IsM365DSCTelemetryEnabled)
     {
         $timeTaken = [System.DateTime]::Now.Subtract($startTime).TotalMilliseconds
-        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data = [System.Collections.Generic.Dictionary[[System.String], [System.Object]]]::new()
         $data.Add('Resource', $Source)
         $data.Add('Method', 'Test-M365DSCParameterState')
         $data.Add('TimeTakenMilliseconds', $timeTaken)
@@ -989,7 +991,7 @@ function Assert-M365DSCBlueprint
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data = [System.Collections.Generic.Dictionary[[System.String], [System.Object]]]::new()
     $data.Add('Event', 'AssertBlueprint')
     $data.Add('BluePrint', $BluePrintUrl)
     Add-M365DSCTelemetryEvent -Data $data
@@ -2294,6 +2296,53 @@ function Update-M365DSCAuthenticationTargets
     }
 }
 
+<#
+.DESCRIPTION
+    This function sends a push notification to $Global:M365DSCPushNotificationsURI
+    (if defined) with optional headers $Global:M365DSCPushNotificationsHeaders
+    and body $Body
+
+.PARAMETER Body
+    This is the body that will be sent to the push notification which can be
+    overriden by defining $Global:M365DSCPushNotificationsBody
+
+.EXAMPLE
+    PS> Send-M365DSCPushNotification -Body "This is a test"
+
+.FUNCTIONALITY
+    Internal
+#>
+function Send-M365DSCPushNotification
+{
+    [CmdletBinding()]
+    [OutputType($null)]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Body
+    )
+
+    if (-not [System.String]::IsNullOrEmpty($Global:M365DSCPushNotificationsURI))
+    {
+        if (-not [System.String]::IsNullOrEmpty($Global:M365DSCPushNotificationsBody))
+        {
+            $Body = $Global:M365DSCPushNotificationsBody
+        }
+        $postRequest = @{
+            Method      = "Post"
+            URI         = $Global:M365DSCPushNotificationsURI
+            Body        = $Body
+            ErrorAction = "SilentlyContinue"
+        }
+        if (-not [System.String]::IsNullOrEmpty($Global:M365DSCPushNotificationsHeaders))
+        {
+            $postRequest.Add("Headers", $Global:M365DSCPushNotificationsHeaders)
+        }
+        $null = Invoke-RestMethod @postRequest
+    }
+}
+
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
     'Clear-M365DSCHostMessageCache',
@@ -2323,6 +2372,7 @@ Export-ModuleMember -Function @(
     'New-M365DSCMissingResourcesExample',
     'Remove-M365DSCAuthenticationParameter',
     'Remove-NullEntriesFromHashtable',
+    'Send-M365DSCPushNotification',
     'Set-M365DSCAllResourcesDictionary',
     'Test-CodePage',
     'Test-M365DSCParameterState',

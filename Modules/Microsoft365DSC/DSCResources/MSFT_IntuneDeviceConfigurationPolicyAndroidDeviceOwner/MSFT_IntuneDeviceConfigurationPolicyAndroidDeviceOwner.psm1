@@ -2516,6 +2516,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
 
             if ($Results.AzureAdSharedDeviceDataClearApps)
             {
@@ -2740,7 +2741,8 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('AzureAdSharedDeviceDataClearApps', 'DetailedHelpText', 'DeviceOwnerLockScreenMessage', 'GlobalProxy',
                 'KioskModeAppPositions', 'KioskModeApps', 'KioskModeManagedFolders', 'PersonalProfilePersonalApplications',
-                'ShortHelpText', 'SystemUpdateFreezePeriods', 'Assignments')
+                'ShortHelpText', 'SystemUpdateFreezePeriods', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

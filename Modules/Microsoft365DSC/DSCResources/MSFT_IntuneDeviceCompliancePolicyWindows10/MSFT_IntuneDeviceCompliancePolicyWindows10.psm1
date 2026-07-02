@@ -1048,6 +1048,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $configDeviceWindowsPolicy
             $Results = Get-TargetResource @params
+            $rawResults = $Results.Clone()
 
             if ($null -ne $Results.ValidOperatingSystemBuildRanges)
             {
@@ -1121,10 +1122,10 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('ValidOperatingSystemBuildRanges', 'DeviceCompliancePolicyScript', 'ScheduledActionsForRule', 'Assignments')
+                -NoEscape @('ValidOperatingSystemBuildRanges', 'DeviceCompliancePolicyScript', 'ScheduledActionsForRule', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
-
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++

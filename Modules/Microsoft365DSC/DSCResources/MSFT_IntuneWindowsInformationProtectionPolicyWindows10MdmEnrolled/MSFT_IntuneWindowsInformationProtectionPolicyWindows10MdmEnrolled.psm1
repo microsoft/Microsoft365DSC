@@ -963,6 +963,7 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
 
             if ( $null -ne $Results.DataRecoveryCertificate)
             {
@@ -1166,7 +1167,8 @@ function Export-TargetResource
                 -NoEscape @('DataRecoveryCertificate', 'EnterpriseInternalProxyServers', 'EnterpriseIPRanges',
                 'EnterpriseNetworkDomainNames', 'EnterpriseProtectedDomainNames', 'EnterpriseProxiedDomains',
                 'EnterpriseProxyServers', 'ExemptApps', 'NeutralDomainResources', 'ProtectedApps',
-                'SmbAutoEncryptedFileExtensions', 'Assignments')
+                'SmbAutoEncryptedFileExtensions', 'Assignments') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

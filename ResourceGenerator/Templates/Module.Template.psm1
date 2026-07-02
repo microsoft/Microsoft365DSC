@@ -55,7 +55,6 @@ function Get-TargetResource
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-
             $null = New-M365DSCConnection -Workload '<#Workload#>' `
                 -InboundParameters $PSBoundParameters
 
@@ -194,6 +193,7 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
     $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Rename-M365DSCCimInstanceParameter -Properties $boundParameters
 
 <#SettingsCatalogProperties#>
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -285,7 +285,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -382,7 +382,7 @@ function Export-TargetResource
                 <ExportParams>
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
-                TenantId              = $TenantId<ApplicationSecret>
+                TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath

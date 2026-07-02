@@ -562,6 +562,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
             if ($null -ne $Results.WindowsNetworkIsolationPolicy)
             {
                 $complexMapping = @(
@@ -612,7 +614,9 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('WindowsNetworkIsolationPolicy', 'Assignments')
+                -NoEscape @('WindowsNetworkIsolationPolicy', 'Assignments') `
+                -RawResults $rawResults
+
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

@@ -93,7 +93,7 @@ It is also important to note, the resulting file will always contain random GUID
 
 ## Available Parameters
 
-The Microsoft365DSC tenant configuration snapshot feature offers several options you can use to better control the output capture. This section provides an overview of each additional parameter that is available for the **Export-M365DSCConfiguration** cmdlet and how they can be used during the capture process
+The Microsoft365DSC tenant configuration snapshot feature offers several options you can use to better control the output capture. This section provides an overview of each additional parameter that is available for the **Export-M365DSCConfiguration** cmdlet and how they can be used during the capture process.
 
 ### LaunchWebUI
 
@@ -211,3 +211,15 @@ By default, specifying a workload will only export components that are part of t
 
 This parameter leads to a parallel export using runspaces. It is not guaranteed that there is a performance improvement over sequential execution (which is the default).
 Parallel execution is more memory and compute intensive than sequential execution. Please make sure that there is enough memory available (recommended: 8GB or more).
+
+### TokenReplacement
+
+This parameter allows replacing specific tokens that appear in the configuration with a variable. This is especially useful in cross-tenant scenarios, where each tenant has a slightly different name for example.
+
+### WithStatistics
+
+This parameter prints a summary of statistics after the export completes.
+
+### IncludeDependencies
+
+When using this parameter, resources that rely on other objects (e.g. an AADGroup containing objects of AADUser) will export those resources as well, even if you don't specify that AADUser should be exported as well. A placeholder object will be created if the export does not already contain the object.

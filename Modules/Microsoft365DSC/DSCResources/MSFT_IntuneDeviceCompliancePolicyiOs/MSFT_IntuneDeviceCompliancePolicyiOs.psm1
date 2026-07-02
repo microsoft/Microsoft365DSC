@@ -840,6 +840,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $configDeviceiOsPolicy
             $Results = Get-TargetResource @params
+            $rawResults = $Results.Clone()
 
             if ($Results.RestrictedApps)
             {
@@ -887,7 +888,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('RestrictedApps', 'Assignments', 'ScheduledActionsForRule')
+                -NoEscape @('RestrictedApps', 'Assignments', 'ScheduledActionsForRule') `
+                -RawResults $rawResults
 
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `

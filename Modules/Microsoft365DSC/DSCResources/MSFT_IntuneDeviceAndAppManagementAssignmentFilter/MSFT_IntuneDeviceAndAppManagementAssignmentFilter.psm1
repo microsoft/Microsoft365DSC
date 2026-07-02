@@ -484,6 +484,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $assignmentFilter
             $Results = Get-TargetResource @Params
+
             if ($Results.Ensure -eq 'Present')
             {
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

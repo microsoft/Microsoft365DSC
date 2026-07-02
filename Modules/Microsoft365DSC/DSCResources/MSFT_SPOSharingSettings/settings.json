@@ -67,6 +67,7 @@
     {
       "module": "PnP.PowerShell",
       "cmdlets": [
+        "Get-PnPConnection",
         "Get-PnPTenant",
         "Get-PnPTenantSite",
         "Set-PnPTenant",

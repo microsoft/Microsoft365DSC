@@ -687,4 +687,3 @@ function Get-CompareParameters
 }
 
 Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')
-

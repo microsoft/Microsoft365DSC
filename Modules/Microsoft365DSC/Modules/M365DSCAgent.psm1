@@ -14,7 +14,7 @@ function Test-M365DSCAgent
     param()
 
     #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data = [System.Collections.Generic.Dictionary[[System.String], [System.Object]]]::new()
     $data.Add('Event', 'TestAgent')
     Add-M365DSCTelemetryEvent -Data $data -Type 'TestAgent'
     #endregion

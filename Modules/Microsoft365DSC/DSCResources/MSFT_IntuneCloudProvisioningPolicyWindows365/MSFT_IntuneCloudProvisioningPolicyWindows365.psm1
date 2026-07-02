@@ -792,6 +792,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
             if ($null -ne $Results.Autopatch)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -895,7 +897,9 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('Assignments', 'Autopatch', 'AutopilotConfiguration', 'DomainJoinConfigurations', 'MicrosoftManagedDesktop', 'WindowsSetting', 'WindowsSettings')
+                -NoEscape @('Assignments', 'Autopatch', 'AutopilotConfiguration', 'DomainJoinConfigurations', 'MicrosoftManagedDesktop', 'WindowsSetting', 'WindowsSettings') `
+                -RawResults $rawResults
+
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -928,4 +932,3 @@ function Get-CompareParameters
 }
 
 Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')
-
