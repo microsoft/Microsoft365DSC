@@ -15,11 +15,11 @@ node_modules/*
 markdownissues.txt
 start-unittests.ps1
 TestDSCresource.ps1
-Modules/Microsoft365DSC/DSCResources/MSFT_EXOMalwareFilterPolicy/Set-MalwareFilterPolicy.txt
+Modules/Microsoft365DSC/DscResources/MSFT_EXOMalwareFilterPolicy/Set-MalwareFilterPolicy.txt
 docker/Extract.ps1
 docker/Monitor.ps1
 Modules/start-extraction.ps1
-Modules/Microsoft365DSC/DSCResources/MSFT_EXOAvailabilityAddressSpace/Add-AvailabilityAddressSpace-parameterset.txt
+Modules/Microsoft365DSC/DscResources/MSFT_EXOAvailabilityAddressSpace/Add-AvailabilityAddressSpace-parameterset.txt
 *.log
 DscResource.Tests/*
 CodeCov.xml

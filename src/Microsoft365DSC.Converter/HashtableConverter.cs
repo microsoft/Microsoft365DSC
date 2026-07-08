@@ -15,7 +15,7 @@ namespace Microsoft365DSC.Converter
         public static string ToString(Hashtable hashtable)
         {
             List<string> propertyStrings = [];
-            List<string> parametersToObfuscate = ["ApplicationId", "ApplicationSecret", "TenantId", "CertificateThumbprint", "CertificatePath", "CertificatePassword", "Credential", "Password"];
+            List<string> parametersToObfuscate = ["ApplicationSecret", "CertificateThumbprint", "CertificatePath", "CertificatePassword", "Credential", "Password"];
             foreach (DictionaryEntry entry in hashtable)
             {
                 string propertyString;

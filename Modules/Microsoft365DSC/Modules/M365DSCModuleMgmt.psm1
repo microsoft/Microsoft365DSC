@@ -27,7 +27,7 @@ if ($null -eq $Script:M365DSCDependencies)
 
     $commandToModuleMap = @{}
     $Script:M365DSCResourceSettings = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
-    foreach ($file in (Get-ChildItem -Path "$PSScriptRoot/../DSCResources" -Filter 'settings.json' -Recurse)) {
+    foreach ($file in (Get-ChildItem -Path "$PSScriptRoot/../DscResources" -Filter 'settings.json' -Recurse)) {
         Write-Verbose -Message "Processing settings.json file at path: $($file.FullName)"
         $jsonContent = [System.IO.File]::ReadAllText($file.FullName) | ConvertFrom-Json
         foreach ($commandMap in ($jsonContent.commands | Where-Object { $_.module -notin $Script:M365DSCDevDependencies.Keys })) {
@@ -464,7 +464,7 @@ function Uninstall-M365DSCOutdatedDependencies
             catch
             {
                 $message = "Could not uninstall $($module.Name) Version $($module.Version)"
-                if ($_.Exception.Message -like "*Access to the path* is denied*" -and ($Scope -eq "AllUsers") -and -not
+                if ($_.Exception.Message -like "*Access to the path* is denied*" -and ($Scope -eq "AllUsers") -and ($PSEdition -eq 'Desktop' -or $IsWindows) -and -not
                     ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
                 {
                     $message += ' You need to run this command as a local administrator.'
@@ -508,7 +508,7 @@ function Uninstall-M365DSCOutdatedDependencies
                     catch
                     {
                         $message = "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)"
-                        if ($_.Exception.Message -like "*Access to the path* is denied*" -and
+                        if ($_.Exception.Message -like "*Access to the path* is denied*" -and ($PSEdition -eq 'Desktop' -or $IsWindows) -and
                             ($Scope -eq "AllUsers") -and -not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
                         {
                             $message += ' You need to run this command as a local administrator.'
@@ -553,7 +553,7 @@ function Uninstall-M365DSCOutdatedDependencies
             catch
             {
                 $message = "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)"
-                if ($_.Exception.Message -like "*Access to the path* is denied*" -and
+                if ($_.Exception.Message -like "*Access to the path* is denied*" -and ($PSEdition -eq 'Desktop' -or $IsWindows) -and
                     ($Scope -eq "AllUsers") -and -not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
                 {
                     $message += ' You need to run this command as a local administrator.'
@@ -692,7 +692,7 @@ function Update-M365DSCDependencies
                         Write-Verbose -Message "The dependency {$($dependency.ModuleName)} requires PowerShell Core. Skipping."
                         continue
                     }
-                    elseif ($dependency.PowerShellCore -eq $false -and $Script:IsPowerShellCore)
+                    elseif ($dependency.PowerShellCore -eq $false -and $Script:IsPowerShellCore -and $IsWindows)
                     {
                         Write-Verbose -Message "The dependency {$($dependency.ModuleName)} requires Windows PowerShell. Skipping."
                         continue
@@ -705,7 +705,7 @@ function Update-M365DSCDependencies
                     $errorFound = $false
                     try
                     {
-                        if ((-not(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) -and ($Scope -eq "AllUsers"))
+                        if (($PSEdition -eq 'Desktop' -or $IsWindows) -and (-not(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) -and ($Scope -eq "AllUsers"))
                         {
                             Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
                             $errorFound = $true
@@ -717,7 +717,7 @@ function Update-M365DSCDependencies
                     }
                     if (-not $errorFound)
                     {
-                        if (-not $dependency.PowerShellCore -and $Script:IsPowerShellCore)
+                        if (-not $dependency.PowerShellCore -and $Script:IsPowerShellCore -and $IsWindows)
                         {
                             Write-Warning "The dependency {$($dependency.ModuleName)} does not support PowerShell Core. Please run Update-M365DSCDependencies in Windows PowerShell."
                             continue

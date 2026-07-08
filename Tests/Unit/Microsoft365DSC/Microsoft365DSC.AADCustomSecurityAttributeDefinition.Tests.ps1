@@ -186,6 +186,61 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "The instance exists but is missing a desired allowed value" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    ApplicationId           = $ApplicationId;
+                    AllowedValues           = [CimInstance[]]@(
+                        New-CimInstance -ClassName 'MSFT_CustomSecurityAttributeAllowedValue' -Property @{
+                            ValueId  = "Missing"
+                            IsActive = $True
+                        } -ClientOnly
+                    )
+                    AttributeSet            = "ContosoSet";
+                    CertificateThumbprint   = $CertificateThumbprint;
+                    Ensure                  = "Present";
+                    IsCollection            = $False;
+                    IsSearchable            = $True;
+                    Name                    = "ShoeSize";
+                    Status                  = "Available";
+                    TenantId                = $TenantId;
+                    Type                    = "String";
+                    UsePreDefinedValuesOnly = $False;
+                    Description             = "What size of shoe is the person wearing?"
+                    Credential              = $Credential;
+                }
+
+                Mock -CommandName Get-MgBetaDirectoryCustomSecurityAttributeDefinition -MockWith {
+                    return @{
+                        AllowedValues           = @()
+                        AttributeSet            = 'ContosoSet'
+                        IsCollection            = $false
+                        IsSearchable            = $true
+                        Name                    = "ShoeSize";
+                        Status                  = "Available";
+                        Type                    = "String";
+                        UsePreDefinedValuesOnly = $False;
+                        Description             = "What size of shoe is the person wearing?"
+                        Id                      = "ContosoSet_ShoeSize"
+                    }
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should add the missing allowed value from the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Update-MgBetaDirectoryCustomSecurityAttributeDefinition -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDirectoryCustomSecurityAttributeDefinitionAllowedValue -ParameterFilter {
+                    $CustomSecurityAttributeDefinitionId -eq 'ContosoSet_ShoeSize' -and
+                    $Id -eq 'Missing' -and
+                    $IsActive -eq $true
+                } -Exactly 1
+            }
+        }
+
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{

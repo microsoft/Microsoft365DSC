@@ -122,7 +122,7 @@ function Get-M365DSCCompiledPermissionList
         try
         {
             $settingsFilePath = Join-Path -Path $PSScriptRoot `
-                -ChildPath "..\DSCResources\MSFT_$resourceName\settings.json" `
+                -ChildPath "..\DscResources\MSFT_$resourceName\settings.json" `
                 -Resolve `
                 -ErrorAction Stop
         }

@@ -200,7 +200,7 @@ $postProcessingScript = {
 * **Helper Functions:** `Modules/Microsoft365DSC/Modules/M365DSCUtil.psm1`
 * **Comparison Engine:** `Modules/Microsoft365DSC/Modules/M365DSCCompare.psm1`
 * **Report Generator:** `Modules/Microsoft365DSC/Modules/M365DSCReport.psm1`
-* **Resource Example:** `Modules/Microsoft365DSC/DSCResources/MSFT_AADRoleAssignmentScheduleRequest/MSFT_AADRoleAssignmentScheduleRequest.psm1`
+* **Resource Example:** `Modules/Microsoft365DSC/DscResources/MSFT_AADRoleAssignmentScheduleRequest/MSFT_AADRoleAssignmentScheduleRequest.psm1`
 
 ## Resources Currently Using Custom Comparison
 

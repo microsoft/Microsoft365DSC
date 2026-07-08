@@ -497,11 +497,6 @@ function Start-M365DSCConfigurationExtract
                     -Key 'TenantId' `
                     -Value $TenantId `
                     -Description 'The Id or Name of the tenant to authenticate against'
-
-                if ([System.Guid]::TryParse($TenantId, [ref][System.Guid]::Empty))
-                {
-                    Set-M365DSCStringReplacementMap -Map @{ $TenantId = '$ConfigurationData.NonNodeData.TenantId' }
-                }
             }
             'CertificateThumbprint'
             {
@@ -562,7 +557,7 @@ function Start-M365DSCConfigurationExtract
                     -Value $TenantId `
                     -Description 'The Id or Name of the tenant to authenticate against'
 
-                Set-M365DSCStringReplacementMap -Map @{ $TenantId = '$ConfigurationData.NonNodeData.TenantId' }
+                Set-M365DSCStringReplacementMap -Map @{ $TenantId = 'TenantId' }
             }
             { $_ -in 'Credentials', 'CredentialsWithApplicationId', 'CredentialsWithTenantId' }
             {
@@ -608,7 +603,7 @@ function Start-M365DSCConfigurationExtract
                     -Value $TenantId `
                     -Description 'The Id or Name of the tenant to authenticate against'
 
-                Set-M365DSCStringReplacementMap -Map @{ $TenantId = '$ConfigurationData.NonNodeData.TenantId' }
+                Set-M365DSCStringReplacementMap -Map @{ $TenantId = 'TenantId' }
             }
         }
 
@@ -629,7 +624,7 @@ function Start-M365DSCConfigurationExtract
 
         Write-Verbose -Message 'Retrieving resources path'
         $resourcesPath = Join-Path -Path $PSScriptRoot `
-            -ChildPath '../DSCResources/' `
+            -ChildPath '../DscResources/' `
             -Resolve
         Write-Verbose -Message 'Loop through all resources files.'
         $allResoures = Get-ChildItem $resourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
@@ -997,9 +992,9 @@ function Start-M365DSCConfigurationExtract
             {
                 foreach ($fileToCopy in $filesToDownload)
                 {
-                    if (-not [System.String]::IsNullOrEmpty($env:Temp))
+                    if (-not [System.String]::IsNullOrEmpty($env:TEMP))
                     {
-                        $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve
+                        $filePath = Join-Path $env:TEMP $fileToCopy.Name -Resolve
                         $destPath = Join-Path $OutputDSCPath $fileToCopy.Name
                         Copy-Item -Path $filePath -Destination $destPath -Force
                     }
@@ -1034,7 +1029,7 @@ function Start-M365DSCConfigurationExtract
         {
             try
             {
-                if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+                if ($PSEdition -eq 'Desktop' -or $IsWindows -and ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
                 {
                     $LCMConfig = Get-DscLocalConfigurationManager
                     if ($null -ne $LCMConfig.CertificateID)
@@ -1095,7 +1090,7 @@ function Start-M365DSCConfigurationExtract
         Close-M365DSCPartialExport
 
         # Remove Temp Partial Export File
-        if (-not [System.String]::IsNullOrEmpty($env:Temp))
+        if (-not [System.String]::IsNullOrEmpty($env:TEMP))
         {
             $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName)"
             if (Test-Path $partialPath)
@@ -1120,7 +1115,7 @@ function Start-M365DSCConfigurationExtract
         # Close the partial export StreamWriter
         Close-M365DSCPartialExport
 
-        if (-not [System.String]::IsNullOrEmpty($env:Temp))
+        if (-not [System.String]::IsNullOrEmpty($env:TEMP))
         {
             $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName)"
             Write-M365DSCHost -Message "Partial Export file was saved at: $partialPath"
@@ -1152,7 +1147,7 @@ function Get-M365DSCResourcesByWorkloads
         $Mode = 'Default'
     )
 
-    $modules = Get-ChildItem -Path ($PSScriptRoot + '/../DSCResources/') -Recurse -Filter '*.psm1'
+    $modules = Get-ChildItem -Path ($PSScriptRoot + '/../DscResources/') -Recurse -Filter '*.psm1'
     $Components = @()
     foreach ($Workload in $Workloads)
     {

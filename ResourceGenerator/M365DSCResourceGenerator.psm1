@@ -1970,7 +1970,7 @@ function Get-Microsoft365DSCModuleCimClass
 
     Import-Module -Name Microsoft365DSC -Force
     $modulePath = Split-Path -Path (Get-Module -Name Microsoft365DSC).Path
-    $resourcesPath = "$modulePath\DSCResources\*\*.mof"
+    $resourcesPath = "$modulePath\DscResources\*\*.mof"
     $resources = (Get-ChildItem $resourcesPath).FullName
     $resources = $resources | Where-Object -FilterScript {$_ -notlike "*MSFT_$ResourceName.schema.mof"}
     $cimClasses = @()

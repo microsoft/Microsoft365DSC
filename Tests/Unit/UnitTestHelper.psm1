@@ -42,7 +42,7 @@ function New-M365DscUnitTestHelper
     {
         $describeHeader = "DSC Resource '$DscResource'"
         $moduleName = "MSFT_$DscResource"
-        $modulePath = "DSCResources\MSFT_$DscResource\MSFT_$DscResource.psm1"
+        $modulePath = "DscResources\MSFT_$DscResource\MSFT_$DscResource.psm1"
         $moduleToLoad = Join-Path -Path $moduleRoot -ChildPath $modulePath
     }
 

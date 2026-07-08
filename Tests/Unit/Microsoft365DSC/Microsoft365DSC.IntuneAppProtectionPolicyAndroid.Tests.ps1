@@ -296,6 +296,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             '@odata.type' = '#microsoft.graph.groupAssignmentTarget'
                             groupId       = '6ee86c9f-2b3c-471d-ad38-ff4673ed723e'
                         }
+                        source = 'direct'
                     },
                     @{
                         id     = '3eacc231-d77b-4efb-bb5f-310f68bd6198'
@@ -303,6 +304,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId       = '3eacc231-d77b-4efb-bb5f-310f68bd6198'
                         }
+                        source = 'direct'
                     }
                 )
             }

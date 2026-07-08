@@ -160,7 +160,7 @@ function Add-M365DSCTelemetryEvent
             $telemetryParameters = Get-M365DSCTelemetryConnectionParameter
             if ($null -eq $telemetryParameters -or $telemetryParameters.Count -eq 0)
             {
-                New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $Data.PSBoundParameters
+                $null = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $Data.PSBoundParameters
             }
 
             if ($null -ne $dataNew.ConnectionMode -and $dataNew.ConnectionMode.StartsWith('Credential'))
@@ -420,7 +420,7 @@ function Add-M365DSCTelemetryEvent
             # LCM Metadata Information
             try
             {
-                if ($null -eq $Script:M365DSCCurrentPrincipalIsAdmin)
+                if ($null -eq $Script:M365DSCCurrentPrincipalIsAdmin -and ($PSEdition -eq 'Desktop' -or $IsWindows))
                 {
                     $currentPrincipal = New-Object System.Security.Principal.WindowsPrincipal([System.Security.Principal.WindowsIdentity]::GetCurrent())
                     $Script:M365DSCCurrentPrincipalIsAdmin = $currentPrincipal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)

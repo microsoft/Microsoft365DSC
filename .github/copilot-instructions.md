@@ -32,7 +32,7 @@ Not lazy about: input validation at trust boundaries, error handling that preven
   - `Examples`: The directory containing all of the DSC resource examples.
   - `Modules/Microsoft365DSC`: Contains DSC resources for individual Microsoft 365 services (e.g. Entra, Exchange, Teams, SharePoint) and other core modules shared across the Microsoft365DSC module.
     - `Dependencies/`: Contains images for the README files, `Manifest.psd1` for the module dependencies and their versions, and other files.
-    - `DSCResources/`: The directory containing all of the DSC resources.
+    - `DscResources/`: The directory containing all of the DSC resources.
     - `Modules`: The directory containing all of the shared core modules.
   - `ResourceGenerator/`: Utilities for generating resource definitions.
   - `generator/`: TypeScript/Node.js code for resource generation and supporting scripts.

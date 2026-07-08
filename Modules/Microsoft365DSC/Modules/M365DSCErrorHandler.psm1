@@ -24,7 +24,7 @@ function Save-M365DSCPartialExport
         $FileName
     )
 
-    if (-not [System.String]::IsNullOrEmpty($env:Temp))
+    if (-not [System.String]::IsNullOrEmpty($env:TEMP))
     {
         $tempPath = Join-Path -Path $env:TEMP -ChildPath $FileName
 

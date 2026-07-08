@@ -14,7 +14,7 @@ $Workloads = Get-Content -Raw -Path "../src/data/workloads.json" | ConvertFrom-J
 $Resources = @()
 
 # For every resources found, generate an array of resources
-Get-ChildItem -Path "../../Modules/Microsoft365DSC/DSCResources" -Directory | ForEach-Object {
+Get-ChildItem -Path "../../Modules/Microsoft365DSC/DscResources" -Directory | ForEach-Object {
     $CurrentResource = $_.Name.Replace('MSFT_', '')
     $settingsFile = Join-Path -Path $_.FullName -ChildPath "settings.json"
     $settingsContent = [System.IO.File]::ReadAllText($settingsFile) | ConvertFrom-Json

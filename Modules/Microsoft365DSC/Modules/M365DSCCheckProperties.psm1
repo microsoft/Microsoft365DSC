@@ -82,7 +82,7 @@ function Get-PropertyReport
         $PSBoundParameters.Add('Credential', $Credential)
     }
 
-    $folderPath = Join-Path $PSScriptRoot -ChildPath '../DSCResources'
+    $folderPath = Join-Path $PSScriptRoot -ChildPath '../DscResources'
     Write-Verbose "Folderpath of DSC resources: $folderPath"
 
     foreach ($module in $workloads)

@@ -330,7 +330,7 @@ function Export-M365DSCDiagnosticData
     )
     Write-Host 'Exporting logging information' -ForegroundColor Yellow
 
-    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator') -eq $false)
+    if (($PSEdition -eq 'Desktop' -or $IsWindows) -and ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator') -eq $false)
     {
         throw 'You need to run this cmdlet with Administrator privileges!'
     }

@@ -16,7 +16,7 @@ A few rules also apply to your resource selection:
 
 ## Create the Resource Files
 
-The best way to get started here is to simply copy and existing resource, and then to rename and modify it. All resources are found under **/Modules/Microsoft365DSC/DSCResources**. Each resource is represented by a folder, a .psm1 file which contains the logic of the resource, a .schema.mof file which is a class defining the properties of the resource as well as with a readme.md file which describes what the resource is for.
+The best way to get started here is to simply copy and existing resource, and then to rename and modify it. All resources are found under **/Modules/Microsoft365DSC/DscResources**. Each resource is represented by a folder, a .psm1 file which contains the logic of the resource, a .schema.mof file which is a class defining the properties of the resource as well as with a readme.md file which describes what the resource is for.
 
 The folder, module and schema files need to be named based on the following pattern:
 

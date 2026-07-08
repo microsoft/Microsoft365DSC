@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName New-AutoSensitivityLabelRule -Exactly 1
+                Should -Invoke -CommandName New-AutoSensitivityLabelRule -Exactly 1
             }
         }
 
@@ -237,7 +237,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update from the Set method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Set-AutoSensitivityLabelRule -Exactly 1
+                Should -Invoke -CommandName Set-AutoSensitivityLabelRule -Exactly 1
             }
 
             It 'Should return Present from the Get method' {
@@ -300,7 +300,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should delete from the Set method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Remove-AutoSensitivityLabelRule -Exactly 1
+                Should -Invoke -CommandName Remove-AutoSensitivityLabelRule -Exactly 1
             }
 
             It 'Should return Present from the Get method' {

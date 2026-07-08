@@ -41,7 +41,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                return @{
+                return [PSCustomObject]@{
                     Identity = 'Global'
                     Usage    = @('Local')
                 }
@@ -64,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                    return @{
+                    return [PSCustomObject]@{
                         Identity = 'Global'
                         Usage    = @()
                     }

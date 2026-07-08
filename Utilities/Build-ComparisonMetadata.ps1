@@ -9,7 +9,7 @@
     function's return value and generates or updates the ComparisonMetadata.json file.
 
 .PARAMETER ResourcesPath
-    The path to the DSCResources folder. Defaults to the standard location.
+    The path to the DscResources folder. Defaults to the standard location.
 
 .PARAMETER OutputPath
     The path where ComparisonMetadata.json should be saved. Defaults to the Modules/Microsoft365DSC folder.
@@ -32,7 +32,7 @@ param
 (
     [Parameter()]
     [System.String]
-    $ResourcesPath = (Join-Path -Path $PSScriptRoot -ChildPath '../Modules/Microsoft365DSC/DSCResources'),
+    $ResourcesPath = (Join-Path -Path $PSScriptRoot -ChildPath '../Modules/Microsoft365DSC/DscResources'),
 
     [Parameter()]
     [System.String]

@@ -413,16 +413,16 @@ function Export-M365DSCConfiguration
             -CertificateThumbprint $CertificateThumbprint `
             -CertificatePath $CertificatePath `
             -CertificatePassword $CertificatePassword `
-            -ManagedIdentity:$ManagedIdentity `
+            -ManagedIdentity:$ManagedIdentity.IsPresent `
             -AccessTokens $AccessTokens `
             -GenerateInfo $GenerateInfo `
             -Filters $Filters `
-            -Validate:$Validate `
-            -Parallel:$Parallel `
+            -Validate:$Validate.IsPresent `
+            -Parallel:$Parallel.IsPresent `
             -ResourceSettings $resourceSettings `
             -ErrorAction $ErrorActionPreference `
-            -WithStatistics:$WithStatistics `
-            -IncludeDependencies:$IncludeDependencies
+            -WithStatistics:$WithStatistics.IsPresent `
+            -IncludeDependencies:$IncludeDependencies.IsPresent
     }
     elseif ($null -ne $Components)
     {
@@ -438,16 +438,16 @@ function Export-M365DSCConfiguration
             -CertificateThumbprint $CertificateThumbprint `
             -CertificatePath $CertificatePath `
             -CertificatePassword $CertificatePassword `
-            -ManagedIdentity:$ManagedIdentity `
+            -ManagedIdentity:$ManagedIdentity.IsPresent `
             -AccessTokens $AccessTokens `
             -GenerateInfo $GenerateInfo `
             -Filters $Filters `
-            -Validate:$Validate `
-            -Parallel:$Parallel `
+            -Validate:$Validate.IsPresent `
+            -Parallel:$Parallel.IsPresent `
             -ResourceSettings $resourceSettings `
             -ErrorAction $ErrorActionPreference `
-            -WithStatistics:$WithStatistics `
-            -IncludeDependencies:$IncludeDependencies
+            -WithStatistics:$WithStatistics.IsPresent `
+            -IncludeDependencies:$IncludeDependencies.IsPresent
     }
     elseif ($null -ne $Mode)
     {
@@ -463,17 +463,17 @@ function Export-M365DSCConfiguration
             -CertificateThumbprint $CertificateThumbprint `
             -CertificatePath $CertificatePath `
             -CertificatePassword $CertificatePassword `
-            -ManagedIdentity:$ManagedIdentity `
+            -ManagedIdentity:$ManagedIdentity.IsPresent `
             -AccessTokens $AccessTokens `
             -GenerateInfo $GenerateInfo `
             -AllComponents `
             -Filters $Filters `
-            -Validate:$Validate `
-            -Parallel:$Parallel `
+            -Validate:$Validate.IsPresent `
+            -Parallel:$Parallel.IsPresent `
             -ResourceSettings $resourceSettings `
             -ErrorAction $ErrorActionPreference `
-            -WithStatistics:$WithStatistics `
-            -IncludeDependencies:$IncludeDependencies
+            -WithStatistics:$WithStatistics.IsPresent `
+            -IncludeDependencies:$IncludeDependencies.IsPresent
     }
 
     # Clear the exported resource instances' names Global variable
@@ -639,7 +639,6 @@ function Get-M365DSCExportContentForResource
     $NoEscape = $NoEscape | Select-Object -Unique
 
     $primaryKey = ''
-    $ModuleFullName = 'MSFT_' + $ResourceName
     if ($Script:M365DSCMandatoryKeyCache.ContainsKey($ResourceName))
     {
         $Keys = $Script:M365DSCMandatoryKeyCache[$ResourceName]
@@ -650,11 +649,14 @@ function Get-M365DSCExportContentForResource
         $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | Select-Object -ExpandProperty Name
         if ($null -eq $Keys)
         {
-            if (-not (Get-Module $ModuleFullName))
+            $moduleFullName = 'MSFT_' + $ResourceName
+            if (-not (Get-Module $moduleFullName))
             {
-                Import-Module $Resource.Path -Force
+                $m365dscModuleBase = (Get-Module -Name 'Microsoft365DSC').ModuleBase
+                $moduleFullNamePath = Join-Path -Path $m365dscModuleBase -ChildPath "DscResources/$moduleFullName/$moduleFullName.psm1"
+                Import-Module $moduleFullNamePath -Force
             }
-            $cmdInfo = Get-Command $ModuleFullName\Get-TargetResource -ErrorAction SilentlyContinue
+            $cmdInfo = Get-Command $moduleFullName\Get-TargetResource -ErrorAction SilentlyContinue
             $Keys = $cmdInfo.Parameters.Values.Where({ $_.ParameterSets.Values.IsMandatory }).Name
         }
         $Script:M365DSCMandatoryKeyCache[$ResourceName] = $Keys

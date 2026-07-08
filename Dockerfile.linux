@@ -1,0 +1,58 @@
+FROM mcr.microsoft.com/dotnet/runtime:10.0-resolute
+
+WORKDIR /DSC
+
+SHELL ["bash", "-c"]
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    llvm \
+    libncurses5-dev \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libffi-dev \
+    liblzma-dev \
+    python3-openssl \
+    git \
+    wget \
+    curl \
+    apt-transport-https \
+    software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python3.11
+RUN curl https://pyenv.run | bash
+ENV PATH="/root/.pyenv/bin:/root/.pyenv/shims:${PATH}"
+RUN pyenv install "3.11.9"
+
+RUN wget -q https://packages.microsoft.com/ubuntu/24.04/prod/pool/main/p/powershell/powershell_7.6.3-1.deb_amd64.deb && \
+    dpkg -i powershell_7.6.3-1.deb_amd64.deb && \
+    rm powershell_7.6.3-1.deb_amd64.deb
+
+RUN wget -q https://github.com/microsoft/omi/releases/download/v1.9.1-0/omi-1.9.1-0.ssl_300.ulinux.s.x64.deb && \
+    dpkg -i ./omi-1.9.1-0.ssl_300.ulinux.s.x64.deb && \
+    rm ./omi-1.9.1-0.ssl_300.ulinux.s.x64.deb && \
+    cp /opt/omi/lib/libmi.so /opt/microsoft/powershell/7/
+
+RUN wget -q https://github.com/microsoft/PowerShell-DSC-for-Linux/releases/download/v1.2.4-0/dsc-1.2.4-0.ssl_110.x64.deb && \
+    dpkg -i ./dsc-1.2.4-0.ssl_110.x64.deb && \
+    rm ./dsc-1.2.4-0.ssl_110.x64.deb
+
+RUN wget -q https://packages.microsoft.com/ubuntu/24.04/prod/pool/main/p/powershell/powershell_7.6.3-1.deb_amd64.deb && \
+    dpkg -i powershell_7.6.3-1.deb_amd64.deb && \
+    rm powershell_7.6.3-1.deb_amd64.deb
+
+RUN mv /etc/opt/omi/conf/dsc/configuration/baseregistration /etc/opt/omi/conf/dsc/configuration/BaseRegistration && \
+    mv /etc/opt/omi/conf/dsc/configuration/BaseRegistration/baseresource.schema.mof /etc/opt/omi/conf/dsc/configuration/BaseRegistration/BaseResource.schema.mof
+
+COPY ./Utilities/Install-M365DSCAndDependencies.ps1 /DSC/Install-M365DSCAndDependencies.ps1
+
+RUN pwsh -Command /DSC/Install-M365DSCAndDependencies.ps1
+
+ENTRYPOINT ["pwsh", "-NoLogo"]

@@ -28,7 +28,7 @@ if ($UnitTestFilePath.EndsWith('Tests.ps1'))
     $unitTestName = "$($unitTest.Name.Split('.')[1])"
 
     $coveragePath = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Modules\Microsoft365DSC\DSCResources\MSFT_$($unitTestName)\MSFT_$($unitTestName).psm1" `
+            -ChildPath "..\Modules\Microsoft365DSC\DscResources\MSFT_$($unitTestName)\MSFT_$($unitTestName).psm1" `
             -Resolve)
 
     $config = New-PesterConfiguration

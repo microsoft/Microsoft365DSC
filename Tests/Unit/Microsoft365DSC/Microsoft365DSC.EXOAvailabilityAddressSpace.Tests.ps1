@@ -118,7 +118,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                = 'Present'
                     Identity              = 'contoso.com'
                     AccessMethod          = 'PerUserFB' # Drift
-                    Credentials           = $Null
                     ForestName            = 'contoso.com'
                     TargetAutodiscoverEpr = 'http://autodiscover.contoso.com/autodiscover/autodiscover.xml'
                 }

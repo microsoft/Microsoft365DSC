@@ -21,7 +21,7 @@ jobs:
       - name: Ensure No Hardcoded Graph Endpoints
         shell: pwsh
         run: |
-          $resources = Get-ChildItem './Modules/Microsoft365DSC/DSCResources/*.psm1' -Recurse
+          $resources = Get-ChildItem './Modules/Microsoft365DSC/DscResources/*.psm1' -Recurse
 
           foreach ($resource in $resources)
           {
@@ -36,7 +36,7 @@ jobs:
       - name: Ensure resource names are not too long
         shell: pwsh
         run: |
-          $resources = Get-ChildItem -Path './Modules/Microsoft365DSC/DSCResources/*.psm1' -Recurse
+          $resources = Get-ChildItem -Path './Modules/Microsoft365DSC/DscResources/*.psm1' -Recurse
           $fixedLength = 107 # Usually between 100-105, taking a bit more
 
           foreach ($resource in $resources)
@@ -52,7 +52,7 @@ jobs:
       - name: Ensure No Hardcoded Azure Endpoints
         shell: pwsh
         run: |
-          $resources = Get-ChildItem './Modules/Microsoft365DSC/DSCResources/*.psm1' -Recurse
+          $resources = Get-ChildItem './Modules/Microsoft365DSC/DscResources/*.psm1' -Recurse
 
           foreach ($resource in $resources)
           {

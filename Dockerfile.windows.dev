@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0-windowsservercore-ltsc2025
+
+WORKDIR /DSC
+
+SHELL ["cmd", "/S", "/C"]
+
+COPY . .
+
+RUN powershell -Command .\Utilities\Install-M365DSCAndDependencies.ps1 -IsSDK
+
+ENTRYPOINT ["pwsh", "-NoLogo"]

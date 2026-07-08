@@ -43,7 +43,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-RoleGroup -MockWith {
-                return @{
+                return [PSCustomObject]@{
                     Name        = 'Contoso Role Group'
                     Members     = 'Exchange Administrator'
                     Roles       = 'Address Lists'
@@ -54,9 +54,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-RoleGroup -MockWith {
             }
 
+            Mock -CommandName Get-RoleGroupMember -MockWith {
+            }
+
             Mock -Command Get-RoleGroupMember -ParameterFilter { $Name -eq 'Contoso Role Group'}  -MockWith {
-                return @{
-                    Displayname = 'Exchange Administrator'
+                return [PSCustomObject]@{
+                    DisplayName = 'Exchange Administrator'
                     PrimarySmtpAddress = "ExchangeAdministrator@contoso.com"
                 }
             }
@@ -65,6 +68,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Remove-RoleGroup -MockWith {
+            }
+
+            Mock -CommandName Get-Group -MockWith {
             }
 
             Mock -CommandName Get-Group -ParameterFilter { $WindowsEmailAddress -eq 'ExchangeAdministrator@contoso.com' } -MockWith {

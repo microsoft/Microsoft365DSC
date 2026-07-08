@@ -168,36 +168,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Assert-MockCalled Get-MgGroup -Exactly 2 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 2 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 2
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 0
+                Should -Invoke -CommandName Get-MgUser -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 2
             }
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
-                Assert-MockCalled Get-MgGroup -Exactly 2 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 2 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 2
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 0
+                Should -Invoke -CommandName Get-MgUser -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 2
             }
 
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -Exactly 1
-                Assert-MockCalled Get-MgGroup -Exactly 4 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 1 -Scope It
-                Assert-MockCalled Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 2 -Scope It
-                Assert-MockCalled New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -Exactly 1 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 4
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 0
+                Should -Invoke -CommandName Get-MgUser -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 2
+                Should -Invoke -CommandName New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -Exactly 1
             }
         }
 
@@ -266,37 +266,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Assert-MockCalled Get-MgGroup -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 1
+                Should -Invoke -CommandName Get-MgUser -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1
             }
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
-                Assert-MockCalled Get-MgGroup -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 1
+                Should -Invoke -CommandName Get-MgUser -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1
             }
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -Exactly 1
-                Assert-MockCalled Get-MgGroup -Exactly 2 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1 -Scope It
-                Assert-MockCalled New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -Exactly 1 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 2
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 1
+                Should -Invoke -CommandName Get-MgUser -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1
+                Should -Invoke -CommandName New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -Exactly 1
             }
         }
 
@@ -382,13 +382,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return true from the Test method' {
                Test-TargetResource @testParams | Should -Be $true
 
-                Assert-MockCalled Get-MgGroup -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 1
+                Should -Invoke -CommandName Get-MgUser -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1
             }
         }
 
@@ -474,37 +474,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Assert-MockCalled Get-MgGroup -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 1
+                Should -Invoke -CommandName Get-MgUser -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1
             }
 
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
-                Assert-MockCalled Get-MgGroup -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 1
+                Should -Invoke -CommandName Get-MgUser -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1
             }
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -Exactly 1
-                Assert-MockCalled Get-MgGroup -Exactly 2 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 1 -Scope It
-                Assert-MockCalled Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1 -Scope It
-                Assert-MockCalled New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -Exactly 1 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 2
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 1
+                Should -Invoke -CommandName Get-MgUser -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 1
+                Should -Invoke -CommandName New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -Exactly 1
             }
         }
 
@@ -584,10 +584,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
-                Assert-MockCalled Get-MgGroup -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgBetaDirectoryObjectById -Exactly 2 -Scope It
-                Assert-MockCalled Get-MgUser -Exactly 0 -Scope It
-                Assert-MockCalled Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 0 -Scope It
+                Should -Invoke -CommandName Get-MgGroup -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaDirectoryObjectById -Exactly 2
+                Should -Invoke -CommandName Get-MgUser -Exactly 0
+                Should -Invoke -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -Exactly 0
             }
         }
     }

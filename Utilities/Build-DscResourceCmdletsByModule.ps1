@@ -9,7 +9,7 @@ $MaximumFunctionCount = 32767
 Update-M365DSCDependencies -ValidateOnly -Development
 $workingDir = Split-Path -Path $PSScriptRoot -Parent
 $m365dscModules = (Import-PowerShellDataFile -Path "$workingDir\Modules\Microsoft365DSC\Dependencies\Manifest.psd1").Dependencies.ModuleName + (Import-PowerShellDataFile -Path "$workingDir\Modules\Microsoft365DSC\Dependencies\DevManifest.psd1").Dependencies.ModuleName
-foreach ($file in (Get-ChildItem -Path "$workingDir\Modules\Microsoft365DSC\DSCResources" -Filter "$ResourceFilter.psm1" -Recurse -File)) {
+foreach ($file in (Get-ChildItem -Path "$workingDir\Modules\Microsoft365DSC\DscResources" -Filter "$ResourceFilter.psm1" -Recurse -File)) {
     Write-Host "Processing file: $($file.FullName)"
     $content = Get-Content -Path $file.FullName -Raw
     $resourceCmdlets = @()

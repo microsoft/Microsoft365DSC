@@ -221,6 +221,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
+        
+        Context -Name 'Two identically-named AUs exists and ID is not specified. Should throw' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description = 'FakeStringValue2'
+                    DisplayName = 'FakeStringValueDuplicated'
+                    Credential  = $Credential
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
+                    return @(
+                        @{
+                            Description = 'FakeStringValue2'
+                            DisplayName = 'FakeStringValueDuplicated'
+                            Id          = 'FakeStringValue2'
+                        },
+                        @{
+                            Description = 'FakeStringValue3'
+                            DisplayName = 'FakeStringValueDuplicated'
+                            Id          = 'FakeStringValue3'
+                        }
+                    )
+                }
+            }
+
+            It 'Should throw in the Get method' {
+                {Get-TargetResource @testParams} | Should -Throw -ExpectedMessage '*Multiple Azure AD Administrative Units with DisplayName {*} were found. Please specify the Id of the desired Administrative Unit*'
+            }
+        }
 
         Context -Name 'The AU Exists and Values are already in the desired state' -Fixture {
             BeforeAll {

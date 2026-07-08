@@ -10,6 +10,11 @@ $Global:M365DSCPushNotificationsBody = $null
 
 $Script:M365DSCWorkloads = @('AAD', 'ADO', 'AZURE', 'COMMERCE', 'DEFENDER', 'EXO', 'FABRIC', 'INTUNE', 'O365', 'OD', 'PLANNER', 'PP', 'SC', 'SENTINEL', 'SH', 'SPO', 'TEAMS')
 
+if ([System.String]::IsNullOrEmpty($env:TEMP) -and $PSEdition -eq 'Core' -and -not $IsWindows)
+{
+    $env:TEMP = '/tmp'
+}
+
 <#
 .Description
 This function retrieves a Teams team by its name
@@ -251,8 +256,8 @@ function Test-M365DSCParameterState
         $LCMState = $null
         try
         {
-            if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) `
-                -and $null -eq $Script:LCMInfo)
+            if (($PSEdition -eq 'Desktop' -or $IsWindows) -and ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) `
+                -and $null -eq $Script:LCMInfo )
             {
                 $Script:LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
 
@@ -652,8 +657,8 @@ function Install-M365DSCDevBranch
         #region Download and Extract Dev branch's ZIP
         Write-Host 'Downloading the Zip package...' -NoNewline
         $url = 'https://github.com/microsoft/Microsoft365DSC/archive/Dev.zip'
-        $output = "$($env:Temp)\dev.zip"
-        $extractPath = $env:Temp + '\O365Dev'
+        $output = "$($env:TEMP)/dev.zip"
+        $extractPath = "$($env:TEMP)/O365Dev"
         Write-Host 'Done' -ForegroundColor Green
 
         Invoke-WebRequest -Uri $url -OutFile $output -UseBasicParsing
@@ -664,23 +669,21 @@ function Install-M365DSCDevBranch
         #region Install All Dependencies
         $manifest = Import-PowerShellDataFile "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC\Microsoft365DSC.psd1"
         $dependencies = $manifest.RequiredModules
-        if ((-not(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) -and ($Scope -eq 'AllUsers'))
+        if (($PSEdition -eq 'Desktop' -or $IsWindows) -and (-not(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) -and ($Scope -eq 'AllUsers'))
         {
-            Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
+            throw 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
         }
-        else
+
+        foreach ($dependency in $dependencies)
         {
-            foreach ($dependency in $dependencies)
+            Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewline
+            $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+            if ($null -eq $existingModule)
             {
-                Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewline
-                $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
-                if ($null -eq $existingModule)
-                {
-                    Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope $Scope | Out-Null
-                }
-                Import-Module $dependency.ModuleName -Force | Out-Null
-                Write-Host 'Done' -ForegroundColor Green
+                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope $Scope | Out-Null
             }
+            Import-Module $dependency.ModuleName -Force | Out-Null
+            Write-Host 'Done' -ForegroundColor Green
         }
         #endregion
 
@@ -934,6 +937,10 @@ function Assert-M365DSCBlueprint
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificatePath,
 
@@ -944,6 +951,14 @@ function Assert-M365DSCBlueprint
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens,
 
         [Parameter()]
         [System.String]
@@ -998,7 +1013,7 @@ function Assert-M365DSCBlueprint
     #endregion
 
     $TempBluePrintName = 'TempBlueprint_' + (New-Guid).ToString() + '.M365'
-    $LocalBluePrintPath = Join-Path -Path $env:Temp -ChildPath $TempBluePrintName
+    $LocalBluePrintPath = Join-Path -Path $env:TEMP -ChildPath $TempBluePrintName
     try
     {
         # Download the BluePrint locally in a temp location
@@ -1072,7 +1087,7 @@ function Assert-M365DSCBlueprint
         Write-Host "Initiating the Export of those ($($ResourcesInBluePrint.Length)) components from the tenant..."
         $TempExportName = 'TempExport_' + (New-Guid).ToString() + '.ps1'
         Export-M365DSCConfiguration -Components $ResourcesInBluePrint `
-            -Path $env:temp `
+            -Path $env:TEMP `
             -FileName $TempExportName `
             -Credential $Credentials `
             -ApplicationId $ApplicationId `
@@ -1080,11 +1095,13 @@ function Assert-M365DSCBlueprint
             -TenantId $TenantId `
             -CertificateThumbprint $CertificateThumbprint `
             -CertificatePath $CertificatePath `
-            -CertificatePassword $CertificatePassword
+            -CertificatePassword $CertificatePassword `
+            -ManagedIdentity:$ManagedIdentity.IsPresent `
+            -AccessTokens $AccessTokens
 
         # Call the New-M365DSCDeltaReport configuration to generate the Delta Report between
         # the BluePrint and the extracted resources;
-        $ExportPath = Join-Path -Path $env:Temp -ChildPath $TempExportName
+        $ExportPath = Join-Path -Path $env:TEMP -ChildPath $TempExportName
         $deltaReportParams = @{
             Source                = $ExportPath
             Destination           = $LocalBluePrintPath
@@ -1146,7 +1163,7 @@ function Get-M365DSCAllResources
     [CmdletBinding()]
     param ()
 
-    $allResources = Get-ChildItem -Path ($PSScriptRoot + '/../DSCResources/') -Recurse -Filter '*.psm1'
+    $allResources = Get-ChildItem -Path ($PSScriptRoot + '/../DscResources/') -Recurse -Filter '*.psm1'
     $result = @()
     foreach ($resource in $allResources)
     {
@@ -1223,9 +1240,9 @@ function Get-M365DSCResourceDifferences
         throw "Microsoft365DSC version '$PreviousVersion' is not installed."
     }
 
-    # Get resources from each version by scanning their DSCResources folders
-    $currentResourcesPath = Join-Path -Path $currentModule.ModuleBase -ChildPath 'DSCResources'
-    $previousResourcesPath = Join-Path -Path $previousModule.ModuleBase -ChildPath 'DSCResources'
+    # Get resources from each version by scanning their DscResources folders
+    $currentResourcesPath = Join-Path -Path $currentModule.ModuleBase -ChildPath 'DscResources'
+    $previousResourcesPath = Join-Path -Path $previousModule.ModuleBase -ChildPath 'DscResources'
 
     $currentResources = Get-ChildItem -Path $currentResourcesPath -Recurse -Filter '*.psm1' |
         ForEach-Object { $_.Name -replace 'MSFT_', '' -replace '\.psm1', '' }
@@ -1609,11 +1626,11 @@ function New-M365DSCMissingResourcesExample
 }
 
 <#
-.Description
-This function removes the authentication parameters from the hashtable.
+.DESCRIPTION
+    This function removes the authentication parameters from the hashtable.
 
-.Functionality
-Internal
+.FUNCTIONALITY
+    Internal
 #>
 function Remove-M365DSCAuthenticationParameter
 {
@@ -1651,14 +1668,51 @@ function Remove-M365DSCAuthenticationParameter
 }
 
 <#
-.Description
-This function analyzes an M365DSC configuration file and returns information about potential issues (e.g., duplicate primary keys).
+.DESCRIPTION
+    This function replaces the authentication parameters in the hashtable with a *** value.
 
-.Example
-Get-M365DSCConfigurationConflict -ConfigurationContent "content"
+.FUNCTIONALITY
+    Internal
+#>
+function Set-M365DSCAuthenticationParameterMask
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
 
-.Functionality
-Public
+    $keysToReplace = @(
+        'ApplicationSecret',
+        'Credential',
+        'CertificatePassword',
+        'CertificatePath',
+        'CertificateThumbprint',
+        'Password'
+    )
+
+    foreach ($key in $keysToReplace)
+    {
+        if ($BoundParameters.ContainsKey($key))
+        {
+            $BoundParameters[$key] = '***'
+        }
+    }
+
+    return $BoundParameters
+}
+
+<#
+.DESCRIPTION
+    This function analyzes an M365DSC configuration file and returns information about potential issues (e.g., duplicate primary keys).
+
+.EXAMPLE
+    PS> Get-M365DSCConfigurationConflict -ConfigurationContent "content"
+
+.FUNCTIONALITY
+    Public
 #>
 function Get-M365DSCConfigurationConflict
 {
@@ -1725,7 +1779,7 @@ function Get-M365DSCConfigurationConflict
     The parameters to pass to the function.
 
 .EXAMPLE
-    Invoke-PowerShellCoreResource -Path 'C:\Program Files\...\DSCResources\MSFT_Resource\MSFT_Resource.psm1' -FunctionName Test-TargetResource -Parameters @{ Name = 'Value' }
+    Invoke-PowerShellCoreResource -Path 'C:\Program Files\...\DscResources\MSFT_Resource\MSFT_Resource.psm1' -FunctionName Test-TargetResource -Parameters @{ Name = 'Value' }
 
 .EXAMPLE
     # From inside of a DSC resource
@@ -1846,6 +1900,11 @@ function Write-M365DSCHost
         [switch]
         $CommitWrite
     )
+
+    if ([int]$ForegroundColor -eq -1)
+    {
+        $ForegroundColor = [System.ConsoleColor]::Gray
+    }
 
     if (-not [System.String]::IsNullOrEmpty($Message))
     {
@@ -2089,7 +2148,7 @@ function Get-M365DSCResourceComparisonParameters
 
         if ($null -eq $module)
         {
-            $resourceModulePath = Join-Path -Path $PSScriptRoot -ChildPath "../DSCResources/$moduleName/$moduleName.psm1"
+            $resourceModulePath = Join-Path -Path $PSScriptRoot -ChildPath "../DscResources/$moduleName/$moduleName.psm1"
             if (Test-Path -Path $resourceModulePath)
             {
                 $previousValue = $moduleConfig.skipModuleDependencyValidation
@@ -2372,6 +2431,7 @@ Export-ModuleMember -Function @(
     'New-M365DSCMissingResourcesExample',
     'Remove-M365DSCAuthenticationParameter',
     'Remove-NullEntriesFromHashtable',
+    'Set-M365DSCAuthenticationParameterMask',
     'Send-M365DSCPushNotification',
     'Set-M365DSCAllResourcesDictionary',
     'Test-CodePage',

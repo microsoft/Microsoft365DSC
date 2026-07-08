@@ -1,5 +1,50 @@
 # Change log for Microsoft365DSC
 
+# 1.26.708.1
+
+* AADAdministrativeUnit
+  * Added test for duplicated DisplayName across AUs
+  * Fixed an issue that made unit tests under Windows PowerShell fail.
+* AADCustomSecurityAttributeDefinition
+  * Fixed an issue where missing allowed values were not added to existing
+    custom security attribute definitions.
+    FIXES [#7305](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7305)
+* AADEntitlementManagementAccessPackageCatalog
+  * Fixed an issue that made unit tests under Windows PowerShell fail.
+* AADGroup
+  * Fixed an issue where `GroupTypes` would be returned as a null object.
+    FIXES [#7253](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7253)
+* AADTenantAppManagementPolicy
+  * Fixed an issue where the `RestrictForAppsCreatedAfterDateTime` timestamp
+    was incorrectly converted to a DateTime object.
+    FIXES [#7291](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7291)
+* AzureBillingAccountScheduledAction
+  * Fixed an issue that made unit tests under Windows PowerShell fail.
+* IntuneDeviceCompliancePolicyMacOS
+  * Fixed an issue where `ScheduledActionsForRule` was not compared correctly.
+* M365DSCExportUtil
+  * Updated the export to use the Microsoft365DSC module path as base for the
+    resource import.
+* M365DSCReport
+  * Removed check for PowerShell remoting.
+* M365DSCTelemetryEngine
+  * Removed the output when connecting to Microsoft Graph for telemetry.
+    FIXES [#7302](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7302)
+* M365DSCUtil
+  * Added `ApplicationSecret`, `ManagedIdentity` `AccessTokens` to the
+    `Assert-M365DSCBlueprint` function.
+  * Fixed an issue with the foreground color when run under Linux.
+  * Fixed an issue where `$env:TEMP` was not defined when run under Linux.
+* MISC
+  * Added Dockerfile and an ancillary script which is used to install
+    Microsoft365DSC module and its dependencies on that Windows docker image.
+  * Fixed an issue where assignments through a policy set were exported for
+    resources that were not of the `IntunePolicySets` type.
+  * Fixed unit tests so that they all pass under both Windows PowerShell and
+    PowerShell 7.
+  * Updated all unit tests for Pester v6.0.0.
+  * Updated the drift event to mask authentication parameters in the message.
+
 # 1.26.701.1
 
 * AADCrossTenantAccessPolicyConfigurationPartner
@@ -4536,6 +4581,8 @@
     null
     FIXES [#3971](https://github.com/microsoft/Microsoft365DSC/issues/3971)
   * Fixed compare logic for CIM instances in Test-TargetResource
+* IntuneWindowsUpdateForBusinessQualityUpdateProfileWindows10
+  * Fixed an issue with parsing the returned DateTime value object.
 * M365DSCRuleEvaluation
   * Fix issue when it didn't find any matching resources and it tried to make a
     comparison

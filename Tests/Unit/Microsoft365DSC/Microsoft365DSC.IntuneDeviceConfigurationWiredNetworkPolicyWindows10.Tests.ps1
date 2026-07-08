@@ -82,6 +82,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+            }
+
+            Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
                 return @(@{
                     Id = 'a485d322-13cd-43ef-beda-733f656f48ea'
                     DisplayName = 'RootCertificate'

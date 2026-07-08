@@ -83,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName New-RoleGroup -Exactly 1
+                Should -Invoke -CommandName New-RoleGroup -Exactly 1
             }
         }
 
@@ -151,7 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Remove-RoleGroup -Exactly 1
+                Should -Invoke -CommandName Remove-RoleGroup -Exactly 1
             }
         }
 

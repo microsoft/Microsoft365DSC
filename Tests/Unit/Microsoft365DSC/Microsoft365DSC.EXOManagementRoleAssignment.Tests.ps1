@@ -95,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName New-ManagementRoleAssignment -Exactly 1
+                Should -Invoke -CommandName New-ManagementRoleAssignment -Exactly 1
             }
 
             It 'Should return Absent from the Get method' {
@@ -164,8 +164,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Remove-ManagementRoleAssignment -Exactly 1
-                Assert-MockCalled -CommandName New-ManagementRoleAssignment -Exactly 1
+                Should -Invoke -CommandName Remove-ManagementRoleAssignment -Exactly 1
+                Should -Invoke -CommandName New-ManagementRoleAssignment -Exactly 1
             }
         }
 
@@ -198,7 +198,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Remove-ManagementRoleAssignment -Exactly 1
+                Should -Invoke -CommandName Remove-ManagementRoleAssignment -Exactly 1
             }
         }
 

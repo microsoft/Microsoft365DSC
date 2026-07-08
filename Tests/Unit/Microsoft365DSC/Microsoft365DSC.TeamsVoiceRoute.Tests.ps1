@@ -42,7 +42,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-CsOnlineVoiceRoute -MockWith {
-                return @{
+                return [PSCustomObject]@{
                     Identity              = 'Test Route'
                     Description           = 'My Test Route'
                     NumberPattern         = '^\+1(425|206)(\d{7})'
@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                return @{
+                return [PSCustomObject]@{
                     Identity = 'Global'
                     Usage    = @('Local', 'Long Distance')
                 }
@@ -61,11 +61,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-CsOnlinePstnGateway -MockWith {
                 return @(
-                    @{
+                    [PSCustomObject]@{
                         Identity = 'Sbc1.litware.com'
                         Enabled  = $true
                     }
-                    @{
+                    [PSCustomObject]@{
                         Identity = 'Sbc2.litware.com'
                         Enabled  = $true
                     }

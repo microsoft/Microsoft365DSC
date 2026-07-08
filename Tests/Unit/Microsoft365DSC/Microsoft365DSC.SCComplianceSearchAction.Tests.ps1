@@ -64,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "Action doesn't already exist" -Fixture {
+        Context -Name "Export Action doesn't already exist" -Fixture {
             BeforeEach {
                 $testParams = @{
                     IncludeSharePointDocumentVersions   = $False
@@ -99,7 +99,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It '[Export]Should call the Set method' {
                 Set-TargetResource @testParams
             }
+        }
 
+        Context -Name "Retention Action doesn't already exist" -Fixture {
             BeforeEach {
                 $testParams = @{
                     IncludeSharePointDocumentVersions   = $False
@@ -130,7 +132,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It '[Retention]Should call the Set method' {
                 Set-TargetResource @testParams
             }
+        }
 
+        Context -Name "Purge Action doesn't already exist" -Fixture {
             BeforeEach {
                 $testParams = @{
                     Action            = 'Purge'

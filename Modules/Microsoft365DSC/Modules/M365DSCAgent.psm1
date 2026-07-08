@@ -168,7 +168,7 @@ function Set-M365DSCAgentCertificateConfiguration
     if ($null -eq $existingCertificate)
     {
         Write-Verbose -Message 'No existing M365DSC certificate found. Creating one.'
-        $certificateFilePath = "$env:Temp\M365DSC.cer"
+        $certificateFilePath = "$env:TEMP\M365DSC.cer"
         $cert = New-SelfSignedCertificate -Type DocumentEncryptionCertLegacyCsp `
             -DnsName 'Microsoft365DSC' `
             -Subject 'M365DSCEncryptionCert' `
@@ -188,7 +188,7 @@ function Set-M365DSCAgentCertificateConfiguration
     $thumbprint = $existingCertificate.Thumbprint
     Write-Verbose -Message "Using M365DSCEncryptionCert with thumbprint {$thumbprint}"
 
-    $configOutputFile = $env:Temp + '\M365DSCAgentLCMConfig.ps1'
+    $configOutputFile = $env:TEMP + '\M365DSCAgentLCMConfig.ps1'
     $LCMConfigContent = @"
     [DSCLocalConfigurationManager()]
     Configuration M365AgentConfig
@@ -209,7 +209,7 @@ function Set-M365DSCAgentCertificateConfiguration
 
     if ($KeepCertificate)
     {
-        Write-Host "Certificate {$thumbprint} was stored under {$($env:Temp)} with name M365DSC.cer and M365DSC.pfx"
+        Write-Host "Certificate {$thumbprint} was stored under {$($env:TEMP)} with name M365DSC.cer and M365DSC.pfx"
     }
     else
     {

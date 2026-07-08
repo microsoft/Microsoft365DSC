@@ -91,7 +91,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Add-RoleGroupMember method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Add-RoleGroupMember -Exactly 1
+                Should -Invoke -CommandName Add-RoleGroupMember -Exactly 1
             }
         }
 
@@ -123,7 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Remove-RoleGroupMember method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Remove-RoleGroupMember -Exactly 1
+                Should -Invoke -CommandName Remove-RoleGroupMember -Exactly 1
             }
         }
 
@@ -152,7 +152,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Remove-RoleGroupMember method' {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Remove-RoleGroupMember -Exactly 3
+                Should -Invoke -CommandName Remove-RoleGroupMember -Exactly 3
             }
         }
 

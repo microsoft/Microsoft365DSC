@@ -59,8 +59,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Scope            = '/subscriptions/12345678-1234-1234-1234-123456789012'
                     PrincipalId      = '123456'
                     PrincipalType    = 'User'
-                    StartDateTime    = [System.DateTime]::Parse('2021-09-01T02:40:44Z')
-                    EndDateTime      = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
+                    StartDateTime    = [System.DateTime]::Parse('2021-09-01T02:40:44Z').ToUniversalTime()
+                    EndDateTime      = [System.DateTime]::Parse('2025-10-31T02:40:09Z').ToUniversalTime()
                 }
             }
 
@@ -335,8 +335,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Scope            = '/providers/Microsoft.Management/managementGroups/rootGroup'
                         PrincipalId      = '123456'
                         PrincipalType    = 'User'
-                        StartDateTime    = [System.DateTime]::Parse('2021-09-01T02:40:44Z')
-                        EndDateTime      = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
+                        StartDateTime    = [System.DateTime]::Parse('2021-09-01T02:40:44Z').ToUniversalTime()
+                        EndDateTime      = [System.DateTime]::Parse('2025-10-31T02:40:09Z').ToUniversalTime()
                     }
                 }
             }
@@ -427,7 +427,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Scope            = '/providers/Microsoft.Management/managementGroups/rootGroup'
                         PrincipalId      = '123456'
                         PrincipalType    = 'User'
-                        StartDateTime    = [System.DateTime]::Parse('2021-09-01T14:30:00Z')
+                        StartDateTime    = [System.DateTime]::Parse('2021-09-01T14:30:00Z').ToUniversalTime()
                         EndDateTime      = $null
                     }
                 }

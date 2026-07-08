@@ -45,6 +45,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDeviceManagementManagedDeviceCleanupRule -MockWith {
             }
 
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+            }
+
             Mock -CommandName Invoke-MgGraphRequest -ParameterFilter { $Method -eq 'GET' -and $Uri -like "*windowsQualityUpdatePolicies/FakeStringValue" } -MockWith {
                 return @{
                     Description = "FakeStringValue"
@@ -109,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 2
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 3
             }
         }
 
@@ -136,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 3
             }
         }
 
@@ -181,7 +184,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 3
             }
         }
 

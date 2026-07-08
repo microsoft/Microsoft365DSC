@@ -1,0 +1,874 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceEnrollmentStatusPageWindows10'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeviceResetOnInstallFailure,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeviceUseOnInstallFailure,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowLogCollectionOnInstallFailure,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNonBlockingAppInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockDeviceSetupRetryByUser,
+
+        [Parameter()]
+        [System.String]
+        $CustomErrorMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableUserStatusTrackingAfterFirstUser,
+
+        [Parameter()]
+        [System.Int32]
+        $InstallProgressTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $InstallQualityUpdates,
+
+        [Parameter()]
+        [System.String[]]
+        $SelectedMobileAppIds,
+
+        [Parameter()]
+        [System.String[]]
+        $SelectedMobileAppNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowInstallationProgress,
+
+        [Parameter()]
+        [System.Boolean]
+        $TrackInstallProgressForAutopilotOnly,
+        #endregion
+
+        [Parameter()]
+        [System.Uint32]
+        $Priority,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration of the Intune Device Enrollment Status Page for Windows 10 with Id {$Id} and DisplayName {$DisplayName}"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
+        {
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            if ($PSBoundParameters.ContainsKey('SelectedMobileAppIds') -and $PSBoundParameters.ContainsKey('SelectedMobileAppNames'))
+            {
+                Write-Verbose -Message '[WARNING] Both SelectedMobileAppIds and SelectedMobileAppNames are specified. SelectedMobileAppIds will be ignored!'
+            }
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [string]::IsNullOrEmpty($Id))
+            {
+                $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Id -ErrorAction SilentlyContinue `
+                    | Where-Object -FilterScript { $null -ne $_.DisplayName }
+            }
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with Id {$Id}"
+
+                if (-not [string]::IsNullOrEmpty($DisplayName))
+                {
+                    $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
+                        -All `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
+                        -ErrorAction SilentlyContinue | Where-Object `
+                        -FilterScript {
+                            $_.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' -and $null -ne $_.DisplayName
+                    }
+                }
+            }
+            #endregion
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with DisplayName {$DisplayName}"
+                return $nullResult
+            }
+
+            if ($getValue -is [Array] -and $getValue.Length -gt 1)
+            {
+                throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
+            }
+        }
+        else
+        {
+            $getValue = $Script:exportedInstance
+        }
+
+        $Id = $getValue.Id
+        Write-Verbose -Message "An Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
+
+        $SelectedMobileAppNamesValue = @()
+        foreach ($mobileApp in $getValue.selectedMobileAppIds)
+        {
+            $mobileEntry = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $mobileApp
+            $SelectedMobileAppNamesValue += $mobileEntry.DisplayName
+        }
+
+        $results = @{
+            #region resource generator code
+            AllowDeviceResetOnInstallFailure        = $getValue.allowDeviceResetOnInstallFailure
+            AllowDeviceUseOnInstallFailure          = $getValue.allowDeviceUseOnInstallFailure
+            AllowLogCollectionOnInstallFailure      = $getValue.allowLogCollectionOnInstallFailure
+            AllowNonBlockingAppInstallation         = $getValue.allowNonBlockingAppInstallation
+            BlockDeviceSetupRetryByUser             = $getValue.blockDeviceSetupRetryByUser
+            CustomErrorMessage                      = $getValue.customErrorMessage
+            DisableUserStatusTrackingAfterFirstUser = $getValue.disableUserStatusTrackingAfterFirstUser
+            InstallProgressTimeoutInMinutes         = $getValue.installProgressTimeoutInMinutes
+            InstallQualityUpdates                   = $getValue.installQualityUpdates
+            SelectedMobileAppNames                  = $SelectedMobileAppNamesValue
+            SelectedMobileAppIds                    = $getValue.selectedMobileAppIds
+            ShowInstallationProgress                = $getValue.showInstallationProgress
+            TrackInstallProgressForAutopilotOnly    = $getValue.trackInstallProgressForAutopilotOnly
+            Priority                                = $getValue.Priority
+            Description                             = $getValue.Description
+            DisplayName                             = $getValue.DisplayName
+            Id                                      = $getValue.Id
+            RoleScopeTagIds                         = $getValue.RoleScopeTagIds
+            Ensure                                  = 'Present'
+            Credential                              = $Credential
+            ApplicationId                           = $ApplicationId
+            TenantId                                = $TenantId
+            ApplicationSecret                       = $ApplicationSecret
+            CertificateThumbprint                   = $CertificateThumbprint
+            CertificatePath                         = $CertificatePath
+            CertificatePassword                     = $CertificatePassword
+            ManagedIdentity                         = $ManagedIdentity.IsPresent
+            AccessTokens                            = $AccessTokens
+            #endregion
+        }
+
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $Id
+        $assignmentResult = @()
+        if ($assignmentsValues.Count -gt 0)
+        {
+            [array]$assignmentsValues = $assignmentsValues | Where-Object -FilterScript { $_.source -eq 'direct' }
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment `
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
+        }
+        $results.Add('Assignments', $assignmentResult)
+
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeviceResetOnInstallFailure,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeviceUseOnInstallFailure,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowLogCollectionOnInstallFailure,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNonBlockingAppInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockDeviceSetupRetryByUser,
+
+        [Parameter()]
+        [System.String]
+        $CustomErrorMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableUserStatusTrackingAfterFirstUser,
+
+        [Parameter()]
+        [System.Int32]
+        $InstallProgressTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $InstallQualityUpdates,
+
+        [Parameter()]
+        [System.String[]]
+        $SelectedMobileAppIds,
+
+        [Parameter()]
+        [System.String[]]
+        $SelectedMobileAppNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowInstallationProgress,
+
+        [Parameter()]
+        [System.Boolean]
+        $TrackInstallProgressForAutopilotOnly,
+        #endregion
+
+        [Parameter()]
+        [System.Uint32]
+        $Priority,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Write-Verbose -Message "Setting configuration of the Intune Device Enrollment Status Page for Windows 10 with Id {$Id} and DisplayName {$DisplayName}"
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    if ($PSBoundParameters.ContainsKey('SelectedMobileAppNames') -eq $true)
+    {
+        Write-Verbose -Message 'Converting SelectedMobileAppNames to SelectedMobileAppIds'
+        if ($PSBoundParameters.SelectedMobileAppNames.Count -ne 0)
+        {
+            [Array]$mobileAppIds = $SelectedMobileAppNames | ForEach-Object { (Get-MgBetaDeviceAppManagementMobileApp -Filter "DisplayName eq '$($_ -replace "'", "''")'").Id }
+            $PSBoundParameters.SelectedMobileAppIds = $mobileAppIds
+        }
+        else
+        {
+            $PSBoundParameters.SelectedMobileAppIds = @()
+        }
+        $PSBoundParameters.Remove('SelectedMobileAppNames') | Out-Null
+    }
+
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating an Intune Device Enrollment Configuration for Windows10 with DisplayName {$DisplayName}"
+
+        $CreateParameters = ([Hashtable]$PSBoundParameters).Clone()
+        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+        $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Remove('Assignments') | Out-Null
+        $CreateParameters.Remove('Priority') | Out-Null
+
+        #region resource generator code
+        if ($CreateParameters.showInstallationProgress -eq $false)
+        {
+            $CreateParameters.blockDeviceSetupRetryByUser = $true
+            $CreateParameters.Remove('allowLogCollectionOnInstallFailure') | Out-Null
+            $CreateParameters.Remove('allowNonBlockingAppInstallation') | Out-Null
+            $CreateParameters.Remove('customErrorMessage') | Out-Null
+            $CreateParameters.Remove('disableUserStatusTrackingAfterFirstUser') | Out-Null
+            $CreateParameters.Remove('installProgressTimeoutInMinutes') | Out-Null
+            $CreateParameters.Remove('installQualityUpdates') | Out-Null
+            $CreateParameters.Remove('trackInstallProgressForAutopilotOnly') | Out-Null
+        }
+
+        if ($CreateParameters.blockDeviceSetupRetryByUser -eq $true)
+        {
+            $CreateParameters.Remove('allowDeviceUseOnInstallFailure') | Out-Null
+            $CreateParameters.Remove('allowDeviceResetOnInstallFailure') | Out-Null
+            $CreateParameters.Remove('selectedMobileAppIds') | Out-Null
+        }
+
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration')
+        $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -BodyParameter $CreateParameters
+
+        $intuneAssignments = @()
+        if ($null -ne $Assignments -and $Assignments.Count -gt 0)
+        {
+            $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        }
+        $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments } | ConvertTo-Json -Depth 100
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$($policy.Id)/assign"
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+
+        if ($PSBoundParameters.ContainsKey('Priority') -and $policy.Priority -ne $Priority)
+        {
+            Update-DeviceEnrollmentConfigurationPriority `
+                -DeviceEnrollmentConfigurationId $policy.id `
+                -Priority $Priority
+        }
+        #endregion
+    }
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating the Intune Device Enrollment Configuration for Windows10 with Id {$($currentInstance.Id)}"
+
+        $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
+        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+        $UpdateParameters.Remove('Assignments') | Out-Null
+        $UpdateParameters.Remove('Priority') | Out-Null
+
+        #region resource generator code
+        if ($UpdateParameters.blockDeviceSetupRetryByUser -eq $true)
+        {
+            $UpdateParameters.Remove('allowDeviceUseOnInstallFailure') | Out-Null
+            $UpdateParameters.Remove('allowDeviceResetOnInstallFailure') | Out-Null
+            $UpdateParameters.Remove('selectedMobileAppIds') | Out-Null
+        }
+
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration')
+        Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
+            -DeviceEnrollmentConfigurationId $currentInstance.Id `
+            -BodyParameter $UpdateParameters
+
+        if ($currentInstance.Id -notlike '*_DefaultWindows10EnrollmentCompletionPageConfiguration')
+        {
+            $intuneAssignments = @()
+            if ($null -ne $Assignments -and $Assignments.Count -gt 0)
+            {
+                $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+            }
+            $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments } | ConvertTo-Json -Depth 100
+            $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$($currentInstance.Id)/assign"
+            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+
+            if ($PSBoundParameters.ContainsKey('Priority') -and $Priority -ne $currentInstance.Priority)
+            {
+                Update-DeviceEnrollmentConfigurationPriority `
+                    -DeviceEnrollmentConfigurationId $currentInstance.id `
+                    -Priority $Priority
+            }
+        }
+        #endregion
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing the Intune Device Enrollment Configuration for Windows10 with Id {$($currentInstance.Id)}"
+        #region resource generator code
+        Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $currentInstance.Id
+        #endregion
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeviceResetOnInstallFailure,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeviceUseOnInstallFailure,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowLogCollectionOnInstallFailure,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNonBlockingAppInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockDeviceSetupRetryByUser,
+
+        [Parameter()]
+        [System.String]
+        $CustomErrorMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableUserStatusTrackingAfterFirstUser,
+
+        [Parameter()]
+        [System.Int32]
+        $InstallProgressTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $InstallQualityUpdates,
+
+        [Parameter()]
+        [System.String[]]
+        $SelectedMobileAppIds,
+
+        [Parameter()]
+        [System.String[]]
+        $SelectedMobileAppNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowInstallationProgress,
+
+        [Parameter()]
+        [System.Boolean]
+        $TrackInstallProgressForAutopilotOnly,
+        #endregion
+
+        [Parameter()]
+        [System.Uint32]
+        $Priority,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    if ($PSBoundParameters.ContainsKey('SelectedMobileAppIds') -eq $true -and $PSBoundParameters.ContainsKey('SelectedMobileAppNames') -eq $false)
+    {
+        Write-Verbose -Message 'Converting SelectedMobileAppIds to SelectedMobileAppNames'
+        $resolvedNames = @()
+        foreach ($appId in $SelectedMobileAppIds)
+        {
+            $mobileEntry = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $appId
+            $resolvedNames += $mobileEntry.DisplayName
+        }
+        $PSBoundParameters.SelectedMobileAppNames = $resolvedNames
+    }
+    $PSBoundParameters.Remove('SelectedMobileAppIds') | Out-Null
+
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        #region resource generator code
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter $Filter -All -ErrorAction Stop | Where-Object {
+            $_.'@odata.type' -eq "#microsoft.graph.windows10EnrollmentCompletionPageConfiguration"
+        }
+        #endregion
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($getValue.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($config in $getValue)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            $displayedKey = $config.Id
+            if (-not [String]::IsNullOrEmpty($config.displayName))
+            {
+                $displayedKey = $config.displayName
+            }
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
+            $params = @{
+                Id                    = $config.Id
+                DisplayName           = $config.displayName
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential `
+                -NoEscape @('Assignments') `
+                -RawResults $rawResults
+
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+            $i++
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
+        {
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+        }
+        else
+        {
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
+            throw
+        }
+    }
+}
+
+function Update-DeviceEnrollmentConfigurationPriority
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceEnrollmentConfigurationId,
+
+        [Parameter(Mandatory = 'true')]
+        [System.UInt32]
+        $Priority
+    )
+    try
+    {
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$DeviceEnrollmentConfigurationId/setpriority"
+        $body = @{'priority' = $Priority } | ConvertTo-Json -Depth 100
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest `
+            -Method POST `
+            -Body $body `
+            -Uri $Uri `
+            -ErrorAction Stop 4> $null
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+}
+
+Export-ModuleMember -Function *-TargetResource

@@ -23,7 +23,7 @@ jobs:
           Install-PSResource -Name ReverseDSC -Scope AllUsers -TrustRepository
           Install-PSResource -Name DSCParser -Scope AllUsers -TrustRepository
           Install-PSResource -Name PSDesiredStateConfiguration -Scope AllUsers -TrustRepository
-          Install-PSResource -Name Pester -Scope AllUsers -TrustRepository
+          Install-PSResource -Name Pester -Scope AllUsers -TrustRepository -Version 6.0.0
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
 
       - name: Generate SchemaDefinition.json
@@ -40,6 +40,8 @@ jobs:
       - name: Run Quality Checks
         shell: pwsh
         run: |
+          # Add the module to the PSModulePath so that it can be imported
+          $env:PSModulePath = $env:PSModulePath + [System.IO.Path]::PathSeparator + (Join-Path -Path . -ChildPath 'Modules/Microsoft365DSC')
           Import-Module './Tests/TestHarness.psm1' -Force;
           $MaximumFunctionCount = 32767
 
@@ -79,7 +81,7 @@ jobs:
           Install-PSResource -Name ReverseDSC -Scope AllUsers -TrustRepository
           Install-PSResource -Name DSCParser -Scope AllUsers -TrustRepository
           Install-PSResource -Name PSDesiredStateConfiguration -Scope AllUsers -TrustRepository
-          Install-PSResource -Name Pester -Scope AllUsers -TrustRepository
+          Install-PSResource -Name Pester -Scope AllUsers -TrustRepository -Version 6.0.0
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
 
       - name: Generate SchemaDefinition.json
@@ -93,44 +95,23 @@ jobs:
         run: |
           & ./Utilities/Build-DllFiles.ps1 -Configuration Release
 
-      - name: Move Module Files to temp directory
-        shell: pwsh
-        run: |
-          $manifest = Test-ModuleManifest -Path './Modules/Microsoft365DSC/Microsoft365DSC.psd1'
-          $version = $manifest.Version
-          $stagingPath = "$env:TEMP\Staging"
-          if (-not (Test-Path -Path $stagingPath))
-          {
-              New-Item -Path $stagingPath -ItemType Directory -Force
-          }
-          $modulePath = "$stagingPath\Microsoft365DSC"
-          if (-not (Test-Path -Path $modulePath))
-          {
-              New-Item -Path $modulePath -ItemType Directory -Force
-          }
-          $modulePath = "$modulePath\$version"
-          if (Test-Path -Path $modulePath)
-          {
-              Remove-Item -Path $modulePath -Recurse -Force
-          }
-          New-Item -Path $modulePath -ItemType Directory -Force
-          Copy-Item -Path './Modules/Microsoft365DSC/*' -Destination $modulePath -Recurse -Force
-
       - name: Run Test Harness
         shell: pwsh
         run: |
+          # Add a symbolic link for the Module to appear in Program Files
+          New-Item -Type SymbolicLink -Path "C:\Program Files\WindowsPowerShell\Modules\Microsoft365DSC" -Target (Join-Path -Path . -ChildPath 'Modules/Microsoft365DSC' -Resolve)
           Import-Module './Tests/TestHarness.psm1' -Force;
           $MaximumFunctionCount = 32767
 
           try
           {
-              $results = Invoke-TestHarness -ModuleDirectory "$env:TEMP\Staging"
+              $results = Invoke-TestHarness
           }
           catch
           {
               $MaximumFunctionCount = 32767
               Import-Module './Tests/TestHarness.psm1' -Force;
-              $results = Invoke-TestHarness -ModuleDirectory "$env:TEMP\Staging"
+              $results = Invoke-TestHarness
           }
           if ($results.FailedCount -gt 0)
           {

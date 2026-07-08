@@ -58,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "IntuneQualityUpdate"
                     ExpeditedUpdateSettings = @{
                         DaysUntilForcedReboot = 0
-                        QualityUpdateRelease = "2024-06-11T00:00:00Z"
+                        QualityUpdateRelease = [DateTime]::Parse("2024-12-31T23:59:59Z").ToUniversalTime()
                     }
                     Id = "FakeStringValue"
                     RoleScopeTagIds = @("0")
@@ -109,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "IntuneQualityUpdate"
                     ExpeditedUpdateSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphExpeditedWindowsQualityUpdateSettings -Property @{
                         DaysUntilForcedReboot = 0
-                        QualityUpdateRelease = "2024-06-11T00:00:00Z"
+                        QualityUpdateRelease = "2024-12-31T23:59:59Z"
                     } -ClientOnly)
                     Id = "FakeStringValue"
                     RoleScopeTagIds = @("0")
@@ -148,7 +148,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "IntuneQualityUpdate"
                     ExpeditedUpdateSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphExpeditedWindowsQualityUpdateSettings -Property @{
                         DaysUntilForcedReboot = 0
-                        QualityUpdateRelease = "2024-06-11T00:00:00Z"
+                        QualityUpdateRelease = "2024-12-31T23:59:59Z"
                     } -ClientOnly)
                     Id = "FakeStringValue"
                     RoleScopeTagIds = @("0")
@@ -185,7 +185,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "IntuneQualityUpdate"
                     ExpeditedUpdateSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphExpeditedWindowsQualityUpdateSettings -Property @{
                         DaysUntilForcedReboot = 0
-                        QualityUpdateRelease = "2024-06-11T00:00:00Z"
+                        QualityUpdateRelease = "2024-12-31T23:59:59Z"
                     } -ClientOnly)
                     Id = "FakeStringValue"
                     RoleScopeTagIds = @("0")
@@ -214,7 +214,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "IntuneQualityUpdate"
                     ExpeditedUpdateSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphExpeditedWindowsQualityUpdateSettings -Property @{
                         DaysUntilForcedReboot = 1 # Updated property
-                        QualityUpdateRelease = "2024-06-11T00:00:00Z"
+                        QualityUpdateRelease = "2024-12-31T23:59:59Z"
                     } -ClientOnly)
                     Id = "FakeStringValue"
                     RoleScopeTagIds = @("0")
