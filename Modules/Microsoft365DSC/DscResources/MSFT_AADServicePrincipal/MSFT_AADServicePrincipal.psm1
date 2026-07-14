@@ -633,14 +633,6 @@ function Set-TargetResource
         $AppId = $appInstance.AppId
         Write-Verbose -Message "Translated to AppId {$($currentParameters.AppId)}"
     }
-    else
-    {
-        $appInstance = Get-MgApplication -Filter "AppId eq '$($AppId)'"
-        if ($null -eq $appInstance)
-        {
-            throw "No application found with AppId or DisplayName matching '$AppId'."
-        }
-    }
 
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')

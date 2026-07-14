@@ -110,7 +110,8 @@
 * Added `License Requirements` section to README.md documenting Microsoft
     365 E5 / Defender for Office 365 Plan 2 licensing requirements for EXO
     Defender resources.
-
+* AADServicePrincipal
+  * Removed Get-MgApplication AppId validation to allow creation of Service Principals for Enterprise Applications. Enterprise Applications cannot be resolved through Get-MgApplication, causing valid Service Principal registrations to fail.
 
 # 1.26.708.1
 
