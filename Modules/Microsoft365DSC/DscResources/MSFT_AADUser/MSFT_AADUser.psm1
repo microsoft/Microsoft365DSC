@@ -507,16 +507,17 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present')
     {
         $PasswordPolicies = $null
+        $creationParams = @{}
+
         if ($PasswordNeverExpires)
         {
-            $PasswordPolicies = 'DisablePasswordExpiration'
+            $creationParams.Add("PasswordPolicies", "DisablePasswordExpiration")
         }
         else
         {
-            $PasswordPolicies = 'None'
+            $creationParams.Add("PasswordPolicies", "None")
         }
 
-        $creationParams = @{}
         foreach ($kvp in $Script:creationParamsMap.GetEnumerator())
         {
             if ($PSBoundParameters.ContainsKey($($kvp.Value)))
