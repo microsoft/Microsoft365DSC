@@ -93,7 +93,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly
-                    Credential  = $Credential
+                    SubscriptionId       = "00000000-0000-0000-0000-000000000000"
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-AzRoleEligibilitySchedule -MockWith {
@@ -127,7 +128,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly
-                    Credential  = $Credential
+                    SubscriptionId       = "00000000-0000-0000-0000-000000000000"
+                    Credential           = $Credential
                 }
             }
 
@@ -160,7 +162,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly
-                    Credential  = $Credential
+                    SubscriptionId       = "00000000-0000-0000-0000-000000000000"
+                    Credential           = $Credential
                 }
             }
 
@@ -189,7 +192,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly
-                    Credential  = $Credential
+                    SubscriptionId       = "00000000-0000-0000-0000-000000000000"
+                    Credential           = $Credential
                 }
             }
 
@@ -223,7 +227,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly
-                    Credential  = $Credential
+                    SubscriptionId       = "00000000-0000-0000-0000-000000000000"
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-AzRoleEligibilitySchedule -MockWith {
@@ -257,7 +262,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly
-                    Credential  = $Credential
+                    SubscriptionId       = "00000000-0000-0000-0000-000000000000"
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-AzRoleEligibilitySchedule -MockWith {
@@ -291,7 +297,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly
-                    Credential  = $Credential
+                    SubscriptionId       = "00000000-0000-0000-0000-000000000000"
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-AzRoleEligibilitySchedule -MockWith {
@@ -325,7 +332,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             type        = 'afterDateTime'
                         } -ClientOnly
                     } -ClientOnly
-                    Credential  = $Credential
+                    SubscriptionId       = "00000000-0000-0000-0000-000000000000"
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-AzRoleEligibilitySchedule -MockWith {
@@ -366,7 +374,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             type = 'noExpiration'
                         } -ClientOnly
                     } -ClientOnly
-                    Credential  = $Credential
+                    SubscriptionId       = "00000000-0000-0000-0000-000000000000"
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-AzADGroup -MockWith {
@@ -417,7 +426,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             type = 'noExpiration'
                         } -ClientOnly
                     } -ClientOnly
-                    Credential  = $Credential
+                    SubscriptionId       = "00000000-0000-0000-0000-000000000000"
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-AzRoleEligibilitySchedule -MockWith {
@@ -454,7 +464,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential = $Credential
+                    SubscriptionId = "00000000-0000-0000-0000-000000000000"
+                    Credential     = $Credential
                 }
 
                 Mock -CommandName Get-AzTenant -MockWith {
@@ -528,7 +539,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential = $Credential
+                    SubscriptionId = "00000000-0000-0000-0000-000000000000"
+                    Credential     = $Credential
                     Filter     = ''
                 }
 

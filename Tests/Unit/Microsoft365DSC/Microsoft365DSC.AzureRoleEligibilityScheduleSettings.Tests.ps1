@@ -247,6 +247,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ActivationReqMFA          = $false
                     ApprovaltoActivate        = $true
                     ActivateApprover          = @()
+                    SubscriptionId            = "00000000-0000-0000-0000-000000000000"
                     Credential                = $Credential;
                 }
             }
@@ -265,6 +266,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ActivationReqJustification = $true
                     ActivationReqTicket       = $true
                     ActivationReqMFA          = $false
+                    SubscriptionId            = "00000000-0000-0000-0000-000000000000"
                     Credential                = $Credential;
                 }
             }
@@ -286,6 +288,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EligibleAlertNotificationDefaultRecipient    = $true
                     EligibleAlertNotificationAdditionalRecipient = @("eligibility-admin@contoso.com")
                     EligibleAlertNotificationOnlyCritical        = $true
+                    SubscriptionId                               = "00000000-0000-0000-0000-000000000000"
                     Credential                                   = $Credential;
                 }
             }
@@ -303,6 +306,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EligibleAlertNotificationDefaultRecipient    = $false # drift
                     EligibleAlertNotificationAdditionalRecipient = @("eligibility-admin@contoso.com")
                     EligibleAlertNotificationOnlyCritical        = $true
+                    SubscriptionId                               = "00000000-0000-0000-0000-000000000000"
                     Credential                                   = $Credential;
                 }
             }
@@ -322,6 +326,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleDefinitionDisplayName                        = "Owner"
                     ScopeId                                          = "subscriptions/00000000-0000-0000-0000-000000000000"
                     ActiveAssigneeNotificationAdditionalRecipient    = @("foo@test.com")
+                    SubscriptionId                                   = "00000000-0000-0000-0000-000000000000"
                     Credential                                       = $Credential;
                 }
             }
@@ -369,6 +374,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleDefinitionDisplayName                        = "Owner"
                     ScopeId                                          = "subscriptions/00000000-0000-0000-0000-000000000000"
                     ActiveAssigneeNotificationAdditionalRecipient    = @("foo@test.com")
+                    SubscriptionId                                   = "00000000-0000-0000-0000-000000000000"
                     Credential                                       = $Credential;
                 }
             }
@@ -387,6 +393,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleDefinitionDisplayName                    = "Owner"
                     ScopeId                                      = "subscriptions/00000000-0000-0000-0000-000000000000"
                     EligibleAlertNotificationDefaultRecipient    = $false
+                    SubscriptionId                               = "00000000-0000-0000-0000-000000000000"
                     Credential                                   = $Credential;
                 }
             }
@@ -402,6 +409,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleDefinitionDisplayName                       = "Owner"
                     ScopeId                                         = "subscriptions/00000000-0000-0000-0000-000000000000"
                     ActivationAlertNotificationOnlyCritical         = $true
+                    SubscriptionId                                  = "00000000-0000-0000-0000-000000000000"
                     Credential                                      = $Credential;
                 }
             }
@@ -419,6 +427,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ActivationAlertNotificationDefaultRecipient     = $true
                     ActivationAlertNotificationAdditionalRecipient  = @("admin@contoso.com")
                     ActivationAlertNotificationOnlyCritical         = $false
+                    SubscriptionId                                  = "00000000-0000-0000-0000-000000000000"
                     Credential                                      = $Credential;
                 }
             }
@@ -435,6 +444,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScopeId                                         = "subscriptions/00000000-0000-0000-0000-000000000000"
                     PermanentEligibleAssignmentisExpirationRequired = $true
                     ExpireEligibleAssignment                        = "P180D"
+                    SubscriptionId                                  = "00000000-0000-0000-0000-000000000000"
                     Credential                                      = $Credential;
                 }
             }
@@ -451,6 +461,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScopeId                                         = "subscriptions/00000000-0000-0000-0000-000000000000"
                     PermanentEligibleAssignmentisExpirationRequired = $false # drift
                     ExpireEligibleAssignment                        = "P180D"
+                    SubscriptionId                                  = "00000000-0000-0000-0000-000000000000"
                     Credential                                      = $Credential;
                 }
             }
@@ -463,11 +474,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The enablement rule for active assignment is in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    RoleDefinitionDisplayName = "Owner"
-                    ScopeId                   = "subscriptions/00000000-0000-0000-0000-000000000000"
-                    AssignmentReqMFA          = $false
+                    RoleDefinitionDisplayName  = "Owner"
+                    ScopeId                    = "subscriptions/00000000-0000-0000-0000-000000000000"
+                    AssignmentReqMFA           = $false
                     AssignmentReqJustification = $true
-                    Credential                = $Credential;
+                    SubscriptionId             = "00000000-0000-0000-0000-000000000000"
+                    Credential                 = $Credential;
                 }
             }
 
@@ -479,11 +491,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The enablement rule for active assignment is NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    RoleDefinitionDisplayName = "Owner"
-                    ScopeId                   = "subscriptions/00000000-0000-0000-0000-000000000000"
-                    AssignmentReqMFA          = $true # drift
+                    RoleDefinitionDisplayName  = "Owner"
+                    ScopeId                    = "subscriptions/00000000-0000-0000-0000-000000000000"
+                    AssignmentReqMFA           = $true # drift
                     AssignmentReqJustification = $true
-                    Credential                = $Credential;
+                    SubscriptionId             = "00000000-0000-0000-0000-000000000000"
+                    Credential                 = $Credential;
                 }
             }
 
@@ -499,11 +512,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Partial enablement: only Justification and Ticketing specified for EndUser Assignment" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    RoleDefinitionDisplayName = "Owner"
-                    ScopeId                   = "subscriptions/00000000-0000-0000-0000-000000000000"
+                    RoleDefinitionDisplayName  = "Owner"
+                    ScopeId                    = "subscriptions/00000000-0000-0000-0000-000000000000"
                     ActivationReqJustification = $true
-                    ActivationReqTicket       = $true
-                    Credential                = $Credential;
+                    ActivationReqTicket        = $true
+                    SubscriptionId             = "00000000-0000-0000-0000-000000000000"
+                    Credential                 = $Credential;
                 }
             }
 
@@ -515,10 +529,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Partial enablement: only Justification specified for Admin Assignment" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    RoleDefinitionDisplayName = "Owner"
-                    ScopeId                   = "subscriptions/00000000-0000-0000-0000-000000000000"
+                    RoleDefinitionDisplayName  = "Owner"
+                    ScopeId                    = "subscriptions/00000000-0000-0000-0000-000000000000"
                     AssignmentReqJustification = $true
-                    Credential                = $Credential;
+                    SubscriptionId             = "00000000-0000-0000-0000-000000000000"
+                    Credential                 = $Credential;
                 }
             }
 
@@ -533,6 +548,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleDefinitionDisplayName = "Owner"
                     ScopeId                   = "subscriptions/00000000-0000-0000-0000-000000000000"
                     AssignmentReqMFA          = $true
+                    SubscriptionId            = "00000000-0000-0000-0000-000000000000"
                     Credential                = $Credential;
                 }
             }
@@ -631,6 +647,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScopeId                   = "subscriptions/00000000-0000-0000-0000-000000000000"
                     ApprovaltoActivate        = $true
                     ActivateApprover          = @("approver@contoso.com")
+                    SubscriptionId            = "00000000-0000-0000-0000-000000000000"
                     Credential                = $Credential;
                 }
             }
@@ -755,6 +772,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ScopeId                   = "subscriptions/00000000-0000-0000-0000-000000000000"
                     ApprovaltoActivate        = $true
                     ActivateApprover          = @("approver@contoso.com", "PIM Approvers")
+                    SubscriptionId            = "00000000-0000-0000-0000-000000000000"
                     Credential                = $Credential;
                 }
             }
@@ -780,7 +798,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential = $Credential
+                    SubscriptionId = "00000000-0000-0000-0000-000000000000"
+                    Credential     = $Credential
                 }
 
                 Mock -CommandName Invoke-AzRestMethod -MockWith {
@@ -875,8 +894,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential = $Credential
-                    Filter     = 'ModifiedOnly'
+                    SubscriptionId = "00000000-0000-0000-0000-000000000000"
+                    Credential     = $Credential
+                    Filter         = 'ModifiedOnly'
                 }
 
                 Mock -CommandName Invoke-AzRestMethod -MockWith {
@@ -957,7 +977,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential = $Credential
+                    SubscriptionId = "00000000-0000-0000-0000-000000000000"
+                    Credential     = $Credential
                 }
 
                 Mock -CommandName Invoke-AzRestMethod -MockWith {

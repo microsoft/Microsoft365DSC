@@ -1,5 +1,8 @@
 name: Global - Integration - AAD
-on: [push]
+on:
+  push:
+    branches:
+      - Dev
 
 jobs:
   Integration-Global-AAD:

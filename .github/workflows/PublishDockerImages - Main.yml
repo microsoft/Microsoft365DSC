@@ -1,0 +1,73 @@
+name: Publish Docker Images (Release)
+
+on:
+  workflow_run:
+    workflows: [Publish to PowerShell Gallery]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  BuildAndPushDockerImages:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: Dockerfile.linux
+            runner: ubuntu-latest
+          - dockerfile: Dockerfile.windows
+            runner: windows-latest
+
+    runs-on: ${{ matrix.runner }}
+
+    # Only when run from the main repo
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Infer Docker Tag
+        id: tag
+        shell: pwsh
+        run: |
+          $filename = '${{ matrix.dockerfile }}'
+          $inferredTag = $filename -replace '^Dockerfile\.', ''
+          "value=$inferredTag" >> $env:GITHUB_OUTPUT
+
+      - name: Get Module Version
+        id: moduleversion
+        shell: pwsh
+        run: |
+          $manifestPath = './Modules/Microsoft365DSC/Microsoft365DSC.psd1'
+          $moduleVersion = (Import-PowerShellDataFile -Path $manifestPath).ModuleVersion
+          if ([System.String]::IsNullOrWhiteSpace($moduleVersion))
+          {
+            throw 'Unable to determine Microsoft365DSC module version from manifest.'
+          }
+          "value=$moduleVersion" >> $env:GITHUB_OUTPUT
+
+      - name: Log in to Docker Hub
+        shell: pwsh
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          $env:DOCKERHUB_TOKEN | docker login --username $env:DOCKERHUB_USERNAME --password-stdin
+
+      - name: Build and push
+        shell: pwsh
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+        run: |
+          $baseName = "$($env:DOCKERHUB_USERNAME)/microsoft365dsc"
+          $imageTag = "$($baseName):${{ steps.moduleversion.outputs.value }}-${{ steps.tag.outputs.value }}"
+          if ('${{ matrix.dockerfile}}' -eq 'Dockerfile.windows') {
+            Write-Host "Building with version and latest tag for ${{ matrix.dockerfile }}"
+            $imageTagLatest = "$($baseName):latest"
+            docker build --file ./${{ matrix.dockerfile }} --tag $imageTagLatest --tag $imageTag .
+          } else {
+            Write-Host "Building with version tag for ${{ matrix.dockerfile }}"
+            docker build --file ./${{ matrix.dockerfile }} --tag $imageTag .
+          }
+          docker image push $baseName --all-tags

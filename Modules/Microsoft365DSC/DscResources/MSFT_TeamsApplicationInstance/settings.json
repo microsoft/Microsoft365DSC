@@ -3,24 +3,13 @@
   "description": "Manages Teams Resource Accounts.",
   "roles": {
     "read": [
-      "Global Reader"
+      "Teams Reader"
     ],
     "update": [
       "Teams Administrator"
     ]
   },
-  "permissions": {
-    "graph": {
-      "delegated": {
-        "read": [],
-        "update": []
-      },
-      "application": {
-        "read": [],
-        "update": []
-      }
-    }
-  },
+  "permissions": {},
   "requiredModules": [
     "MicrosoftTeams"
   ],

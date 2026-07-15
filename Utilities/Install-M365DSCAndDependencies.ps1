@@ -99,7 +99,6 @@ try
         Name                = "Pester"
         Repository          = "PSGallery"
         Scope               = "AllUsers"
-        Version            = "5.7.1"
         SkipDependencyCheck = [Switch]$true
         TrustRepository     = [Switch]$true
         AcceptLicense       = [Switch]$true

@@ -82,6 +82,9 @@ foreach ($template in $jsonContent.templates.psobject.Properties)
 .PARAMETER ManagedIdentity
     Specifies use of managed identity for authentication.
 
+.PARAMETER SubscriptionId
+    Specifies the subscription id to be used for authentication.
+
 .PARAMETER Validate
     Specifies that the configuration needs to be validated for conflicts or issues after its extraction is completed.
 
@@ -213,6 +216,11 @@ function Export-M365DSCConfiguration
         [Parameter(ParameterSetName = 'Export')]
         [System.String[]]
         $AccessTokens,
+
+        [Parameter(ParameterSetName = 'Export')]
+        [ValidateScript({ $Workloads -contains 'AZURE' -or ($Components -like "Azure*").Count -gt 0 })]
+        [System.String]
+        $SubscriptionId,
 
         [Parameter(ParameterSetName = 'Export')]
         [Switch]
@@ -415,6 +423,7 @@ function Export-M365DSCConfiguration
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity.IsPresent `
             -AccessTokens $AccessTokens `
+            -SubscriptionId $SubscriptionId `
             -GenerateInfo $GenerateInfo `
             -Filters $Filters `
             -Validate:$Validate.IsPresent `
@@ -440,6 +449,7 @@ function Export-M365DSCConfiguration
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity.IsPresent `
             -AccessTokens $AccessTokens `
+            -SubscriptionId $SubscriptionId `
             -GenerateInfo $GenerateInfo `
             -Filters $Filters `
             -Validate:$Validate.IsPresent `
@@ -465,6 +475,7 @@ function Export-M365DSCConfiguration
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity.IsPresent `
             -AccessTokens $AccessTokens `
+            -SubscriptionId $SubscriptionId `
             -GenerateInfo $GenerateInfo `
             -AllComponents `
             -Filters $Filters `
@@ -1125,7 +1136,7 @@ function Update-M365DSCExportAuthenticationResults
 
     if ($ConnectionMode -in @('Credentials', 'CredentialsWithTenantId'))
     {
-        $Results.Credential = Resolve-Credentials -UserName 'credential'
+        $Results.Credential = '$CredsCredential'
         $noEscape += 'Credential'
 
         # Credentials mode removes TenantId; CredentialsWithTenantId keeps it.
@@ -1150,7 +1161,7 @@ function Update-M365DSCExportAuthenticationResults
         {
             if ($ConnectionMode -eq 'CredentialsWithApplicationId')
             {
-                $Results.Credential = Resolve-Credentials -UserName 'credential'
+                $Results.Credential = '$CredsCredential'
                 $noEscape += 'Credential'
             }
             else
@@ -1202,7 +1213,8 @@ function Update-M365DSCExportAuthenticationResults
         # CertificatePassword gets resolved as credentials
         if ($null -ne $Results.CertificatePassword)
         {
-            $Results.CertificatePassword = Resolve-Credentials -UserName 'CertificatePassword'
+            $Results.CertificatePassword = '$CredsCertificatePassword'
+            $noEscape += 'CertificatePassword'
         }
         else
         {
@@ -1705,7 +1717,7 @@ function Get-M365DSCMinimalExportBlocks
 
         if ($null -ne $resourceInfo)
         {
-            $keyProps = $resourceInfo.Properties | Where-Object -FilterScript { $_.IsMandatory }
+            $keyProps = $resourceInfo.Properties | Where-Object -Property IsMandatory -EQ $true
             foreach ($prop in $keyProps)
             {
                 if ($prop.Name -eq 'IsSingleInstance')

@@ -47,6 +47,7 @@ class MSFT_AzureRoleEligibilityScheduleSettings : OMI_BaseResource
     [Write, Description("Send notifications when eligible members activate this role: Notification to approvers, default recipient (True/False).")] Boolean ActivationApproveNotificationDefaultRecipient;
     [Write, Description("Send notifications when eligible members activate this role: Notification to approvers, additional recipient (UPN).")] String ActivationApproveNotificationAdditionalRecipient[];
     [Write, Description("Send notifications when eligible members activate this role: Notification to approvers, only critical Email (True/False).")] Boolean ActivationApproveNotificationOnlyCritical;
+    [Write, Description("The Azure subscription to connect to if the access is restricted on subscription level.")] String SubscriptionId;
     [Write, Description("Credentials for the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

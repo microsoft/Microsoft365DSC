@@ -98,7 +98,10 @@ function New-M365DSCResource
     if ($Workload -in $graphWorkloads)
     {
         Write-Verbose -Message "Import Intune Settings Catalog Helper module"
-        Import-Module -Name Microsoft365DSC -Force
+        if (-not (Get-Module -Name Microsoft365DSC))
+        {
+            Import-Module -Name Microsoft365DSC -Force
+        }
         Import-Module -Name ..\Modules\Microsoft365DSC\Modules\M365DSCIntuneSettingsCatalogUtil.psm1 -Force
         Remove-Module -Name M365DSCGraphShim -Force -ErrorAction SilentlyContinue
 
@@ -873,7 +876,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
             $AssignmentsGet += "        }`r`n"
             $AssignmentsGet += "        `$results.Add('Assignments', `$assignmentResult)`r`n"
 
-            $AssignmentsRemove += "        `$boundParameters.Remove(`"Assignments`") | Out-Null`r`n"
+            $AssignmentsRemove += "        `$boundParameters.Remove('Assignments') | Out-Null`r`n"
 
             $AssignmentsNew += ""
             $AssignmentsNew += "`r`n"
@@ -1968,7 +1971,10 @@ function Get-Microsoft365DSCModuleCimClass
         $ResourceName
     )
 
-    Import-Module -Name Microsoft365DSC -Force
+    if (-not (Get-Module -Name Microsoft365DSC))
+    {
+        Import-Module -Name Microsoft365DSC -Force
+    }
     $modulePath = Split-Path -Path (Get-Module -Name Microsoft365DSC).Path
     $resourcesPath = "$modulePath\DscResources\*\*.mof"
     $resources = (Get-ChildItem $resourcesPath).FullName

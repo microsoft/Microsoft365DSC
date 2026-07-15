@@ -22,7 +22,6 @@ Configuration Example
             Identity                                 = "John.Smith@contoso.com";
             OofGreetingEnabled                       = $False;
             OofGreetingFollowAutomaticRepliesEnabled = $False;
-            OofGreetingFollowCalendarEnabled         = $False;
             PromptLanguage                           = "en-US";
             ShareData                                = $False;
             VoicemailEnabled                         = $True;

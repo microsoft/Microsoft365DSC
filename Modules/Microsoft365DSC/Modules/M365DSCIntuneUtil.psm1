@@ -90,7 +90,7 @@ function ConvertFrom-IntunePolicyAssignment
             {
                 $filterId = $assignment.Target.DeviceAndAppManagementAssignmentFilterId
                 $hashAssignment.Add('deviceAndAppManagementAssignmentFilterId', $filterId)
-                $hashAssignment.Add('deviceAndAppManagementAssignmentFilterDisplayName', (($Script:IntuneAssignmentFilters | Where-Object -FilterScript { $_.FilterId -eq $filterId }).DisplayName))
+                $hashAssignment.Add('deviceAndAppManagementAssignmentFilterDisplayName', (($Script:IntuneAssignmentFilters | Where-Object -Property FilterId -EQ $filterId).DisplayName))
             }
         }
 
@@ -139,10 +139,10 @@ function ConvertTo-IntunePolicyAssignment
         {
             if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterType -and $assignment.DeviceAndAppManagementAssignmentFilterType -ne 'none')
             {
-                $filter = $Script:IntuneAssignmentFilters | Where-Object -FilterScript { $_.FilterId -eq $assignment.DeviceAndAppManagementAssignmentFilterId }
+                $filter = $Script:IntuneAssignmentFilters | Where-Object -Property FilterId -EQ $assignment.DeviceAndAppManagementAssignmentFilterId
                 if ($null -eq $filter)
                 {
-                    $filter = $Script:IntuneAssignmentFilters | Where-Object -FilterScript { $_.DisplayName -eq $assignment.DeviceAndAppManagementAssignmentFilterDisplayName }
+                    $filter = $Script:IntuneAssignmentFilters | Where-Object -Property DisplayName -EQ $assignment.DeviceAndAppManagementAssignmentFilterDisplayName
                     if ($null -eq $filter)
                     {
                         Write-Warning -Message "Assignment filter with DisplayName {$($assignment.DeviceAndAppManagementAssignmentFilterDisplayName)} not found in the directory. Please update your DSC resource extract with the correct filterId or filterDisplayName."
@@ -288,7 +288,7 @@ function ConvertFrom-IntuneMobileAppAssignment
             {
                 $filterId = $assignment.Target.DeviceAndAppManagementAssignmentFilterId
                 $hashAssignment.Add('deviceAndAppManagementAssignmentFilterId', $filterId)
-                $hashAssignment.Add('deviceAndAppManagementAssignmentFilterDisplayName', (($Script:IntuneAssignmentFilters | Where-Object -FilterScript { $_.FilterId -eq $filterId }).DisplayName))
+                $hashAssignment.Add('deviceAndAppManagementAssignmentFilterDisplayName', (($Script:IntuneAssignmentFilters | Where-Object -Property FilterId -EQ $filterId).DisplayName))
             }
         }
 
@@ -347,15 +347,11 @@ function ConvertTo-IntuneMobileAppAssignment
             if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterType -and
                 $assignment.DeviceAndAppManagementAssignmentFilterType -ne 'none')
             {
-                $filter = $Script:IntuneAssignmentFilters | Where-Object {
-                    $_.FilterId -eq $assignment.DeviceAndAppManagementAssignmentFilterId
-                }
+                $filter = $Script:IntuneAssignmentFilters | Where-Object -Property FilterId -EQ $assignment.DeviceAndAppManagementAssignmentFilterId
 
                 if ($null -eq $filter)
                 {
-                    $filter = $Script:IntuneAssignmentFilters | Where-Object {
-                        $_.DisplayName -eq $assignment.DeviceAndAppManagementAssignmentFilterDisplayName
-                    }
+                    $filter = $Script:IntuneAssignmentFilters | Where-Object -Property DisplayName -EQ $assignment.DeviceAndAppManagementAssignmentFilterDisplayName
                 }
 
                 if ($null -ne $filter)
@@ -709,7 +705,7 @@ function Update-DeviceAppManagementAppCategory
         {
             if ($diff.SideIndicator -eq '=>')
             {
-                $category = $Categories | Where-Object { $_.DisplayName -eq $diff }
+                $category = $Categories | Where-Object -Property DisplayName -EQ $diff
                 if ($category.Id)
                 {
                     $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $category.Id -ErrorAction SilentlyContinue
@@ -731,7 +727,7 @@ function Update-DeviceAppManagementAppCategory
             }
             else
             {
-                $category = $App.Categories | Where-Object { $_.DisplayName -eq $diff }
+                $category = $App.Categories | Where-Object -Property DisplayName -EQ $diff
                 Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($App.Id)/categories/$($category.Id)/`$ref" -Method 'DELETE'
             }
         }
@@ -1144,19 +1140,19 @@ function Find-GraphDataUsingComplexFunctions
         {
             $property = $matches[1]
             $value = $matches[2]
-            $Policies = $Policies | Where-Object { $_.$property -like "$value*" }
+            $Policies = $Policies | Where-Object -Property $property -Like "$value*"
         }
         elseif ($function -match "endswith\((.*?),\s*'(.*?)'")
         {
             $property = $matches[1]
             $value = $matches[2]
-            $Policies = $Policies | Where-Object { $_.$property -like "*$value" }
+            $Policies = $Policies | Where-Object -Property $property -Like "*$value"
         }
         elseif ($function -match "contains\((.*?),\s*'(.*?)'")
         {
             $property = $matches[1]
             $value = $matches[2]
-            $Policies = $Policies | Where-Object { $_.$property -like "*$value*" }
+            $Policies = $Policies | Where-Object -Property $property -Like "*$value*"
         }
     }
 

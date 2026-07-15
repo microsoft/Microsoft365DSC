@@ -91,6 +91,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name                        = "TestDiag";
                     StorageAccountId            = "/subscriptions/f854132c-570e-4c98-a4c9-3cd902de77dd/resourceGroups/TBD/providers/Microsoft.Storage/storageAccounts/demostore";
                     WorkspaceId                 = "/subscriptions/f854132c-570e-4c98-a4c9-3cd902de77dd/resourceGroups/TBD/providers/Microsoft.OperationalInsights/workspaces/MySentinelWorkspace";
+                    SubscriptionId              = "00000000-0000-0000-0000-000000000000"
                     Credential                  = $Credential;
                 }
 
@@ -133,6 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name                        = "TestDiag";
                     StorageAccountId            = "/subscriptions/f854132c-570e-4c98-a4c9-3cd902de77dd/resourceGroups/TBD/providers/Microsoft.Storage/storageAccounts/demostore";
                     WorkspaceId                 = "/subscriptions/f854132c-570e-4c98-a4c9-3cd902de77dd/resourceGroups/TBD/providers/Microsoft.OperationalInsights/workspaces/MySentinelWorkspace";
+                    SubscriptionId              = "00000000-0000-0000-0000-000000000000"
                     Credential                  = $Credential;
                 }
             }
@@ -167,6 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name                        = "TestDiag";
                     StorageAccountId            = "/subscriptions/f854132c-570e-4c98-a4c9-3cd902de77dd/resourceGroups/TBD/providers/Microsoft.Storage/storageAccounts/demostore";
                     WorkspaceId                 = "/subscriptions/f854132c-570e-4c98-a4c9-3cd902de77dd/resourceGroups/TBD/providers/Microsoft.OperationalInsights/workspaces/MySentinelWorkspace";
+                    SubscriptionId              = "00000000-0000-0000-0000-000000000000"
                     Credential                  = $Credential;
                 }
             }
@@ -194,6 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name                        = "TestDiag";
                     StorageAccountId            = "/subscriptions/f854132c-570e-4c98-a4c9-3cd902de77dd/resourceGroups/TBD/providers/Microsoft.Storage/storageAccounts/demostore";
                     WorkspaceId                 = "/subscriptions/f854132c-570e-4c98-a4c9-3cd902de77dd/resourceGroups/TBD/providers/Microsoft.OperationalInsights/workspaces/MySentinelWorkspace";
+                    SubscriptionId              = "00000000-0000-0000-0000-000000000000"
                     Credential                  = $Credential;
                 }
             }
@@ -217,7 +221,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential  = $Credential;
+                    SubscriptionId = "00000000-0000-0000-0000-000000000000"
+                    Credential     = $Credential;
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {

@@ -191,6 +191,10 @@ function Get-TargetResource
         $ActivationApproveNotificationOnlyCritical,
 
         [Parameter()]
+        [System.String]
+        $SubscriptionId,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -462,6 +466,7 @@ function Get-TargetResource
             TenantId                                                  = $TenantId
             CertificateThumbprint                                     = $CertificateThumbprint
             ApplicationSecret                                         = $ApplicationSecret
+            SubscriptionId                                            = $SubscriptionId
             Credential                                                = $Credential
             ManagedIdentity                                           = $ManagedIdentity.IsPresent
             AccessTokens                                              = $AccessTokens
@@ -668,6 +673,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $ActivationApproveNotificationOnlyCritical,
+
+        [Parameter()]
+        [System.String]
+        $SubscriptionId,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1454,6 +1463,10 @@ function Test-TargetResource
         $ActivationApproveNotificationOnlyCritical,
 
         [Parameter()]
+        [System.String]
+        $SubscriptionId,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1499,8 +1512,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -1513,6 +1528,10 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $Filter,
+
+        [Parameter()]
+        [System.String]
+        $SubscriptionId,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1748,6 +1767,7 @@ function Export-TargetResource
                 $Params = @{
                     RoleDefinitionDisplayName = $instance.RoleDisplayName
                     ScopeId                   = $currentScope
+                    SubscriptionId            = $SubscriptionId
                     Credential                = $Credential
                     ApplicationId             = $ApplicationId
                     TenantId                  = $TenantId
@@ -1793,4 +1813,15 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('SubscriptionId')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

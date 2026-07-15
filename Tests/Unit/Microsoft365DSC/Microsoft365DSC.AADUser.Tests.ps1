@@ -169,7 +169,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UsageLocation        = 'US'
                     LicenseAssignment    = @()
                     Password             = $Credential
-                    PasswordNeverExpires = $false
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
@@ -230,7 +229,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UsageLocation        = 'US'
                     MemberOf             = 'TestGroup'
                     Password             = $Credential
-                    PasswordNeverExpires = $false
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
@@ -292,7 +290,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UsageLocation        = 'US'
                     #MemberOf             = @('TestGroup')
                     Password             = $Credential
-                    PasswordNeverExpires = $false
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
@@ -360,7 +357,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UsageLocation        = 'US'
                     MemberOf             = 'TestGroup'
                     Password             = $Credential
-                    PasswordNeverExpires = $false
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }

@@ -69,7 +69,7 @@ function Get-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise')]
+        [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise', 'wpa3Personal')]
         [System.String]
         $WiFiSecurityType,
 
@@ -293,7 +293,7 @@ function Set-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise')]
+        [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise', 'wpa3Personal')]
         [System.String]
         $WiFiSecurityType,
 
@@ -496,7 +496,7 @@ function Test-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise')]
+        [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise', 'wpa3Personal')]
         [System.String]
         $WiFiSecurityType,
 

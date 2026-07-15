@@ -348,7 +348,7 @@ function Export-M365DSCDiagnosticData
     $null = New-Item -Path $logPath -ItemType 'Directory'
 
     $sourceLogPath = Join-Path -Path $env:windir -ChildPath 'System32/Configuration/ConfigurationStatus'
-    $items = Get-ChildItem -Path "$sourceLogPath/*.json" | Where-Object { $_.LastWriteTime -gt $afterDate }
+    $items = Get-ChildItem -Path "$sourceLogPath/*.json" | Where-Object -Property LastWriteTime -GT $afterDate
     Copy-Item -Path $items -Destination $logPath -ErrorAction 'SilentlyContinue' #-ErrorVariable $err
 
     if ($Anonymize)
@@ -569,12 +569,12 @@ function Get-M365DSCNotificationEndpointRegistration
         elseif ([System.String]::IsNullOrEmpty($EventType) -and -not[System.String]::IsNullOrEmpty($Url))
         {
             # If Url is specified but EventType is null, return all endpoints on the given Url, no matter the EventType.
-            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript { $_.Url -eq $Url }
+            return $CurrentNotificationEndpointsAsObject | Where-Object -Property Url -EQ $Url
         }
         elseif (-not [System.String]::IsNullOrEmpty($EventType) -and [System.String]::IsNullOrEmpty($Url))
         {
             # If EventType is specified but $Url is null, return all endpoints matching the specified EventType.
-            return $CurrentNotificationEndpointsAsObject | Where-Object -FilterScript { $_.EventType -eq $EventType }
+            return $CurrentNotificationEndpointsAsObject | Where-Object -Property EventType -EQ $EventType
         }
         elseif (-not [System.String]::IsNullOrEmpty($EventType) -and -not [System.String]::IsNullOrEmpty($Url))
         {
@@ -663,7 +663,7 @@ function Assert-M365DSCIsNonInteractiveShell
     param ()
 
     # Test each Arg for match of abbreviated '-NonInteractive' command.
-    $NonInteractive = [Environment]::GetCommandLineArgs() | Where-Object -FilterScript { $_ -like '-NonI*' }
+    $NonInteractive = [Environment]::GetCommandLineArgs() -like '-NonI*'
 
     if ([Environment]::UserInteractive -and -not $NonInteractive)
     {

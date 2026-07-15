@@ -2,8 +2,7 @@
 
 ## Description
 
-This resource configures the settings of Windows 10 compliance policies
-in your cloud-based organization.
+This resource configures the settings of Windows 10 compliance policies in your cloud-based organization.
 
 ## Parameters
 

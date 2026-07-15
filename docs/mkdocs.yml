@@ -17,6 +17,7 @@ nav:
       - Concepts:
           - 'DSC Error Flow': 'blog/2024/dsc-error-flow/dsc-error-flow.md'
           - 'Intune Settings Catalog': 'blog/2026/intune-settings-catalog/intune-settings-catalog.md'
+          - 'Microsoft365DSC Docker Images: How to Use Them': 'blog/2026/docker-images/docker-images.md'
           - 'Moving from Microsoft365DSC to Tenant Configuration Management APIs': 'blog/2026/utcm-transition/utcm-transition.md'
   - User Guide:
       - 'Get Started':

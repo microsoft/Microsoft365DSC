@@ -1984,9 +1984,9 @@ function New-M365DSCDeltaReport
 
                         if ($drift.ContainsKey('DeltaValue') -and $null -ne $drift.DeltaValue)
                         {
-                            $deltaValues = $drift.DeltaValue.Split("; ")
-                            $destinationValues = $deltaValues | Where-Object { $_ -like "*<=*" } | Foreach-Object { $_.Replace('<= ', '') }
-                            $sourceValues = $deltaValues | Where-Object { $_ -like "*=>*" } | Foreach-Object { $_.Replace('=> ', '') }
+                            [System.String[]]$deltaValues = $drift.DeltaValue.Split("; ")
+                            [System.String[]]$destinationValues = $deltaValues -like "*<=*" | Foreach-Object { $_.Replace('<= ', '') }
+                            [System.String[]]$sourceValues = $deltaValues -like "*=>*" | Foreach-Object { $_.Replace('=> ', '') }
                             [void]$sb.AppendLine('<tr>')
                             [void]$sb.AppendLine("<td class='value-cell'>")
                             if ($sourceValues.Count -gt 0)

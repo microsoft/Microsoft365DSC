@@ -65,6 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     NotDataActions        = @()
                     AssignableScopes      = @("/subscriptions/00000000-0000-0000-0000-000000000000")
                     Ensure                = 'Present'
+                    SubscriptionId        = "00000000-0000-0000-0000-000000000000"
                     Credential            = $Credential
                     ApplicationId         = "00000000-0000-0000-0000-000000000010"
                     TenantId              = "00000000-0000-0000-0000-000000000020"
@@ -101,6 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     NotDataActions        = @()
                     AssignableScopes      = @("/subscriptions/00000000-0000-0000-0000-000000000000")
                     Ensure                = 'Absent'
+                    SubscriptionId        = "00000000-0000-0000-0000-000000000000"
                     Credential            = $Credential
                     ApplicationId         = "00000000-0000-0000-0000-000000000010"
                     TenantId              = "00000000-0000-0000-0000-000000000020"
@@ -147,6 +149,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     NotDataActions        = @()
                     AssignableScopes      = @("/subscriptions/00000000-0000-0000-0000-000000000000")
                     Ensure                = 'Present'
+                    SubscriptionId        = "00000000-0000-0000-0000-000000000000"
                     Credential            = $Credential
                     ApplicationId         = "00000000-0000-0000-0000-000000000010"
                     TenantId              = "00000000-0000-0000-0000-000000000020"
@@ -184,6 +187,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     NotDataActions        = @()
                     AssignableScopes      = @("/subscriptions/00000000-0000-0000-0000-000000000000")
                     Ensure                = 'Present'
+                    SubscriptionId        = "00000000-0000-0000-0000-000000000000"
                     Credential            = $Credential
                     ApplicationId         = "00000000-0000-0000-0000-000000000010"
                     TenantId              = "00000000-0000-0000-0000-000000000020"
@@ -220,7 +224,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential  = $Credential;
+                    SubscriptionId = "00000000-0000-0000-0000-000000000000"
+                    Credential     = $Credential;
                 }
 
                 Mock -CommandName Get-AzRoleDefinition -MockWith {

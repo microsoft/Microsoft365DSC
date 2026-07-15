@@ -3,32 +3,13 @@
   "description": "This resource configures an \r\nNew-CsTeamsFilesPolicy [-Identity] <string> [-NativeFileEntryPoints <string>] [-SPChannelFilesTab <string>] [-MsftInternalProcessingMode <string>] [-WhatIf] [-Confirm] [<CommonParameters>]\r\n.",
   "roles": {
     "read": [
-      "Global Reader"
+      "Teams Reader"
     ],
     "update": [
       "Teams Administrator"
     ]
   },
-  "permissions": {
-    "graph": {
-      "delegated": {
-        "read": [],
-        "update": []
-      },
-      "application": {
-        "read": [
-          {
-            "name": "Organization.Read.All"
-          }
-        ],
-        "update": [
-          {
-            "name": "Organization.Read.All"
-          }
-        ]
-      }
-    }
-  },
+  "permissions": {},
   "requiredModules": [
     "MicrosoftTeams"
   ],

@@ -86,6 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                 = "Test Tenant";
                     ProvisioningManagementState = "Pending";
                     Ensure                      = 'Present'
+                    SubscriptionId              = "00000000-0000-0000-0000-000000000000"
                     Credential                  = $Credential;
                 }
 
@@ -115,6 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                 = "Test Tenant";
                     ProvisioningManagementState = "Pending";
                     Ensure                      = 'Absent'
+                    SubscriptionId              = "00000000-0000-0000-0000-000000000000"
                     Credential                  = $Credential;
                 }
             }
@@ -140,6 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                 = "Test Tenant";
                     ProvisioningManagementState = "Pending";
                     Ensure                      = 'Present'
+                    SubscriptionId              = "00000000-0000-0000-0000-000000000000"
                     Credential                  = $Credential;
                 }
             }
@@ -158,6 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                 = "Test Tenant";
                     ProvisioningManagementState = "Pending";
                     Ensure                      = 'Present'
+                    SubscriptionId              = "00000000-0000-0000-0000-000000000000"
                     Credential                  = $Credential;
                 }
             }
@@ -181,7 +185,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential  = $Credential;
+                    SubscriptionId = "00000000-0000-0000-0000-000000000000"
+                    Credential     = $Credential;
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {

@@ -2,8 +2,7 @@
 
 ## Description
 
-This resource configures the settings of MacOS compliance policies
-in your cloud-based organization.
+This resource configures the settings of MacOS compliance policies in your cloud-based organization.
 
 ## Parameters
 

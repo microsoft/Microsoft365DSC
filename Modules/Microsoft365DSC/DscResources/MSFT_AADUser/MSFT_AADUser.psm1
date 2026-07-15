@@ -162,6 +162,13 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
+    # TODO: Remove property 'PasswordNeverExpires' in next breaking change
+    if ($PSBoundParameters.ContainsKey('PasswordNeverExpires'))
+    {
+        $PSBoundParameters.Remove('PasswordNeverExpires') | Out-Null
+        Write-Warning "Property 'PasswordNeverExpires' is deprecated and will be removed, please use 'PasswordPolicies' instead with 'DisablePasswordExpiration'"
+    }
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.UserPrincipalName -ne $UserPrincipalName)
@@ -256,11 +263,6 @@ function Get-TargetResource
         # return membership of static groups only
         [array]$currentMemberOf = ($batchResponse | Where-Object -FilterScript { $_.id -eq 'MemberOf' }).body.value.DisplayName
 
-        $userPasswordPolicyInfo = $user | Select-Object UserprincipalName, @{
-            N = 'PasswordNeverExpires'; E = { $_.PasswordPolicies -contains 'DisablePasswordExpiration' }
-        }
-        $passwordNeverExpires = $userPasswordPolicyInfo.PasswordNeverExpires
-
         if ($null -eq $Script:allDirectoryRoleAssignment)
         {
             $Script:allDirectoryRoleAssignment = Get-MgBetaRoleManagementDirectoryRoleAssignment -All
@@ -296,7 +298,6 @@ function Get-TargetResource
             Office                = $user.OfficeLocation
             Mail                  = $user.Mail
             OtherMails            = $user.OtherMails
-            PasswordNeverExpires  = $passwordNeverExpires
             PasswordPolicies      = $user.PasswordPolicies
             PhoneNumber           = $user.BusinessPhones | Select-Object -First 1
             PostalCode            = $user.PostalCode
@@ -486,6 +487,13 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
 
+    # TODO: Remove property 'PasswordNeverExpires' in next breaking change
+    if ($PSBoundParameters.ContainsKey('PasswordNeverExpires'))
+    {
+        $PSBoundParameters.Remove('PasswordNeverExpires') | Out-Null
+        Write-Warning "Property 'PasswordNeverExpires' is deprecated and will be removed, please use 'PasswordPolicies' instead with 'DisablePasswordExpiration'"
+    }
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -506,16 +514,6 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present')
     {
-        $PasswordPolicies = $null
-        if ($PasswordNeverExpires)
-        {
-            $PasswordPolicies = 'DisablePasswordExpiration'
-        }
-        else
-        {
-            $PasswordPolicies = 'None'
-        }
-
         $creationParams = @{}
         foreach ($kvp in $Script:creationParamsMap.GetEnumerator())
         {
@@ -526,6 +524,11 @@ function Set-TargetResource
         }
         $creationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
         $creationParams = Rename-M365DSCCimInstanceParameter -Properties $creationParams
+        if ($creationParams.ContainsKey("BusinessPhones"))
+        {
+            $BusinessPhones = Get-M365DSCArrayFromProperty -PropertyValue $PhoneNumber -ElementType ([System.String])
+            $creationParams["BusinessPhones"] = $BusinessPhones
+        }
 
         #region Licenses
         if ($null -ne $LicenseAssignment)
@@ -581,7 +584,6 @@ function Set-TargetResource
         }
         else
         {
-
             if ($null -ne $Password)
             {
                 $passwordValue = $Password.GetNetworkCredential().Password
@@ -723,7 +725,6 @@ function Set-TargetResource
                     }
                     else
                     {
-
                         # Group that user is a member of is not present in MemberOf, remove user from group
                         # (no need to test for dynamic groups as they are ignored in Get-TargetResource)
                         if ($null -eq $group)
@@ -954,8 +955,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -1221,4 +1224,15 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('PasswordNeverExpires')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

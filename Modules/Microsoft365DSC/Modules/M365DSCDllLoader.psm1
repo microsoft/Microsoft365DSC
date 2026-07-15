@@ -89,7 +89,21 @@ function Initialize-M365DSCDllLoader
         foreach ($dllName in $dllsToLoad)
         {
             $dllPath = Join-Path -Path $moduleRoot -ChildPath "Dependencies/Assemblies/$dllName"
-            $loadedAssemblies += Add-Type -Path $dllPath -PassThru -ErrorAction Stop
+            try
+            {
+                $loadedAssemblies += Add-Type -Path $dllPath -PassThru -ErrorAction Stop
+            }
+            catch
+            {
+                if ($_.Exception.Message -like "*Assembly with same name is already loaded*")
+                {
+                    Write-Verbose -Message "Assembly $dllName is already loaded. Skipping."
+                }
+                else
+                {
+                    throw "Failed to load assembly $($dllName): $($_.Exception.Message)"
+                }
+            }
         }
 
         foreach ($assembly in $loadedAssemblies)

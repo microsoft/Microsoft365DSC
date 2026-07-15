@@ -119,6 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrincipalTenantId     = '9c888910-6b3b-4c17-8cff-844fefb026d4'
                     RoleDefinition        = "Billing account owner";
                     Ensure                = 'Present'
+                    SubscriptionId        = "00000000-0000-0000-0000-000000000000"
                     Credential            = $Credential;
                 }
 
@@ -148,6 +149,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrincipalTenantId     = '9c888910-6b3b-4c17-8cff-844fefb026d4'
                     RoleDefinition        = "Billing account owner";
                     Ensure                = 'Absent'
+                    SubscriptionId        = "00000000-0000-0000-0000-000000000000"
                     Credential            = $Credential;
                 }
             }
@@ -173,6 +175,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrincipalTenantId     = '9c888910-6b3b-4c17-8cff-844fefb026d4'
                     RoleDefinition        = "Billing account owner";
                     Ensure                = 'Present'
+                    SubscriptionId        = "00000000-0000-0000-0000-000000000000"
                     Credential            = $Credential;
                 }
             }
@@ -187,7 +190,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential  = $Credential;
+                    SubscriptionId = "00000000-0000-0000-0000-000000000000"
+                    Credential     = $Credential;
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {

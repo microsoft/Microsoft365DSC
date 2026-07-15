@@ -44,7 +44,7 @@ function Get-M365DSCTenantDomain
         try
         {
             $tenantDetails = (Invoke-MgGraphRequest -Uri '/beta/organization' -Method GET -ErrorAction 'Stop').value
-            $defaultDomain = $tenantDetails.verifiedDomains | Where-Object -FilterScript { $_.isInitial }
+            $defaultDomain = $tenantDetails.verifiedDomains | Where-Object -Property isInitial -EQ $true
 
             return $defaultDomain.name
         }

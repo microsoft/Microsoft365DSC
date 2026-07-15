@@ -3,7 +3,7 @@ function New-M365DSCSchemaDefinition
     [CmdletBinding()]
     param ()
 
-    $schemaFiles = Get-ChildItem -Path './Modules/Microsoft365DSC/DscResources/*.schema.mof' -Recurse
+    $schemaFiles = Get-ChildItem -Path './Modules/Microsoft365DSC/DscResources/*.schema.mof' -Recurse -File
 
     $classInfoList = @()
     $classesList = @()

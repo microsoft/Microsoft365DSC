@@ -588,10 +588,10 @@ function Update-M365DSCAllowedGraphScopes
 
     Write-Verbose -Message "Specified type: $Type"
     $results = (Get-M365DSCCompiledPermissionList -ResourceNameList $resourceNames -PermissionType 'Delegated' -AccessType $Type).Permissions
-    $permissions = ($results | Where-Object -FilterScript { $_.API -eq 'Graph' }).PermissionName
+    [System.String[]]$permissions = ($results | Where-Object -Property API -EQ 'Graph').PermissionName
 
     # Remove the Tasks.Read.All permission from the list as it is causing an issue with the Graph SDK
-    $permissions = $permissions | Where-Object { $_ -ne 'Tasks.Read.All' }
+    $permissions = $permissions -ne 'Tasks.Read.All'
     Write-Verbose -Message "Found permissions: $($permissions -join ', ')"
     $params = @{
         Scopes = $permissions
@@ -944,7 +944,7 @@ function Update-M365DSCAzureAdApplication
                 }
             }
 
-            $appRole = $azureADApp.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.PermissionName }
+            $appRole = $azureADApp.AppRoles | Where-Object -Property Value -EQ $permission.PermissionName
 
             if ($null -eq $appRole)
             {
@@ -954,7 +954,7 @@ function Update-M365DSCAzureAdApplication
                 {
                     $allRequiredAccess.Add(($svcprincipal.AppId), @())
                 }
-                $role = $svcPrincipal.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.PermissionName }
+                $role = $svcPrincipal.AppRoles | Where-Object -Property Value -EQ $permission.PermissionName
                 if ($null -eq $role)
                 {
                     if ([System.Guid]::TryParse($permission.PermissionName , [ref][System.Guid]::Empty))

@@ -1,9 +1,12 @@
 name: Build & Deploy to Preview
-on: [push]
+on:
+  push:
+    branches:
+      - Dev
 
 jobs:
   build:
-    if: github.repository == 'Microsoft365DSC/Microsoft365DSC' && github.event.ref == 'refs/heads/Dev'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
     runs-on: ubuntu-latest
     environment:
       name: PREVIEW
@@ -36,7 +39,7 @@ jobs:
           path: ${{ github.workspace }}/generator/dist
 
   deploy_preview:
-    if: github.repository == 'Microsoft365DSC/Microsoft365DSC' && github.event.ref == 'refs/heads/Dev'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
     runs-on: ubuntu-latest
     environment:
       name: PREVIEW

@@ -209,6 +209,8 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Warning -Message 'The resource "MSFT_AADIdentityGovernanceProgram" is deprecated. Please use AADAccessReview[Definition|Policy] instead.'
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -312,6 +314,8 @@ function Test-TargetResource
         $AccessTokens
     )
 
+    Write-Warning -Message 'The resource "MSFT_AADIdentityGovernanceProgram" is deprecated. Please use AADAccessReview[Definition|Policy] instead.'
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
@@ -372,6 +376,8 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Warning -Message 'The resource "MSFT_AADIdentityGovernanceProgram" is deprecated. Please use AADAccessReview[Definition|Policy] instead.'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters

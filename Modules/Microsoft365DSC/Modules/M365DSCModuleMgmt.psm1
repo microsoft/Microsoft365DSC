@@ -2,63 +2,80 @@ $Script:IsPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
 $Script:IsPsResourceGetAvailable = $null -ne (Get-Module -Name Microsoft.PowerShell.PSResourceGet -ListAvailable)
 $Script:M365DSCDependenciesValidated = $false
 $Script:M365DSCGraphShimLoaded = $false
-if ($null -eq $Script:M365DSCDependencies)
+
+<#
+.DESCRIPTION
+    This function performs the one-time initialization of the M365DSC dependency and resource-settings
+    metadata used throughout this module. It is wrapped in a function (rather than run as top-level module
+    code) so that the scratch/intermediate variables it uses are released once it returns, instead of being
+    pinned for the lifetime of the session as module-scope variables.
+
+.FUNCTIONALITY
+    Internal
+#>
+function Initialize-M365DSCModuleMgmt
 {
-    $Script:M365DSCDependencies = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
-    $Script:M365DSCDevDependencies = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
-    $dependencies = (Import-PowerShellDataFile "$PSScriptRoot/../Dependencies/Manifest.psd1").Dependencies
-    $devDependencies = (Import-PowerShellDataFile "$PSScriptRoot/../Dependencies/DevManifest.psd1").Dependencies
-    foreach ($dependency in $dependencies)
+    [CmdletBinding()]
+    param()
+
+    if ($null -eq $Script:M365DSCDependencies)
     {
-        # TODO: Review again once ModuleFast can work with additional properties
-        # https://github.com/microsoft/Microsoft365DSC/pull/6726
-        # https://github.com/ykuijs/M365DSC_CICD/issues/53
-        if ($dependency.ModuleName -eq 'PnP.PowerShell')
+        $Script:M365DSCDependencies = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
+        $Script:M365DSCDevDependencies = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
+        $dependencies = (Import-PowerShellDataFile "$PSScriptRoot/../Dependencies/Manifest.psd1").Dependencies
+        $devDependencies = (Import-PowerShellDataFile "$PSScriptRoot/../Dependencies/DevManifest.psd1").Dependencies
+        foreach ($dependency in $dependencies)
         {
-            $dependency.DependsOn = @('Microsoft.Graph.Authentication')
+            # TODO: Review again once ModuleFast can work with additional properties
+            # https://github.com/microsoft/Microsoft365DSC/pull/6726
+            # https://github.com/ykuijs/M365DSC_CICD/issues/53
+            if ($dependency.ModuleName -eq 'PnP.PowerShell')
+            {
+                $dependency.DependsOn = @('Microsoft.Graph.Authentication')
+            }
+            $Script:M365DSCDependencies.Add($dependency.ModuleName, $dependency)
         }
-        $Script:M365DSCDependencies.Add($dependency.ModuleName, $dependency)
-    }
 
-    foreach ($devDependency in $devDependencies)
-    {
-        $Script:M365DSCDevDependencies.Add($devDependency.ModuleName, $devDependency)
-    }
-
-    $commandToModuleMap = @{}
-    $Script:M365DSCResourceSettings = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
-    foreach ($file in (Get-ChildItem -Path "$PSScriptRoot/../DscResources" -Filter 'settings.json' -Recurse)) {
-        Write-Verbose -Message "Processing settings.json file at path: $($file.FullName)"
-        $jsonContent = [System.IO.File]::ReadAllText($file.FullName) | ConvertFrom-Json
-        foreach ($commandMap in ($jsonContent.commands | Where-Object { $_.module -notin $Script:M365DSCDevDependencies.Keys })) {
-            $commandToModuleMap[$commandMap.module] += @($commandMap.cmdlets)
+        foreach ($devDependency in $devDependencies)
+        {
+            $Script:M365DSCDevDependencies.Add($devDependency.ModuleName, $devDependency)
         }
-        $directoryName = (Split-Path -Path $file.DirectoryName -Leaf).Replace('MSFT_', '')
-        $Script:M365DSCResourceSettings.Add($directoryName, @{
-            requiredModules = $jsonContent.requiredModules | Where-Object { $_ -notin $Script:M365DSCDevDependencies.Keys }
-            commands = $jsonContent.commands | Where-Object { $_.module -notin $Script:M365DSCDevDependencies.Keys }
-            mode = $jsonContent.mode
-        })
-    }
 
-    Write-Verbose -Message "Loading current configuration from config.json"
-    $Script:M365DSCValidatedDependencies = [System.Collections.Generic.List[System.String]]::new($Script:M365DSCDependencies.Count + $Script:M365DSCDevDependencies.Count)
-    $configAsPsCustomObject = Get-Content -Path "$PSScriptRoot/../config.json" | ConvertFrom-Json
-    $configAsHashtable = @{}
-    foreach ($property in $configAsPsCustomObject.PSObject.Properties)
-    {
-        $configAsHashtable.Add($property.Name, $property.Value)
+        $commandToModuleMap = @{}
+        $Script:M365DSCResourceSettings = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
+        foreach ($file in (Get-ChildItem -Path "$PSScriptRoot/../DscResources" -Filter 'settings.json' -Recurse -File)) {
+            Write-Verbose -Message "Processing settings.json file at path: $($file.FullName)"
+            $jsonContent = [System.IO.File]::ReadAllText($file.FullName) | ConvertFrom-Json
+            foreach ($commandMap in ($jsonContent.commands | Where-Object -Property module -NotIn $Script:M365DSCDevDependencies.Keys)) {
+                $commandToModuleMap[$commandMap.module] += @($commandMap.cmdlets)
+            }
+            $directoryName = (Split-Path -Path $file.DirectoryName -Leaf).Replace('MSFT_', '')
+            $Script:M365DSCResourceSettings.Add($directoryName, @{
+                requiredModules = $jsonContent.requiredModules | Where-Object { $_ -notin $Script:M365DSCDevDependencies.Keys }
+                mode = $jsonContent.mode
+            })
+        }
+
+        Write-Verbose -Message "Loading current configuration from config.json"
+        $Script:M365DSCValidatedDependencies = [System.Collections.Generic.List[System.String]]::new($Script:M365DSCDependencies.Count + $Script:M365DSCDevDependencies.Count)
+        $configAsPsCustomObject = Get-Content -Path "$PSScriptRoot/../config.json" | ConvertFrom-Json
+        $configAsHashtable = @{}
+        foreach ($property in $configAsPsCustomObject.PSObject.Properties)
+        {
+            $configAsHashtable.Add($property.Name, $property.Value)
+        }
+        $Script:CurrentConfiguration = $configAsHashtable
+        $globalRequiredModules = $Script:CurrentConfiguration.requiredModules
+        foreach ($entry in $commandToModuleMap.GetEnumerator())
+        {
+            $sortedFunctions = @($globalRequiredModules.$($entry.Key)) + @($entry.Value) | Sort-Object -Unique
+            $Script:M365DSCDependencies[$entry.Key].Commands = $sortedFunctions
+        }
+        $Script:M365DSCRequiredModules = @($globalRequiredModules.psobject.Properties.Name)
+        $Script:M365DSCRequiredModulesLoaded = $false
     }
-    $Script:CurrentConfiguration = $configAsHashtable
-    $globalRequiredModules = $Script:CurrentConfiguration.requiredModules
-    foreach ($entry in $commandToModuleMap.GetEnumerator())
-    {
-        $sortedFunctions = @($globalRequiredModules.$($entry.Key)) + @($entry.Value) | Sort-Object -Unique
-        $Script:M365DSCDependencies[$entry.Key].Commands = $sortedFunctions
-    }
-    $Script:M365DSCRequiredModules = @($globalRequiredModules.psobject.Properties.Name)
-    $Script:M365DSCRequiredModulesLoaded = $false
 }
+Initialize-M365DSCModuleMgmt
 
 function Get-M365DSCResourceSettings
 {
@@ -210,7 +227,7 @@ function Confirm-M365DSCLoadedModule
             # Ensure Microsoft.Graph.Authentication is loaded first
             Confirm-M365DSCLoadedModule -ModuleName 'Microsoft.Graph.Authentication'
 
-            Import-Module -Name "$PSScriptRoot/M365DSCGraphShim.psm1" -Global -Force -DisableNameChecking
+            Import-Module -Name "$PSScriptRoot/M365DSCGraphShim.psd1" -Global -Force -DisableNameChecking -Function * -Cmdlet @() -Variable @() -Alias @()
             $Script:M365DSCGraphShimLoaded = $true
         }
         else
@@ -494,7 +511,7 @@ function Uninstall-M365DSCOutdatedDependencies
                     Write-Verbose -Message "Skipping module {$($dependency.ModuleName)} as it is managed by Windows PowerShell."
                     continue
                 }
-                $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
+                $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -Property Version -NE $dependency.RequiredVersion
                 foreach ($foundModule in $found)
                 {
                     try
@@ -539,7 +556,7 @@ function Uninstall-M365DSCOutdatedDependencies
     try
     {
         Write-Information -MessageData 'Checking Microsoft.Graph.Authentication'
-        $found = Get-Module $authModule.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $authModule.RequiredVersion }
+        $found = Get-Module $authModule.ModuleName -ListAvailable | Where-Object -Property Version -NE $authModule.RequiredVersion
         foreach ($foundModule in $found)
         {
             try
@@ -680,7 +697,9 @@ function Update-M365DSCDependencies
         {
             $Script:M365DSCDevDependencies.Values.CopyTo($dependencies, $Script:M365DSCDependencies.Count)
         }
-        foreach ($dependency in ($dependencies | Where-Object { $null -ne $_ }))
+
+        # $null comparison is correct in that way because the left-hand side is always an array and the right-hand side is a single value
+        foreach ($dependency in ($dependencies -ne $null))
         {
             Write-Progress -Activity 'Scanning dependencies' -PercentComplete ($i / $dependencies.Count * 100)
             try
@@ -697,7 +716,7 @@ function Update-M365DSCDependencies
                         Write-Verbose -Message "The dependency {$($dependency.ModuleName)} requires Windows PowerShell. Skipping."
                         continue
                     }
-                    $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+                    $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -Property Version -EQ $dependency.RequiredVersion
                 }
 
                 if ((-not $found -or $Force) -and -not $ValidateOnly)

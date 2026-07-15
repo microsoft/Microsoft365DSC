@@ -46,7 +46,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                                 = 'JohnSmith@Contoso.com'
                     OofGreetingEnabled                       = $False
                     OofGreetingFollowAutomaticRepliesEnabled = $False
-                    OofGreetingFollowCalendarEnabled         = $False
                     PromptLanguage                           = 'en-US'
                     ShareData                                = $False
                     VoicemailEnabled                         = $True
@@ -68,7 +67,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                                 = 'JohnSmith@Contoso.com'
                     OofGreetingEnabled                       = $False
                     OofGreetingFollowAutomaticRepliesEnabled = $False
-                    OofGreetingFollowCalendarEnabled         = $False
                     PromptLanguage                           = 'en-US'
                     ShareData                                = $False
                     VoicemailEnabled                         = $True
@@ -101,8 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CallAnswerRule                           = 'RegularVoicemail'
                     Identity                                 = 'JohnSmith@Contoso.com'
                     OofGreetingEnabled                       = $False
-                    OofGreetingFollowAutomaticRepliesEnabled = $False
-                    OofGreetingFollowCalendarEnabled         = $True # Drift
+                    OofGreetingFollowAutomaticRepliesEnabled = $True # Drift
                     PromptLanguage                           = 'en-US'
                     ShareData                                = $False
                     VoicemailEnabled                         = $True
@@ -132,7 +129,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                                 = 'JohnSmith@Contoso.com'
                     OofGreetingEnabled                       = $False
                     OofGreetingFollowAutomaticRepliesEnabled = $False
-                    OofGreetingFollowCalendarEnabled         = $False
                     PromptLanguage                           = 'en-US'
                     ShareData                                = $False
                     VoicemailEnabled                         = $True

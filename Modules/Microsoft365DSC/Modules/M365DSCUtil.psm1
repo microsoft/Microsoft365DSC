@@ -10,10 +10,57 @@ $Global:M365DSCPushNotificationsBody = $null
 
 $Script:M365DSCWorkloads = @('AAD', 'ADO', 'AZURE', 'COMMERCE', 'DEFENDER', 'EXO', 'FABRIC', 'INTUNE', 'O365', 'OD', 'PLANNER', 'PP', 'SC', 'SENTINEL', 'SH', 'SPO', 'TEAMS')
 
-if ([System.String]::IsNullOrEmpty($env:TEMP) -and $PSEdition -eq 'Core' -and -not $IsWindows)
+<#
+.Description
+The Get-TemporaryPath function will return the temporary
+path specific to the OS. It will return $env:TEMP when run
+on Windows OS, '/tmp' when run in Linux and $env:TMPDIR when
+run on MacOS.
+
+.Example
+Get-TemporaryPath
+
+Get the temporary path (which will differ between operating system).
+
+.Functionality
+Internal,Hidden
+#>
+function Get-TemporaryPath
 {
-    $env:TEMP = '/tmp'
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param ()
+
+    $temporaryPath = $null
+
+    switch ($true)
+    {
+        (-not (Test-Path -Path variable:IsWindows) -or ((Get-Variable -Name 'IsWindows' -ValueOnly -ErrorAction SilentlyContinue) -eq $true))
+        {
+            # Windows PowerShell or PowerShell 6+
+            $temporaryPath = (Get-Item -Path env:TEMP).Value
+        }
+
+        ((Get-Variable -Name 'IsMacOs' -ValueOnly -ErrorAction SilentlyContinue) -eq $true)
+        {
+            $temporaryPath = (Get-Item -Path env:TMPDIR).Value
+        }
+
+        ((Get-Variable -Name 'IsLinux' -ValueOnly -ErrorAction SilentlyContinue) -eq $true)
+        {
+            $temporaryPath = '/tmp'
+        }
+
+        default
+        {
+            throw 'Cannot set the temporary path. Unknown operating system.'
+        }
+    }
+
+    return $temporaryPath
 }
+
+$env:TEMP = Get-TemporaryPath
 
 <#
 .Description
@@ -38,7 +85,7 @@ function Get-TeamByName
         $loopCounter = 0
         do
         {
-            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript { $_.DisplayName -eq [System.Net.WebUtility]::UrlDecode($TeamName) }
+            $team = Get-Team -DisplayName $TeamName | Where-Object -Property DisplayName -EQ [System.Net.WebUtility]::UrlDecode($TeamName)
             if ($null -eq $team)
             {
                 Start-Sleep 5
@@ -483,7 +530,7 @@ function Test-M365DSCTargetResource
         [Microsoft365DSC.Cache.CacheManager]::LoadSchema($schemaContent)
     }
     $resourceDefinition = [Microsoft365DSC.Utilities.Utilities]::FilterLoadedCimClassesByName("MSFT_$ResourceName")
-    $resourceKeys = $resourceDefinition.Parameters | Where-Object -FilterScript { $_.Option -eq 'Key' }
+    $resourceKeys = $resourceDefinition.Parameters | Where-Object -Property Option -EQ 'Key'
 
     $keyStrings = @()
     foreach ($resourceKey in $resourceKeys)
@@ -677,7 +724,7 @@ function Install-M365DSCDevBranch
         foreach ($dependency in $dependencies)
         {
             Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewline
-            $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+            $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -Property Version -EQ $dependency.RequiredVersion
             if ($null -eq $existingModule)
             {
                 Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope $Scope | Out-Null
@@ -696,7 +743,7 @@ function Install-M365DSCDevBranch
             -Destination $defaultPath -Recurse -Force
 
         Import-Module ($defaultPath + 'Microsoft365DSC.psd1') -Force | Out-Null
-        $oldModule = Get-Module 'Microsoft365DSC' | Where-Object -FilterScript { $_.ModuleBase -eq $currentVersionPath }
+        $oldModule = Get-Module 'Microsoft365DSC' | Where-Object -Property ModuleBase -EQ $currentVersionPath
         Remove-Module $oldModule -Force | Out-Null
         if (Test-Path $currentVersionPath)
         {
@@ -896,6 +943,9 @@ Specifies if the report should only show properties drifts and not missing insta
 .Parameter KeepExport
 Specifies if the export created to compare with the blueprint should be kept after the report is generated. By default, the export will be removed after the report is generated.
 
+.Parameter Parallel
+Specifies that the export is executed in parallel.
+
 .Example
 Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html'
 
@@ -999,7 +1049,11 @@ function Assert-M365DSCBlueprint
 
         [Parameter()]
         [System.String[]]
-        $ExcludedSubstitutionProperties
+        $ExcludedSubstitutionProperties,
+
+        [Parameter()]
+        [Switch]
+        $Parallel
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -1089,6 +1143,7 @@ function Assert-M365DSCBlueprint
         Export-M365DSCConfiguration -Components $ResourcesInBluePrint `
             -Path $env:TEMP `
             -FileName $TempExportName `
+            -Parallel:$Parallel.IsPresent `
             -Credential $Credentials `
             -ApplicationId $ApplicationId `
             -ApplicationSecret $ApplicationSecret `
@@ -1163,7 +1218,7 @@ function Get-M365DSCAllResources
     [CmdletBinding()]
     param ()
 
-    $allResources = Get-ChildItem -Path ($PSScriptRoot + '/../DscResources/') -Recurse -Filter '*.psm1'
+    $allResources = Get-ChildItem -Path ($PSScriptRoot + '/../DscResources/') -Recurse -Filter '*.psm1' -File
     $result = @()
     foreach ($resource in $allResources)
     {
@@ -1225,7 +1280,7 @@ function Get-M365DSCResourceDifferences
     }
     else
     {
-        $currentModule = $installedModules | Where-Object -FilterScript { $_.Version -eq $CurrentVersion }
+        $currentModule = $installedModules | Where-Object -Property Version -EQ $CurrentVersion
     }
 
     if ($null -eq $currentModule)
@@ -1234,7 +1289,7 @@ function Get-M365DSCResourceDifferences
     }
 
     # Resolve previous version
-    $previousModule = $installedModules | Where-Object -FilterScript { $_.Version -eq $PreviousVersion }
+    $previousModule = $installedModules | Where-Object -Property Version -EQ $PreviousVersion
     if ($null -eq $previousModule)
     {
         throw "Microsoft365DSC version '$PreviousVersion' is not installed."
@@ -1244,10 +1299,10 @@ function Get-M365DSCResourceDifferences
     $currentResourcesPath = Join-Path -Path $currentModule.ModuleBase -ChildPath 'DscResources'
     $previousResourcesPath = Join-Path -Path $previousModule.ModuleBase -ChildPath 'DscResources'
 
-    $currentResources = Get-ChildItem -Path $currentResourcesPath -Recurse -Filter '*.psm1' |
+    $currentResources = Get-ChildItem -Path $currentResourcesPath -Recurse -Filter '*.psm1' -File |
         ForEach-Object { $_.Name -replace 'MSFT_', '' -replace '\.psm1', '' }
 
-    $previousResources = Get-ChildItem -Path $previousResourcesPath -Recurse -Filter '*.psm1' |
+    $previousResources = Get-ChildItem -Path $previousResourcesPath -Recurse -Filter '*.psm1' -File |
         ForEach-Object { $_.Name -replace 'MSFT_', '' -replace '\.psm1', '' }
 
     # Return resources present in current but not in previous
@@ -1424,7 +1479,7 @@ function New-M365DSCCmdletDocumentation
                 {
                     $paramName = $parameter.Name.VariablePath.UserPath
 
-                    $paramHelp = $helpInfo.parameters.parameter | Where-Object { $_.Name -eq $paramName }
+                    $paramHelp = $helpInfo.parameters.parameter | Where-Object -Property Name -EQ $paramName
                     $description = ''
                     if ($paramHelp.description.Count -gt 0)
                     {
@@ -1595,7 +1650,7 @@ function New-M365DSCMissingResourcesExample
 
     $m365Resources = Get-DscResourceV2 -Module 'Microsoft365DSC' | Select-Object -ExpandProperty Name
     $examplesPath = Join-Path $location -ChildPath '../../../Examples/Resources'
-    $examples = Get-ChildItem -Path $examplesPath | Where-Object { $_.PsIsContainer } | Select-Object -ExpandProperty Name
+    $examples = Get-ChildItem -Path $examplesPath | Where-Object -Property PsIsContainer -EQ $true | Select-Object -ExpandProperty Name
 
     [array]$differences = Compare-Object -ReferenceObject $m365Resources -DifferenceObject $examples
 
@@ -1733,8 +1788,8 @@ function Get-M365DSCConfigurationConflict
     $resourcesInModule = Get-DscResourceV2 -Module 'Microsoft365DSC'
     foreach ($component in $parsedContent)
     {
-        $resourceDefinition = $resourcesInModule | Where-Object -FilterScript { $_.Name -eq $component.ResourceName }
-        [Array]$mandatoryProperties = $resourceDefinition.Properties | Where-Object -FilterScript { $_.IsMandatory }
+        $resourceDefinition = $resourcesInModule | Where-Object -Property Name -EQ $component.ResourceName
+        [Array]$mandatoryProperties = $resourceDefinition.Properties | Where-Object -Property IsMandatory -EQ $true
         $primaryKeyValues = ''
         foreach ($mandatoryKey in $mandatoryProperties.Name)
         {
@@ -2016,7 +2071,7 @@ function Invoke-M365DSCGraphBatchRequest
             -Body ($request | ConvertTo-Json -Depth 10) `
             -ErrorAction SilentlyContinue
 
-        [array]$throttlingResponse = $apiResponse.responses | Where-Object { $_.status -eq 429 }
+        [array]$throttlingResponse = $apiResponse.responses | Where-Object -Property status -EQ 429
         if ($throttlingResponse.Count -gt 0)
         {
             Write-Warning -Message "Throttling encountered, pausing and repeating request..."

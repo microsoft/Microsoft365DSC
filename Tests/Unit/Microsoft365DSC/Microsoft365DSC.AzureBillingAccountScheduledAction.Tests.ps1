@@ -109,6 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Status                = "Enabled";
                     View                  = "/providers/Microsoft.Billing/billingAccounts/xxxxx:xxxxx_xxxxx/providers/Microsoft.CostManagement/views/ms:AccumulatedCosts";
                     Ensure              = 'Present'
+                    SubscriptionId      = "00000000-0000-0000-0000-000000000000"
                     Credential          = $Credential;
                 }
 
@@ -155,6 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Status                = "Enabled";
                     View                  = "/providers/Microsoft.Billing/billingAccounts/xxxxx:xxxxx_xxxxx/providers/Microsoft.CostManagement/views/ms:AccumulatedCosts";
                     Ensure              = 'Absent'
+                    SubscriptionId      = "00000000-0000-0000-0000-000000000000"
                     Credential          = $Credential;
                 }
             }
@@ -193,6 +195,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Status                = "Enabled";
                     View                  = "/providers/Microsoft.Billing/billingAccounts/xxxxx:xxxxx_xxxxx/providers/Microsoft.CostManagement/views/ms:AccumulatedCosts";
                     Ensure              = 'Present'
+                    SubscriptionId      = "00000000-0000-0000-0000-000000000000"
                     Credential          = $Credential;
                 }
             }
@@ -224,6 +227,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Status                = "Disabled"; # Drift
                     View                  = "/providers/Microsoft.Billing/billingAccounts/xxxxx:xxxxx_xxxxx/providers/Microsoft.CostManagement/views/ms:AccumulatedCosts";
                     Ensure              = 'Present'
+                    SubscriptionId      = "00000000-0000-0000-0000-000000000000"
                     Credential          = $Credential;
                 }
             }
@@ -247,7 +251,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential  = $Credential;
+                    SubscriptionId = "00000000-0000-0000-0000-000000000000"
+                    Credential     = $Credential;
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {

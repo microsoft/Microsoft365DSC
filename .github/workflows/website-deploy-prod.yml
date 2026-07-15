@@ -1,9 +1,12 @@
 name: Build & Deploy to Production
-on: [push]
+on:
+  push:
+    branches:
+      - Master
 
 jobs:
   build:
-    if: github.repository == 'Microsoft365DSC/Microsoft365DSC' && github.event.ref == 'refs/heads/Master'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
     runs-on: ubuntu-latest
     environment:
       name: PROD
@@ -36,7 +39,7 @@ jobs:
           path: ${{ github.workspace }}/generator/dist
 
   deploy_prod:
-    if: github.repository == 'Microsoft365DSC/Microsoft365DSC' && github.event.ref == 'refs/heads/Master'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
     runs-on: ubuntu-latest
     environment:
       name: PROD

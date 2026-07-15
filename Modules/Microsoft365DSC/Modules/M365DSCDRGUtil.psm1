@@ -506,7 +506,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
     if ($SingleLevel)
     {
         $returnObject = @{}
-        $keys = $ComplexObject.CimInstanceProperties | Where-Object -FilterScript { $_.Name -ne 'PSComputerName' }
+        $keys = $ComplexObject.CimInstanceProperties | Where-Object -Property Name -NE 'PSComputerName'
         foreach ($key in $keys)
         {
             if ($ExcludeUnchangedProperties -and -not $key.IsValueModified)

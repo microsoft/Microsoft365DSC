@@ -3,32 +3,13 @@
   "description": "The TeamsMessagingConfiguration determines the messaging settings for users in your tenant.",
   "roles": {
     "read": [
-      "Global Reader"
+      "Teams Reader"
     ],
     "update": [
       "Teams Administrator"
     ]
   },
-  "permissions": {
-    "graph": {
-      "delegated": {
-        "read": [],
-        "update": []
-      },
-      "application": {
-        "read": [
-          {
-            "name": "Organization.Read.All"
-          }
-        ],
-        "update": [
-          {
-            "name": "Organization.Read.All"
-          }
-        ]
-      }
-    }
-  },
+  "permissions": {},
   "requiredModules": [
     "MicrosoftTeams"
   ],

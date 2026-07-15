@@ -46,6 +46,60 @@ Install-Module -Name Microsoft365DSC -Force
 Update-M365DSCModule
 ```
 
+## License Requirements
+
+Some resources in this module — specifically those covering **Defender for Office 365** — require a **Microsoft 365 E5** license, or **Microsoft 365 E3 combined with the Defender for Office 365 Plan 2 add-on**. A standard E3 license only includes **Exchange Online Protection (EOP)**, which supports basic anti-spam/anti-malware settings but not the advanced Defender for Office 365 feature set.
+
+### Affected resources
+
+The following resources require Defender for Office 365 (Plan 2) and will fail against an E3-only tenant:
+
+- `EXOAntiPhishPolicy`
+- `EXOSafeAttachmentPolicy`
+- `EXOSafeLinksPolicy`
+- `EXOAtpPolicyForO365`
+- `EXOAtpProtectionPolicyRule`
+- `EXOMalwareFilterPolicy`
+
+### Supported vs. unsupported licensing
+
+| License SKU | Includes Defender for Office 365? | Result |
+|---|---|---|
+| Microsoft 365 E5 | Yes (Plan 2) | Fully supported |
+| Microsoft 365 E3 + Defender for Office 365 Plan 2 (add-on) | Yes (Plan 2) | Fully supported |
+| Office 365 E5 | Yes (Plan 2) | Fully supported |
+| Microsoft 365 E3 | No | Deployment will fail |
+| Office 365 E3 | No (EOP only) | Deployment will fail |
+
+### What happens without the required license
+
+Deploying the affected resources against a tenant without Defender for Office 365 will fail with parameter errors rather than a clear licensing message, for example:
+
+```
+A parameter cannot be found that matches parameter name 'EnableTargetedDomainsProtection'
+A parameter cannot be found that matches parameter name 'PhishThresholdLevel'
+```
+
+If you hit errors like these, check your tenant's licensing before assuming it's a configuration or module bug.
+
+### Verifying your license before deploying
+
+**PowerShell (Microsoft Graph):**
+
+```powershell
+Connect-MgGraph -Scopes "Organization.Read.All"
+Get-MgSubscribedSku | Where-Object { $_.SkuPartNumber -like "*E5*" }
+```
+
+**Functional check (Exchange Online):**
+
+```powershell
+Connect-ExchangeOnline -AppId <AppId> -CertificateThumbprint <Thumbprint> -Organization <Organization>
+Get-AntiPhishPolicy -Identity "Office365 AntiPhish Default" -Advanced
+```
+
+If the `-Advanced` parameter succeeds, Defender for Office 365 is active on the tenant.
+
 ## Telemetry Disclaimer
 
 Microsoft365DSC captures Telemetry data about the names of the resources

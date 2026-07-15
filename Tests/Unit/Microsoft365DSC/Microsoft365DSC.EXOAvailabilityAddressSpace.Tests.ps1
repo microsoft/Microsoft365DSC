@@ -22,6 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         BeforeAll {
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
+            $targetCreds = New-Object System.Management.Automation.PSCredential ('tenantadmin@otherdomain.com', $secpasswd)
 
             Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -118,6 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                = 'Present'
                     Identity              = 'contoso.com'
                     AccessMethod          = 'PerUserFB' # Drift
+                    Credentials           = $targetCreds
                     ForestName            = 'contoso.com'
                     TargetAutodiscoverEpr = 'http://autodiscover.contoso.com/autodiscover/autodiscover.xml'
                 }

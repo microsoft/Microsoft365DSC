@@ -7,8 +7,54 @@
     Internal
 #>
 
-$Script:M365DSCPartialExportWriter = $null
-$Script:M365DSCPartialExportWriterPath = $null
+$Script:M365DSCPartialExportMutex = $null
+$Script:M365DSCPartialExportMutexPath = $null
+
+function Get-M365DSCPartialExportFallbackPath
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $FilePath
+    )
+
+    $directory = Split-Path -Path $FilePath -Parent
+    $fileNameWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($FilePath)
+    $extension = [System.IO.Path]::GetExtension($FilePath)
+    $fallbackFileName = '{0}.{1}{2}' -f $fileNameWithoutExtension, $PID, $extension
+
+    return (Join-Path -Path $directory -ChildPath $fallbackFileName)
+}
+
+function Get-M365DSCPartialExportMutexName
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $FilePath
+    )
+
+    $normalizedPath = [System.IO.Path]::GetFullPath($FilePath).ToLowerInvariant()
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    try
+    {
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($normalizedPath)
+        $hashBytes = $sha256.ComputeHash($bytes)
+    }
+    finally
+    {
+        $sha256.Dispose()
+    }
+
+    $hash = ([System.BitConverter]::ToString($hashBytes)).Replace('-', '')
+    return "Global\M365DSCPartialExport_$hash"
+}
 
 function Save-M365DSCPartialExport
 {
@@ -28,23 +74,64 @@ function Save-M365DSCPartialExport
     {
         $tempPath = Join-Path -Path $env:TEMP -ChildPath $FileName
 
-        # Reuse an open StreamWriter for the same file to avoid repeated open/close cycles
-        if ($null -eq $Script:M365DSCPartialExportWriter -or $Script:M365DSCPartialExportWriterPath -ne $tempPath)
+        # Reuse the same named mutex object per path in-process while coordinating writes across processes.
+        if ($null -eq $Script:M365DSCPartialExportMutex -or $Script:M365DSCPartialExportMutexPath -ne $tempPath)
         {
             Close-M365DSCPartialExport
-            $Script:M365DSCPartialExportWriter = [System.IO.StreamWriter]::new($tempPath, $true, [System.Text.Encoding]::UTF8)
-            $Script:M365DSCPartialExportWriter.AutoFlush = $false
-            $Script:M365DSCPartialExportWriterPath = $tempPath
+            $mutexName = Get-M365DSCPartialExportMutexName -FilePath $tempPath
+            $Script:M365DSCPartialExportMutex = [System.Threading.Mutex]::new($false, $mutexName)
+            $Script:M365DSCPartialExportMutexPath = $tempPath
         }
 
-        $Script:M365DSCPartialExportWriter.Write($Content)
-        $Script:M365DSCPartialExportWriter.Flush()
+        $maxRetries = 10
+        $lockAcquired = $false
+
+        for ($attempt = 1; $attempt -le $maxRetries; $attempt++)
+        {
+            try
+            {
+                $lockAcquired = $Script:M365DSCPartialExportMutex.WaitOne([System.TimeSpan]::FromSeconds(2))
+            }
+            catch
+            {
+                if ($_.Exception -is [System.Threading.AbandonedMutexException])
+                {
+                    # Another process exited while holding the lock. Continue and treat lock as acquired.
+                    $lockAcquired = $true
+                }
+                else
+                {
+                    throw
+                }
+            }
+
+            if ($lockAcquired)
+            {
+                try
+                {
+                    [System.IO.File]::AppendAllText($tempPath, $Content, [System.Text.Encoding]::UTF8)
+                    return
+                }
+                finally
+                {
+                    $Script:M365DSCPartialExportMutex.ReleaseMutex()
+                }
+            }
+
+            $delay = [System.Int32]([Math]::Min(1000, (50 * [Math]::Pow(2, $attempt - 1))))
+            Start-Sleep -Milliseconds $delay
+        }
+
+        # If lock contention persists, fall back to a per-process file to avoid data loss.
+        $fallbackPath = Get-M365DSCPartialExportFallbackPath -FilePath $tempPath
+        Write-Verbose -Message "Falling back to per-process partial export file '$fallbackPath' after lock contention."
+        [System.IO.File]::AppendAllText($fallbackPath, $Content, [System.Text.Encoding]::UTF8)
     }
 }
 
 <#
 .DESCRIPTION
-    Closes the StreamWriter used by Save-M365DSCPartialExport. Call at export completion or on error.
+    Releases the synchronization handle used by Save-M365DSCPartialExport. Call at export completion or on error.
 
 .FUNCTIONALITY
     Internal
@@ -54,18 +141,11 @@ function Close-M365DSCPartialExport
     [CmdletBinding()]
     param()
 
-    if ($null -ne $Script:M365DSCPartialExportWriter)
+    if ($null -ne $Script:M365DSCPartialExportMutex)
     {
-        try
-        {
-            $Script:M365DSCPartialExportWriter.Close()
-        }
-        catch
-        {
-            # Ignore errors on close (writer may already be disposed)
-        }
-        $Script:M365DSCPartialExportWriter = $null
-        $Script:M365DSCPartialExportWriterPath = $null
+        $Script:M365DSCPartialExportMutex.Dispose()
+        $Script:M365DSCPartialExportMutex = $null
+        $Script:M365DSCPartialExportMutexPath = $null
     }
 }
 

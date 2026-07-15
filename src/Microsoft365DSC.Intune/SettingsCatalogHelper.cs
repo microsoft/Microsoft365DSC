@@ -328,6 +328,8 @@ namespace Microsoft365DSC.Intune
                     "ppt16v2~Policy~L_MicrosoftOfficePowerPoint~L_PowerPointOptions", "MicrosoftPowerPoint_"),
                 (null, "proj16v2~Policy~L_Proj~L_ProjectOptions~", null,
                     "proj16v2~Policy~L_Proj~L_ProjectOptions", "MicrosoftProject_"),
+                (null, "proj16v3~Policy~L_Proj~L_ProjectOptions~", null,
+                    "proj16v3~Policy~L_Proj~L_ProjectOptions", "MicrosoftProjectV3_"),
                 (null, "visio16v2~Policy~L_MicrosoftVisio~L_VisioOptions~", null,
                     "visio16v2~Policy~L_MicrosoftVisio~L_VisioOptions", "MicrosoftVisio_"),
                 (null, "pub16v2~Policy~L_MicrosoftOfficePublisher~", null,
@@ -346,6 +348,7 @@ namespace Microsoft365DSC.Intune
                 // Contains-style (wildcard on both sides): '*~X~*' or '*~X_*'
                 (null, null, "~SmartScreen_", "~SmartScreen", "SmartScreen"),
                 (null, null, "~L_Security~", "~L_Security", "Security"),
+                (null, null, "~L_Security_", "~L_Security_", "Security_"),
                 (null, null, "~L_TrustCenter", "~L_TrustCenter", "_TrustCenter"),
                 (null, null, "~L_ProtectedView_", "~L_ProtectedView", "ProtectedView"),
                 (null, null, "~L_FileBlockSettings_", "~L_FileBlockSettings", "FileBlockSettings"),
@@ -621,7 +624,7 @@ namespace Microsoft365DSC.Intune
                 // Prefix match: 'prefix*'
                 if (Prefix is not null)
                 {
-                    if (settingName.StartsWith(Prefix))
+                    if (settingName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
                     {
                         settingName = settingName.Replace(Search, Replace);
                     }
@@ -631,7 +634,7 @@ namespace Microsoft365DSC.Intune
                 // Contains match (Suffix is used as the contains-check string): '*contains*'
                 if (Suffix is not null)
                 {
-                    if (settingName.Contains(Suffix))
+                    if (settingName.IndexOf(Suffix, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         settingName = settingName.Replace(Search, Replace);
                     }

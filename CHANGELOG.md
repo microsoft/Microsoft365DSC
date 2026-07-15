@@ -1,5 +1,147 @@
 # Change log for Microsoft365DSC
 
+# 1.26.715.1
+
+* AADConditionalAccessPolicy
+  * Updated the code to return a GUID for `IncludeApplications` and
+    `ExcludeApplications` if the input already contains that GUID.
+    FIXES [#7118](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7118)
+* AADIdentityGovernanceProgram
+  * Deprecated resource. It is superseded by the access review resources.
+* AADServicePrincipal
+  * Fixed an issue where attempting to resolve 3rd-party SPNs would fail.
+  * Fixed several issues when creating or updating an SPN.
+* AADUser
+  * Deprecate property `PasswordNeverExpires`
+    FIXES [#7339](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7339)
+  * Fixed issue with how `BusinessPhones` property was being sent when trying to
+    set that value
+* AzureBillingAccountPolicy
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+* AzureBillingAccountsAssociatedTenant
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+* AzureBillingAccountScheduledAction
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+* AzureBillingAccountsRoleAssignment
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+* AzureDiagnosticSettings
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+* AzureDiagnosticSettingsCustomSecurityAttribute
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+* AzureRoleAssignmentScheduleRequest
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+* AzureRoleAssignmentScheduleRequest
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+* AzureRoleDefinition
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+    FIXES [#7321](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7321)
+* AzureRoleEligibilityScheduleRequest
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+* AzureRoleEligibilityScheduleSettings
+  * Added `SubscriptionId` parameter to specify the Azure subscription
+    that is used to connect to.
+* EXOAvailabilityAddressSpace
+  * Fixed an issue where the `Credentials` property had the correct
+    parameter type in its definition.
+* EXODistributionGroup
+  * Deprecate property `Notes`
+* EXOIRMConfiguration
+  * Deprecate property `EnablePortalTrackingLogs`
+* EXOManagementRoleEntry
+  * Deprecate property `Type`
+* EXOMigration
+  * Fixed unit-tests so datetimes are parsed in US-format
+* EXOPlace
+  * Deprecate property `Desks`
+* IntuneDeviceEnrollmentScopeConfigurationMam
+  * Fixed issue where function `Get-CompareParameters` was not being exported
+* IntuneDeviceEnrollmentScopeConfigurationMdm
+  * Fixed issue where function `Get-CompareParameters` was not being exported
+* IntuneWifiConfigurationPolicyIOS
+  * Added `wpa3Personal` to the `WifiSecurityType` property.
+* SettingsCatalogHelper
+  * Fixed an issue where complex administrative template names
+    were not handled correctly.
+* Teams
+  * Updated resource settings to use the Teams Reader role and remove Graph
+    permissions from resources that do not require Microsoft Graph modules.
+* TeamsCallQueue
+  * Added new properties `AutoRecordingTemplateId`, `CallbackEmailNotificationTarget`,
+    `CallbackOfferAudioFilePromptResourceId`, `CallbackOfferTextToSpeechPrompt`,
+    `CallbackRequestDtmf`, `CallToAgentRatioThresholdBeforeOfferingCallback`,
+    `ComplianceRecordingForCallQueueTemplateId`, `CustomAudioFileAnnouncementForCR`,
+    `CustomAudioFileAnnouncementForCRFailure`, `EnableNoAgentSharedVoicemailSystemPromptSuppression`,
+    `EnableNoAgentSharedVoicemailTranscription`, `EnableOverflowSharedVoicemailSystemPromptSuppression`,
+    `EnableTimeoutSharedVoicemailSystemPromptSuppression`, `IsCallbackEnabled`, `NoAgentAction`,
+    `NoAgentActionCallPriority`, `NoAgentActionTarget`, `NoAgentApplyTo`,
+    `NoAgentDisconnectAudioFilePrompt`, `NoAgentDisconnectTextToSpeechPrompt`,
+    `NoAgentRedirectPersonAudioFilePrompt`, `NoAgentRedirectPersonTextToSpeechPrompt`,
+    `NoAgentRedirectPhoneNumberAudioFilePrompt`, `NoAgentRedirectPhoneNumberTextToSpeechPrompt`,
+    `NoAgentRedirectVoiceAppAudioFilePrompt`, `NoAgentRedirectVoiceAppTextToSpeechPrompt`,
+    `NoAgentRedirectVoicemailAudioFilePrompt`, `NoAgentRedirectVoicemailTextToSpeechPrompt`,
+    `NoAgentSharedVoicemailAudioFilePrompt`, `NoAgentSharedVoicemailTextToSpeechPrompt`,
+    `NumberOfCallsInQueueBeforeOfferingCallback`, `OverflowActionCallPriority`,
+    `ServiceLevelThresholdResponseTimeInSecond`, `SharedCallQueueHistoryTemplateId`,
+    `ShiftsSchedulingGroupId`, `ShiftsTeamId`,
+    `ShouldOverwriteCallableChannelProperty`, `TimeoutActionCallPriority`,
+    `WaitTimeBeforeOfferingCallbackInSecond`, `WelcomeTextToSpeechPrompt`
+* TeamsGuestMessagingConfiguration
+  * Deprecated property `UsersCanDeleteBotMessages`
+* TeamsOnlineVoicemailUserSettings
+  * Deprecated property `OofGreetingFollowCalendarEnabled`
+* TeamsTenantNetworkSite
+  * Deprecated property `SiteAddress`
+* M365DSCCheckProperties
+  * Fixed an issue with function `Get-PropertyReport` where it wasn't working
+    because the `Teams` module was being loaded last and causing conflicts
+  * Added authentication methods `ApplicationSecret`, `AccesstTokens` and
+    `ManagedIdentity` as internal M365DSC properties that should to be ignored
+* M365DSCDllLoader
+  * Fixed an issue when trying to load assemblies that were already loaded.
+* M365DSCDocGenerator
+  * Moved function `Get-TemporaryPath` to `M365DSCUtil` and use `$env:TEMP`
+    directly instead of the function's output
+* M365DSCErrorHandler
+  * Fixed an issue when writing in parallel to the same export file.
+* M365DSCExportUtil
+  * Fixed a formatting issue with `CertificatePassword` during export.
+  * Removed usage of function `Resolve-Credentials` and instead just use the
+    appropriate hardcoded strings
+* M365DSCModuleMgmt
+  * Fixed invalid arg used in Confirm-M365DSCLoadedModule when run in Windows Powershell 5.1
+* M365DSCReverse
+  * Fixed an issue with `Credential` and `CertificatePassword` parameters.
+  * Fixed an issue generating the blueprint if using Azure Automation with
+    `Credential` parameter.
+  * Fixed an issue when exporting resources in parallel.
+  * Removed usage of function `Save-Credentials` since it's not required any
+    longer.
+* M365DSCUtil
+  * Added function `Get-TemporaryPath` taken from `M365DSCDocGenerator` and use
+    its output to assign `$env:TEMP` variable
+  * Enabled parallel export on `Assert-M365DSCBlueprint`
+* DEPENDENCIES
+  * Updated `MSCloudLoginAssistant` to version `1.1.69`.
+* MISC
+  * Added Docker image publishing for Windows and Linux platforms.
+  * Updated workflow triggers for GitHub Actions.
+  * Stopped pinning Pester dependency to `5.7.1` on Docker images since all
+    tests were made compatible in previous release with version `6.x`
+* Added `License Requirements` section to README.md documenting Microsoft
+    365 E5 / Defender for Office 365 Plan 2 licensing requirements for EXO
+    Defender resources.
+
+
 # 1.26.708.1
 
 * AADAdministrativeUnit
@@ -44,7 +186,6 @@
     PowerShell 7.
   * Updated all unit tests for Pester v6.0.0.
   * Updated the drift event to mask authentication parameters in the message.
-
 # 1.26.701.1
 
 * AADCrossTenantAccessPolicyConfigurationPartner

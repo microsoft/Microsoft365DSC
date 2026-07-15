@@ -59,6 +59,13 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting Management Role Entry configuration for {$Identity}"
 
+    # TODO: Remove property 'Type' in next breaking change
+    if ($PSBoundParameters.ContainsKey('Type'))
+    {
+        $PSBoundParameters.Remove('Type') | Out-Null
+        Write-Warning "Property 'Type' is deprecated and will be removed"
+    }
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
@@ -180,6 +187,13 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting Management Role Entry configuration for {$Identity}"
+
+    # TODO: Remove property 'Type' in next breaking change
+    if ($PSBoundParameters.ContainsKey('Type'))
+    {
+        $PSBoundParameters.Remove('Type') | Out-Null
+        Write-Warning "Property 'Type' is deprecated and will be removed"
+    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -316,8 +330,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $compareParameters = Get-CompareParameters
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
     return $result
 }
 
@@ -435,4 +451,15 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('Type')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

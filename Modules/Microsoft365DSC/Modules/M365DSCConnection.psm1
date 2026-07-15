@@ -195,6 +195,11 @@ function New-M365DSCConnection
         $connectParams.Url = $Url
     }
 
+    if ($Workload -eq 'Azure' -and -not [System.String]::IsNullOrEmpty($InboundParameters.SubscriptionId))
+    {
+        $connectParams.SubscriptionId = $InboundParameters.SubscriptionId
+    }
+
     switch ($connectionMode)
     {
         'Credentials'

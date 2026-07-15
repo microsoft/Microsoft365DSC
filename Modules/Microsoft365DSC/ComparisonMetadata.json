@@ -71,6 +71,50 @@
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
     },
+    "AADUser": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: PasswordNeverExpires"
+    },
+    "AzureBillingAccountPolicy": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: SubscriptionId"
+    },
+    "AzureBillingAccountsAssociatedTenant": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: SubscriptionId"
+    },
+    "AzureBillingAccountScheduledAction": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: SubscriptionId"
+    },
+    "AzureBillingAccountsRoleAssignment": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: SubscriptionId"
+    },
+    "AzureDiagnosticSettings": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: SubscriptionId"
+    },
+    "AzureDiagnosticSettingsCustomSecurityAttribute": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: SubscriptionId"
+    },
+    "AzureRoleAssignmentScheduleRequest": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: Justification, SubscriptionId"
+    },
+    "AzureRoleDefinition": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: SubscriptionId"
+    },
+    "AzureRoleEligibilityScheduleRequest": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: Justification, SubscriptionId"
+    },
+    "AzureRoleEligibilityScheduleSettings": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: SubscriptionId"
+    },
     "DefenderDeviceAuthenticatedScanDefinition": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: ScanAuthenticationParams"
@@ -79,13 +123,17 @@
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
     },
+    "EXOAvailabilityAddressSpace": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: Credentials"
+    },
     "EXOAvailabilityConfig": {
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
     },
     "EXODistributionGroup": {
       "HasCustomComparison": true,
-      "Description": "Uses PostProcessing scriptblock"
+      "Description": "Excludes properties: Notes; Uses PostProcessing scriptblock"
     },
     "EXODynamicDistributionGroup": {
       "HasCustomComparison": true,
@@ -108,9 +156,21 @@
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
     },
+    "EXOIRMConfiguration": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: EnablePortalTrackingLogs"
+    },
     "EXOMailContact": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: OrganizationalUnit"
+    },
+    "EXOManagementRoleEntry": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: Type"
+    },
+    "EXOPlace": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: Desks"
     },
     "EXOSafeLinksPolicy": {
       "HasCustomComparison": true,
@@ -424,6 +484,10 @@
       "HasCustomComparison": true,
       "Description": "Excludes properties: GroupID, NewDisplayName"
     },
+    "TeamsGuestMessagingConfiguration": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: UsersCanDeleteBotMessages"
+    },
     "TeamsGroupPolicyAssignment": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: GroupId"
@@ -432,9 +496,17 @@
       "HasCustomComparison": true,
       "Description": "Uses PostProcessing scriptblock"
     },
+    "TeamsOnlineVoicemailUserSettings": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: OofGreetingFollowCalendarEnabled"
+    },
     "TeamsTeam": {
       "HasCustomComparison": true,
       "Description": "Excludes properties: GroupID"
+    },
+    "TeamsTenantNetworkSite": {
+      "HasCustomComparison": true,
+      "Description": "Excludes properties: SiteAddress"
     },
     "TeamsTenantNetworkSubnet": {
       "HasCustomComparison": true,
