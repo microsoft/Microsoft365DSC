@@ -610,6 +610,15 @@ function Set-TargetResource
     $AppRoleAssignedToSpecified = $currentParameters.ContainsKey('AppRoleAssignedTo')
     $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
     $currentParameters.Remove('LogoutUrl') | Out-Null
+    $appIdIsGuid = [System.Guid]::TryParse($AppId, [ref][System.Guid]::Empty)
+    $resolvedAppId = $null
+    $oldAppId = $null
+    $servicePrincipalDetails = $null
+
+    if ($appIdIsGuid)
+    {
+        $resolvedAppId = $AppId
+    }
 
     # update the custom security attributes to be cmdlet comsumable
     if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes.Count -gt 0)
@@ -623,28 +632,30 @@ function Set-TargetResource
         $currentParameters.Remove('CustomSecurityAttributes')
     }
 
-    # If the AppId was passed as a display name (not in GUID format), translate it to an ID.
-    if (-not [System.Guid]::TryParse($AppId, [ref][System.Guid]::Empty))
-    {
-        Write-Verbose -Message 'AppId was provided as a DisplayName. Translating it to an a GUID.'
-        $appInstance = Get-MgApplication -Filter "DisplayName eq '$($AppId -replace "'", "''")'"
-        $currentParameters.AppId = $appInstance.AppId
-        $oldAppId = $AppId
-        $AppId = $appInstance.AppId
-        Write-Verbose -Message "Translated to AppId {$($currentParameters.AppId)}"
-    }
-    else
-    {
-        $appInstance = Get-MgApplication -Filter "AppId eq '$($AppId)'"
-        if ($null -eq $appInstance)
-        {
-            throw "No application found with AppId or DisplayName matching '$AppId'."
-        }
-    }
-
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
     {
+        if (-not $appIdIsGuid)
+        {
+            Write-Verbose -Message 'AppId was provided as a DisplayName. Translating it to a GUID for service principal creation.'
+            [Array]$matchedApplications = Get-MgApplication -Filter "DisplayName eq '$($AppId -replace "'", "''")'" -Property 'appId', 'identifierUris'
+            if ($null -eq $matchedApplications -or $matchedApplications.Count -eq 0)
+            {
+                throw "No application found with DisplayName matching '$AppId'."
+            }
+            if ($matchedApplications.Count -gt 1)
+            {
+                throw "Multiple applications found with DisplayName '$AppId'. Please provide the AppId GUID instead."
+            }
+            $resolvedAppId = $matchedApplications[0].AppId
+            $oldAppId = $AppId
+            $AppId = $resolvedAppId
+            $currentParameters.ServicePrincipalNames = Get-M365DSCArrayFromProperty -PropertyValue $matchedApplications[0].IdentifierUris -ElementType ([System.String])
+            $currentParameters.ServicePrincipalNames += $resolvedAppId
+            Write-Verbose -Message "Translated DisplayName to AppId {$resolvedAppId}"
+        }
+
+        $currentParameters.AppId = $resolvedAppId
         Write-Verbose -Message 'Creating new Service Principal'
         $newSP = New-MgServicePrincipal -BodyParameter $currentParameters
         Start-Sleep -Seconds 4
@@ -669,7 +680,7 @@ function Set-TargetResource
                     classification = $permissionClassification.Classification
                     permissionName = $permissionClassification.permissionName
                 }
-                $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
+                $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals/$($newSP.Id)/delegatedPermissionClassifications"
                 Invoke-M365DSCCommand -ScriptBlock { Invoke-MgGraphRequest -Uri $Uri -Method Post -Body $params -ErrorAction Stop } -RetryOnNotFoundError -MaxRetries 4
             }
         }
@@ -715,13 +726,19 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message 'Updating existing Service Principal'
+        $currentParameters.Remove('AppId') | Out-Null
         $currentParameters.Remove("ReplyUrls") | Out-Null
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
 
         if ($PreferredSingleSignOnMode -eq 'saml')
         {
-            $IdentifierUris = $ServicePrincipalNames | Where-Object { $_ -notmatch $AppId -and $_ -notmatch $oldAppId }
+            if ($null -eq $servicePrincipalDetails)
+            {
+                $servicePrincipalDetails = Get-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID -Property 'AppId'
+            }
+            $identifiersToExclude = @($AppId, $oldAppId, $servicePrincipalDetails.AppId) | Where-Object -FilterScript { -not [System.String]::IsNullOrEmpty($_) } | Select-Object -Unique
+            $IdentifierUris = @($ServicePrincipalNames | Where-Object -FilterScript { $_ -notin $identifiersToExclude })
             $currentParameters.Remove('ServicePrincipalNames')
         }
 
@@ -732,7 +749,7 @@ function Set-TargetResource
             $CSAParams = @{
                 customSecurityAttributes = $currentAADServicePrincipal.CustomSecurityAttributes
             }
-            Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/servicePrincipals(appId='$($currentParameters.AppId)')") -Method Patch -Body $CSAParams
+            Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/servicePrincipals/$($currentAADServicePrincipal.ObjectID)") -Method Patch -Body $CSAParams
         }
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID -BodyParameter $currentParameters
 
@@ -746,8 +763,21 @@ function Set-TargetResource
         if ($IdentifierUris)
         {
             Write-Verbose -Message 'Updating the Application ID Uri on the application instance.'
-            $appInstance = Get-MgApplication -Filter "AppId eq '$AppId'"
-            Update-MgApplication -ApplicationId $appInstance.Id -IdentifierUris $IdentifierUris
+            if ($null -eq $servicePrincipalDetails)
+            {
+                $servicePrincipalDetails = Get-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID -Property 'AppId'
+            }
+
+            [Array]$matchedApplications = Get-MgApplication -Filter "AppId eq '$($servicePrincipalDetails.AppId)'"
+            if ($null -eq $matchedApplications -or $matchedApplications.Count -eq 0)
+            {
+                throw "Unable to resolve the application object for service principal '$($currentAADServicePrincipal.DisplayName)' while updating ServicePrincipalNames. This can happen for cross-tenant applications."
+            }
+
+            $IdentifierUris = Get-M365DSCArrayFromProperty -PropertyValue $IdentifierUris -ElementType ([System.String])
+            Update-MgApplication -ApplicationId $matchedApplications[0].Id -BodyParameter @{
+                identifierUris = $IdentifierUris
+            }
         }
         if ($AppRoleAssignedToSpecified)
         {
@@ -796,7 +826,12 @@ function Set-TargetResource
                             $PrincipalIdValue = $group.Id
                         }
 
-                        $appRoleId = Get-M365DSCAADServicePrincipalAppRoleId -AppRoles $appInstance.AppRoles -PrincipalType $assignment.PrincipalType
+                        if ($null -eq $servicePrincipalDetails)
+                        {
+                            $servicePrincipalDetails = Get-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID -Property 'AppRoles'
+                        }
+
+                        $appRoleId = Get-M365DSCAADServicePrincipalAppRoleId -AppRoles $servicePrincipalDetails.AppRoles -PrincipalType $assignment.PrincipalType
                         $bodyParam = @{
                             principalId = $PrincipalIdValue
                             resourceId  = $currentAADServicePrincipal.ObjectID
@@ -884,7 +919,7 @@ function Set-TargetResource
         if ($null -ne $DelegatedPermissionClassifications)
         {
             # removing old perm classifications
-            $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
+            $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals/$($currentAADServicePrincipal.ObjectID)/delegatedPermissionClassifications"
             $permissionClassificationList = Invoke-MgGraphRequest -Uri $Uri -Method Get
             foreach ($permissionClassification in $permissionClassificationList.Value)
             {

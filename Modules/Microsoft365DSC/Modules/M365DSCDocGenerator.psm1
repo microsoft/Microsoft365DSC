@@ -294,7 +294,7 @@ function Get-MofSchemaObject
         $FileName
     )
 
-    $temporaryPath = Get-TemporaryPath
+    $temporaryPath = $env:TEMP
 
     #region Workaround for OMI_BaseResource inheritance not resolving.
 
@@ -431,56 +431,6 @@ function Get-ResourceExampleAsMarkdown
     }
 
     return $outputExampleMarkDown
-}
-
-<#
-.Description
-The Get-TemporaryPath function will return the temporary
-path specific to the OS. It will return $ENV:Temp when run
-on Windows OS, '/tmp' when run in Linux and $ENV:TMPDIR when
-run on MacOS.
-
-.Example
-Get-TemporaryPath
-
-Get the temporary path (which will differ between operating system).
-
-.Functionality
-Internal,Hidden
-#>
-function Get-TemporaryPath
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param ()
-
-    $temporaryPath = $null
-
-    switch ($true)
-    {
-        (-not (Test-Path -Path variable:IsWindows) -or ((Get-Variable -Name 'IsWindows' -ValueOnly -ErrorAction SilentlyContinue) -eq $true))
-        {
-            # Windows PowerShell or PowerShell 6+
-            $temporaryPath = (Get-Item -Path env:TEMP).Value
-        }
-
-        ((Get-Variable -Name 'IsMacOs' -ValueOnly -ErrorAction SilentlyContinue) -eq $true)
-        {
-            $temporaryPath = (Get-Item -Path env:TMPDIR).Value
-        }
-
-        ((Get-Variable -Name 'IsLinux' -ValueOnly -ErrorAction SilentlyContinue) -eq $true)
-        {
-            $temporaryPath = '/tmp'
-        }
-
-        default
-        {
-            throw 'Cannot set the temporary path. Unknown operating system.'
-        }
-    }
-
-    return $temporaryPath
 }
 
 <#

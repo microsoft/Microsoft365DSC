@@ -10,10 +10,57 @@ $Global:M365DSCPushNotificationsBody = $null
 
 $Script:M365DSCWorkloads = @('AAD', 'ADO', 'AZURE', 'COMMERCE', 'DEFENDER', 'EXO', 'FABRIC', 'INTUNE', 'O365', 'OD', 'PLANNER', 'PP', 'SC', 'SENTINEL', 'SH', 'SPO', 'TEAMS')
 
-if ([System.String]::IsNullOrEmpty($env:TEMP) -and $PSEdition -eq 'Core' -and -not $IsWindows)
+<#
+.Description
+The Get-TemporaryPath function will return the temporary
+path specific to the OS. It will return $env:TEMP when run
+on Windows OS, '/tmp' when run in Linux and $env:TMPDIR when
+run on MacOS.
+
+.Example
+Get-TemporaryPath
+
+Get the temporary path (which will differ between operating system).
+
+.Functionality
+Internal,Hidden
+#>
+function Get-TemporaryPath
 {
-    $env:TEMP = '/tmp'
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param ()
+
+    $temporaryPath = $null
+
+    switch ($true)
+    {
+        (-not (Test-Path -Path variable:IsWindows) -or ((Get-Variable -Name 'IsWindows' -ValueOnly -ErrorAction SilentlyContinue) -eq $true))
+        {
+            # Windows PowerShell or PowerShell 6+
+            $temporaryPath = (Get-Item -Path env:TEMP).Value
+        }
+
+        ((Get-Variable -Name 'IsMacOs' -ValueOnly -ErrorAction SilentlyContinue) -eq $true)
+        {
+            $temporaryPath = (Get-Item -Path env:TMPDIR).Value
+        }
+
+        ((Get-Variable -Name 'IsLinux' -ValueOnly -ErrorAction SilentlyContinue) -eq $true)
+        {
+            $temporaryPath = '/tmp'
+        }
+
+        default
+        {
+            throw 'Cannot set the temporary path. Unknown operating system.'
+        }
+    }
+
+    return $temporaryPath
 }
+
+$env:TEMP = Get-TemporaryPath
 
 <#
 .Description

@@ -4,6 +4,9 @@
 
 * AADIdentityGovernanceProgram
   * Deprecated resource. It is superseded by the access review resources.
+* AADServicePrincipal
+  * Fixed an issue where attempting to resolve 3rd-party SPNs would fail.
+  * Fixed several issues when creating or updating an SPN.
 * AADUser
   * Fixed an issue where `PasswordNeverExpires` was not set.
     FIXES [#7339](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7339)
@@ -93,16 +96,24 @@
     because the `Teams` module was being loaded last and causing conflicts
   * Added authentication methods `ApplicationSecret`, `AccesstTokens` and
     `ManagedIdentity` as internal M365DSC properties that should to be ignored
+* M365DSCDocGenerator
+  * Moved function `Get-TemporaryPath` to `M365DSCUtil` and use `$env:TEMP`
+    directly instead of the function's output
 * M365DSCExportUtil
   * Fixed a formatting issue with `CertificatePassword` during export.
   * Removed usage of function `Resolve-Credentials` and instead just use the
     appropriate hardcoded strings
+* M365DSCModuleMgmt
+  * Fixed invalid arg used in Confirm-M365DSCLoadedModule when run in Windows Powershell 5.1
 * M365DSCReverse
   * Fixed an issue with `Credential` and `CertificatePassword` parameters.
   * Fixed an issue generating the blueprint if using Azure Automation with
     `Credential` parameter.
   * Removed usage of function `Save-Credentials` since it's not required any
     longer.
+* M365DSCUtil
+  * Added function `Get-TemporaryPath` taken from `M365DSCDocGenerator` and use
+    its output to assign `$env:TEMP` variable
 * DEPENDENCIES
   * Updated `MSCloudLoginAssistant` to version `1.1.69`.
 * MISC
