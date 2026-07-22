@@ -258,7 +258,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $DisplayName)
         {
             $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
@@ -282,7 +282,9 @@ function Get-TargetResource
             #region resource generator code
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ErrorAction SilentlyContinue `
+                    -ExpandProperty 'settings($expand=settingDefinitions)'
+                $settings = $getValue.settings
             }
 
             if ($null -eq $getValue)
@@ -312,19 +314,22 @@ function Get-TargetResource
         else
         {
             $getValue = $Script:exportedInstance
+            $settings = $getValue.settings
         }
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Antivirus Policy for Linux with Id {$Id} and Name {$DisplayName} was found"
 
         # Retrieve policy specific settings
-        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $Id `
-            -ExpandProperty 'settingDefinitions' `
-            -All `
-            -ErrorAction Stop
-        $policyTemplateId = $getValue.TemplateReference.TemplateId
+        if ($null -eq $settings)
+        {
+            [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
+                -DeviceManagementConfigurationPolicyId $Id `
+                -ExpandProperty 'settingDefinitions' `
+                -All `
+                -ErrorAction Stop
+        }
         [array]$settingDefinitions = (Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate `
-            -DeviceManagementConfigurationPolicyTemplateId $policyTemplateId `
+            -DeviceManagementConfigurationPolicyTemplateId $getValue.TemplateReference.TemplateId `
             -ExpandProperty 'settingDefinitions' `
             -All `
             -ErrorAction Stop).SettingDefinitions
@@ -1232,10 +1237,9 @@ function Export-TargetResource
         {
             $Filter = $baseFilter
         }
-        [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -Filter $Filter `
-            -All `
-            -ErrorAction Stop
+        [array]$getValue = Get-M365DSCExportCachedConfigurationPolicies `
+            -TemplateId $policyTemplateID `
+            -Filter $Filter
         #endregion
 
         $i = 1

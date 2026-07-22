@@ -268,7 +268,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $policyTemplateID = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
+    $templateReferenceId = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
     $currentPolicy = Get-TargetResource @PSBoundParameters
     $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
@@ -281,11 +281,11 @@ function Set-TargetResource
 
         $settings = Get-M365DSCIntuneDeviceConfigurationSettings `
             -Properties ([System.Collections.Hashtable]$boundParameters) `
-            -TemplateId $policyTemplateID
+            -TemplateId $templateReferenceId
 
         $policy = New-MgBetaDeviceManagementIntent -DisplayName $DisplayName `
             -Description $Description `
-            -TemplateId $policyTemplateID `
+            -TemplateId $templateReferenceId `
             -Settings $Settings
 
         #region Assignments
@@ -303,7 +303,7 @@ function Set-TargetResource
         Write-Verbose -Message "Updating existing Endpoint Protection Application Control Policy {$DisplayName}"
         $appControlPolicy = Get-MgBetaDeviceManagementIntent `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.TemplateId -eq $policyTemplateID -and `
+            -FilterScript { $_.TemplateId -eq $templateReferenceId -and `
                 $_.displayName -eq $($DisplayName) }
 
         $boundParameters.Remove('DisplayName') | Out-Null
@@ -316,7 +316,7 @@ function Set-TargetResource
 
         $settings = Get-M365DSCIntuneDeviceConfigurationSettings `
             -Properties ([System.Collections.Hashtable]$boundParameters) `
-            -TemplateId $policyTemplateID
+            -TemplateId $templateReferenceId
 
         $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/intents/$($appControlPolicy.Id)/updateSettings"
         $body = @{'settings' = $settings }

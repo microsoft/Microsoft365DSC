@@ -1,23 +1,26 @@
 using namespace System.Management.Automation.Language
 
 <#
+.SYNOPSIS
+    Compiles required permissions for selected Microsoft365DSC resources.
+
 .DESCRIPTION
-    This function lists all Graph, SharePoint or Exchange permissions required for the specified
-    resources, both for reading/updating and Delegated/Applications. With the parameters, you can
-    specify a specific subset of permissions, to be use with the Permissions parameter of
+    Reads resource settings metadata and aggregates delegated/application permissions, required Exchange roles, and administrative roles.
+    Output can be returned as a global matrix or grouped by resource.
+    With the parameters, you can specify a specific subset of permissions, to be used with the Permissions parameter of
     Update-M365DSCAzureAdApplication.
 
 .PARAMETER ResourceNameList
-    An array of resource names for which the permissions should be determined.
+    Specifies resource names to evaluate.
 
-.PARAMETER PermissionsType
-    Specifies what type of permissions need to get returned, Delegated or Application.
+.PARAMETER PermissionType
+    Specifies the permission type filter to return.
 
 .PARAMETER AccessType
-    Specifies the workload of the permissions that need to get returned.
+    Specifies whether read or update permissions should be returned.
 
 .PARAMETER GroupByResourceName
-    If specified, groups the permissions by resource name instead of by permission type.
+    Indicates that results should be grouped per resource.
 
 .EXAMPLE
     Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain')
@@ -36,6 +39,9 @@ using namespace System.Management.Automation.Language
 
 .FUNCTIONALITY
     Public
+
+.OUTPUTS
+    System.Collections.Hashtable
 #>
 function Get-M365DSCCompiledPermissionList
 {
@@ -523,27 +529,32 @@ function Update-M365DSCPermissionsMatrix
 }
 
 <#
-.Description
-This function updates the required permissions for the specified resources and type
-for the Microsoft Graph delegated application in Azure Active Directory.
+.SYNOPSIS
+    Opens Graph consent flow for required delegated scopes.
 
-.Parameter ResourceNameList
-An array of resource names for which the permissions should be determined.
+.DESCRIPTION
+    Resolves delegated Graph scopes required by selected resources and calls Connect-MgGraph with those scopes so consent can be granted.
 
-.Parameter All
-Specifies that the permissions should be determined for all resources.
+.PARAMETER ResourceNameList
+    Specifies resource names used to determine required scopes.
 
-.Parameter Type
-For which action should the permissions be updated: Read or Update.
+.PARAMETER All
+    Indicates that all Microsoft365DSC resources should be included.
 
-.Example
-Update-M365DSCAllowedGraphScopes -ResourceNameList @('AADUSer', 'AADApplication') -Type 'Read'
+.PARAMETER Type
+    Specifies whether read or update scopes should be requested.
 
-.Example
-Update-M365DSCAllowedGraphScopes -All -Type 'Update' -Environment 'Global'
+.PARAMETER Environment
+    Specifies the Microsoft Graph cloud environment.
 
-.Functionality
-Public
+.EXAMPLE
+    Update-M365DSCAllowedGraphScopes -ResourceNameList @('AADUSer', 'AADApplication') -Type 'Read'
+
+.EXAMPLE
+    Update-M365DSCAllowedGraphScopes -All -Type 'Update' -Environment 'Global'
+
+.FUNCTIONALITY
+    Public
 #>
 function Update-M365DSCAllowedGraphScopes
 {
@@ -610,6 +621,9 @@ function Update-M365DSCAllowedGraphScopes
 }
 
 <#
+.SYNOPSIS
+    Creates or updates the Microsoft365DSC Entra application registration.
+
 .DESCRIPTION
     This function creates or updates an application in Azure AD. It assigns permissions,
     grants consent and creates a secret or uploads a certificate to the application.
@@ -655,22 +669,22 @@ function Update-M365DSCAllowedGraphScopes
     https://microsoft365dsc.com/user-guide/get-started/authentication-and-permissions/#power-apps-permissions
 
 .PARAMETER ApplicationName
-    The name of the application to create or update. Default value is 'Microsoft365DSC'.
+    Specifies the application display name.
 
 .PARAMETER Permissions
-    The permissions to assign to the application. This has to be an array of hashtables, with Api=Graph, SharePoint or Exchange and PermissionsName set to a list of permissions. See examples for more information.
+    Specifies permission definitions to assign.
 
 .PARAMETER Type
-    The type of credential to create. Default value is 'Secret'. Valid values are 'Secret' and 'Certificate'.
+    Specifies whether the app should use a secret or certificate credential.
 
 .PARAMETER MonthsValid
-    The number of months the certificate should be valid. Default value is 12.
+    Specifies the validity period in months for newly created credentials.
 
 .PARAMETER CreateNewSecret
-    If specified, a new secret will be created for the application. -CreateNewSecret or -CertificatePath can be used, not both.
+    Indicates that a new secret should be created when using secret mode.
 
 .PARAMETER CertificatePath
-    The path to the certificate to be uploaded for the app registration. If using with -CreateSelfSignedCertificate - a file with this name will be created and uploaded (file must not exist). Otherwise the file must already exist. Cannot be used with -CreateNewSecret simultaneously.
+    Specifies the certificate file path to upload or create.
 
 .PARAMETER CreateSelfSignedCertificate
     If specified, a self-signed certificate will be created for the application. -CreateSelfSignedCertificate or -CertificatePath can be used, not both.
@@ -678,25 +692,25 @@ function Update-M365DSCAllowedGraphScopes
     If you require the certificate with the private key, you can export it from the certificate store after running the command using the Export-PfxCertificate cmdlet.
 
 .PARAMETER AdminConsent
-    If specified, admin consent will be granted for the application.
+    Indicates that admin consent flow should be executed.
 
 .PARAMETER Credential
-    The credential to use for authenticating the request. Mutually exclusive with -TenantId.
+    Specifies delegated credentials used for interactive operations.
 
 .PARAMETER ApplicationId
-    The ApplicationId to use for authenticating the request. -Credential or -ApplicationId can be used, not both.
+    Specifies the application id used for app-based authentication.
 
 .PARAMETER TenantId
-    The name of the tenant to use for the request. Must be in the form of contoso.onmicrosoft.com. Mutually exclusive with -Credential.
+    Specifies the tenant id or tenant domain used for authentication.
 
 .PARAMETER ApplicationSecret
-    The ApplicationSecret to use for authenticating the request. -Credential or -ApplicationSecret can be used, not both.
+    Specifies the application secret used for app-based authentication.
 
 .PARAMETER CertificateThumbprint
-    Thumbprint of an existing auth certificate to use for authenticating the request. Mutually exclusive with -Credential.
+    Specifies the certificate thumbprint used for app-based authentication.
 
 .PARAMETER ManagedIdentity
-    If specified, Managed Identity will be used for authenticating the request. -Credential or -ApplicationId or -ManagedIdentity can be used, only one of them.
+    Indicates that managed identity authentication should be used.
 
 .EXAMPLE
     PS> $creds = Get-Credential

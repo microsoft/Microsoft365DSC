@@ -42,6 +42,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
+        $EndpointDlpRestrictions,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ExceptIfContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -439,6 +443,7 @@ function Get-TargetResource
             Comment                                      = $PolicyRule.Comment
             AdvancedRule                                 = $newAdvancedRule
             ContentContainsSensitiveInformation          = $PolicyRule.ContentContainsSensitiveInformation
+            EndpointDlpRestrictions                      = Convert-SCDLPEndpointDlpRestrictions -EndpointDlpRestrictions $PolicyRule.EndpointDlpRestrictions
             ExceptIfContentContainsSensitiveInformation  = $PolicyRule.ExceptIfContentContainsSensitiveInformation
             ContentPropertyContainsWords                 = $PolicyRule.ContentPropertyContainsWords
             Disabled                                     = $PolicyRule.Disabled
@@ -572,6 +577,10 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $EndpointDlpRestrictions,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -927,6 +936,11 @@ function Set-TargetResource
             $CreationParams.Remove('AdvancedRule')
         }
 
+        if ($null -ne $CreationParams.EndpointDlpRestrictions)
+        {
+            $CreationParams.EndpointDlpRestrictions = Convert-SCDLPEndpointDlpRestrictions -EndpointDlpRestrictions $CreationParams.EndpointDlpRestrictions
+        }
+
         if ($null -ne $CreationParams.SetHeader)
         {
             $setHeaders = @{}
@@ -984,6 +998,11 @@ function Set-TargetResource
         if ($null -ne $UpdateParams.ContentContainsSensitiveInformation)
         {
             $UpdateParams.Remove('AdvancedRule')
+        }
+
+        if ($null -ne $UpdateParams.EndpointDlpRestrictions)
+        {
+            $UpdateParams.EndpointDlpRestrictions = Convert-SCDLPEndpointDlpRestrictions -EndpointDlpRestrictions $UpdateParams.EndpointDlpRestrictions
         }
 
         if ($null -ne $UpdateParams.SetHeader)
@@ -1051,6 +1070,10 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $EndpointDlpRestrictions,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -1403,9 +1426,14 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ContentContainsSensitiveInformation') | Out-Null
     $ValuesToCheck.Remove('ExceptIfContentContainsSensitiveInformation') | Out-Null
 
+    if ($null -ne $ValuesToCheck['EndpointDlpRestrictions'])
+    {
+        $ValuesToCheck['EndpointDlpRestrictions'] = Convert-SCDLPEndpointDlpRestrictions -EndpointDlpRestrictions $ValuesToCheck['EndpointDlpRestrictions']
+    }
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
+        -DesiredValues $ValuesToCheck `
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
@@ -1621,12 +1649,28 @@ function Export-TargetResource
                 }
             }
 
+            if ($null -ne $Results.EndpointDlpRestrictions)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.EndpointDlpRestrictions `
+                    -CIMInstanceName 'SCDLPEndpointDlpRestriction' `
+                    -IsArray
+                if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+                {
+                    $Results.EndpointDlpRestrictions = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('EndpointDlpRestrictions') | Out-Null
+                }
+            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('ContentContainsSensitiveInformation', 'ExceptIfContentContainsSensitiveInformation')
+                -NoEscape @('ContentContainsSensitiveInformation', 'EndpointDlpRestrictions', 'ExceptIfContentContainsSensitiveInformation')
 
             [void]$dscContent.Append($currentDSCBlock)
 
@@ -1648,6 +1692,46 @@ function Export-TargetResource
 
         throw
     }
+}
+
+function Convert-SCDLPEndpointDlpRestrictions
+{
+    [CmdletBinding()]
+    [OutputType([System.Object[]])]
+    param
+    (
+        [Parameter()]
+        [System.Object[]]
+        $EndpointDlpRestrictions
+    )
+
+    if ($null -eq $EndpointDlpRestrictions)
+    {
+        return $null
+    }
+
+    $returnValue = @()
+    foreach ($restriction in $EndpointDlpRestrictions)
+    {
+        $currentRestriction = @{}
+        foreach ($propertyName in @('Setting', 'Value', 'Value2'))
+        {
+            if ($restriction -is [System.Collections.IDictionary])
+            {
+                if ($restriction.Contains($propertyName) -and $null -ne $restriction[$propertyName])
+                {
+                    $currentRestriction[$propertyName] = $restriction[$propertyName]
+                }
+            }
+            elseif ($null -ne $restriction.$propertyName)
+            {
+                $currentRestriction[$propertyName] = $restriction.$propertyName
+            }
+        }
+        $returnValue += $currentRestriction
+    }
+
+    return $returnValue
 }
 
 function Get-SCDLPSensitiveInformation

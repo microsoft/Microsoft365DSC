@@ -63,6 +63,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-M365DSCExportCachedConfigurationPolicies -MockWith {
+                return Get-MgBetaDeviceManagementConfigurationPolicy
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }

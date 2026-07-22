@@ -7,6 +7,39 @@
 
 $Script:IsPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
 
+<#
+.SYNOPSIS
+    Compares the current state of a resource with the desired state and returns whether they match.
+
+.DESCRIPTION
+    This function compares the current state of a resource with the desired state and returns whether they match.
+    It also populates a global variable with detailed information about any drifts detected during the comparison.
+
+.PARAMETER ResourceName
+    Specifies the name of the resource to compare.
+
+.PARAMETER DesiredValues
+    Specifies a hashtable containing the desired values for the resource.
+
+.PARAMETER CurrentValues
+    Specifies a hashtable containing the current values of the resource.
+
+.PARAMETER ExcludedProperties
+    Specifies an array of property names to exclude from the comparison.
+
+.PARAMETER IncludedProperties
+    Specifies an array of property names to include in the comparison. If specified, only these properties will be compared.
+
+.PARAMETER PostProcessing
+    Specifies a script block or function that will be invoked after the initial comparison to allow for custom post-processing of the current and desired values.
+    The script block should accept three parameters: DesiredValues, CurrentValues, and ValuesToCheck, and return a tuple containing the modified DesiredValues, CurrentValues, and ValuesToCheck.
+
+.PARAMETER PostProcessingArgs
+    Specifies an array of additional arguments to pass to the PostProcessing script block or function.
+
+.OUTPUTS
+    Returns a boolean indicating whether the current state matches the desired state.
+#>
 function Compare-M365DSCResourceState
 {
     [CmdletBinding()]

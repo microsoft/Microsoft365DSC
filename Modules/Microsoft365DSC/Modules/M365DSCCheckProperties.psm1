@@ -1,10 +1,19 @@
 <#
-.Description
+.SYNOPSIS
+    Checks if properties of existing resources are up to date.
+
+.DESCRIPTION
     This function checks if properties of existing resources are up to date.
     Creates a report about missing or outdated properties of existing resources
     and a list of missing resources.
 
-.Functionality
+.PARAMETER DestinationFolder
+    Specifies the destination folder where the report will be saved.
+
+.PARAMETER Credential
+    Specifies the credentials to use for connecting to Microsoft 365 workloads.
+
+.FUNCTIONALITY
     Internal
 #>
 function Get-PropertyReport
@@ -102,8 +111,11 @@ function Get-PropertyReport
 
     foreach ($module in $workloads)
     {
-        Write-Verbose "Connecting to {$($Module.Name)}"
-        $null = New-M365DSCConnection -Workload ($Module.Name) -InboundParameters $PSBoundParameters
+        if ($module.Name -ne 'MicrosoftTeams')
+        {
+            Write-Verbose "Connecting to {$($Module.Name)}"
+            $null = New-M365DSCConnection -Workload ($Module.Name) -InboundParameters $PSBoundParameters
+        }
 
         Write-Verbose "Getting list of cmdlets of {$($Module.ModuleName)}..."
         $CurrentModuleName = $Module.ModuleName

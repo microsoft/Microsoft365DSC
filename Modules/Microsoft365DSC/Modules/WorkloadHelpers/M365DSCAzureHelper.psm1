@@ -1,3 +1,13 @@
+<#
+.SYNOPSIS
+    Gets Azure billing accounts.
+
+.DESCRIPTION
+    Retrieves the list of Azure billing accounts for the current authenticated context.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Get-M365DSCAzureBillingAccount
 {
     [CmdletBinding()]
@@ -10,6 +20,19 @@ function Get-M365DSCAzureBillingAccount
     return $result
 }
 
+<#
+.SYNOPSIS
+    Gets associated tenants for a billing account.
+
+.DESCRIPTION
+    Retrieves the tenants currently associated to a specific Azure billing account.
+
+.PARAMETER BillingAccountId
+    Specifies the billing account identifier.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Get-M365DSCAzureBillingAccountsAssociatedTenant
 {
     [CmdletBinding()]
@@ -26,6 +49,22 @@ function Get-M365DSCAzureBillingAccountsAssociatedTenant
     return $result
 }
 
+<#
+.SYNOPSIS
+    Removes an associated tenant from a billing account.
+
+.DESCRIPTION
+    Deletes the association between an Azure billing account and an associated tenant.
+
+.PARAMETER BillingAccountId
+    Specifies the billing account identifier.
+
+.PARAMETER AssociatedTenantId
+    Specifies the associated tenant identifier to remove.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Remove-M365DSCAzureBillingAccountsAssociatedTenant
 {
     [CmdletBinding()]
@@ -45,6 +84,26 @@ function Remove-M365DSCAzureBillingAccountsAssociatedTenant
     $result = ConvertFrom-Json $response.Content
     return $result
 }
+
+<#
+.SYNOPSIS
+    Creates or updates an associated tenant for a billing account.
+
+.DESCRIPTION
+    Creates or updates the associated tenant relationship for an Azure billing account using the provided request body.
+
+.PARAMETER BillingAccountId
+    Specifies the billing account identifier.
+
+.PARAMETER AssociatedTenantId
+    Specifies the associated tenant identifier to create or update.
+
+.PARAMETER Body
+    Specifies the request payload sent to the Azure Billing API.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function New-M365DSCAzureBillingAccountsAssociatedTenant
 {
     [CmdletBinding()]
@@ -70,6 +129,19 @@ function New-M365DSCAzureBillingAccountsAssociatedTenant
     return $result
 }
 
+<#
+.SYNOPSIS
+    Gets billing role assignments for a billing account.
+
+.DESCRIPTION
+    Retrieves all billing role assignments for a specific Azure billing account.
+
+.PARAMETER BillingAccountId
+    Specifies the billing account identifier.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Get-M365DSCAzureBillingAccountsRoleAssignment
 {
     [CmdletBinding()]
@@ -86,6 +158,22 @@ function Get-M365DSCAzureBillingAccountsRoleAssignment
     return $result
 }
 
+<#
+.SYNOPSIS
+    Gets billing role definitions for a billing account.
+
+.DESCRIPTION
+    Retrieves billing role definitions for a specific Azure billing account, or a single role definition when an identifier is provided.
+
+.PARAMETER BillingAccountId
+    Specifies the billing account identifier.
+
+.PARAMETER RoleDefinitionId
+    Specifies the role definition identifier. When omitted, all role definitions are returned.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Get-M365DSCAzureBillingAccountsRoleDefinition
 {
     [CmdletBinding()]
@@ -113,6 +201,22 @@ function Get-M365DSCAzureBillingAccountsRoleDefinition
     return $result
 }
 
+<#
+.SYNOPSIS
+    Creates a billing role assignment.
+
+.DESCRIPTION
+    Creates a new billing role assignment for a specific Azure billing account using the provided request body.
+
+.PARAMETER BillingAccountId
+    Specifies the billing account identifier.
+
+.PARAMETER Body
+    Specifies the request payload sent to the Azure Billing API.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function New-M365DSCAzureBillingAccountsRoleAssignment
 {
     [CmdletBinding()]
@@ -134,6 +238,22 @@ function New-M365DSCAzureBillingAccountsRoleAssignment
     return $result
 }
 
+<#
+.SYNOPSIS
+    Removes a billing role assignment.
+
+.DESCRIPTION
+    Deletes a billing role assignment from a specific Azure billing account.
+
+.PARAMETER BillingAccountId
+    Specifies the billing account identifier.
+
+.PARAMETER AssignmentId
+    Specifies the billing role assignment identifier to remove.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Remove-M365DSCAzureBillingAccountsRoleAssignment
 {
     [CmdletBinding()]

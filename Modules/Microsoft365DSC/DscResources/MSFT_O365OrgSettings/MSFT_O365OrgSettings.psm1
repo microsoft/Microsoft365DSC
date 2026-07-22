@@ -163,21 +163,13 @@ function Get-TargetResource
 
     try
     {
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
 
         $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
         $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
-            -InboundParameters $PSBoundParameters
-
-        # Workaround for issue when if connected to S+C prior to calling cmdlet, an error about an invalid token is thrown.
-        # If connected to S+C, then we need to re-initialize the connection to EXO.
-        if ((Get-MSCloudLoginConnectionProfile -Workload SecurityComplianceCenter).Connected -and `
-            (Get-MSCloudLoginConnectionProfile -Workload ExchangeOnline).Connected)
-        {
-            Reset-MSCloudLoginConnectionProfileContext -Workload ExchangeOnline
-        }
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
@@ -1095,7 +1087,13 @@ function Export-TargetResource
         $AccessTokens
     )
 
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    $null = New-M365DSCConnection -Workload 'Tasks' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.

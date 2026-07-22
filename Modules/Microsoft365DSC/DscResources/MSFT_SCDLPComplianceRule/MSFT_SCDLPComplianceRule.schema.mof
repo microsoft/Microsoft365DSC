@@ -35,7 +35,15 @@ class MSFT_SCDLPContainsSensitiveInformation
     [Write, Description("Operator"),ValueMap{"And","Or"}, Values{"And","Or"}] String Operator;
 };
 
-[ClassVersion("1.0.0.2"), FriendlyName("SCDLPComplianceRule")]
+[ClassVersion("1.0.0.0")]
+class MSFT_SCDLPEndpointDlpRestriction
+{
+    [Required, Description("The Endpoint DLP restriction setting.")] String Setting;
+    [Required, Description("The Endpoint DLP restriction value.")] String Value;
+    [Write, Description("Additional Endpoint DLP restriction value.")] String Value2;
+};
+
+[ClassVersion("1.0.0.3"), FriendlyName("SCDLPComplianceRule")]
 class MSFT_SCDLPComplianceRule : OMI_BaseResource
 {
     [Key, Description("Name of the Rule.")] String Name;
@@ -46,6 +54,7 @@ class MSFT_SCDLPComplianceRule : OMI_BaseResource
     [Write, Description("The Comment parameter specifies an optional comment. If you specify a value that contains spaces, enclose the value in quotation marks.")] String Comment;
     [Write, Description("The AdvancedRule parameter uses complex rule syntax that supports multiple AND, OR, and NOT operators and nested groups")] String AdvancedRule;
     [Write, Description("The ContentContainsSensitiveInformation parameter specifies a condition for the rule that's based on a sensitive information type match in content. The rule is applied to content that contains the specified sensitive information type."), EmbeddedInstance("MSFT_SCDLPContainsSensitiveInformation")] String ContentContainsSensitiveInformation[];
+    [Write, Description("The EndpointDlpRestrictions parameter specifies the restricted endpoints for Endpoint DLP."), EmbeddedInstance("MSFT_SCDLPEndpointDlpRestriction")] String EndpointDlpRestrictions[];
     [Write, Description("The ExceptIfContentContainsSensitiveInformation parameter specifies an exception for the rule that's based on a sensitive information type match in content. The rule isn't applied to content that contains the specified sensitive information type."), EmbeddedInstance("MSFT_SCDLPContainsSensitiveInformation")] String ExceptIfContentContainsSensitiveInformation[];
     [Write, Description("The ContentPropertyContainsWords parameter specifies a condition for the DLP rule that's based on a property match in content. The rule is applied to content that contains the specified property.")] String ContentPropertyContainsWords[];
     [Write, Description("The Disabled parameter specifies whether the DLP rule is disabled.")] Boolean Disabled;

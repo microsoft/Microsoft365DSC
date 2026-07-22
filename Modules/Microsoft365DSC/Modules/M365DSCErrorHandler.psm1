@@ -1,12 +1,3 @@
-<#
-.DESCRIPTION
-    This function stores the already exported configuration to file, so this
-    information isn't lost when the export encounters an issue
-
-.FUNCTIONALITY
-    Internal
-#>
-
 $Script:M365DSCPartialExportMutex = $null
 $Script:M365DSCPartialExportMutexPath = $null
 
@@ -56,6 +47,24 @@ function Get-M365DSCPartialExportMutexName
     return "Global\M365DSCPartialExport_$hash"
 }
 
+<#
+.SYNOPSIS
+    Saves the already exported configuration to a temporary file to prevent data loss
+    in case of an error during export.
+
+.DESCRIPTION
+    This function stores the already exported configuration to file, so this
+    information isn't lost when the export encounters an issue
+
+.PARAMETER Content
+    The content to save to the temporary file.
+
+.PARAMETER FileName
+    The name of the temporary file to save the content to.
+
+.FUNCTIONALITY
+    Internal
+#>
 function Save-M365DSCPartialExport
 {
     [CmdletBinding()]
@@ -365,6 +374,9 @@ function Test-M365DSCNotFoundError
     When specified, errors classified as "resource not found" (HTTP 404, various
     workload-specific "not found" messages) will cause the function to return $null
     instead of throwing. Use this for lookups by Id where non-existence is expected.
+
+.PARAMETER RetryOnNotFoundError
+    When specified, errors classified as "resource not found" will be treated as errors to retry.
 
 .PARAMETER MaxRetries
     Maximum number of retry attempts for transient errors. Default is 3.

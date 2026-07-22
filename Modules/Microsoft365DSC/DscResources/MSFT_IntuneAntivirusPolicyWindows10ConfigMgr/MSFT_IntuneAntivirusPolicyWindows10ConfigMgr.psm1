@@ -278,7 +278,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $DisplayName)
         {
             $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
@@ -303,7 +303,9 @@ function Get-TargetResource
             #region resource generator code
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ErrorAction SilentlyContinue `
+                    -ExpandProperty 'settings($expand=settingDefinitions)'
+                $settings = $getValue.settings
             }
 
             if ($null -eq $getValue)
@@ -333,11 +335,14 @@ function Get-TargetResource
         Write-Verbose -Message "An Intune Antivirus Policy for Windows10 Config Mgr with Id {$Id} and DisplayName {$DisplayName} was found"
 
         # Retrieve policy specific settings
-        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $Id `
-            -ExpandProperty 'settingDefinitions' `
-            -All `
-            -ErrorAction Stop
+        if ($null -eq $settings)
+        {
+            [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
+                -DeviceManagementConfigurationPolicyId $Id `
+                -ExpandProperty 'settingDefinitions' `
+                -All `
+                -ErrorAction Stop
+        }
 
         $policySettings = @{}
         $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings

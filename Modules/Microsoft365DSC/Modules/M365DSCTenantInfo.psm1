@@ -1,9 +1,34 @@
 <#
+.SYNOPSIS
+    Resolves the initial onmicrosoft tenant domain.
+
 .DESCRIPTION
-    This function gets the onmicrosoft.com name of the tenant
+    Retrieves the tenant's initial domain through Microsoft Graph when connection parameters support it.
+    When a certificate path is provided and the tenant id already contains onmicrosoft, it returns the tenant id directly.
+
+.PARAMETER ApplicationId
+    Specifies the application id used for app-based authentication.
+
+.PARAMETER TenantId
+    Specifies the tenant id or tenant domain.
+
+.PARAMETER ApplicationSecret
+    Specifies the application secret used for app-based authentication.
+
+.PARAMETER CertificateThumbprint
+    Specifies the certificate thumbprint used for app-based authentication.
+
+.PARAMETER CertificatePath
+    Specifies the certificate file path used for app-based authentication.
+
+.PARAMETER ManagedIdentity
+    Indicates that managed identity authentication should be used.
 
 .FUNCTIONALITY
     Internal
+
+.OUTPUTS
+    System.String
 #>
 function Get-M365DSCTenantDomain
 {
@@ -77,11 +102,21 @@ function Get-M365DSCTenantDomain
 }
 
 <#
+.SYNOPSIS
+    Derives the tenant name from a bound parameter set.
+
 .DESCRIPTION
-    This function retrieves the current tenant's name based on received authentication parameters.
+    Returns the tenant identifier directly when TenantId is present.
+    Otherwise, it derives the tenant name from the credential user principal name.
+
+.PARAMETER ParameterSet
+    Specifies the bound parameter hashtable to inspect.
 
 .FUNCTIONALITY
     Internal
+
+.OUTPUTS
+    System.String
 #>
 function Get-M365DSCTenantNameFromParameterSet
 {
@@ -113,8 +148,18 @@ function Get-M365DSCTenantNameFromParameterSet
 }
 
 <#
+.SYNOPSIS
+    Resolves the organization domain from credential or tenant id.
+
 .DESCRIPTION
-    This function gets the DNS domain used in the specified credential
+    Extracts the DNS domain part from the credential username when available.
+    If no credential is provided, it validates and returns the tenant id when it represents a domain value.
+
+.PARAMETER Credential
+    Specifies the credential containing a user principal name.
+
+.PARAMETER TenantId
+    Specifies the tenant id or domain value to return.
 
 .FUNCTIONALITY
     Internal
@@ -154,8 +199,18 @@ function Get-M365DSCOrganization
 }
 
 <#
+.SYNOPSIS
+    Retrieves the tenant short name from initial Microsoft Graph domains.
+
 .DESCRIPTION
-    This function gets the name of the M365 tenant
+    Connects to Microsoft Graph and finds the initial onmicrosoft domain.
+    Returns the tenant short name portion that is used to build workload-specific endpoints.
+
+.PARAMETER UseMFA
+    Indicates that interactive multi-factor authentication should be used.
+
+.PARAMETER Credential
+    Specifies the credential used for delegated authentication.
 
 .FUNCTIONALITY
     Internal
@@ -201,14 +256,24 @@ function Get-M365TenantName
 }
 
 <#
+.SYNOPSIS
+    Resolves API endpoint base URLs for a tenant cloud region.
+
 .DESCRIPTION
-    This function retrieves the various endpoint urls based on the cloud environment.
+    Reads the tenant OpenID metadata to detect regional scope and returns endpoint values used by Microsoft365DSC.
+    Currently resolves the Azure management endpoint with sovereign cloud handling.
+
+.PARAMETER TenantId
+    Specifies the tenant id or tenant domain used to query OpenID metadata.
 
 .EXAMPLE
     PS> Get-M365DSCAPIEndpoint -TenantId 'contoso.onmicrosoft.com'
 
 .FUNCTIONALITY
-    Private
+    Internal
+
+.OUTPUTS
+    System.Collections.Hashtable
 #>
 function Get-M365DSCAPIEndpoint
 {
@@ -253,8 +318,18 @@ function Get-M365DSCAPIEndpoint
 }
 
 <#
+.SYNOPSIS
+    Retrieves the SharePoint Online administration URL.
+
 .DESCRIPTION
-    This function gets the URL of the SPO Administration site
+    Connects to Microsoft Graph, discovers the initial tenant domain, and builds the SharePoint admin URL.
+    Returns the URL in the https://tenant-admin.sharepoint.com format.
+
+.PARAMETER UseMFA
+    Indicates that interactive multi-factor authentication should be used.
+
+.PARAMETER Credential
+    Specifies the credential used for delegated authentication.
 
 .FUNCTIONALITY
     Internal

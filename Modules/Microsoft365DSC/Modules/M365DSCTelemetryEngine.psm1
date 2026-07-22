@@ -2,11 +2,17 @@ $Script:TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSC
             [System.EnvironmentVariableTarget]::Machine)
 
 <#
+.SYNOPSIS
+    Returns whether Microsoft365DSC telemetry is enabled.
+
 .DESCRIPTION
-    This function tests if telemetry is enabled for M365DSC.
+    Evaluates the machine-scoped telemetry flag and returns true when telemetry is enabled or not explicitly disabled.
 
 .FUNCTIONALITY
     Internal
+
+.OUTPUTS
+    System.Boolean
 #>
 function Test-IsM365DSCTelemetryEnabled
 {
@@ -67,11 +73,14 @@ function Get-M365DSCApplicationInsightsTelemetryClient
 }
 
 <#
+.SYNOPSIS
+    Stores LCM configuration metadata for telemetry enrichment.
+
 .DESCRIPTION
-    This function sets the LCM configuration for the current session.
+    Saves the Local Configuration Manager configuration object in module scope so telemetry events can include LCM context.
 
 .PARAMETER LCMConfig
-    The Local Configuration Manager configuration to set for the session.
+    Specifies the Local Configuration Manager configuration object.
 
 .EXAMPLE
     PS> $lcmConfig = Get-DscLocalConfigurationManager
@@ -90,8 +99,20 @@ function Set-M365DSCLCMConfiguration
 }
 
 <#
+.SYNOPSIS
+    Sends a telemetry event to Application Insights.
+
 .DESCRIPTION
-    This function sends telemetry information to Application Insights
+    Enriches telemetry data with runtime, environment, connection, and workload metadata, then submits the event through the telemetry client when telemetry is enabled.
+
+.PARAMETER Type
+    Specifies the telemetry event type.
+
+.PARAMETER Data
+    Specifies telemetry properties to include with the event.
+
+.PARAMETER Metrics
+    Specifies numeric telemetry metrics to include with the event.
 
 .FUNCTIONALITY
     Internal
@@ -513,23 +534,29 @@ function Add-M365DSCTelemetryEvent
 }
 
 <#
-.Description
-This function configures the telemetry feature of M365DSC
+.SYNOPSIS
+    Configures machine-scoped telemetry options.
 
-.Parameter Enabled
-Enables or disables telemetry collection.
+.DESCRIPTION
+    Writes telemetry settings such as enabled state, instrumentation key, project name, and connection string to machine environment variables.
 
-.Parameter InstrumentationKey
-Specifies the Instrumention Key to be used to send the telemetry to.
+.PARAMETER Enabled
+    Specifies whether telemetry should be enabled.
 
-.Parameter ProjectName
-Specifies the name of the project to store the telemetry data under.
+.PARAMETER InstrumentationKey
+    Specifies the Application Insights instrumentation key.
 
-.Example
-Set-M365DSCTelemetryOption -Enabled $false
+.PARAMETER ProjectName
+    Specifies the telemetry project name value.
 
-.Functionality
-Public
+.PARAMETER ConnectionString
+    Specifies the Application Insights connection string.
+
+.EXAMPLE
+    Set-M365DSCTelemetryOption -Enabled $false
+
+.FUNCTIONALITY
+    Public
 #>
 function Set-M365DSCTelemetryOption
 {
@@ -578,14 +605,20 @@ function Set-M365DSCTelemetryOption
 }
 
 <#
-.Description
-This function gets the configuration for the M365DSC telemetry feature
+.SYNOPSIS
+    Returns current machine-scoped telemetry configuration.
 
-.Example
-Get-M365DSCTelemetryOption
+.DESCRIPTION
+    Reads telemetry-related environment variables and returns them as a hashtable.
 
-.Functionality
-Public
+.EXAMPLE
+    Get-M365DSCTelemetryOption
+
+.FUNCTIONALITY
+    Public
+
+.OUTPUTS
+    System.Collections.Hashtable
 #>
 function Get-M365DSCTelemetryOption
 {
@@ -613,11 +646,27 @@ function Get-M365DSCTelemetryOption
 }
 
 <#
-.Description
-This function converts the data which is send to Application Insights to the correct format.
+.SYNOPSIS
+    Normalizes resource execution context into telemetry parameters.
 
-.Functionality
-Internal
+.DESCRIPTION
+    Builds a telemetry dictionary from resource name, command name, and bound parameters.
+    It resolves tenant and principal hints and includes authentication mode metadata.
+
+.PARAMETER ResourceName
+    Specifies the resource name that produced the telemetry event.
+
+.PARAMETER CommandName
+    Specifies the command or method name associated with the telemetry event.
+
+.PARAMETER Parameters
+    Specifies bound parameters from the calling command.
+
+.FUNCTIONALITY
+    Internal
+
+.OUTPUTS
+    System.Collections.Generic.Dictionary[[System.String], [System.Object]]
 #>
 function Format-M365DSCTelemetryParameters
 {
@@ -659,7 +708,7 @@ function Format-M365DSCTelemetryParameters
             $data.Add('Principal', $Parameters.ApplicationId)
             $data.Add('Tenant', $Parameters.TenantId)
         }
-        elseif (-not [System.String]::IsNullOrEmpty($TenantId))
+        elseif (-not [System.String]::IsNullOrEmpty($Parameters.TenantId))
         {
             $data.Add('Tenant', $Parameters.TenantId)
         }

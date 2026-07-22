@@ -1,10 +1,27 @@
 <#
-.Description
-This function creates a new error log file for each session, whenever an error
-is encountered, and appends valuable troubleshooting information to the file
+.SYNOPSIS
+    Creates a Microsoft365DSC error log entry and emits diagnostics.
 
-.Functionality
-Internal
+.DESCRIPTION
+    Builds a detailed error record, writes verbose output, logs to the M365DSC event log, emits telemetry, and appends error details to a session log file.
+
+.PARAMETER Source
+    Specifies the source name used for event and log entry context.
+
+.PARAMETER Message
+    Specifies the primary error message to record.
+
+.PARAMETER Exception
+    Specifies the exception object to include in diagnostics.
+
+.PARAMETER Credential
+    Specifies credential context used to derive tenant information when needed.
+
+.PARAMETER TenantId
+    Specifies the tenant identifier to include in log records.
+
+.FUNCTIONALITY
+    Internal
 #>
 function New-M365DSCLogEntry
 {
@@ -142,11 +159,32 @@ function New-M365DSCLogEntry
 }
 
 <#
-.Description
-This function creates a new entry in the M365DSC event log, based on the provided information
+.SYNOPSIS
+    Writes an entry to the Microsoft365DSC event log.
 
-.Functionality
-Internal
+.DESCRIPTION
+    Creates the event source when needed, truncates long payloads, optionally forwards notifications, and writes the event entry with the requested severity and metadata.
+
+.PARAMETER Message
+    Specifies the event message text.
+
+.PARAMETER Source
+    Specifies the event source name.
+
+.PARAMETER EntryType
+    Specifies the event entry type.
+
+.PARAMETER EventID
+    Specifies the numeric event identifier.
+
+.PARAMETER EventType
+    Specifies the notification event category used for endpoint forwarding.
+
+.PARAMETER TenantId
+    Specifies the tenant identifier appended to the event payload.
+
+.FUNCTIONALITY
+    Internal
 #>
 function Add-M365DSCEvent
 {
@@ -266,38 +304,39 @@ function Add-M365DSCEvent
 }
 
 <#
-.Description
-This function creates a ZIP package with a collection of troubleshooting information,
-like Verbose logs, M365DSC event log, PowerShell version, OS versions and LCM config.
-It is also able to anonymize this information (as much as possible), so important
-information isn't shared.
+.SYNOPSIS
+    Exports Microsoft365DSC diagnostic artifacts into a zip archive.
 
-.Parameter ExportFilePath
-The file path to the ZIP file that should be created.
+.DESCRIPTION
+    Collects DSC verbose logs, M365DSC event log entries, PowerShell and OS details, and LCM information.
+    Optionally anonymizes selected values before packaging the output.
 
-.Parameter NumberOfDays
-The number of days of logs that should be exported.
+.PARAMETER ExportFilePath
+    Specifies the destination zip file path.
 
-.Parameter Anonymize
-Specify if the results should be anonymized.
+.PARAMETER NumberOfDays
+    Specifies how many days of logs should be included.
 
-.Parameter Server
-(Anonymize=True) The server name that should be renamed.
+.PARAMETER Anonymize
+    Indicates that sensitive values should be anonymized in exported artifacts.
 
-.Parameter Domain
-(Anonymize=True) The domain that should be renamed.
+.PARAMETER Server
+    Specifies the server value to replace during anonymization.
 
-.Parameter Url
-(Anonymize=True) The url that should be renamed.
+.PARAMETER Domain
+    Specifies the domain value to replace during anonymization.
 
-.Example
-Export-M365DSCDiagnosticData -ExportFilePath C:\Temp\DSCLogsExport.zip -NumberOfDays 3
+.PARAMETER Url
+    Specifies the URL value to replace during anonymization.
 
-.Example
-Export-M365DSCDiagnosticData -ExportFilePath C:\Temp\DSCLogsExport.zip -Anonymize -Server spfe -Domain contoso.com -Url sharepoint.contoso.com
+.EXAMPLE
+    Export-M365DSCDiagnosticData -ExportFilePath C:\Temp\DSCLogsExport.zip -NumberOfDays 3
 
-.Functionality
-Public
+.EXAMPLE
+    Export-M365DSCDiagnosticData -ExportFilePath C:\Temp\DSCLogsExport.zip -Anonymize -Server spfe -Domain contoso.com -Url sharepoint.contoso.com
+
+.FUNCTIONALITY
+    Internal
 #>
 function Export-M365DSCDiagnosticData
 {
@@ -424,17 +463,21 @@ function Export-M365DSCDiagnosticData
 }
 
 <#
-.Description
-This function attempts to register a new notification endpoint in registry.
+.SYNOPSIS
+    Registers a notification endpoint for M365DSC events.
 
-.Parameter Url
-Represents the Url of the endpoint to be contacted when events are detected.
+.DESCRIPTION
+    Adds a URL and event type pair to the machine-level endpoint registration list.
+    The function validates duplicates before persisting the new registration.
 
-.Parameter EventType
-Represents the type of events that need to be reported to the endpoint.
+.PARAMETER Url
+    Specifies the notification endpoint URL.
 
-.Functionality
-Public
+.PARAMETER EventType
+    Specifies the event type that should trigger notifications.
+
+.FUNCTIONALITY
+    Public
 #>
 function New-M365DSCNotificationEndpointRegistration
 {
@@ -474,17 +517,21 @@ function New-M365DSCNotificationEndpointRegistration
 }
 
 <#
-.Description
-This function attempts to remove a new notification endpoint in registry.
+.SYNOPSIS
+    Removes a notification endpoint registration.
 
-.Parameter Url
-Represents the Url of the endpoint to be contacted when events are detected.
+.DESCRIPTION
+    Removes a URL and event type pair from the machine-level endpoint registration list.
+    The function throws when the registration does not exist.
 
-.Parameter EventType
-Represents the type of events that need to be reported to the endpoint.
+.PARAMETER Url
+    Specifies the notification endpoint URL.
 
-.Functionality
-Public
+.PARAMETER EventType
+    Specifies the registered event type to remove.
+
+.FUNCTIONALITY
+    Public
 #>
 function Remove-M365DSCNotificationEndpointRegistration
 {
@@ -526,17 +573,20 @@ function Remove-M365DSCNotificationEndpointRegistration
 }
 
 <#
-.Description
-This function returns all or a specific notification endpoint registration.
+.SYNOPSIS
+    Retrieves notification endpoint registrations.
 
-.Parameter Url
-Represents the Url of the endpoint to be contacted when events are detected.
+.DESCRIPTION
+    Returns all or filtered endpoint registrations from the machine-level registration value based on URL and event type filters.
 
-.Parameter EventType
-Represents the type of events that need to be reported to the endpoint.
+.PARAMETER Url
+    Specifies an optional URL filter.
 
-.Functionality
-Public
+.PARAMETER EventType
+    Specifies an optional event type filter.
+
+.FUNCTIONALITY
+    Public
 #>
 function Get-M365DSCNotificationEndpointRegistration
 {
@@ -652,11 +702,14 @@ function Send-M365DSCNotificationEndPointMessage
 }
 
 <#
-.Description
-This function determines if the process is running interactively or unattended.
+.SYNOPSIS
+    Determines whether the current shell is non-interactive.
 
-.Functionality
-Private
+.DESCRIPTION
+    Checks command-line arguments and host interaction mode to identify unattended execution contexts.
+
+.FUNCTIONALITY
+    Private
 #>
 function Assert-M365DSCIsNonInteractiveShell
 {
@@ -675,14 +728,17 @@ function Assert-M365DSCIsNonInteractiveShell
 }
 
 <#
-.Description
-This function configures the option for logging events into the Event Log.
+.SYNOPSIS
+    Configures M365DSC event logging options.
 
-.Parameter IncludeNonDrifted
-Determines whether or not we should log information about resource's instances that don't have drifts.
+.DESCRIPTION
+    Updates machine-scoped logging behavior for drift reporting.
 
-.Functionality
-Public
+.PARAMETER IncludeNonDrifted
+    Specifies whether non-drifted resources should also be logged.
+
+.FUNCTIONALITY
+    Public
 #>
 function Set-M365DSCLoggingOption
 {
@@ -701,11 +757,17 @@ function Set-M365DSCLoggingOption
 }
 
 <#
-.Description
-This function returns information about the option for logging events into the Event Log.
+.SYNOPSIS
+    Returns current M365DSC event logging options.
 
-.Functionality
-Public
+.DESCRIPTION
+    Reads machine-scoped logging options and returns them as a hashtable.
+
+.FUNCTIONALITY
+    Public
+
+.OUTPUTS
+    System.Collections.Hashtable
 #>
 function Get-M365DSCLoggingOption
 {

@@ -1,3 +1,25 @@
+<#
+.SYNOPSIS
+    Helper function to invoke a web request to Azure DevOPS API with the correct authorization header.
+
+.DESCRIPTION
+    This function is used to invoke a web request to the Azure DevOPS API. It automatically adds the correct authorization header using the access token obtained from the M365DSC connection profile for Azure DevOPS.
+
+.PARAMETER Uri
+    The URI of the Azure DevOPS API endpoint to which the request will be sent.
+
+.PARAMETER Method
+    The HTTP method to use for the request (e.g., GET, POST, PUT, DELETE). Default is 'GET'.
+
+.PARAMETER Body
+    The body of the request, if applicable. This is typically used for POST or PUT requests.
+
+.PARAMETER ContentType
+    The content type of the request. Default is 'application/json-patch+json'.
+
+.OUTPUTS
+    Returns a hashtable containing the response from the Azure DevOPS API. If the response content is not empty, it will be converted from JSON to a PowerShell object.
+#>
 function Invoke-M365DSCAzureDevOPSWebRequest
 {
     [OutputType([System.Collections.Hashtable])]

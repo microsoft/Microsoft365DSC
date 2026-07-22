@@ -1,3 +1,22 @@
+<#
+.SYNOPSIS
+    Invokes a Defender for Endpoint REST request.
+
+.DESCRIPTION
+    Sends an authenticated REST request to Microsoft Defender for Endpoint using the current connection profile and returns the parsed response content.
+
+.PARAMETER Uri
+    Specifies the target URI for the REST request.
+
+.PARAMETER Method
+    Specifies the HTTP method to use. The default value is GET.
+
+.PARAMETER Body
+    Specifies the request payload to send when the method supports a body.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Invoke-M365DSCDefenderREST
 {
     [CmdletBinding()]

@@ -96,7 +96,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $DisplayName)
         {
             $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
@@ -122,8 +122,10 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 $getValue = Invoke-M365DSCCommand -ScriptBlock {
-                    Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id  -ErrorAction Stop
+                    Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id  -ErrorAction Stop `
+                        -ExpandProperty 'settings($expand=settingDefinitions)'
                 } -SuppressNotFoundError
+                $settings = $getValue.settings
             }
 
             if ($null -eq $getValue)
@@ -134,8 +136,9 @@ function Get-TargetResource
                 {
                     $getValue = Invoke-M365DSCCommand -ScriptBlock {
                         Get-MgBetaDeviceManagementConfigurationPolicy `
+                            -All `
                             -Filter "Name eq '$($DisplayName -replace "'", "''")'" `
-                        -ErrorAction SilentlyContinue
+                            -ErrorAction SilentlyContinue
                     }
                 }
             }
@@ -149,16 +152,20 @@ function Get-TargetResource
         else
         {
             $getValue = $Script:exportedInstance
+            $settings = $getValue.settings
         }
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune App Control For Business Policy for Windows10 V2 with Id {$Id} and Name {$DisplayName} was found"
 
         # Retrieve policy specific settings
-        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $Id `
-            -ExpandProperty 'settingDefinitions' `
-            -All `
-            -ErrorAction Stop
+        if ($null -eq $settings)
+        {
+            [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
+                -DeviceManagementConfigurationPolicyId $Id `
+                -ExpandProperty 'settingDefinitions' `
+                -All `
+                -ErrorAction Stop
+        }
 
         $policySettings = @{}
         $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings
@@ -568,10 +575,9 @@ function Export-TargetResource
         {
             $Filter = $baseFilter
         }
-        [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -Filter $Filter `
-            -All `
-            -ErrorAction Stop
+        [array]$getValue = Get-M365DSCExportCachedConfigurationPolicies `
+            -TemplateId $policyTemplateID `
+            -Filter $Filter
         #endregion
 
         $i = 1

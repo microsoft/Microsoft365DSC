@@ -20,85 +20,100 @@ foreach ($template in $jsonContent.templates.psobject.Properties)
 {
     $Script:RelationTemplates.templates[$template.Name] = $template.Value
 }
+$allResourcesArgumentCompleter = Get-ChildItem -Path ($PSScriptRoot + '/../DscResources/') -Recurse -Filter '*.psm1' -File | Foreach-Object {
+    $_.Name -replace 'MSFT_', '' -replace '.psm1', ''
+}
+Register-ArgumentCompleter -CommandName Export-M365DSCConfiguration -ParameterName Components -ScriptBlock {
+    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+    $resources = $allResourcesArgumentCompleter -like "$wordToComplete*"
+    foreach ($resource in $resources)
+    {
+        [System.Management.Automation.CompletionResult]::new($resource, $resource, 'ParameterValue', $resource)
+    }
+}
 
 <#
+.SYNOPSIS
+    Exports tenant configuration to Microsoft365DSC configuration content.
+
 .DESCRIPTION
-    This is the main Microsoft365DSC.Reverse function that extracts the DSC configuration from an existing Microsoft 365 Tenant.
+    Entry point for ReverseDSC export.
+    Validates authentication inputs, resolves target resources, executes extraction, and returns the generated configuration content.
 
 .PARAMETER LaunchWebUI
-    Adding this parameter will open the WebUI in a browser.
+    Indicates that the export Web UI should be launched.
 
 .PARAMETER Path
-    Specifies the path in which the exported DSC configuration should be stored.
+    Specifies the output path for exported configuration files.
 
 .PARAMETER FileName
-    Specifies the name of the file in which the exported DSC configuration should be stored.
+    Specifies the output configuration file name.
 
 .PARAMETER ConfigurationName
-    Specifies the name of the configuration that will be generated.
+    Specifies the generated DSC configuration name.
 
 .PARAMETER Components
-    Specifies the components for which an export should be created.
+    Specifies component names to export.
 
 .PARAMETER ExcludeComponents
-    Specifies the components to skip when creating the export
+    Specifies component names to exclude.
 
 .PARAMETER Workloads
-    Specifies the workload for which an export should be created for all resources.
+    Specifies workloads used to derive components.
 
 .PARAMETER Mode
-    Specifies the mode of the export: Default or Full.
+    Specifies the export mode.
 
 .PARAMETER GenerateInfo
-    Specifies if each exported resource should get a link to the Wiki article of the resource.
-
-.PARAMETER ApplicationId
-    Specifies the application id to be used for authentication.
-
-.PARAMETER ApplicationSecret
-    Specifies the application secret of the application to be used for authentication.
-
-.PARAMETER TenantId
-    Specifies the id of the tenant.
-
-.PARAMETER CertificateThumbprint
-    Specifies the thumbprint to be used for authentication.
-
-.PARAMETER Credential
-    Specifies the credentials to be used for authentication.
-
-.PARAMETER CertificatePassword
-    Specifies the password of the PFX file which is used for authentication.
-
-.PARAMETER CertificatePath
-    Specifies the path of the PFX file which is used for authentication.
+    Indicates whether informational metadata should be generated in export output.
 
 .PARAMETER Filters
-    Specifies resource level filters to apply in order to reduce the number of instances exported.
+    Specifies resource-level filters used during export.
 
-.PARAMETER AccessTokens
-    Specifies the access token to use for authentication.
+.PARAMETER ApplicationId
+    Specifies the application id used for app-based authentication.
+
+.PARAMETER TenantId
+    Specifies the tenant id or tenant domain used for authentication.
+
+.PARAMETER ApplicationSecret
+    Specifies the application secret used for app-based authentication.
+
+.PARAMETER CertificateThumbprint
+    Specifies the certificate thumbprint used for app-based authentication.
+
+.PARAMETER Credential
+    Specifies delegated credentials used for authentication.
+
+.PARAMETER CertificatePassword
+    Specifies the password used to read the certificate file.
+
+.PARAMETER CertificatePath
+    Specifies the certificate file path used for app-based authentication.
 
 .PARAMETER ManagedIdentity
-    Specifies use of managed identity for authentication.
+    Indicates that managed identity authentication should be used.
+
+.PARAMETER AccessTokens
+    Specifies one or more pre-acquired access tokens.
 
 .PARAMETER SubscriptionId
-    Specifies the subscription id to be used for authentication.
+    Specifies the Azure subscription id used by Azure resources.
 
 .PARAMETER Validate
-    Specifies that the configuration needs to be validated for conflicts or issues after its extraction is completed.
+    Indicates whether the exported configuration should be validated.
 
 .PARAMETER Parallel
-    Specifies that the export is executed in parallel.
+    Indicates whether export should execute in parallel.
 
 .PARAMETER TokenReplacement
-    Specifies the hashtable to use for token replacement. Key is the value to replace, and the value is the variable to use for replacement without the '$' sign.
+    Specifies token replacement mappings applied to exported content.
 
 .PARAMETER WithStatistics
-    Specifies that statistics about the export should be shown after completion.
+    Indicates whether export statistics should be collected.
 
 .PARAMETER IncludeDependencies
-    Specifies that resource dependencies should be included in the export.
+    Indicates whether dependency extraction and DependsOn generation should run.
 
 .EXAMPLE
     PS> Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
@@ -510,19 +525,17 @@ function Export-M365DSCConfiguration
 }
 
 <#
-.DESCRIPTION
-    This function retrieves the resources available in the M365DSC project based on the specified export mode.
+.SYNOPSIS
+    Returns exportable resource names for a selected export mode.
 
-.FUNCTIONALITY
-    Public
+.DESCRIPTION
+    Filters resource settings by mode and optionally excludes configuration resources when Full mode is used.
 
 .PARAMETER Mode
-    Specifies the mode of the export. Valid values are 'Default' and 'Full'.
-    - 'Default' includes only configuration resources.
-    - 'Full' includes all resources, both configuration and data.
+    Specifies the export mode used to select resources.
 
 .PARAMETER ExcludeConfigurationResources
-    If specified, configuration resources will be excluded from the results. Works only for the 'Full' mode.
+    Indicates that configuration-only resources should be excluded in Full mode.
 
 .EXAMPLE
     Get-M365DSCResourcesByExportMode -Mode 'Default'
@@ -535,7 +548,7 @@ function Export-M365DSCConfiguration
     This command retrieves all resources that are available in the Full export mode.
 
 .OUTPUTS
-    [System.String[]] - An array of resource names that match the specified export mode.
+    System.String[]
 #>
 function Get-M365DSCResourcesByExportMode
 {
@@ -575,11 +588,42 @@ function Get-M365DSCResourcesByExportMode
 }
 
 <#
-.DESCRIPTION
-    This function generates DSC string from an exported result hashtable
+.SYNOPSIS
+    Builds DSC resource block content for a single exported resource instance.
 
-.FUNCTIONALITY
-    Internal
+.DESCRIPTION
+    Converts resource export results into DSC text content.
+    It normalizes authentication fields, handles escaping rules, and emits resource block content for the target module.
+
+.PARAMETER ResourceName
+    Specifies the resource name being rendered.
+
+.PARAMETER ConnectionMode
+    Specifies the resolved authentication connection mode.
+
+.PARAMETER ModulePath
+    Specifies the path to the resource module used during export rendering.
+
+.PARAMETER Results
+    Specifies exported resource values to render.
+
+.PARAMETER Credential
+    Specifies delegated credentials used for contextual rendering.
+
+.PARAMETER NoEscape
+    Specifies property names that should not be string-escaped.
+
+.PARAMETER SkipAuthenticationUpdate
+    Indicates that authentication fields should not be transformed.
+
+.PARAMETER AllowVariablesInStrings
+    Indicates that variable placeholders may be preserved inside strings.
+
+.PARAMETER RawResults
+    Specifies the original unprocessed export result values.
+
+.OUTPUTS
+    System.String
 #>
 function Get-M365DSCExportContentForResource
 {
@@ -806,6 +850,10 @@ function Get-M365DSCExportContentForResource
     }
 
     # Apply additional string to variable replacements from mapping
+    if ($Global:M365DSCStringReplacementMap)
+    {
+        Set-M365DSCStringReplacementMap -Map $Global:M365DSCStringReplacementMap
+    }
     if ($null -ne $Script:M365DSCStringReplacementMap -and $Script:M365DSCStringReplacementMap.Count -gt 0)
     {
         foreach ($entry in $Script:M365DSCStringReplacementMap.GetEnumerator())
@@ -847,11 +895,17 @@ function Get-M365DSCExportContentForResource
 }
 
 <#
-.DESCRIPTION
-    This function sets the string replacement map used during export.
+.SYNOPSIS
+    Updates the export string replacement map.
 
-.FUNCTIONALITY
-    Internal
+.DESCRIPTION
+    Merges replacement entries into the module string replacement map and optionally clears existing mappings first.
+
+.PARAMETER Map
+    Specifies replacement mappings where key is source text and value is replacement token.
+
+.PARAMETER Clear
+    Indicates that existing mappings should be cleared before applying Map.
 #>
 function Set-M365DSCStringReplacementMap
 {
@@ -881,11 +935,14 @@ function Set-M365DSCStringReplacementMap
 }
 
 <#
-.DESCRIPTION
-    This function returns the string replacement map used during export.
+.SYNOPSIS
+    Returns the current export string replacement map.
 
-.FUNCTIONALITY
-    Internal
+.DESCRIPTION
+    Returns a clone of the in-memory map used for token replacement in exported content.
+
+.OUTPUTS
+    System.Collections.Hashtable
 #>
 function Get-M365DSCStringReplacementMap
 {
@@ -898,7 +955,7 @@ function Get-M365DSCStringReplacementMap
 
 <#
 .SYNOPSIS
-    Joins two or more M365DSC configurations into a single configuration.
+    Joins split DSC configuration files into a single configuration content block.
 
 .DESCRIPTION
     This function is used to join two or more M365DSC configurations into a single configuration.
@@ -906,10 +963,10 @@ function Get-M365DSCStringReplacementMap
     Please note that the function won't be updating the authentication parameters if they differ between the configurations. Make sure that the authentication parameters are the same over all configurations.
 
 .PARAMETER ConfigurationFile
-    The name of the first configuration file to use as the base configuration.
+    Specifies the base configuration file name.
 
 .PARAMETER ConfigurationPath
-    The directory path to the configuration files to join to the base configuration.
+    Specifies the folder containing configuration files to merge.
 
 .EXAMPLE
     Join-M365DSCConfiguration -ConfigurationFile 'M365TenantConfig.ps1' -ConfigurationPath 'D:\testbed'
@@ -966,20 +1023,23 @@ function Join-M365DSCConfiguration
 }
 
 <#
+.SYNOPSIS
+    Splits a large DSC configuration file into smaller files.
+
 .DESCRIPTION
-    This function splits a large M365DSC configuration file into smaller files based on size and resource count limits.
+    Parses Node localhost resource blocks and writes chunked configuration files based on maximum file size and optional resource count limits.
 
 .PARAMETER Path
-    The path to the M365DSC configuration file to split.
+    Specifies the source configuration file path.
 
 .PARAMETER OutputFolder
-    The folder where the split configuration files will be saved. Defaults to the same folder as the input file.
+    Specifies the destination folder for split files.
 
 .PARAMETER MaxFileSizeMB
-    The maximum size (in megabytes) for each split configuration file. Default is 3 MB.
+    Specifies the maximum file size per output file in megabytes.
 
 .PARAMETER MaxResources
-    The maximum number of resources per split configuration file. Default is 0 (no limit).
+    Specifies the maximum number of resource blocks per output file.
 
 .EXAMPLE
     Split-M365DSCConfiguration -Path 'C:\Configs\M365TenantConfig.ps1' -OutputFolder 'C:\Configs\Split' -MaxFileSizeMB 2 -MaxResources 50
@@ -1106,11 +1166,20 @@ function Split-M365DSCConfiguration
 }
 
 <#
-.Description
-This function updates the exported results with the specified authentication method
+.SYNOPSIS
+    Normalizes authentication fields in exported resource results.
 
-.Functionality
-Internal
+.DESCRIPTION
+    Transforms authentication-related properties into configuration-data references and returns updated results with no-escape property metadata.
+
+.PARAMETER ConnectionMode
+    Specifies the authentication mode used for transformation rules.
+
+.PARAMETER Results
+    Specifies exported resource values to normalize.
+
+.OUTPUTS
+    System.Collections.Hashtable
 #>
 function Update-M365DSCExportAuthenticationResults
 {
@@ -1242,11 +1311,23 @@ function Update-M365DSCExportAuthenticationResults
 }
 
 <#
-.Description
-    Registers an export dependency between a source instance and a target resource.
+.SYNOPSIS
+    Registers a discovered resource dependency during export.
 
-.Functionality
-    Internal
+.DESCRIPTION
+    Adds a source-target dependency record to the global export dependency collector.
+
+.PARAMETER SourceInstanceName
+    Specifies the source resource instance name.
+
+.PARAMETER SourceResourceName
+    Specifies the source resource type name.
+
+.PARAMETER TargetResourceType
+    Specifies the target resource type name.
+
+.PARAMETER TargetKey
+    Specifies the target key value used to resolve the dependency target instance.
 #>
 function Register-M365DSCExportDependency
 {
@@ -1282,12 +1363,20 @@ function Register-M365DSCExportDependency
 }
 
 <#
-.Description
-    Resolves relation declarations from a resource's settings.json and registers
-    any cross-resource dependencies found in the exported Results hashtable.
+.SYNOPSIS
+    Resolves relation templates into concrete export dependencies.
 
-.Functionality
-    Internal
+.DESCRIPTION
+    Evaluates configured relation templates for the resource instance and registers dependencies for referenced target resources.
+
+.PARAMETER ResourceName
+    Specifies the source resource type name.
+
+.PARAMETER InstanceName
+    Specifies the source resource instance name.
+
+.PARAMETER Results
+    Specifies exported property values used to evaluate relation definitions.
 #>
 function Resolve-M365DSCExportRelations
 {
@@ -1522,12 +1611,17 @@ function Test-M365DSCRelationCondition
 }
 
 <#
-.Description
-    Post-processes the exported DSC content to inject DependsOn declarations and
-    generate minimal stub blocks for referenced resources not already exported.
+.SYNOPSIS
+    Injects DependsOn statements into exported DSC content.
 
-.Functionality
-    Internal
+.DESCRIPTION
+    Resolves collected dependencies to exported instances, injects DependsOn arrays into source resource blocks, and generates minimal stub blocks for unresolved targets.
+
+.PARAMETER DSCContent
+    Specifies the exported DSC content to enrich with dependency data.
+
+.OUTPUTS
+    System.String
 #>
 function Add-M365DSCExportDependsOn
 {
@@ -1667,12 +1761,17 @@ function Add-M365DSCExportDependsOn
 }
 
 <#
-.Description
-    Generates minimal DSC resource blocks for dependency targets that were not
-    part of the main export. Only includes key/mandatory properties and Ensure.
+.SYNOPSIS
+    Builds minimal DSC stub blocks for unresolved dependency targets.
 
-.Functionality
-    Internal
+.DESCRIPTION
+    Generates placeholder resource blocks with mandatory keys and authentication fields so unresolved dependency references can still compile.
+
+.PARAMETER UnresolvedTargets
+    Specifies unresolved target definitions keyed by resource type and target key.
+
+.OUTPUTS
+    System.String
 #>
 function Get-M365DSCMinimalExportBlocks
 {

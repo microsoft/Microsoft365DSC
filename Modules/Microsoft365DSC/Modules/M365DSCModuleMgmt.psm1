@@ -77,6 +77,13 @@ function Initialize-M365DSCModuleMgmt
 }
 Initialize-M365DSCModuleMgmt
 
+<#
+.SYNOPSIS
+    Returns resource settings metadata loaded by module management.
+
+.DESCRIPTION
+    Returns the in-memory dictionary of resource settings built from each resource settings.json file.
+#>
 function Get-M365DSCResourceSettings
 {
     [CmdletBinding()]
@@ -85,6 +92,13 @@ function Get-M365DSCResourceSettings
     return $Script:M365DSCResourceSettings
 }
 
+<#
+.SYNOPSIS
+    Returns globally required module names for Microsoft365DSC.
+
+.DESCRIPTION
+    Returns the module names defined as required in the module configuration.
+#>
 function Get-M365DSCRequiredModules
 {
     [CmdletBinding()]
@@ -93,6 +107,16 @@ function Get-M365DSCRequiredModules
     return $Script:M365DSCRequiredModules
 }
 
+<#
+.SYNOPSIS
+    Sets the required-modules-loaded state flag.
+
+.DESCRIPTION
+    Updates the module-scope flag used to track whether required modules were loaded in the current session.
+
+.PARAMETER Value
+    Specifies the new loaded state value.
+#>
 function Set-M365DSCRequiredModulesLoaded
 {
     [CmdletBinding()]
@@ -104,6 +128,13 @@ function Set-M365DSCRequiredModulesLoaded
     $Script:M365DSCRequiredModulesLoaded = $Value
 }
 
+<#
+.SYNOPSIS
+    Returns whether required modules are marked as loaded.
+
+.DESCRIPTION
+    Returns the module-scope boolean state indicating whether required modules were loaded.
+#>
 function Test-IsM365DSCRequiredModulesLoaded
 {
     [CmdletBinding()]
@@ -112,6 +143,16 @@ function Test-IsM365DSCRequiredModulesLoaded
     return $Script:M365DSCRequiredModulesLoaded
 }
 
+<#
+.SYNOPSIS
+    Returns the current Microsoft365DSC module configuration.
+
+.DESCRIPTION
+    Returns a cloned hashtable of the loaded module configuration values.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Get-M365DSCModuleConfiguration
 {
     [CmdletBinding()]
@@ -121,6 +162,19 @@ function Get-M365DSCModuleConfiguration
     return $Script:CurrentConfiguration.Clone()
 }
 
+<#
+.SYNOPSIS
+    Updates a single Microsoft365DSC module configuration value.
+
+.DESCRIPTION
+    Sets a configuration entry in the current module configuration hashtable.
+
+.PARAMETER Key
+    Specifies the configuration key to update.
+
+.PARAMETER Value
+    Specifies the value to assign to the configuration key.
+#>
 function Set-M365DSCModuleConfiguration
 {
     [CmdletBinding()]
@@ -142,8 +196,12 @@ function Set-M365DSCModuleConfiguration
 }
 
 <#
+.SYNOPSIS
+    Validates that required Microsoft365DSC dependencies are installed.
+
 .DESCRIPTION
-    This function checks if all M365DSC dependencies are present
+    Checks dependency health and throws when required module versions are missing.
+    Validation can be skipped by session flags already used by Microsoft365DSC.
 
 .FUNCTIONALITY
     Internal
@@ -187,11 +245,15 @@ function Confirm-M365DSCDependencies
 }
 
 <#
+.SYNOPSIS
+    Ensures a dependency module is loaded at the required version.
+
 .DESCRIPTION
-    This function checks if a specific module is loaded and validates its version against the required version specified in the M365DSC dependencies manifest.
+    Loads dependency modules on demand, validates versions, and recursively validates dependency chains.
+    For Graph typed modules, it applies the Microsoft365DSC Graph shim behavior.
 
 .PARAMETER ModuleName
-    The name of the module to check and validate.
+    Specifies the dependency module name to validate and load.
 
 .EXAMPLE
     PS> Confirm-M365DSCLoadedModule -ModuleName 'Microsoft.Graph.Authentication'
@@ -311,11 +373,14 @@ function Confirm-M365DSCLoadedModule
 }
 
 <#
+.SYNOPSIS
+    Validates dependencies required by a DSC resource module.
+
 .DESCRIPTION
-    This function checks the required dependencies for a specific M365DSC module and validates that they are loaded.
+    Resolves required modules from resource settings and validates each dependency before resource execution.
 
 .PARAMETER ModuleName
-    The name of the DSC resource for which to check dependencies.
+    Specifies the DSC resource module name whose dependencies should be validated.
 
 .EXAMPLE
     PS> Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADApplication'
@@ -350,8 +415,11 @@ function Confirm-M365DSCModuleDependency
 }
 
 <#
+.SYNOPSIS
+    Checks whether newer versions exist for configured dependencies.
+
 .DESCRIPTION
-    This function checks if new versions are available for the M365DSC dependencies
+    Queries the gallery for each configured dependency and reports modules with newer available versions.
 
 .EXAMPLE
     PS> Test-M365DSCDependenciesForNewVersions
@@ -397,11 +465,15 @@ function Test-M365DSCDependenciesForNewVersions
 }
 
 <#
+.SYNOPSIS
+    Validates the installed Microsoft365DSC module version.
+
 .DESCRIPTION
-    This function validates there are no updates to the module or it's dependencies and no multiple versions are present on the local system.
+    Compares local and gallery module versions and reports when a newer Microsoft365DSC module is available.
+
 
 .EXAMPLE
-    Test-M365DSCModuleValidity
+    PS> Test-M365DSCModuleValidity
 
 .FUNCTIONALITY
     Public
@@ -447,11 +519,14 @@ function Test-M365DSCModuleValidity
 }
 
 <#
+.SYNOPSIS
+    Removes outdated Microsoft365DSC module and dependency versions.
+
 .DESCRIPTION
-    This function uninstalls all previous M365DSC dependencies and older versions of the module.
+    Scans installed module versions and removes outdated Microsoft365DSC and dependency versions while preserving required versions.
 
 .EXAMPLE
-    Uninstall-M365DSCOutdatedDependencies
+    PS> Uninstall-M365DSCOutdatedDependencies
 
 .FUNCTIONALITY
     Public
@@ -589,26 +664,32 @@ function Uninstall-M365DSCOutdatedDependencies
 }
 
 <#
+.SYNOPSIS
+    Installs or validates Microsoft365DSC dependencies.
+
 .DESCRIPTION
-    This function installs all missing M365DSC dependencies
+    Validates, installs, or force-refreshes dependency modules according to manifest requirements and selected installation options.
 
 .PARAMETER Force
-    Specifies that all dependencies should be forcefully imported again.
+    Indicates that dependencies should be reinstalled even when required versions are present.
 
 .PARAMETER ValidateOnly
-    Specifies that the function should only return the dependencies that are not installed.
+    Indicates that only validation should run and missing dependencies should be returned.
 
 .PARAMETER Scope
-    Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user).
+    Specifies the installation scope for dependency modules.
 
 .PARAMETER Proxy
-    Specifies the proxy server to use for the module installation.
+    Specifies the proxy server used for module installation requests.
 
 .PARAMETER Repository
-    Specifies the PowerShell repository name to use for the installation of the dependencies.
+    Specifies the repository used to install dependencies.
 
 .PARAMETER UsePowerShellGet
-    Specifies that Install-Module should be used for the installation of the dependencies instead of Install-PSResource.
+    Indicates that Install-Module should be used instead of Install-PSResource.
+
+.PARAMETER Development
+    Indicates that development dependencies should also be processed.
 
 .EXAMPLE
     PS> Update-M365DSCDependencies
@@ -811,23 +892,26 @@ function Update-M365DSCDependencies
 }
 
 <#
+.SYNOPSIS
+    Updates Microsoft365DSC and refreshes dependency state.
+
 .DESCRIPTION
-    This function updates the module, dependencies and uninstalls outdated dependencies.
+    Updates the Microsoft365DSC module, reloads the latest installed version, updates dependencies, and optionally removes outdated versions.
 
 .PARAMETER Scope
-    Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user).
+    Specifies the installation scope used for update operations.
 
 .PARAMETER Proxy
-    Specifies the proxy server to use for the update.
+    Specifies the proxy server used for update operations.
 
 .PARAMETER BaseRepository
-    Specifies the PowerShell Repository name to use for the installation of the Microsoft365DSC module.
+    Specifies the repository used to update the Microsoft365DSC module.
 
 .PARAMETER DependencyRepository
-    Specifies the PowerShell Repository name to use for the installation of the dependencies of the Microsoft365DSC module.
+    Specifies the repository used to update dependencies.
 
 .PARAMETER NoUninstall
-    Indicates if outdated dependencies and modules should be uninstalled.
+    Indicates that outdated module and dependency versions should not be removed.
 
 .EXAMPLE
     PS> Update-M365DSCModule

@@ -1,5 +1,36 @@
 # Change log for Microsoft365DSC
 
+# 1.26.722.1
+
+* O365OrgCustomizationSetting
+  * Removed unused backtick in hashtable.
+* O365OrgSettings
+  * Added missing workload connections.
+* O365SearchAndIntelligenceConfigurations
+  * Added missing workload connection.
+* M365DSCExportUtil
+  * Added auto completion for `-Components` in `Export-M365DSCConfiguration`.
+  * Since `M365DSCStringReplacementMap` is now being sent in parallel exports
+    as global variable we need to set it as script scope based to be able to
+    inspect it.
+* M365DSCReverse
+  * Fixed an issue where parallel exports for EXO, O365 and SC could fail
+    if combined with resources that use Microsoft Graph.
+  * Fixed an issue where parallel exports were not being sent with the variable
+    `M365DSCStringReplacementMap` and therefore mappings were not working and
+    creating drifts.
+  * Reduced the number of calls to `Get-M365DSCAllResources` if `-Components`
+    was specified.
+  * Reduced the number of calls to `Get-M365DSCAllResources` by caching its
+    results.
+* M365DSCUtil
+  * Added new helper function `Get-M365DSCAllResourcesPath`
+* DEPENDENCIES
+  * Updated `MSCloudLoginAssistant` to version 1.1.71.
+* MISC
+  * Reduced time to export Intune policies by up to 50%.
+  * Updated function help descriptions and added / removed parameters.
+
 # 1.26.715.1
 
 * AADConditionalAccessPolicy
@@ -69,6 +100,8 @@
   * Fixed issue where function `Get-CompareParameters` was not being exported
 * IntuneWifiConfigurationPolicyIOS
   * Added `wpa3Personal` to the `WifiSecurityType` property.
+* SCDLPComplianceRule
+  * Added support for the `EndpointDlpRestrictions` property.
 * SettingsCatalogHelper
   * Fixed an issue where complex administrative template names
     were not handled correctly.

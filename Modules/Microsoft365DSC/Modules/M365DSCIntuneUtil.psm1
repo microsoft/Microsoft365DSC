@@ -1,3 +1,20 @@
+<#
+.SYNOPSIS
+    Converts Microsoft Graph Intune policy assignments into DSC-friendly hashtables.
+
+.DESCRIPTION
+    Transforms assignment objects returned by Intune policy endpoints into hashtables used by Microsoft365DSC.
+    It resolves group display names and, when enabled, enriches assignments with device filter metadata.
+
+.PARAMETER Assignments
+    Specifies the Intune assignment objects returned by Microsoft Graph.
+
+.PARAMETER IncludeDeviceFilter
+    Indicates whether assignment filter type, identifier, and display name should be included.
+
+.OUTPUTS
+    System.Collections.Hashtable[]
+#>
 function ConvertFrom-IntunePolicyAssignment
 {
     [CmdletBinding()]
@@ -100,6 +117,23 @@ function ConvertFrom-IntunePolicyAssignment
     return ,$assignmentResult
 }
 
+<#
+.SYNOPSIS
+    Converts DSC assignment hashtables into Intune policy assignment payloads.
+
+.DESCRIPTION
+    Builds Microsoft Graph assignment payloads from DSC-style hashtables for policy assignment operations.
+    It resolves groups by id or display name and optionally adds assignment filter values.
+
+.PARAMETER Assignments
+    Specifies the DSC assignment hashtables to convert.
+
+.PARAMETER IncludeDeviceFilter
+    Indicates whether assignment filter information should be added to generated targets.
+
+.OUTPUTS
+    Hashtable[]
+#>
 function ConvertTo-IntunePolicyAssignment
 {
     [CmdletBinding()]
@@ -205,6 +239,23 @@ function ConvertTo-IntunePolicyAssignment
     return ,$assignmentResult
 }
 
+<#
+.SYNOPSIS
+    Converts mobile app assignment objects into DSC hashtables.
+
+.DESCRIPTION
+    Transforms Intune mobile app assignments into hashtables used by Microsoft365DSC resources.
+    It includes assignment intent, group display names, optional filter details, and assignment settings when present.
+
+.PARAMETER Assignments
+    Specifies the mobile app assignment objects returned by Microsoft Graph.
+
+.PARAMETER IncludeDeviceFilter
+    Indicates whether assignment filter details should be included in the output.
+
+.OUTPUTS
+    System.Collections.Hashtable[]
+#>
 function ConvertFrom-IntuneMobileAppAssignment
 {
     [CmdletBinding()]
@@ -304,6 +355,23 @@ function ConvertFrom-IntuneMobileAppAssignment
     return ,$assignmentResult
 }
 
+<#
+.SYNOPSIS
+    Converts DSC mobile app assignment hashtables into Graph request payloads.
+
+.DESCRIPTION
+    Creates Intune mobile app assignment payloads from DSC-style hashtables.
+    It resolves target groups, applies optional assignment filters, and maps assignment settings into the expected schema.
+
+.PARAMETER Assignments
+    Specifies the mobile app assignment hashtables to convert.
+
+.PARAMETER IncludeDeviceFilter
+    Indicates whether assignment filter fields should be emitted in the generated targets.
+
+.OUTPUTS
+    Hashtable[]
+#>
 function ConvertTo-IntuneMobileAppAssignment
 {
     [CmdletBinding()]
@@ -424,6 +492,84 @@ function ConvertTo-IntuneMobileAppAssignment
     return ,$assignmentResult
 }
 
+<#
+.SYNOPSIS
+    Retrieves cached Intune configuration policies by templateId or filter.
+
+.DESCRIPTION
+    Fetches Intune configuration policies from the local cache if available, or queries Microsoft Graph using the provided templateId or filter.
+    This function is used to optimize retrieval of configuration policies during DSC operations.
+
+.PARAMETER TemplateId
+    Specifies the templateId of the configuration policy to retrieve.
+
+.PARAMETER Filter
+    Specifies an optional OData filter string to apply when querying configuration policies.
+
+.OUTPUTS
+    List of configuration policy objects from cache or Microsoft Graph.
+#>
+function Get-M365DSCExportCachedConfigurationPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TemplateId,
+
+        [Parameter(Mandatory = $false)]
+        [System.String]
+        $Filter
+    )
+
+    # Fetch from cache if the filter is empty or matches the templateId filter
+    if (-not [System.String]::IsNullOrEmpty($Filter) -and $Filter -like 'templateReference/templateId eq ''*''')
+    {
+        $cacheValue = [Microsoft365DSC.Intune.ConfigurationPolicyCache]::GetByTemplateId($TemplateId)
+        if ($null -ne $cacheValue)
+        {
+            return $cacheValue
+        }
+    }
+
+    if (-not [System.String]::IsNullOrEmpty($Filter))
+    {
+        return Get-MgBetaDeviceManagementConfigurationPolicy -All `
+            -Filter $Filter `
+            -ErrorAction Stop
+    }
+
+    return Get-MgBetaDeviceManagementConfigurationPolicy -All `
+        -Filter "templateReference/TemplateId eq '$TemplateId'" `
+        -ErrorAction Stop
+}
+
+<#
+.SYNOPSIS
+    Updates assignments on an Intune device configuration policy.
+
+.DESCRIPTION
+    Builds and submits assignment payloads for a device configuration policy.
+    It resolves groups when needed and posts the final assignment set to the selected Graph endpoint.
+
+.PARAMETER DeviceConfigurationPolicyId
+    Specifies the identifier of the device configuration policy to update.
+
+.PARAMETER Targets
+    Specifies assignment targets to apply to the policy.
+
+.PARAMETER Repository
+    Specifies the Graph repository segment used to address the policy resource.
+
+.PARAMETER APIVersion
+    Specifies the Graph API version to call.
+
+.PARAMETER RootIdentifier
+    Specifies the root property name used for the assignment payload body.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Update-DeviceConfigurationPolicyAssignment
 {
     [CmdletBinding()]
@@ -546,6 +692,32 @@ function Update-DeviceConfigurationPolicyAssignment
     }
 }
 
+<#
+.SYNOPSIS
+    Updates assignments on an Intune app management policy.
+
+.DESCRIPTION
+    Creates and submits mobile app assignment payloads for the target app policy.
+    The function resolves assignment groups and filter settings before posting the payload to Graph.
+
+.PARAMETER AppManagementPolicyId
+    Specifies the identifier of the app management policy to update.
+
+.PARAMETER Assignments
+    Specifies the mobile app assignments to apply.
+
+.PARAMETER Repository
+    Specifies the Graph repository segment used to address the app resource.
+
+.PARAMETER APIVersion
+    Specifies the Graph API version to call.
+
+.PARAMETER RootIdentifier
+    Specifies the root property name used for the assignment payload body.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Update-DeviceAppManagementPolicyAssignment
 {
     [CmdletBinding()]
@@ -665,6 +837,23 @@ function Update-DeviceAppManagementPolicyAssignment
     }
 }
 
+<#
+.SYNOPSIS
+    Synchronizes Intune mobile app category assignments.
+
+.DESCRIPTION
+    Adds or removes mobile app categories for a target app.
+    In compare mode, it computes differences and only applies required adds or removals.
+
+.PARAMETER App
+    Specifies the mobile app object to update.
+
+.PARAMETER Categories
+    Specifies the category set to add or compare against.
+
+.PARAMETER Compare
+    Indicates that categories should be reconciled by difference instead of only added.
+#>
 function Update-DeviceAppManagementAppCategory
 {
     [CmdletBinding()]
@@ -758,6 +947,23 @@ function Update-DeviceAppManagementAppCategory
     }
 }
 
+<#
+.SYNOPSIS
+    Builds setting instances for an Intune configuration template.
+
+.DESCRIPTION
+    Retrieves recommended setting definitions for a template category and merges them with provided property values.
+    The function outputs settings in the format expected by configuration policy update calls.
+
+.PARAMETER Properties
+    Specifies desired property values keyed by setting suffix.
+
+.PARAMETER TemplateId
+    Specifies the Intune configuration template identifier.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Get-M365DSCIntuneDeviceConfigurationSettings
 {
     [CmdletBinding()]
@@ -843,6 +1049,23 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
     return $results
 }
 
+<#
+.SYNOPSIS
+    Retrieves the decrypted value for an OMA setting secret reference.
+
+.DESCRIPTION
+    Extracts the parent policy identifier from a secret reference value id and calls Graph to return the plain-text OMA setting value.
+    Returns null when the identifier is invalid or decryption fails.
+
+.PARAMETER SecretReferenceValueId
+    Specifies the secret reference identifier associated with an encrypted OMA setting value.
+
+.PARAMETER APIVersion
+    Specifies the Graph API version to call.
+
+.OUTPUTS
+    System.String
+#>
 function Get-OmaSettingPlainTextValue
 {
     [CmdletBinding()]
@@ -908,6 +1131,29 @@ function Get-OmaSettingPlainTextValue
     }
 }
 
+<#
+.SYNOPSIS
+    Constructs setting catalog policy settings from DSC parameters.
+
+.DESCRIPTION
+    Builds setting catalog policy setting objects from DSC input values.
+    It can start from a template id or use preloaded setting templates for nested calls.
+
+.PARAMETER DSCParams
+    Specifies DSC parameter values used to build setting instances.
+
+.PARAMETER TemplateId
+    Specifies the setting catalog template identifier used in the Start parameter set.
+
+.PARAMETER SettingTemplates
+    Specifies preloaded setting templates used in the DeviceAndUserSettings parameter set.
+
+.PARAMETER ContainsDeviceAndUserSettings
+    Indicates whether the policy contains both device and user settings.
+
+.OUTPUTS
+    System.Object[]
+#>
 function Get-IntuneSettingCatalogPolicySetting
 {
     [CmdletBinding()]
@@ -957,6 +1203,38 @@ function Get-IntuneSettingCatalogPolicySetting
         $ContainsDeviceAndUserSettings.IsPresent)
 }
 
+<#
+.SYNOPSIS
+    Exports Intune setting catalog settings into DSC hashtable format.
+
+.DESCRIPTION
+    Converts setting catalog instances from Graph into the return hashtable used by export routines.
+    It supports root export execution and nested setting processing flows.
+
+.PARAMETER Settings
+    Specifies the settings collection to export in the Start parameter set.
+
+.PARAMETER ReturnHashtable
+    Specifies the hashtable that receives exported values.
+
+.PARAMETER SettingInstance
+    Specifies the current setting instance to process in the Setting parameter set.
+
+.PARAMETER SettingDefinitions
+    Specifies setting definitions used when processing a single setting instance.
+
+.PARAMETER AllSettingDefinitions
+    Specifies all available setting definitions for name and value resolution.
+
+.PARAMETER IsRoot
+    Indicates that the current setting instance is processed as a root node.
+
+.PARAMETER ContainsDeviceAndUserSettings
+    Indicates whether the policy contains both device and user settings.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Export-IntuneSettingCatalogPolicySettings
 {
     [CmdletBinding()]
@@ -1011,6 +1289,44 @@ function Export-IntuneSettingCatalogPolicySettings
     return [Microsoft365DSC.Intune.SettingCatalogPolicyExporter]::Export($Settings, $ReturnHashtable, $AllSettingDefinitions, $ContainsDeviceAndUserSettings)
 }
 
+<#
+.SYNOPSIS
+    Updates an Intune configuration policy definition.
+
+.DESCRIPTION
+    Builds a policy update payload and sends it to the Intune configuration policy endpoint.
+    Optional template and creation source values are included only when supplied.
+
+.PARAMETER DeviceConfigurationPolicyId
+    Specifies the identifier of the configuration policy to update.
+
+.PARAMETER Name
+    Specifies the policy display name.
+
+.PARAMETER Description
+    Specifies the policy description.
+
+.PARAMETER Platforms
+    Specifies the target platform value for the policy.
+
+.PARAMETER Technologies
+    Specifies the technologies value for the policy.
+
+.PARAMETER TemplateReferenceId
+    Specifies the template identifier to reference in the policy payload.
+
+.PARAMETER CreationSource
+    Specifies the creation source value to include in the payload.
+
+.PARAMETER Settings
+    Specifies the settings collection to apply to the policy.
+
+.PARAMETER RoleScopeTagIds
+    Specifies role scope tag identifiers assigned to the policy.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Update-IntuneDeviceConfigurationPolicy
 {
     [CmdletBinding()]
@@ -1094,6 +1410,20 @@ function Update-IntuneDeviceConfigurationPolicy
     }
 }
 
+<#
+.SYNOPSIS
+    Extracts startswith, endswith, and contains clauses from a filter query.
+
+.DESCRIPTION
+    Parses an OData-like filter string and returns complex function fragments.
+    These fragments can then be evaluated against in-memory policy objects.
+
+.PARAMETER FilterQuery
+    Specifies the filter query string to parse.
+
+.OUTPUTS
+    System.Array
+#>
 function Get-ComplexFunctionsFromFilterQuery
 {
     [CmdletBinding()]
@@ -1110,6 +1440,20 @@ function Get-ComplexFunctionsFromFilterQuery
     return $complexFunctions
 }
 
+<#
+.SYNOPSIS
+    Removes complex function clauses from a filter query.
+
+.DESCRIPTION
+    Removes startswith, endswith, and contains clauses from an OData-like filter string.
+    The resulting query can be sent to Graph while complex predicates are evaluated locally.
+
+.PARAMETER FilterQuery
+    Specifies the filter query string to simplify.
+
+.OUTPUTS
+    System.String
+#>
 function Remove-ComplexFunctionsFromFilterQuery
 {
     [CmdletBinding()]
@@ -1125,6 +1469,23 @@ function Remove-ComplexFunctionsFromFilterQuery
     return $basicFilterQuery
 }
 
+<#
+.SYNOPSIS
+    Applies complex filter function fragments to a policy collection.
+
+.DESCRIPTION
+    Evaluates startswith, endswith, and contains predicates against policy properties.
+    Returns only policies that satisfy all provided complex function conditions.
+
+.PARAMETER Policies
+    Specifies the policy collection to filter.
+
+.PARAMETER ComplexFunctions
+    Specifies parsed complex function expressions to apply.
+
+.OUTPUTS
+    System.Array
+#>
 function Find-GraphDataUsingComplexFunctions
 {
     [CmdletBinding()]
@@ -1159,6 +1520,23 @@ function Find-GraphDataUsingComplexFunctions
     return $Policies
 }
 
+<#
+.SYNOPSIS
+    Performs the initial content upload flow for an Intune mobile app.
+
+.DESCRIPTION
+    Creates a content version and placeholder file, uploads sample encrypted content to Azure Storage, commits the file, and updates the app with the committed content version.
+    This helper supports app creation flows that require an initial content artifact.
+
+.PARAMETER AppId
+    Specifies the target mobile app identifier.
+
+.PARAMETER OdataType
+    Specifies the mobile app OData type used for content endpoints.
+
+.PARAMETER FileExtension
+    Specifies the file extension used when creating the sample content file.
+#>
 function Invoke-M365DSCIntuneMobileAppInitialUpload
 {
     [CmdletBinding()]
@@ -1293,6 +1671,32 @@ function Invoke-M365DSCIntuneMobileAppInitialUpload
     }
 }
 
+<#
+.SYNOPSIS
+    Waits until Intune mobile app content file processing completes.
+
+.DESCRIPTION
+    Polls the mobile app content file endpoint until the upload state reaches the expected success state.
+    Throws when the upload state enters a failure state.
+
+.PARAMETER AppId
+    Specifies the target mobile app identifier.
+
+.PARAMETER OdataType
+    Specifies the mobile app OData type used for the file endpoint.
+
+.PARAMETER FileId
+    Specifies the content file identifier.
+
+.PARAMETER ContentVersionId
+    Specifies the content version identifier containing the file.
+
+.PARAMETER UploadStatePrefix
+    Specifies the upload state prefix that is combined with Success for completion checks.
+
+.OUTPUTS
+    System.Object
+#>
 function Wait-ForFileProcessing
 {
     [CmdletBinding()]
@@ -1349,6 +1753,7 @@ Export-ModuleMember -Function @(
     'Find-GraphDataUsingComplexFunctions',
     'Get-ComplexFunctionsFromFilterQuery',
     'Get-IntuneSettingCatalogPolicySetting',
+    'Get-M365DSCExportCachedConfigurationPolicies',
     'Get-M365DSCIntuneDeviceConfigurationSettings',
     'Get-OmaSettingPlainTextValue',
     'Invoke-M365DSCIntuneMobileAppInitialUpload',

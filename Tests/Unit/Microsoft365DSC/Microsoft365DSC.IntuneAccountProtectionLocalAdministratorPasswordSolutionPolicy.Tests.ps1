@@ -44,6 +44,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
 
+            Mock -CommandName Get-M365DSCExportCachedConfigurationPolicies -MockWith {
+                return Get-MgBetaDeviceManagementConfigurationPolicy
+            }
+
             Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                 return @{
                     Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'

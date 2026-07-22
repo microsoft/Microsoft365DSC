@@ -1,3 +1,16 @@
+<#
+.SYNOPSIS
+    Converts the first character of a string to uppercase.
+
+.DESCRIPTION
+    Returns a new string where the first character is converted to uppercase and the remaining characters are unchanged.
+
+.PARAMETER Value
+    Specifies the input string to transform.
+
+.OUTPUTS
+    System.String
+#>
 function Get-StringFirstCharacterToUpper
 {
     [CmdletBinding()]
@@ -11,6 +24,19 @@ function Get-StringFirstCharacterToUpper
     return $Value.Substring(0, 1).ToUpper() + $Value.Substring(1, $Value.Length - 1)
 }
 
+<#
+.SYNOPSIS
+    Converts the first character of a string to lowercase.
+
+.DESCRIPTION
+    Returns a new string where the first character is converted to lowercase and the remaining characters are unchanged.
+
+.PARAMETER Value
+    Specifies the input string to transform.
+
+.OUTPUTS
+    System.String
+#>
 function Get-StringFirstCharacterToLower
 {
     [CmdletBinding()]
@@ -24,6 +50,23 @@ function Get-StringFirstCharacterToLower
     return $Value.Substring(0, 1).ToLower() + $Value.Substring(1, $Value.Length - 1)
 }
 
+<#
+.SYNOPSIS
+    Renames complex object parameter keys for DSC and API compatibility.
+
+.DESCRIPTION
+    Recursively processes hashtables, CIM instances, and object arrays, normalizes key casing, and applies explicit key mappings such as converting odataType to @odata.type.
+
+.PARAMETER Properties
+    Specifies the source properties to process.
+
+.PARAMETER KeyMapping
+    Specifies key name mappings to apply during conversion.
+
+.OUTPUTS
+    System.Collections.Hashtable
+    System.Object[]
+#>
 function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
@@ -113,6 +156,20 @@ function Rename-M365DSCCimInstanceParameter
     #endregion
 }
 
+<#
+.SYNOPSIS
+    Converts a complex object to a hashtable representation.
+
+.DESCRIPTION
+    Uses Microsoft365DSC conversion helpers to transform CIM instances or arrays of CIM instances into hashtables.
+
+.PARAMETER ComplexObject
+    Specifies the complex object or array of complex objects to convert.
+
+.OUTPUTS
+    System.Collections.Hashtable
+    System.Collections.Hashtable[]
+#>
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
@@ -161,6 +218,36 @@ function Get-M365DSCDRGComplexTypeToHashtable
     Name: the name of the parameter to be overwritten
     CimInstanceName: The type of the CIM instance (can include or not the prefix MSFT_)
     IsRequired: If isRequired equals true, an empty hashtable or array will be returned. Some of the Graph parameters are required even though they are empty
+#>
+
+<#
+.SYNOPSIS
+    Converts a complex object to a DSC string representation.
+
+.DESCRIPTION
+    Converts CIM instances or hashtables to the DSC CIM instance string format, with optional nested type mapping, whitespace control, and array handling.
+
+.PARAMETER ComplexObject
+    Specifies the complex object or array to convert.
+
+.PARAMETER CIMInstanceName
+    Specifies the CIM instance class name used in the generated DSC representation.
+
+.PARAMETER ComplexTypeMapping
+    Specifies optional nested type mappings for specific properties.
+
+.PARAMETER Whitespace
+    Specifies the whitespace prefix used when rendering output.
+
+.PARAMETER IndentLevel
+    Specifies the indentation level used when rendering output.
+
+.PARAMETER IsArray
+    Indicates that the input should be rendered as an array of instances.
+
+.OUTPUTS
+    System.String
+    System.String[]
 #>
 function Get-M365DSCDRGComplexTypeToString
 {
@@ -230,6 +317,9 @@ function Get-M365DSCDRGComplexTypeToString
 .PARAMETER String
     The string to be updated.
 
+.OUTPUTS
+    System.String
+
 .EXAMPLE
     PS> Update-M365DSCSpecialCharacters -String 'This is a test string with special characters: „, “, ”'
 #>
@@ -247,6 +337,19 @@ function Update-M365DSCSpecialCharacters
     return [Microsoft365DSC.Utilities.Utilities]::UpdateSpecialCharacters($String)
 }
 
+<#
+.SYNOPSIS
+    Tests whether an object is a CIM instance.
+
+.DESCRIPTION
+    Returns true when the provided object is not null and its type name indicates a CIM instance.
+
+.PARAMETER Object
+    Specifies the object to test.
+
+.OUTPUTS
+    System.Boolean
+#>
 function Test-IsCimInstance
 {
     [CmdletBinding()]
@@ -263,6 +366,19 @@ function Test-IsCimInstance
     return $null -ne $Object -and $Object.GetType().FullName -like '*CimInstance*'
 }
 
+<#
+.SYNOPSIS
+    Tests whether an object is a hashtable-like type.
+
+.DESCRIPTION
+    Returns true when the provided object is not null and is a hashtable or ordered dictionary.
+
+.PARAMETER Object
+    Specifies the object to test.
+
+.OUTPUTS
+    System.Boolean
+#>
 function Test-IsHashtable
 {
     [CmdletBinding()]
@@ -279,6 +395,19 @@ function Test-IsHashtable
     return $null -ne $Object -and ($Object.GetType().FullName -like '*Hashtable' -or $Object.GetType().FullName -like '*OrderedDictionary')
 }
 
+<#
+.SYNOPSIS
+    Tests whether an object is an object array.
+
+.DESCRIPTION
+    Returns true when the provided object is not null and its type name is Object[].
+
+.PARAMETER Object
+    Specifies the object to test.
+
+.OUTPUTS
+    System.Boolean
+#>
 function Test-IsObjectArray
 {
     [CmdletBinding()]
@@ -295,6 +424,19 @@ function Test-IsObjectArray
     return $null -ne $Object -and $Object.GetType().Name -eq 'Object[]'
 }
 
+<#
+.SYNOPSIS
+    Tests whether an object can be treated as a complex object array.
+
+.DESCRIPTION
+    Returns true when the object is an array of CIM instances or hashtables, or an object array containing those types.
+
+.PARAMETER Object
+    Specifies the object to evaluate.
+
+.OUTPUTS
+    System.Boolean
+#>
 function Test-IsComplexArrayCandidate
 {
     [CmdletBinding()]
@@ -326,6 +468,25 @@ function Test-IsComplexArrayCandidate
     return $false
 }
 
+<#
+.SYNOPSIS
+    Compares two complex objects for drift.
+
+.DESCRIPTION
+    Compares source and target complex objects using the Microsoft365DSC comparer, records drift details in the global drift collection, and returns whether both objects are equivalent.
+
+.PARAMETER Source
+    Specifies the current or source object.
+
+.PARAMETER Target
+    Specifies the desired or target object.
+
+.PARAMETER PropertyName
+    Specifies the property name context used by the comparer.
+
+.OUTPUTS
+    System.Boolean
+#>
 function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
@@ -362,6 +523,28 @@ function Compare-M365DSCComplexObject
     return $tuple.Item2
 }
 
+<#
+.SYNOPSIS
+    Writes detected configuration drifts to the event log.
+
+.DESCRIPTION
+    Masks authentication parameters, builds a drift event payload from desired and current values, and writes the event to the Microsoft365DSC event source when drift information is present.
+
+.PARAMETER Drifts
+    Specifies the drift object that contains drift details.
+
+.PARAMETER ResourceName
+    Specifies the DSC resource name associated with the drift.
+
+.PARAMETER TenantName
+    Specifies the tenant identifier or display name included in the event payload.
+
+.PARAMETER CurrentValues
+    Specifies current resource values to include in the event payload.
+
+.PARAMETER DesiredValues
+    Specifies desired resource values to include in the event payload.
+#>
 function Write-M365DSCDriftsToEventLog
 {
     [CmdletBinding()]
@@ -480,6 +663,26 @@ function Write-M365DSCDriftsToEventLog
     }
 }
 
+<#
+.SYNOPSIS
+    Normalizes complex objects into hashtables.
+
+.DESCRIPTION
+    Converts complex CIM instances into normalized hashtables. Supports single-level conversion and optional exclusion of unchanged properties.
+
+.PARAMETER ComplexObject
+    Specifies the complex object to normalize.
+
+.PARAMETER SingleLevel
+    Converts only top-level properties and lowercases the first character of each property name.
+
+.PARAMETER ExcludeUnchangedProperties
+    Excludes properties that were not modified when SingleLevel conversion is used.
+
+.OUTPUTS
+    System.Collections.Hashtable
+    System.Collections.Hashtable[]
+#>
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]

@@ -10,6 +10,19 @@
 
 .PARAMETER OutputPath
     The path to the output file. If not provided, the function will return the evaluation rules as a string.
+
+.PARAMETER ConnectionMode
+    The connection mode to use for the evaluation rules. This parameter is mandatory and must be one of the following values:
+    - ServicePrincipalWithThumbprint
+    - ServicePrincipalWithSecret
+    - ServicePrincipalWithPath
+    - CredentialsWithTenantId
+    - CredentialsWithApplicationId
+    - Credentials
+    - ManagedIdentity
+
+.OUTPUTS
+    If OutputPath is provided, the function will create a new configuration file with the evaluation rules. If OutputPath is not provided, the function will return the evaluation rules as a string.
 #>
 function Get-M365DSCEvaluationRulesForConfiguration
 {

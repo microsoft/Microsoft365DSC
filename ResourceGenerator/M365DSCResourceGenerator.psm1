@@ -567,11 +567,14 @@ $($userDefinitionSettings.MOF -join "`r`n")
         {
             $settingsCatalogGetSettings = @"
 `r`n        # Retrieve policy specific settings
-        [array]`$settings = Get-$($CmdLetNoun)Setting ``
-            -DeviceManagementConfigurationPolicyId `$Id ``
-            -ExpandProperty 'settingDefinitions' ``
-            -All ``
-            -ErrorAction Stop
+        if (`$null -eq `$settings)
+        {
+            [array]`$settings = Get-$($CmdLetNoun)Setting ``
+                -DeviceManagementConfigurationPolicyId `$Id ``
+                -ExpandProperty 'settingDefinitions' ``
+                -All ``
+                -ErrorAction Stop
+        }
 
         `$policySettings = @{}
         `$policySettings = Export-IntuneSettingCatalogPolicySettings -Settings `$settings -ReturnHashtable `$policySettings$(if ($containsDeviceAndUserSettings) { ' -ContainsDeviceAndUserSettings' })`r`n
@@ -707,7 +710,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
         if ($CmdLetNoun -like "*DeviceManagementConfigurationPolicy")
         {
             $exportGetCommand.AppendLine(@'
-        $policyTemplateID = "<TemplateReferenceId>"
+        $policyTemplateID = '<TemplateReferenceId>'
         $baseFilter = "templateReference/templateId eq '$policyTemplateID'"
         if (-not [System.String]::IsNullOrEmpty($Filter))
         {

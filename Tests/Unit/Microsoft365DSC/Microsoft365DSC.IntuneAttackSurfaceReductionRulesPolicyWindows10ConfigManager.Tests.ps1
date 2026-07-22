@@ -42,15 +42,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-                    return @{
-                        Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        Name        = 'My Test'
-                        TemplateReference = @{
-                            TemplateId = '5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
-                        }
+                return @{
+                    Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
+                    Description = 'My Test Description'
+                    Name        = 'My Test'
+                    TemplateReference = @{
+                        TemplateId = '5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
                     }
                 }
+            }
+
+            Mock -CommandName Get-M365DSCExportCachedConfigurationPolicies -MockWith {
+                return Get-MgBetaDeviceManagementConfigurationPolicy
+            }
 
             Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }

@@ -110,8 +110,10 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 $getValue = Invoke-M365DSCCommand -ScriptBlock {
-                    Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id  -ErrorAction Stop
+                    Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id  -ErrorAction Stop `
+                        -ExpandProperty 'settings($expand=settingDefinitions)'
                 } -SuppressNotFoundError
+                $settings = $getValue.settings
             }
 
             if ($null -eq $getValue)
@@ -138,16 +140,20 @@ function Get-TargetResource
         else
         {
             $getValue = $Script:exportedInstance
+            $settings = $getValue.settings
         }
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Windows Autopilot Device Preparation Automatic Policy with Id {$Id} and Name {$DisplayName} was found"
 
         # Retrieve policy specific settings
-        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $Id `
-            -ExpandProperty 'settingDefinitions' `
-            -All `
-            -ErrorAction Stop
+        if ($null -eq $settings)
+        {
+            [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
+                -DeviceManagementConfigurationPolicyId $Id `
+                -ExpandProperty 'settingDefinitions' `
+                -All `
+                -ErrorAction Stop
+        }
 
         $policySettings = @{}
         $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings
@@ -612,7 +618,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        $policyTemplateID = "a6157a7f-aa00-42d9-ac82-7d2479f545db_1"
+        $policyTemplateID = 'a6157a7f-aa00-42d9-ac82-7d2479f545db_1'
         $baseFilter = "templateReference/templateId eq '$policyTemplateID'"
         if (-not [System.String]::IsNullOrEmpty($Filter))
         {
@@ -622,10 +628,9 @@ function Export-TargetResource
         {
             $Filter = $baseFilter
         }
-        [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -Filter $Filter `
-            -All `
-            -ErrorAction Stop
+        [array]$getValue = Get-M365DSCExportCachedConfigurationPolicies `
+            -TemplateId $policyTemplateID `
+            -Filter $Filter
         #endregion
 
         $i = 1

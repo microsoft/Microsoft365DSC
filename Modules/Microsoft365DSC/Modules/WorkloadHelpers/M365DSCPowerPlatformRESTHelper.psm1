@@ -1,7 +1,26 @@
+<#
+.SYNOPSIS
+    Invokes a Power Platform REST request.
+
+.DESCRIPTION
+    Sends an authenticated REST request to the Power Platform REST workload using the current connection profile and returns the parsed response content when available.
+
+.PARAMETER Uri
+    Specifies the target URI for the REST request.
+
+.PARAMETER Method
+    Specifies the HTTP method to use. The default value is GET.
+
+.PARAMETER Body
+    Specifies the request payload to send when the method supports a body.
+
+.OUTPUTS
+    System.Collections.Hashtable
+#>
 function Invoke-M365DSCPowerPlatformRESTWebRequest
 {
-    [OutputType([System.Collections.Hashtable])]
     [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
     param(
         [Parameter(Mandatory = $true)]
         [System.String]

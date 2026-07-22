@@ -157,7 +157,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $DisplayName)
         {
             $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters `
@@ -184,7 +184,9 @@ function Get-TargetResource
             $policy = $null
             if (-not [System.String]::IsNullOrEmpty($Identity))
             {
-                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue `
+                    -ExpandProperty 'settings($expand=settingDefinitions)'
+                $settings = $policy.settings
             }
 
             if ($null -eq $policy)
@@ -194,6 +196,7 @@ function Get-TargetResource
                 if (-not [System.String]::IsNullOrEmpty($DisplayName))
                 {
                     $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
+                        -All `
                         -Filter "Name eq '$($DisplayName -replace "'", "''")' and templateReference/TemplateId eq '$templateReferenceId'" `
                         -ErrorAction SilentlyContinue
 
@@ -207,6 +210,7 @@ function Get-TargetResource
         else
         {
             $policy = $Script:exportedInstance
+            $settings = $policy.settings
         }
 
         if ($null -eq $policy)
@@ -217,10 +221,13 @@ function Get-TargetResource
         $Identity = $policy.Id
         Write-Verbose "Found Account Protection LAPS Policy with Id {$Identity} and Name {$($policy.Name)}"
 
-        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $Identity `
-            -ExpandProperty 'settingDefinitions' `
-            -ErrorAction Stop
+        if ($null -eq $settings)
+        {
+            [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
+                -DeviceManagementConfigurationPolicyId $Identity `
+                -ExpandProperty 'settingDefinitions' `
+                -ErrorAction Stop
+        }
 
         $returnHashtable = @{}
         $returnHashtable.Add('Identity', $Identity)
@@ -436,7 +443,6 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $templateReferenceId = 'adc46e5a-f4aa-4ff6-aeff-4f27bc525796_1'
@@ -755,10 +761,9 @@ function Export-TargetResource
         {
             $Filter = $baseFilter
         }
-        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -All `
-            -Filter $Filter `
-            -ErrorAction Stop
+        [array]$policies = Get-M365DSCExportCachedConfigurationPolicies `
+            -TemplateId $policyTemplateID `
+            -Filter $Filter
 
         if ($policies.Length -eq 0)
         {

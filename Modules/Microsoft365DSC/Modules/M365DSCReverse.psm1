@@ -1,10 +1,91 @@
 <#
+.SYNOPSIS
+    Orchestrates a reverse extraction of Microsoft 365 tenant configuration.
+
 .DESCRIPTION
-    This function orchestrate the export process between Export-M365DSCConfiguration
-    and the ReverseDSC module.
+    Coordinates the end-to-end reverse DSC export flow, including authentication validation, workload/resource selection, configuration data generation, and resource export execution.
+    This function is the bridge between export entry points and the ReverseDSC extraction pipeline.
+
+.PARAMETER Credential
+    Specifies the credential used for delegated authentication.
+
+.PARAMETER Components
+    Specifies resource component names to export.
+
+.PARAMETER ExcludeComponents
+    Specifies resource component names to exclude from export.
+
+.PARAMETER AllComponents
+    Indicates that all components should be considered for export.
+
+.PARAMETER Path
+    Specifies the destination path for generated files.
+
+.PARAMETER FileName
+    Specifies the output file name for the generated configuration.
+
+.PARAMETER ConfigurationName
+    Specifies the DSC configuration name to generate.
+
+.PARAMETER Workloads
+    Specifies workload names used to derive exportable components.
+
+.PARAMETER Mode
+    Specifies the export mode.
+
+.PARAMETER GenerateInfo
+    Indicates whether additional resource information should be generated.
+
+.PARAMETER Filters
+    Specifies resource-level filters used to limit exported instances.
+
+.PARAMETER ApplicationId
+    Specifies the application id used for app-based authentication.
+
+.PARAMETER ApplicationSecret
+    Specifies the application secret used for app-based authentication.
+
+.PARAMETER TenantId
+    Specifies the tenant id or tenant domain used for authentication.
+
+.PARAMETER CertificateThumbprint
+    Specifies the certificate thumbprint used for app-based authentication.
+
+.PARAMETER CertificatePath
+    Specifies the certificate file path used for app-based authentication.
+
+.PARAMETER CertificatePassword
+    Specifies the certificate password used to read the certificate file.
+
+.PARAMETER ManagedIdentity
+    Indicates that managed identity authentication should be used.
+
+.PARAMETER AccessTokens
+    Specifies one or more pre-acquired access tokens to use.
+
+.PARAMETER SubscriptionId
+    Specifies the Azure subscription id used by Azure-backed resources.
+
+.PARAMETER Validate
+    Indicates whether extracted configuration should be validated.
+
+.PARAMETER Parallel
+    Indicates whether resource extraction should run in parallel.
+
+.PARAMETER ResourceSettings
+    Specifies resource settings metadata used during extraction.
+
+.PARAMETER WithStatistics
+    Indicates whether extraction statistics should be collected and emitted.
+
+.PARAMETER IncludeDependencies
+    Indicates whether dependency relationships should be included in output.
 
 .FUNCTIONALITY
     Internal
+
+.OUTPUTS
+    System.Collections.Hashtable
 #>
 function Start-M365DSCConfigurationExtract
 {
@@ -181,21 +262,14 @@ function Start-M365DSCConfigurationExtract
 
         $M365DSCExportStartTime = [System.DateTime]::Now
 
+        [System.String[]]$Script:allM365DSCResources = Get-M365DSCAllResources
+
         if ($null -ne $Workloads)
         {
             Write-Verbose -Message 'Retrieving the resources to export by workloads'
             $Workloads = $Workloads | Select-Object -Unique
             $Components = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
                 -Mode $Mode
-        }
-
-        if ($null -eq $Components -or $Components.Length -eq 0)
-        {
-            $ComponentsSpecified = $false
-        }
-        else
-        {
-            $ComponentsSpecified = $true
         }
 
         $ComponentsToSkip = @()
@@ -211,13 +285,12 @@ function Start-M365DSCConfigurationExtract
 
         if ($null -ne $Components)
         {
-            [System.String[]]$allM365DscResources = Get-M365DSCAllResources
             $newComponents = @()
             foreach ($component in $Components)
             {
                 if ($component.Contains('*'))
                 {
-                    $matchingResources = $allM365DscResources -like $component
+                    $matchingResources = $Script:allM365DSCResources -like $component
                     if ($matchingResources.Count -eq 0)
                     {
                         Write-Warning -Message "The component filter '$component' did not match any resources and will be ignored."
@@ -306,11 +379,10 @@ function Start-M365DSCConfigurationExtract
         # If some resources are not supported based on the Authentication parameters
         # received, write a warning.
         $Components = $Components | Select-Object -Unique
-        $allResourcesInModule = Get-M365DSCAllResources
         if ($Components.Length -eq 0)
         {
             Write-Verbose -Message 'Retrieving all resources'
-            $selectedItems = Compare-Object -ReferenceObject $allResourcesInModule `
+            $selectedItems = Compare-Object -ReferenceObject $Script:allM365DSCResources `
                 -DifferenceObject $ComponentsToSkip | Where-Object -Property SideIndicator -EQ '<='
             $selectedResources = @()
             foreach ($item in $selectedItems)
@@ -322,7 +394,7 @@ function Start-M365DSCConfigurationExtract
         {
             foreach ($component in $Components)
             {
-                if ($allResourcesInModule -notcontains $component)
+                if ($Script:allM365DSCResources -notcontains $component)
                 {
                     Write-Warning -Message "The component '$component' is not a valid Microsoft365DSC resource and will be ignored."
                     $ComponentsToSkip += $component
@@ -337,9 +409,9 @@ function Start-M365DSCConfigurationExtract
 
         try
         {
-            if ($allSupportedResources.Length -eq 0)
+            if ($allSupportedResourcesWithMostSecureAuthMethod.Length -eq 0)
             {
-                $allSupportedResources = @()
+                $allSupportedResourcesWithMostSecureAuthMethod = @()
             }
             if ($selectedResources.Length -eq 0)
             {
@@ -620,43 +692,54 @@ function Start-M365DSCConfigurationExtract
             -Value '0' `
             -Description 'Default Value Used to Ensure a Configuration Data File is Generated'
 
-        Write-Verbose -Message 'Retrieving resources path'
-        $dscResourcesPath = Join-Path -Path $PSScriptRoot `
-            -ChildPath '../DscResources/' `
-            -Resolve
-        Write-Verbose -Message 'Loop through all resources files.'
-        $allResoures = Get-ChildItem $dscResourcesPath -Recurse -File -Filter "MSFT_*.psm1"
+        $resourcesToExport = [System.Collections.Generic.List[Hashtable[]]]::new()
+        $resourcesPath = [System.Collections.Generic.List[System.IO.FileInfo[]]]::new()
+        $allResourcesPath = Get-M365DSCAllResourcesPath
 
-        $ResourcesToExport = @()
-        $resourcesPath = @()
-        foreach ($ResourceModule in $allResoures)
+        $containsConfigurationPolicies = $false
+        $requestedConfigurationPolicyTemplateIds = @()
+        # TODO: Update to -AsHashtable once PowerShell 7 is enforced
+        $intuneTemplateRegistryObject = Get-Content -Path (Join-Path -Path $PSScriptRoot -ChildPath '../IntuneTemplateRegistry.json') -Raw | ConvertFrom-Json
+        $intuneTemplateRegistry = @{}
+        foreach ($property in $intuneTemplateRegistryObject.psobject.properties)
+        {
+            $intuneTemplateRegistry.Add($property.Name, $property.Value)
+        }
+
+        foreach ($resourceModule in $Script:allM365DSCResources)
         {
             try
             {
-                $resourceName = $ResourceModule.Name.Split('.')[0] -replace 'MSFT_', ''
-
-                if ((($Components -and ($Components -contains $resourceName)) -or $AllComponents -or `
+                if ((($Components -and ($Components -contains $resourceModule)) -or $AllComponents -or `
                         (-not $Components -and $null -eq $Workloads)) -and `
-                    ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
-                        $resourcesNotSupported -notcontains $resourceName -and `
-                        -not $resourceName.StartsWith('M365DSC'))
+                    $ComponentsToSkip -notcontains $resourceModule -and `
+                        $resourcesNotSupported -notcontains $resourceModule -and `
+                        -not $resourceModule.StartsWith('M365DSC'))
                 {
-                    $authMethod = $allSupportedResourcesWithMostSecureAuthMethod | Where-Object -Property Resource -EQ $ResourceName
+                    $authMethod = $allSupportedResourcesWithMostSecureAuthMethod | Where-Object -Property Resource -EQ $resourceModule
                     $resourceInfo = @{
-                        Name                 = $ResourceName
+                        Name                 = $resourceModule
                         AuthenticationMethod = $authMethod.AuthMethod
                     }
-                    $ResourcesToExport += $resourceInfo
-                    $resourcesPath += $ResourceModule
+                    $resourcesToExport.Add($resourceInfo)
+                    $resourcePath = $allResourcesPath | Where-Object -Property Name -EQ "MSFT_$resourceModule.psm1"
+                    $resourcesPath.Add($resourcePath)
+
+                    if ($intuneTemplateRegistry.ContainsKey($resourceModule))
+                    {
+                        $requestedConfigurationPolicyTemplateIds += $intuneTemplateRegistry.$resourceModule
+                        $containsConfigurationPolicies = $true
+                    }
                 }
             }
             catch
             {
-                New-M365DSCLogEntry -Message $ResourceModule.Name `
+                New-M365DSCLogEntry -Message $resourceModule `
                     -Exception $_ `
-                    -Source "[M365DSCReverse]$($ResourceModule.Name)"
+                    -Source "[M365DSCReverse]$resourceModule"
             }
         }
+        $resourcesPath = $resourcesPath | Sort-Object $_.Name
 
         # If the tenant id is not a GUID, retrieve it based on the organization name
         # Only implemented for public cloud tenants
@@ -682,24 +765,22 @@ function Start-M365DSCConfigurationExtract
 
         Confirm-M365DSCDependencies
         $partialExportName = $Global:PartialExportFileName
-        $resourcesPath = $resourcesPath | Sort-Object $_.Name
         $synchronizedHashtable = [System.Collections.Concurrent.ConcurrentDictionary[System.String, System.Object]]::new()
         [void]$synchronizedHashtable.TryAdd('ResourceCounter', 1)
         [void]$synchronizedHashtable.TryAdd('ResourcesResult', [System.Collections.Concurrent.ConcurrentDictionary[System.String, System.String]]::new())
         [void]$synchronizedHashtable.TryAdd('SuccessfulResources', 0)
         [void]$synchronizedHashtable.TryAdd('FailedResources', 0)
         $resourceDictionary = Get-M365DSCAllResourcesDictionary
+        $M365DSCStringReplacementMap = Get-M365DSCStringReplacementMap
         $exportScriptBlock = {
             $Global:MaximumFunctionCount = 32768
             $Global:PartialExportFileName = $using:partialExportName
             $Global:M365DSCSkipDependenciesValidation = $true
+            $Global:M365DSCStringReplacementMap = $using:M365DSCStringReplacementMap
             $resource = $_
             Set-M365DSCAllResourcesDictionary -DscResourceDictionary $using:resourceDictionary
             $resourceName = $resource.Name.Split('.')[0] -replace 'MSFT_', ''
             $mostSecureAuthMethod = ($using:allSupportedResourcesWithMostSecureAuthMethod | Where-Object -Property Resource -EQ $resourceName).AuthMethod
-
-            Import-Module $resource.FullName -Force | Out-Null
-            $filterExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains('Filter')
 
             $parameters = @{}
             switch ($mostSecureAuthMethod)
@@ -751,7 +832,7 @@ function Start-M365DSCConfigurationExtract
             if ($using:ComponentsToSkip -notcontains $resourceName)
             {
                 $counter = ($using:synchronizedHashtable).ResourceCounter++
-                Write-M365DSCHost -Message "[$counter/$($using:ResourcesToExport.Length)] Extracting [" -DeferWrite
+                Write-M365DSCHost -Message "[$counter/$($using:resourcesToExport.Count)] Extracting [" -DeferWrite
                 Write-M365DSCHost -Message $resourceName -ForegroundColor Green -DeferWrite
                 Write-M365DSCHost -Message '] using {' -DeferWrite
                 Write-M365DSCHost -Message $mostSecureAuthMethod -ForegroundColor Cyan -DeferWrite
@@ -765,7 +846,9 @@ function Start-M365DSCConfigurationExtract
 
                 # Check if filters for the current resource were specified.
                 $resourceFilter = $null
-                $resourceName = $resource.Name.Split('.')[0] -replace 'MSFT_', ''
+
+                Import-Module $resource.FullName -Force | Out-Null
+                $filterExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains('Filter')
                 if ($filterExists -and $null -ne $using:Filters -and ($using:Filters).Keys.Contains($resourceName))
                 {
                     $resourceFilter = ($using:Filters).$resourceName
@@ -808,17 +891,51 @@ function Start-M365DSCConfigurationExtract
             }
         }
 
+        if ($containsConfigurationPolicies)
+        {
+            $null = New-M365DSCConnection -Workload MicrosoftGraph -InboundParameters @{
+                Credential = $Credential
+                ApplicationId = $ApplicationId
+                ApplicationSecret = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath = $CertificatePath
+                CertificatePassword = $CertificatePassword
+                TenantId = $TenantId
+                ManagedIdentity = $ManagedIdentity
+                AccessTokens = $AccessTokens
+            }
+            [array]$allRequestedConfigurationPolicies = Get-MgBetaDeviceManagementConfigurationPolicy -All | Where-Object { $_.templateReference.templateId -in $requestedConfigurationPolicyTemplateIds }
+            $batchRequests = @()
+            foreach ($policy in $allRequestedConfigurationPolicies)
+            {
+                $batchRequest = @{
+                    Id = $policy.id
+                    Method = 'GET'
+                    Url = "/deviceManagement/configurationPolicies/$($policy.id)/settings?`$expand=settingDefinitions&`$top=1000"
+                }
+                $batchRequests += $batchRequest
+            }
+            $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests
+            foreach ($policySettings in $batchResponses)
+            {
+                $policy = $allRequestedConfigurationPolicies | Where-Object -Property Id -EQ $policySettings.id
+                $policy.settings = $policySettings.body.value
+            }
+            [Microsoft365DSC.Intune.ConfigurationPolicyCache]::Populate($allRequestedConfigurationPolicies, [System.Func[System.Object, System.String]]{ param($policy) $policy.templateReference.templateId })
+        }
+
         if ($Parallel)
         {
             if ($Workloads.Count -eq 0)
             {
-                $Workloads = Get-M365DSCWorkloadForResource -ResourceName $ResourcesToExport.Name
+                $Workloads = Get-M365DSCWorkloadForResource -ResourceName $resourcesToExport.Name
             }
             foreach ($workload in $Workloads)
             {
                 Write-M365DSCHost -Message "Starting export in parallel mode for workload {$workload}. Initialization may take a while..."
                 $requiredModules = [System.Collections.Generic.List[System.String]]::new(25)
-                foreach ($resource in $($ResourcesToExport | Where-Object -Property Name -Like "$workload*"))
+                $currentWorkloadResources = $resourcesToExport | Where-Object -FilterScript { $_.Name -Like "$workload*" }
+                foreach ($resource in $currentWorkloadResources)
                 {
                     foreach ($module in $resourceSettings[$resource.Name].requiredModules)
                     {
@@ -831,11 +948,13 @@ function Start-M365DSCConfigurationExtract
                 $arguments = @{
                     ScriptBlock = $exportScriptBlock
                 }
+                <# Removed due to collection enumeration error in parallel execution
                 if ($requiredModules.Count -gt 0)
                 {
                     $arguments.Add('ModuleName', $requiredModules)
                 }
-                $resourcesPath | Where-Object -Property Name -Like "*MSFT_$workload*" | Invoke-Parallel @arguments -Verbose
+                #>
+                $resourcesPath | Where-Object -FilterScript { $_.Name -Like "*MSFT_$workload*" } | Invoke-Parallel @arguments -Verbose
             }
         }
         else
@@ -1124,7 +1243,7 @@ function Start-M365DSCConfigurationExtract
 function Get-M365DSCResourcesByWorkloads
 {
     [CmdletBinding()]
-    [OutputType([System.String[]])]
+    [OutputType([System.Collections.Generic.List[System.String[]]])]
     param(
         [Parameter(Mandatory = $true)]
         [System.String[]]
@@ -1136,26 +1255,24 @@ function Get-M365DSCResourcesByWorkloads
         $Mode = 'Default'
     )
 
-    $modules = Get-ChildItem -Path ($PSScriptRoot + '/../DscResources/') -Recurse -File -Filter '*.psm1'
-    $Components = @()
+    $components = [System.Collections.Generic.List[System.String[]]]::new()
     foreach ($Workload in $Workloads)
     {
         Write-M365DSCHost -Message "Finding all resources for workload {$Workload} and Mode {$Mode}" -ForegroundColor Gray
 
         $fullComponents = Get-M365DSCResourcesByExportMode -Mode 'Full' -ExcludeConfigurationResources
-        foreach ($resource in $modules)
+        foreach ($resource in $Script:allM365DSCResources)
         {
-            $ResourceName = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-
-            if ($ResourceName.StartsWith($Workload, 'CurrentCultureIgnoreCase') -and
+            if ($resource.StartsWith($Workload, 'CurrentCultureIgnoreCase') -and
                 ($Mode -eq 'Full' -or `
-                ($Mode -eq 'Default' -and -not $fullComponents.Contains($ResourceName))))
+                ($Mode -eq 'Default' -and -not $fullComponents.Contains($resource))))
             {
-                $Components += $ResourceName
+                $components.Add($resource)
             }
         }
     }
-    return $Components
+
+    return $components
 }
 
 Export-ModuleMember -Function @(
