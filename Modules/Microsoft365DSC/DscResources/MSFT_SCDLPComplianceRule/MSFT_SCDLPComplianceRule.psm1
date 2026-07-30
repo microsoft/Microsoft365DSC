@@ -412,11 +412,7 @@ function Get-TargetResource
 
         if ($null -ne $PolicyRule.AdvancedRule -and $PolicyRule.AdvancedRule.Count -gt 0)
         {
-            $ruleobject = $PolicyRule.AdvancedRule | ConvertFrom-Json
-            $ruleObject.Condition = Remove-AdvancedRuleConditionId -Condition $ruleObject.Condition
-
-            $newAdvancedRule = $ruleobject | ConvertTo-Json -Depth 32 | Format-Json
-            $newAdvancedRule = $newAdvancedRule | ConvertTo-Json -Compress
+            $newAdvancedRule = Format-AdvancedRuleWithoutConditionId -AdvancedRule $PolicyRule.AdvancedRule
         }
         else
         {
@@ -1431,6 +1427,37 @@ function Test-TargetResource
         $ValuesToCheck['EndpointDlpRestrictions'] = Convert-SCDLPEndpointDlpRestrictions -EndpointDlpRestrictions $ValuesToCheck['EndpointDlpRestrictions']
     }
 
+    if ($null -ne $ValuesToCheck['AdvancedRule'])
+    {
+        $advancedRuleObject = $ValuesToCheck['AdvancedRule'] | ConvertFrom-Json | ConvertFrom-Json
+        $conditions = @($advancedRuleObject.Condition)
+        while ($conditions.Count -gt 0)
+        {
+            $currentCondition = $conditions[0]
+            $conditions = @($conditions | Select-Object -Skip 1)
+
+            if ($null -ne $currentCondition.SubConditions)
+            {
+                $conditions += $currentCondition.SubConditions
+            }
+
+            if ($currentCondition.ConditionName -like '*ContentContainsSensitiveInformation*' -and `
+                $null -ne $currentCondition.Value.Groups.Sensitivetypes)
+            {
+                foreach ($sensitiveType in $currentCondition.Value.Groups.Sensitivetypes)
+                {
+                    if ($sensitiveType.Classifiertype -eq 'MLModel' -and $null -ne $sensitiveType.Id)
+                    {
+                        $sensitiveType.Id = $null
+                    }
+                }
+            }
+        }
+
+        $newAdvancedRule = $advancedRuleObject | ConvertTo-Json -Depth 32 | Format-Json
+        $ValuesToCheck['AdvancedRule'] = $newAdvancedRule | ConvertTo-Json -Compress
+    }
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $ValuesToCheck `
@@ -2118,6 +2145,21 @@ function Format-Json([Parameter(Mandatory, ValueFromPipeline)][String] $json)
         }
         $line
     }) -join "`n"
+}
+
+function Format-AdvancedRuleWithoutConditionId
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AdvancedRule
+    )
+
+    $ruleObject = $AdvancedRule | ConvertFrom-Json
+
+    $ruleObject.Condition = Remove-AdvancedRuleConditionId -Condition $ruleObject.Condition
+    $newAdvancedRule = $ruleObject | ConvertTo-Json -Depth 32 | Format-Json
+    return $newAdvancedRule | ConvertTo-Json -Compress
 }
 
 function Remove-AdvancedRuleConditionId

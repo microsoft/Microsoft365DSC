@@ -48,6 +48,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-ManagementRole -MockWith {
             }
 
+            Mock -CommandName Start-Sleep -MockWith {
+            }
+
+            Mock -CommandName New-M365DSCLogEntry -MockWith {
+            }
+
             Mock -CommandName Get-ManagementRole -MockWith {
                 return @{
                     Name                = 'Contoso Management Role'
@@ -133,6 +139,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-ManagementRole -Exactly 1
                 Should -Invoke -CommandName New-ManagementRole -Exactly 1
+            }
+        }
+
+        Context -Name 'Management Role should exist. Management Role lookup initially returns no results.' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name        = 'Contoso Management Role'
+                    Parent      = 'Journaling'
+                    Description = 'This is the Contoso Management Role'
+                    Ensure      = 'Present'
+                    Credential  = $Credential
+                }
+
+                $script:getManagementRoleCallCount = 0
+                Mock -CommandName Get-ManagementRole -MockWith {
+                    $script:getManagementRoleCallCount++
+                    if ($script:getManagementRoleCallCount -eq 1)
+                    {
+                        return $null
+                    }
+
+                    return @{
+                        Name                = 'Contoso Management Role'
+                        Parent              = 'Journaling'
+                        Description         = 'This is the Contoso Management Role'
+                        FreeBusyAccessLevel = 'AvailabilityOnly'
+                    }
+                }
+            }
+
+            It 'Should retry the Get-ManagementRole lookup before returning the resource' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+                Should -Invoke -CommandName Get-ManagementRole -Exactly 2
+                Should -Invoke -CommandName Start-Sleep -Exactly 1 -ParameterFilter { $Seconds -eq 10 }
+                Should -Invoke -CommandName New-M365DSCLogEntry -Exactly 1
             }
         }
 

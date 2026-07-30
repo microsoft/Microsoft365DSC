@@ -1,5 +1,69 @@
 # Change log for Microsoft365DSC
 
+# 1.26.729.1
+
+* AADApplication
+  * Added new properties `DefaultRedirectUri`, `Info`, `Logo` and
+    `ServiceManagementReference`.
+    FIXES [#4321](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/4321)
+* AADConditionalAccessPolicy
+  * Added requirement to specify `ExcludeExternalTenantsMembershipKind` if
+    `ExcludeExternalTenantsMembers` is specified during apply.
+  * Assigned the value `All` as default for `ExcludeExternalTenantsMembershipKind`
+    during apply.
+    FIXES [#6163](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/6163)
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Fixed an issue where lookup by `DisplayName` returned all results.
+    FIXES [#7374](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7374)
+* AADEntitlementManagementAccessPackageCatalogResource
+  * Fixed an issue where a non-existing Service Principal or Group would
+    throw an error during the export instead of continuing.
+* EXOManagementRole
+  * Added retry and logging when `Get-ManagementRole` returns no results.
+* IntuneAppConfigurationPolicy
+  * Added information about no support for Settings catalog policy entries due to
+    delegated authentication requirements.
+    FIXES [#5672](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/5672)
+* IntuneDeviceManagementDeviceDiagnosticSettings
+  * Initial release.
+    FIXES [#4154](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/4154)
+* IntuneWindowsDataProcessingSettings
+  * Initial release.
+    FIXES [#4154](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/4154)
+* M365DSCConnection
+  * Fixed an issue where `ApplicationSecret` was not converted to a secure string.
+* SentinelAlertRule
+  * Added `SubscriptionId` parameter to `Export-TargetResource`.
+  * Fixed an issue where non-Sentinel Log Analytics Workspaces were exported.
+* SentinelSetting
+  * Added `SubscriptionId` parameter to `Export-TargetResource`.
+  * Fixed an issue where non-Sentinel Log Analytics Workspaces were exported.
+* SentinelThreatIntelligenceIndicator
+  * Added `SubscriptionId` parameter to `Export-TargetResource`.
+  * Fixed an issue where non-Sentinel Log Analytics Workspaces were exported.
+* SentinelWatchlist
+  * Added `SubscriptionId` parameter to `Export-TargetResource`.
+  * Fixed an issue where non-Sentinel Log Analytics Workspaces were exported.
+* M365DSCDocGenerator
+  * Fixed an issue where not all permissions were shown on the resource docs page.
+* M365DSCExportUtil
+  * Removed validation from `SubscriptionId` parameter.
+* M365DSCReverse
+  * Updated `SubscriptionId` handling to pass to all export functions that define it.
+* M365DSCUtil
+  * Added the function `Update-M365DSCAuthenticationConfiguration` to update a
+    configuration to use a different authentication mode and save it to a new file.
+    FIXES [#3205](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/3205)
+* MISC
+  * Updated documentation for the `Update-M365DSCAzureAdApplication` function.
+    FIXES [#5399](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/5399)
+  * Updated required permissions and documentation for Azure resources.
+    FIXES [#6960](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/6960)
+  * Added support to run Docker release images with older Microsoft365DSC versions
+* DEPENDENCIES
+  * Updated `MSCloudLoginAssistant` to version 1.1.72.
+    FIXES [#7371](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7371)
+
 # 1.26.722.1
 
 * O365OrgCustomizationSetting
@@ -8,6 +72,9 @@
   * Added missing workload connections.
 * O365SearchAndIntelligenceConfigurations
   * Added missing workload connection.
+* SCDLPComplianceRule
+  * Fixed an issue where trainable classifier ids in `AdvancedRule` could cause drift.
+    FIXES [#7352](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7352)
 * M365DSCExportUtil
   * Added auto completion for `-Components` in `Export-M365DSCConfiguration`.
   * Since `M365DSCStringReplacementMap` is now being sent in parallel exports

@@ -573,77 +573,84 @@ function New-DscMofResourceWikiPage
                 $settingsContent = Get-Content -Path $settingsFile -Raw
                 $settingsJson = ConvertFrom-Json -InputObject $settingsContent
 
-                if ($null -ne $settingsJson.permissions.exchange)
+                $workloads = @('exchange', 'purview')
+                foreach ($workload in $workloads)
                 {
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine('### Exchange')
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine('To authenticate with Microsoft Exchange, this resource requires the following permissions:')
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine('#### Roles')
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine('* **Read**')
-                    $null = $permissionsContent.AppendLine("* $($settingsJson.permissions.exchange.requiredroles.read -join ', ')")
-                    $null = $permissionsContent.AppendLine('* **Update**')
-                    $null = $permissionsContent.AppendLine("* $($settingsJson.permissions.exchange.requiredroles.update -join ', ')")
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine('#### Role Groups')
-                    $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine('* **Read**')
-                    if ($settingsJson.permissions.exchange.requiredrolegroups.read.Count -ne 0)
+                    if ($null -ne $settingsJson.permissions.$workload)
                     {
-                        $roleGroups = $settingsJson.permissions.exchange.requiredrolegroups.read -join ', '
+                        $workloadNameUpper = $workload.Substring(0, 1).ToUpper() + $workload.Substring(1, $workload.Length - 1)
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("### $workloadNameUpper")
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine("To authenticate with Microsoft $workloadNameUpper, this resource requires the following permissions:")
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('#### Roles')
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('* **Read**')
+                        $null = $permissionsContent.AppendLine("  * $($settingsJson.permissions.$workload.requiredroles.read -join ', ')")
+                        $null = $permissionsContent.AppendLine('* **Update**')
+                        $null = $permissionsContent.AppendLine("  * $($settingsJson.permissions.$workload.requiredroles.update -join ', ')")
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('#### Role Groups')
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('* **Read**')
+                        if ($settingsJson.permissions.$workload.requiredrolegroups.read.Count -ne 0)
+                        {
+                            $roleGroups = $settingsJson.permissions.$workload.requiredrolegroups.read -join ', '
+                        }
+                        else
+                        {
+                            $roleGroups = 'None'
+                        }
+                        $null = $permissionsContent.AppendLine("  * $roleGroups")
+                        $null = $permissionsContent.AppendLine('* **Update**')
+                        if ($settingsJson.permissions.$workload.requiredrolegroups.update.Count -ne 0)
+                        {
+                            $roleGroups = $settingsJson.permissions.$workload.requiredrolegroups.update -join ', '
+                        }
+                        else
+                        {
+                            $roleGroups = 'None'
+                        }
+                        $null = $permissionsContent.AppendLine("  * $roleGroups")
                     }
-                    else
-                    {
-                        $roleGroups = 'None'
-                    }
-                    $null = $permissionsContent.AppendLine("* $roleGroups")
-                    $null = $permissionsContent.AppendLine('* **Update**')
-                    if ($settingsJson.permissions.exchange.requiredrolegroups.update.Count -ne 0)
-                    {
-                        $roleGroups = $settingsJson.permissions.exchange.requiredrolegroups.update -join ', '
-                    }
-                    else
-                    {
-                        $roleGroups = 'None'
-                    }
-                    $null = $permissionsContent.AppendLine("* $roleGroups")
                 }
-                else
+
+                $otherApis = $settingsJson.permissions.psobject.properties.Name | Where-Object { $_ -notin $workloads }
+                foreach ($otherApi in $otherApis)
                 {
-                    # Microsoft Graph permissions
-                    if ($null -ne $settingsJson.permissions.graph)
+                    $otherApiUpper = $otherApi.Substring(0, 1).ToUpper() + $otherApi.Substring(1, $otherApi.Length - 1)
+                    if ($null -ne $settingsJson.permissions.$otherapi)
                     {
                         $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('### Microsoft Graph')
+                        $null = $permissionsContent.AppendLine("### $otherApiUpper")
                         $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('To authenticate with the Microsoft Graph API, this resource requires the following permissions:')
+                        $null = $permissionsContent.AppendLine("To authenticate with the $otherApiUpper API, this resource requires the following permissions:")
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('#### Delegated permissions')
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('* **Read**')
 
-                        if ($settingsJson.permissions.graph.delegated.read.Count -eq 0)
+                        if ($settingsJson.permissions.$otherApi.delegated.read.Count -eq 0)
                         {
                             $delegatedRead = 'None'
                         }
                         else
                         {
-                            $delegatedRead = $settingsJson.permissions.graph.delegated.read.name -join ', '
+                            $delegatedRead = $settingsJson.permissions.$otherApi.delegated.read.name -join ', '
                         }
                         $null = $permissionsContent.AppendLine("  * $delegatedRead")
 
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('* **Update**')
 
-                        if ($settingsJson.permissions.graph.delegated.update.Count -eq 0)
+                        if ($settingsJson.permissions.$otherApi.delegated.update.Count -eq 0)
                         {
                             $delegatedUpdate = 'None'
                         }
                         else
                         {
-                            $delegatedUpdate = $settingsJson.permissions.graph.delegated.update.name -join ', '
+                            $delegatedUpdate = $settingsJson.permissions.$otherApi.delegated.update.name -join ', '
                         }
                         $null = $permissionsContent.AppendLine("  * $delegatedUpdate")
 
@@ -652,154 +659,26 @@ function New-DscMofResourceWikiPage
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('* **Read**')
 
-                        if ($settingsJson.permissions.graph.application.read.Count -eq 0)
+                        if ($settingsJson.permissions.$otherApi.application.read.Count -eq 0)
                         {
                             $applicationRead = 'None'
                         }
                         else
                         {
-                            $applicationRead = $settingsJson.permissions.graph.application.read.name -join ', '
+                            $applicationRead = $settingsJson.permissions.$otherApi.application.read.name -join ', '
                         }
                         $null = $permissionsContent.AppendLine("  * $applicationRead")
 
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('* **Update**')
 
-                        if ($settingsJson.permissions.graph.application.update.Count -eq 0)
+                        if ($settingsJson.permissions.$otherApi.application.update.Count -eq 0)
                         {
                             $applicationUpdate = 'None'
                         }
                         else
                         {
-                            $applicationUpdate = $settingsJson.permissions.graph.application.update.name -join ', '
-                        }
-                        $null = $permissionsContent.AppendLine("  * $applicationUpdate")
-                    }
-
-                    # Microsoft SharePoint permissions
-                    if ($null -ne $settingsJson.permissions.sharepoint)
-                    {
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('### Microsoft SharePoint')
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('To authenticate with the SharePoint API, this resource requires the following permissions:')
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('#### Delegated permissions')
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('* **Read**')
-
-                        if ($settingsJson.permissions.sharepoint.delegated.read.Count -eq 0)
-                        {
-                            $delegatedRead = 'None'
-                        }
-                        else
-                        {
-                            $delegatedRead = $settingsJson.permissions.sharepoint.delegated.read.name -join ', '
-                        }
-                        $null = $permissionsContent.AppendLine("  * $delegatedRead")
-
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('* **Update**')
-
-                        if ($settingsJson.permissions.sharepoint.delegated.update.Count -eq 0)
-                        {
-                            $delegatedUpdate = 'None'
-                        }
-                        else
-                        {
-                            $delegatedUpdate = $settingsJson.permissions.sharepoint.delegated.update.name -join ', '
-                        }
-                        $null = $permissionsContent.AppendLine("  * $delegatedUpdate")
-
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('#### Application permissions')
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('* **Read**')
-
-                        if ($settingsJson.permissions.sharepoint.application.read.Count -eq 0)
-                        {
-                            $applicationRead = 'None'
-                        }
-                        else
-                        {
-                            $applicationRead = $settingsJson.permissions.sharepoint.application.read.name -join ', '
-                        }
-                        $null = $permissionsContent.AppendLine("  * $applicationRead")
-
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('* **Update**')
-
-                        if ($settingsJson.permissions.sharepoint.application.update.Count -eq 0)
-                        {
-                            $applicationUpdate = 'None'
-                        }
-                        else
-                        {
-                            $applicationUpdate = $settingsJson.permissions.sharepoint.application.update.name -join ', '
-                        }
-                        $null = $permissionsContent.AppendLine("  * $applicationUpdate")
-                    }
-
-                    # ProjectWorkManagement API permissions
-                    if ($null -ne $settingsJson.permissions.ProjectWorkManagement)
-                    {
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('### ProjectWorkManagement')
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('To authenticate with the Microsoft ProjectWorkManagement API, this resource requires the following permissions:')
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('#### Delegated permissions')
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('* **Read**')
-
-                        if ($settingsJson.permissions.ProjectWorkManagement.delegated.read.Count -eq 0)
-                        {
-                            $delegatedRead = 'None'
-                        }
-                        else
-                        {
-                            $delegatedRead = $settingsJson.permissions.ProjectWorkManagement.delegated.read.name -join ', '
-                        }
-                        $null = $permissionsContent.AppendLine("  * $delegatedRead")
-
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('* **Update**')
-
-                        if ($settingsJson.permissions.ProjectWorkManagement.delegated.update.Count -eq 0)
-                        {
-                            $delegatedUpdate = 'None'
-                        }
-                        else
-                        {
-                            $delegatedUpdate = $settingsJson.permissions.ProjectWorkManagement.delegated.update.name -join ', '
-                        }
-                        $null = $permissionsContent.AppendLine("  * $delegatedUpdate")
-
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('#### Application permissions')
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('* **Read**')
-
-                        if ($settingsJson.permissions.ProjectWorkManagement.application.read.Count -eq 0)
-                        {
-                            $applicationRead = 'None'
-                        }
-                        else
-                        {
-                            $applicationRead = $settingsJson.permissions.ProjectWorkManagement.application.read.name -join ', '
-                        }
-                        $null = $permissionsContent.AppendLine("  * $applicationRead")
-
-                        $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('* **Update**')
-
-                        if ($settingsJson.permissions.ProjectWorkManagement.application.update.Count -eq 0)
-                        {
-                            $applicationUpdate = 'None'
-                        }
-                        else
-                        {
-                            $applicationUpdate = $settingsJson.permissions.ProjectWorkManagement.application.update.name -join ', '
+                            $applicationUpdate = $settingsJson.permissions.$otherApi.application.update.name -join ', '
                         }
                         $null = $permissionsContent.AppendLine("  * $applicationUpdate")
                     }

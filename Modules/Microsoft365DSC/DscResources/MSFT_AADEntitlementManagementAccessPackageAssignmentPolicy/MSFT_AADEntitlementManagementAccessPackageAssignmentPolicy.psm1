@@ -131,7 +131,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "The access package assignment policy with id {$id} was not found"
             $getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
-                -DisplayNameEq $DisplayName `
+                -Filter "displayName eq '$($DisplayName -replace "'", "''")'" `
                 -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
                 -ErrorAction SilentlyContinue
         }

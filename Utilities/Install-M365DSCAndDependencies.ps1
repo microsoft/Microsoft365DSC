@@ -1,12 +1,22 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [switch]
-    $IsSDK
+    [Switch]
+    $IsSDK,
+    
+    [Parameter()]
+    [System.String]
+    $M365DSCVersion
 )
 
 $isWindowsPlatform = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
     [System.Runtime.InteropServices.OSPlatform]::Windows)
+
+if ([String]::IsNullOrEmpty($M365DSCVersion) -or $M365DSCVersion -eq "latest")
+{
+    $M365DSCVersion = (Import-PowerShellDataFile -Path "/DSC/Microsoft365DSC.psd1").ModuleVersion
+}
+Remove-Item -Path "/DSC/Microsoft365DSC.psd1" -Force -ErrorAction SilentlyContinue
 
 try
 {
@@ -64,9 +74,11 @@ try
 
     if (-not $IsSDK.IsPresent)
     {
-        Write-Output "Installing Microsoft365DSC module"
+        $Message = "Installing Microsoft365DSC module ({0})" -f $M365DSCVersion
+        Write-Output $Message
         $Parameters = @{
             Name                = "Microsoft365DSC"
+            RequiredVersion     = $M365DSCVersion
             Repository          = "PSGallery"
             Scope               = "AllUsers"
             Force               = [Switch]$true
@@ -117,11 +129,11 @@ try
         {
             $ProgressPreference = 'SilentlyContinue'
             Write-Output "PowerShell 7 not found, installing it now"
-            Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/download/v7.6.3/PowerShell-7.6.3-win-x64.zip" -OutFile "PowerShell-7.6.3-win-x64.zip"
-            Unblock-File "PowerShell-7.6.3-win-x64.zip"
+            Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/download/v7.6.4/PowerShell-7.6.4-win-x64.zip" -OutFile "PowerShell-7.6.4-win-x64.zip"
+            Unblock-File "PowerShell-7.6.4-win-x64.zip"
             $null = New-Item -ItemType Directory -Path "C:\Program Files\PowerShell\7" -Force
-            Expand-Archive "PowerShell-7.6.3-win-x64.zip" -DestinationPath "C:\Program Files\PowerShell\7"
-            Remove-Item "PowerShell-7.6.3-win-x64.zip" -Force
+            Expand-Archive "PowerShell-7.6.4-win-x64.zip" -DestinationPath "C:\Program Files\PowerShell\7"
+            Remove-Item "PowerShell-7.6.4-win-x64.zip" -Force
             [System.Environment]::SetEnvironmentVariable('PATH', $env:PATH + ";C:\Program Files\PowerShell\7", [System.EnvironmentVariableTarget]::Machine)
             $env:PATH += ";C:\Program Files\PowerShell\7"
         }

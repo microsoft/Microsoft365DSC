@@ -272,6 +272,121 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'Rule already exists, and should with AdvancedRules containing trainable classifier ids' -Fixture {
+            BeforeAll {
+                $desiredAdvancedRule = @'
+{
+  "Version": "1.0",
+  "Condition": {
+    "Operator": "And",
+    "SubConditions": [
+      {
+        "ConditionName": "ContentContainsSensitiveInformation",
+        "Value": [
+          {
+            "Groups": [
+              {
+                "Name": "PHI SITs",
+                "Operator": "Or",
+                "Sensitivetypes": [
+                  {
+                    "Name": "Healthcare",
+                    "Id": "11111111-1111-1111-1111-111111111111",
+                    "Classifiertype": "MLModel"
+                  },
+                  {
+                    "Name": "EU Debit Card Number",
+                    "Id": "0e9b3178-9678-47dd-a509-37222ca96b42",
+                    "Mincount": 1,
+                    "Maxcount": -1,
+                    "Confidencelevel": "Medium"
+                  }
+                ]
+              }
+            ],
+            "Operator": "And"
+          }
+        ]
+      }
+    ]
+  }
+}
+'@
+                $currentAdvancedRule = @'
+{
+  "Version": "1.0",
+  "Condition": {
+    "Operator": "And",
+    "SubConditions": [
+      {
+        "ConditionName": "ContentContainsSensitiveInformation",
+        "Value": [
+          {
+            "Groups": [
+              {
+                "Name": "PHI SITs",
+                "Operator": "Or",
+                "Sensitivetypes": [
+                  {
+                    "Name": "Healthcare",
+                    "Id": null,
+                    "Classifiertype": "MLModel"
+                  },
+                  {
+                    "Name": "EU Debit Card Number",
+                    "Id": null,
+                    "Mincount": 1,
+                    "Maxcount": -1,
+                    "Confidencelevel": "Medium"
+                  }
+                ]
+              }
+            ],
+            "Operator": "And"
+          }
+        ]
+      }
+    ]
+  }
+}
+'@
+                $testParams = @{
+                    Ensure       = 'Present'
+                    Policy       = 'MyParentPolicy'
+                    Comment      = 'New comment'
+                    AdvancedRule = $desiredAdvancedRule | ConvertTo-Json -Compress
+                    BlockAccess  = $False
+                    Name         = 'TestPolicy'
+                    Credential   = $Credential
+                }
+
+                $Script:AdvancedRulePassedToTest = $null
+                Mock -CommandName Get-DLPComplianceRule -MockWith {
+                    return @{
+                        Name             = 'TestPolicy'
+                        Comment          = 'New Comment'
+                        ParentPolicyName = 'MyParentPolicy'
+                        AdvancedRule     = $currentAdvancedRule
+                        BlockAccess      = $False
+                    }
+                }
+
+                Mock -CommandName Test-M365DSCParameterState -MockWith {
+                    param($CurrentValues, $Source, $DesiredValues, $ValuesToCheck)
+                    $Script:AdvancedRulePassedToTest = $DesiredValues.AdvancedRule
+                    return $true
+                }
+            }
+
+            It 'Should ignore trainable classifier ids when testing AdvancedRules for drift' {
+                Test-TargetResource @testParams | Should -Be $true
+                $normalizedAdvancedRule = $Script:AdvancedRulePassedToTest | ConvertFrom-Json | ConvertFrom-Json
+                $sensitiveTypes = $normalizedAdvancedRule.Condition.SubConditions[0].Value[0].Groups[0].Sensitivetypes
+                ($sensitiveTypes | Where-Object -FilterScript { $_.Name -eq 'Healthcare' }).Id | Should -Be $null
+                ($sensitiveTypes | Where-Object -FilterScript { $_.Name -eq 'EU Debit Card Number' }).Id | Should -Be '0e9b3178-9678-47dd-a509-37222ca96b42'
+            }
+        }
+
         Context -Name "Rule doesn't already exist but should with EndpointDlpRestrictions" -Fixture {
             BeforeAll {
                 $testParams = @{

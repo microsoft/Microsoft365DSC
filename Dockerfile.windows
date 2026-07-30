@@ -1,11 +1,15 @@
 FROM mcr.microsoft.com/dotnet/runtime:10.0-windowsservercore-ltsc2025
 
+ARG M365DSC_VERSION
+ENV M365DSC_VERSION=${M365DSC_VERSION:-latest}
+
 WORKDIR /DSC
 
+COPY ./Modules/Microsoft365DSC/Microsoft365DSC.psd1 /DSC/Microsoft365DSC.psd1
 COPY ./Utilities/Install-M365DSCAndDependencies.ps1 /DSC/Install-M365DSCAndDependencies.ps1
 
 SHELL ["cmd", "/S", "/C"]
 
-RUN powershell -Command .\Install-M365DSCAndDependencies.ps1
+RUN powershell -Command .\Install-M365DSCAndDependencies.ps1 -M365DSCVersion %M365DSC_VERSION%
 
 ENTRYPOINT ["pwsh", "-NoLogo"]

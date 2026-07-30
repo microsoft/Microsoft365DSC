@@ -61,7 +61,20 @@ In order to authenticate to Azure DevOps using a Service Principal (Certificate 
 
 ## Azure Permissions
 
-Coming soon!
+Almost all of the Azure resources require an Azure Role to be assigned to the Service Principal, scoped on the Subscription or Resource Group level. You can assign an Azure role using the following PowerShell command:
+
+```powershell
+# Connect to Azure with an owner account
+# Select the correct subscription if you have multiple subscriptions
+Connect-AzAccount
+
+# Assign the required role you want the App Registration to have
+# Contributor for modifications, Reader for read-only access, or other roles depending on the use case
+New-AzRoleAssignment -RoleDefinitionName "<Role Name>" -ApplicationId "<Application Id>" -Scope "/"
+
+# For Service Principals, the command looks a little bit different
+New-AzRoleAssignment -RoleDefinitionName '<Role Name>' -ObjectId "<Service Principal Object ID>" -Scope "/" -ObjectType 'ServicePrincipal'
+```
 
 ## Defender Permissions
 
@@ -74,7 +87,10 @@ Assigning the API permissions is done in the App Registration Permission blade. 
 Connect-AzAccount
 
 # Assign the required role according to the resource definition
-New-AzRoleAssignment -RoleDefinitionName "<Role Name>" -ApplicationId "<Application Id>" -Scope /
+New-AzRoleAssignment -RoleDefinitionName "<Role Name>" -ApplicationId "<Application Id>" -Scope "/"
+
+# For Service Principals, the command looks a little bit different
+New-AzRoleAssignment -RoleDefinitionName '<Role Name>' -ObjectId "<Service Principal Object ID>" -Scope "/" -ObjectType 'ServicePrincipal'
 ```
 
 Wait for a couple of minutes for RBAC to take effect and then you're ready for managing the Defender workload with a Service Principal.
@@ -97,6 +113,15 @@ You now can export the Fabric resources.
 
 In order to authenticate to Power Apps using a Service Principal (Certificate Thumbprint or Application Secret), you will first need to define your app as a Power App Management app. For details on how to proceed, please refer to the following link: [Registering an Admin Management Application](https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application)
 
+Next, you need to add the application to the Power Platform Environment you want to manage. Follow these instructions, if it is not the `Default Environment`:
+
+1. Go to the [Power Platform Admin Center](https://admin.powerplatform.microsoft.com)
+2. Go to Manage --> Environments --> Select environment --> Click "Membership" on top --> Add yourself as System Administrator ([More info](https://community.powerplatform.com/forums/thread/details/?threadid=b273d481-82d6-ef11-a730-7c1e527e6ed8))
+3. Go to selected environment --> Settings --> Users + Permissions --> Application users
+4. Click "Add new app user" --> Click "Add app" --> Select App Registration --> Select a business unit --> Select role "System Administrator" --> Click "Create"
+5. Click on the newly created app user --> Select the refresh button on top right --> It displays "This app user's name has been successfully updated."
+6. Now everything is set up. [Visual guide to Power Platform Service Principal setup](https://www.matthewdevaney.com/a-visual-guide-to-power-platform-service-principal-setup/)
+
 Additionally, to be able to authenticate using a Certificate Thumbprint, the underlying Power Apps PowerShell module used by Microsoft365DSC requires the certificate's private key (.pfx) to be registered under the current user's certificate store at **Cert:\CurrentUser\My\\**. Omitting to register the private key will result in Microsoft365DSC throwing the following error when trying to authenticate to the Power Platform:
 
 ```powershell
@@ -114,7 +139,10 @@ In order to authenticate to Sentinel using a Service Principal (Certificate Thum
 Connect-AzAccount
 
 # Assign the required role according to the resource definition
-New-AzRoleAssignment -RoleDefinitionName "<Role Name>" -ApplicationId "<Application Id>" -Scope /
+New-AzRoleAssignment -RoleDefinitionName "<Role Name>" -ApplicationId "<Application Id>" -Scope "/"
+
+# For Service Principals, the command looks a little bit different
+New-AzRoleAssignment -RoleDefinitionName '<Role Name>' -ObjectId "<Service Principal Object ID>" -Scope "/" -ObjectType 'ServicePrincipal'
 ```
 
 Wait for a couple of minutes for RBAC to take effect and then you're ready for managing the Sentinel workload with a Service Principal.

@@ -472,6 +472,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $SubscriptionId,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -526,11 +530,17 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $workspaces = Get-AzResource -ResourceType 'Microsoft.OperationalInsights/workspaces'
+        $sentinelInstances = Get-AzResource -ResourceType 'Microsoft.OperationsManagement/solutions'
+        $sentinelNames = @()
+        foreach ($instance in $sentinelInstances)
+        {
+            $sentinelNames += $instance.Name.Replace('SecurityInsights(', '').Replace(')', '')
+        }
+        $workspaces = Get-AzResource -ResourceType 'Microsoft.OperationalInsights/workspaces' | Where-Object Name -in $sentinelNames
         $Script:exportedInstances = @()
         $i = 1
         $dscContent = [System.Text.StringBuilder]::new()
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($workspaces.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -556,7 +566,7 @@ function Export-TargetResource
                 -TenantId $TenantId
 
             $j = 1
-            if ($currentWatchLists.Length -eq 0 )
+            if ($currentWatchLists.Length -eq 0)
             {
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }

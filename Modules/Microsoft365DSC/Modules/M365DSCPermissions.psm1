@@ -687,7 +687,7 @@ function Update-M365DSCAllowedGraphScopes
     Specifies the certificate file path to upload or create.
 
 .PARAMETER CreateSelfSignedCertificate
-    If specified, a self-signed certificate will be created for the application. -CreateSelfSignedCertificate or -CertificatePath can be used, not both.
+    If specified, a self-signed certificate will be created for the application. Once specified, -CertificatePath is required as well.
     The certificate is create in the Cert:\CurrentUser\My store and will be exported to the path specified in -CertificatePath.
     If you require the certificate with the private key, you can export it from the certificate store after running the command using the Export-PfxCertificate cmdlet.
 
@@ -868,7 +868,7 @@ function Update-M365DSCAzureAdApplication
             Write-LogEntry -Message '    And the entire certificate chain is available!'
             Write-LogEntry -Message ' '
 
-            if ($PSBoundParameters.ContainsKey('CertificatePath') -eq $false)
+            if (-not $PSBoundParameters.ContainsKey('CertificatePath'))
             {
                 if ($PSBoundParameters.ContainsKey('CreateSelfSignedCertificate'))
                 {
@@ -897,7 +897,7 @@ function Update-M365DSCAzureAdApplication
                 else
                 {
                     # CreateSelfSignedCertificate is NOT specified and path specified in CertificatePath does not exists.
-                    if ((Test-Path -Path $CertificatePath) -eq $false)
+                    if (-not (Test-Path -Path $CertificatePath))
                     {
                         Write-LogEntry -Message "Specified CertificatePath '$CertificatePath' does not exist." -Type Error
                         return

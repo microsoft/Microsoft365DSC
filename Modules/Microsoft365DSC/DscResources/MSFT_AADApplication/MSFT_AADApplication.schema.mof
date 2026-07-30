@@ -144,18 +144,28 @@ class MSFT_MicrosoftGraphAppRole
     [Required, Description("Specifies the value to include in the roles claim in ID tokens and access tokens authenticating an assigned user or service principal. Must not exceed 120 characters in length. Allowed characters are : ! # $ % & ' ( ) * + , - . / :   =       + _    } , and characters in the ranges 0-9, A-Z and a-z. Any other character, including the space character, aren't allowed. May not begin with ..")] String Value;
 };
 
+[ClassVersion("1.0.0.0")]
+class MSFT_MicrosoftGraphInformationalUrl
+{
+    [Write, Description("Link to the application's marketing page. For example, https://www.contoso.com/app/marketing")] String MarketingUrl;
+    [Write, Description("Link to the application's privacy statement. For example, https://www.contoso.com/app/privacy")] String PrivacyStatementUrl;
+    [Write, Description("Link to the application's support page. For example, https://www.contoso.com/app/support")] String SupportUrl;
+    [Write, Description("Link to the application's terms of service statement. For example, https://www.contoso.com/app/termsofservice")] String TermsOfServiceUrl;
+};
+
 [ClassVersion("1.0.0")]
 class MSFT_AADApplicationSPA
 {
     [Write, Description("Single page application redirect URIs.")] String RedirectUris[];
 };
 
-[ClassVersion("1.0.0.1"), FriendlyName("AADApplication")]
+[ClassVersion("1.0.0.2"), FriendlyName("AADApplication")]
 class MSFT_AADApplication : OMI_BaseResource
 {
     [Key, Description("DisplayName of the app")] string DisplayName;
     [Write, Description("ObjectID of the app.")] String ObjectId;
     [Write, Description("AppId for the app.")] String AppId;
+    [Write, Description("The default redirect URI. If specified and there's no explicit redirect URI in the sign-in request for SAML and OIDC flows, Microsoft Entra ID sends the token to this redirect URI. Microsoft Entra ID also sends the token to this default URI in SAML IdP-initiated single sign-on. The value must match one of the configured redirect URIs for the application.")] String DefaultRedirectUri;
     [Write, Description("A free text field to provide a description of the application object to end users. The maximum allowed size is 1024 characters.")] String Description;
     [Write, Description("A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects.")] String GroupMembershipClaims;
     [Write, Description("The URL to the application's homepage.")] String Homepage;
@@ -167,6 +177,8 @@ class MSFT_AADApplication : OMI_BaseResource
     [Write, Description("The collection of breaking change behaviors related to token issuance that are configured for the application. Authentication behaviors are unset by default (null) and must be explicitly enabled or disabled. Nullable. Returned only on $select.  For more information about authentication behaviors, see Manage application authenticationBehaviors to avoid unverified use of email claims for user identification or authorization."), EmbeddedInstance("MSFT_MicrosoftGraphauthenticationBehaviors")] String AuthenticationBehaviors;
     [Write, Description("The collection of password credentials associated with the application. Not nullable."), EmbeddedInstance("MSFT_MicrosoftGraphpasswordCredential")] String PasswordCredentials[];
     [Write, Description("The collection of key credentials associated with the application. Not nullable. Supports $filter (eq, not, ge, le)."), EmbeddedInstance("MSFT_MicrosoftGraphkeyCredential")] String KeyCredentials[];
+    [Write, Description("The object that contains information urls."), EmbeddedInstance("MSFT_MicrosoftGraphInformationalUrl")] String Info;
+    [Write, Description("The base64 encoded content of the logo.")] String Logo;
     [Write, Description("The collection of roles defined for the application. With app role assignments, these roles can be assigned to users, groups, or service principals associated with other applications. Not nullable."), EmbeddedInstance("MSFT_MicrosoftGraphappRole")] String AppRoles[];
     [Write, Description("The logout url for this application.")] string LogoutURL;
     [Write, Description("Specifies whether this application is a public client (such as an installed application running on a mobile device). Default is false.")] Boolean PublicClient;
@@ -175,6 +187,7 @@ class MSFT_AADApplication : OMI_BaseResource
     [Write, Description("Represents the set of properties required for configuring Application Proxy for this application. Configuring these properties allows you to publish your on-premises application for secure remote access."), EmbeddedInstance("MSFT_AADApplicationOnPremisesPublishing")] String OnPremisesPublishing;
     [Write, Description("Identifier of the associated Application Template.")] String ApplicationTemplateId;
     [Write, Description("List of public clients redirect URIs.")] String PublicClientRedirectUris[];
+    [Write, Description("References application or service contact information from a Service or Asset Management database. Nullable.")] String ServiceManagementReference;
     [Write, Description("List of single page application settings."), EmbeddedInstance("MSFT_AADApplicationSpa")] String Spa;
     [Write, Description("Specifies the Microsoft accounts that are supported for the current application. The possible values are: AzureADMyOrg (default), AzureADMultipleOrgs, AzureADandPersonalMicrosoftAccount, and PersonalMicrosoftAccount"), ValueMap{"AzureADandPersonalMicrosoftAccount", "AzureADMultipleOrgs", "AzureADMyOrg", "PersonalMicrosoftAccount"}, Values{"AzureADandPersonalMicrosoftAccount", "AzureADMultipleOrgs", "AzureADMyOrg", "PersonalMicrosoftAccount"}] String SignInAudience;
     [Write, Description("The Token Lifetime Policy assigned to the application with its DisplayName.")] String TokenLifetimePolicy;

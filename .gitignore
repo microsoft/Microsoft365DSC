@@ -27,3 +27,5 @@ site
 
 # generated docs
 docs/site
+# Added by code-review-graph
+.code-review-graph/

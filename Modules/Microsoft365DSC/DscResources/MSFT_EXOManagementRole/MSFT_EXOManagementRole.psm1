@@ -81,7 +81,9 @@ function Get-TargetResource
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
 
-            $ManagementRole = Invoke-M365DSCCommand -ScriptBlock { Get-ManagementRole -Identity $Name -ErrorAction Stop } -SuppressNotFoundError
+            $ManagementRole = Get-M365DSCEXOManagementRoleWithRetry -Identity $Name `
+                -TenantId $TenantId `
+                -Credential $Credential
             if ($null -eq $ManagementRole)
             {
                 Write-Verbose -Message "Management Role $($Name) does not exist."
@@ -354,7 +356,8 @@ function Export-TargetResource
 
     try
     {
-        [array] $exportedInstances = Get-ManagementRole | Where-Object -FilterScript { $null -ne $_.Parent }
+        [array] $exportedInstances = Get-M365DSCEXOManagementRoleWithRetry -TenantId $TenantId `
+            -Credential $Credential | Where-Object -FilterScript { $null -ne $_.Parent }
 
         $dscContent = [System.Text.StringBuilder]::new()
 
@@ -413,6 +416,70 @@ function Export-TargetResource
 
         throw
     }
+}
+
+function Get-M365DSCEXOManagementRoleWithRetry
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxAttempts = 2,
+
+        [Parameter()]
+        [System.Int32]
+        $RetryDelayInSeconds = 10,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential
+    )
+
+    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++)
+    {
+        if ([System.String]::IsNullOrEmpty($Identity))
+        {
+            $managementRole = Invoke-M365DSCCommand -ScriptBlock { Get-ManagementRole -ErrorAction Stop }
+            $lookupDescription = 'all management roles'
+        }
+        else
+        {
+            $managementRole = Invoke-M365DSCCommand -ScriptBlock { Get-ManagementRole -Identity $Identity -ErrorAction Stop } -SuppressNotFoundError
+            $lookupDescription = "management role '$Identity'"
+        }
+
+        if ($null -ne $managementRole -and @($managementRole).Count -gt 0)
+        {
+            return $managementRole
+        }
+
+        $message = "Get-ManagementRole returned no results for $lookupDescription on attempt $attempt of $MaxAttempts."
+        if ($attempt -lt $MaxAttempts)
+        {
+            $message += " Retrying in $RetryDelayInSeconds seconds."
+        }
+
+        New-M365DSCLogEntry -Message $message `
+            -Source $MyInvocation.MyCommand.Source `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        if ($attempt -lt $MaxAttempts)
+        {
+            Start-Sleep -Seconds $RetryDelayInSeconds
+        }
+    }
+
+    return $null
 }
 
 Export-ModuleMember -Function *-TargetResource

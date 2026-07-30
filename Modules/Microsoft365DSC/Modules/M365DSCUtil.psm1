@@ -1290,7 +1290,7 @@ function Assert-M365DSCBlueprint
 
         if ([String]::IsNullOrEmpty($ResourcesInBluePrint))
         {
-            if (![String]::IsNullOrEmpty($ExcludedResources))
+            if (-not [String]::IsNullOrEmpty($ExcludedResources))
             {
                 Write-Host 'All resources were excluded from BluePrint, aborting'
             }
@@ -1357,7 +1357,7 @@ function Assert-M365DSCBlueprint
 
         # Clean up the temporary files
         Remove-Item $LocalBluePrintPath -Force -ErrorAction SilentlyContinue
-        if (!$KeepExport)
+        if (-not $KeepExport)
         {
             Remove-Item $ExportPath -Force -ErrorAction SilentlyContinue
         }
@@ -2809,6 +2809,264 @@ function Send-M365DSCPushNotification
     }
 }
 
+<#
+.SYNOPSIS
+    Updates the authentication parameters of an existing Microsoft365DSC configuration file.
+
+.DESCRIPTION
+    This function parses an existing Microsoft365DSC configuration file, removes the authentication
+    parameters from every resource instance it contains and replaces them with the ones matching the
+    requested connection mode. The updated resource instances are converted back into DSC syntax and
+    written to the file specified by the DestinationFile parameter.
+
+    On top of the resource instances located inside the 'Node localhost' section, the header of the
+    configuration file is updated as well. The PSCredential parameters and the initialization of the
+    $CredsCredential and $CredsCertificatePassword variables are added or removed based on the
+    requested connection mode, as is the initialization of the $OrganizationName variable.
+
+    The values used by the updated configuration are not written to the associated ConfigurationData
+    file, which therefore needs to be updated manually before the configuration can be applied. The
+    entries that need to be present are listed in the output of the function.
+
+.PARAMETER SourceFile
+    Specifies the path of the configuration file to parse and update the authentication parameters in.
+
+.PARAMETER DestinationFile
+    Specifies the fully qualified path of the file the updated configuration is written to.
+
+.PARAMETER ConnectionMode
+    Specifies the authentication mode the configuration should be updated to. Accepted values are
+    ServicePrincipalWithThumbprint, ServicePrincipalWithSecret, ServicePrincipalWithPath,
+    CredentialsWithTenantId, CredentialsWithApplicationId, Credentials, ManagedIdentity and
+    AccessTokens.
+
+.EXAMPLE
+    PS> Update-M365DSCAuthenticationConfiguration -SourceFile 'C:\DSC\M365TenantConfig.ps1' -DestinationFile 'C:\DSC\M365TenantConfig-MSI.ps1' -ConnectionMode 'ManagedIdentity'
+
+.FUNCTIONALITY
+    Public
+
+.OUTPUTS
+    $null
+#>
+function Update-M365DSCAuthenticationConfiguration
+{
+    [CmdletBinding()]
+    [OutputType($null)]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SourceFile,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DestinationFile,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('ServicePrincipalWithThumbprint', 'ServicePrincipalWithSecret', 'ServicePrincipalWithPath', 'CredentialsWithTenantId', 'CredentialsWithApplicationId', 'Credentials', 'ManagedIdentity', 'AccessTokens')]
+        [System.String]
+        $ConnectionMode
+    )
+
+    if (-not (Test-Path -Path $SourceFile -PathType Leaf))
+    {
+        throw "The SourceFile parameter must point to an existing file. Received {$SourceFile}."
+    }
+
+    $destinationRoot = [System.IO.Path]::GetPathRoot($DestinationFile)
+    if ([System.String]::IsNullOrEmpty($destinationRoot.TrimEnd('\', '/')))
+    {
+        throw "The DestinationFile parameter must be a fully qualified path. Received {$DestinationFile}."
+    }
+
+    $destinationFolder = Split-Path -Path $DestinationFile -Parent
+    if (-not (Test-Path -Path $destinationFolder))
+    {
+        New-Item -Path $destinationFolder -ItemType Directory -Force | Out-Null
+    }
+
+    [array]$parsedContent = ConvertTo-DSCObject -Path $SourceFile
+    if ($parsedContent.Count -eq 0)
+    {
+        throw "No DSC resource instances could be found in the file {$SourceFile}."
+    }
+
+    # The authentication parameters that need to be present for a given connection mode. The values
+    # assigned below are the ones Update-M365DSCExportAuthenticationResults expects to find in order
+    # to translate them into their final ConfigurationData or credential references.
+    $authenticationParameterSet = @{
+        ServicePrincipalWithThumbprint = @('ApplicationId', 'CertificateThumbprint', 'TenantId')
+        ServicePrincipalWithSecret     = @('ApplicationId', 'ApplicationSecret', 'TenantId')
+        ServicePrincipalWithPath       = @('ApplicationId', 'CertificatePath', 'CertificatePassword', 'TenantId')
+        CredentialsWithTenantId        = @('Credential', 'TenantId')
+        CredentialsWithApplicationId   = @('Credential', 'ApplicationId')
+        Credentials                    = @('Credential')
+        ManagedIdentity                = @('ManagedIdentity', 'TenantId')
+        AccessTokens                   = @('AccessTokens', 'TenantId')
+    }
+
+    $updatedResources = [System.Collections.Generic.List[System.Collections.Hashtable]]::new()
+    foreach ($resource in $parsedContent)
+    {
+        Write-Verbose -Message "Updating the authentication parameters of {$($resource.ResourceInstanceName)}."
+
+        # Restore Ensure property because Remove-M365DSCAuthenticationParameter removes it
+        $ensureValue = $resource.Ensure
+        $resource = Remove-M365DSCAuthenticationParameter -BoundParameters $resource
+        if ($null -ne $ensureValue)
+        {
+            $resource.Ensure = $ensureValue
+        }
+
+        foreach ($parameter in $authenticationParameterSet.$ConnectionMode)
+        {
+            $resource.$parameter = switch ($parameter)
+            {
+                'ManagedIdentity'
+                {
+                    $true
+                }
+                'Credential'
+                {
+                    '$CredsCredential'
+                }
+                'CertificatePassword'
+                {
+                    '$CredsCertificatePassword'
+                }
+                default
+                {
+                    "`$ConfigurationData.NonNodeData.$parameter"
+                }
+            }
+        }
+
+        $updatedResult = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode -Results $resource
+        $updatedResources.Add($updatedResult.Results)
+    }
+
+    Write-Verbose -Message 'Converting the updated resource instances back into DSC syntax.'
+    $updatedContent = ConvertFrom-DSCObject -DSCResources $updatedResources.ToArray()
+
+    # Indent all non-empty lines by 8 spaces to match the indentation of the configuration file
+    $updatedContent = ($updatedContent -replace '(?m)^(?=.)', '        ').TrimEnd()
+    $sourceContent = Get-Content -Path $SourceFile -Raw
+
+    # Locate everything in the "Node localhost" part of the configuration file, while excluding the
+    # last two closing brackets
+    $nodeSection = [regex]::Match($sourceContent, '(?s)(?<=Node localhost\s*\{)(.*\s{8}\}?)(?=\s*\})')
+    if (-not $nodeSection.Success)
+    {
+        throw "Could not locate the 'Node localhost' section in the file {$SourceFile}."
+    }
+
+    #region Update the credential variables in the header of the configuration
+    $headerContent = $sourceContent.Substring(0, $nodeSection.Index)
+
+    # The PSCredential parameters, and therefore the $Creds* variables, the requested connection
+    # mode relies on.
+    $credentialParameters = @(switch ($ConnectionMode)
+        {
+            'ServicePrincipalWithPath'
+            {
+                'CertificatePassword'
+            }
+            { $_ -in 'Credentials', 'CredentialsWithTenantId', 'CredentialsWithApplicationId' }
+            {
+                'Credential'
+            }
+        })
+
+    Write-Verbose -Message 'Removing the existing credential parameters and variables from the header.'
+
+    # Remove the PSCredential parameter declarations from both the script and the configuration
+    # parameter blocks.
+    $headerContent = $headerContent -replace '(?im)^[ \t]*\[Parameter\(\)\][ \t]*\r?\n[ \t]*\[System\.Management\.Automation\.PSCredential\][ \t]*\r?\n[ \t]*\$(?:Credential|CertificatePassword)[ \t]*,?[ \t]*\r?\n', ''
+
+    # Remove the initialization of the $Creds* variables, together with the empty line following it.
+    $headerContent = $headerContent -replace '(?ims)^[ \t]*if[ \t]*\([ \t]*\$null -eq \$(?:Credential|CertificatePassword)[ \t]*\)[ \t]*\r?\n[ \t]*\{.*?\r?\n[ \t]*\}[ \t]*\r?\n[ \t]*else[ \t]*\r?\n[ \t]*\{.*?\r?\n[ \t]*\}[ \t]*\r?\n(\r?\n)?', ''
+
+    # Remove the initialization of the $OrganizationName variable, since its value depends on the
+    # connection mode as well.
+    $headerContent = $headerContent -replace '(?im)^[ \t]*\$OrganizationName[ \t]*=.*\r?\n(\r?\n)?', ''
+
+    $scriptParameterContent = [System.Text.StringBuilder]::new()
+    $configurationParameterContent = [System.Text.StringBuilder]::new()
+    $postParameterContent = [System.Text.StringBuilder]::new()
+
+    foreach ($credentialParameter in $credentialParameters)
+    {
+        Write-Verbose -Message "Adding the {$credentialParameter} parameter to the header."
+
+        $null = $scriptParameterContent.Append("    [Parameter()]`r`n")
+        $null = $scriptParameterContent.Append("    [System.Management.Automation.PSCredential]`r`n")
+        $null = $scriptParameterContent.Append("    `$$credentialParameter`r`n")
+
+        $null = $configurationParameterContent.Append("        [Parameter()]`r`n")
+        $null = $configurationParameterContent.Append("        [System.Management.Automation.PSCredential]`r`n")
+        $null = $configurationParameterContent.Append("        `$$credentialParameter`r`n")
+
+        $null = $postParameterContent.Append("    if (`$null -eq `$$credentialParameter)`r`n")
+        $null = $postParameterContent.Append("    {`r`n")
+        $null = $postParameterContent.Append("        `$Creds$credentialParameter = Get-Credential -Message 'Enter the credentials for the $credentialParameter parameter.'`r`n")
+        $null = $postParameterContent.Append("    }`r`n")
+        $null = $postParameterContent.Append("    else`r`n")
+        $null = $postParameterContent.Append("    {`r`n")
+        $null = $postParameterContent.Append("        `$Creds$credentialParameter = `$$credentialParameter`r`n")
+        $null = $postParameterContent.Append("    }`r`n`r`n")
+    }
+
+    if ($credentialParameters -contains 'Credential')
+    {
+        $null = $postParameterContent.Append("    `$OrganizationName = `$CredsCredential.UserName.Split('@')[1]`r`n`r`n")
+    }
+    else
+    {
+        $null = $postParameterContent.Append("    `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName`r`n`r`n")
+    }
+
+    # The '$' characters of the generated content are doubled, since the -replace operator would
+    # otherwise interpret them as substitution patterns. '$0' represents the matched content itself.
+    if ($credentialParameters.Count -gt 0)
+    {
+        $headerContent = $headerContent -replace '(?m)^param[ \t]*\([ \t]*\r?\n', ('$0' + $scriptParameterContent.ToString().Replace('$', '$$'))
+        $headerContent = $headerContent -replace '(?m)^[ \t]+param[ \t]*\([ \t]*\r?\n', ('$0' + $configurationParameterContent.ToString().Replace('$', '$$'))
+    }
+
+    $headerContent = $headerContent -replace '(?m)^[ \t]*Import-DscResource[ \t]', ($postParameterContent.ToString().Replace('$', '$$') + '$0')
+    #endregion
+
+    # Replace the resource instances of the source file with the updated ones. Substring is used
+    # instead of the -replace operator, since the updated content contains '$' characters that would
+    # otherwise be interpreted as substitution patterns.
+    $destinationContent = $headerContent + "`r`n" + $updatedContent + `
+        $sourceContent.Substring($nodeSection.Index + $nodeSection.Length)
+
+    Write-Verbose -Message "Saving the updated configuration to {$DestinationFile}."
+    Set-Content -Path $DestinationFile -Value $destinationContent -Encoding UTF8 -Force
+
+    # The ConfigurationData file is not updated by this function, so let the user know which entries
+    # need to receive a value before the configuration can be applied.
+    $configurationDataKeys = @($authenticationParameterSet.$ConnectionMode | Where-Object -FilterScript { $_ -notin @('ManagedIdentity', 'Credential', 'CertificatePassword') })
+    if ($credentialParameters -notcontains 'Credential')
+    {
+        $configurationDataKeys = @('OrganizationName') + $configurationDataKeys
+    }
+
+    Write-M365DSCHost -Message "Updated the configuration to use the {$ConnectionMode} authentication mode and saved it to {$DestinationFile}." -ForegroundColor Green
+
+    if ($configurationDataKeys.Count -gt 0)
+    {
+        Write-M365DSCHost -Message "To apply the configuration, update the ConfigurationData.psd1 file with the values for the following NonNodeData entries: $($configurationDataKeys -join ', ')." -ForegroundColor Yellow
+    }
+
+    foreach ($credentialParameter in $credentialParameters)
+    {
+        Write-M365DSCHost -Message "The configuration also requires the {$credentialParameter} credential to be provided when compiling it." -ForegroundColor Yellow
+    }
+}
+
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
     'Clear-M365DSCHostMessageCache',
@@ -2845,6 +3103,7 @@ Export-ModuleMember -Function @(
     'Test-CodePage',
     'Test-M365DSCParameterState',
     'Test-M365DSCTargetResource',
+    'Update-M365DSCAuthenticationConfiguration',
     'Update-M365DSCAuthenticationTargets',
     'Write-M365DSCHost'
 )

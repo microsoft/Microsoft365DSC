@@ -186,14 +186,20 @@ function Get-TargetResource
         switch ($getValue.OriginSystem)
         {
             'AadApplication' {
-                $originId = (Get-MgServicePrincipal -ServicePrincipalId $getValue.OriginId).DisplayName
+                $originId = (Get-MgServicePrincipal -ServicePrincipalId $getValue.OriginId -ErrorAction SilentlyContinue).DisplayName
             }
             'AADGroup' {
-                $originId = (Get-MgGroup -GroupId $getValue.OriginId).DisplayName
+                $originId = (Get-MgGroup -GroupId $getValue.OriginId -ErrorAction SilentlyContinue).DisplayName
             }
             default {
                 $originId = $getValue.OriginId
             }
+        }
+
+        if ($null -eq $originId)
+        {
+            Write-Warning -Message "The origin id {$($getValue.OriginId)} of OriginSystem {$($getValue.OriginSystem)} could not be resolved to a display name. Returning the id instead."
+            $originId = $getValue.OriginId
         }
 
         $results = [ordered]@{

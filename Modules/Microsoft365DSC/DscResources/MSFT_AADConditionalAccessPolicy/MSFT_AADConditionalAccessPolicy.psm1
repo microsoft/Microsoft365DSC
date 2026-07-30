@@ -1498,9 +1498,18 @@ function Set-TargetResource
                     [string]$ExcludeGuestOrExternalUserTypes = $ExcludeGuestOrExternalUserTypes -join ','
                     $excludeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $ExcludeGuestOrExternalUserTypes)
                     $externalTenants = @{}
+                    # Assume default value of 'All' if ExcludeExternalTenantsMembershipKind is null or empty
+                    if ([System.String]::IsNullOrEmpty($ExcludeExternalTenantsMembershipKind))
+                    {
+                        $ExcludeExternalTenantsMembershipKind = 'All'
+                    }
                     if ($ExcludeExternalTenantsMembershipKind -eq 'All')
                     {
                         $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+                        if ($PSBoundParameters.ContainsKey('ExcludeExternalTenantsMembers') -and $ExcludeExternalTenantsMembers.Count -gt 0)
+                        {
+                            throw "Set-Targetresource: ExcludeExternalTenantsMembers is defined, but ExcludeExternalTenantsMembershipKind is 'All'. Please set ExcludeExternalTenantsMembershipKind to 'enumerated' to use ExcludeExternalTenantsMembers."
+                        }
                     }
                     elseif ($ExcludeExternalTenantsMembershipKind -eq 'enumerated')
                     {

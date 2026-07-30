@@ -2,8 +2,17 @@
 
 ## Description
 
-Configures Azure PIM (Privileged Identity Management) role policy settings including
-activation duration, activation requirements (MFA, justification, ticketing), approval workflows,
-email notification settings for eligible/active assignments and activations,
-expiration settings for eligible and active assignments, and enablement requirements
+Configures Azure PIM (Privileged Identity Management) role policy settings including activation duration, activation requirements (MFA, justification, ticketing), approval workflows,
+email notification settings for eligible/active assignments and activations, expiration settings for eligible and active assignments, and enablement requirements
 for Azure roles at Management Group, Subscription, and Resource Group scopes.
+
+## Required Permissions
+
+To manage Azure PIM role eligibility schedule settings, you need one of the following:
+
+- **Privileged Role Administrator** role in Azure AD
+- **Owner** or **User Access Administrator** role at the appropriate Azure scope
+- Custom role with permissions:
+  - `Microsoft.Authorization/roleEligibilityScheduleRequests/write`
+  - `Microsoft.Authorization/roleEligibilitySchedules/read`
+  - `Microsoft.Authorization/roleDefinitions/read`

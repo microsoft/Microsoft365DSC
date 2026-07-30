@@ -114,3 +114,10 @@ These formatting rules are enforced during code review. Agents must apply them t
 6. **Use third-person phrasing in all descriptions.** Use `"their"` not `"your"` (e.g., `"Manages their SPO tenant settings."` not `"Manages your SPO tenant settings."`).
 7. **Descriptions must have a space between sentences.** When a description contains multiple sentences, separate them with a single space after the period.
 8. **Use `[ValidateSet()]` for parameters with a known fixed set of values.** Prefer enforcing allowed values in the schema rather than free-text where an enum is available.
+
+<!-- mermaid-ai-skills:start -->
+## Mermaid Diagrams
+
+When the user asks to create, edit, or visualize a diagram, follow the
+instructions in `.github/instructions/mermaid.instructions.md`.
+<!-- mermaid-ai-skills:end -->

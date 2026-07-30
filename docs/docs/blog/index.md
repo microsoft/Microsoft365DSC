@@ -13,6 +13,7 @@
 ## Concepts
 
 * [DSC Error Flow](./2024/dsc-error-flow/dsc-error-flow.md)
-* [Microsoft365DSC Docker Images: How to Use Them](./2026/docker-images/docker-images.md)
 * [Intune Settings Catalog Functionality](./2026/intune-settings-catalog/intune-settings-catalog.md)
+* [Microsoft365DSC Docker Images: How to Use Them](./2026/docker-images/docker-images.md)
 * [Migrating to the Unified Tenant Configuration Management APIs](./2026/utcm-transition/utcm-transition.md)
+* [Performance Improvements in Microsoft365DSC](./2026/performance-improvements/performance-improvements.md)

@@ -170,9 +170,16 @@ function New-M365DSCConnection
     }
 
     # Convert ApplicationSecret from SecureString to plain string.
-    if ($InboundParameters.ApplicationSecret)
+    if ($null -ne $InboundParameters.ApplicationSecret)
     {
-        $InboundParameters.ApplicationSecret = $InboundParameters.ApplicationSecret.GetNetworkCredential().Password
+        if ($InboundParameters.ApplicationSecret -is [System.Management.Automation.PSCredential])
+        {
+            $InboundParameters.ApplicationSecret = $InboundParameters.ApplicationSecret.Password
+        }
+        elseif ($InboundParameters.ApplicationSecret -is [System.String])
+        {
+            $InboundParameters.ApplicationSecret = ConvertTo-SecureString $InboundParameters.ApplicationSecret -AsPlainText -Force
+        }
     }
 
     #region Validation
@@ -307,6 +314,11 @@ function New-M365DSCConnection
         -not $Script:M365DSCTelemetryConnectionToGraphParams.ContainsKey('Identity'))
     {
         $Script:M365DSCTelemetryConnectionToGraphParams.Add('Identity', $true)
+    }
+    if ($ConnectionMode -eq 'ServicePrincipalWithSecret' -and
+        -not $Script:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationSecret'))
+    {
+        $Script:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationSecret', $InboundParameters.ApplicationSecret.Password)
     }
     if ($connectionMode -eq 'ServicePrincipalWithPath' -and
         -not $Script:M365DSCTelemetryConnectionToGraphParams.ContainsKey('CertificatePassword'))

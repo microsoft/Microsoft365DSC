@@ -106,12 +106,13 @@ function Get-TargetResource
                 -ErrorAction SilentlyContinue `
                 -SubscriptionId $SubscriptionId
         }
+
         if ($null -eq $instance)
         {
-            throw "Could not find Sentinel Workspace {$WorkspaceName} in Resource Group {$ResourceGroupName}"
+            throw "Failed to get configuration for Sentinel Workspace {$WorkspaceName} in Resource Group {$ResourceGroupName}"
         }
 
-        Write-Verbose -Message "Found an instance of Sentinel Workspace {$Workspace}"
+        Write-Verbose -Message "Found an instance of Sentinel Workspace {$WorkspaceName}"
         $Anomalies = $instance | Where-Object -FilterScript { $_.Name -eq 'Anomalies' }
         $AnomaliesIsEnabledValue = $false
         if ($null -ne $Anomalies)
@@ -380,6 +381,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $SubscriptionId,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -434,7 +439,13 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-AzResource -ResourceType 'Microsoft.OperationalInsights/workspaces'
+        $sentinelInstances = Get-AzResource -ResourceType 'Microsoft.OperationsManagement/solutions'
+        $sentinelNames = @()
+        foreach ($instance in $sentinelInstances)
+        {
+            $sentinelNames += $instance.Name.Replace('SecurityInsights(', '').Replace(')', '')
+        }
+        [array] $Script:exportedInstances = Get-AzResource -ResourceType 'Microsoft.OperationalInsights/workspaces' | Where-Object Name -in $sentinelNames
 
         $dscContent = [System.Text.StringBuilder]::new()
         $i = 1

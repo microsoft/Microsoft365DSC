@@ -12,21 +12,25 @@ This resource manages Azure PIM (Privileged Identity Management) role eligibilit
 ## Supported Scope Levels
 
 ### Subscription Scope
+
 Format: `/subscriptions/{subscriptionId}`
 
 Example: Assign "Owner" eligibility on subscription
 
 ### Management Group Scope
+
 Format: `/providers/Microsoft.Management/managementGroups/{managementGroupId}`
 
 Example: Assign "Reader" eligibility on management group
 
 ### Resource Group Scope
+
 Format: `/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}`
 
 Example: Assign "Contributor" eligibility on resource group
 
 ### Resource Scope
+
 Format: `/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}`
 
 Example: Assign "Key Vault Administrator" eligibility on specific key vault
