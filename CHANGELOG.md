@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.26.729.2
+
+* M365DSCConnection
+  * Fixed issue connecting to a workload using `New-M365DSCConnection`.
+
 # 1.26.729.1
 
 * AADApplication
