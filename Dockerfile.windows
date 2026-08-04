@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/runtime:10.0-windowsservercore-ltsc2025
 
-ARG M365DSC_VERSION
-ENV M365DSC_VERSION=${M365DSC_VERSION:-latest}
+ARG M365DSC_VERSION=latest
+ENV M365DSC_VERSION=$M365DSC_VERSION
 
 WORKDIR /DSC
 
