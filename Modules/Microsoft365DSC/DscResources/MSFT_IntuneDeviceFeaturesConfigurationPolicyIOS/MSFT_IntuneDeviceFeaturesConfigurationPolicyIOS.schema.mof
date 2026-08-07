@@ -19,11 +19,11 @@ class MSFT_airPrintDestination
     [Write, Description("If true, AirPrint connections are secured by Transport Layer Security (TLS). Default is false. Available in iOS 11.0 and later.")] Boolean forceTls;
 };
 
-[ClassVersion("1.0.0.1")]
+[ClassVersion("1.0.0.2")]
 class MSFT_iosWebContentFilterBase
 {
     [Required, Description("url.")] String url;
-    [Required, Description("bookmarkFolder.")] String bookmarkFolder;
+    [Write, Description("bookmarkFolder.")] String bookmarkFolder;
     [Required, Description("displayName.")] String displayName;
 };
 

@@ -1,0 +1,61 @@
+{
+  "resourceName": "AADApplicationFederatedIdentityCredential",
+  "description": "This resource configures federated identity credentials for Azure AD applications.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Application Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Application.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Application.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Application.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Application.ReadWrite.OwnedBy"
+          },
+          {
+            "name": "Application.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgApplication",
+        "Get-MgApplicationFederatedIdentityCredential",
+        "New-MgApplicationFederatedIdentityCredential",
+        "Remove-MgApplicationFederatedIdentityCredential",
+        "Update-MgApplicationFederatedIdentityCredential"
+      ]
+    }
+  ]
+}

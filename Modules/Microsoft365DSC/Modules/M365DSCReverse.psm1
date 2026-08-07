@@ -420,9 +420,8 @@ function Start-M365DSCConfigurationExtract
             }
             # Filter null elements in case one resource was provided and is not supported with the provided authentication method
             # to avoid Compare-Object from throwing a ParameterArgumentValidationErrorNullNotAllowed error
-            # allSupportedResourcesWithMostSecureAuthMethod is a List, so -ne $null evaluates each element in the list
             $allSupportedResourcesWithMostSecureAuthMethodArray = @()
-            foreach ($resource in ($allSupportedResourcesWithMostSecureAuthMethod -ne $null))
+            foreach ($resource in ($allSupportedResourcesWithMostSecureAuthMethod | Where-Object { $null -ne $_ }))
             {
                 $allSupportedResourcesWithMostSecureAuthMethodArray += $resource.Resource
             }

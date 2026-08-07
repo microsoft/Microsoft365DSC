@@ -169,16 +169,12 @@ function New-M365DSCConnection
         $Script:M365ConnectedToWorkloads = @()
     }
 
-    # Convert ApplicationSecret from SecureString to plain string.
+    # Convert ApplicationSecret from SecureString to plain string for MSCloudLoginAssistant
     if (-not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationSecret))
     {
         if ($InboundParameters.ApplicationSecret -is [System.Management.Automation.PSCredential])
         {
-            $InboundParameters.ApplicationSecret = $InboundParameters.ApplicationSecret.Password
-        }
-        elseif ($InboundParameters.ApplicationSecret -is [System.String])
-        {
-            $InboundParameters.ApplicationSecret = ConvertTo-SecureString $InboundParameters.ApplicationSecret -AsPlainText -Force
+            $InboundParameters.ApplicationSecret = ConvertFrom-SecureString -SecureString $InboundParameters.ApplicationSecret.Password -AsPlainText
         }
     }
 

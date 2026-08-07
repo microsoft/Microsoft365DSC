@@ -1,5 +1,27 @@
 # Change log for Microsoft365DSC
 
+# 1.26.805.1
+
+* AADApplicationFederatedIdentityCredential
+  * Initial release.
+* AADEntitlementManagementAccessPackage
+  * Fixed an issue where a resource role scope whose `AccessPackageResourceOriginId`
+    is specified as the object GUID was removed and re-added on every Set,
+    eventually leaving the access package with no resource roles. The desired
+    OriginId is now resolved to the same value that Get-TargetResource returns
+    before comparison.
+    FIXES [#7386](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7386)
+* AADApplicationFederatedIdentityCredential
+  * Added resource to manage federated identity credentials for Azure AD applications.
+* IntuneCloudProvisioningPolicyWindows365
+  * Added missing geographic location `australiaNewZealand`
+* IntuneDeviceFeaturesConfigurationPolicyIOS
+  * Demoted property `bookmarkFolder` from Required to Write.
+* M365DSCConnection
+  * Fixed an issue with client secret authentication.
+* M365DSCReverse
+  * Fixed an issue where filtering was not applied correctly.
+
 # 1.26.729.2
 
 * M365DSCConnection

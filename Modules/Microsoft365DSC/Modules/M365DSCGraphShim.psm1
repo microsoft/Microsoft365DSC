@@ -752,6 +752,103 @@ function Get-MgApplication
     return Invoke-M365DSCGraphShimGetResource -BoundParameters $PSBoundParameters -CollectionUri "/v1.0/applications" -SingleItemUri $singleItemUri -ErrorAction $ErrorActionPreference
 }
 
+function Get-MgApplicationFederatedIdentityCredential
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $FederatedIdentityCredentialId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $ConsistencyLevel,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
+    )
+
+    $singleItemUri = if ($PSBoundParameters.ContainsKey('FederatedIdentityCredentialId') -and -not [System.String]::IsNullOrEmpty($FederatedIdentityCredentialId)) { "/v1.0/applications/$($ApplicationId)/federatedIdentityCredentials/$($FederatedIdentityCredentialId)" } else { $null }
+    return Invoke-M365DSCGraphShimGetResource -BoundParameters $PSBoundParameters -CollectionUri "/v1.0/applications/$($ApplicationId)/federatedIdentityCredentials" -SingleItemUri $singleItemUri -ErrorAction $ErrorActionPreference
+}
+
 function Get-MgBetaAgreement
 {
     [CmdletBinding()]
@@ -18395,6 +18492,90 @@ function New-MgApplication
     return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/v1.0/applications" -Method 'POST' -ErrorAction $ErrorActionPreference
 }
 
+function New-MgApplicationFederatedIdentityCredential
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.String[]]
+        $Audiences,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Issuer,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Subject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/v1.0/applications/$($ApplicationId)/federatedIdentityCredentials" -Method 'POST' -ExtraExcludeParams @('ApplicationId') -ErrorAction $ErrorActionPreference
+}
+
 function New-MgApplicationOwnerByRef
 {
     [CmdletBinding()]
@@ -31011,6 +31192,66 @@ function Remove-MgApplication
     Invoke-M365DSCGraphShimDeleteResource -BoundParameters $PSBoundParameters -Uri "/v1.0/applications/$($ApplicationId)" -ErrorAction $ErrorActionPreference
 }
 
+function Remove-MgApplicationFederatedIdentityCredential
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $FederatedIdentityCredentialId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    Invoke-M365DSCGraphShimDeleteResource -BoundParameters $PSBoundParameters -Uri "/v1.0/applications/$($ApplicationId)/federatedIdentityCredentials/$($FederatedIdentityCredentialId)" -ErrorAction $ErrorActionPreference
+}
+
 function Remove-MgApplicationOwnerDirectoryObjectByRef
 {
     [CmdletBinding()]
@@ -38621,6 +38862,94 @@ function Update-MgApplication
     )
 
     return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/v1.0/applications/$($ApplicationId)" -Method 'PATCH' -ExtraExcludeParams @('ApplicationId') -ErrorAction $ErrorActionPreference
+}
+
+function Update-MgApplicationFederatedIdentityCredential
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $FederatedIdentityCredentialId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.String[]]
+        $Audiences,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Issuer,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Subject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/v1.0/applications/$($ApplicationId)/federatedIdentityCredentials/$($FederatedIdentityCredentialId)" -Method 'PATCH' -ExtraExcludeParams @('ApplicationId', 'FederatedIdentityCredentialId') -ErrorAction $ErrorActionPreference
 }
 
 function Update-MgBetaApplication
@@ -50953,6 +51282,7 @@ Export-ModuleMember -Function @(
     'Clear-MgBetaDeviceManagementConfigurationPolicyEnrollmentTimeDeviceMembershipTarget',
     'Get-MgAdminSharepointSetting',
     'Get-MgApplication',
+    'Get-MgApplicationFederatedIdentityCredential',
     'Get-MgBetaAgreement',
     'Get-MgBetaApplication',
     'Get-MgBetaDeviceAppManagementAndroidManagedAppProtection',
@@ -51159,6 +51489,7 @@ Export-ModuleMember -Function @(
     'Invoke-MgBetaInstantiateApplicationTemplate',
     'Invoke-MgBetaUploadIdentityApiConnectorClientCertificate',
     'New-MgApplication',
+    'New-MgApplicationFederatedIdentityCredential',
     'New-MgApplicationOwnerByRef',
     'New-MgApplicationTokenLifetimePolicyByRef',
     'New-MgBetaDeviceAppManagementAndroidManagedAppProtection',
@@ -51281,6 +51612,7 @@ Export-ModuleMember -Function @(
     'New-MgServicePrincipalOwnerByRef',
     'New-MgUser',
     'Remove-MgApplication',
+    'Remove-MgApplicationFederatedIdentityCredential',
     'Remove-MgApplicationOwnerDirectoryObjectByRef',
     'Remove-MgApplicationTokenLifetimePolicyTokenLifetimePolicyByRef',
     'Remove-MgBetaAgreement',
@@ -51405,6 +51737,7 @@ Export-ModuleMember -Function @(
     'Set-MgUserLicense',
     'Update-MgAdminSharepointSetting',
     'Update-MgApplication',
+    'Update-MgApplicationFederatedIdentityCredential',
     'Update-MgBetaApplication',
     'Update-MgBetaDeviceAppManagementAndroidManagedAppProtection',
     'Update-MgBetaDeviceAppManagementiOSManagedAppProtection',
@@ -51509,4 +51842,3 @@ Export-ModuleMember -Function @(
     'Update-MgServicePrincipal',
     'Update-MgUser'
 )
-

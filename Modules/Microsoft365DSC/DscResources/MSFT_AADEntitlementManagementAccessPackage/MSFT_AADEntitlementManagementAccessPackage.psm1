@@ -156,16 +156,9 @@ function Get-TargetResource
         $getAccessPackageResourceRoleScopes = @()
         foreach ($accessPackageResourceRoleScope in $getValue.AccessPackageResourceRoleScopes)
         {
-            $originId = $accessPackageResourceRoleScope.AccessPackageResourceScope.OriginId
-            $guid = [System.Guid]::Empty
-            if ([System.Guid]::TryParse($originId, [ref]$guid))
-            {
-                switch ($accessPackageResourceRoleScope.AccessPackageResourceScope.OriginSystem)
-                {
-                    'AadApplication' { $originId = (Get-MgServicePrincipal -ServicePrincipalId $originId).DisplayName }
-                    'AadGroup' { $originId = (Get-MgGroup -GroupId $originId).DisplayName }
-                }
-            }
+            $originId = Get-M365DSCAccessPackageResourceOriginKey `
+                -OriginId $accessPackageResourceRoleScope.AccessPackageResourceScope.OriginId `
+                -OriginSystem $accessPackageResourceRoleScope.AccessPackageResourceScope.OriginSystem
             $getAccessPackageResourceRoleScopes += @{
                 Id                                     = $accessPackageResourceRoleScope.Id
                 AccessPackageResourceOriginId          = $originId
@@ -579,7 +572,14 @@ function Set-TargetResource
         $currentAccessPackageResourceOriginIds = $currentInstance.AccessPackageResourceRoleScopes.AccessPackageResourceOriginId
         foreach ($accessPackageResourceRoleScope in $AccessPackageResourceRoleScopes)
         {
-            if ($accessPackageResourceRoleScope.AccessPackageResourceOriginId -notin ($currentAccessPackageResourceOriginIds))
+            # Match against the same value Get-TargetResource returns (display name for AadGroup/AadApplication).
+            # Comparing the raw GUID OriginId here made a GUID-specified scope look absent every run, so it was
+            # removed and re-added on every Set, eventually leaving the package with no resource roles.
+            $originKey = Get-M365DSCAccessPackageResourceOriginKey `
+                -OriginId $accessPackageResourceRoleScope.AccessPackageResourceOriginId `
+                -OriginSystem $accessPackageResourceRoleScope.AccessPackageResourceScopeOriginSystem
+
+            if ($originKey -notin ($currentAccessPackageResourceOriginIds))
             {
                 #region new roleScope
                 $originId = $accessPackageResourceRoleScope.AccessPackageResourceOriginId
@@ -663,7 +663,7 @@ function Set-TargetResource
             else
             {
                 $currentRole = $currentInstance.AccessPackageResourceRoleScopes | Where-Object `
-                    -FilterScript { $_.AccessPackageResourceOriginId -eq $accessPackageResourceRoleScope.AccessPackageResourceOriginId }
+                    -FilterScript { $_.AccessPackageResourceOriginId -eq $originKey }
                 if ($accessPackageResourceRoleScope.AccessPackageResourceRoleDisplayName -ne $currentRole.AccessPackageResourceRoleDisplayName )
                 {
                     #region update role
@@ -735,8 +735,13 @@ function Set-TargetResource
         }
 
         #region remove roleScope
+        $desiredAccessPackageResourceOriginKeys = @($AccessPackageResourceRoleScopes | ForEach-Object {
+                Get-M365DSCAccessPackageResourceOriginKey `
+                    -OriginId $_.AccessPackageResourceOriginId `
+                    -OriginSystem $_.AccessPackageResourceScopeOriginSystem
+            })
         $currentAccessPackageResourceOriginIdsToRemove = $currentAccessPackageResourceOriginIds | Where-Object `
-            -FilterScript { $_ -notin $AccessPackageResourceRoleScopes.AccessPackageResourceOriginId }
+            -FilterScript { $_ -notin $desiredAccessPackageResourceOriginKeys }
         foreach ($originId in $currentAccessPackageResourceOriginIdsToRemove)
         {
 
@@ -1025,6 +1030,38 @@ function Export-TargetResource
 
             throw
         }
+    }
+}
+
+function Get-M365DSCAccessPackageResourceOriginKey
+{
+    # Resolves a resource role scope OriginId to the value Get-TargetResource reports for it. For an
+    # AadGroup or AadApplication, Get-TargetResource replaces the GUID OriginId with the object's display
+    # name, so any code that compares a desired OriginId against the current value has to resolve it the
+    # same way. A value that is not a GUID (already a display name) is returned unchanged.
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $OriginId,
+
+        [Parameter()]
+        [System.String]
+        $OriginSystem
+    )
+
+    $guid = [System.Guid]::Empty
+    if (-not [System.Guid]::TryParse($OriginId, [ref]$guid))
+    {
+        return $OriginId
+    }
+
+    switch ($OriginSystem)
+    {
+        'AadApplication' { return (Get-MgServicePrincipal -ServicePrincipalId $OriginId).DisplayName }
+        'AadGroup' { return (Get-MgGroup -GroupId $OriginId).DisplayName }
+        default { return $OriginId }
     }
 }
 
