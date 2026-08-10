@@ -1,0 +1,61 @@
+{
+  "resourceName": "AADGSAPrivateAccessApplication",
+  "description": "This resource configures a Microsoft Entra Private Access application including its type, connector group, and network segments.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Application.ReadWrite.All"
+          },
+          {
+            "name": "Directory.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Application.ReadWrite.All"
+          },
+          {
+            "name": "Directory.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Applications",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    }
+  ]
+}

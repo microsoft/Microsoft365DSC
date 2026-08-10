@@ -1,0 +1,32 @@
+
+[ClassVersion("1.0.0.0")]
+class MSFT_AADGSAPrivateAccessApplicationSegment
+{
+    [Write, Description("The destination host for the segment, such as an FQDN or IP address.")] String DestinationHost;
+    [Write, Description("The destination type for the segment."), ValueMap{"ipAddress","ipRange","ipRangeCidr","fqdn","dnsSuffix"}, Values{"ipAddress","ipRange","ipRangeCidr","fqdn","dnsSuffix"}] String DestinationType;
+    [Write, Description("List of port ranges for the segment (e.g., '445-445', '3389-3389').")] String Ports[];
+    [Write, Description("The protocol for the segment."), ValueMap{"tcp","udp","tcp,udp"}, Values{"tcp","udp","tcp,udp"}] String Protocol;
+    [Write, Description("The unique identifier of the segment. Read-only.")] String Id;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("AADGSAPrivateAccessApplication")]
+class MSFT_AADGSAPrivateAccessApplication : OMI_BaseResource
+{
+    [Key, Description("The display name of the Private Access application.")] String DisplayName;
+    [Write, Description("The type of private application."), ValueMap{"nonwebapp","quickaccessapp"}, Values{"nonwebapp","quickaccessapp"}] String ApplicationType;
+    [Write, Description("Specifies whether the application is accessible via the Zero Trust Network Access client.")] Boolean IsAccessibleViaZTNAClient;
+    [Write, Description("The name of the connector group assigned to this application.")] String ConnectorGroupName;
+    [Write, Description("Specifies whether private DNS resolution is enabled. Applicable to Quick Access apps only.")] Boolean IsDnsResolutionEnabled;
+    [Write, Description("List of application segments defining the private network destinations."), EmbeddedInstance("MSFT_AADGSAPrivateAccessApplicationSegment")] String Segments[];
+    [Write, Description("The object ID of the underlying Azure AD application. Used for efficient lookups after initial creation.")] String ObjectId;
+    [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the workload's Admin."), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword."), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};
