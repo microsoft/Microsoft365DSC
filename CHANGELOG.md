@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.26.812.1
+
+* M365DSCTenantInfo
+  * Added support for Bleu and Delos sovereign cloud.
+* DEPENDENCIES
+  * Updated `DSCParser` to version 3.1.0.2.
+  * Updated `MSCloudLoginAssistant` to version 1.2.2.
+  * Updated `ReverseDSC` to version 2.0.0.35.
+
 # 1.26.805.1
 
 * AADApplicationFederatedIdentityCredential

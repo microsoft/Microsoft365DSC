@@ -192,12 +192,12 @@ function Export-M365DSCConfiguration
                 $invalid = $false
                 if ([System.Guid]::TryParse($_, [ref][System.Guid]::Empty))
                 {
-                    throw 'Please provide the tenant name (e.g., contoso.onmicrosoft.com) for TenantId instead of its GUID.'
+                    throw 'Please provide the tenant name (e.g., contoso.onmicrosoft.com or contoso.onsovcloud.com for sovereign tenants) for TenantId instead of its GUID.'
                 }
-                $invalid = $_ -notmatch '.onmicrosoft.'
+                $invalid = $_ -notmatch '.onmicrosoft.' -and $_ -notmatch '.onsovcloud.'
                 if ($invalid)
                 {
-                    Write-Warning -Message 'We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*'
+                    Write-Warning -Message 'We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.* or <tenant>.onsovcloud.* for sovereign tenants.'
                 }
                 return $true
             })]
@@ -304,9 +304,9 @@ function Export-M365DSCConfiguration
     if ($PSBoundParameters.ContainsKey('Credential') -eq $true -and `
             -not [System.String]::IsNullOrEmpty($Credential))
     {
-        if ($Credential.Username -notmatch '.onmicrosoft.')
+        if ($Credential.Username -notmatch '.onmicrosoft.' -and $Credential.Username -notmatch '.onsovcloud.')
         {
-            Write-Warning -Message 'We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property.'
+            Write-Warning -Message 'We recommend providing the username in the format of <tenant>.onmicrosoft.* (or <tenant>.onsovcloud.* for sovereign tenants) for the Credential property.'
         }
     }
 
