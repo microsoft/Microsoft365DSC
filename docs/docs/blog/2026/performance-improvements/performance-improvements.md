@@ -1,3 +1,7 @@
+---
+date: 2026-07-23
+---
+
 # Under the Hood: How We Make Microsoft365DSC Exports Faster
 
 <img src="../../../images/FabienTschanz.jpg" style="width:75px;border-radius:50%;border:3px solid black;float:left;" />

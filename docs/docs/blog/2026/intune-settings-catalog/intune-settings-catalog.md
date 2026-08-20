@@ -1,3 +1,7 @@
+---
+date: 2026-04-11
+---
+
 # Intune Settings Catalog in Microsoft365DSC
 
 <img src="../../../images/FabienTschanz.jpg" style="width:75px;border-radius:50%;border:3px solid black;float:left;" />

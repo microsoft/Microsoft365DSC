@@ -1,3 +1,7 @@
+---
+date: 2026-01-27
+---
+
 # Moving from Microsoft365DSC to Tenant Configuration Management APIs
 
 Microsoft recently announced the public preview of the [Tenant Configuration Management APIs (TCM)](https://learn.microsoft.com/en-us/graph/unified-tenant-configuration-management-concept-overview). TCM is an official solution that is supported by Microsoft, which offers the same high-level features as Microsoft365DSC. During the preview phase, only the configuration export/snapshot and the drift detection/monitoring  features are available. The ability to push configuration changes and to remediate to detected drifts will be made available later. The APIs are hosted on the Microsoft Graph, which means you can either access them directly via REST calls, or leverage the Microsoft Graph SDKs such as the Graph .NET SDK, the Graph Java SDK, or Graph PowerShell SDK to interact with them. It is important to note that because these are available on the Graph APIs, you are no longer tied to and forced to use PowerShell to automate your tenant configuration management tasks.

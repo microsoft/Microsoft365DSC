@@ -58,6 +58,7 @@ jobs:
       - run: |
           pip install mkdocs-material
           pip install mkdocs-include-dir-to-nav
+          pip install mkdocs-rss-plugin
 
       - name: Download generated docs
         uses: actions/download-artifact@v7

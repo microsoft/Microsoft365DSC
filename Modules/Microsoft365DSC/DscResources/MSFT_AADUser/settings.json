@@ -2,9 +2,12 @@
   "resourceName": "AADUser",
   "description": "",
   "roles": {
-    "read": [],
+    "read": [
+      "Attribute Assignment Reader"
+    ],
     "update": [
-      "User Administrator"
+      "User Administrator",
+      "Attribute Assignment Administrator"
     ]
   },
   "permissions": {
@@ -22,6 +25,9 @@
           },
           {
             "name": "GroupMember.Read.All"
+          },
+          {
+            "name": "CustomSecAttributeAssignment.Read.All"
           }
         ],
         "update": [
@@ -45,6 +51,9 @@
           },
           {
             "name": "GroupMember.ReadWrite.All"
+          },
+          {
+            "name": "CustomSecAttributeAssignment.ReadWrite.All"
           }
         ]
       },
@@ -55,6 +64,9 @@
           },
           {
             "name": "User.Read.All"
+          },
+          {
+            "name": "CustomSecAttributeAssignment.Read.All"
           }
         ],
         "update": [
@@ -78,6 +90,9 @@
           },
           {
             "name": "GroupMember.ReadWrite.All"
+          },
+          {
+            "name": "CustomSecAttributeAssignment.ReadWrite.All"
           }
         ]
       }

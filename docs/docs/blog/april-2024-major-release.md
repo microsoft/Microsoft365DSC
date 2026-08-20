@@ -1,3 +1,7 @@
+---
+date: 2024-03-27
+---
+
 # Microsoft365DSC – April 2024 Major Release (version 1.24.403.1)
 
 As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts/breaking-changes/), twice a year we allow for breaking changes to be deployed as part of a release. Our next major release, scheduled to go out on April 3rd 2024, will include several breaking changes and will be labeled version 1.24.403.1. This article provides details on the breaking changes and other important updates that will be included as part of our April 2024 Major release.

@@ -387,6 +387,67 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "Rule doesn't already exist but should with AdvancedRules containing trainable classifier ids" -Fixture {
+            BeforeAll {
+                $desiredAdvancedRule = @'
+{
+  "Version": "1.0",
+  "Condition": {
+    "Operator": "And",
+    "SubConditions": [
+      {
+        "ConditionName": "ContentContainsSensitiveInformation",
+        "Value": [
+          {
+            "Groups": [
+              {
+                "Name": "PHI SITs",
+                "Operator": "Or",
+                "Sensitivetypes": [
+                  {
+                    "Name": "Healthcare",
+                    "Id": "11111111-1111-1111-1111-111111111111",
+                    "Classifiertype": "MLModel"
+                  }
+                ]
+              }
+            ],
+            "Operator": "And"
+          }
+        ]
+      }
+    ]
+  }
+}
+'@
+                $testParams = @{
+                    Ensure       = 'Present'
+                    Policy       = 'MyParentPolicy'
+                    Comment      = 'New comment'
+                    AdvancedRule = $desiredAdvancedRule | ConvertTo-Json -Compress
+                    BlockAccess  = $False
+                    Name         = 'TestPolicy'
+                    Credential   = $Credential
+                }
+
+                $Script:AdvancedRulePassedToTest = $null
+                Mock -CommandName Get-DLPComplianceRule -MockWith {
+                    return $null
+                }
+
+                Mock -CommandName Test-M365DSCParameterState -MockWith {
+                    param($CurrentValues, $Source, $DesiredValues, $ValuesToCheck)
+                    $Script:AdvancedRulePassedToTest = $DesiredValues.AdvancedRule
+                    return $false
+                }
+            }
+
+            It 'Should not normalize AdvancedRules for missing rules' {
+                Test-TargetResource @testParams | Should -Be $false
+                $Script:AdvancedRulePassedToTest | Should -Be ($desiredAdvancedRule | ConvertTo-Json -Compress)
+            }
+        }
+
         Context -Name "Rule doesn't already exist but should with EndpointDlpRestrictions" -Fixture {
             BeforeAll {
                 $testParams = @{

@@ -1427,7 +1427,7 @@ function Test-TargetResource
         $ValuesToCheck['EndpointDlpRestrictions'] = Convert-SCDLPEndpointDlpRestrictions -EndpointDlpRestrictions $ValuesToCheck['EndpointDlpRestrictions']
     }
 
-    if ($null -ne $ValuesToCheck['AdvancedRule'])
+    if ($null -ne $ValuesToCheck['AdvancedRule'] -and $CurrentValues.Ensure -eq 'Present')
     {
         $advancedRuleObject = $ValuesToCheck['AdvancedRule'] | ConvertFrom-Json | ConvertFrom-Json
         $conditions = @($advancedRuleObject.Condition)

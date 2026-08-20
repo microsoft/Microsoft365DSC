@@ -1,3 +1,7 @@
+---
+date: 2026-07-09
+---
+
 # Microsoft365DSC Docker Images: How to Use Them
 
 <img src="../../../images/FabienTschanz.jpg" style="width:75px;border-radius:50%;border:3px solid black;float:left;" />

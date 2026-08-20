@@ -220,7 +220,7 @@ The [Get-M365DSCAllResources](../cmdlets/Get-M365DSCAllResources.md) cmdlet will
 We provide an easy way of consenting permissions to the Delegated Permissions application "Microsoft Graph PowerShell" in your tenant with the [Update-M365DSCAllowedGraphScopes](../cmdlets/Update-M365DSCAllowedGraphScopes.md) cmdlet. This cmdlet accepts either a list of components to grant the permissions for or can grant it for all resources if the **-All** switch is used. You also need to specify what type of permissions, Read or Update, you wish to grant it using the **-Type** parameter.
 
 <figure markdown>
-  ![Consenting to requested Graph permissions](../../Images/Accept)
+  ![Consenting to requested Graph permissions](../../Images/AcceptGraphPermissions.png)
   <figcaption>Consenting to requested Graph permissions</figcaption>
 </figure>
 

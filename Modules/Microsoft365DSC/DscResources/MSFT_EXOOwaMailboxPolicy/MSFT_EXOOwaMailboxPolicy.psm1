@@ -50,6 +50,18 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $AllowedOrganizationAccountDomains,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentsOfflineEnabledWin,
+
+        [Parameter()]
+        [System.Boolean]
+        $BizBarEnabled,
+
+        [Parameter()]
+        [System.String[]]
         $BlockedFileTypes,
 
         [Parameter()]
@@ -59,6 +71,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $BookingsMailboxCreationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $BookingsMailboxDomain,
 
         [Parameter()]
         [System.Boolean]
@@ -72,6 +88,10 @@ function Get-TargetResource
         [ValidateSet('Off', 'ReadOnly', 'ReadOnlyPlusAttachmentsBlocked')]
         [System.String]
         $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.Int32]
+        $DefaultClientLanguage,
 
         [Parameter()]
         [System.String]
@@ -92,6 +112,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisplayPhotosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EmptyStateEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -143,6 +167,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $HideClassicOutlookToggleOut,
+
+        [Parameter()]
+        [System.Boolean]
         $InstantMessagingEnabled,
 
         [Parameter()]
@@ -176,6 +204,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $LinkedInEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $LocalEventsEnabled,
 
         [Parameter()]
@@ -188,11 +220,27 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MonthlyUpdatesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $NotesEnabled,
 
         [Parameter()]
         [System.Boolean]
         $NpsSurveysEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OfflineEnabledWeb,
+
+        [Parameter()]
+        [System.Boolean]
+        $OfflineEnabledWin,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneDriveAttachmentsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -216,12 +264,36 @@ function Get-TargetResource
         $OutlookBetaToggleEnabled,
 
         [Parameter()]
+        [ValidateSet('Allow', 'NoExport', 'NoExportNoGrow', 'NoExportNoOpen', 'NoExportNoOpenNoGrow', 'Deny')]
+        [System.String]
+        $OutlookDataFile,
+
+        [Parameter()]
+        [ValidateSet('NoAccess', 'ReadOnly', 'ReadWrite', 'Undefined')]
+        [System.String]
+        $OutlookNewslettersAccessLevel,
+
+        [Parameter()]
+        [ValidateSet('DefaultOff', 'DefaultOn', 'Disabled', 'Undefined')]
+        [System.String]
+        $OutlookNewslettersReactions,
+
+        [Parameter()]
+        [ValidateSet('DefaultOff', 'DefaultOn', 'Disabled', 'Undefined')]
+        [System.String]
+        $OutlookNewslettersShowMore,
+
+        [Parameter()]
         [System.Boolean]
         $OWALightEnabled,
 
         [Parameter()]
         [System.Boolean]
         $PersonalAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalBookingsDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -302,6 +374,18 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $SkipCreateUnifiedGroupCustomSharepointClassification,
+
+        [Parameter()]
+        [System.Boolean]
+        $SMimeSuppressNameChecksEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SpellCheckerEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $TasksEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -447,17 +531,23 @@ function Get-TargetResource
             AllowCopyContactsToDeviceAddressBook                 = $OwaMailboxPolicy.AllowCopyContactsToDeviceAddressBook
             AllowedFileTypes                                     = $OwaMailboxPolicy.AllowedFileTypes
             AllowedMimeTypes                                     = $OwaMailboxPolicy.AllowedMimeTypes
+            AllowedOrganizationAccountDomains                    = $OwaMailboxPolicy.AllowedOrganizationAccountDomains
+            AttachmentsOfflineEnabledWin                         = $OwaMailboxPolicy.AttachmentsOfflineEnabledWin
+            BizBarEnabled                                        = $OwaMailboxPolicy.BizBarEnabled
             BlockedFileTypes                                     = $OwaMailboxPolicy.BlockedFileTypes
             BlockedMimeTypes                                     = $OwaMailboxPolicy.BlockedMimeTypes
             BookingsMailboxCreationEnabled                       = $OwaMailboxPolicy.BookingsMailboxCreationEnabled
+            BookingsMailboxDomain                                = $OwaMailboxPolicy.BookingsMailboxDomain
             ChangeSettingsAccountEnabled                         = $OwaMailboxPolicy.ChangeSettingsAccountEnabled
             ClassicAttachmentsEnabled                            = $OwaMailboxPolicy.ClassicAttachmentsEnabled
             ConditionalAccessPolicy                              = $OwaMailboxPolicy.ConditionalAccessPolicy
+            DefaultClientLanguage                                = $OwaMailboxPolicy.DefaultClientLanguage
             DefaultTheme                                         = $OwaMailboxPolicy.DefaultTheme
             DirectFileAccessOnPrivateComputersEnabled            = $OwaMailboxPolicy.DirectFileAccessOnPrivateComputersEnabled
             DirectFileAccessOnPublicComputersEnabled             = $OwaMailboxPolicy.DirectFileAccessOnPublicComputersEnabled
             DisableFacebook                                      = $OwaMailboxPolicy.DisableFacebook
             DisplayPhotosEnabled                                 = $OwaMailboxPolicy.DisplayPhotosEnabled
+            EmptyStateEnabled                                    = $OwaMailboxPolicy.EmptyStateEnabled
             ExplicitLogonEnabled                                 = $OwaMailboxPolicy.ExplicitLogonEnabled
             ExternalImageProxyEnabled                            = $OwaMailboxPolicy.ExternalImageProxyEnabled
             ExternalSPMySiteHostURL                              = $OwaMailboxPolicy.ExternalSPMySiteHostURL
@@ -470,6 +560,7 @@ function Get-TargetResource
             FreCardsEnabled                                      = $OwaMailboxPolicy.FreCardsEnabled
             GlobalAddressListEnabled                             = $OwaMailboxPolicy.GlobalAddressListEnabled
             GroupCreationEnabled                                 = $OwaMailboxPolicy.GroupCreationEnabled
+            HideClassicOutlookToggleOut                          = $OwaMailboxPolicy.HideClassicOutlookToggleOut
             InstantMessagingEnabled                              = $OwaMailboxPolicy.InstantMessagingEnabled
             InstantMessagingType                                 = $OwaMailboxPolicy.InstantMessagingType
             InterestingCalendarsEnabled                          = $OwaMailboxPolicy.InterestingCalendarsEnabled
@@ -478,19 +569,29 @@ function Get-TargetResource
             ItemsToOtherAccountsEnabled                          = $OwaMailboxPolicy.ItemsToOtherAccountsEnabled
             IsDefault                                            = $OwaMailboxPolicy.IsDefault
             JournalEnabled                                       = $OwaMailboxPolicy.JournalEnabled
+            LinkedInEnabled                                      = $OwaMailboxPolicy.LinkedInEnabled
             LocalEventsEnabled                                   = $OwaMailboxPolicy.LocalEventsEnabled
             LogonAndErrorLanguage                                = $OwaMailboxPolicy.LogonAndErrorLanguage
             MessagePreviewsDisabled                              = $OwaMailboxPolicy.MessagePreviewsDisabled
+            MonthlyUpdatesEnabled                                = $OwaMailboxPolicy.MonthlyUpdatesEnabled
             NotesEnabled                                         = $OwaMailboxPolicy.NotesEnabled
             NpsSurveysEnabled                                    = $OwaMailboxPolicy.NpsSurveysEnabled
+            OfflineEnabledWeb                                    = $OwaMailboxPolicy.OfflineEnabledWeb
+            OfflineEnabledWin                                    = $OwaMailboxPolicy.OfflineEnabledWin
+            OneDriveAttachmentsEnabled                           = $OwaMailboxPolicy.OneDriveAttachmentsEnabled
             OneWinNativeOutlookEnabled                           = $OwaMailboxPolicy.OneWinNativeOutlookEnabled
             OrganizationEnabled                                  = $OwaMailboxPolicy.OrganizationEnabled
             OnSendAddinsEnabled                                  = $OwaMailboxPolicy.OnSendAddinsEnabled
             OutboundCharset                                      = $OwaMailboxPolicy.OutboundCharset
             OutlookBetaToggleEnabled                             = $OwaMailboxPolicy.OutlookBetaToggleEnabled
+            OutlookDataFile                                      = $OwaMailboxPolicy.OutlookDataFile
+            OutlookNewslettersAccessLevel                        = $OwaMailboxPolicy.OutlookNewslettersAccessLevel
+            OutlookNewslettersReactions                          = $OwaMailboxPolicy.OutlookNewslettersReactions
+            OutlookNewslettersShowMore                           = $OwaMailboxPolicy.OutlookNewslettersShowMore
             OWALightEnabled                                      = $OwaMailboxPolicy.OWALightEnabled
             PersonalAccountCalendarsEnabled                      = $OwaMailboxPolicy.PersonalAccountCalendarsEnabled
             PersonalAccountsEnabled                              = $OwaMailboxPolicy.PersonalAccountsEnabled
+            PersonalBookingsDisabled                             = $OwaMailboxPolicy.PersonalBookingsDisabled
             PhoneticSupportEnabled                               = $OwaMailboxPolicy.PhoneticSupportEnabled
             PlacesEnabled                                        = $OwaMailboxPolicy.PlacesEnabled
             PremiumClientEnabled                                 = $OwaMailboxPolicy.PremiumClientEnabled
@@ -510,6 +611,9 @@ function Get-TargetResource
             ShowOnlineArchiveEnabled                             = $OwaMailboxPolicy.ShowOnlineArchiveEnabled
             SignaturesEnabled                                    = $OwaMailboxPolicy.SignaturesEnabled
             SkipCreateUnifiedGroupCustomSharepointClassification = $OwaMailboxPolicy.SkipCreateUnifiedGroupCustomSharepointClassification
+            SMimeSuppressNameChecksEnabled                       = $OwaMailboxPolicy.SMimeSuppressNameChecksEnabled
+            SpellCheckerEnabled                                  = $OwaMailboxPolicy.SpellCheckerEnabled
+            TasksEnabled                                         = $OwaMailboxPolicy.TasksEnabled
             TeamSnapCalendarsEnabled                             = $OwaMailboxPolicy.TeamSnapCalendarsEnabled
             TextMessagingEnabled                                 = $OwaMailboxPolicy.TextMessagingEnabled
             ThemeSelectionEnabled                                = $OwaMailboxPolicy.ThemeSelectionEnabled
@@ -598,6 +702,18 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $AllowedOrganizationAccountDomains,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentsOfflineEnabledWin,
+
+        [Parameter()]
+        [System.Boolean]
+        $BizBarEnabled,
+
+        [Parameter()]
+        [System.String[]]
         $BlockedFileTypes,
 
         [Parameter()]
@@ -607,6 +723,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $BookingsMailboxCreationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $BookingsMailboxDomain,
 
         [Parameter()]
         [System.Boolean]
@@ -620,6 +740,10 @@ function Set-TargetResource
         [ValidateSet('Off', 'ReadOnly', 'ReadOnlyPlusAttachmentsBlocked')]
         [System.String]
         $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.Int32]
+        $DefaultClientLanguage,
 
         [Parameter()]
         [System.String]
@@ -640,6 +764,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisplayPhotosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EmptyStateEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -691,6 +819,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $HideClassicOutlookToggleOut,
+
+        [Parameter()]
+        [System.Boolean]
         $InstantMessagingEnabled,
 
         [Parameter()]
@@ -724,6 +856,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $LinkedInEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $LocalEventsEnabled,
 
         [Parameter()]
@@ -736,11 +872,27 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MonthlyUpdatesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $NotesEnabled,
 
         [Parameter()]
         [System.Boolean]
         $NpsSurveysEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OfflineEnabledWeb,
+
+        [Parameter()]
+        [System.Boolean]
+        $OfflineEnabledWin,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneDriveAttachmentsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -764,12 +916,36 @@ function Set-TargetResource
         $OutlookBetaToggleEnabled,
 
         [Parameter()]
+        [ValidateSet('Allow', 'NoExport', 'NoExportNoGrow', 'NoExportNoOpen', 'NoExportNoOpenNoGrow', 'Deny')]
+        [System.String]
+        $OutlookDataFile,
+
+        [Parameter()]
+        [ValidateSet('NoAccess', 'ReadOnly', 'ReadWrite', 'Undefined')]
+        [System.String]
+        $OutlookNewslettersAccessLevel,
+
+        [Parameter()]
+        [ValidateSet('DefaultOff', 'DefaultOn', 'Disabled', 'Undefined')]
+        [System.String]
+        $OutlookNewslettersReactions,
+
+        [Parameter()]
+        [ValidateSet('DefaultOff', 'DefaultOn', 'Disabled', 'Undefined')]
+        [System.String]
+        $OutlookNewslettersShowMore,
+
+        [Parameter()]
         [System.Boolean]
         $OWALightEnabled,
 
         [Parameter()]
         [System.Boolean]
         $PersonalAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalBookingsDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -850,6 +1026,18 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $SkipCreateUnifiedGroupCustomSharepointClassification,
+
+        [Parameter()]
+        [System.Boolean]
+        $SMimeSuppressNameChecksEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SpellCheckerEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $TasksEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1051,6 +1239,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $AllowedOrganizationAccountDomains,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentsOfflineEnabledWin,
+
+        [Parameter()]
+        [System.Boolean]
+        $BizBarEnabled,
+
+        [Parameter()]
+        [System.String[]]
         $BlockedFileTypes,
 
         [Parameter()]
@@ -1060,6 +1260,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $BookingsMailboxCreationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $BookingsMailboxDomain,
 
         [Parameter()]
         [System.Boolean]
@@ -1073,6 +1277,10 @@ function Test-TargetResource
         [ValidateSet('Off', 'ReadOnly', 'ReadOnlyPlusAttachmentsBlocked')]
         [System.String]
         $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.Int32]
+        $DefaultClientLanguage,
 
         [Parameter()]
         [System.String]
@@ -1093,6 +1301,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisplayPhotosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EmptyStateEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1144,6 +1356,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $HideClassicOutlookToggleOut,
+
+        [Parameter()]
+        [System.Boolean]
         $InstantMessagingEnabled,
 
         [Parameter()]
@@ -1177,6 +1393,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $LinkedInEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $LocalEventsEnabled,
 
         [Parameter()]
@@ -1189,11 +1409,27 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MonthlyUpdatesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $NotesEnabled,
 
         [Parameter()]
         [System.Boolean]
         $NpsSurveysEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OfflineEnabledWeb,
+
+        [Parameter()]
+        [System.Boolean]
+        $OfflineEnabledWin,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneDriveAttachmentsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1217,12 +1453,36 @@ function Test-TargetResource
         $OutlookBetaToggleEnabled,
 
         [Parameter()]
+        [ValidateSet('Allow', 'NoExport', 'NoExportNoGrow', 'NoExportNoOpen', 'NoExportNoOpenNoGrow', 'Deny')]
+        [System.String]
+        $OutlookDataFile,
+
+        [Parameter()]
+        [ValidateSet('NoAccess', 'ReadOnly', 'ReadWrite', 'Undefined')]
+        [System.String]
+        $OutlookNewslettersAccessLevel,
+
+        [Parameter()]
+        [ValidateSet('DefaultOff', 'DefaultOn', 'Disabled', 'Undefined')]
+        [System.String]
+        $OutlookNewslettersReactions,
+
+        [Parameter()]
+        [ValidateSet('DefaultOff', 'DefaultOn', 'Disabled', 'Undefined')]
+        [System.String]
+        $OutlookNewslettersShowMore,
+
+        [Parameter()]
         [System.Boolean]
         $OWALightEnabled,
 
         [Parameter()]
         [System.Boolean]
         $PersonalAccountsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalBookingsDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1303,6 +1563,18 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $SkipCreateUnifiedGroupCustomSharepointClassification,
+
+        [Parameter()]
+        [System.Boolean]
+        $SMimeSuppressNameChecksEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SpellCheckerEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $TasksEnabled,
 
         [Parameter()]
         [System.Boolean]
