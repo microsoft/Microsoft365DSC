@@ -102,22 +102,23 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found IntraOrganizationConnector $($Identity)"
 
-        $DiscoveryEndpointValue = $IntraOrganizationConnector.DiscoveryEndpoint
-        if (-not $DiscoveryEndpointValue.EndsWith('/'))
+        $DiscoveryEndpointValue = $null
+        if ($null -ne $IntraOrganizationConnector.DiscoveryEndpoint)
         {
-            $DiscoveryEndpointValue += '/'
+            $DiscoveryEndpointValue = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
+            if (-not $DiscoveryEndpointValue.EndsWith('/'))
+            {
+                $DiscoveryEndpointValue = $DiscoveryEndpointValue + '/'
+            }
         }
-        if ($IntraOrganizationConnector.TargetSharingEpr)
+        $TargetSharingEprValue = ''
+        if ($null -ne $IntraOrganizationConnector.TargetSharingEpr)
         {
-            $TargetSharingEprValue = $IntraOrganizationConnector.TargetSharingEpr
-        }
-        else
-        {
-            $TargetSharingEprValue = ''
+            $TargetSharingEprValue = $IntraOrganizationConnector.TargetSharingEpr.ToString()
         }
         $result = @{
             Identity              = $Identity
-            DiscoveryEndpoint     = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
+            DiscoveryEndpoint     = $DiscoveryEndpointValue
             Enabled               = $IntraOrganizationConnector.Enabled
             TargetAddressDomains  = $IntraOrganizationConnector.TargetAddressDomains
             TargetSharingEpr      = $TargetSharingEprValue

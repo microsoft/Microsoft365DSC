@@ -1,15 +1,17 @@
 FROM mcr.microsoft.com/dotnet/runtime:10.0-windowsservercore-ltsc2025
 
-ARG M365DSC_VERSION
-ENV M365DSC_VERSION=${M365DSC_VERSION:-latest}
-
 WORKDIR /DSC
 
-COPY ./Modules/Microsoft365DSC/Microsoft365DSC.psd1 /DSC/Microsoft365DSC.psd1
 COPY ./Utilities/Install-M365DSCAndDependencies.ps1 /DSC/Install-M365DSCAndDependencies.ps1
 
-SHELL ["cmd", "/S", "/C"]
+SHELL ["powershell", "-NoLogo"]
 
-RUN powershell -Command .\Install-M365DSCAndDependencies.ps1 -M365DSCVersion %M365DSC_VERSION%
+RUN $null = Install-PackageProvider -Name "NuGet" -Force
+RUN $null = Install-Module -Name "Microsoft.PowerShell.PSResourceGet" -Repository "PSGallery" -Scope "AllUsers" -Force -SkipPublisherCheck
+RUN $null = Save-PSResource -Name "Microsoft365Dsc" -Repository "PSGallery" -Path "C:\Program Files\WindowsPowerShell\Modules" -SkipDependencyCheck -TrustRepository -AcceptLicense
+RUN $null = Install-PSResource -Name "Pester" -Repository "PSGallery" -Scope "AllUsers" -SkipDependencyCheck -TrustRepository -AcceptLicense
+RUN $null = Install-PSResource -Name "M365DSC.PSDesiredStateConfiguration" -Repository "PSGallery" -Scope "AllUsers" -SkipDependencyCheck -TrustRepository -AcceptLicense
+
+RUN .\Install-M365DSCAndDependencies.ps1
 
 ENTRYPOINT ["pwsh", "-NoLogo"]

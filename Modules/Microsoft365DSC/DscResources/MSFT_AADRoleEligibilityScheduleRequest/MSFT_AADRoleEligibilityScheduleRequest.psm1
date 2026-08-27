@@ -15,7 +15,7 @@ function Get-TargetResource
         $RoleDefinition,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('User', 'Group', 'ServicePrincipal')]
+        [ValidateSet('agentUser', 'User', 'Group', 'ServicePrincipal')]
         [System.String]
         $PrincipalType,
 
@@ -146,7 +146,7 @@ function Get-TargetResource
 
         Write-Verbose -Message 'Getting Role Eligibility by PrincipalId and RoleDefinitionId'
         $PrincipalValue = $null
-        if ($PrincipalType -eq 'User')
+        if ($PrincipalType -eq 'User' -or $PrincipalType -eq 'agentUser')
         {
             Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
             $PrincipalInstance = Get-MgUser -Filter "UserPrincipalName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
@@ -314,7 +314,7 @@ function Set-TargetResource
         $RoleDefinition,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('User', 'Group', 'ServicePrincipal')]
+        [ValidateSet('agentUser', 'User', 'Group', 'ServicePrincipal')]
         [System.String]
         $PrincipalType,
 
@@ -416,7 +416,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Retrieving Principal Id from Set-TargetResource"
     $PrincipalId = $null
-    if ($PrincipalType -eq 'User')
+    if ($PrincipalType -eq 'User' -or $PrincipalType -eq 'agentUser')
     {
         Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
         $PrincipalInstance = Get-MgUser -Filter "UserPrincipalName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
@@ -551,7 +551,7 @@ function Test-TargetResource
         $RoleDefinition,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('User', 'Group', 'ServicePrincipal')]
+        [ValidateSet('agentUser', 'User', 'Group', 'ServicePrincipal')]
         [System.String]
         $PrincipalType,
 
@@ -748,10 +748,9 @@ function Export-TargetResource
             $displayedKey = $config.Id
             Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
             # Find the Principal Type
-            $principalType = 'User'
             $userInfo = Get-MgBetaDirectoryObjectById -Ids $config.PrincipalId -ErrorAction SilentlyContinue
             $principalType = $userInfo['@odata.type'].Split('.')[2]
-            $PrincipalValue = if ($principalType -eq 'user' )
+            $PrincipalValue = if ($principalType -eq 'user' -or $principalType -eq 'agentUser' )
             {
                 $userInfo['userPrincipalName']
             }

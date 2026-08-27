@@ -1,5 +1,35 @@
 # Change log for Microsoft365DSC
 
+# 1.26.826.1
+
+* AADRoleAssignmentScheduleRequest
+  * Added `agentUser` to `PrincipalType` to support the new agent user capability in Entra.
+* AADRoleEligibilityScheduleRequest
+  * Added `agentUser` to `PrincipalType` to support the new agent user capability in Entra.
+* EXOIntraOrganizationConnector
+  * Fixed an issue where `DiscoveryEndpoint` did not end with a trailing slash `/`.
+  * Fixed a regression regarding Url to String conversion.
+    FIXES [#7425](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7425)
+* SPOSite
+  * Fixed an issue where a site collection that could not be retrieved aborted the entire export.
+* M365DSCReverse
+  * Fixed issue where variable `$organization` would be empty if connecting
+    using access tokens.
+* DEPENDENCIES
+  * Updated `DSCParser` to version 3.1.0.3.
+  * Updated `MSCloudLoginAssistant` to version 1.2.4.
+  * Updated `ReverseDSC` to version 2.0.0.36.
+* MISC
+  * Fixed build of Linux docker images by updating nano to latest version.
+  * Changed both Windows and Linux docker images to install some packages
+    directly in the dockerfiles, this way those installations get cached.
+  * Fixed issue with Linux docker dev image where the path for PowerShell has
+    changed.
+  * Updated PowerShell LTS version to be installed in Linux docker image to
+    `7.6.5`.
+  * Simplified installation of `Microsoft365Dsc` by removing support to run
+    Docker release images with older versions.
+
 # 1.26.819.1
 
 * AADAuthenticationMethodPolicy
@@ -20,11 +50,11 @@
 * EXOOrganizationConfig
   * Added support for `EwsAllowedAppIDs` when `EwsEnabled` is set to true.
 * EXOOwaMailboxPolicy
-  * Added new properties `AllowedOrganizationAccountDomains`, `AttachmentsOfflineEnabledWin`, 
-    `BizBarEnabled`, `BookingsMailboxDomain`, `DefaultClientLanguage`, `EmptyStateEnabled`, 
-	`HideClassicOutlookToggleOut`, `LinkedInEnabled`, `MonthlyUpdatesEnabled`, 
-	`OfflineEnabledWeb`, `OfflineEnabledWin`, `OneDriveAttachmentsEnabled`, `OutlookDataFile`, 
-	`OutlookNewslettersAccessLevel`, `OutlookNewslettersReactions`, `OutlookNewslettersShowMore`, 
+  * Added new properties `AllowedOrganizationAccountDomains`, `AttachmentsOfflineEnabledWin`,
+    `BizBarEnabled`, `BookingsMailboxDomain`, `DefaultClientLanguage`, `EmptyStateEnabled`,
+	`HideClassicOutlookToggleOut`, `LinkedInEnabled`, `MonthlyUpdatesEnabled`,
+	`OfflineEnabledWeb`, `OfflineEnabledWin`, `OneDriveAttachmentsEnabled`, `OutlookDataFile`,
+	`OutlookNewslettersAccessLevel`, `OutlookNewslettersReactions`, `OutlookNewslettersShowMore`,
 	`PersonalBookingsDisabled`, `SMimeSuppressNameChecksEnabled`, `SpellCheckerEnabled`, `TasksEnabled`.
 * M365DSCReverse
   * Fixed an issue where exporting the Intune workload against a tenant with no

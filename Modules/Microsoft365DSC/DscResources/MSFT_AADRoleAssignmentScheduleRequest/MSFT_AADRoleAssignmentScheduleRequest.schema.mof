@@ -50,12 +50,12 @@ class MSFT_AADRoleAssignmentScheduleRequestTicketInfo
     [Write, Description("The description of the ticket system.")] String ticketSystem;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("AADRoleAssignmentScheduleRequest")]
+[ClassVersion("1.0.0.1"), FriendlyName("AADRoleAssignmentScheduleRequest")]
 class MSFT_AADRoleAssignmentScheduleRequest : OMI_BaseResource
 {
     [Key, Description("User Principal Name of the assignment request.")] String Principal;
     [Key, Description("Role associated with the assignment request.")] String RoleDefinition;
-    [Write, Description("Represented the type of principal to assign the request to. Accepted values are: Group and User."), ValueMap{"Group","User","ServicePrincipal"}, Values{"Group","User","ServicePrincipal"}] String PrincipalType;
+    [Write, Description("Represented the type of principal to assign the request to. Accepted values are: Group and User."), ValueMap{"agentUser", "Group","User","ServicePrincipal"}, Values{"agentUser", "Group","User","ServicePrincipal"}] String PrincipalType;
     [Key, Description("Identifier of the directory object representing the scope of the role assignment. The scope of an role assignment determines the set of resources for which the principal has been granted access. Directory scopes are shared scopes stored in the directory that are understood by multiple applications. Use / for tenant-wide scope. Use appScopeId to limit the scope to an application only. Either directoryScopeId or appScopeId is required.")] String DirectoryScopeId;
     [Write, Description("Identifier for the Role Assignment Schedule Request.")] String Id;
     [Write, Description("Identifier of the app-specific scope when the role assignment is scoped to an app. The scope of a role assignment determines the set of resources for which the principal is eligible to access. App scopes are scopes that are defined and understood by this application only. Use / for tenant-wide app scopes. Use directoryScopeId to limit the scope to particular directory objects, for example, administrative units. Either directoryScopeId or appScopeId is required.")] String AppScopeId;

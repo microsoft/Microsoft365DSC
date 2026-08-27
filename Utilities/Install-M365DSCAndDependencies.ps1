@@ -2,21 +2,11 @@
 param(
     [Parameter()]
     [Switch]
-    $IsSDK,
-    
-    [Parameter()]
-    [System.String]
-    $M365DSCVersion
+    $IsSDK
 )
 
 $isWindowsPlatform = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
     [System.Runtime.InteropServices.OSPlatform]::Windows)
-
-if ([String]::IsNullOrEmpty($M365DSCVersion) -or $M365DSCVersion -eq "latest")
-{
-    $M365DSCVersion = (Import-PowerShellDataFile -Path "/DSC/Microsoft365DSC.psd1").ModuleVersion
-}
-Remove-Item -Path "/DSC/Microsoft365DSC.psd1" -Force -ErrorAction SilentlyContinue
 
 try
 {
@@ -40,53 +30,7 @@ try
     }
     Write-Output $message
 
-    $nugetProvider = Get-PackageProvider -Name "NuGet" -ErrorAction SilentlyContinue
-    if (-not $nugetProvider)
-    {
-        Write-Output "NuGet package provider not found. Installing..."
-        $null = Install-PackageProvider -Name "NuGet" -Force
-    }
-
-    Write-Output "Setting PSGallery InstallationPolicy to Trusted"
-    Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
-
-    Write-Output "Installing PSResourceGet module"
-    $parameters = @{
-        Name                = "Microsoft.PowerShell.PSResourceGet"
-        Repository          = "PSGallery"
-        Scope               = "AllUsers"
-        Force               = [Switch]$true
-        SkipPublisherCheck  = [Switch]$true
-    }
-    Install-Module @parameters
-
-    Write-Output "Installing PSDesiredStateConfiguration module"
-    $Parameters = @{
-        Name                = "PSDesiredStateConfiguration"
-        Repository          = "PSGallery"
-        Scope               = "AllUsers"
-        SkipDependencyCheck = [Switch]$true
-        TrustRepository     = [Switch]$true
-        AcceptLicense       = [Switch]$true
-        Prerelease          = [Switch]$true
-    }
-    Install-PSResource @Parameters
-
-    if (-not $IsSDK.IsPresent)
-    {
-        $Message = "Installing Microsoft365DSC module ({0})" -f $M365DSCVersion
-        Write-Output $Message
-        $Parameters = @{
-            Name                = "Microsoft365DSC"
-            RequiredVersion     = $M365DSCVersion
-            Repository          = "PSGallery"
-            Scope               = "AllUsers"
-            Force               = [Switch]$true
-            SkipPublisherCheck  = [Switch]$true
-        }
-        Install-Module @Parameters
-    }
-    else
+    if ($IsSDK.IsPresent)
     {
         Write-Output "Adding symbolic link from repository folder to module path"
         $Parameters = @{
@@ -100,23 +44,20 @@ try
         }
         else
         {
-            $Parameters.Add("Path", "/usr/share/powershell/.store/powershell.linux.x64/7.6.2/powershell.linux.x64/7.6.2/tools/net10.0/any/Modules/Microsoft365DSC")
+            $PSVersion = [System.String]$PSVersionTable.PSVersion
+            $SDK = dotnet --list-sdks
+            if ($LASTEXITCODE -ne 0)
+            {
+                throw "Could not get .NET SDK version"
+            }
+            $SDKVersion = $SDK.Split(' ')[0].SubString(0, 4)
+            $destinationPath = "/usr/share/powershell/.store/powershell.linux.x64/{0}/powershell.linux.x64/{1}/tools/net{2}/any/Modules/Microsoft365DSC" `
+                -f $PSVersion, $PSVersion, $SDKVersion
+            $Parameters.Add("Path", $destinationPath)
             $Parameters.Add("Target", "/DSC/Modules/Microsoft365DSC")
         }
         $null = New-Item @Parameters
     }
-
-    Write-Output "Installing Pester module"
-    $Parameters = @{
-        Name                = "Pester"
-        Repository          = "PSGallery"
-        Scope               = "AllUsers"
-        SkipDependencyCheck = [Switch]$true
-        TrustRepository     = [Switch]$true
-        AcceptLicense       = [Switch]$true
-        Prerelease          = [Switch]$true
-    }
-    Install-PSResource @Parameters
 
     Write-Output "Installing Microsoft365DSC module dependencies"
     Update-M365DSCDependencies
@@ -129,11 +70,11 @@ try
         {
             $ProgressPreference = 'SilentlyContinue'
             Write-Output "PowerShell 7 not found, installing it now"
-            Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/download/v7.6.4/PowerShell-7.6.4-win-x64.zip" -OutFile "PowerShell-7.6.4-win-x64.zip"
-            Unblock-File "PowerShell-7.6.4-win-x64.zip"
+            Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/download/v7.6.5/PowerShell-7.6.5-win-x64.zip" -OutFile "PowerShell-7.6.5-win-x64.zip"
+            Unblock-File "PowerShell-7.6.5-win-x64.zip"
             $null = New-Item -ItemType Directory -Path "C:\Program Files\PowerShell\7" -Force
-            Expand-Archive "PowerShell-7.6.4-win-x64.zip" -DestinationPath "C:\Program Files\PowerShell\7"
-            Remove-Item "PowerShell-7.6.4-win-x64.zip" -Force
+            Expand-Archive "PowerShell-7.6.5-win-x64.zip" -DestinationPath "C:\Program Files\PowerShell\7"
+            Remove-Item "PowerShell-7.6.5-win-x64.zip" -Force
             [System.Environment]::SetEnvironmentVariable('PATH', $env:PATH + ";C:\Program Files\PowerShell\7", [System.EnvironmentVariableTarget]::Machine)
             $env:PATH += ";C:\Program Files\PowerShell\7"
         }
@@ -222,16 +163,7 @@ Import-Module PSDesiredStateConfiguration -Force
 
         if ($IsSDK.IsPresent)
         {
-            $PSVersion = [System.String]$PSVersionTable.PSVersion
-            $SDK = dotnet --list-sdks
-            if ($LASTEXITCODE -ne 0)
-            {
-                throw "Could not get .NET SDK version"
-            }
-            $SDKVersion = $SDK.Split(' ')[0].SubString(0, 4)
             $moduleBasePath = "/DSC/Modules/Microsoft365DSC"
-            $destinationPath = "/usr/share/powershell/.store/powershell.linux.x64/{0}/powershell.linux.x64/{1}/tools/net{2}/any/Modules/Microsoft365DSC" `
-                -f $PSVersion, $PSVersion, $SDKVersion
 
             Write-Output "Generating SchemaDefinition.json"
             $M365DSCSchemaHandlerPath = Join-Path -Path $moduleBasePath -ChildPath "Modules/M365DSCSchemaHandler.psm1"

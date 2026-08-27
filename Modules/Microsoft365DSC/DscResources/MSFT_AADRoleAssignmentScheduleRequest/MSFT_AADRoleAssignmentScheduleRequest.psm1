@@ -15,7 +15,7 @@ function Get-TargetResource
         $RoleDefinition,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('User', 'Group', 'ServicePrincipal')]
+        [ValidateSet('agentUser', 'User', 'Group', 'ServicePrincipal')]
         [System.String]
         $PrincipalType,
 
@@ -149,7 +149,7 @@ function Get-TargetResource
 
         Write-Verbose -Message 'Getting Role Assignment by PrincipalId and RoleDefinitionId'
         $PrincipalValue = $null
-        if ($PrincipalType -eq 'User')
+        if ($PrincipalType -eq 'User' -or $PrincipalType -eq 'agentUser')
         {
             Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
             $PrincipalInstance = Get-MgUser -Filter "UserPrincipalName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
@@ -168,7 +168,8 @@ function Get-TargetResource
             $PrincipalValue = $PrincipalInstance.DisplayName
         }
 
-        if ([System.String]::IsNullOrEmpty($PrincipalValue)) {
+        if ([System.String]::IsNullOrEmpty($PrincipalValue))
+        {
             return $nullResult
         }
 
@@ -324,7 +325,7 @@ function Set-TargetResource
         $RoleDefinition,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('User', 'Group', 'ServicePrincipal')]
+        [ValidateSet('agentUser', 'User', 'Group', 'ServicePrincipal')]
         [System.String]
         $PrincipalType,
 
@@ -434,7 +435,7 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $ParametersOps = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if ($PrincipalType -eq 'User')
+    if ($PrincipalType -eq 'User' -or $PrincipalType -eq 'agentUser')
     {
         Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
         [Array]$PrincipalIdValue = (Get-MgUser -Filter "UserPrincipalName eq '$($Principal -replace "'", "''")'").Id
@@ -572,7 +573,7 @@ function Test-TargetResource
         $RoleDefinition,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('User', 'Group', 'ServicePrincipal')]
+        [ValidateSet('agentUser', 'User', 'Group', 'ServicePrincipal')]
         [System.String]
         $PrincipalType,
 
@@ -780,10 +781,9 @@ function Export-TargetResource
             Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
 
             # Find the Principal Type
-            $principalType = 'User'
             $userInfo = Get-MgBetaDirectoryObjectById -Ids $request.PrincipalId -ErrorAction SilentlyContinue
             $principalType = $userInfo['@odata.type'].Split('.')[2]
-            $PrincipalValue = if ($principalType -eq 'user')
+            $PrincipalValue = if ($principalType -eq 'user' -or $principalType -eq 'agentUser')
             {
                 $userInfo['userPrincipalName']
             }

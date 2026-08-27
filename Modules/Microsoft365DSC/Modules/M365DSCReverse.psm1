@@ -482,6 +482,10 @@ function Start-M365DSCConfigurationExtract
                 $organization = $Credential.UserName.Split('@')[1]
             }
         }
+        elseif ($AuthMethods -contains 'AccessTokens')
+        {
+            $organization = $TenantId
+        }
         elseif ($AuthMethods -contains 'ManagedIdentity')
         {
             # If tenantId comes in as a GUID then query to replace with string representation, else use what was provided
