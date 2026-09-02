@@ -240,7 +240,7 @@ function Get-M365TenantName
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message 'Getting SharePoint Online admin URL...'
     $domain = Invoke-MgGraphRequest -Uri 'beta/domains' -Method GET
-    [Array]$defaultDomain = $domain | Where-Object { ($_.id -like '*.onmicrosoft.com' -or $_.id -like '*.onmicrosoft.de') -and $_.isInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    [Array]$defaultDomain = $domain | Where-Object { ($_.id -like '*.onmicrosoft.com' -or $_.id -like '*.onmicrosoft.de' -or $_.id -like '*.onsovcloud.*') -and $_.isInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
     if ($defaultDomain[0].id -like '*.onmicrosoft.com*')
     {
@@ -249,6 +249,10 @@ function Get-M365TenantName
     elseif ($defaultDomain[0].id -like '*.onmicrosoft.de*')
     {
         $tenantName = $defaultDomain[0].id -replace '.onmicrosoft.de', ''
+    }
+    elseif ($defaultDomain[0].id -like '*.onsovcloud.*')
+    {
+        $tenantName = $defaultDomain[0].id -replace '.onsovcloud.*', ''
     }
 
     Write-Verbose -Message "M365 tenant name is $tenantName"

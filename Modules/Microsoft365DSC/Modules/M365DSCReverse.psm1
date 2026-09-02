@@ -482,6 +482,10 @@ function Start-M365DSCConfigurationExtract
                 $organization = $Credential.UserName.Split('@')[1]
             }
         }
+        elseif ($AuthMethods -contains 'AccessTokens')
+        {
+            $organization = $TenantId
+        }
         elseif ($AuthMethods -contains 'ManagedIdentity')
         {
             # If tenantId comes in as a GUID then query to replace with string representation, else use what was provided
@@ -851,7 +855,7 @@ function Start-M365DSCConfigurationExtract
 
                 Import-Module $resource.FullName -Force | Out-Null
                 $filterExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains('Filter')
-                if ($filterExists -and $null -ne $using:Filters -and ($using:Filters).Keys.Contains($resourceName))
+                if ($filterExists -and $null -ne $using:Filters -and ($using:Filters).Keys.Where({ $_ -eq $resourceName }))
                 {
                     $resourceFilter = ($using:Filters).$resourceName
                     if ($filterExists)
@@ -907,7 +911,7 @@ function Start-M365DSCConfigurationExtract
                 ManagedIdentity = $ManagedIdentity
                 AccessTokens = $AccessTokens
             }
-            [array]$allRequestedConfigurationPolicies = Get-MgBetaDeviceManagementConfigurationPolicy -All | Where-Object { $_.templateReference.templateId -in $requestedConfigurationPolicyTemplateIds }
+            $allRequestedConfigurationPolicies = Get-M365DSCArrayFromProperty -PropertyValue (Get-MgBetaDeviceManagementConfigurationPolicy -All | Where-Object { $_.templateReference.templateId -in $requestedConfigurationPolicyTemplateIds })
             $batchRequests = @()
             foreach ($policy in $allRequestedConfigurationPolicies)
             {

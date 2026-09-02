@@ -313,7 +313,6 @@ function Set-TargetResource
         $boundParameters.Remove('Assignments') | Out-Null
 
         $createParameters = ([Hashtable]$boundParameters).Clone()
-        $createParameters.scriptContent = [System.Convert]::FromBase64String($createParameters.scriptContent)
         $createParameters.Remove('Id') | Out-Null
 
         #region resource generator code
@@ -336,7 +335,6 @@ function Set-TargetResource
         $boundParameters.Remove('Assignments') | Out-Null
 
         $updateParameters = ([Hashtable]$boundParameters).Clone()
-        $updateParameters.scriptContent = [System.Convert]::FromBase64String($updateParameters.scriptContent)
         $updateParameters.Remove('Id') | Out-Null
 
         #region resource generator code

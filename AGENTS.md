@@ -52,6 +52,25 @@ Schema files (manually authored):
 21. **Do not wrap Boolean values in quotes.** Use `$true`/`$false`, never `'true'`/`'false'` or `"true"`/`"false"`, including in example files and test params.
 22. **Use `($null -ne $var)` style (null on the left) for all null comparisons.** This is the enforced PowerShell best practice in this codebase (e.g., `($null -ne $Role)` not `($Role -ne $null)`).
 23. **Do not remove `Verbose` from `$PSBoundParameters` explicitly.** `Verbose` is never part of `$PSBoundParameters`, so removing it is unnecessary noise.
+24. **New embedded CIM classes start at `ClassVersion("1.0.0.0")`.** When adding a new `MSFT_*` complex-type class to a `.schema.mof`, the initial version is always `1.0.0.0`. Do not copy the version from the resource class in the same file, which is usually already incremented (rule 9 governs bumping an existing class; it does not apply to a brand-new one).
+25. **Never unwrap `AdditionalProperties` on Graph responses.** Graph calls now go through `M365DSCGraphShim.psm1`, which wraps `Invoke-MgGraphRequest` and returns plain hashtables, so the typed-SDK `AdditionalProperties` dictionary no longer exists. Read open-type payloads (for example `customSecurityAttributes`) directly off the returned object. Defensive `if ($null -ne $x.AdditionalProperties)` fallbacks are dead code and must not be added.
+26. **Declare embedded CIM instances in examples with the brace adjacent to the type name.** In `Examples/`, write `MSFT_AADUserAttributeSet{` on one line, not the type name with the opening brace on the next line. This is a deliberate exception to the general "opening braces on a new line" style in `.github/instructions/powershell.instructions.md`, and it matches the dominant convention in the existing examples.
+27. **Mock a Graph `Get-*` cmdlet once, then vary it per scenario.** In unit tests, define the baseline object (a helper in the outer `BeforeAll`, or a single top-level mock) and have each `Context` override only the properties that scenario exercises. Do not re-declare a full mock body in every `Context` when the contexts differ by one or two fields. Make each variation self-describing through the `Context` name (drift vs. match) rather than an inline comment, per rule 28.
+28. **Comments explain *why*, never *what*.** Inline comments are reserved for logic whose reasoning is not evident from the code itself -- a non-obvious API contract, an ordering requirement, a workaround for a service-side quirk. Do not add comments that restate the next line, label an obvious block, or narrate the happy path. If a comment feels necessary to make the mechanics understandable, rewrite the code (clearer names, an extracted helper) instead of annotating it. Comment-based help (`<# .SYNOPSIS ... #>`) on public functions is governed separately by `.github/instructions/powershell.instructions.md` and is always welcome. Examples:
+    ```powershell
+    # Bad -- restates the code
+    # Handle different types of values
+    if ($Value -is [string]) { ... }
+
+    # Bad -- labels an obvious block
+    # Custom Security Attributes
+    if ($PSBoundParameters.ContainsKey('CustomSecurityAttributes')) { ... }
+
+    # Good -- explains a non-obvious service contract
+    # Graph requires each attribute be sent as $null to clear it; omitting the
+    # key leaves the existing value in place.
+    $valuesHashtable.Add($attributeKey, $null)
+    ```
 
 Quick checklist:
 

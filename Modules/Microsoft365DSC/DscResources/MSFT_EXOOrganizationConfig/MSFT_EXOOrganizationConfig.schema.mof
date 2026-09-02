@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.1"), FriendlyName("EXOOrganizationConfig")]
+[ClassVersion("1.0.0.2"), FriendlyName("EXOOrganizationConfig")]
 class MSFT_EXOOrganizationConfig : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
@@ -59,6 +59,7 @@ class MSFT_EXOOrganizationConfig : OMI_BaseResource
     [Write, Description("The EnableOutlookEvents parameter specifies whether Outlook or Outlook on the web automatically discovers events from email messages and adds them to user calendars.")] Boolean EnableOutlookEvents;
     [Write, Description("The EndUserDLUpgradeFlowsDisabled parameter specifies whether to prevent users from upgrading their own distribution groups to Office 365 groups in an Exchange Online organization.")] Boolean EndUserDLUpgradeFlowsDisabled;
     [Write, Description("The EndUserMailNotificationForDelayedDelicensingEnabled parameter enables or disables periodic email warnings to affected users that have pending Exchange Online license removal requests on their mailboxes.")] Boolean EndUserMailNotificationForDelayedDelicensingEnabled;
+    [Write, Description("The EwsAllowedAppIDs parameter specifies the Azure AD applications that are allowed to access Exchange Web Services (EWS) when the EwsEnabled parameter on this cmdlet is also set to the value $true. Unspecified applications are blocked from accessing EWS. You identify each application by its Azure AD application ID (GUID).")] String EwsAllowedAppIDs[];
     [Write, Description("The EwsAllowEntourage parameter specifies whether to enable or disable Entourage 2008 to access Exchange Web Services (EWS) for the entire organization.")] Boolean EwsAllowEntourage;
     [Write, Description("The EwsAllowList parameter specifies the applications that are allowed to access EWS or REST when the EwsApplicationAccessPolicy parameter is set to EwsAllowList. Other applications that aren't specified by this parameter aren't allowed to access EWS or REST. You identify the application by its user agent string value. Wildcard characters (*) are supported.")] String EwsAllowList[];
     [Write, Description("The EwsAllowMacOutlook parameter enables or disables access to mailboxes by Outlook for Mac clients that use Exchange Web Services (for example, Outlook for Mac 2011 or later).")] Boolean EwsAllowMacOutlook;

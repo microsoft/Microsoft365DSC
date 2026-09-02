@@ -942,32 +942,32 @@ function Export-TargetResource
             }
 
             Write-M365DSCHost -Message "    [$i/$($sites.Length)] $($site.Url)" -DeferWrite
-            $site = Get-PnPTenantSite -Identity $site.Url
-            $siteTitle = 'Null'
-            if (-not [System.String]::IsNullOrEmpty($site.Title))
-            {
-                $siteTitle = $site.Title
-            }
-
-            $Params = @{
-                Url                   = $site.Url
-                Template              = $site.Template
-                Owner                 = 'admin@contoso.com' # Passing in bogus value to bypass null owner error
-                Title                 = $siteTitle
-                TimeZoneId            = $site.TimeZoneID
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                ApplicationSecret     = $ApplicationSecret
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                Credential            = $Credential
-                AccessTokens          = $AccessTokens
-            }
-
             try
             {
+                $site = Get-PnPTenantSite -Identity $site.Url -ErrorAction Stop
+                $siteTitle = 'Null'
+                if (-not [System.String]::IsNullOrEmpty($site.Title))
+                {
+                    $siteTitle = $site.Title
+                }
+
+                $Params = @{
+                    Url                   = $site.Url
+                    Template              = $site.Template
+                    Owner                 = 'admin@contoso.com' # Passing in bogus value to bypass null owner error
+                    Title                 = $siteTitle
+                    TimeZoneId            = $site.TimeZoneID
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    ApplicationSecret     = $ApplicationSecret
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePath       = $CertificatePath
+                    CertificatePassword   = $CertificatePassword
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
+                    Credential            = $Credential
+                    AccessTokens          = $AccessTokens
+                }
+
                 $Script:exportedInstance = $site
                 $Results = Get-TargetResource @Params
                 if ([System.String]::IsNullOrEmpty($Results.SharingDomainRestrictionMode))

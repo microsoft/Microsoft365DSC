@@ -45,8 +45,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-OwaMailboxPolicy -MockWith {
                 return @{
-                    Name                    = 'Contoso OWA Mailbox Policy'
-                    InstantMessagingEnabled = $true
+                    Name                              = 'Contoso OWA Mailbox Policy'
+                    InstantMessagingEnabled           = $true
+                    AllowedOrganizationAccountDomains = @('contoso.com')
+                    AttachmentsOfflineEnabledWin      = $true
+                    BizBarEnabled                     = $true
+                    BookingsMailboxDomain             = 'bookings.contoso.com'
+                    DefaultClientLanguage             = 1033
+                    EmptyStateEnabled                 = $true
+                    HideClassicOutlookToggleOut       = $true
+                    LinkedInEnabled                   = $true
+                    MonthlyUpdatesEnabled             = $true
+                    OfflineEnabledWeb                 = $true
+                    OfflineEnabledWin                 = $true
+                    OneDriveAttachmentsEnabled        = $true
+                    OutlookDataFile                   = 'Allow'
+                    OutlookNewslettersAccessLevel     = 'Undefined'
+                    OutlookNewslettersReactions       = 'Undefined'
+                    OutlookNewslettersShowMore        = 'Undefined'
+                    PersonalBookingsDisabled          = $false
+                    SMimeSuppressNameChecksEnabled    = $false
+                    SpellCheckerEnabled               = $true
+                    TasksEnabled                      = $true
                 }
             }
 
@@ -89,10 +109,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'OWA Mailbox Policy should exist. OWA Mailbox Policy exists. Test should pass.' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name                    = 'Contoso OWA Mailbox Policy'
-                    InstantMessagingEnabled = $true
-                    Ensure                  = 'Present'
-                    Credential              = $Credential
+                    Name                              = 'Contoso OWA Mailbox Policy'
+                    InstantMessagingEnabled           = $true
+                    AllowedOrganizationAccountDomains = @('contoso.com')
+                    AttachmentsOfflineEnabledWin      = $true
+                    BizBarEnabled                     = $true
+                    BookingsMailboxDomain             = 'bookings.contoso.com'
+                    DefaultClientLanguage             = 1033
+                    EmptyStateEnabled                 = $true
+                    HideClassicOutlookToggleOut       = $true
+                    LinkedInEnabled                   = $true
+                    MonthlyUpdatesEnabled             = $true
+                    OfflineEnabledWeb                 = $true
+                    OfflineEnabledWin                 = $true
+                    OneDriveAttachmentsEnabled        = $true
+                    OutlookDataFile                   = 'Allow'
+                    OutlookNewslettersAccessLevel     = 'Undefined'
+                    OutlookNewslettersReactions       = 'Undefined'
+                    OutlookNewslettersShowMore        = 'Undefined'
+                    PersonalBookingsDisabled          = $false
+                    SMimeSuppressNameChecksEnabled    = $false
+                    SpellCheckerEnabled               = $true
+                    TasksEnabled                      = $true
+                    Ensure                            = 'Present'
+                    Credential                        = $Credential
                 }
             }
 

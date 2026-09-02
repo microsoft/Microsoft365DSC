@@ -86,14 +86,14 @@ function New-M365DSCConnection
         [ValidateScript({
                 if ($null -ne $_.Credential)
                 {
-                    $invalid = $_.Credential.Username -notmatch '.onmicrosoft.'
-                    if (-not $invalid)
+                    $isValid = $_.Credential.Username -match '.onmicrosoft.' -or $_.Credential.Username -match '.onsovcloud.'
+                    if ($isValid)
                     {
                         return $true
                     }
                     else
                     {
-                        Write-Warning -Message 'We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property.'
+                        Write-Warning -Message 'We recommend providing the username in the format of <tenant>.onmicrosoft.* (or <tenant>.onsovcloud.* for sovereign tenants) for the Credential property.'
                     }
                 }
 
@@ -102,17 +102,17 @@ function New-M365DSCConnection
                     $isValid = [System.Guid]::TryParse($_.TenantId, [ref][System.Guid]::Empty)
                     if ($isValid)
                     {
-                        throw 'Please provide the tenant name (e.g., contoso.onmicrosoft.com) for TenantId instead of its GUID.'
+                        throw 'Please provide the tenant name (e.g., contoso.onmicrosoft.com or contoso.onsovcloud.com for sovereign tenants) for TenantId instead of its GUID.'
                     }
 
-                    $isValid = $_.TenantId -match '.onmicrosoft.'
+                    $isValid = $_.TenantId -match '.onmicrosoft.' -or $_.TenantId -match '.onsovcloud.'
                     if ($isValid)
                     {
                         return $true
                     }
                     else
                     {
-                        Write-Warning -Message 'We recommend providing the tenant name in format <tenant>.onmicrosoft.* for TenantId.'
+                        Write-Warning -Message 'We recommend providing the tenant name in format <tenant>.onmicrosoft.* (or <tenant>.onsovcloud.* for sovereign tenants) for TenantId.'
                     }
                 }
                 return $true

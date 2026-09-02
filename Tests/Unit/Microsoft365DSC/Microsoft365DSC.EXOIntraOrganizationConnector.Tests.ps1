@@ -71,7 +71,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure               = 'Present'
                     Credential           = $Credential
                     Identity             = 'TestIntraOrganizationConnector'
-                    DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
+                    DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc/'
                     Enabled              = $true
                     TargetAddressDomains = @('contoso.com', 'contoso.org')
                 }
@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure               = 'Present'
                     Credential           = $Credential
                     Identity             = 'TestIntraOrganizationConnector'
-                    DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
+                    DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc/'
                     Enabled              = $true
                     TargetAddressDomains = @('contoso.com', 'contoso.org')
                 }
@@ -117,7 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure               = 'Present'
                     Credential           = $Credential
                     Identity             = 'TestIntraOrganizationConnector'
-                    DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
+                    DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc/'
                     Enabled              = $false # Drift
                     TargetAddressDomains = @('contoso.com', 'contoso.org')
                 }
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure            = 'Absent'
                     Credential        = $Credential
                     Identity          = 'TestIntraOrganizationConnector'
-                    DiscoveryEndpoint = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
+                    DiscoveryEndpoint = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc/'
                 }
             }
 

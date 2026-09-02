@@ -1,3 +1,7 @@
+---
+date: 2024-06-28
+---
+
 # Deep-Dive into the Local Configuration Manager (LCM) Error Flow
 
 <img src="../../../images/NikCharlebois.jpg" style="width:75px;border-radius:50%;border:3px solid black;float:left;" />

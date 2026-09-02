@@ -2,6 +2,108 @@
 
 # UNRELEASED
 
+* AADApplicationFederatedIdentityCredential
+  * Fixed an issue where an incorrect count check resulted in a single object
+    being detected as multiple objects.
+* IntuneDeviceConfigurationPlatformScriptMacOS
+  * Fixed an issue where the `scriptContent` property was incorrectly converted
+    to a binary array during Set.
+* IntuneDeviceConfigurationPlatformScriptWindows10
+  * Fixed an issue where the `scriptContent` property was incorrectly converted
+    to a binary array during Set.
+    FIXES [#7431](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7431)
+* IntuneDeviceRemediation
+  * Fixed an issue where the `DetectionScriptContent` and `RemediationScriptContent`
+    properties were incorrectly converted to a binary array during Set.
+* M365DSCGraphShim
+  * Changed how an object is returned from Graph if both `value` and
+    `presentation` properties are present. This fixes an issue with the resource
+    `IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10`.
+* MISC
+  * Fixed an issue when building the Windows docker image.
+
+# 1.26.826.1
+
+* AADRoleAssignmentScheduleRequest
+  * Added `agentUser` to `PrincipalType` to support the new agent user capability in Entra.
+* AADRoleEligibilityScheduleRequest
+  * Added `agentUser` to `PrincipalType` to support the new agent user capability in Entra.
+* EXOIntraOrganizationConnector
+  * Fixed an issue where `DiscoveryEndpoint` did not end with a trailing slash `/`.
+  * Fixed a regression regarding Url to String conversion.
+    FIXES [#7425](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7425)
+* SPOSite
+  * Fixed an issue where a site collection that could not be retrieved aborted the entire export.
+* M365DSCReverse
+  * Fixed issue where variable `$organization` would be empty if connecting
+    using access tokens.
+* DEPENDENCIES
+  * Updated `DSCParser` to version 3.1.0.3.
+  * Updated `MSCloudLoginAssistant` to version 1.2.4.
+  * Updated `ReverseDSC` to version 2.0.0.36.
+* MISC
+  * Fixed build of Linux docker images by updating nano to latest version.
+  * Changed both Windows and Linux docker images to install some packages
+    directly in the dockerfiles, this way those installations get cached.
+  * Fixed issue with Linux docker dev image where the path for PowerShell has
+    changed.
+  * Updated PowerShell LTS version to be installed in Linux docker image to
+    `7.6.5`.
+  * Simplified installation of `Microsoft365Dsc` by removing support to run
+    Docker release images with older versions.
+
+# 1.26.819.1
+
+* AADAuthenticationMethodPolicy
+  * Added additional support for Passkeys (FIDO2) as the target of a registrationcampaign.
+    `TargetedAuthenticationMethod` can now contain `microsoftAuthenticator` *or* `fido2`.
+* AADCertificateBasedApplicationConfiguration
+  * Fixed an issue where the target address for the POST request was incorrect.
+    FIXES [#7405](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7405)
+* AADConditionalAccessPolicy
+  * Added missing `-All` switch when fetching policies with a filter.
+    FIXES [#7350](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7350)
+* AADUser
+  * Add support for `CustomSecurityAttributes`
+    FIXES [#7399](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7399)
+* EXOIntraOrganizationConnector
+  * Fixed an issue where `TargetSharingEpr` could fail with a null-reference exception.
+    FIXES [#7413](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7413)
+* EXOOrganizationConfig
+  * Added support for `EwsAllowedAppIDs` when `EwsEnabled` is set to true.
+* EXOOwaMailboxPolicy
+  * Added new properties `AllowedOrganizationAccountDomains`, `AttachmentsOfflineEnabledWin`,
+    `BizBarEnabled`, `BookingsMailboxDomain`, `DefaultClientLanguage`, `EmptyStateEnabled`,
+	`HideClassicOutlookToggleOut`, `LinkedInEnabled`, `MonthlyUpdatesEnabled`,
+	`OfflineEnabledWeb`, `OfflineEnabledWin`, `OneDriveAttachmentsEnabled`, `OutlookDataFile`,
+	`OutlookNewslettersAccessLevel`, `OutlookNewslettersReactions`, `OutlookNewslettersShowMore`,
+	`PersonalBookingsDisabled`, `SMimeSuppressNameChecksEnabled`, `SpellCheckerEnabled`, `TasksEnabled`.
+* M365DSCReverse
+  * Fixed an issue where exporting the Intune workload against a tenant with no
+    matching Settings Catalog configuration policies aborted the entire export.
+    FIXES [#7396](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7396)
+  * Fixed an issue where using multiple Filters passed through empty filters to
+    other exported resources.
+* SCDLPComplianceRule
+  * Fixed an issue where testing a missing rule with an advanced rule containing
+    ML model classifiers could fail before reporting drift.
+    FIXES [#7403](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7403)
+* MISC
+  * Updated import warning that **PowerShell 7.6** is going to be required starting October 2026.
+
+# 1.26.812.1
+
+* M365DSCTenantInfo
+  * Added support for Bleu and Delos sovereign cloud.
+* DEPENDENCIES
+  * Updated `DSCParser` to version 3.1.0.2.
+  * Updated `MSCloudLoginAssistant` to version 1.2.2.
+  * Updated `ReverseDSC` to version 2.0.0.35.
+
+# 1.26.805.1
+
+* AADApplicationFederatedIdentityCredential
+  * Initial release.
 * AADEntitlementManagementAccessPackage
   * Fixed an issue where a resource role scope whose `AccessPackageResourceOriginId`
     is specified as the object GUID was removed and re-added on every Set,
@@ -11,6 +113,10 @@
     FIXES [#7386](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7386)
 * AADApplicationFederatedIdentityCredential
   * Added resource to manage federated identity credentials for Azure AD applications.
+* IntuneCloudProvisioningPolicyWindows365
+  * Added missing geographic location `australiaNewZealand`
+* IntuneDeviceFeaturesConfigurationPolicyIOS
+  * Demoted property `bookmarkFolder` from Required to Write.
 * M365DSCConnection
   * Fixed an issue with client secret authentication.
 * M365DSCReverse

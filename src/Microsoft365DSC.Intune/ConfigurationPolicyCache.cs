@@ -20,6 +20,12 @@ namespace Microsoft365DSC.Intune
                 if (_isPopulated)
                     return;
 
+                if (allPolicies is null)
+                {
+                    _isPopulated = true;
+                    return;
+                }
+
                 foreach (var policy in allPolicies)
                 {
                     string templateId = templateIdSelector(policy);

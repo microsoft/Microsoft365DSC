@@ -1,5 +1,7 @@
 site_name: Microsoft365DSC - Your Cloud Configuration
-site_url: https://microsoft.github.io/Microsoft365DSC
+site_url: https://microsoft365dsc.com/
+site_description: Manage and monitor your Microsoft 365 tenant configurations as code with Microsoft365DSC.
+site_author: Microsoft365DSC
 nav:
   - Home:
       - 'Introduction': 'index.md'
@@ -44,10 +46,8 @@ nav:
           - 'Dynamic Resource Generator (DRG)': 'user-guide/advanced/dynamic-resource-generator.md'
       - Cmdlets:
           - 'Assert-M365DSCBlueprint': 'user-guide/cmdlets/Assert-M365DSCBlueprint.md'
-          - 'Confirm-M365DSCModuleDependency': 'user-guide/cmdlets/Confirm-M365DSCModuleDependency.md'
           - 'Export-M365DSCConfiguration': 'user-guide/cmdlets/Export-M365DSCConfiguration.md'
           - 'Export-M365DSCDiagnosticData': 'user-guide/cmdlets/Export-M365DSCDiagnosticData.md'
-          - 'Compare-M365DSCConfigurations': 'user-guide/cmdlets/Compare-M365DSCConfigurations.md'
           - 'Get-M365DSCAllResources': 'user-guide/cmdlets/Get-M365DSCAllResources.md'
           - 'Get-M365DSCCompiledPermissionList': 'user-guide/cmdlets/Get-M365DSCCompiledPermissionList.md'
           - 'Get-M365DSCConfigurationConflict': 'user-guide/cmdlets/Get-M365DSCConfigurationConflict.md'
@@ -69,6 +69,7 @@ nav:
           - 'Test-M365DSCAgent': 'user-guide/cmdlets/Test-M365DSCAgent.md'
           - 'Test-M365DSCDependenciesForNewVersions': 'user-guide/cmdlets/Test-M365DSCDependenciesForNewVersions.md'
           - 'Test-M365DSCModuleValidity': 'user-guide/cmdlets/Test-M365DSCModuleValidity.md'
+          - 'Test-M365DSCParameterState': 'user-guide/cmdlets/Test-M365DSCParameterState.md'
           - 'Uninstall-M365DSCOutdatedDependencies': 'user-guide/cmdlets/Uninstall-M365DSCOutdatedDependencies.md'
           - 'Update-M365DSCAllowedGraphScopes': 'user-guide/cmdlets/Update-M365DSCAllowedGraphScopes.md'
           - 'Update-M365DSCAuthenticationConfiguration': 'user-guide/cmdlets/Update-M365DSCAuthenticationConfiguration.md'
@@ -113,6 +114,12 @@ nav:
 plugins:
   - search
   - include_dir_to_nav
+  - rss:
+      match_path: 'blog/(?!index\.md).*'
+      use_git: false
+      date_from_meta:
+        as_creation: date
+      abstract_chars_count: 160
 theme:
   name: material
   custom_dir: docs/overrides
@@ -171,6 +178,8 @@ extra:
       link: 'https://www.youtube.com/channel/UCveScabVT6pxzqYgGRu17iw'
     - icon: fontawesome/solid/link
       link: 'https://www.powershellgallery.com/packages/Microsoft365DSC/'
+    - icon: fontawesome/solid/rss
+      link: 'https://microsoft365dsc.com/feed_rss_created.xml'
 extra_css:
   - stylesheets/extra.css
 repo_url: https://github.com/microsoft/Microsoft365DSC

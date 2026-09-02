@@ -336,7 +336,7 @@ function Add-M365DSCEvent
     Export-M365DSCDiagnosticData -ExportFilePath C:\Temp\DSCLogsExport.zip -Anonymize -Server spfe -Domain contoso.com -Url sharepoint.contoso.com
 
 .FUNCTIONALITY
-    Internal
+    Public
 #>
 function Export-M365DSCDiagnosticData
 {

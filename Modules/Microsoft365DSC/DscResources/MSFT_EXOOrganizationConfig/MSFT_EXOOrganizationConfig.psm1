@@ -247,6 +247,10 @@ function Get-TargetResource
         $EnableOutlookEvents,
 
         [Parameter()]
+        [System.String[]]
+        $EwsAllowedAppIDs,
+
+        [Parameter()]
         [System.Boolean]
         $EwsAllowEntourage,
 
@@ -634,6 +638,7 @@ function Get-TargetResource
             EndUserDLUpgradeFlowsDisabled                             = $ConfigSettings.EndUserDLUpgradeFlowsDisabled
             EndUserMailNotificationForDelayedDelicensingEnabled       = $EndUserMailNotificationForDelayedDelicensingEnabledValue
             EwsAllowEntourage                                         = $ConfigSettings.EwsAllowEntourage
+            EwsAllowedAppIDs                                          = $ConfigSettings.EwsAllowedAppIDs
             EwsAllowList                                              = $ConfigSettings.EwsAllowList
             EwsAllowMacOutlook                                        = $ConfigSettings.EwsAllowMacOutlook
             EwsAllowOutlook                                           = $ConfigSettings.EwsAllowOutlook
@@ -975,6 +980,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableOutlookEvents,
+
+        [Parameter()]
+        [System.String[]]
+        $EwsAllowedAppIDs,
 
         [Parameter()]
         [System.Boolean]
@@ -1538,6 +1547,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableOutlookEvents,
+
+        [Parameter()]
+        [System.String[]]
+        $EwsAllowedAppIDs,
 
         [Parameter()]
         [System.Boolean]
