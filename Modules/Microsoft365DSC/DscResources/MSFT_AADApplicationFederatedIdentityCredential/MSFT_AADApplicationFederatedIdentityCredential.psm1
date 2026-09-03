@@ -108,7 +108,7 @@ function Get-TargetResource
             {
                 if (-not [System.String]::IsNullOrEmpty($ApplicationObjectId))
                 {
-                    $application = Get-MgApplication `
+                    [array]$application = Get-MgApplication `
                         -ApplicationId $ApplicationObjectId `
                         -Property @('id', 'displayName') `
                         -ErrorAction Stop
@@ -158,7 +158,7 @@ function Get-TargetResource
             {
                 if (-not [System.String]::IsNullOrEmpty($Id))
                 {
-                    $federatedIdentityCredential = Get-MgApplicationFederatedIdentityCredential `
+                    [array]$federatedIdentityCredential = Get-MgApplicationFederatedIdentityCredential `
                         -ApplicationId $ApplicationObjectId `
                         -FederatedIdentityCredentialId $Id `
                         -ErrorAction Stop

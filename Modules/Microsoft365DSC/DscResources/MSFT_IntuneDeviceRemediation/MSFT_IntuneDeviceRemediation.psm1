@@ -436,8 +436,6 @@ function Set-TargetResource
 
         $CreateParameters = ([Hashtable]$BoundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.DetectionScriptContent = [System.Convert]::FromBase64String($CreateParameters.DetectionScriptContent)
-        $CreateParameters.RemediationScriptContent = [System.Convert]::FromBase64String($CreateParameters.RemediationScriptContent)
         $CreateParameters.Remove('Id') | Out-Null
 
         #region resource generator code
@@ -492,8 +490,6 @@ function Set-TargetResource
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-        $UpdateParameters.DetectionScriptContent = [System.Convert]::FromBase64String($UpdateParameters.DetectionScriptContent)
-        $UpdateParameters.RemediationScriptContent = [System.Convert]::FromBase64String($UpdateParameters.RemediationScriptContent)
         $UpdateParameters.Remove('DeviceHealthScriptType') | Out-Null
         $UpdateParameters.Remove('Id') | Out-Null
 

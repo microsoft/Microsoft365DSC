@@ -444,7 +444,7 @@ function Get-TargetResource
             ContentPropertyContainsWords                 = $PolicyRule.ContentPropertyContainsWords
             Disabled                                     = $PolicyRule.Disabled
             Quarantine                                   = $PolicyRule.Quarantine
-            GenerateAlert                                = $PolicyRule.GenerateAlert
+            GenerateAlert                                = Get-M365DSCArrayFromProperty -PropertyValue $PolicyRule.GenerateAlert -ElementType ([System.String])
             GenerateIncidentReport                       = $PolicyRule.GenerateIncidentReport
             IncidentReportContent                        = $ArrayIncidentReportContent
             NotifyAllowOverride                          = $NotifyAllowOverrideValue
@@ -507,18 +507,26 @@ function Get-TargetResource
             AccessTokens                                 = $AccessTokens
         }
 
-        $paramsToRemove = @()
-        foreach ($paramName in $result.Keys)
+        if (-not [System.String]::IsNullOrEmpty($PolicyRule.AdvancedRule))
         {
-            if ($null -eq $result[$paramName] -or '' -eq $result[$paramName] -or @() -eq $result[$paramName])
+            $paramsToRemove = @()
+            foreach ($paramName in $result.Keys)
             {
-                $paramsToRemove += $paramName
-            }
-        }
+                if ($paramName -eq 'GenerateAlert')
+                {
+                    continue
+                }
 
-        foreach ($paramName in $paramsToRemove)
-        {
-            $result.Remove($paramName)
+                if ($null -eq $result[$paramName] -or '' -eq $result[$paramName] -or @() -eq $result[$paramName])
+                {
+                    $paramsToRemove += $paramName
+                }
+            }
+
+            foreach ($paramName in $paramsToRemove)
+            {
+                $result.Remove($paramName)
+            }
         }
 
         return $result

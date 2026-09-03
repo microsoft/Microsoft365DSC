@@ -8,7 +8,7 @@ SHELL ["powershell", "-NoLogo"]
 
 RUN $null = Install-PackageProvider -Name "NuGet" -Force
 RUN $null = Install-Module -Name "Microsoft.PowerShell.PSResourceGet" -Repository "PSGallery" -Scope "AllUsers" -Force -SkipPublisherCheck
-RUN $null = Save-PSResource -Name "Microsoft365Dsc" -Repository "PSGallery" -Path "C:\Program Files\WindowsPowerShell\Modules" -SkipDependencyCheck -TrustRepository -AcceptLicense
+RUN $null = Install-Module -Name "Microsoft365Dsc" -Repository "PSGallery" -Scope "AllUsers" -Force -SkipPublisherCheck
 RUN $null = Install-PSResource -Name "Pester" -Repository "PSGallery" -Scope "AllUsers" -SkipDependencyCheck -TrustRepository -AcceptLicense
 RUN $null = Install-PSResource -Name "M365DSC.PSDesiredStateConfiguration" -Repository "PSGallery" -Scope "AllUsers" -SkipDependencyCheck -TrustRepository -AcceptLicense
 
