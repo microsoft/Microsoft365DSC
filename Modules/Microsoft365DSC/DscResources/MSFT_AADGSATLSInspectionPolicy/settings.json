@@ -45,9 +45,13 @@
       "module": "Microsoft.Graph.Beta.NetworkAccess",
       "cmdlets": [
         "Get-MgBetaNetworkAccessTlInspectionPolicy",
+        "Get-MgBetaNetworkAccessTlInspectionPolicyRule",
         "New-MgBetaNetworkAccessTlInspectionPolicy",
+        "New-MgBetaNetworkAccessTlInspectionPolicyRule",
         "Remove-MgBetaNetworkAccessTlInspectionPolicy",
-        "Update-MgBetaNetworkAccessTlInspectionPolicy"
+        "Remove-MgBetaNetworkAccessTlInspectionPolicyRule",
+        "Update-MgBetaNetworkAccessTlInspectionPolicy",
+        "Update-MgBetaNetworkAccessTlInspectionPolicyRule"
       ]
     }
   ]

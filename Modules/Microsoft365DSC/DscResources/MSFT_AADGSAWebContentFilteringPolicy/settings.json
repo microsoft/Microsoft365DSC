@@ -44,10 +44,14 @@
     {
       "module": "Microsoft.Graph.Beta.NetworkAccess",
       "cmdlets": [
-        "Get-MgBetaNetworkAccessFilteringPolicy",
-        "New-MgBetaNetworkAccessFilteringPolicy",
-        "Remove-MgBetaNetworkAccessFilteringPolicy",
-        "Update-MgBetaNetworkAccessFilteringPolicy"
+        "Get-MgBetaNetworkAccessWebFilteringPolicy",
+        "Get-MgBetaNetworkAccessWebFilteringPolicyRule",
+        "New-MgBetaNetworkAccessWebFilteringPolicy",
+        "New-MgBetaNetworkAccessWebFilteringPolicyRule",
+        "Remove-MgBetaNetworkAccessWebFilteringPolicy",
+        "Remove-MgBetaNetworkAccessWebFilteringPolicyRule",
+        "Update-MgBetaNetworkAccessWebFilteringPolicy",
+        "Update-MgBetaNetworkAccessWebFilteringPolicyRule"
       ]
     }
   ]

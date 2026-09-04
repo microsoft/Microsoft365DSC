@@ -2,6 +2,72 @@ Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADGSAPrivateAccessApplication
 
 $Script:PrivateAccessTemplateId = '8adf8e6e-67b2-4cf2-a259-e3dc5476c621'
 
+function Invoke-AADGSAPrivateAccessApplicationGraphRequestWithRetry
+{
+    [CmdletBinding()]
+    [OutputType([System.Object])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Method,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Uri,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Body,
+
+        [Parameter()]
+        [System.String]
+        $PrimeGetUri,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxRetries = 5,
+
+        [Parameter()]
+        [System.Int32]
+        $RetryDelaySeconds = 10
+    )
+
+    $retryCount = 0
+    do
+    {
+        try
+        {
+            if (-not [string]::IsNullOrEmpty($PrimeGetUri))
+            {
+                # The application proxy backend needs the application to have been read at least once before it accepts writes to onPremisesPublishing, matching the GSA portal's own request pattern.
+                $null = Invoke-MgGraphRequest -Method GET -Uri $PrimeGetUri -ErrorAction SilentlyContinue
+            }
+            $requestParams = @{
+                Method      = $Method
+                Uri         = $Uri
+                ErrorAction = 'Stop'
+            }
+            if ($null -ne $Body)
+            {
+                $requestParams.Body = $Body
+            }
+            return Invoke-MgGraphRequest @requestParams
+        }
+        catch
+        {
+            $retryCount++
+            if ($retryCount -ge $MaxRetries)
+            {
+                throw
+            }
+            # A newly instantiated application's onPremisesPublishing sub-resource is not immediately available and returns transient errors until provisioning completes.
+            Write-Verbose -Message "Request to {$Uri} failed, retrying in $RetryDelaySeconds seconds ($retryCount/$MaxRetries)"
+            Start-Sleep -Seconds $RetryDelaySeconds
+        }
+    } while ($true)
+}
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -105,20 +171,37 @@ function Get-TargetResource
 
             if (-not [string]::IsNullOrEmpty($ObjectId))
             {
-                $getValue = Invoke-MgGraphRequest -Method GET `
-                    -Uri ($baseUrl + "beta/applications/$ObjectId") `
-                    -ErrorAction SilentlyContinue
+                try
+                {
+                    # onPremisesPublishing is not returned on a bare GET and must be explicitly selected.
+                    $getValue = Invoke-MgGraphRequest -Method GET `
+                        -Uri ($baseUrl + "beta/applications/${ObjectId}?`$select=id,appId,displayName,onPremisesPublishing") `
+                        -ErrorAction Stop
+                }
+                catch
+                {
+                    # Invoke-MgGraphRequest throws a terminating error on 404 even with -ErrorAction SilentlyContinue, so fall back to the DisplayName lookup below.
+                    $getValue = $null
+                }
             }
 
             if ($null -eq $getValue)
             {
                 $filter = "applicationTemplateId eq '$Script:PrivateAccessTemplateId' and displayName eq '$(($DisplayName -replace "'", "''"))'"
-                $response = Invoke-MgGraphRequest -Method GET `
-                    -Uri ($baseUrl + "beta/applications?`$filter=$filter") `
-                    -ErrorAction SilentlyContinue
-                if ($null -ne $response -and $response.value.Count -gt 0)
+                try
                 {
-                    $getValue = $response.value[0]
+                    # onPremisesPublishing is not returned on a bare GET and must be explicitly selected.
+                    $response = Invoke-MgGraphRequest -Method GET `
+                        -Uri ($baseUrl + "beta/applications?`$filter=$filter&`$select=id,appId,displayName,onPremisesPublishing") `
+                        -ErrorAction Stop
+                    if ($null -ne $response -and $response.value.Count -gt 0)
+                    {
+                        $getValue = $response.value[0]
+                    }
+                }
+                catch
+                {
+                    $getValue = $null
                 }
             }
         }
@@ -142,18 +225,33 @@ function Get-TargetResource
         $onPremPub = $getValue.onPremisesPublishing
 
         $connectorGroupName = $null
-        $connectorGroupResponse = Invoke-MgGraphRequest -Method GET `
-            -Uri ($baseUrl + "beta/applications/$appId/connectorGroup") `
-            -ErrorAction SilentlyContinue
-        if ($null -ne $connectorGroupResponse -and -not [string]::IsNullOrEmpty($connectorGroupResponse.name))
+        try
         {
-            $connectorGroupName = $connectorGroupResponse.name
+            # An application with no connector group assigned returns a 404 here, which is expected.
+            $connectorGroupResponse = Invoke-MgGraphRequest -Method GET `
+                -Uri ($baseUrl + "beta/applications/$appId/connectorGroup") `
+                -ErrorAction Stop
+            if ($null -ne $connectorGroupResponse -and -not [string]::IsNullOrEmpty($connectorGroupResponse.name))
+            {
+                $connectorGroupName = $connectorGroupResponse.name
+            }
+        }
+        catch
+        {
+            $connectorGroupName = $null
         }
 
         $complexSegments = @()
-        $segmentsResponse = Invoke-MgGraphRequest -Method GET `
-            -Uri ($baseUrl + "beta/applications/$appId/onPremisesPublishing/segmentsConfiguration/microsoft.graph.ipSegmentConfiguration/applicationSegments") `
-            -ErrorAction SilentlyContinue
+        try
+        {
+            $segmentsResponse = Invoke-MgGraphRequest -Method GET `
+                -Uri ($baseUrl + "beta/applications/$appId/onPremisesPublishing/segmentsConfiguration/microsoft.graph.ipSegmentConfiguration/applicationSegments") `
+                -ErrorAction Stop
+        }
+        catch
+        {
+            $segmentsResponse = $null
+        }
         if ($null -ne $segmentsResponse -and $null -ne $segmentsResponse.value)
         {
             foreach ($seg in $segmentsResponse.value)
@@ -161,7 +259,7 @@ function Get-TargetResource
                 $complexSegments += @{
                     Id              = $seg.id
                     DestinationHost = $seg.destinationHost
-                    DestinationType = $seg.destinationType
+                    DestinationType = ConvertFrom-AADGSADestinationTypeGraphValue -DestinationType $seg.destinationType
                     Ports           = [System.String[]]$seg.ports
                     Protocol        = $seg.protocol
                 }
@@ -305,20 +403,25 @@ function Set-TargetResource
             displayName = $DisplayName
         }
         $newApp = Invoke-MgGraphRequest -Method POST `
-            -Uri ($baseUrl + "v1.0/applicationTemplates/$Script:PrivateAccessTemplateId/instantiate") `
+            -Uri ($baseUrl + "beta/applicationTemplates/$Script:PrivateAccessTemplateId/instantiate") `
             -Body $instantiateBody
 
-        $appId = $newApp.application.id
+        # The beta instantiate response exposes the application's id as 'objectId', not 'id' like v1.0 does.
+        $appId = $newApp.application.objectId
+        if ([string]::IsNullOrEmpty($appId))
+        {
+            $appId = $newApp.application.id
+        }
 
         $onPremBody = @{
-            onPremisesPublishing = @{
-                applicationType           = $ApplicationType
-                isAccessibleViaZTNAClient = $IsAccessibleViaZTNAClient
-            }
+            applicationType           = $ApplicationType
+            isAccessibleViaZTNAClient = $IsAccessibleViaZTNAClient
+            trafficRoutingMethod      = 'none'
         }
-        Invoke-MgGraphRequest -Method PATCH `
-            -Uri ($baseUrl + "beta/applications/$appId") `
-            -Body $onPremBody | Out-Null
+        Invoke-AADGSAPrivateAccessApplicationGraphRequestWithRetry -Method PATCH `
+            -Uri ($baseUrl + "beta/applications/$appId/onPremisesPublishing") `
+            -Body $onPremBody `
+            -PrimeGetUri ($baseUrl + "beta/applications/$appId") | Out-Null
 
         if (-not [string]::IsNullOrEmpty($ConnectorGroupName))
         {
@@ -338,7 +441,7 @@ function Set-TargetResource
             $dnsBody = @{
                 isDnsResolutionEnabled = $true
             }
-            Invoke-MgGraphRequest -Method PATCH `
+            Invoke-AADGSAPrivateAccessApplicationGraphRequestWithRetry -Method PATCH `
                 -Uri ($baseUrl + "beta/applications/$appId/onPremisesPublishing") `
                 -Body $dnsBody | Out-Null
         }
@@ -348,31 +451,29 @@ function Set-TargetResource
         $appId = $currentInstance.ObjectId
         Write-Verbose -Message "Updating AAD GSA Private Access Application {$DisplayName} with Id {$appId}"
 
-        $onPremBody = @{
-            onPremisesPublishing = @{}
-        }
+        $onPremBody = @{}
         $onPremUpdated = $false
 
         if ($PSBoundParameters.ContainsKey('ApplicationType') -and $ApplicationType -ne $currentInstance.ApplicationType)
         {
-            $onPremBody.onPremisesPublishing.applicationType = $ApplicationType
+            $onPremBody.applicationType = $ApplicationType
             $onPremUpdated = $true
         }
         if ($PSBoundParameters.ContainsKey('IsAccessibleViaZTNAClient') -and $IsAccessibleViaZTNAClient -ne $currentInstance.IsAccessibleViaZTNAClient)
         {
-            $onPremBody.onPremisesPublishing.isAccessibleViaZTNAClient = $IsAccessibleViaZTNAClient
+            $onPremBody.isAccessibleViaZTNAClient = $IsAccessibleViaZTNAClient
             $onPremUpdated = $true
         }
         if ($PSBoundParameters.ContainsKey('IsDnsResolutionEnabled') -and $IsDnsResolutionEnabled -ne $currentInstance.IsDnsResolutionEnabled)
         {
-            $onPremBody.onPremisesPublishing.isDnsResolutionEnabled = $IsDnsResolutionEnabled
+            $onPremBody.isDnsResolutionEnabled = $IsDnsResolutionEnabled
             $onPremUpdated = $true
         }
 
         if ($onPremUpdated)
         {
-            Invoke-MgGraphRequest -Method PATCH `
-                -Uri ($baseUrl + "beta/applications/$appId") `
+            Invoke-AADGSAPrivateAccessApplicationGraphRequestWithRetry -Method PATCH `
+                -Uri ($baseUrl + "beta/applications/$appId/onPremisesPublishing") `
                 -Body $onPremBody | Out-Null
         }
 
@@ -560,6 +661,7 @@ function Export-TargetResource
         {
             $filterQuery = "$filterQuery and $Filter"
         }
+        # Graph rejects $select combined with $filter for onPremisesPublishing on this collection, so the per-item GET below (Get-TargetResource) must be used to retrieve it.
         $response = Invoke-MgGraphRequest -Method GET `
             -Uri ($baseUrl + "beta/applications?`$filter=$filterQuery") `
             -ErrorAction Stop
@@ -598,7 +700,8 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Script:exportedInstance = $config
+            # $config from the list query lacks onPremisesPublishing (not selectable on this collection), so force Get-TargetResource to do its own fresh, correctly-selected GET.
+            $Script:exportedInstance = $null
             $Results = Get-TargetResource @params
 
             if ($null -ne $Results.Segments -and $Results.Segments.Count -gt 0)
@@ -683,9 +786,46 @@ function Set-AADGSAPrivateAccessApplicationConnectorGroup
     $refBody = @{
         '@odata.id' = $BaseUrl + "beta/onPremisesPublishingProfiles/applicationproxy/connectorGroups/$connectorGroupId"
     }
-    Invoke-MgGraphRequest -Method PUT `
+    Invoke-AADGSAPrivateAccessApplicationGraphRequestWithRetry -Method PUT `
         -Uri ($BaseUrl + "beta/applications/$AppId/connectorGroup/`$ref") `
         -Body $refBody | Out-Null
+}
+
+function ConvertTo-AADGSADestinationTypeGraphValue
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DestinationType
+    )
+
+    # The Global Secure Access API accepts 'ip' on the wire for the documented 'ipAddress' value.
+    if ($DestinationType -eq 'ipAddress')
+    {
+        return 'ip'
+    }
+    return $DestinationType
+}
+
+function ConvertFrom-AADGSADestinationTypeGraphValue
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DestinationType
+    )
+
+    if ($DestinationType -eq 'ip')
+    {
+        return 'ipAddress'
+    }
+    return $DestinationType
 }
 
 function Add-AADGSAPrivateAccessApplicationSegment
@@ -708,7 +848,7 @@ function Add-AADGSAPrivateAccessApplicationSegment
 
     $segmentBody = @{
         destinationHost = $Segment.DestinationHost
-        destinationType = $Segment.DestinationType
+        destinationType = ConvertTo-AADGSADestinationTypeGraphValue -DestinationType $Segment.DestinationType
     }
     if ($null -ne $Segment.Ports -and $Segment.Ports.Count -gt 0)
     {
@@ -719,7 +859,7 @@ function Add-AADGSAPrivateAccessApplicationSegment
         $segmentBody.protocol = $Segment.Protocol
     }
 
-    Invoke-MgGraphRequest -Method POST `
+    Invoke-AADGSAPrivateAccessApplicationGraphRequestWithRetry -Method POST `
         -Uri ($BaseUrl + "beta/applications/$AppId/onPremisesPublishing/segmentsConfiguration/microsoft.graph.ipSegmentConfiguration/applicationSegments") `
         -Body $segmentBody | Out-Null
 }

@@ -19,13 +19,13 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('enabled', 'disabled')]
+        [ValidateSet('allow', 'block', 'unknownFutureValue')]
         [System.String]
-        $State,
+        $DefaultAction,
 
         [Parameter()]
-        [System.UInt32]
-        $Priority,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Rules,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -97,13 +97,15 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 Write-Verbose -Message "Retrieving Web Content Filtering Policy by Id {$Id}"
-                $instance = Get-MgBetaNetworkAccessFilteringPolicy -FilteringPolicyId $Id `
+                $instance = Get-MgBetaNetworkAccessWebFilteringPolicy -WebFilteringPolicyId $Id `
+                    -ExpandProperty 'policyRules' `
                     -ErrorAction SilentlyContinue
             }
             if ($null -eq $instance)
             {
                 Write-Verbose -Message "Retrieving Web Content Filtering Policy by Name {$Name}"
-                $instance = Get-MgBetaNetworkAccessFilteringPolicy -All `
+                $instance = Get-MgBetaNetworkAccessWebFilteringPolicy -All `
+                    -ExpandProperty 'policyRules' `
                     -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq $Name }
             }
         }
@@ -118,12 +120,18 @@ function Get-TargetResource
             return $nullResult
         }
 
+        $rulesValue = @()
+        if ($null -ne $instance.PolicyRules)
+        {
+            $rulesValue = Get-MicrosoftGraphNetworkAccessWebFilteringPolicyRules -PolicyRules $instance.PolicyRules
+        }
+
         $results = @{
             Name                  = $instance.Name
             Id                    = $instance.Id
             Description           = $instance.Description
-            State                 = $instance.State
-            Priority              = $instance.Priority
+            DefaultAction         = Get-M365DSCWebFilteringActionValue -Action $instance.Settings.DefaultAction
+            Rules                 = $rulesValue
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -167,13 +175,13 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('enabled', 'disabled')]
+        [ValidateSet('allow', 'block', 'unknownFutureValue')]
         [System.String]
-        $State,
+        $DefaultAction,
 
         [Parameter()]
-        [System.UInt32]
-        $Priority,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Rules,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -234,25 +242,97 @@ function Set-TargetResource
     $instanceParams = @{
         name        = $Name
         description = $Description
-        state       = $State
-        priority    = $Priority
+        settings    = @{
+            defaultAction = Get-M365DSCWebFilteringActionBody -Action $DefaultAction
+        }
     }
+
+    $policyId = $currentInstance.Id
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new AAD GSA Web Content Filtering Policy {$Name}"
-        New-MgBetaNetworkAccessFilteringPolicy -BodyParameter $instanceParams
+        $newInstance = New-MgBetaNetworkAccessWebFilteringPolicy -BodyParameter $instanceParams
+        $policyId = $newInstance.Id
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating AAD GSA Web Content Filtering Policy {$Name} with Id {$($currentInstance.Id)}"
-        Update-MgBetaNetworkAccessFilteringPolicy -FilteringPolicyId $currentInstance.Id `
+        Update-MgBetaNetworkAccessWebFilteringPolicy -WebFilteringPolicyId $currentInstance.Id `
             -BodyParameter $instanceParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AAD GSA Web Content Filtering Policy {$Name} with Id {$($currentInstance.Id)}"
-        Remove-MgBetaNetworkAccessFilteringPolicy -FilteringPolicyId $currentInstance.Id
+        Remove-MgBetaNetworkAccessWebFilteringPolicy -WebFilteringPolicyId $currentInstance.Id
+    }
+
+    if ($Ensure -eq 'Present' -and $null -ne $Rules)
+    {
+        $currentRules = @()
+        if ($currentInstance.Ensure -eq 'Present' -and $null -ne $currentInstance.Rules)
+        {
+            $currentRules = $currentInstance.Rules
+        }
+
+        $matchedCurrentRuleIds = @()
+        foreach ($desiredRule in $Rules)
+        {
+            $destinationsBody = @()
+            foreach ($destination in $desiredRule.Destinations)
+            {
+                $destinationsBody += @{
+                    '@odata.type' = "#microsoft.graph.networkaccess.$($destination.Type)"
+                    values        = $destination.Values
+                }
+            }
+            $ruleBody = @{
+                '@odata.type'      = '#microsoft.graph.networkaccess.webFilteringRule'
+                name               = $desiredRule.Name
+                priority           = $desiredRule.Priority
+                description        = $desiredRule.Description
+                action             = Get-M365DSCWebFilteringActionBody -Action $desiredRule.Action
+                settings           = @{
+                    status = $desiredRule.Status
+                }
+                matchingConditions = @{
+                    destinations = @{
+                        targets           = $destinationsBody
+                        httpRequestMethod = $desiredRule.HttpRequestMethod
+                    }
+                    sources      = @{
+                        sessionType = $desiredRule.SessionType
+                    }
+                }
+            }
+
+            $matchedRule = $currentRules | Where-Object -FilterScript { $_.Id -notin $matchedCurrentRuleIds -and $_.Name -eq $desiredRule.Name } | Select-Object -First 1
+
+            if ($null -ne $matchedRule)
+            {
+                $matchedCurrentRuleIds += $matchedRule.Id
+                Write-Verbose -Message "Updating Web Content Filtering Rule {$($desiredRule.Name)} with Id {$($matchedRule.Id)}"
+                Update-MgBetaNetworkAccessWebFilteringPolicyRule -WebFilteringPolicyId $policyId `
+                    -PolicyRuleId $matchedRule.Id `
+                    -BodyParameter $ruleBody
+            }
+            else
+            {
+                Write-Verbose -Message "Creating new Web Content Filtering Rule {$($desiredRule.Name)}"
+                New-MgBetaNetworkAccessWebFilteringPolicyRule -WebFilteringPolicyId $policyId `
+                    -BodyParameter $ruleBody
+            }
+        }
+
+        foreach ($currentRule in $currentRules)
+        {
+            if ($currentRule.Id -notin $matchedCurrentRuleIds)
+            {
+                Write-Verbose -Message "Removing Web Content Filtering Rule {$($currentRule.Name)} with Id {$($currentRule.Id)}"
+                Remove-MgBetaNetworkAccessWebFilteringPolicyRule -WebFilteringPolicyId $policyId `
+                    -PolicyRuleId $currentRule.Id
+            }
+        }
     }
 }
 
@@ -275,13 +355,13 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet('enabled', 'disabled')]
+        [ValidateSet('allow', 'block', 'unknownFutureValue')]
         [System.String]
-        $State,
+        $DefaultAction,
 
         [Parameter()]
-        [System.UInt32]
-        $Priority,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Rules,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -403,7 +483,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $exportedInstances = Get-MgBetaNetworkAccessFilteringPolicy -All -ErrorAction Stop
+        [array] $exportedInstances = Get-MgBetaNetworkAccessWebFilteringPolicy -All -ExpandProperty 'policyRules' -ErrorAction Stop
 
         $i = 1
         $dscContent = [System.Text.StringBuilder]::new()
@@ -441,11 +521,45 @@ function Export-TargetResource
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @params
 
+            if ($null -ne $Results.Rules -and $Results.Rules.Count -gt 0)
+            {
+                $complexMapping = @(
+                    @{
+                        Name            = 'Rules'
+                        CimInstanceName = 'AADGSAWebContentFilteringPolicyRule'
+                        IsRequired      = $False
+                    }
+                    @{
+                        Name            = 'Destinations'
+                        CimInstanceName = 'AADGSAWebContentFilteringPolicyRuleDestination'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Rules `
+                    -CIMInstanceName 'AADGSAWebContentFilteringPolicyRule' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Rules = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Rules') | Out-Null
+                }
+            }
+            else
+            {
+                $Results.Remove('Rules') | Out-Null
+            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
+                -Credential $Credential `
+                -NoEscape @('Rules')
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -463,6 +577,81 @@ function Export-TargetResource
             -Credential $Credential
 
         throw
+    }
+}
+
+function Get-MicrosoftGraphNetworkAccessWebFilteringPolicyRules
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [System.Object[]]
+        $PolicyRules
+    )
+
+    $newPolicyRules = @()
+    foreach ($rule in $PolicyRules)
+    {
+        $destinationsValue = @()
+        foreach ($destination in $rule.MatchingConditions.Destinations.Targets)
+        {
+            $destinationsValue += @{
+                Type   = $destination.'@odata.type'.Replace('#microsoft.graph.networkaccess.', '')
+                Values = [System.String[]]$destination.Values
+            }
+        }
+        $newPolicyRules += [ordered]@{
+            Id                = $rule.Id
+            Name              = $rule.Name
+            Priority          = [System.UInt32]$rule.Priority
+            Description       = $rule.Description
+            Action            = Get-M365DSCWebFilteringActionValue -Action $rule.Action
+            Status            = $rule.Settings.Status
+            HttpRequestMethod = $rule.MatchingConditions.Destinations.HttpRequestMethod
+            SessionType       = $rule.MatchingConditions.Sources.SessionType
+            Destinations      = $destinationsValue
+        }
+    }
+
+    ,$newPolicyRules
+}
+
+function Get-M365DSCWebFilteringActionValue
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        $Action
+    )
+
+    if ($null -eq $Action -or [System.String]::IsNullOrEmpty($Action.'@odata.type'))
+    {
+        return $null
+    }
+
+    $actionTypeName = $Action.'@odata.type'.Replace('#microsoft.graph.networkaccess.webFilteringAction', '')
+    return $actionTypeName.Substring(0, 1).ToLower() + $actionTypeName.Substring(1)
+}
+
+function Get-M365DSCWebFilteringActionBody
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Action
+    )
+
+    $actionTypeName = $Action.Substring(0, 1).ToUpper() + $Action.Substring(1)
+    return @{
+        '@odata.type' = "#microsoft.graph.networkaccess.webFilteringAction$actionTypeName"
     }
 }
 

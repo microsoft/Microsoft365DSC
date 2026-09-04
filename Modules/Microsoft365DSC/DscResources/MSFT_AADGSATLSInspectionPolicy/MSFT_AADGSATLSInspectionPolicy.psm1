@@ -24,6 +24,10 @@ function Get-TargetResource
         $DefaultAction,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Rules,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -94,12 +98,14 @@ function Get-TargetResource
             {
                 Write-Verbose -Message "Retrieving TLS Inspection Policy by Id {$Id}"
                 $instance = Get-MgBetaNetworkAccessTlInspectionPolicy -TlsInspectionPolicyId $Id `
+                    -ExpandProperty 'policyRules' `
                     -ErrorAction SilentlyContinue
             }
             if ($null -eq $instance)
             {
                 Write-Verbose -Message "Retrieving TLS Inspection Policy by Name {$Name}"
                 $instance = Get-MgBetaNetworkAccessTlInspectionPolicy -All `
+                    -ExpandProperty 'policyRules' `
                     -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq $Name }
             }
         }
@@ -114,11 +120,18 @@ function Get-TargetResource
             return $nullResult
         }
 
+        $rulesValue = @()
+        if ($null -ne $instance.PolicyRules)
+        {
+            $rulesValue = Get-MicrosoftGraphNetworkAccessTlsInspectionPolicyRules -PolicyRules $instance.PolicyRules
+        }
+
         $results = @{
             Name                  = $instance.Name
             Id                    = $instance.Id
             Description           = $instance.Description
             DefaultAction         = $instance.Settings.DefaultAction
+            Rules                 = $rulesValue
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -165,6 +178,10 @@ function Set-TargetResource
         [ValidateSet('bypass', 'inspect', 'unknownFutureValue')]
         [System.String]
         $DefaultAction,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Rules,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -230,10 +247,13 @@ function Set-TargetResource
         }
     }
 
+    $policyId = $currentInstance.Id
+
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new AAD GSA TLS Inspection Policy {$Name}"
-        New-MgBetaNetworkAccessTlInspectionPolicy -BodyParameter $instanceParams
+        $newInstance = New-MgBetaNetworkAccessTlInspectionPolicy -BodyParameter $instanceParams
+        $policyId = $newInstance.Id
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -245,6 +265,68 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing AAD GSA TLS Inspection Policy {$Name} with Id {$($currentInstance.Id)}"
         Remove-MgBetaNetworkAccessTlInspectionPolicy -TlsInspectionPolicyId $currentInstance.Id
+    }
+
+    if ($Ensure -eq 'Present' -and $null -ne $Rules)
+    {
+        $currentRules = @()
+        if ($currentInstance.Ensure -eq 'Present' -and $null -ne $currentInstance.Rules)
+        {
+            $currentRules = $currentInstance.Rules
+        }
+
+        $matchedCurrentRuleIds = @()
+        foreach ($desiredRule in $Rules)
+        {
+            $destinationsBody = @()
+            foreach ($destination in $desiredRule.Destinations)
+            {
+                $destinationsBody += @{
+                    '@odata.type' = "#microsoft.graph.networkaccess.$($destination.Type)"
+                    values        = $destination.Values
+                }
+            }
+            $ruleBody = @{
+                '@odata.type'      = '#microsoft.graph.networkaccess.tlsInspectionRule'
+                name               = $desiredRule.Name
+                priority           = $desiredRule.Priority
+                description        = $desiredRule.Description
+                action             = $desiredRule.Action
+                settings           = @{
+                    status = $desiredRule.Status
+                }
+                matchingConditions = @{
+                    destinations = $destinationsBody
+                }
+            }
+
+            $matchedRule = $currentRules | Where-Object -FilterScript { $_.Id -notin $matchedCurrentRuleIds -and $_.Name -eq $desiredRule.Name } | Select-Object -First 1
+
+            if ($null -ne $matchedRule)
+            {
+                $matchedCurrentRuleIds += $matchedRule.Id
+                Write-Verbose -Message "Updating TLS Inspection Rule {$($desiredRule.Name)} with Id {$($matchedRule.Id)}"
+                Update-MgBetaNetworkAccessTlInspectionPolicyRule -TlsInspectionPolicyId $policyId `
+                    -PolicyRuleId $matchedRule.Id `
+                    -BodyParameter $ruleBody
+            }
+            else
+            {
+                Write-Verbose -Message "Creating new TLS Inspection Rule {$($desiredRule.Name)}"
+                New-MgBetaNetworkAccessTlInspectionPolicyRule -TlsInspectionPolicyId $policyId `
+                    -BodyParameter $ruleBody
+            }
+        }
+
+        foreach ($currentRule in $currentRules)
+        {
+            if ($currentRule.Id -notin $matchedCurrentRuleIds)
+            {
+                Write-Verbose -Message "Removing TLS Inspection Rule {$($currentRule.Name)} with Id {$($currentRule.Id)}"
+                Remove-MgBetaNetworkAccessTlInspectionPolicyRule -TlsInspectionPolicyId $policyId `
+                    -PolicyRuleId $currentRule.Id
+            }
+        }
     }
 }
 
@@ -270,6 +352,10 @@ function Test-TargetResource
         [ValidateSet('bypass', 'inspect', 'unknownFutureValue')]
         [System.String]
         $DefaultAction,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Rules,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -391,7 +477,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $exportedInstances = Get-MgBetaNetworkAccessTlInspectionPolicy -All -ErrorAction Stop
+        [array] $exportedInstances = Get-MgBetaNetworkAccessTlInspectionPolicy -All -ExpandProperty 'policyRules' -ErrorAction Stop
 
         $i = 1
         $dscContent = [System.Text.StringBuilder]::new()
@@ -429,11 +515,45 @@ function Export-TargetResource
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @params
 
+            if ($null -ne $Results.Rules -and $Results.Rules.Count -gt 0)
+            {
+                $complexMapping = @(
+                    @{
+                        Name            = 'Rules'
+                        CimInstanceName = 'AADGSATLSInspectionPolicyRule'
+                        IsRequired      = $False
+                    }
+                    @{
+                        Name            = 'Destinations'
+                        CimInstanceName = 'AADGSATLSInspectionPolicyRuleDestination'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Rules `
+                    -CIMInstanceName 'AADGSATLSInspectionPolicyRule' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Rules = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Rules') | Out-Null
+                }
+            }
+            else
+            {
+                $Results.Remove('Rules') | Out-Null
+            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
+                -Credential $Credential `
+                -NoEscape @('Rules')
             [void]$dscContent.Append($currentDSCBlock)
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -452,6 +572,49 @@ function Export-TargetResource
 
         throw
     }
+}
+
+function Get-MicrosoftGraphNetworkAccessTlsInspectionPolicyRules
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [System.Object[]]
+        $PolicyRules
+    )
+
+    $newPolicyRules = @()
+    foreach ($rule in $PolicyRules)
+    {
+        # GSA auto-creates these two system rules on every policy; they are not user-managed.
+        if ($rule.Description -like 'Auto-created*' -and ($rule.Priority -eq 50 -or $rule.Priority -eq 65000))
+        {
+            continue
+        }
+
+        $destinationsValue = @()
+        foreach ($destination in $rule.MatchingConditions.Destinations)
+        {
+            $destinationsValue += @{
+                Type   = $destination.'@odata.type'.Replace('#microsoft.graph.networkaccess.', '')
+                Values = [System.String[]]$destination.Values
+            }
+        }
+        $newPolicyRules += [ordered]@{
+            Id           = $rule.Id
+            Name         = $rule.Name
+            Priority     = [System.UInt32]$rule.Priority
+            Description  = $rule.Description
+            Action       = $rule.Action
+            Status       = $rule.Settings.Status
+            Destinations = $destinationsValue
+        }
+    }
+
+    ,$newPolicyRules
 }
 
 Export-ModuleMember -Function *-TargetResource
