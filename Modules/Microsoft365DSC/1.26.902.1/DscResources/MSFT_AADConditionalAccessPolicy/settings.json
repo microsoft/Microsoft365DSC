@@ -1,0 +1,181 @@
+{
+  "resourceName": "AADConditionalAccessPolicy",
+  "description": "This resource configures an Azure Active Directory Conditional Access Policy.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Conditional Access Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Agreement.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Policy.Read.All"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Agreement.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Policy.Read.All"
+          },
+          {
+            "name": "Policy.ReadWrite.ConditionalAccess"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Agreement.Read.All"
+          },
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Policy.Read.All"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Agreement.Read.All"
+          },
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Policy.Read.All"
+          },
+          {
+            "name": "Policy.ReadWrite.ConditionalAccess"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Identity.DirectoryManagement",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgServicePrincipal"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaAgreement"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference",
+        "Get-MgBetaIdentityConditionalAccessNamedLocation",
+        "Get-MgBetaIdentityConditionalAccessPolicy",
+        "Get-MgBetaPolicyAuthenticationStrengthPolicy",
+        "Remove-MgBetaIdentityConditionalAccessPolicy"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgDirectoryRoleTemplate"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "resourceName": "AADSocialIdentityProvider",
+  "description": "Represents a group of related custom security attribute definitions.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Authentication Policy Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "IdentityProvider.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "IdentityProvider.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "IdentityProvider.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "IdentityProvider.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaIdentityProvider",
+        "New-MgBetaIdentityProvider",
+        "Remove-MgBetaIdentityProvider",
+        "Update-MgBetaIdentityProvider"
+      ]
+    }
+  ]
+}

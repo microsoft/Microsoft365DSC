@@ -1,0 +1,54 @@
+{
+  "resourceName": "AzureBillingAccountPolicy",
+  "description": "Configures policies settings for an Azure billing account.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "Azure Service Management": {
+      "delegated": {
+        "read": [
+          {
+            "name": "user_impersonation"
+          }
+        ],
+        "update": [
+          {
+            "name": "user_impersonation"
+          }
+        ]
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    },
+    "azure": {
+      "requiredRoles": [
+        "Billing Reader"
+      ]
+    }
+  },
+  "requiredModules": [
+    "Az.Accounts",
+    "MSCloudLoginAssistant"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Connect-AzAccount",
+        "Invoke-AzRestMethod",
+        "Register-AzModule"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
+}

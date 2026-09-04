@@ -1,0 +1,512 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_TeamsChannel'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateLength(1, 50)]
+        $DisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TeamName,
+
+        [Parameter()]
+        [System.String]
+        $GroupID,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(0, 50)]
+        $NewDisplayName,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
+        $Description,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration of Teams channel $DisplayName"
+
+    try
+    {
+        if ($null -eq $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
+        {
+            $null = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+            Write-Verbose -Message 'Checking for existance of team channels'
+
+            if (-not [System.String]::IsNullOrEmpty($GroupId))
+            {
+                $team = Get-Team -GroupId $GroupId -ErrorAction 'SilentlyContinue'
+            }
+
+            if ($null -eq $team)
+            {
+                $team = Get-TeamByName ([System.Net.WebUtility]::UrlEncode($TeamName))
+            }
+
+            if ($null -eq $team)
+            {
+                return $nullReturn
+            }
+
+            Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
+
+            $channel = Get-TeamChannel -GroupId $team.GroupId `
+                -ErrorAction SilentlyContinue | Where-Object -FilterScript {
+                    $_.DisplayName -eq $DisplayName
+                }
+
+            # Current channel doesnt exist and trying to rename throw an error
+            if (($null -eq $channel) -and $PSBoundParameters.ContainsKey('NewDisplayName'))
+            {
+                Write-Verbose -Message "Cannot rename channel $DisplayName, doesnt exist in current Team"
+                throw "Channel named $DisplayName doesn't exist in current Team"
+            }
+
+            if ($null -eq $channel)
+            {
+                Write-Verbose -Message "Failed to get team channels with ID $($team.GroupId) and display name of $DisplayName"
+                return $nullReturn
+            }
+        }
+        else
+        {
+            $channel = $Script:exportedInstance
+            $team = $Script:currentTeam
+        }
+
+        $results = @{
+            DisplayName           = $channel.DisplayName
+            TeamName              = $team.DisplayName
+            GroupId               = $team.GroupId
+            Description           = $channel.Description
+            Ensure                = 'Present'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            Credential            = $Credential
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
+        }
+
+        if ($NewDisplayName)
+        {
+            $results.Add('NewDisplayName', $NewDisplayName)
+        }
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateLength(1, 50)]
+        $DisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TeamName,
+
+        [Parameter()]
+        [System.String]
+        $GroupID,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(0, 50)]
+        $NewDisplayName,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
+        $Description,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Setting configuration of Teams channel $DisplayName"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $channel = Get-TargetResource @PSBoundParameters
+
+    $CurrentParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    $team = Get-TeamByName ([System.Net.WebUtility]::UrlEncode($TeamName))
+
+    if ($team.Length -gt 1)
+    {
+        throw "Multiple Teams with name {$($TeamName)} were found"
+    }
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
+
+    $CurrentParameters.Remove('TeamName') | Out-Null
+    if ($CurrentParameters.ContainsKey('GroupId'))
+    {
+        $CurrentParameters.GroupId = $team.GroupId
+    }
+    else
+    {
+        $CurrentParameters.Add('GroupId', $team.GroupId)
+    }
+
+    if ($Ensure -eq 'Present')
+    {
+        # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
+        if ($channel.Ensure -eq 'Present')
+        {
+            if ($CurrentParameters.ContainsKey('NewDisplayName'))
+            {
+                Write-Verbose -Message "Updating team channel to new channel name $NewDisplayName"
+                $CurrentParameters.Remove('DisplayName') | Out-Null
+                Set-TeamChannel @CurrentParameters -CurrentDisplayName $DisplayName
+            }
+        }
+        else
+        {
+            if ($CurrentParameters.ContainsKey('NewDisplayName'))
+            {
+                $CurrentParameters.Remove('NewDisplayName')
+            }
+            Write-Verbose -Message "Creating team channel $DisplayName"
+            Write-Verbose -Message "Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentParameters)"
+            New-TeamChannel @CurrentParameters
+        }
+    }
+    else
+    {
+        if ($channel.DisplayName)
+        {
+            Write-Verbose -Message "Removing team channel $DisplayName"
+            Remove-TeamChannel -GroupId $team.GroupId -DisplayName $DisplayName
+        }
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateLength(1, 50)]
+        $DisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TeamName,
+
+        [Parameter()]
+        [System.String]
+        $GroupID,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(0, 50)]
+        $NewDisplayName,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
+        $Description,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $compareParameters = Get-CompareParameters
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        $teams = Get-Team -ErrorAction Stop | Sort-Object -Property GroupId
+        $j = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
+        foreach ($team in $Teams)
+        {
+            if ($null -ne $team.GroupId)
+            {
+                $channels = Get-TeamChannel -GroupId $team.GroupId
+                $i = 1
+                Write-M365DSCHost -Message "    |---[$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+                foreach ($channel in $channels)
+                {
+                    if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                    {
+                        $Global:M365DSCExportResourceInstancesCount++
+                    }
+
+                    Write-M365DSCHost -Message "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -DeferWrite
+                    $params = @{
+                        TeamName              = $team.DisplayName
+                        GroupId               = $team.GroupId
+                        DisplayName           = $channel.DisplayName
+                        Credential            = $Credential
+                        ApplicationId         = $ApplicationId
+                        TenantId              = $TenantId
+                        CertificateThumbprint = $CertificateThumbprint
+                        CertificatePath       = $CertificatePath
+                        CertificatePassword   = $CertificatePassword
+                        ManagedIdentity       = $ManagedIdentity.IsPresent
+                        AccessTokens          = $AccessTokens
+                    }
+
+                    $Script:exportedInstance = $channel
+                    $Script:currentTeam = $team
+                    $Results = Get-TargetResource @Params
+                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -Credential $Credential
+                    [void]$dscContent.Append($currentDSCBlock)
+                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                        -FileName $Global:PartialExportFileName
+                    $i++
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+                }
+            }
+            else
+            {
+                Write-M365DSCHost -Message "    |---[$j/$($Teams.Length)] Team has no GroupId and will be skipped"
+            }
+            $j++
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('GroupID', 'NewDisplayName')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

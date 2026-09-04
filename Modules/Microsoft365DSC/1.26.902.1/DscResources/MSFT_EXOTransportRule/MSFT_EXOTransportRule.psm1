@@ -1,0 +1,2668 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOTransportRule'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $ADComparisonAttribute,
+
+        [Parameter()]
+        [ValidateSet('Equal', 'NotEqual')]
+        [System.String]
+        $ADComparisonOperator,
+
+        [Parameter()]
+        [System.String]
+        $ActivationDate,
+
+        [Parameter()]
+        [ValidateSet('To', 'Cc', 'Bcc', 'Redirect')]
+        [System.String]
+        $AddManagerAsRecipientType,
+
+        [Parameter()]
+        [System.String[]]
+        $AddToRecipients = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String]
+        $ApplyClassification,
+
+        [Parameter()]
+        [ValidateSet('Wrap', 'Ignore', 'Reject')]
+        [System.String]
+        $ApplyHtmlDisclaimerFallbackAction,
+
+        [Parameter()]
+        [ValidateSet('Append', 'Prepend')]
+        [System.String]
+        $ApplyHtmlDisclaimerLocation,
+
+        [Parameter()]
+        [System.String]
+        $ApplyHtmlDisclaimerText,
+
+        [Parameter()]
+        [System.String]
+        $ApplyRightsProtectionCustomizationTemplate,
+
+        [Parameter()]
+        [System.String]
+        $ApplyRightsProtectionTemplate,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentHasExecutableContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentIsUnsupported,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.String]
+        $AttachmentSizeOver,
+
+        [Parameter()]
+        [System.String[]]
+        $BetweenMemberOf1 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BetweenMemberOf2 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlindCopyTo = @(),
+
+        [Parameter()]
+        [ValidateLength(0, 1024)]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $CopyTo = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteMessage,
+
+        [Parameter()]
+        [System.String]
+        $DlpPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfADComparisonAttribute,
+
+        [Parameter()]
+        [ValidateSet('Equal', 'NotEqual')]
+        [System.String]
+        $ExceptIfADComparisonOperator,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentHasExecutableContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentIsUnsupported,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfAttachmentSizeOver,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfBetweenMemberOf1 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfBetweenMemberOf2 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentCharacterSetContainsWords = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFrom = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String]
+        $ExceptIfFromScope,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfHasClassification,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfHasNoClassification,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfHeaderContainsMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfHeaderContainsWords,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfHeaderMatchesMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfManagerAddresses = @(),
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfManagerForEvaluatedUser,
+
+        [Parameter()]
+        [ValidateSet('OOF', 'AutoForward', 'Encrypted', 'Calendaring', 'PermissionControlled', 'Voicemail', 'Signed', 'ApprovalRequest', 'ReadReceipt')]
+        [System.String]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfMessageSizeOver,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientInSenderList,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderInRecipientList,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderIpRanges,
+
+        [Parameter()]
+        [ValidateSet('Manager', 'DirectReport')]
+        [System.String]
+        $ExceptIfSenderManagementRelationship,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization', 'ExternalPartner', 'ExternalNonPartner')]
+        [System.String]
+        $ExceptIfSentToScope,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Low', 'Normal', 'High')]
+        [System.String]
+        $ExceptIfWithImportance,
+
+        [Parameter()]
+        [System.String]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.String[]]
+        $From = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $FromMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String]
+        $FromScope,
+
+        [Parameter()]
+        [System.String]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [System.String]
+        $GenerateNotification,
+
+        [Parameter()]
+        [System.String]
+        $HasClassification,
+
+        [Parameter()]
+        [System.Boolean]
+        $HasNoClassification,
+
+        [Parameter()]
+        [System.String]
+        $HeaderContainsMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $HeaderContainsWords,
+
+        [Parameter()]
+        [System.String]
+        $HeaderMatchesMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $IncidentReportContent = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ManagerAddresses = @(),
+
+        [Parameter()]
+        [ValidateSet('Recipient', 'Sender')]
+        [System.String]
+        $ManagerForEvaluatedUser,
+
+        [Parameter()]
+        [System.String]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [ValidateSet('OOF', 'AutoForward', 'Encrypted', 'Calendaring', 'PermissionControlled', 'Voicemail', 'Signed', 'ApprovalRequest', 'ReadReceipt')]
+        [System.String]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [ValidateSet('Audit', 'AuditAndNotify', 'Enforce')]
+        [System.String]
+        $Mode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ModerateMessageByManager,
+
+        [Parameter()]
+        [System.String[]]
+        $ModerateMessageByUser = @(),
+
+        [Parameter()]
+        [System.String]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.Boolean]
+        $Quarantine,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Original', 'Resolved')]
+        [System.String]
+        $RecipientAddressType,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientInSenderList,
+
+        [Parameter()]
+        [System.String[]]
+        $RedirectMessageTo = @(),
+
+        [Parameter()]
+        [System.String]
+        $RejectMessageEnhancedStatusCode,
+
+        [Parameter()]
+        [System.String]
+        $RejectMessageReasonText,
+
+        [Parameter()]
+        [System.String]
+        $RemoveHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveOMEv2,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSAttachmentEncryption,
+
+        [Parameter()]
+        [System.String]
+        $RouteMessageOutboundConnector,
+
+        [Parameter()]
+        [System.Boolean]
+        $RouteMessageOutboundRequireTls,
+
+        [Parameter()]
+        [ValidateSet('Ignore', 'Defer')]
+        [System.String]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [ValidateSet('Dlp', 'None')]
+        [System.String]
+        $RuleSubType,
+
+        [Parameter()]
+        [System.String]
+        $SCLOver,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Header', 'Envelope', 'HeaderOrEnvelope')]
+        [System.String]
+        $SenderAddressLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderInRecipientList,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderIpRanges,
+
+        [Parameter()]
+        [ValidateSet('Manager', 'DirectReport')]
+        [System.String]
+        $SenderManagementRelationship,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization', 'ExternalPartner', 'ExternalNonPartner')]
+        [System.String]
+        $SentToScope,
+
+        [Parameter()]
+        [ValidateSet('DoNotAudit', 'Low', 'Medium', 'High')]
+        [System.String]
+        $SetAuditSeverity,
+
+        [Parameter()]
+        [System.String]
+        $SetHeaderName,
+
+        [Parameter()]
+        [System.String]
+        $SetHeaderValue,
+
+        [Parameter()]
+        [System.String]
+        $SetSCL,
+
+        [Parameter()]
+        [System.Boolean]
+        $StopRuleProcessing,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Low', 'Normal', 'High')]
+        [System.String]
+        $WithImportance,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting Transport Rule configuration for $Name"
+
+    try
+    {
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = 'Absent'
+
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
+        {
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $TransportRule = Get-TransportRule -Identity $Name -ErrorAction SilentlyContinue
+            if ($null -eq $TransportRule)
+            {
+                Write-Verbose -Message "Transport Rule $($Name) does not exist."
+                return $nullReturn
+            }
+        }
+        else
+        {
+            $TransportRule = $Script:exportedInstance
+        }
+
+        $result = @{
+            Name                                         = $TransportRule.Name
+            ADComparisonAttribute                        = $TransportRule.ADComparisonAttribute
+            ADComparisonOperator                         = $TransportRule.ADComparisonOperator
+            ActivationDate                               = $TransportRule.ActivationDate
+            AddManagerAsRecipientType                    = $TransportRule.AddManagerAsRecipientType
+            AddToRecipients                              = $TransportRule.AddToRecipients
+            AnyOfCcHeader                                = $TransportRule.AnyOfCcHeader
+            AnyOfCcHeaderMemberOf                        = $TransportRule.AnyOfCcHeaderMemberOf
+            AnyOfRecipientAddressContainsWords           = $TransportRule.AnyOfRecipientAddressContainsWords
+            AnyOfRecipientAddressMatchesPatterns         = $TransportRule.AnyOfRecipientAddressMatchesPatterns
+            AnyOfToCcHeader                              = $TransportRule.AnyOfToCcHeader
+            AnyOfToCcHeaderMemberOf                      = $TransportRule.AnyOfToCcHeaderMemberOf
+            AnyOfToHeader                                = $TransportRule.AnyOfToHeader
+            AnyOfToHeaderMemberOf                        = $TransportRule.AnyOfToHeaderMemberOf
+            ApplyClassification                          = $TransportRule.ApplyClassification
+            ApplyHtmlDisclaimerFallbackAction            = $TransportRule.ApplyHtmlDisclaimerFallbackAction
+            ApplyHtmlDisclaimerLocation                  = $TransportRule.ApplyHtmlDisclaimerLocation
+            ApplyHtmlDisclaimerText                      = $TransportRule.ApplyHtmlDisclaimerText
+            ApplyRightsProtectionCustomizationTemplate   = $TransportRule.ApplyRightsProtectionCustomizationTemplate
+            ApplyRightsProtectionTemplate                = $TransportRule.ApplyRightsProtectionTemplate
+            AttachmentContainsWords                      = $TransportRule.AttachmentContainsWords
+            AttachmentExtensionMatchesWords              = $TransportRule.AttachmentExtensionMatchesWords
+            AttachmentHasExecutableContent               = $TransportRule.AttachmentHasExecutableContent
+            AttachmentIsPasswordProtected                = $TransportRule.AttachmentIsPasswordProtected
+            AttachmentIsUnsupported                      = $TransportRule.AttachmentIsUnsupported
+            AttachmentMatchesPatterns                    = $TransportRule.AttachmentMatchesPatterns
+            AttachmentNameMatchesPatterns                = $TransportRule.AttachmentNameMatchesPatterns
+            AttachmentPropertyContainsWords              = $TransportRule.AttachmentPropertyContainsWords
+            AttachmentProcessingLimitExceeded            = $TransportRule.AttachmentProcessingLimitExceeded
+            AttachmentSizeOver                           = $TransportRule.AttachmentSizeOver
+            BetweenMemberOf1                             = $TransportRule.BetweenMemberOf1
+            BetweenMemberOf2                             = $TransportRule.BetweenMemberOf2
+            BlindCopyTo                                  = $TransportRule.BlindCopyTo
+            Comments                                     = $TransportRule.Comments
+            ContentCharacterSetContainsWords             = $TransportRule.ContentCharacterSetContainsWords
+            CopyTo                                       = $TransportRule.CopyTo
+            DeleteMessage                                = $TransportRule.DeleteMessage
+            DlpPolicy                                    = $TransportRule.DlpPolicy
+            Enabled                                      = $TransportRule.State -eq 'Enabled'
+            ExceptIfADComparisonAttribute                = $TransportRule.ExceptIfADComparisonAttribute
+            ExceptIfADComparisonOperator                 = $TransportRule.ExceptIfADComparisonOperator
+            ExceptIfAnyOfCcHeader                        = $TransportRule.ExceptIfAnyOfCcHeader
+            ExceptIfAnyOfCcHeaderMemberOf                = $TransportRule.ExceptIfAnyOfCcHeaderMemberOf
+            ExceptIfAnyOfRecipientAddressContainsWords   = $TransportRule.ExceptIfAnyOfRecipientAddressContainsWords
+            ExceptIfAnyOfRecipientAddressMatchesPatterns = $TransportRule.ExceptIfAnyOfRecipientAddressMatchesPatterns
+            ExceptIfAnyOfToCcHeader                      = $TransportRule.ExceptIfAnyOfToCcHeader
+            ExceptIfAnyOfToCcHeaderMemberOf              = $TransportRule.ExceptIfAnyOfToCcHeaderMemberOf
+            ExceptIfAnyOfToHeader                        = $TransportRule.ExceptIfAnyOfToHeader
+            ExceptIfAnyOfToHeaderMemberOf                = $TransportRule.ExceptIfAnyOfToHeaderMemberOf
+            ExceptIfAttachmentContainsWords              = $TransportRule.ExceptIfAttachmentContainsWords
+            ExceptIfAttachmentExtensionMatchesWords      = $TransportRule.ExceptIfAttachmentExtensionMatchesWords
+            ExceptIfAttachmentHasExecutableContent       = $TransportRule.ExceptIfAttachmentHasExecutableContent
+            ExceptIfAttachmentIsPasswordProtected        = $TransportRule.ExceptIfAttachmentIsPasswordProtected
+            ExceptIfAttachmentIsUnsupported              = $TransportRule.ExceptIfAttachmentIsUnsupported
+            ExceptIfAttachmentMatchesPatterns            = $TransportRule.ExceptIfAttachmentMatchesPatterns
+            ExceptIfAttachmentNameMatchesPatterns        = $TransportRule.ExceptIfAttachmentNameMatchesPatterns
+            ExceptIfAttachmentPropertyContainsWords      = $TransportRule.ExceptIfAttachmentPropertyContainsWords
+            ExceptIfAttachmentProcessingLimitExceeded    = $TransportRule.ExceptIfAttachmentProcessingLimitExceeded
+            ExceptIfAttachmentSizeOver                   = $TransportRule.ExceptIfAttachmentSizeOver
+            ExceptIfBetweenMemberOf1                     = $TransportRule.ExceptIfBetweenMemberOf1
+            ExceptIfBetweenMemberOf2                     = $TransportRule.ExceptIfBetweenMemberOf2
+            ExceptIfContentCharacterSetContainsWords     = $TransportRule.ExceptIfContentCharacterSetContainsWords
+            ExceptIfFrom                                 = $TransportRule.ExceptIfFrom
+            ExceptIfFromAddressContainsWords             = $TransportRule.ExceptIfFromAddressContainsWords
+            ExceptIfFromAddressMatchesPatterns           = $TransportRule.ExceptIfFromAddressMatchesPatterns
+            ExceptIfFromMemberOf                         = $TransportRule.ExceptIfFromMemberOf
+            ExceptIfFromScope                            = $TransportRule.ExceptIfFromScope
+            ExceptIfHasClassification                    = $TransportRule.ExceptIfHasClassification
+            ExceptIfHasNoClassification                  = $TransportRule.ExceptIfHasNoClassification
+            ExceptIfHeaderContainsMessageHeader          = $TransportRule.ExceptIfHeaderContainsMessageHeader
+            ExceptIfHeaderContainsWords                  = $TransportRule.ExceptIfHeaderContainsWords
+            ExceptIfHeaderMatchesMessageHeader           = $TransportRule.ExceptIfHeaderMatchesMessageHeader
+            ExceptIfHeaderMatchesPatterns                = $TransportRule.ExceptIfHeaderMatchesPatterns
+            ExceptIfManagerAddresses                     = $TransportRule.ExceptIfManagerAddresses
+            ExceptIfManagerForEvaluatedUser              = $TransportRule.ExceptIfManagerForEvaluatedUser
+            ExceptIfMessageTypeMatches                   = $TransportRule.ExceptIfMessageTypeMatches
+            ExceptIfMessageSizeOver                      = $TransportRule.ExceptIfMessageSizeOver
+            ExceptIfRecipientADAttributeContainsWords    = $TransportRule.ExceptIfRecipientADAttributeContainsWords
+            ExceptIfRecipientADAttributeMatchesPatterns  = $TransportRule.ExceptIfRecipientADAttributeMatchesPatterns
+            ExceptIfRecipientAddressContainsWords        = $TransportRule.ExceptIfRecipientAddressContainsWords
+            ExceptIfRecipientAddressMatchesPatterns      = $TransportRule.ExceptIfRecipientAddressMatchesPatterns
+            ExceptIfRecipientDomainIs                    = $TransportRule.ExceptIfRecipientDomainIs
+            ExceptIfRecipientInSenderList                = $TransportRule.ExceptIfRecipientInSenderList
+            ExceptIfSCLOver                              = $TransportRule.ExceptIfSCLOver
+            ExceptIfSenderADAttributeContainsWords       = $TransportRule.ExceptIfSenderADAttributeContainsWords
+            ExceptIfSenderADAttributeMatchesPatterns     = $TransportRule.ExceptIfSenderADAttributeMatchesPatterns
+            ExceptIfSenderDomainIs                       = $TransportRule.ExceptIfSenderDomainIs
+            ExceptIfSenderInRecipientList                = $TransportRule.ExceptIfSenderInRecipientList
+            ExceptIfSenderIpRanges                       = $TransportRule.ExceptIfSenderIpRanges
+            ExceptIfSenderManagementRelationship         = $TransportRule.ExceptIfSenderManagementRelationship
+            ExceptIfSentTo                               = $TransportRule.ExceptIfSentTo
+            ExceptIfSentToMemberOf                       = $TransportRule.ExceptIfSentToMemberOf
+            ExceptIfSentToScope                          = $TransportRule.ExceptIfSentToScope
+            ExceptIfSubjectContainsWords                 = $TransportRule.ExceptIfSubjectContainsWords
+            ExceptIfSubjectMatchesPatterns               = $TransportRule.ExceptIfSubjectMatchesPatterns
+            ExceptIfSubjectOrBodyContainsWords           = $TransportRule.ExceptIfSubjectOrBodyContainsWords
+            ExceptIfSubjectOrBodyMatchesPatterns         = $TransportRule.ExceptIfSubjectOrBodyMatchesPatterns
+            ExceptIfWithImportance                       = $TransportRule.ExceptIfWithImportance
+            ExpiryDate                                   = $TransportRule.ExpiryDate
+            From                                         = $TransportRule.From
+            FromAddressContainsWords                     = $TransportRule.FromAddressContainsWords
+            FromAddressMatchesPatterns                   = $TransportRule.FromAddressMatchesPatterns
+            FromMemberOf                                 = $TransportRule.FromMemberOf
+            FromScope                                    = $TransportRule.FromScope
+            GenerateIncidentReport                       = $TransportRule.GenerateIncidentReport
+            GenerateNotification                         = $TransportRule.GenerateNotification
+            HasClassification                            = $TransportRule.HasClassification
+            HasNoClassification                          = $TransportRule.HasNoClassification
+            HeaderContainsMessageHeader                  = $TransportRule.HeaderContainsMessageHeader
+            HeaderContainsWords                          = $TransportRule.HeaderContainsWords
+            HeaderMatchesMessageHeader                   = $TransportRule.HeaderMatchesMessageHeader
+            HeaderMatchesPatterns                        = $TransportRule.HeaderMatchesPatterns
+            IncidentReportContent                        = $TransportRule.IncidentReportContent
+            ManagerAddresses                             = $TransportRule.ManagerAddresses
+            ManagerForEvaluatedUser                      = $TransportRule.ManagerForEvaluatedUser
+            MessageSizeOver                              = $TransportRule.MessageSizeOver
+            MessageTypeMatches                           = $TransportRule.MessageTypeMatches
+            Mode                                         = $TransportRule.Mode
+            ModerateMessageByManager                     = $TransportRule.ModerateMessageByManager
+            ModerateMessageByUser                        = $TransportRule.ModerateMessageByUser
+            PrependSubject                               = $TransportRule.PrependSubject
+            Priority                                     = $TransportRule.Priority
+            Quarantine                                   = $TransportRule.Quarantine
+            RecipientADAttributeContainsWords            = $TransportRule.RecipientADAttributeContainsWords
+            RecipientADAttributeMatchesPatterns          = $TransportRule.RecipientADAttributeMatchesPatterns
+            RecipientAddressContainsWords                = $TransportRule.RecipientAddressContainsWords
+            RecipientAddressMatchesPatterns              = $TransportRule.RecipientAddressMatchesPatterns
+            RecipientAddressType                         = $TransportRule.RecipientAddressType
+            RecipientDomainIs                            = $TransportRule.RecipientDomainIs
+            RecipientInSenderList                        = $TransportRule.RecipientInSenderList
+            RedirectMessageTo                            = $TransportRule.RedirectMessageTo
+            RejectMessageEnhancedStatusCode              = $TransportRule.RejectMessageEnhancedStatusCode
+            RejectMessageReasonText                      = $TransportRule.RejectMessageReasonText
+            RemoveHeader                                 = $TransportRule.RemoveHeader
+            RemoveOMEv2                                  = $TransportRule.RemoveOMEv2
+            RemoveRMSAttachmentEncryption                = $TransportRule.RemoveRMSAttachmentEncryption
+            RouteMessageOutboundConnector                = $TransportRule.RouteMessageOutboundConnector
+            RouteMessageOutboundRequireTls               = $TransportRule.RouteMessageOutboundRequireTls
+            RuleErrorAction                              = $TransportRule.RuleErrorAction
+            RuleSubType                                  = $TransportRule.RuleSubType
+            SCLOver                                      = $TransportRule.SCLOver
+            SenderADAttributeContainsWords               = $TransportRule.SenderADAttributeContainsWords
+            SenderADAttributeMatchesPatterns             = $TransportRule.SenderADAttributeMatchesPatterns
+            SenderAddressLocation                        = $TransportRule.SenderAddressLocation
+            SenderDomainIs                               = $TransportRule.SenderDomainIs
+            SenderInRecipientList                        = $TransportRule.SenderInRecipientList
+            SenderIpRanges                               = $TransportRule.SenderIpRanges
+            SenderManagementRelationship                 = $TransportRule.SenderManagementRelationship
+            SentTo                                       = $TransportRule.SentTo
+            SentToMemberOf                               = $TransportRule.SentToMemberOf
+            SentToScope                                  = $TransportRule.SentToScope
+            SetAuditSeverity                             = $TransportRule.SetAuditSeverity
+            SetHeaderName                                = $TransportRule.SetHeaderName
+            SetHeaderValue                               = $TransportRule.SetHeaderValue
+            SetSCL                                       = $TransportRule.SetSCL
+            StopRuleProcessing                           = $TransportRule.StopRuleProcessing
+            SubjectContainsWords                         = $TransportRule.SubjectContainsWords
+            SubjectMatchesPatterns                       = $TransportRule.SubjectMatchesPatterns
+            SubjectOrBodyContainsWords                   = $TransportRule.SubjectOrBodyContainsWords
+            SubjectOrBodyMatchesPatterns                 = $TransportRule.SubjectOrBodyMatchesPatterns
+            WithImportance                               = $TransportRule.WithImportance
+            Ensure                                       = 'Present'
+            Credential                                   = $Credential
+            ApplicationId                                = $ApplicationId
+            CertificateThumbprint                        = $CertificateThumbprint
+            CertificatePath                              = $CertificatePath
+            CertificatePassword                          = $CertificatePassword
+            ManagedIdentity                              = $ManagedIdentity.IsPresent
+            TenantId                                     = $TenantId
+            AccessTokens                                 = $AccessTokens
+        }
+        $inputParams = (Get-Command 'Get-TargetResource').Parameters
+        foreach ($key in $inputParams.Keys)
+        {
+            $propertyInfo = $inputParams.$key
+            $curVar = $TransportRule.$key
+            if ($result.ContainsKey($key) -and $propertyInfo.ParameterType.Name -eq 'String[]' -and $null -eq $curVar)
+            {
+                $result.$key = @()
+            }
+        }
+
+        # Formats DateTime as String
+        if ($null -ne $TransportRule.ActivationDate)
+        {
+            $result.ActivationDate = $TransportRule.ActivationDate.ToUniversalTime().ToString()
+        }
+        if ($null -ne $TransportRule.ExpiryDate)
+        {
+            $result.ExpiryDate = $TransportRule.ExpiryDate.ToUniversalTime().ToString()
+        }
+
+        Write-Verbose -Message "Found Transport Rule $($Name)"
+        return $result
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $ADComparisonAttribute,
+
+        [Parameter()]
+        [ValidateSet('Equal', 'NotEqual')]
+        [System.String]
+        $ADComparisonOperator,
+
+        [Parameter()]
+        [System.String]
+        $ActivationDate,
+
+        [Parameter()]
+        [ValidateSet('To', 'Cc', 'Bcc', 'Redirect')]
+        [System.String]
+        $AddManagerAsRecipientType,
+
+        [Parameter()]
+        [System.String[]]
+        $AddToRecipients = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String]
+        $ApplyClassification,
+
+        [Parameter()]
+        [ValidateSet('Wrap', 'Ignore', 'Reject')]
+        [System.String]
+        $ApplyHtmlDisclaimerFallbackAction,
+
+        [Parameter()]
+        [ValidateSet('Append', 'Prepend')]
+        [System.String]
+        $ApplyHtmlDisclaimerLocation,
+
+        [Parameter()]
+        [System.String]
+        $ApplyHtmlDisclaimerText,
+
+        [Parameter()]
+        [System.String]
+        $ApplyRightsProtectionCustomizationTemplate,
+
+        [Parameter()]
+        [System.String]
+        $ApplyRightsProtectionTemplate,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentHasExecutableContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentIsUnsupported,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.String]
+        $AttachmentSizeOver,
+
+        [Parameter()]
+        [System.String[]]
+        $BetweenMemberOf1 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BetweenMemberOf2 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlindCopyTo = @(),
+
+        [Parameter()]
+        [ValidateLength(0, 1024)]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $CopyTo = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteMessage,
+
+        [Parameter()]
+        [System.String]
+        $DlpPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfADComparisonAttribute,
+
+        [Parameter()]
+        [ValidateSet('Equal', 'NotEqual')]
+        [System.String]
+        $ExceptIfADComparisonOperator,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentHasExecutableContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentIsUnsupported,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfAttachmentSizeOver,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfBetweenMemberOf1 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfBetweenMemberOf2 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentCharacterSetContainsWords = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFrom = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String]
+        $ExceptIfFromScope,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfHasClassification,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfHasNoClassification,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfHeaderContainsMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfHeaderContainsWords,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfHeaderMatchesMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfManagerAddresses = @(),
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfManagerForEvaluatedUser,
+
+        [Parameter()]
+        [ValidateSet('OOF', 'AutoForward', 'Encrypted', 'Calendaring', 'PermissionControlled', 'Voicemail', 'Signed', 'ApprovalRequest', 'ReadReceipt')]
+        [System.String]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfMessageSizeOver,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientInSenderList,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderInRecipientList,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderIpRanges,
+
+        [Parameter()]
+        [ValidateSet('Manager', 'DirectReport')]
+        [System.String]
+        $ExceptIfSenderManagementRelationship,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization', 'ExternalPartner', 'ExternalNonPartner')]
+        [System.String]
+        $ExceptIfSentToScope,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Low', 'Normal', 'High')]
+        [System.String]
+        $ExceptIfWithImportance,
+
+        [Parameter()]
+        [System.String]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.String[]]
+        $From = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $FromMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String]
+        $FromScope,
+
+        [Parameter()]
+        [System.String]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [System.String]
+        $GenerateNotification,
+
+        [Parameter()]
+        [System.String]
+        $HasClassification,
+
+        [Parameter()]
+        [System.Boolean]
+        $HasNoClassification,
+
+        [Parameter()]
+        [System.String]
+        $HeaderContainsMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $HeaderContainsWords,
+
+        [Parameter()]
+        [System.String]
+        $HeaderMatchesMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $IncidentReportContent = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ManagerAddresses = @(),
+
+        [Parameter()]
+        [ValidateSet('Recipient', 'Sender')]
+        [System.String]
+        $ManagerForEvaluatedUser,
+
+        [Parameter()]
+        [System.String]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [ValidateSet('OOF', 'AutoForward', 'Encrypted', 'Calendaring', 'PermissionControlled', 'Voicemail', 'Signed', 'ApprovalRequest', 'ReadReceipt')]
+        [System.String]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [ValidateSet('Audit', 'AuditAndNotify', 'Enforce')]
+        [System.String]
+        $Mode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ModerateMessageByManager,
+
+        [Parameter()]
+        [System.String[]]
+        $ModerateMessageByUser = @(),
+
+        [Parameter()]
+        [System.String]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.Boolean]
+        $Quarantine,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Original', 'Resolved')]
+        [System.String]
+        $RecipientAddressType,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientInSenderList,
+
+        [Parameter()]
+        [System.String[]]
+        $RedirectMessageTo = @(),
+
+        [Parameter()]
+        [System.String]
+        $RejectMessageEnhancedStatusCode,
+
+        [Parameter()]
+        [System.String]
+        $RejectMessageReasonText,
+
+        [Parameter()]
+        [System.String]
+        $RemoveHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveOMEv2,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSAttachmentEncryption,
+
+        [Parameter()]
+        [System.String]
+        $RouteMessageOutboundConnector,
+
+        [Parameter()]
+        [System.Boolean]
+        $RouteMessageOutboundRequireTls,
+
+        [Parameter()]
+        [ValidateSet('Ignore', 'Defer')]
+        [System.String]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [ValidateSet('Dlp', 'None')]
+        [System.String]
+        $RuleSubType,
+
+        [Parameter()]
+        [System.String]
+        $SCLOver,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Header', 'Envelope', 'HeaderOrEnvelope')]
+        [System.String]
+        $SenderAddressLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderInRecipientList,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderIpRanges,
+
+        [Parameter()]
+        [ValidateSet('Manager', 'DirectReport')]
+        [System.String]
+        $SenderManagementRelationship,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization', 'ExternalPartner', 'ExternalNonPartner')]
+        [System.String]
+        $SentToScope,
+
+        [Parameter()]
+        [ValidateSet('DoNotAudit', 'Low', 'Medium', 'High')]
+        [System.String]
+        $SetAuditSeverity,
+
+        [Parameter()]
+        [System.String]
+        $SetHeaderName,
+
+        [Parameter()]
+        [System.String]
+        $SetHeaderValue,
+
+        [Parameter()]
+        [System.String]
+        $SetSCL,
+
+        [Parameter()]
+        [System.Boolean]
+        $StopRuleProcessing,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Low', 'Normal', 'High')]
+        [System.String]
+        $WithImportance,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Setting Transport Rule configuration for $Name"
+
+    $currentTransportRuleConfig = Get-TargetResource @PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $newTransportRuleParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $newTransportRuleParams.Remove('MakeDefault') | Out-Null
+
+    $SetTransportRuleParams = $newTransportRuleParams.Clone()
+    $SetTransportRuleParams.Add('Identity', $Name)
+
+    # CASE: Transport Rule doesn't exist but should;
+    if ($Ensure -eq 'Present' -and $currentTransportRuleConfig.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Transport Rule '$($Name)' does not exist but it should. Create and configure it."
+
+        $nullKeysToRemove = @()
+        foreach ($key in $newTransportRuleParams.Keys)
+        {
+            if ($newTransportRuleParams.$key.GetType().Name -eq 'String[]' -and $newTransportRuleParams.$key.Length -eq 0)
+            {
+                $nullKeysToRemove += $key
+            }
+        }
+        foreach ($paramToRemove in $nullKeysToRemove)
+        {
+            $newTransportRuleParams.Remove($paramToRemove) | Out-Null
+        }
+
+        # Create Transport Rule
+        New-TransportRule @NewTransportRuleParams
+
+    }
+    # CASE: Transport Rule exists but it shouldn't;
+    elseif ($Ensure -eq 'Absent' -and $currentTransportRuleConfig.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Transport Rule '$($Name)' exists but it shouldn't. Remove it."
+        Remove-TransportRule -Identity $Name -Confirm:$false
+    }
+    # CASE: Transport Rule exists and it should, but has different values than the desired ones
+    elseif ($Ensure -eq 'Present' -and $currentTransportRuleConfig.Ensure -eq 'Present')
+    {
+        if ($null -ne $HeaderContainsMessageHeader -and $null -eq $currentTransportRuleConfig.HeaderContainsMessageHeader)
+        {
+            if (-not $SetTransportRuleParams.ContainsKey('HeaderContainsMessageHeader'))
+            {
+                $SetTransportRuleParams.Add('HeaderContainsMessageHeader', $null)
+            }
+            else
+            {
+                $SetTransportRuleParams.HeaderContainsMessageHeader = $null
+            }
+
+            if (-not $SetTransportRuleParams.ContainsKey('HeaderContainsWords'))
+            {
+                $SetTransportRuleParams.Add('HeaderContainsWords', @())
+            }
+            else
+            {
+                $SetTransportRuleParams.HeaderContainsWords = @()
+            }
+        }
+        elseif ([System.String]::IsNullOrEmpty($HeaderContainsMessageHeader))
+        {
+            $SetTransportRuleParams.HeaderContainsMessageHeader = $null
+        }
+
+        if ($null -eq $HeaderMatchesPatterns -and $null -eq $currentTransportRuleConfig.HeaderMatchesMessageHeader)
+        {
+
+            if (-not $SetTransportRuleParams.ContainsKey('HeaderMatchesMessageHeader'))
+            {
+                $SetTransportRuleParams.Add('HeaderMatchesMessageHeader', $null)
+            }
+            else
+            {
+                $SetTransportRuleParams.HeaderMatchesMessageHeader = $null
+            }
+
+            if (-not $SetTransportRuleParams.ContainsKey('HeaderMatchesPatterns'))
+            {
+                $SetTransportRuleParams.Add('HeaderMatchesPatterns', @())
+            }
+            else
+            {
+                $SetTransportRuleParams.HeaderMatchesPatterns = @()
+            }
+        }
+        if ($null -eq $ExceptIfHeaderContainsWords -and $null -eq $currentTransportRuleConfig.ExceptIfHeaderContainsMessageHeader)
+        {
+            if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderContainsMessageHeader'))
+            {
+                $SetTransportRuleParams.Add('ExceptIfHeaderContainsMessageHeader', $null)
+            }
+            else
+            {
+                $SetTransportRuleParams.ExceptIfHeaderContainsMessageHeader = $null
+            }
+
+            if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderContainsWords'))
+            {
+                $SetTransportRuleParams.Add('ExceptIfHeaderContainsWords', @())
+            }
+            else
+            {
+                $SetTransportRuleParams.ExceptIfHeaderContainsWords = @()
+            }
+        }
+        if ($null -eq $ExceptIfHeaderMatchesPatterns -and $null -eq $currentTransportRuleConfig.ExceptIfHeaderMatchesMessageHeader)
+        {
+            if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderMatchesMessageHeader'))
+            {
+                $SetTransportRuleParams.Add('ExceptIfHeaderMatchesMessageHeader', $null)
+            }
+            else
+            {
+                $SetTransportRuleParams.ExceptIfHeaderMatchesMessageHeader = $null
+            }
+
+            if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderMatchesPatterns'))
+            {
+                $SetTransportRuleParams.Add('ExceptIfHeaderMatchesPatterns', @())
+            }
+            else
+            {
+                $SetTransportRuleParams.ExceptIfHeaderMatchesPatterns = @()
+            }
+        }
+
+        if ($SetTransportRuleParams.ContainsKey('Enabled'))
+        {
+            if ($Enabled)
+            {
+                Write-Verbose -Message "Enabling TransportRule {$Name}"
+                Enable-TransportRule -Identity $Name
+            }
+            else
+            {
+                Write-Verbose -Message "Disabling TransportRule {$Name}"
+                Disable-TransportRule -Identity $Name
+            }
+        }
+        $SetTransportRuleParams.Remove('Enabled') | Out-Null
+        Write-Verbose -Message "Transport Rule '$($Name)' already exists, but needs updating."
+        Write-Verbose -Message "Setting Transport Rule $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetTransportRuleParams)"
+        Set-TransportRule @SetTransportRuleParams
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $ADComparisonAttribute,
+
+        [Parameter()]
+        [ValidateSet('Equal', 'NotEqual')]
+        [System.String]
+        $ADComparisonOperator,
+
+        [Parameter()]
+        [System.String]
+        $ActivationDate,
+
+        [Parameter()]
+        [ValidateSet('To', 'Cc', 'Bcc', 'Redirect')]
+        [System.String]
+        $AddManagerAsRecipientType,
+
+        [Parameter()]
+        [System.String[]]
+        $AddToRecipients = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfToHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String]
+        $ApplyClassification,
+
+        [Parameter()]
+        [ValidateSet('Wrap', 'Ignore', 'Reject')]
+        [System.String]
+        $ApplyHtmlDisclaimerFallbackAction,
+
+        [Parameter()]
+        [ValidateSet('Append', 'Prepend')]
+        [System.String]
+        $ApplyHtmlDisclaimerLocation,
+
+        [Parameter()]
+        [System.String]
+        $ApplyHtmlDisclaimerText,
+
+        [Parameter()]
+        [System.String]
+        $ApplyRightsProtectionCustomizationTemplate,
+
+        [Parameter()]
+        [System.String]
+        $ApplyRightsProtectionTemplate,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentHasExecutableContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentIsUnsupported,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $AttachmentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.String]
+        $AttachmentSizeOver,
+
+        [Parameter()]
+        [System.String[]]
+        $BetweenMemberOf1 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BetweenMemberOf2 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlindCopyTo = @(),
+
+        [Parameter()]
+        [ValidateLength(0, 1024)]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $CopyTo = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteMessage,
+
+        [Parameter()]
+        [System.String]
+        $DlpPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfADComparisonAttribute,
+
+        [Parameter()]
+        [ValidateSet('Equal', 'NotEqual')]
+        [System.String]
+        $ExceptIfADComparisonOperator,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToCcHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToCcHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToHeader = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfToHeaderMemberOf = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentHasExecutableContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentIsUnsupported,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAttachmentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfAttachmentProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfAttachmentSizeOver,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfBetweenMemberOf1 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfBetweenMemberOf2 = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentCharacterSetContainsWords = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFrom = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String]
+        $ExceptIfFromScope,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfHasClassification,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfHasNoClassification,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfHeaderContainsMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfHeaderContainsWords,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfHeaderMatchesMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfManagerAddresses = @(),
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfManagerForEvaluatedUser,
+
+        [Parameter()]
+        [ValidateSet('OOF', 'AutoForward', 'Encrypted', 'Calendaring', 'PermissionControlled', 'Voicemail', 'Signed', 'ApprovalRequest', 'ReadReceipt')]
+        [System.String]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfMessageSizeOver,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientInSenderList,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderInRecipientList,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderIpRanges,
+
+        [Parameter()]
+        [ValidateSet('Manager', 'DirectReport')]
+        [System.String]
+        $ExceptIfSenderManagementRelationship,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization', 'ExternalPartner', 'ExternalNonPartner')]
+        [System.String]
+        $ExceptIfSentToScope,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Low', 'Normal', 'High')]
+        [System.String]
+        $ExceptIfWithImportance,
+
+        [Parameter()]
+        [System.String]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.String[]]
+        $From = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $FromMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String]
+        $FromScope,
+
+        [Parameter()]
+        [System.String]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [System.String]
+        $GenerateNotification,
+
+        [Parameter()]
+        [System.String]
+        $HasClassification,
+
+        [Parameter()]
+        [System.Boolean]
+        $HasNoClassification,
+
+        [Parameter()]
+        [System.String]
+        $HeaderContainsMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $HeaderContainsWords,
+
+        [Parameter()]
+        [System.String]
+        $HeaderMatchesMessageHeader,
+
+        [Parameter()]
+        [System.String[]]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $IncidentReportContent = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ManagerAddresses = @(),
+
+        [Parameter()]
+        [ValidateSet('Recipient', 'Sender')]
+        [System.String]
+        $ManagerForEvaluatedUser,
+
+        [Parameter()]
+        [System.String]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [ValidateSet('OOF', 'AutoForward', 'Encrypted', 'Calendaring', 'PermissionControlled', 'Voicemail', 'Signed', 'ApprovalRequest', 'ReadReceipt')]
+        [System.String]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [ValidateSet('Audit', 'AuditAndNotify', 'Enforce')]
+        [System.String]
+        $Mode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ModerateMessageByManager,
+
+        [Parameter()]
+        [System.String[]]
+        $ModerateMessageByUser = @(),
+
+        [Parameter()]
+        [System.String]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.Boolean]
+        $Quarantine,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Original', 'Resolved')]
+        [System.String]
+        $RecipientAddressType,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientInSenderList,
+
+        [Parameter()]
+        [System.String[]]
+        $RedirectMessageTo = @(),
+
+        [Parameter()]
+        [System.String]
+        $RejectMessageEnhancedStatusCode,
+
+        [Parameter()]
+        [System.String]
+        $RejectMessageReasonText,
+
+        [Parameter()]
+        [System.String]
+        $RemoveHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveOMEv2,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSAttachmentEncryption,
+
+        [Parameter()]
+        [System.String]
+        $RouteMessageOutboundConnector,
+
+        [Parameter()]
+        [System.Boolean]
+        $RouteMessageOutboundRequireTls,
+
+        [Parameter()]
+        [ValidateSet('Ignore', 'Defer')]
+        [System.String]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [ValidateSet('Dlp', 'None')]
+        [System.String]
+        $RuleSubType,
+
+        [Parameter()]
+        [System.String]
+        $SCLOver,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Header', 'Envelope', 'HeaderOrEnvelope')]
+        [System.String]
+        $SenderAddressLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderInRecipientList,
+
+        [Parameter()]
+        [System.String[]]
+        $SenderIpRanges,
+
+        [Parameter()]
+        [ValidateSet('Manager', 'DirectReport')]
+        [System.String]
+        $SenderManagementRelationship,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization', 'ExternalPartner', 'ExternalNonPartner')]
+        [System.String]
+        $SentToScope,
+
+        [Parameter()]
+        [ValidateSet('DoNotAudit', 'Low', 'Medium', 'High')]
+        [System.String]
+        $SetAuditSeverity,
+
+        [Parameter()]
+        [System.String]
+        $SetHeaderName,
+
+        [Parameter()]
+        [System.String]
+        $SetHeaderValue,
+
+        [Parameter()]
+        [System.String]
+        $SetSCL,
+
+        [Parameter()]
+        [System.Boolean]
+        $StopRuleProcessing,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [ValidateSet('Low', 'Normal', 'High')]
+        [System.String]
+        $WithImportance,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        [array]$AllTransportRules = Get-TransportRule
+        $dscContent = [System.Text.StringBuilder]::new()
+        $i = 1
+        if ($AllTransportRules.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($TransportRule in $AllTransportRules)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            Write-M365DSCHost -Message "    |---[$i/$($AllTransportRules.Count)] $($TransportRule.Name)" -DeferWrite
+            $Params = @{
+                Name                  = $TransportRule.Name
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
+            }
+            $Script:exportedInstance = $TransportRule
+            $Results = Get-TargetResource @Params
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+            $i++
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+Export-ModuleMember -Function *-TargetResource

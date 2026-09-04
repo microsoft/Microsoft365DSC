@@ -1,0 +1,32 @@
+{
+  "resourceName": "TeamsVdiPolicy",
+  "description": "This resource implements Teams VDI Policies.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsVdiPolicy",
+        "New-CsTeamsVdiPolicy",
+        "Remove-CsTeamsVdiPolicy",
+        "Set-CsTeamsVdiPolicy"
+      ]
+    }
+  ]
+}

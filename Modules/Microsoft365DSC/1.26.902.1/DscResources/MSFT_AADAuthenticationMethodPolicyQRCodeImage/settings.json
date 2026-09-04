@@ -1,0 +1,89 @@
+{
+  "resourceName": "AADAuthenticationMethodPolicyQRCodeImage",
+  "description": "This resource configures an Azure AD Authentication Method Policy QR Code Image.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Authentication Policy Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Policy.Read.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Remove-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration",
+        "Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
+}

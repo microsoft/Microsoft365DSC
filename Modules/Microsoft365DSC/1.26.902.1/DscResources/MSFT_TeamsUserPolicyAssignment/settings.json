@@ -1,0 +1,77 @@
+{
+  "resourceName": "TeamsUserPolicyAssignment",
+  "description": "",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Organization.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Organization.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Users",
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsUserPolicyAssignment",
+        "Grant-CsCallingLineIdentity",
+        "Grant-CsExternalAccessPolicy",
+        "Grant-CsOnlineVoicemailPolicy",
+        "Grant-CsOnlineVoiceRoutingPolicy",
+        "Grant-CsTeamsAppPermissionPolicy",
+        "Grant-CsTeamsAppSetupPolicy",
+        "Grant-CsTeamsAudioConferencingPolicy",
+        "Grant-CsTeamsCallHoldPolicy",
+        "Grant-CsTeamsCallingPolicy",
+        "Grant-CsTeamsCallParkPolicy",
+        "Grant-CsTeamsChannelsPolicy",
+        "Grant-CsTeamsEmergencyCallingPolicy",
+        "Grant-CsTeamsEmergencyCallRoutingPolicy",
+        "Grant-CsTeamsEnhancedEncryptionPolicy",
+        "Grant-CsTeamsEventsPolicy",
+        "Grant-CsTeamsMeetingBroadcastPolicy",
+        "Grant-CsTeamsMeetingPolicy",
+        "Grant-CsTeamsMessagingPolicy",
+        "Grant-CsTeamsMobilityPolicy",
+        "Grant-CsTeamsUpdateManagementPolicy",
+        "Grant-CsTeamsUpgradePolicy",
+        "Grant-CsTenantDialPlan"
+      ]
+    }
+  ]
+}

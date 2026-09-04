@@ -1,0 +1,62 @@
+{
+  "resourceName": "IntuneDeviceManagementDeviceDiagnosticSettings",
+  "description": "This resource configures the device diagnostic settings at the tenant level.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Update-MgBetaDeviceManagement"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
+}

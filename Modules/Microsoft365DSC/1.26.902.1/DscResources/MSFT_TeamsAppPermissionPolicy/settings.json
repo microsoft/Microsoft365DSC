@@ -1,0 +1,32 @@
+{
+  "resourceName": "TeamsAppPermissionPolicy",
+  "description": "Manages the Teams App Permission Policies.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsAppPermissionPolicy",
+        "New-CsTeamsAppPermissionPolicy",
+        "Remove-CsTeamsAppPermissionPolicy",
+        "Set-CsTeamsAppPermissionPolicy"
+      ]
+    }
+  ]
+}

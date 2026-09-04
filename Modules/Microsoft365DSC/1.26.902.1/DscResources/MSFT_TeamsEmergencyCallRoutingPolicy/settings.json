@@ -1,0 +1,32 @@
+{
+  "resourceName": "TeamsEmergencyCallRoutingPolicy",
+  "description": "",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsEmergencyCallRoutingPolicy",
+        "New-CsTeamsEmergencyCallRoutingPolicy",
+        "New-CsTeamsEmergencyNumber",
+        "Remove-CsTeamsEmergencyCallRoutingPolicy",
+        "Set-CsTeamsEmergencyCallRoutingPolicy"
+      ]
+    }
+  ]
+}

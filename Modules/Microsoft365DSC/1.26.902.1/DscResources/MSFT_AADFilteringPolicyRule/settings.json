@@ -1,0 +1,55 @@
+{
+  "resourceName": "AADFilteringPolicyRule",
+  "description": "Configures filtering rules in Entra Id.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "NetworkAccess.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "NetworkAccess.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "NetworkAccess.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "NetworkAccess.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.NetworkAccess"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.NetworkAccess",
+      "cmdlets": [
+        "Get-MgBetaNetworkAccessFilteringPolicy",
+        "Get-MgBetaNetworkAccessFilteringPolicyRule",
+        "New-MgBetaNetworkAccessFilteringPolicyRule",
+        "Remove-MgBetaNetworkAccessFilteringPolicyRule",
+        "Update-MgBetaNetworkAccessFilteringPolicyRule"
+      ]
+    }
+  ]
+}

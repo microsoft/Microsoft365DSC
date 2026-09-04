@@ -1,0 +1,529 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_PPAdminDLPPolicy'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String[]]
+        $Environments,
+
+        [Parameter()]
+        [System.String]
+        $FilterType,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration of the Power Platform Admin DLP Policy with DisplayName {$DisplayName}"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.properties.displayName -ne $DisplayName)
+        {
+            $null = New-M365DSCConnection -Workload 'PowerPlatformREST' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+                '/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01'
+
+            $policies = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
+
+            $instance = $null
+            foreach ($policyInfo in $policies.value)
+            {
+                if ($policyInfo.properties.displayName -eq $DisplayName)
+                {
+                    $instance = $policyInfo
+                }
+            }
+        }
+        else
+        {
+            $instance = $Script:exportedInstance
+        }
+        if ($null -eq $instance)
+        {
+            return $nullResult
+        }
+
+        $results = @{
+            DisplayName           = $instance.properties.displayName
+            PolicyName            = $instance.name
+            Environments          = [array]$instance.properties.definition.constraints.environmentFilter1.parameters.environments.name
+            FilterType            = $instance.properties.definition.constraints.environmentFilter1.parameters.filterType
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
+        }
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String[]]
+        $Environments,
+
+        [Parameter()]
+        [System.String]
+        $FilterType,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Setting configuration of the Power Platform Admin DLP Policy with DisplayName {$DisplayName}"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    $schema = 'https://schema.management.azure.com/providers/Microsoft.BusinessAppPlatform/schemas/2016-10-01-preview/apiPolicyDefinition.json#'
+    $constraints = @{}
+    if ($null -ne $Environments -and $Environments.Length -gt 0)
+    {
+        $environmentInfo = @()
+        foreach ($environment in $Environments)
+        {
+            $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+                "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments/$($environment)?`$expand=permissions&api-version=2016-11-01"
+
+            Write-Verbose -Message "Creating new policy with body:`r`n$(ConvertTo-Json $newPolicy -Depth 20)"
+            $environmentInfo += Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
+        }
+
+        $constraints = @{
+            environmentFilter1 = @{
+                parameters = @{
+                    environments = $environmentInfo
+                    filterType   = $FilterType
+                }
+                type       = 'environmentFilter'
+            }
+        }
+    }
+    $rules = @{
+        dataFlowRule = @{
+            actions    = @{
+                blockAction = @{
+                    type = 'Block'
+                }
+            }
+            parameters = @{
+                destinationApiGroup = 'lbi'
+                sourceApiGroup      = 'hbi'
+            }
+            type       = 'DataFlowRestriction'
+        }
+    }
+    $CreatedTime = Get-Date -Format 'o'
+    $policyObject = @{
+        id         = ''
+        name       = ''
+        type       = $type
+        tags       = @{}
+        properties = @{
+            createdTime = $CreatedTime
+            displayName = $DisplayName
+            definition  = @{
+                "`$schema"      = $schema
+                defaultApiGroup = 'lbi'
+                constraints     = $constraints
+                apiGroups       = @{
+                    hbi = @{
+                        apis        = $hbiApis
+                        description = 'Business data only'
+                    }
+                    lbi = @{
+                        apis        = @()
+                        description = $lbiDescription
+                    }
+                }
+                rules           = $rules
+            }
+        }
+    }
+
+    # CREATE
+    $needToUpdateNewInstance = $false
+    $policyName = $currentInstance.PolicyName
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating new Data Policy {$DisplayName}"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            '/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01'
+
+        Write-Verbose -Message "Creating new policy with body:`r`n$(ConvertTo-Json $newPolicy -Depth 20)"
+        $policy = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST' -Body $policyObject
+        $policyName = $policy.name
+    }
+    if ($setParameters.ContainsKey('PolicyName'))
+    {
+        $setParameters.PolicyName = $policyName
+    }
+    else
+    {
+        $setParameters.Add('PolicyName', $policyName)
+    }
+
+    # UPDATE
+    if (($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present') -or $needToUpdateNewInstance)
+    {
+        Write-Verbose -Message "Updating Data Policy {$DisplayName}"
+        $setParameters.Remove('DisplayName') | Out-Null
+
+        if ($null -ne $setParameters.Environments -and $setParameters.Environments.Count -gt 0)
+        {
+            $setParameters.Environments = ($setParameters.Environments -join ',')
+        }
+        Write-Verbose -Message "Updating Data Policy {$DisplayName} with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $setParameters)"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies/$($policyName)?api-version=2016-11-01"
+
+        $policy = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'PUT' -Body $policyObject
+    }
+    # REMOVE
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing Data Policy {$DisplayName}"
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies/$($policyName)?api-version=2016-11-01"
+
+        $policy = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'DELETE'
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String[]]
+        $Environments,
+
+        [Parameter()]
+        [System.String]
+        $FilterType,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        $uri = 'https://' + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+            '/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01'
+
+        [array] $exportedInstances = (Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET').value
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Count -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($config in $exportedInstances)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            $displayedKey = $config.properties.displayName
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
+            $params = @{
+                DisplayName           = $config.properties.displayName
+                PolicyName            = $config.name
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+Export-ModuleMember -Function *-TargetResource

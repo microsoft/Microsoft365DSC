@@ -1,0 +1,62 @@
+{
+  "resourceName": "SentinelSetting",
+  "description": "Configures settings for a Sentinel instance.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "Azure Service Management": {
+      "delegated": {
+        "read": [
+          {
+            "name": "user_impersonation"
+          }
+        ],
+        "update": [
+          {
+            "name": "user_impersonation"
+          }
+        ]
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    },
+    "azure": {
+      "requiredRoles": [
+        "Microsoft Sentinel Reader",
+        "Microsoft Sentinel Contributor"
+      ]
+    }
+  },
+  "requiredModules": [
+    "Az.Accounts",
+    "Az.Resources",
+    "Az.SecurityInsights"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Connect-AzAccount",
+        "Register-AzModule"
+      ]
+    },
+    {
+      "module": "Az.Resources",
+      "cmdlets": [
+        "Get-AzResource"
+      ]
+    },
+    {
+      "module": "Az.SecurityInsights",
+      "cmdlets": [
+        "Get-AzSentinelSetting",
+        "Update-AzSentinelSetting"
+      ]
+    }
+  ]
+}

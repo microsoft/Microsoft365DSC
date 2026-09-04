@@ -1,0 +1,32 @@
+{
+  "resourceName": "TeamsTenantDialPlan",
+  "description": "",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTenantDialPlan",
+        "New-CsTenantDialPlan",
+        "New-CsVoiceNormalizationRule",
+        "Remove-CsTenantDialPlan",
+        "Set-CsTenantDialPlan"
+      ]
+    }
+  ]
+}

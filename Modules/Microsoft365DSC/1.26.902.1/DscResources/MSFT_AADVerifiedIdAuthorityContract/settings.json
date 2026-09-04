@@ -1,0 +1,56 @@
+{
+  "resourceName": "AADVerifiedIdAuthorityContract",
+  "description": "This resource configures an Azure AD Verified Identity Authority Contracts.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Authentication Policy Administrator"
+    ]
+  },
+  "permissions": {
+    "Verifiable Credentials Service Admin": {
+      "delegated": {
+        "read": [
+          {
+            "name": "full_access"
+          }
+        ],
+        "update": [
+          {
+            "name": "full_access"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "VerifiableCredential.Contract.Read"
+          }
+        ],
+        "update": [
+          {
+            "name": "VerifiableCredential.Contract.ReadWrite"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
+}

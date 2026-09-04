@@ -1,0 +1,32 @@
+{
+  "resourceName": "TeamsUser",
+  "description": "",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Add-TeamUser",
+        "Get-Team",
+        "Get-TeamUser",
+        "Remove-TeamUser"
+      ]
+    }
+  ]
+}

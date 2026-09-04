@@ -1,0 +1,1171 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneSettingCatalogASRRulesPolicyWindows10'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String[]]
+        $AttackSurfaceReductionOnlyExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockAbuseOfExploitedVulnerableSignedDrivers,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockAdobeReaderFromCreatingChildProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockAdobeReaderFromCreatingChildProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockAllOfficeApplicationsFromCreatingChildProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockAllOfficeApplicationsFromCreatingChildProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockExecutableContentFromEmailClientAndWebmail,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockExecutableContentFromEmailClientAndWebmail_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockExecutionOfPotentiallyObfuscatedScripts,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockExecutionOfPotentiallyObfuscatedScripts_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockOfficeApplicationsFromCreatingExecutableContent,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockOfficeCommunicationAppFromCreatingChildProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockOfficeCommunicationAppFromCreatingChildProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockPersistenceThroughWMIEventSubscription,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockProcessCreationsFromPSExecAndWMICommands,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockProcessCreationsFromPSExecAndWMICommands_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockRebootingMachineInSafeMode,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockUntrustedUnsignedProcessesThatRunFromUSB,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockUseOfCopiedOrImpersonatedSystemTools,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockWebShellCreationForServers,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockWebshellCreationForServers_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockWin32APICallsFromOfficeMacros,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockWin32APICallsFromOfficeMacros_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $UseAdvancedProtectionAgainstRansomware,
+
+        [Parameter()]
+        [System.String[]]
+        $UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [System.String[]]
+        $ControlledFolderAccessProtectedFolders,
+
+        [Parameter()]
+        [System.String[]]
+        $ControlledFolderAccessAllowedApplications,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '3', '4')]
+        [System.String]
+        $EnableControlledFolderAccess,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration of the Intune Endpoint Protection Attack Surface Protection rules Policy with Id {$Id} and DisplayName {$DisplayName}"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $DisplayName)
+        {
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters `
+                -ErrorAction Stop
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $templateReferenceId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+
+            # Retrieve policy general settings
+            $policy = $null
+            if (-not [System.String]::IsNullOrEmpty($Identity))
+            {
+                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue `
+                    -ExpandProperty 'settings($expand=settingDefinitions)'
+                $settings = $policy.settings
+            }
+
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No Endpoint Protection Attack Surface Reduction Rules Policy {$Identity} was found"
+
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
+                {
+                    $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
+                        -All `
+                        -Filter "Name eq '$($DisplayName -replace "'", "''")' and templateReference/TemplateId eq '$templateReferenceId'" `
+                        -ErrorAction SilentlyContinue
+
+                    if ($policy.Length -gt 1)
+                    {
+                        throw "Duplicate Endpoint Protection Attack Surface Reduction Rules Policy named $DisplayName exist in tenant"
+                    }
+                }
+            }
+
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No Endpoint Protection Attack Surface Reduction Rules Policy {$DisplayName} was found"
+                return $nullResult
+            }
+        }
+        else
+        {
+            $policy = $Script:exportedInstance
+            $settings = $policy.settings
+        }
+        $Identity = $policy.Id
+        Write-Verbose -Message "Found Endpoint Protection Attack Surface Reduction Rules Policy with Id {$Identity} and Name {$DisplayName)}."
+
+        #Retrieve policy specific settings
+        if ($null -eq $settings)
+        {
+            [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
+                -DeviceManagementConfigurationPolicyId $Identity `
+                -ExpandProperty 'settingDefinitions' `
+                -All `
+                -ErrorAction Stop
+        }
+
+        $returnHashtable = @{}
+        $returnHashtable.Add('Identity', $Identity)
+        $returnHashtable.Add('DisplayName', $policy.name)
+        $returnHashtable.Add('Description', $policy.description)
+        $returnHashtable.Add('RoleScopeTagIds', $policy.roleScopeTagIds)
+
+        $returnHashtable = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $returnHashtable
+
+        $assignmentsValues = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity
+        $assignmentResult = @()
+        if ($assignmentsValues.Count -gt 0)
+        {
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $assignmentsValues -IncludeDeviceFilter $true
+        }
+        $returnHashtable.Add('Assignments', $assignmentResult)
+
+        $returnHashtable.Add('Ensure', 'Present')
+        $returnHashtable.Add('Credential', $Credential)
+        $returnHashtable.Add('ApplicationId', $ApplicationId)
+        $returnHashtable.Add('TenantId', $TenantId)
+        $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
+        $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
+        $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
+        $returnHashtable.Add('AccessTokens', $AccessTokens)
+
+        return $returnHashtable
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String[]]
+        $AttackSurfaceReductionOnlyExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockAbuseOfExploitedVulnerableSignedDrivers,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockAdobeReaderFromCreatingChildProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockAdobeReaderFromCreatingChildProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockAllOfficeApplicationsFromCreatingChildProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockAllOfficeApplicationsFromCreatingChildProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockExecutableContentFromEmailClientAndWebmail,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockExecutableContentFromEmailClientAndWebmail_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockExecutionOfPotentiallyObfuscatedScripts,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockExecutionOfPotentiallyObfuscatedScripts_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockOfficeApplicationsFromCreatingExecutableContent,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockOfficeCommunicationAppFromCreatingChildProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockOfficeCommunicationAppFromCreatingChildProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockPersistenceThroughWMIEventSubscription,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockProcessCreationsFromPSExecAndWMICommands,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockProcessCreationsFromPSExecAndWMICommands_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockRebootingMachineInSafeMode,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockUntrustedUnsignedProcessesThatRunFromUSB,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockUseOfCopiedOrImpersonatedSystemTools,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockWebShellCreationForServers,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockWebshellCreationForServers_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockWin32APICallsFromOfficeMacros,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockWin32APICallsFromOfficeMacros_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $UseAdvancedProtectionAgainstRansomware,
+
+        [Parameter()]
+        [System.String[]]
+        $UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [System.String[]]
+        $ControlledFolderAccessProtectedFolders,
+
+        [Parameter()]
+        [System.String[]]
+        $ControlledFolderAccessAllowedApplications,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '3', '4')]
+        [System.String]
+        $EnableControlledFolderAccess,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentPolicy = Get-TargetResource @PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    $templateReferenceId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+    $platforms = 'windows10'
+    $technologies = 'mdm,microsoftSense'
+
+    if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating new Endpoint Protection Attack Surface Reduction Rules Policy {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove('Identity') | Out-Null
+
+        $settings = Get-IntuneSettingCatalogPolicySetting `
+            -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
+            -TemplateId $templateReferenceId
+
+        $createParameters = @{
+            name              = $DisplayName
+            description       = $Description
+            templateReference = @{ templateId = $templateReferenceId }
+            platforms         = $platforms
+            technologies      = $technologies
+            settings          = $settings
+            roleScopeTagIds   = $RoleScopeTagIds
+        }
+        $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
+
+        #region Assignments
+        if ($policy.Id)
+        {
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+            Update-DeviceConfigurationPolicyAssignment `
+                -DeviceConfigurationPolicyId $policy.Id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/configurationPolicies'
+        }
+    }
+    elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating existing Endpoint Protection Attack Surface Reduction Rules Policy {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove('Identity') | Out-Null
+
+        $settings = Get-IntuneSettingCatalogPolicySetting `
+            -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
+            -TemplateId $templateReferenceId
+
+        Update-IntuneDeviceConfigurationPolicy `
+            -DeviceConfigurationPolicyId $currentPolicy.Identity `
+            -Name $DisplayName `
+            -Description $Description `
+            -TemplateReferenceId $templateReferenceId `
+            -Platforms $platforms `
+            -Technologies $technologies `
+            -Settings $settings `
+            -RoleScopeTagIds $RoleScopeTagIds
+
+        #region Assignments
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentPolicy.Identity `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/configurationPolicies'
+        #endregion
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing Endpoint Protection Attack Surface Reduction Rules Policy {$DisplayName}"
+        Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentPolicy.Identity
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String[]]
+        $AttackSurfaceReductionOnlyExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockAbuseOfExploitedVulnerableSignedDrivers,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockAdobeReaderFromCreatingChildProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockAdobeReaderFromCreatingChildProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockAllOfficeApplicationsFromCreatingChildProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockAllOfficeApplicationsFromCreatingChildProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockExecutableContentFromEmailClientAndWebmail,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockExecutableContentFromEmailClientAndWebmail_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockExecutionOfPotentiallyObfuscatedScripts,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockExecutionOfPotentiallyObfuscatedScripts_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockOfficeApplicationsFromCreatingExecutableContent,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockOfficeCommunicationAppFromCreatingChildProcesses,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockOfficeCommunicationAppFromCreatingChildProcesses_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockPersistenceThroughWMIEventSubscription,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockProcessCreationsFromPSExecAndWMICommands,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockProcessCreationsFromPSExecAndWMICommands_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockRebootingMachineInSafeMode,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockUntrustedUnsignedProcessesThatRunFromUSB,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockUseOfCopiedOrImpersonatedSystemTools,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockWebShellCreationForServers,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockWebshellCreationForServers_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockWin32APICallsFromOfficeMacros,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockWin32APICallsFromOfficeMacros_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $UseAdvancedProtectionAgainstRansomware,
+
+        [Parameter()]
+        [System.String[]]
+        $UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions,
+
+        [Parameter()]
+        [System.String[]]
+        $ControlledFolderAccessProtectedFolders,
+
+        [Parameter()]
+        [System.String[]]
+        $ControlledFolderAccessAllowedApplications,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '3', '4')]
+        [System.String]
+        $EnableControlledFolderAccess,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $compareParameters = Get-CompareParameters
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $dscContent = [System.Text.StringBuilder]::new()
+    $i = 1
+
+    try
+    {
+        $policyTemplateId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+        $baseFilter = "templateReference/templateId eq '$policyTemplateID'"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($Filter) and ($baseFilter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$policies = Get-M365DSCExportCachedConfigurationPolicies `
+            -TemplateId $policyTemplateID `
+            -Filter $Filter
+
+        if ($policies.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($policy in $policies)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            Write-M365DSCHost -Message "    |---[$i/$($policies.Count)] $($policy.Name)" -DeferWrite
+
+            $params = @{
+                Identity              = $policy.Id
+                DisplayName           = $policy.Name
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $policy
+            $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential `
+                -NoEscape @('Assignments') `
+                -RawResults $rawResults
+
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
+        {
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+        }
+        else
+        {
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
+            throw
+        }
+    }
+}
+
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        PostProcessing     = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $PostProcessingArgs)
+            $PostProcessingArgs[0] | ForEach-Object {
+                if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))
+                {
+                    if ($null -ne $CurrentValues[$_.Key] -or $null -ne $DesiredValues[$_.Key])
+                    {
+                        $ValuesToCheck[$_.Key] = $null
+                        if (-not $DesiredValues.ContainsKey($_.Key))
+                        {
+                            $DesiredValues.Add($_.Key, $null)
+                        }
+                    }
+                }
+            }
+
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+        PostProcessingArgs = $MyInvocation.MyCommand.Parameters.GetEnumerator()
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

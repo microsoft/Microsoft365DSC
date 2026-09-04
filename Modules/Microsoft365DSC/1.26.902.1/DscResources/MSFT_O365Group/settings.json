@@ -1,0 +1,83 @@
+{
+  "resourceName": "O365Group",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup",
+        "Get-MgGroupMember",
+        "Get-MgGroupOwner",
+        "New-MgGroup",
+        "New-MgGroupMemberByRef",
+        "New-MgGroupOwnerByRef",
+        "Remove-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
+}

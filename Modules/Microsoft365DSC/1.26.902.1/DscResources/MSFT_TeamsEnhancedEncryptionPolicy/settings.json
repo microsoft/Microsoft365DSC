@@ -1,0 +1,31 @@
+{
+  "resourceName": "TeamsEnhancedEncryptionPolicy",
+  "description": "This resource configures an Use this resource to create a new Teams enhanced encryption policy.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsEnhancedEncryptionPolicy",
+        "New-CsTeamsEnhancedEncryptionPolicy",
+        "Remove-CsTeamsEnhancedEncryptionPolicy",
+        "Set-CsTeamsEnhancedEncryptionPolicy"
+      ]
+    }
+  ]
+}

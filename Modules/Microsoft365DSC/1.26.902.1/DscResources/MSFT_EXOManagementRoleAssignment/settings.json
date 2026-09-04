@@ -1,0 +1,77 @@
+{
+  "resourceName": "EXOManagementRoleAssignment",
+  "description": "",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
+        "read": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ],
+        "update": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ]
+      }
+    },
+    "exchange": {
+      "requiredroles": {
+        "read": [
+          "View-Only Configuration"
+        ],
+        "update": [
+          "Role Management"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "View-Only Organization Management"
+        ],
+        "update": [
+          "Organization Management"
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Identity.DirectoryManagement",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgDirectoryAdministrativeUnit"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile",
+        "Reset-MSCloudLoginConnectionProfileContext"
+      ]
+    }
+  ]
+}

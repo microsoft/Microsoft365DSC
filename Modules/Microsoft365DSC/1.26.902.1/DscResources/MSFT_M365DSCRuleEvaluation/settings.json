@@ -1,0 +1,56 @@
+{
+  "resourceName": "M365DSCRuleEvaluation",
+  "description": "This resource configures the Azure AD Tenant Details.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Billing Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Organization.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "Organization.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Organization.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "Organization.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "DSCParser"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "DSCParser",
+      "cmdlets": [
+        "ConvertTo-DSCObject"
+      ]
+    }
+  ]
+}

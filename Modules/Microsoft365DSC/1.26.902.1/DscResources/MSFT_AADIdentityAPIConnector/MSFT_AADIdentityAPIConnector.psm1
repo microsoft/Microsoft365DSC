@@ -1,0 +1,700 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADIdentityAPIConnector'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $TargetUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Username,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Password,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Certificates,
+
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration for the Azure AD Identity API Connector with Id {$Id} and DisplayName {$DisplayName}"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
+        {
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+            #region resource generator code
+            $getValue = Get-MgBetaIdentityApiConnector -IdentityApiConnectorId $Id -ErrorAction SilentlyContinue
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Azure AD Identity A P I Connector with Id {$Id}"
+
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
+                {
+                    $getValue = Get-MgBetaIdentityApiConnector `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
+                        -ErrorAction SilentlyContinue
+                }
+            }
+        }
+        else
+        {
+            $getValue = $Script:exportedInstance
+        }
+        #endregion
+        if ($null -eq $getValue)
+        {
+            Write-Verbose -Message "Could not find an Azure AD Identity API Connector with DisplayName {$DisplayName}."
+            return $nullResult
+        }
+        $Id = $getValue.Id
+        Write-Verbose -Message "An Azure AD Identity API Connector with Id {$Id} and DisplayName {$DisplayName} was found"
+
+        #region resource generator code
+        if ($null -ne $getValue.AuthenticationConfiguration.password)
+        {
+            $securePassword = ConvertTo-SecureString $getValue.AuthenticationConfiguration.password -AsPlainText -Force
+            $Password = New-Object System.Management.Automation.PSCredential ('Password', $securePassword)
+        }
+
+        $complexCertificates = @()
+        foreach ($currentCertificate in $getValue.AuthenticationConfiguration.certificateList)
+        {
+            $myCertificate = [ordered]@{}
+            $myCertificate.Add('Pkcs12Value', "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ('Please insert a valid Pkcs12Value') -AsPlainText -Force))")
+            $myCertificate.Add('Thumbprint', $currentCertificate.thumbprint)
+            $myCertificate.Add('Password', "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ('Please insert a valid Password for the certificate') -AsPlainText -Force))")
+            $myCertificate.Add('IsActive', $currentCertificate.isActive)
+
+            if ($myCertificate.values.Where({ $null -ne $_ }).Count -gt 0)
+            {
+                $complexCertificates += $myCertificate
+            }
+        }
+        #endregion
+
+        $results = @{
+            #region resource generator code
+            DisplayName           = $getValue.DisplayName
+            TargetUrl             = $getValue.TargetUrl
+            Id                    = $getValue.Id
+            Username              = $getValue.AuthenticationConfiguration.username
+            Password              = $Password
+            Certificates          = $complexCertificates
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            #endregion
+        }
+
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $TargetUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Username,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Password,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Certificates,
+
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    # If the certificates array is not empty, then we need to create a new instance
+    $needToUpdateCertificates = $false
+    if ($null -ne $Certificates -and $Certificates.Count -gt 0)
+    {
+        $needToUpdateCertificates = $true
+    }
+
+    if ($needToUpdateCertificates -eq $false)
+    {
+        if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+        {
+            Write-Verbose -Message "Creating an Azure AD Identity API Connector with DisplayName {$DisplayName}"
+
+            $createParameters = ([Hashtable]$BoundParameters).Clone()
+            $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
+            $createParameters.Remove('Id') | Out-Null
+
+            $createParameters.Remove('Password') | Out-Null
+            $createParameters.Remove('Pkcs12Value') | Out-Null
+
+            if ($null -ne $username)
+            {
+                $createParameters.Add('AuthenticationConfiguration', @{
+                        '@odata.type' = 'microsoft.graph.basicAuthentication'
+                        'password'    = $Password.GetNetworkCredential().Password
+                        'username'    = $Username
+                    })
+            }
+
+            $createParameters.Add('@odata.type', '#microsoft.graph.IdentityApiConnector')
+            $policy = New-MgBetaIdentityApiConnector -BodyParameter $createParameters
+        }
+        elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+        {
+            Write-Verbose -Message "Updating the Azure AD Identity API Connector with Id {$($currentInstance.Id)}"
+
+            $updateParameters = ([Hashtable]$BoundParameters).Clone()
+            $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
+
+            $updateParameters.Remove('Id') | Out-Null
+
+            $updateParameters.Remove('Password') | Out-Null
+            $updateParameters.Remove('Pkcs12Value') | Out-Null
+
+            $updateParameters.Add('AuthenticationConfiguration', @{
+                    '@odata.type' = 'microsoft.graph.basicAuthentication'
+                    'password'    = $Password.GetNetworkCredential().Password
+                    'username'    = $Username
+                })
+
+            $UpdateParameters.Add('@odata.type', '#microsoft.graph.IdentityApiConnector')
+            Update-MgBetaIdentityApiConnector `
+                -IdentityApiConnectorId $currentInstance.Id `
+                -BodyParameter $UpdateParameters
+        }
+        elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+        {
+            Write-Verbose -Message "Removing the Azure AD Identity API Connector with Id {$($currentInstance.Id)}"
+            Remove-MgBetaIdentityApiConnector -IdentityApiConnectorId $currentInstance.Id
+        }
+    }
+    else
+    {
+        # Remove the existing instance if already present
+        if ($currentInstance.Ensure -ne 'Absent')
+        {
+            Write-Verbose -Message "Removing the Azure AD Identity API Connector with Id {$($currentInstance.Id)}"
+            Remove-MgBetaIdentityApiConnector -IdentityApiConnectorId $currentInstance.Id
+        }
+
+        # Create a new instance with the certificates
+        Write-Verbose -Message "Creating an Azure AD Identity API Connector with DisplayName {$DisplayName}"
+
+        $createParameters = ([Hashtable]$BoundParameters).Clone()
+        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
+        $createParameters.Remove('Id') | Out-Null
+
+        $createParameters.Remove('Password') | Out-Null
+        $createParameters.Remove('Pkcs12Value') | Out-Null
+
+        # Get the active and inactive certificates
+        $activeCertificates = @()
+        $inactiveCertificates = @()
+        foreach ($currentCertificate in $Certificates)
+        {
+            $myCertificate = [ordered]@{}
+            $myCertificate.Add('Pkcs12Value', ($currentCertificate.Pkcs12Value).Password)
+            $myCertificate.Add('Password', ($currentCertificate.Password).Password)
+
+            if ($currentCertificate.IsActive -eq $true)
+            {
+                $activeCertificates += $myCertificate
+            }
+            else
+            {
+                $inactiveCertificates += $myCertificate
+            }
+        }
+
+        # Only one certificate can be active
+        if ($activeCertificates.Count -ne 1)
+        {
+            Write-Error 'There should be one active certificate'
+            throw
+        }
+
+        if ($inactiveCertificates.Count -eq 0)
+        {
+            $createParameters.Add('AuthenticationConfiguration', @{
+                    '@odata.type' = 'microsoft.graph.pkcs12Certificate'
+                    'password'    = $activeCertificates[0].Password
+                    'pkcs12Value' = $activeCertificates[0].Pkcs12Value
+                })
+            $activeCertificates = $activeCertificates[1..$activeCertificates.Count]
+        }
+        else
+        {
+            $createParameters.Add('AuthenticationConfiguration', @{
+                    '@odata.type' = 'microsoft.graph.pkcs12Certificate'
+                    'password'    = $inactiveCertificates[0].Password
+                    'pkcs12Value' = $inactiveCertificates[0].Pkcs12Value
+                })
+            # remove the first element from the inactive certificates
+            $inactiveCertificates = $inactiveCertificates[1..$inactiveCertificates.Count]
+        }
+
+        $createParameters.Add('@odata.type', '#microsoft.graph.IdentityApiConnector')
+        $policy = New-MgBetaIdentityApiConnector -BodyParameter $createParameters
+
+        # Upload the inactive certificates
+        foreach ($currentCertificate in $inactiveCertificates)
+        {
+            $params = @{
+                pkcs12Value = $currentCertificate.Pkcs12Value
+                password    = $currentCertificate.Password
+            }
+
+            Invoke-MgBetaUploadIdentityApiConnectorClientCertificate -IdentityApiConnectorId $policy.Id -BodyParameter $params
+        }
+
+        # Upload active certificate
+        foreach ($currentCertificate in $activeCertificates)
+        {
+            $params = @{
+                pkcs12Value = $currentCertificate.Pkcs12Value
+                password    = $currentCertificate.Password
+            }
+
+            Invoke-MgBetaUploadIdentityApiConnectorClientCertificate -IdentityApiConnectorId $policy.Id -BodyParameter $params
+        }
+
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $TargetUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Username,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Password,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Certificates,
+
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $compareParameters = Get-CompareParameters
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        #region resource generator code
+        [array]$getValue = Get-MgBetaIdentityApiConnector `
+            -Filter $Filter `
+            -All `
+            -ErrorAction Stop
+        #endregion
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($getValue.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($config in $getValue)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            $displayedKey = $config.Id
+            if (-not [String]::IsNullOrEmpty($config.displayName))
+            {
+                $displayedKey = $config.displayName
+            }
+            elseif (-not [string]::IsNullOrEmpty($config.name))
+            {
+                $displayedKey = $config.name
+            }
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
+            $params = @{
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
+            $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ('Please insert a valid Password') -AsPlainText -Force));"
+
+            if ($null -ne $Results.Certificates)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Certificates`
+                    -CIMInstanceName 'AADIdentityAPIConnectionCertificate'
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Certificates = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Certificates') | Out-Null
+                }
+            }
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential `
+                -NoEscape @('Certificates')
+
+            # Replace the main password variable.
+            $currentDSCBlock = $currentDSCBlock.Replace('"New-Object System.', 'New-Object System.').Replace(') -AsPlainText -Force));";', ') -AsPlainText -Force));')
+
+            # Replace the certificate variables.
+            $currentDSCBlock = $currentDSCBlock.Replace("'New-Object System.", 'New-Object System.').Replace(" -Force))'", ' -Force))')
+            $currentDSCBlock = $currentDSCBlock.Replace("(ConvertTo-SecureString (''", "(ConvertTo-SecureString ('").Replace("''Password''", "'Password'").Replace("'') -AsPlainText", "') -AsPlainText")
+            $currentDSCBlock = $currentDSCBlock.Replace(''') -AsPlainText -Force))"', "') -AsPlainText -Force))")
+
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('Password')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

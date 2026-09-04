@@ -1,0 +1,533 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_TeamsOnlineVoicemailUserSettings'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DeclineCall', 'PromptOnly', 'PromptOnlyWithTransfer', 'RegularVoicemail', 'VoicemailWithTransferOption')]
+        $CallAnswerRule,
+
+        [Parameter()]
+        [System.String]
+        $DefaultGreetingPromptOverwrite,
+
+        [Parameter()]
+        [System.String]
+        $DefaultOofGreetingPromptOverwrite,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowAutomaticRepliesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowCalendarEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PromptLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShareData,
+
+        [Parameter()]
+        [System.String]
+        $TransferTarget,
+
+        [Parameter()]
+        [System.Boolean]
+        $VoicemailEnabled,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting the Teams Online Voicemail User Settings $($Identity)"
+
+    # TODO: Remove property 'OofGreetingFollowCalendarEnabled' in next breaking change
+    if ($PSBoundParameters.ContainsKey('OofGreetingFollowCalendarEnabled'))
+    {
+        $PSBoundParameters.Remove('OofGreetingFollowCalendarEnabled') | Out-Null
+        Write-Warning "Property 'OofGreetingFollowCalendarEnabled' is deprecated and will be removed"
+    }
+
+    try
+    {
+        if (-not $Script:exportMode)
+        {
+            $null = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+        }
+
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = 'Absent'
+
+        $instance = Get-CsOnlineVoicemailUserSettings -Identity $Identity -ErrorAction 'SilentlyContinue'
+
+        if ($null -eq $instance)
+        {
+            Write-Verbose -Message "Could not find Teams Online Voicemail User Settings for ${$Identity}"
+            return $nullReturn
+        }
+
+        Write-Verbose -Message "Found Teams Online Voicemail User Settings for {$Identity}"
+        return @{
+            Identity                                 = $Identity
+            CallAnswerRule                           = $instance.CallAnswerRule
+            DefaultGreetingPromptOverwrite           = $instance.DefaultGreetingPromptOverwrite
+            DefaultOofGreetingPromptOverwrite        = $instance.DefaultOofGreetingPromptOverwrite
+            OofGreetingEnabled                       = $instance.OofGreetingEnabled
+            OofGreetingFollowAutomaticRepliesEnabled = $instance.OofGreetingFollowAutomaticRepliesEnabled
+            PromptLanguage                           = $instance.PromptLanguage
+            ShareData                                = $instance.ShareData
+            TransferTarget                           = $instance.TransferTarget
+            VoicemailEnabled                         = $instance.VoicemailEnabled
+            Ensure                                   = 'Present'
+            Credential                               = $Credential
+            ApplicationId                            = $ApplicationId
+            TenantId                                 = $TenantId
+            CertificateThumbprint                    = $CertificateThumbprint
+            CertificatePath                          = $CertificatePath
+            CertificatePassword                      = $CertificatePassword
+            ManagedIdentity                          = $ManagedIdentity.IsPresent
+            AccessTokens                             = $AccessTokens
+        }
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DeclineCall', 'PromptOnly', 'PromptOnlyWithTransfer', 'RegularVoicemail', 'VoicemailWithTransferOption')]
+        $CallAnswerRule,
+
+        [Parameter()]
+        [System.String]
+        $DefaultGreetingPromptOverwrite,
+
+        [Parameter()]
+        [System.String]
+        $DefaultOofGreetingPromptOverwrite,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowAutomaticRepliesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowCalendarEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PromptLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShareData,
+
+        [Parameter()]
+        [System.String]
+        $TransferTarget,
+
+        [Parameter()]
+        [System.Boolean]
+        $VoicemailEnabled,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message 'Setting Teams Online Voicemail User Settings'
+
+    # TODO: Remove property 'OofGreetingFollowCalendarEnabled' in next breaking change
+    if ($PSBoundParameters.ContainsKey('OofGreetingFollowCalendarEnabled'))
+    {
+        $PSBoundParameters.Remove('OofGreetingFollowCalendarEnabled') | Out-Null
+        Write-Warning "Property 'OofGreetingFollowCalendarEnabled' is deprecated and will be removed"
+    }
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $null = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters
+
+    $SetParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    try
+    {
+        Set-CsOnlineVoicemailUserSettings @SetParameters
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DeclineCall', 'PromptOnly', 'PromptOnlyWithTransfer', 'RegularVoicemail', 'VoicemailWithTransferOption')]
+        $CallAnswerRule,
+
+        [Parameter()]
+        [System.String]
+        $DefaultGreetingPromptOverwrite,
+
+        [Parameter()]
+        [System.String]
+        $DefaultOofGreetingPromptOverwrite,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowAutomaticRepliesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowCalendarEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PromptLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShareData,
+
+        [Parameter()]
+        [System.String]
+        $TransferTarget,
+
+        [Parameter()]
+        [System.Boolean]
+        $VoicemailEnabled,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $compareParameters = Get-CompareParameters
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        $splat = @{
+            Properties = 'UserPrincipalName'
+        }
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $splat.Add('Filter', $Filter)
+        }
+        $allUsers = Get-CsOnlineUser @splat
+        $i = 1
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
+        $dscContent = [System.Text.StringBuilder]::new()
+        $Script:exportMode = $true
+        foreach ($user in $allUsers)
+        {
+            Write-M365DSCHost -Message "    |---[$i/$($allUsers.Length)] $($user.UserPrincipalName)" -DeferWrite
+            $params = @{
+                Identity              = $user.UserPrincipalName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+            $Results = Get-TargetResource @Params
+            if ($Results.Ensure -eq 'Present')
+            {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                [void]$dscContent.Append($currentDSCBlock)
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+            }
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+            $i++
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('OofGreetingFollowCalendarEnabled')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')
+

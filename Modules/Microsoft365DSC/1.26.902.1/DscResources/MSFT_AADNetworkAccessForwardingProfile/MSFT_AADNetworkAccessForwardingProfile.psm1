@@ -1,0 +1,515 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADNetworkAccessForwardingProfile'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Policies,
+
+        #endregion
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration for the AAD Network Access Forwarding Policy with Id {$Id} and Name {$Name}"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
+        {
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $getValue = Get-MgBetaNetworkAccessForwardingProfile -ForwardingProfileId $Id -ErrorAction SilentlyContinue
+            }
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Azure AD Network Access Forwarding Profile with  Id {$Id}"
+
+                if (-not [System.String]::IsNullOrEmpty($Name))
+                {
+                    $getValue = Get-MgBetaNetworkAccessForwardingProfile -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $Name }
+                }
+            }
+        }
+        else
+        {
+            $getValue = $Script:exportedInstance
+        }
+        $Id = $getValue.Id
+
+        #endregion
+        if ($null -eq $getValue)
+        {
+            Write-Verbose -Message "Could not find an Azure AD Network Access Forwarding Profile with  name {$Name}."
+            return $nullResult
+        }
+
+        Write-Verbose -Message "An Azure AD Network Access Forwarding Profile with  {$Id} and  {$Name} was found"
+
+        $forwardingProfilePolicies = Get-MgBetaNetworkAccessForwardingProfilePolicy -ForwardingProfileId $getValue.Id -ErrorAction SilentlyContinue
+
+        if ($null -ne $forwardingProfilePolicies)
+        {
+            Write-Verbose -Message "An Azure AD Network Access Forwarding Profile Policy with  $($forwardingProfilePolicies.Id) and  $($forwardingProfilePolicies.Name) was found"
+        }
+
+        $complexPolicies = @()
+        foreach ($currentPolicy in $forwardingProfilePolicies)
+        {
+            $myPolicies = [ordered]@{}
+            $myPolicies.Add('Name', $currentPolicy.Policy.Name)
+            $myPolicies.Add('State', $currentPolicy.State)
+            $myPolicies.Add('PolicyLinkId', $currentPolicy.Id)
+            if ($myPolicies.values.Where({ $null -ne $_ }).Count -gt 0)
+            {
+                $complexPolicies += $myPolicies
+            }
+        }
+
+        $results = @{
+            Name                  = $getValue.Name
+            Id                    = $getValue.Id
+            State                 = $getValue.State
+            Policies              = $complexPolicies
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+        }
+
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Policies,
+
+        #endregion
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    # Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    if ($null -ne $currentInstance)
+    {
+        Write-Verbose -Message "Updating the Azure AD Network Access Forwarding Profile with  {$($currentInstance.Id)}"
+
+        $updateParameters = ([Hashtable]$BoundParameters).Clone()
+        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
+        $updateParameters.Remove('Id') | Out-Null
+
+        Write-Verbose -Message "Updating the Azure AD Network Access Forwarding Profile with  {$($currentInstance.Id)} {$($currentInstance.Name)} State"
+        Update-MgBetaNetworkAccessForwardingProfile `
+            -ForwardingProfileId $currentInstance.Id `
+            -State $updateParameters.State
+
+        $currentPolicies = $currentInstance.Policies
+        $updatedPolicies = $updateParameters.Policies
+
+        # update the current policy's state with the updated policy's state.
+        foreach ($currentPolicy in $currentPolicies)
+        {
+            $updatedPolicy = $updatedPolicies | Where-Object { $_.Name -eq $currentPolicy.Name }
+            if ($null -ne $updatedPolicy)
+            {
+                Write-Verbose -Message "Updating the Azure AD Network Access Forwarding Profile Policy with  Id {$($currentPolicy.PolicyLinkId)} {$($currentPolicy.Name)}"
+                Update-MgBetaNetworkAccessForwardingProfilePolicy `
+                    -ForwardingProfileId $currentInstance.Id `
+                    -PolicyLinkId $currentPolicy.PolicyLinkId `
+                    -State $updatedPolicy.State
+            }
+        }
+        #endregion
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+
+        #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Policies,
+
+        #endregion
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        #region resource generator code
+        [array]$getValue = Get-MgBetaNetworkAccessForwardingProfile `
+            -Filter $Filter `
+            -All `
+            -ErrorAction Stop
+        #endregion
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($getValue.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($config in $getValue)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+            $displayedKey = $config.Id
+            if (-not [string]::IsNullOrEmpty($config.name))
+            {
+                $displayedKey = $config.name
+            }
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
+            $params = @{
+                Id                    = $config.Id
+                Name                  = $config.Name
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
+
+            if ($null -ne $Results.Policies)
+            {
+                $complexMapping = @(
+                    @{
+                        Name            = 'Policies'
+                        CimInstanceName = 'MicrosoftGraphNetworkaccessPolicyLink'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Policies `
+                    -CIMInstanceName 'MicrosoftGraphNetworkaccessPolicyLink' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Policies = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Policies') | Out-Null
+                }
+            }
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential `
+                -NoEscape @('Policies')
+
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+Export-ModuleMember -Function *-TargetResource

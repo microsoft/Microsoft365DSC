@@ -1,0 +1,51 @@
+{
+  "resourceName": "AADIdentityAPIConnector",
+  "description": "This resource configures an Azure AD Identity API Connector.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "APIConnectors.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "APIConnectors.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "APIConnectors.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "APIConnectors.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaIdentityApiConnector",
+        "Invoke-MgBetaUploadIdentityApiConnectorClientCertificate",
+        "New-MgBetaIdentityApiConnector",
+        "Remove-MgBetaIdentityApiConnector",
+        "Update-MgBetaIdentityApiConnector"
+      ]
+    }
+  ]
+}

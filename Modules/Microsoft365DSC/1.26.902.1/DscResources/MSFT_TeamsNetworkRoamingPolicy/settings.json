@@ -1,0 +1,31 @@
+{
+  "resourceName": "TeamsNetworkRoamingPolicy",
+  "description": "This resource configures an New-CsTeamsNetworkRoamingPolicy allows IT Admins to create policies for Network Roaming and Bandwidth Control experiences in Microsoft Teams.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsNetworkRoamingPolicy",
+        "New-CsTeamsNetworkRoamingPolicy",
+        "Remove-CsTeamsNetworkRoamingPolicy",
+        "Set-CsTeamsNetworkRoamingPolicy"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "resourceName": "AADExternalIdentityPolicy",
+  "description": "Represents the tenant-wide policy that controls whether external users can leave the guest Microsoft Entra tenant via self-service controls.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Privileged Role Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Policy.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.ExternalIdentities"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.ExternalIdentities"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyExternalIdentityPolicy",
+        "Update-MgBetaPolicyExternalIdentityPolicy"
+      ]
+    }
+  ]
+}

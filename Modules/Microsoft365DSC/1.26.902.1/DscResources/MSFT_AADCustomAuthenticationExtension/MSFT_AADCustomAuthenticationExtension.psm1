@@ -1,0 +1,670 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADCustomAuthenticationExtension'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet(
+            '#microsoft.graph.onTokenIssuanceStartCustomExtension',
+            '#microsoft.graph.onAttributeCollectionStartCustomExtension',
+            '#microsoft.graph.onAttributeCollectionStartCustomExtension'
+        )]
+        $CustomAuthenticationExtensionType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet(
+            '#microsoft.graph.azureAdTokenAuthentication',
+            '#microsoft.graph.azureAdPopTokenAuthentication'
+        )]
+        $AuthenticationConfigurationType,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationConfigurationResourceId,
+
+        [Parameter()]
+        [System.Int32]
+        $ClientConfigurationTimeoutMilliseconds,
+
+        [Parameter()]
+        [System.Int32]
+        $ClientConfigurationMaximumRetries,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $EndPointConfiguration,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ClaimsForTokenConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present'
+    )
+
+    Write-Verbose -Message "Getting configuration of AzureAD Custom Authentication Extension for {$DisplayName}"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
+        {
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+            Write-Verbose -Message 'Fetching result....'
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $instance = Get-MgBetaIdentityCustomAuthenticationExtension -CustomAuthenticationExtensionId $Id `
+                    -ErrorAction SilentlyContinue
+            }
+            if ($null -eq $instance)
+            {
+                $instance = Get-MgBetaIdentityCustomAuthenticationExtension -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
+                    -ErrorAction SilentlyContinue
+            }
+            if ($null -eq $instance)
+            {
+                return $nullResult
+            }
+        }
+        else
+        {
+            $instance = $Script:exportedInstance
+        }
+
+        Write-Verbose 'Instance found for the resource. Calculating result....'
+
+        $results = @{
+            DisplayName           = $instance.DisplayName
+            Id                    = $instance.Id
+            Description           = $instance.Description
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
+        }
+
+        if ($null -ne $instance)
+        {
+            $results.Add('CustomAuthenticationExtensionType', $instance['@odata.type'])
+        }
+
+        if ($null -ne $instance.AuthenticationConfiguration)
+        {
+            $results.Add('AuthenticationConfigurationType', $instance.AuthenticationConfiguration['@odata.type'])
+            $results.Add('AuthenticationConfigurationResourceId', $instance.AuthenticationConfiguration['resourceId'])
+        }
+
+        if ($null -ne $instance.ClientConfiguration)
+        {
+            $results.Add('ClientConfigurationTimeoutMilliseconds', $instance.ClientConfiguration.TimeoutInMilliseconds)
+            $results.Add('ClientConfigurationMaximumRetries', $instance.ClientConfiguration.MaximumRetries)
+        }
+
+        $endpointConfigurationInstance = @{}
+        if ($null -ne $instance.EndPointConfiguration -and $null -ne $instance.EndPointConfiguration)
+        {
+            $endpointConfigurationInstance.Add('EndpointType', $instance.EndPointConfiguration['@odata.type'])
+
+            if ($endpointConfigurationInstance['EndpointType'] -eq '#microsoft.graph.httpRequestEndpoint')
+            {
+                $endpointConfigurationInstance.Add('TargetUrl', $instance.EndPointConfiguration['targetUrl'])
+            }
+
+            if ($endpointConfigurationInstance['EndpointType'] -eq '#microsoft.graph.logicAppTriggerEndpointConfiguration')
+            {
+                $endpointConfigurationInstance.Add('SubscriptionId', $instance.EndPointConfiguration['subscriptionId'])
+                $endpointConfigurationInstance.Add('ResourceGroupName', $instance.EndPointConfiguration['resourceGroupName'])
+                $endpointConfigurationInstance.Add('LogicAppWorkflowName', $instance.EndPointConfiguration['logicAppWorkflowName'])
+            }
+        }
+
+        $ClaimsForTokenConfigurationInstance = @()
+        if ($null -ne $instance -and $null -ne $instance['claimsForTokenConfiguration'])
+        {
+            foreach ($claim in $instance['claimsForTokenConfiguration'])
+            {
+                $c = @{
+                    ClaimIdInApiResponse = $claim.claimIdInApiResponse
+                }
+
+                $ClaimsForTokenConfigurationInstance += $c
+            }
+        }
+
+        $results.Add('EndPointConfiguration', $endpointConfigurationInstance)
+        $results.Add('ClaimsForTokenConfiguration', $ClaimsForTokenConfigurationInstance)
+
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet(
+            '#microsoft.graph.onTokenIssuanceStartCustomExtension',
+            '#microsoft.graph.onAttributeCollectionStartCustomExtension',
+            '#microsoft.graph.onAttributeCollectionStartCustomExtension'
+        )]
+        $CustomAuthenticationExtensionType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet(
+            '#microsoft.graph.azureAdTokenAuthentication',
+            '#microsoft.graph.azureAdPopTokenAuthentication'
+        )]
+        $AuthenticationConfigurationType,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationConfigurationResourceId,
+
+        [Parameter()]
+        [System.Int32]
+        $ClientConfigurationTimeoutMilliseconds,
+
+        [Parameter()]
+        [System.Int32]
+        $ClientConfigurationMaximumRetries,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $EndPointConfiguration,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ClaimsForTokenConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present'
+    )
+
+    Write-Verbose -Message "Setting configuration of AzureAD Custom Authentication Extension for {$DisplayName}"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    $params = @{
+        '@odata.type'               = $setParameters.CustomAuthenticationExtensionType
+        displayName                 = $setParameters.DisplayName
+        description                 = $setParameters.Description
+        endpointConfiguration       = @{
+            '@odata.type' = $setParameters.EndPointConfiguration.EndpointType
+        }
+        authenticationConfiguration = @{
+            '@odata.type' = $setParameters.AuthenticationConfigurationType
+            resourceId    = $setParameters.AuthenticationConfigurationResourceId
+        }
+        clientConfiguration         = @{
+            timeoutInMilliseconds = $setParameters['ClientConfigurationTimeoutMilliseconds']
+            maximumRetries        = $setParameters['ClientConfigurationMaximumRetries']
+        }
+    }
+
+    if ($params.endpointConfiguration['@odata.type'] -eq '#microsoft.graph.httpRequestEndpoint')
+    {
+        Write-Verbose -Message "{$setParameters.EndPointConfiguration.TargetUrl}"
+        $params.endpointConfiguration['targetUrl'] = $setParameters.EndPointConfiguration.TargetUrl
+    }
+
+    if ($params.endpointConfiguration['@odata.type'] -eq '#microsoft.graph.logicAppTriggerEndpointConfiguration')
+    {
+        $params.endpointConfiguration['subscriptionId'] = $setParameters.EndPointConfiguration['SubscriptionId']
+        $params.endpointConfiguration['resourceGroupName'] = $setParameters.EndPointConfiguration['ResourceGroupName']
+        $params.endpointConfiguration['logicAppWorkflowName'] = $setParameters.EndPointConfiguration['LogicAppWorkflowName']
+    }
+
+    # CREATE
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        $params.Add('claimsForTokenConfiguration', @())
+        foreach ($claim in $setParameters.claimsForTokenConfiguration)
+        {
+            $val = $claim.claimIdInApiResponse
+            Write-Verbose -Message "{$val}"
+            $c = @{
+                'claimIdInApiResponse' = $claim.claimIdInApiResponse
+            }
+            $params.claimsForTokenConfiguration += $c
+        }
+
+        $params.Remove('Id') | Out-Null
+        $type = $params['@odata.type']
+        Write-Verbose -Message "Creating new Custom authentication extension with display name {$DisplayName} and type {$type}"
+        New-MgBetaIdentityCustomAuthenticationExtension -BodyParameter $params
+    }
+
+    # UPDATE
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        $params.Add('customAuthenticationExtensionId', $currentInstance.Id)
+        $params.Remove('Id') | Out-Null
+
+        $params.Add('claimsForTokenConfiguration', @())
+        foreach ($claim in $setParameters['ClaimsForTokenConfiguration'])
+        {
+            $c = @{
+                'claimIdInApiResponse' = $claim['ClaimIdInApiResponse']
+            }
+            $params['claimsForTokenConfiguration'] += $c
+        }
+
+        Write-Verbose -Message "Updating custom authentication extension {$DisplayName} with:`r`n$(ConvertTo-Json $params -Depth 10)"
+        Update-MgBetaIdentityCustomAuthenticationExtension -CustomAuthenticationExtensionId $currentInstance.Id -BodyParameter $params
+    }
+    # REMOVE
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing custom authentication extension {$DisplayName}."
+        Remove-MgBetaIdentityCustomAuthenticationExtension -CustomAuthenticationExtensionId $currentInstance.Id
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet(
+            '#microsoft.graph.onTokenIssuanceStartCustomExtension',
+            '#microsoft.graph.onAttributeCollectionStartCustomExtension',
+            '#microsoft.graph.onAttributeCollectionStartCustomExtension'
+        )]
+        $CustomAuthenticationExtensionType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet(
+            '#microsoft.graph.azureAdTokenAuthentication',
+            '#microsoft.graph.azureAdPopTokenAuthentication'
+        )]
+        $AuthenticationConfigurationType,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationConfigurationResourceId,
+
+        [Parameter()]
+        [System.Int32]
+        $ClientConfigurationTimeoutMilliseconds,
+
+        [Parameter()]
+        [System.Int32]
+        $ClientConfigurationMaximumRetries,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $EndPointConfiguration,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ClaimsForTokenConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present'
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        [array] $exportedInstances = Get-MgBetaIdentityCustomAuthenticationExtension `
+        -All `
+        -Filter $Filter `
+        -ErrorAction Stop
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($config in $exportedInstances)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            $displayedKey = $config.Id
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
+            $params = @{
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
+            $endpointConfigurationCimString = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.EndpointConfiguration `
+                -CIMInstanceName 'MSFT_AADCustomAuthenticationExtensionEndPointConfiguration'
+
+            $ClaimsForTokenConfigurationCimString = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.ClaimsForTokenConfiguration `
+                -CIMInstanceName 'MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration'
+
+            $Results.EndPointConfiguration = $endpointConfigurationCimString
+            $Results.ClaimsForTokenConfiguration = $ClaimsForTokenConfigurationCimString
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential `
+                -NoEscape @('EndPointConfiguration', 'ClaimsForTokenConfiguration')
+
+            [void]$dscContent.Append($currentDSCBlock)
+
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+Export-ModuleMember -Function *-TargetResource

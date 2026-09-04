@@ -1,0 +1,71 @@
+{
+  "resourceName": "IntuneDeviceConfigurationPlatformScriptMacOS",
+  "description": "This resource configures an Intune Device Configuration Platform Script MacOS.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementScripts.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementScripts.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementScripts.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementScripts.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.DeviceManagement",
+    "Microsoft.Graph.Groups"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementAssignmentFilter",
+        "Get-MgBetaDeviceManagementDeviceShellScript",
+        "New-MgBetaDeviceManagementDeviceShellScript",
+        "Remove-MgBetaDeviceManagementDeviceShellScript",
+        "Update-MgBetaDeviceManagementDeviceShellScript"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}

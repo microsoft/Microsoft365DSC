@@ -1,0 +1,79 @@
+{
+  "resourceName": "IntuneMobileAppsWebLink",
+  "description": "This resource configures an Intune Mobile Apps Web Link for the iOS, MacOS, Windows and general platform.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementApps.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementApps.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementApps.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementApps.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.DeviceManagement",
+    "Microsoft.Graph.Beta.Devices.CorporateManagement",
+    "Microsoft.Graph.Groups"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementAssignmentFilter"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Devices.CorporateManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceAppManagementMobileApp",
+        "Get-MgBetaDeviceAppManagementMobileAppAssignment",
+        "Get-MgBetaDeviceAppManagementMobileAppCategory",
+        "New-MgBetaDeviceAppManagementMobileApp",
+        "Remove-MgBetaDeviceAppManagementMobileApp",
+        "Update-MgBetaDeviceAppManagementMobileApp"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}

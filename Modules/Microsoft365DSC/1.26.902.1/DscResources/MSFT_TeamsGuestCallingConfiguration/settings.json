@@ -1,0 +1,29 @@
+{
+  "resourceName": "TeamsGuestCallingConfiguration",
+  "description": "",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsGuestCallingConfiguration",
+        "Set-CsTeamsGuestCallingConfiguration"
+      ]
+    }
+  ]
+}

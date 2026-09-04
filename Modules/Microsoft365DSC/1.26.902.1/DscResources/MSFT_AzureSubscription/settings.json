@@ -1,0 +1,57 @@
+{
+  "resourceName": "AzureSubscription",
+  "description": "This resource controls the properties of an Azure subscription.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "Azure Service Management": {
+      "delegated": {
+        "read": [
+          {
+            "name": "user_impersonation"
+          }
+        ],
+        "update": [
+          {
+            "name": "user_impersonation"
+          }
+        ]
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    }
+  },
+  "requiredModules": [
+    "Az.Accounts",
+    "Az.Subscription",
+    "MSCloudLoginAssistant"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Connect-AzAccount",
+        "Invoke-AzRestMethod",
+        "Register-AzModule"
+      ]
+    },
+    {
+      "module": "Az.Subscription",
+      "cmdlets": [
+        "Disable-AzSubscription",
+        "Enable-AzSubscription"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
+}

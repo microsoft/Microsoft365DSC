@@ -1,0 +1,97 @@
+{
+  "resourceName": "AADRoleAssignmentScheduleRequest",
+  "description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Privileged Role Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "RoleAssignmentSchedule.Read.Directory"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "RoleAssignmentSchedule.ReadWrite.Directory"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "RoleAssignmentSchedule.Read.Directory"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "RoleAssignmentSchedule.ReadWrite.Directory"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Beta.DirectoryObjects",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgServicePrincipal"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.DirectoryObjects",
+      "cmdlets": [
+        "Get-MgBetaDirectoryObjectById"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaRoleManagementDirectoryRoleAssignmentSchedule",
+        "Get-MgBetaRoleManagementDirectoryRoleDefinition",
+        "New-MgBetaRoleManagementDirectoryRoleAssignmentScheduleRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
+}

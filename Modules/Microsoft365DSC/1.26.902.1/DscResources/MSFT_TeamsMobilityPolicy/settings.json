@@ -1,0 +1,31 @@
+{
+  "resourceName": "TeamsMobilityPolicy",
+  "description": "This resource configures an The TeamsMobilityPolicy allows Admins to control Teams mobile usage for users.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsMobilityPolicy",
+        "New-CsTeamsMobilityPolicy",
+        "Remove-CsTeamsMobilityPolicy",
+        "Set-CsTeamsMobilityPolicy"
+      ]
+    }
+  ]
+}

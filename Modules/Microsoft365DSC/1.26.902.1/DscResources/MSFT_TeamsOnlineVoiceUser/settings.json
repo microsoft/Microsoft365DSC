@@ -1,0 +1,31 @@
+{
+  "resourceName": "TeamsOnlineVoiceUser",
+  "description": "",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsOnlineUser",
+        "Get-CsPhoneNumberAssignment",
+        "Remove-CsPhoneNumberAssignment",
+        "Set-CsPhoneNumberAssignment"
+      ]
+    }
+  ]
+}

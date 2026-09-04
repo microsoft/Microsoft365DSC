@@ -1,0 +1,32 @@
+{
+  "resourceName": "TeamsVoiceRoutingPolicy",
+  "description": "",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsOnlinePstnUsage",
+        "Get-CsOnlineVoiceRoutingPolicy",
+        "New-CsOnlineVoiceRoutingPolicy",
+        "Remove-CsOnlineVoiceRoutingPolicy",
+        "Set-CsOnlineVoiceRoutingPolicy"
+      ]
+    }
+  ]
+}

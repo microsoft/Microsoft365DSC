@@ -1,0 +1,65 @@
+{
+  "resourceName": "PlannerPlan",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Tasks.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Tasks.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Tasks.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Tasks.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Planner"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Planner",
+      "cmdlets": [
+        "Get-MgGroupPlannerPlan",
+        "New-MgPlannerPlan",
+        "Update-MgPlannerPlan"
+      ]
+    }
+  ]
+}

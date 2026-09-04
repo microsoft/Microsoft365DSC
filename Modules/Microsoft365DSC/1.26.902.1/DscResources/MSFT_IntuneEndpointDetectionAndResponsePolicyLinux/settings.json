@@ -1,0 +1,73 @@
+{
+  "resourceName": "IntuneEndpointDetectionAndResponsePolicyLinux",
+  "description": "This resource configures an Intune Endpoint Detection And Response Policy Linux.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.DeviceManagement",
+    "Microsoft.Graph.Groups"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementAssignmentFilter",
+        "Get-MgBetaDeviceManagementConfigurationPolicy",
+        "Get-MgBetaDeviceManagementConfigurationPolicyAssignment",
+        "Get-MgBetaDeviceManagementConfigurationPolicySetting",
+        "Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate",
+        "New-MgBetaDeviceManagementConfigurationPolicy",
+        "Remove-MgBetaDeviceManagementConfigurationPolicy"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}

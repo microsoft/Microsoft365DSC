@@ -1,0 +1,33 @@
+{
+  "resourceName": "TeamsChannel",
+  "description": "",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-Team",
+        "Get-TeamChannel",
+        "New-TeamChannel",
+        "Remove-TeamChannel",
+        "Set-TeamChannel"
+      ]
+    }
+  ]
+}

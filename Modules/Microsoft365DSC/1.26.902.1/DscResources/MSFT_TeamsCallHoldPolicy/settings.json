@@ -1,0 +1,32 @@
+{
+  "resourceName": "TeamsCallHoldPolicy",
+  "description": "This resource configures an Creates a new Teams call hold policy in your tenant. The Teams call hold policy is used to customize the call hold experience for Teams clients.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsCallHoldPolicy",
+        "New-CsTeamsCallHoldPolicy",
+        "Remove-CsTeamsCallHoldPolicy",
+        "Set-CsTeamsCallHoldPolicy"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,985 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneMobileAppsWindowsOfficeSuiteApp'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        #region Intune resource parameters
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFeatured,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $InformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoAcceptEula,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('O365ProPlusRetail', 'O365BusinessRetail', 'VisioProRetail', 'ProjectProRetail')]
+        $ProductIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ExcludedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseSharedComputerActivation,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('None', 'Current', 'Deferred', 'FirstReleaseCurrent', 'FirstReleaseDeferred', 'MonthlyEnterprise')]
+        $UpdateChannel,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('NotConfigured', 'OfficeOpenXMLFormat', 'OfficeOpenDocumentFormat', 'UnknownFutureValue')]
+        $OfficeSuiteAppDefaultFileFormat,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('None', 'X86', 'X64', 'Arm', 'Neutral', 'Arm64')]
+        $OfficePlatformArchitecture,
+
+        [Parameter()]
+        [System.String[]]
+        $LocalesToInstall,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('None', 'Full')]
+        $InstallProgressDisplayLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShouldUninstallOlderVersionsOfOffice,
+
+        [Parameter()]
+        [System.String]
+        $TargetVersion,
+
+        [Parameter()]
+        [System.String]
+        $UpdateVersion,
+
+        [Parameter()]
+        [System.String]
+        $OfficeConfigurationXml,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Categories,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        # [Parameter()]
+        # [Microsoft.Management.Infrastructure.CimInstance]
+        # $LargeIcon,
+
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration of the Intune Windows Office Suite App with Id {$Id} and DisplayName {$DisplayName}"
+
+    try
+    {
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
+        $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id `
+            -ExpandProperty 'categories' `
+            -ErrorAction SilentlyContinue
+
+        if ($null -eq $instance)
+        {
+            Write-Verbose -Message "Could not find an Intune Windows Office Suite App with Id {$Id}."
+
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                $instance = Get-MgBetaDeviceAppManagementMobileApp `
+                    -All `
+                    -Filter "(isof('microsoft.graph.officeSuiteApp') and DisplayName eq '$($DisplayName -replace "'", "''")')" `
+                    -ErrorAction SilentlyContinue
+            }
+
+            if ($null -ne $instance)
+            {
+                $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id `
+                    -ExpandProperty 'categories' `
+                    -ErrorAction SilentlyContinue
+                $Id = $instance.Id
+            }
+        }
+
+        if ($null -eq $instance)
+        {
+            Write-Verbose -Message "Could not find an Intune Windows Office Suite App with DisplayName {$DisplayName} was found."
+            return $nullResult
+        }
+
+        Write-Verbose "An Intune Windows Office Suite App with Id {$Id} and DisplayName {$DisplayName} was found."
+
+        #region complex types
+        $complexCategories = @()
+        foreach ($category in $instance.Categories)
+        {
+            $myCategory = [ordered]@{}
+            $myCategory.Add('Id', $category.id)
+            $myCategory.Add('DisplayName', $category.displayName)
+            $complexCategories += $myCategory
+        }
+
+        $complexExcludedApps = [ordered]@{}
+        if ($null -ne $instance.excludedApps)
+        {
+            $instance.excludedApps.GetEnumerator() | ForEach-Object {
+                $complexExcludedApps.Add($_.Key, $_.Value)
+            }
+        }
+        if ($complexExcludedApps.Count -eq 0)
+        {
+            $complexExcludedApps = $null
+        }
+
+        $results = @{
+            Id                                   = $instance.Id
+            DisplayName                          = $instance.DisplayName
+            Description                          = $instance.Description
+            IsFeatured                           = $instance.IsFeatured
+            PrivacyInformationUrl                = $instance.PrivacyInformationUrl
+            InformationUrl                       = $instance.InformationUrl
+            Notes                                = $instance.Notes
+            RoleScopeTagIds                      = $instance.RoleScopeTagIds
+            AutoAcceptEula                       = $instance.autoAcceptEula
+            ProductIds                           = $instance.productIds
+            UseSharedComputerActivation          = $instance.useSharedComputerActivation
+            UpdateChannel                        = $instance.updateChannel
+            OfficeSuiteAppDefaultFileFormat      = $instance.officeSuiteAppDefaultFileFormat
+            OfficePlatformArchitecture           = $instance.officePlatformArchitecture
+            LocalesToInstall                     = $instance.localesToInstall
+            InstallProgressDisplayLevel          = $instance.installProgressDisplayLevel
+            ShouldUninstallOlderVersionsOfOffice = $instance.shouldUninstallOlderVersionsOfOffice
+            TargetVersion                        = $instance.targetVersion
+            UpdateVersion                        = $instance.updateVersion
+            OfficeConfigurationXml               = $instance.officeConfigurationXml
+            # LargeIcon                       = $complexLargeIcon
+            ExcludedApps                         = $complexExcludedApps
+            Categories                           = $complexCategories
+            Ensure                               = 'Present'
+            Credential                           = $Credential
+            ApplicationId                        = $ApplicationId
+            TenantId                             = $TenantId
+            ApplicationSecret                    = $ApplicationSecret
+            CertificateThumbprint                = $CertificateThumbprint
+            CertificatePath                      = $CertificatePath
+            CertificatePassword                  = $CertificatePassword
+            ManagedIdentity                      = $ManagedIdentity.IsPresent
+            AccessTokens                         = $AccessTokens
+        }
+
+        #Assignments
+        $resultAssignments = @()
+        $appAssignments = Get-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $instance.Id
+        if ($null -ne $appAssignments -and $appAssignments.Count -gt 0)
+        {
+            [array]$appAssignments = $appAssignments | Where-Object -FilterScript { $_.source -eq 'direct' }
+            $convertedAssignments = ConvertFrom-IntuneMobileAppAssignment `
+                -IncludeDeviceFilter:$true `
+                -Assignments ($appAssignments)
+
+            # Filter out 'source' from the assignment objects
+            foreach ($assignment in $convertedAssignments)
+            {
+                if ($assignment.ContainsKey('source'))
+                {
+                    $assignment.Remove('source')
+                }
+            }
+
+            $resultAssignments += $convertedAssignments
+        }
+        $results.Add('Assignments', $resultAssignments)
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        #region Intune resource parameters
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFeatured,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $InformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoAcceptEula,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('O365ProPlusRetail', 'O365BusinessRetail', 'VisioProRetail', 'ProjectProRetail')]
+        $ProductIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ExcludedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseSharedComputerActivation,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('None', 'Current', 'Deferred', 'FirstReleaseCurrent', 'FirstReleaseDeferred', 'MonthlyEnterprise')]
+        $UpdateChannel,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('NotConfigured', 'OfficeOpenXMLFormat', 'OfficeOpenDocumentFormat', 'UnknownFutureValue')]
+        $OfficeSuiteAppDefaultFileFormat,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('None', 'X86', 'X64', 'Arm', 'Neutral', 'Arm64')]
+        $OfficePlatformArchitecture,
+
+        [Parameter()]
+        [System.String[]]
+        $LocalesToInstall,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('None', 'Full')]
+        $InstallProgressDisplayLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShouldUninstallOlderVersionsOfOffice,
+
+        [Parameter()]
+        [System.String]
+        $TargetVersion,
+
+        [Parameter()]
+        [System.String]
+        $UpdateVersion,
+
+        [Parameter()]
+        [System.String]
+        $OfficeConfigurationXml,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Categories,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        # [Parameter()]
+        # [Microsoft.Management.Infrastructure.CimInstance]
+        # $LargeIcon,
+
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $BoundParameters.Remove('Categories') | Out-Null
+
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating an Intune Windows Office Suite App with DisplayName {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
+
+        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
+        $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Add('Publisher', 'Microsoft')
+        $CreateParameters.Add('Developer', 'Microsoft')
+        $CreateParameters.Add('Owner', 'Microsoft')
+        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.officeSuiteApp')
+        $app = New-MgBetaDeviceAppManagementMobileApp -BodyParameter $CreateParameters
+
+        foreach ($category in $Categories)
+        {
+            if ($category.Id)
+            {
+                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $category.Id
+            }
+            else
+            {
+                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "DisplayName eq '$($category.DisplayName -replace "'", "''")'"
+            }
+
+            if ($null -eq $currentCategory)
+            {
+                throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
+            }
+
+            Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($app.Id)/categories/`$ref" -Method 'POST' -Body @{
+                '@odata.id' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
+            }
+        }
+
+        #Assignments
+        if ($app.Id)
+        {
+            $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+            Update-DeviceAppManagementPolicyAssignment -AppManagementPolicyId $app.Id `
+                -Assignments $assignmentsHash
+        }
+    }
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating the Intune Windows Office Suite App with DisplayName {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
+
+        $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
+        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+        $UpdateParameters.Remove('Id') | Out-Null
+        $UpdateParameters.Remove('OfficePlatformArchitecture') | Out-Null
+
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.officeSuiteApp')
+        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -BodyParameter $UpdateParameters
+
+        [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName)
+        {
+            $currentInstance.Categories.DisplayName
+        }
+        else
+        {
+            , @()
+        }
+        [array]$differenceObject = if ($null -ne $Categories.DisplayName)
+        {
+            $Categories.DisplayName
+        }
+        else
+        {
+            , @()
+        }
+        $delta = Compare-Object -ReferenceObject $referenceObject -DifferenceObject $differenceObject -PassThru
+        foreach ($diff in $delta)
+        {
+            if ($diff.SideIndicator -eq '=>')
+            {
+                $category = $Categories | Where-Object { $_.DisplayName -eq $diff }
+                if ($category.Id)
+                {
+                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $category.Id
+                }
+                else
+                {
+                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "DisplayName eq '$($category.DisplayName -replace "'", "''")'"
+                }
+
+                if ($null -eq $currentCategory)
+                {
+                    throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
+                }
+
+                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/`$ref" -Method 'POST' -Body @{
+                    '@odata.id' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
+                }
+            }
+            else
+            {
+                $category = $currentInstance.Categories | Where-Object { $_.DisplayName -eq $diff }
+                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/$($category.Id)/`$ref" -Method 'DELETE'
+            }
+        }
+
+        #Assignments
+        $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+        Update-DeviceAppManagementPolicyAssignment -AppManagementPolicyId $currentInstance.Id `
+            -Assignments $assignmentsHash
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Remove the Intune Windows Office Suite App with Id {$($currentInstance.Id)}"
+        Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        #region Intune resource parameters
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFeatured,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $InformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoAcceptEula,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('O365ProPlusRetail', 'O365BusinessRetail', 'VisioProRetail', 'ProjectProRetail')]
+        $ProductIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ExcludedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseSharedComputerActivation,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('None', 'Current', 'Deferred', 'FirstReleaseCurrent', 'FirstReleaseDeferred', 'MonthlyEnterprise')]
+        $UpdateChannel,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('NotConfigured', 'OfficeOpenXMLFormat', 'OfficeOpenDocumentFormat', 'UnknownFutureValue')]
+        $OfficeSuiteAppDefaultFileFormat,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('None', 'X86', 'X64', 'Arm', 'Neutral', 'Arm64')]
+        $OfficePlatformArchitecture,
+
+        [Parameter()]
+        [System.String[]]
+        $LocalesToInstall,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('None', 'Full')]
+        $InstallProgressDisplayLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShouldUninstallOlderVersionsOfOffice,
+
+        [Parameter()]
+        [System.String]
+        $TargetVersion,
+
+        [Parameter()]
+        [System.String]
+        $UpdateVersion,
+
+        [Parameter()]
+        [System.String]
+        $OfficeConfigurationXml,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Categories,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        # [Parameter()]
+        # [Microsoft.Management.Infrastructure.CimInstance]
+        # $LargeIcon,
+
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $compareParameters = Get-CompareParameters
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        $baseFilter = "isof('microsoft.graph.officeSuiteApp')"
+        if (-not [String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($Filter) and ($baseFilter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array] $getValue = Get-MgBetaDeviceAppManagementMobileApp `
+            -All `
+            -Filter $Filter `
+            -ErrorAction Stop
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($getValue.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+
+        foreach ($config in $getValue)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            $displayedKey = $config.Id
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
+
+            $params = @{
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
+            #region complex types
+            if ($null -ne $Results.Categories)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Categories `
+                    -CIMInstanceName 'DeviceManagementMobileAppCategory'
+
+                if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Categories = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Categories') | Out-Null
+                }
+            }
+
+            if ($null -ne $Results.ExcludedApps)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.ExcludedApps `
+                    -CIMInstanceName 'DeviceManagementMobileAppExcludedApp'
+
+                if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.ExcludedApps = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ExcludedApps') | Out-Null
+                }
+            }
+
+            # if ($null -ne $Results.LargeIcon)
+            # {
+            #     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+            #         -ComplexObject $Results.LargeIcon `
+            #         -CIMInstanceName 'DeviceManagementMimeContent'
+
+            #     if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            #     {
+            #         $Results.LargeIcon = $complexTypeStringResult
+            #     }
+            #     else
+            #     {
+            #         $Results.Remove('LargeIcon') | Out-Null
+            #     }
+            # }
+
+            if ($null -ne $Results.Assignments)
+            {
+                if ($Results.Assignments)
+                {
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.Assignments `
+                        -CIMInstanceName DeviceManagementMobileAppAssignment
+
+                    if ($complexTypeStringResult)
+                    {
+                        $Results.Assignments = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('Assignments') | Out-Null
+                    }
+                }
+            }
+            #endregion complex types
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential `
+                -NoEscape @('Categories', 'ExcludedApps', 'Assignments') `
+                -RawResults $rawResults
+
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('OfficePlatformArchitecture')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

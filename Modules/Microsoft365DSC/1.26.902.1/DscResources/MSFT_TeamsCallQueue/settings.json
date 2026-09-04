@@ -1,0 +1,33 @@
+{
+  "resourceName": "TeamsCallQueue",
+  "description": "This resource is used to manage Call Queue in your Skype for Business Online organization.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsCallQueue",
+        "Get-CsOnlineUser",
+        "New-CsCallQueue",
+        "Remove-CsCallQueue",
+        "Set-CsCallQueue"
+      ]
+    }
+  ]
+}

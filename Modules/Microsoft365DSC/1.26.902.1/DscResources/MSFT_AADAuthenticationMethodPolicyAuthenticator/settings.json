@@ -1,0 +1,77 @@
+{
+  "resourceName": "AADAuthenticationMethodPolicyAuthenticator",
+  "description": "This resource configures an Azure AD Authentication Method Policy Authenticator.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Authentication Policy Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Policy.Read.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration",
+        "Remove-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration",
+        "Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}

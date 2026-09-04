@@ -1,0 +1,104 @@
+{
+  "resourceName": "SPOTenantSettings",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "SharePointTenantSettings.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "SharePointTenantSettings.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "SharePointTenantSettings.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "SharePointTenantSettings.ReadWrite.All"
+          }
+        ]
+      }
+    },
+    "sharepoint": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Sites",
+    "MSCloudLoginAssistant",
+    "PnP.PowerShell"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Sites",
+      "cmdlets": [
+        "Get-MgAdminSharepointSetting",
+        "Update-MgAdminSharepointSetting"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile",
+        "Reset-MSCloudLoginConnectionProfileContext"
+      ]
+    },
+    {
+      "module": "PnP.PowerShell",
+      "cmdlets": [
+        "Get-PnPTenant",
+        "Invoke-PnPSPRestMethod",
+        "Set-PnPTenant"
+      ]
+    }
+  ]
+}

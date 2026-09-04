@@ -1,0 +1,75 @@
+{
+  "resourceName": "TeamsTeam",
+  "description": "",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Organization.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Organization.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users",
+    "MicrosoftTeams",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "New-MgGroup",
+        "New-MgGroupOwnerByRef"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Add-TeamUser",
+        "Get-Team",
+        "Get-TeamUser",
+        "New-Team",
+        "Remove-Team",
+        "Set-Team"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
+}

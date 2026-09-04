@@ -1,0 +1,31 @@
+{
+  "resourceName": "TeamsWorkloadPolicy",
+  "description": "This resources implements a Teams workload policy.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsWorkLoadPolicy",
+        "New-CsTeamsWorkLoadPolicy",
+        "Remove-CsTeamsWorkLoadPolicy",
+        "Set-CsTeamsWorkLoadPolicy"
+      ]
+    }
+  ]
+}

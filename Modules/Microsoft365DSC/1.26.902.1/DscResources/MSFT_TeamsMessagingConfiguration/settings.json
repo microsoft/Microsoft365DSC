@@ -1,0 +1,30 @@
+{
+  "resourceName": "TeamsMessagingConfiguration",
+  "description": "The TeamsMessagingConfiguration determines the messaging settings for users in your tenant.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsMessagingConfiguration",
+        "Set-CsTeamsMessagingConfiguration"
+      ]
+    }
+  ]
+}

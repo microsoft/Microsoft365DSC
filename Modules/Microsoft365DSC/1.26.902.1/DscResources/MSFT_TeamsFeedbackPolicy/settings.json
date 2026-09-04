@@ -1,0 +1,32 @@
+{
+  "resourceName": "TeamsFeedbackPolicy",
+  "description": "This resource configures an \r\nNew-CsTeamsFeedbackPolicy [-Identity] <string> [-UserInitiatedMode <string>] [-ReceiveSurveysMode <string>] [-AllowScreenshotCollection <bool>] [-AllowEmailCollection <bool>] [-AllowLogCollection <bool>] [-EnableFeatureSuggestions <bool>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]\r\n.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsFeedbackPolicy",
+        "New-CsTeamsFeedbackPolicy",
+        "Remove-CsTeamsFeedbackPolicy",
+        "Set-CsTeamsFeedbackPolicy"
+      ]
+    }
+  ]
+}

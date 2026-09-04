@@ -1,0 +1,63 @@
+{
+  "resourceName": "TeamsM365App",
+  "description": "This resource manages Teams app. This includes app state, app availability, user who updated app availability, and the associated timestamp.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Organization.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Organization.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users",
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    },
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-AllM365TeamsApps",
+        "Get-M365TeamsApp",
+        "Update-M365TeamsApp"
+      ]
+    }
+  ]
+}

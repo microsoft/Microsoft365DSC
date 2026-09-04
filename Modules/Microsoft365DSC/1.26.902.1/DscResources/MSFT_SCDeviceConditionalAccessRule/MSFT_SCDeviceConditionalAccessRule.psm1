@@ -1,0 +1,1088 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SCDeviceConditionalAccessRule'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $TargetGroups,
+
+        [Parameter()]
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [System.String]
+        $AccountUserName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAppStore,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAssistantWhileLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowConvenienceLogon,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDiagnosticSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudDocSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudPhotoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowJailbroken,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPassbookWhileLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScreenshot,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSimplePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVideoConferencing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceAssistant,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceDialing,
+
+        [Parameter()]
+        [System.UInt32]
+        $AntiVirusSignatureStatus,
+
+        [Parameter()]
+        [System.UInt32]
+        $AntiVirusStatus,
+
+        [Parameter()]
+        [System.String]
+        $AppsRating,
+
+        [Parameter()]
+        [System.String]
+        $AutoUpdateStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CameraEnabled,
+
+        [Parameter()]
+        [System.String]
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRemovableStorage,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeActiveSyncHost,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceAppStorePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceEncryptedBackup,
+
+        [Parameter()]
+        [System.UInt32]
+        $MaxPasswordAttemptsBeforeWipe,
+
+        [Parameter()]
+        [System.UInt32]
+        $MaxPasswordGracePeriod,
+
+        [Parameter()]
+        [System.String]
+        $MoviesRating,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordComplexity,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordHistoryCount,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordMinComplexChars,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordQuality,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordRequired,
+
+        [Parameter()]
+        [System.String]
+        $PasswordTimeout,
+
+        [Parameter()]
+        [System.Boolean]
+        $PhoneMemoryEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $RegionRatings,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireEmailProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $SmartScreenEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemSecurityTLS,
+
+        [Parameter()]
+        [System.String]
+        $TVShowsRating,
+
+        [Parameter()]
+        [System.String]
+        $UserAccountControlStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $WLANEnabled,
+
+        [Parameter()]
+        [System.String]
+        $WorkFoldersSyncUrl,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration of Purview Device Conditional Access Rule for $Name"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
+        {
+            $null = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+                -InboundParameters $PSBoundParameters
+
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $policyObj = Get-DeviceConditionalAccessPolicy | Where-Object -FilterScript { $_.Name -eq $Policy }
+            if ($null -ne $policyObj)
+            {
+                Write-Verbose -Message "Found policy object {$Policy}"
+                $instance = Get-DeviceConditionalAccessRule | Where-Object -FilterScript { $_.Policy -eq $policyObj.ExchangeObjectId }
+            }
+            if ($null -eq $instance)
+            {
+                return $nullResult
+            }
+        }
+        else
+        {
+            $instance = $Script:exportedInstance
+            $policyObj = Get-DeviceConditionalAccessPolicy | Where-Object -FilterScript { $_.Name -eq $Policy }
+        }
+
+        $groupNames = @()
+        foreach ($group in $instance.TargetGroups)
+        {
+            $groupValue = Get-Group $group.Guid -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.GUID -eq $group.Guid }
+            if ($null -ne $groupValue)
+            {
+                $groupNames += $groupValue.Name
+            }
+            else
+            {
+                $errorMessage = "Target Group {$group} defined in policy wasn't found"
+                New-M365DSCLogEntry -Message $errorMessage `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+            }
+        }
+
+        $results = @{
+            Name                          = $instance.Name
+            Policy                        = $policyObj.Name
+            TargetGroups                  = $groupNames
+            AccountName                   = $instance.AccountName
+            AccountUserName               = $instance.AccountUserName
+            AllowAppStore                 = $instance.AllowAppStore
+            AllowAssistantWhileLocked     = $instance.AllowAssistantWhileLocked
+            AllowConvenienceLogon         = $instance.AllowConvenienceLogon
+            AllowDiagnosticSubmission     = $instance.AllowDiagnosticSubmission
+            AllowiCloudBackup             = $instance.AllowiCloudBackup
+            AllowiCloudDocSync            = $instance.AllowiCloudDocSync
+            AllowiCloudPhotoSync          = $instance.AllowiCloudPhotoSync
+            AllowJailbroken               = $instance.AllowJailbroken
+            AllowPassbookWhileLocked      = $instance.AllowPassbookWhileLocked
+            AllowScreenshot               = $instance.AllowScreenshot
+            AllowSimplePassword           = $instance.AllowSimplePassword
+            AllowVideoConferencing        = $instance.AllowVideoConferencing
+            AllowVoiceAssistant           = $instance.AllowVoiceAssistant
+            AllowVoiceDialing             = $instance.AllowVoiceDialing
+            AntiVirusSignatureStatus      = $instance.AntiVirusSignatureStatus
+            AntiVirusStatus               = $instance.AntiVirusStatus
+            AppsRating                    = $instance.AppsRating
+            AutoUpdateStatus              = $instance.AutoUpdateStatus
+            BluetoothEnabled              = $instance.BluetoothEnabled
+            CameraEnabled                 = $instance.CameraEnabled
+            EmailAddress                  = $instance.EmailAddress
+            EnableRemovableStorage        = $instance.EnableRemovableStorage
+            ExchangeActiveSyncHost        = $instance.ExchangeActiveSyncHost
+            FirewallStatus                = $instance.FirewallStatus
+            ForceAppStorePassword         = $instance.ForceAppStorePassword
+            ForceEncryptedBackup          = $instance.ForceEncryptedBackup
+            MaxPasswordAttemptsBeforeWipe = $instance.MaxPasswordAttemptsBeforeWipe
+            MaxPasswordGracePeriod        = $instance.MaxPasswordGracePeriod
+            MoviesRating                  = $instance.MoviesRating
+            PasswordComplexity            = $instance.PasswordComplexity
+            PasswordExpirationDays        = $instance.PasswordExpirationDays
+            PasswordHistoryCount          = $instance.PasswordHistoryCount
+            PasswordMinComplexChars       = $instance.PasswordMinComplexChars
+            PasswordMinimumLength         = $instance.PasswordMinimumLength
+            PasswordQuality               = $instance.PasswordQuality
+            PasswordRequired              = $instance.PasswordRequired
+            PasswordTimeout               = $instance.PasswordTimeout
+            PhoneMemoryEncrypted          = $instance.PhoneMemoryEncrypted
+            RegionRatings                 = $instance.RegionRatings
+            RequireEmailProfile           = $instance.RequireEmailProfile
+            SmartScreenEnabled            = $instance.SmartScreenEnabled
+            SystemSecurityTLS             = $instance.SystemSecurityTLS
+            TVShowsRating                 = $instance.TVShowsRating
+            UserAccountControlStatus      = $instance.UserAccountControlStatus
+            WLANEnabled                   = $instance.WLANEnabled
+            WorkFoldersSyncUrl            = $instance.WorkFoldersSyncUrl
+            Ensure                        = 'Present'
+            Credential                    = $Credential
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            CertificateThumbprint         = $CertificateThumbprint
+            CertificatePath               = $CertificatePath
+            CertificatePassword           = $CertificatePassword
+            ManagedIdentity               = $ManagedIdentity.IsPresent
+            AccessTokens                  = $AccessTokens
+        }
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $TargetGroups,
+
+        [Parameter()]
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [System.String]
+        $AccountUserName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAppStore,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAssistantWhileLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowConvenienceLogon,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDiagnosticSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudDocSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudPhotoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowJailbroken,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPassbookWhileLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScreenshot,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSimplePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVideoConferencing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceAssistant,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceDialing,
+
+        [Parameter()]
+        [System.UInt32]
+        $AntiVirusSignatureStatus,
+
+        [Parameter()]
+        [System.UInt32]
+        $AntiVirusStatus,
+
+        [Parameter()]
+        [System.String]
+        $AppsRating,
+
+        [Parameter()]
+        [System.String]
+        $AutoUpdateStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CameraEnabled,
+
+        [Parameter()]
+        [System.String]
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRemovableStorage,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeActiveSyncHost,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceAppStorePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceEncryptedBackup,
+
+        [Parameter()]
+        [System.UInt32]
+        $MaxPasswordAttemptsBeforeWipe,
+
+        [Parameter()]
+        [System.UInt32]
+        $MaxPasswordGracePeriod,
+
+        [Parameter()]
+        [System.String]
+        $MoviesRating,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordComplexity,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordHistoryCount,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordMinComplexChars,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordQuality,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordRequired,
+
+        [Parameter()]
+        [System.String]
+        $PasswordTimeout,
+
+        [Parameter()]
+        [System.Boolean]
+        $PhoneMemoryEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $RegionRatings,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireEmailProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $SmartScreenEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemSecurityTLS,
+
+        [Parameter()]
+        [System.String]
+        $TVShowsRating,
+
+        [Parameter()]
+        [System.String]
+        $UserAccountControlStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $WLANEnabled,
+
+        [Parameter()]
+        [System.String]
+        $WorkFoldersSyncUrl,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Setting configuration of Purview Device Conditional Access Rule for $Name"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $setParameters.Remove('Name') | Out-Null
+
+    if ($Ensure -eq 'Present' -and $null -ne $TargetGroups)
+    {
+        $targetGroupsValue = @()
+        foreach ($group in $TargetGroups)
+        {
+            $entry = Get-Group $group -ErrorAction SilentlyContinue
+            if ($null -ne $entry)
+            {
+                $targetGroupsValue += $entry.Id
+            }
+        }
+        $setParameters.TargetGroups = $targetGroupsValue
+    }
+
+    # CREATE
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating new device conditional access rule {$Name}"
+        New-DeviceConditionalAccessRule @setParameters
+    }
+    # UPDATE
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        $setParameters.Remove('Policy') | Out-Null
+        $setParameters.Add('Identity', $currentInstance.Name)
+        Write-Verbose -Message "Updating device conditional access rule {$Name}"
+        Set-DeviceConditionalAccessRule @setParameters
+    }
+    # REMOVE
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing device conditional access rule {$Name}"
+        Remove-DeviceConditionalAccessRule -Identity $currentInstance.Name -Confirm:$false
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $TargetGroups,
+
+        [Parameter()]
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [System.String]
+        $AccountUserName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAppStore,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAssistantWhileLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowConvenienceLogon,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDiagnosticSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudDocSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudPhotoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowJailbroken,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPassbookWhileLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScreenshot,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSimplePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVideoConferencing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceAssistant,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceDialing,
+
+        [Parameter()]
+        [System.UInt32]
+        $AntiVirusSignatureStatus,
+
+        [Parameter()]
+        [System.UInt32]
+        $AntiVirusStatus,
+
+        [Parameter()]
+        [System.String]
+        $AppsRating,
+
+        [Parameter()]
+        [System.String]
+        $AutoUpdateStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CameraEnabled,
+
+        [Parameter()]
+        [System.String]
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRemovableStorage,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeActiveSyncHost,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceAppStorePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceEncryptedBackup,
+
+        [Parameter()]
+        [System.UInt32]
+        $MaxPasswordAttemptsBeforeWipe,
+
+        [Parameter()]
+        [System.UInt32]
+        $MaxPasswordGracePeriod,
+
+        [Parameter()]
+        [System.String]
+        $MoviesRating,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordComplexity,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordHistoryCount,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordMinComplexChars,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.UInt32]
+        $PasswordQuality,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordRequired,
+
+        [Parameter()]
+        [System.String]
+        $PasswordTimeout,
+
+        [Parameter()]
+        [System.Boolean]
+        $PhoneMemoryEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $RegionRatings,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireEmailProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $SmartScreenEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemSecurityTLS,
+
+        [Parameter()]
+        [System.String]
+        $TVShowsRating,
+
+        [Parameter()]
+        [System.String]
+        $UserAccountControlStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $WLANEnabled,
+
+        [Parameter()]
+        [System.String]
+        $WorkFoldersSyncUrl,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $compareParameters = Get-CompareParameters
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        [array] $exportedInstances = Get-DeviceConditionalAccessRule -ErrorAction Stop
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($exportedInstances.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($config in $exportedInstances)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            $displayedKey = $config.Name
+            Write-M365DSCHost -Message "    |---[$i/$($exportedInstances.Count)] $displayedKey" -DeferWrite
+            $params = @{
+                Name                  = $config.Name
+                Policy                = $config.Name.Split('{')[0]
+                TargetGroups          = $config.TargetGroups
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('Name')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

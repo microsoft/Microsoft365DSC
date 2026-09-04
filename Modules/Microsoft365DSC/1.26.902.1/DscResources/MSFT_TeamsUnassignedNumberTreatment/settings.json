@@ -1,0 +1,31 @@
+{
+  "resourceName": "TeamsUnassignedNumberTreatment",
+  "description": "This resource configures an Creates a new treatment for how calls to an unassigned number range should be routed. The call can be routed to a user, an application or to an announcement service where a custom message will be played to the caller.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsUnassignedNumberTreatment",
+        "New-CsTeamsUnassignedNumberTreatment",
+        "Remove-CsTeamsUnassignedNumberTreatment",
+        "Set-CsTeamsUnassignedNumberTreatment"
+      ]
+    }
+  ]
+}

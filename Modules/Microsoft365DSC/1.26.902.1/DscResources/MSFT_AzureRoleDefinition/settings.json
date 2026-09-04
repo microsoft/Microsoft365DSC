@@ -1,0 +1,62 @@
+{
+  "resourceName": "AzureRoleDefinition",
+  "description": "Manages Azure RBAC custom role definitions across management group, subscription, and resource group scopes.",
+  "roles": {
+    "read": [
+      "User Access Administrator",
+      "Owner"
+    ],
+    "update": [
+      "User Access Administrator",
+      "Owner"
+    ]
+  },
+  "permissions": {
+    "Azure Service Management": {
+      "delegated": {
+        "read": [
+          {
+            "name": "user_impersonation"
+          }
+        ],
+        "update": [
+          {
+            "name": "user_impersonation"
+          }
+        ]
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    }
+  },
+  "requiredModules": [
+    "Az.Accounts",
+    "Az.Resources"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov",
+    "USGovDoD"
+  ],
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Az.Accounts",
+      "cmdlets": [
+        "Connect-AzAccount",
+        "Register-AzModule"
+      ]
+    },
+    {
+      "module": "Az.Resources",
+      "cmdlets": [
+        "Get-AzRoleDefinition",
+        "New-AzRoleDefinition",
+        "Remove-AzRoleDefinition",
+        "Set-AzRoleDefinition"
+      ]
+    }
+  ]
+}

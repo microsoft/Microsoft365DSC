@@ -1,0 +1,67 @@
+{
+  "resourceName": "AADPolicyFeatureRolloutPolicy",
+  "description": "This resource configures an Azure AD Policy Feature Rollout Policy.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyFeatureRolloutPolicy",
+        "New-MgBetaPolicyFeatureRolloutPolicy",
+        "New-MgBetaPolicyFeatureRolloutPolicyApplyToByRef",
+        "Remove-MgBetaPolicyFeatureRolloutPolicy",
+        "Remove-MgBetaPolicyFeatureRolloutPolicyApplyToDirectoryObjectByRef",
+        "Update-MgBetaPolicyFeatureRolloutPolicy"
+      ]
+    },
+    {
+      "module": "MSCloudLoginAssistant",
+      "cmdlets": [
+        "Get-MSCloudLoginConnectionProfile"
+      ]
+    }
+  ]
+}

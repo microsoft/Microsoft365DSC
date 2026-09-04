@@ -1,0 +1,31 @@
+{
+  "resourceName": "TeamsAudioConferencingPolicy",
+  "description": "This resource configures a Teams Audio Conferencing Policy.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsAudioConferencingPolicy",
+        "New-CsTeamsAudioConferencingPolicy",
+        "Remove-CsTeamsAudioConferencingPolicy",
+        "Set-CsTeamsAudioConferencingPolicy"
+      ]
+    }
+  ]
+}

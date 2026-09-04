@@ -1,0 +1,1237 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceControlPolicyWindows10'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        #region resource generator code
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Allow_Deny_Layered,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_IDs_Allow,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_IDs_Allow_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Instance_IDs_Allow,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Instance_IDs_Allow_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Classes_Allow,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Classes_Allow_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Unspecified_Deny,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_IDs_Deny,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_IDs_Deny_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_IDs_Deny_Retroactive,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Instance_IDs_Deny,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Instance_IDs_Deny_Retroactive,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Instance_IDs_Deny_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Classes_Deny,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Classes_Deny_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Classes_Deny_Retroactive,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Removable_Deny,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyRead_Access_2,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyRead_Access_1,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyWrite_Access_2,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyWrite_Access_1,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowFullScanRemovableDriveScanning,
+
+        [Parameter()]
+        [ValidateSet('1', '2')]
+        [System.String]
+        $DefaultEnforcement,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceControlEnabled,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowDirectMemoryAccess,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2')]
+        [System.String]
+        $DeviceEnumerationPolicy,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $RemovableDiskDenyWriteAccess,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowUSBConnection,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2')]
+        [System.String]
+        $AllowBluetooth,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowAdvertising,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowDiscoverableMode,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowPrepairing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowPromptedProximalConnections,
+
+        [Parameter()]
+        [ValidateLength(0, 87516)]
+        [System.String[]]
+        $ServicesAllowedList,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PolicyRule,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowStorageCard,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration of the Intune Device Control Policy for Windows10 with Id {$Id} and Name {$DisplayName}"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $DisplayName)
+        {
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ErrorAction SilentlyContinue `
+                    -ExpandProperty 'settings($expand=settingDefinitions)'
+                $settings = $getValue.settings
+            }
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Intune Device Control Policy for Windows10 with Id {$Id}"
+
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
+                {
+                    $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
+                        -All `
+                        -Filter "Name eq '$($DisplayName -replace "'", "''")'" `
+                        -ErrorAction SilentlyContinue
+
+                    if ($getValue.Length -gt 1)
+                    {
+                        throw "Duplicate Intune Device Control Policy for Windows10 named $DisplayName exist in tenant"
+                    }
+                }
+            }
+            #endregion
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Intune Device Control Policy for Windows10 with Name {$DisplayName}."
+                return $nullResult
+            }
+        }
+        else
+        {
+            $getValue = $Script:exportedInstance
+            $settings = $getValue.settings
+        }
+        $Id = $getValue.Id
+        Write-Verbose -Message "An Intune Device Control Policy for Windows10 with Id {$Id} and Name {$DisplayName} was found"
+
+        # Retrieve policy specific settings
+        if ($null -eq $settings)
+        {
+            [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
+                -DeviceManagementConfigurationPolicyId $Id `
+                -ExpandProperty 'settingDefinitions' `
+                -All `
+                -ErrorAction Stop
+        }
+
+        $policySettings = @{}
+        Write-Verbose -Message 'Exporting Calatog Policy Settings'
+        $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings
+
+        #region resource generator code
+        Write-Verbose -Message 'Processing complex PolicyRule property'
+        $complexPolicyRule = @()
+        foreach ($currentPolicyRule in $policySettings.policyRule)
+        {
+            $complexEntry = @()
+            foreach ($currentEntry in $currentPolicyRule.entry)
+            {
+                $complexEntry += @{
+                    Type        = $currentEntry.Type
+                    Options     = $currentEntry.Options
+                    Sid         = $currentEntry.Sid
+                    AccessMask  = $currentEntry.AccessMask
+                    ComputerSid = $currentEntry.ComputerSid
+                }
+            }
+            $myPolicyRule = [ordered]@{}
+            $myPolicyRule.Add('Entry', $complexEntry)
+            $myPolicyRule.Add('Name', $currentPolicyRule.name)
+            $myPolicyRule.Add('ExcludedIdList_GroupId', $currentPolicyRule.excludedIdList_GroupId)
+            $myPolicyRule.Add('IncludedIdList_GroupId', $currentPolicyRule.includedIdList_GroupId)
+            $complexPolicyRule += $myPolicyRule
+        }
+        $policySettings.Remove('PolicyRule') | Out-Null
+        #endregion
+
+        $results = @{
+            #region resource generator code
+            Description           = $getValue.Description
+            DisplayName           = $getValue.Name
+            RoleScopeTagIds       = $getValue.RoleScopeTagIds
+            Id                    = $getValue.Id
+            PolicyRule            = $complexPolicyRule
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            #endregion
+        }
+        $results += $policySettings
+
+        Write-Verbose -Message 'Getting Assignments'
+        $assignmentsValues = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Id
+        $assignmentResult = @()
+
+        Write-Verbose -Message 'Converting Asignments'
+        if ($assignmentsValues.Count -gt 0)
+        {
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $assignmentsValues -IncludeDeviceFilter $true
+        }
+        Write-Verbose -Message 'Assignments converted'
+        $results.Add('Assignments', $assignmentResult)
+
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        #region resource generator code
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Allow_Deny_Layered,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_IDs_Allow,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_IDs_Allow_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Instance_IDs_Allow,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Instance_IDs_Allow_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Classes_Allow,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Classes_Allow_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Unspecified_Deny,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_IDs_Deny,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_IDs_Deny_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_IDs_Deny_Retroactive,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Instance_IDs_Deny,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Instance_IDs_Deny_Retroactive,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Instance_IDs_Deny_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Classes_Deny,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Classes_Deny_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Classes_Deny_Retroactive,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Removable_Deny,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyRead_Access_2,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyRead_Access_1,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyWrite_Access_2,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyWrite_Access_1,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowFullScanRemovableDriveScanning,
+
+        [Parameter()]
+        [ValidateSet('1', '2')]
+        [System.String]
+        $DefaultEnforcement,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceControlEnabled,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowDirectMemoryAccess,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2')]
+        [System.String]
+        $DeviceEnumerationPolicy,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $RemovableDiskDenyWriteAccess,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowUSBConnection,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2')]
+        [System.String]
+        $AllowBluetooth,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowAdvertising,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowDiscoverableMode,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowPrepairing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowPromptedProximalConnections,
+
+        [Parameter()]
+        [ValidateLength(0, 87516)]
+        [System.String[]]
+        $ServicesAllowedList,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PolicyRule,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowStorageCard,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    $templateReferenceId = '0f2034c6-3cd6-4ee1-bd37-f3c0693e9548_1'
+    $platforms = 'windows10'
+    $technologies = 'mdm,microsoftSense'
+
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating an Intune Device Control Policy for Windows10 with Name {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
+
+        $settings = Get-IntuneSettingCatalogPolicySetting `
+            -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
+            -TemplateId $templateReferenceId
+
+        $createParameters = @{
+            name              = $DisplayName
+            description       = $Description
+            templateReference = @{ templateId = $templateReferenceId }
+            platforms         = $platforms
+            technologies      = $technologies
+            settings          = $settings
+            roleScopeTagIds   = $RoleScopeTagIds
+        }
+
+        #region resource generator code
+        $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
+
+        if ($policy.Id)
+        {
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+            Update-DeviceConfigurationPolicyAssignment `
+                -DeviceConfigurationPolicyId $policy.Id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/configurationPolicies'
+        }
+        #endregion
+    }
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating the Intune Device Control Policy for Windows10 with Id {$($currentInstance.Id)}"
+        $BoundParameters.Remove('Assignments') | Out-Null
+
+        $settings = Get-IntuneSettingCatalogPolicySetting `
+            -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
+            -TemplateId $templateReferenceId
+
+        Update-IntuneDeviceConfigurationPolicy `
+            -DeviceConfigurationPolicyId $currentInstance.Id `
+            -Name $DisplayName `
+            -Description $Description `
+            -TemplateReferenceId $templateReferenceId `
+            -Platforms $platforms `
+            -Technologies $technologies `
+            -Settings $settings `
+            -RoleScopeTagIds $RoleScopeTagIds
+
+        #region resource generator code
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentInstance.Id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/configurationPolicies'
+        #endregion
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing the Intune Device Control Policy for Windows10 with Id {$($currentInstance.Id)}"
+        #region resource generator code
+        Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentInstance.Id
+        #endregion
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        #region resource generator code
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Allow_Deny_Layered,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_IDs_Allow,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_IDs_Allow_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Instance_IDs_Allow,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Instance_IDs_Allow_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Classes_Allow,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Classes_Allow_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Unspecified_Deny,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_IDs_Deny,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_IDs_Deny_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_IDs_Deny_Retroactive,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Instance_IDs_Deny,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Instance_IDs_Deny_Retroactive,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Instance_IDs_Deny_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Classes_Deny,
+
+        [Parameter()]
+        [ValidateLength(0, 2048)]
+        [System.String[]]
+        $DeviceInstall_Classes_Deny_List,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Classes_Deny_Retroactive,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceInstall_Removable_Deny,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyRead_Access_2,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyRead_Access_1,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyWrite_Access_2,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $WPDDevices_DenyWrite_Access_1,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowFullScanRemovableDriveScanning,
+
+        [Parameter()]
+        [ValidateSet('1', '2')]
+        [System.String]
+        $DefaultEnforcement,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DeviceControlEnabled,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowDirectMemoryAccess,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2')]
+        [System.String]
+        $DeviceEnumerationPolicy,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $RemovableDiskDenyWriteAccess,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowUSBConnection,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2')]
+        [System.String]
+        $AllowBluetooth,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowAdvertising,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowDiscoverableMode,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowPrepairing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowPromptedProximalConnections,
+
+        [Parameter()]
+        [ValidateLength(0, 87516)]
+        [System.String[]]
+        $ServicesAllowedList,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PolicyRule,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowStorageCard,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $compareParameters = Get-CompareParameters
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        #region resource generator code
+        $policyTemplateID = '0f2034c6-3cd6-4ee1-bd37-f3c0693e9548_1'
+        $baseFilter = "templateReference/templateId eq '$policyTemplateID'"
+        if (-not [System.String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($Filter) and ($baseFilter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-M365DSCExportCachedConfigurationPolicies `
+            -TemplateId $policyTemplateID `
+            -Filter $Filter
+        #endregion
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($getValue.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($config in $getValue)
+        {
+            $displayedKey = $config.Id
+            if (-not [String]::IsNullOrEmpty($config.displayName))
+            {
+                $displayedKey = $config.displayName
+            }
+            elseif (-not [string]::IsNullOrEmpty($config.name))
+            {
+                $displayedKey = $config.name
+            }
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
+            $params = @{
+                Id                    = $config.Id
+                DisplayName           = $config.Name
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
+            if ($null -ne $Results.PolicyRule)
+            {
+                $complexMapping = @(
+                    @{
+                        Name            = 'PolicyRule'
+                        CimInstanceName = 'MicrosoftGraphIntuneSettingsCatalogPolicyRule'
+                        IsRequired      = $False
+                    }
+                    @{
+                        Name            = 'Entry'
+                        CimInstanceName = 'MicrosoftGraphIntuneSettingsCatalogPolicyRuleEntry'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.PolicyRule `
+                    -CIMInstanceName 'MicrosoftGraphIntuneSettingsCatalogPolicyRule' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.PolicyRule = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('PolicyRule') | Out-Null
+                }
+            }
+
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential `
+                -NoEscape @('PolicyRule', 'Assignments') `
+                -RawResults $rawResults
+
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        PostProcessing     = {
+            param($DesiredValues, $CurrentValues, $ValuesToCheck, $PostProcessingArgs)
+            $PostProcessingArgs[0] | ForEach-Object {
+                if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))
+                {
+                    if ($null -ne $CurrentValues[$_.Key] -or $null -ne $DesiredValues[$_.Key])
+                    {
+                        $ValuesToCheck[$_.Key] = $null
+                        if (-not $DesiredValues.ContainsKey($_.Key))
+                        {
+                            $DesiredValues.Add($_.Key, $null)
+                        }
+                    }
+                }
+            }
+
+            return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
+        }
+        PostProcessingArgs = $MyInvocation.MyCommand.Parameters.GetEnumerator()
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

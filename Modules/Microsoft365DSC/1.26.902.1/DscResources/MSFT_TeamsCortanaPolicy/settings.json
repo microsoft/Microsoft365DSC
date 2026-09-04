@@ -1,0 +1,31 @@
+{
+  "resourceName": "TeamsCortanaPolicy",
+  "description": "This resource configures an The CsTeamsCortanaPolicy resources enable administrators to control settings for Cortana voice assistant in Microsoft Teams.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsCortanaPolicy",
+        "New-CsTeamsCortanaPolicy",
+        "Remove-CsTeamsCortanaPolicy",
+        "Set-CsTeamsCortanaPolicy"
+      ]
+    }
+  ]
+}

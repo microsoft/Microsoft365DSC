@@ -1,0 +1,36 @@
+{
+  "resourceName": "TeamsComplianceRecordingPolicy",
+  "description": "This resource configures an Creates a new Teams recording policy for governing automatic policy-based recording in your tenant. Automatic policy-based recording is only applicable to Microsoft Teams users.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsComplianceRecordingApplication",
+        "Get-CsTeamsComplianceRecordingPolicy",
+        "New-CsTeamsComplianceRecordingApplication",
+        "New-CsTeamsComplianceRecordingPairedApplication",
+        "New-CsTeamsComplianceRecordingPolicy",
+        "Remove-CsTeamsComplianceRecordingPolicy",
+        "Set-CsTeamsComplianceRecordingApplication",
+        "Set-CsTeamsComplianceRecordingPolicy"
+      ]
+    }
+  ]
+}

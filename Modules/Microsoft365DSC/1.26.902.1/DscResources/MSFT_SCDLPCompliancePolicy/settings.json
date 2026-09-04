@@ -1,0 +1,80 @@
+{
+  "resourceName": "SCDLPCompliancePolicy",
+  "description": "This resource configures a DLP Compliance Policy in Purview.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Compliance Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
+    },
+    "Office 365 Exchange Online": {
+      "application": {
+        "read": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ],
+        "update": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ]
+      }
+    },
+    "purview": {
+      "requiredroles": {
+        "read": [
+          "Security Reader"
+        ],
+        "update": [
+          "Organization Configuration"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [
+          "Security Reader"
+        ],
+        "update": [
+          "Compliance Data Administrator"
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Groups"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}

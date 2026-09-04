@@ -1,0 +1,629 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_DefenderDeviceAuthenticatedScanDefinition'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.UInt32]
+        $IntervalInHours,
+
+        [Parameter()]
+        [System.String]
+        $Target,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsActive,
+
+        [Parameter()]
+        [System.String]
+        $ScanType,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ScannerAgent,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ScanAuthenticationParams,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration for Defender Device Authenticated Scan Definition with Name $Name"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
+        {
+            $null = New-M365DSCConnection -Workload 'DefenderForEndpoint' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $instances = (Invoke-M365DSCDefenderREST -Uri 'https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions' `
+                    -Method GET).value
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $instance = $instances | Where-Object -FilterScript { $_.id -eq $Id }
+            }
+            if ($null -eq $instance)
+            {
+                $instance = $instances | Where-Object -FilterScript { $_.scanName -eq $Name }
+            }
+        }
+        else
+        {
+            $instance = $Script:exportedInstance
+        }
+
+        if ($null -eq $instance)
+        {
+            return $nullResult
+        }
+
+        $ScannerAgentValue = $null
+        if ($null -ne $instance.scannerAgent)
+        {
+            $ScannerAgentValue = @{
+                id          = $instance.scannerAgent.id
+                machineId   = $instance.scannerAgent.machineId
+                machineName = $instance.scannerAgent.machineName
+            }
+        }
+
+        # This property cannot be retrieve, nor changed once set.
+        $ScanAuthenticationParamsValue = $null
+        if ($null -ne $instance.scanAuthenticationParams)
+        {
+            $ScanAuthenticationParamsValue = @{
+                DataType           = $ScanAuthenticationParams.DataType
+                Type               = $ScanAuthenticationParams.Type
+                KeyVaultUrl        = $ScanAuthenticationParams.KeyVaultUrl
+                KeyVaultSecretName = $ScanAuthenticationParams.keyVaultSecretName
+                Domain             = $ScanAuthenticationParams.Domain
+                Username           = $ScanAuthenticationParams.Username
+                IsGMSAUser         = $ScanAuthenticationParams.IsGMSAUser
+                CommunityString    = $ScanAuthenticationParams.CommunityString
+                AuthProtocol       = $ScanAuthenticationParams.AuthProtocol
+                AuthPassword       = $ScanAuthenticationParams.AuthPassword
+                PrivProtocol       = $ScanAuthenticationParams.PrivProtocol
+                PrivPassword       = $ScanAuthenticationParams.PrivPassword
+            }
+        }
+        else
+        {
+            $ScanAuthenticationParamsValue = @{
+                DataType = '#microsoft.windowsDefenderATP.api.SnmpAuthParams'
+                Type     = 'NoAuthNoPriv'
+            }
+        }
+
+        $results = @{
+            Name                     = $instance.scanName
+            Id                       = $instance.id
+            IntervalInHours          = $instance.intervalInHours
+            Target                   = $instance.Target
+            IsActive                 = $instance.isActive
+            ScanType                 = $instance.scanType
+            ScannerAgent             = $ScannerAgentValue
+            ScanAuthenticationParams = $ScanAuthenticationParamsValue
+            Ensure                   = 'Present'
+            Credential               = $Credential
+            ApplicationId            = $ApplicationId
+            TenantId                 = $TenantId
+            CertificateThumbprint    = $CertificateThumbprint
+            CertificatePath          = $CertificatePath
+            CertificatePassword      = $CertificatePassword
+            ManagedIdentity          = $ManagedIdentity.IsPresent
+            AccessTokens             = $AccessTokens
+        }
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.UInt32]
+        $IntervalInHours,
+
+        [Parameter()]
+        [System.String]
+        $Target,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsActive,
+
+        [Parameter()]
+        [System.String]
+        $ScanType,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ScannerAgent,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ScanAuthenticationParams,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Setting configuration for Defender Device Authenticated Scan Definition with Name $Name"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+
+    $instanceParams = @{
+        scanType                 = $ScanType
+        scanName                 = $Name
+        isActive                 = $IsActive
+        target                   = $Target
+        intervalInHours          = $IntervalInHours
+        scannerAgent             = @{
+            machineName = $ScannerAgent.machineName
+            id          = $ScannerAgent.id
+        }
+        targetType               = 'Ip'
+        scanAuthenticationParams = @{
+            '@odata.type' = $ScanAuthenticationParams.DataType
+            type          = $ScanAuthenticationParams.Type
+        }
+    }
+
+    if ($null -ne $ScanAuthenticationParams.KeyVaultUrl)
+    {
+        $instanceParams.scanAuthenticationParams.Add('keyVaultUrl', $ScanAuthenticationParams.KeyVaultUrl)
+    }
+    if ($null -ne $ScanAuthenticationParams.KeyVaultSecretName)
+    {
+        $instanceParams.scanAuthenticationParams.Add('keyVaultSecretName', $ScanAuthenticationParams.KeyVaultSecretName)
+    }
+    if ($null -ne $ScanAuthenticationParams.Domain)
+    {
+        $instanceParams.scanAuthenticationParams.Add('domain', $ScanAuthenticationParams.Domain)
+    }
+    if ($null -ne $ScanAuthenticationParams.Username)
+    {
+        $instanceParams.scanAuthenticationParams.Add('username', $ScanAuthenticationParams.Username)
+    }
+    if ($null -ne $ScanAuthenticationParams.IsGMSAUser)
+    {
+        $instanceParams.scanAuthenticationParams.Add('isGMSAUser', $ScanAuthenticationParams.IsGMSAUser)
+    }
+    if ($null -ne $ScanAuthenticationParams.CommunityString)
+    {
+        $instanceParams.scanAuthenticationParams.Add('communityString', $ScanAuthenticationParams.CommunityString)
+    }
+    if ($null -ne $ScanAuthenticationParams.AuthProtocol)
+    {
+        $instanceParams.scanAuthenticationParams.Add('authProtocol', $ScanAuthenticationParams.AuthProtocol)
+    }
+    if ($null -ne $ScanAuthenticationParams.AuthPassword)
+    {
+        $instanceParams.scanAuthenticationParams.Add('authPassword', $ScanAuthenticationParams.AuthPassword)
+    }
+    if ($null -ne $ScanAuthenticationParams.PrivProtocol)
+    {
+        $instanceParams.scanAuthenticationParams.Add('privProtocol', $ScanAuthenticationParams.PrivProtocol)
+    }
+    if ($null -ne $ScanAuthenticationParams.PrivPassword)
+    {
+        $instanceParams.scanAuthenticationParams.Add('privPassword', $ScanAuthenticationParams.PrivPassword)
+    }
+
+    # CREATE
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating new device authenticated scan definition {$Name} with payload:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
+        $response = Invoke-M365DSCDefenderREST -Uri 'https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions' `
+            -Method POST `
+            -Body $instanceParams
+        Write-Verbose -Message "Response:`r`n$($response.Content)"
+    }
+    # UPDATE
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating device authenticated scan definition {$Name} with payload:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
+        $response = Invoke-M365DSCDefenderREST -Uri "https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions/$($currentInstance.Id)" `
+            -Method PATCH `
+            -Body $instanceParams
+        Write-Verbose -Message "Response:`r`n$($response.Content)"
+    }
+    # REMOVE
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        $instanceParams = @{
+            ScanDefinitionIds = @($currentInstance.Id)
+        }
+        Write-Verbose -Message "Deleting device authenticated scan definition {$Name} with payload:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
+        $response = Invoke-M365DSCDefenderREST -Uri 'https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions/BatchDelete' `
+            -Method POST `
+            -Body $instanceParams
+        Write-Verbose -Message "Response:`r`n$($response.Content)"
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.UInt32]
+        $IntervalInHours,
+
+        [Parameter()]
+        [System.String]
+        $Target,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsActive,
+
+        [Parameter()]
+        [System.String]
+        $ScanType,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ScannerAgent,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ScanAuthenticationParams,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $compareParameters = Get-CompareParameters
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+        @compareParameters
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'DefenderForEndpoint' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        [array] $Script:exportedInstances = (Invoke-M365DSCDefenderREST -Uri 'https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions' `
+                -Method GET).value
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($Script:exportedInstances.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($config in $Script:exportedInstances)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            $displayedKey = $config.scanName
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            $params = @{
+                Name                  = $config.scanName
+                id                    = $config.id
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
+
+            if ($Results.ScannerAgent)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ScannerAgent -CIMInstanceName DefenderDeviceAuthenticatedScanDefinitionScanAgent
+                if ($complexTypeStringResult)
+                {
+                    $Results.ScannerAgent = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ScannerAgent') | Out-Null
+                }
+            }
+
+            if ($Results.ScanAuthenticationParams)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ScanAuthenticationParams -CIMInstanceName DefenderDeviceAuthenticatedScanDefinitionAuthenticationParams
+                if ($complexTypeStringResult)
+                {
+                    $Results.ScanAuthenticationParams = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ScanAuthenticationParams') | Out-Null
+                }
+            }
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential `
+                -NoEscape @('ScannerAgent', 'ScanAuthenticationParams')
+
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Get-CompareParameters
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return @{
+        ExcludedProperties = @('ScanAuthenticationParams')
+    }
+}
+
+Export-ModuleMember -Function @('*-TargetResource', 'Get-CompareParameters')

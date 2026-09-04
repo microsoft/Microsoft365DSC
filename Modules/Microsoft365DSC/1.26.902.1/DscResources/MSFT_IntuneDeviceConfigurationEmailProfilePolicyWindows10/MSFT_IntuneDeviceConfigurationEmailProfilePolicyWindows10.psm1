@@ -1,0 +1,789 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceConfigurationEmailProfilePolicyWindows10'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        #region resource generator code
+        [Parameter()]
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [ValidateSet('userDefined', 'oneDay', 'threeDays', 'oneWeek', 'twoWeeks', 'oneMonth', 'unlimited')]
+        [System.String]
+        $DurationOfEmailToSync,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
+        [System.String]
+        $EmailAddressSource,
+
+        [Parameter()]
+        [ValidateSet('userDefined', 'asMessagesArrive', 'manual', 'fifteenMinutes', 'thirtyMinutes', 'sixtyMinutes', 'basedOnMyUsage')]
+        [System.String]
+        $EmailSyncSchedule,
+
+        [Parameter()]
+        [System.String]
+        $HostName,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireSsl,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncCalendar,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncContacts,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncTasks,
+
+        [Parameter()]
+        [System.String]
+        $CustomDomainName,
+
+        [Parameter()]
+        [ValidateSet('fullDomainName', 'netBiosDomainName')]
+        [System.String]
+        $UserDomainNameSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress', 'samAccountName')]
+        [System.String]
+        $UsernameAADSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
+        [System.String]
+        $UsernameSource,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration of the Intune Device Configuration Email Profile Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
+        {
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [string]::IsNullOrEmpty($Id))
+            {
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "Id eq '$Id'" -ErrorAction SilentlyContinue
+            }
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Intune Device Configuration Email Profile Policy for Windows10 with Id {$Id}"
+
+                if (-not [string]::IsNullOrEmpty($DisplayName))
+                {
+                    $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
+                        -All `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.windows10EasEmailProfileConfiguration')" `
+                        -ErrorAction SilentlyContinue
+                    if ($null -eq $getValue)
+                    {
+                        Write-Verbose -Message "Could not find an Intune Device Configuration Email Profile Policy for Windows10 with DisplayName {$DisplayName}"
+                        return $nullResult
+                    }
+                    if (([array]$getValue).Count -gt 1)
+                    {
+                        throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+                    }
+                }
+            }
+            #endregion
+        }
+        else
+        {
+            $getValue = $Script:exportedInstance
+        }
+
+        $Id = $getValue.Id
+        Write-Verbose -Message "An Intune Device Configuration Email Profile Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
+
+        #region resource generator code
+        $enumDurationOfEmailToSync = $null
+        if ($null -ne $getValue.durationOfEmailToSync)
+        {
+            $enumDurationOfEmailToSync = $getValue.durationOfEmailToSync.ToString()
+        }
+
+        $enumEmailAddressSource = $null
+        if ($null -ne $getValue.emailAddressSource)
+        {
+            $enumEmailAddressSource = $getValue.emailAddressSource.ToString()
+        }
+
+        $enumEmailSyncSchedule = $null
+        if ($null -ne $getValue.emailSyncSchedule)
+        {
+            $enumEmailSyncSchedule = $getValue.emailSyncSchedule.ToString()
+        }
+
+        $enumUserDomainNameSource = $null
+        if ($null -ne $getValue.userDomainNameSource)
+        {
+            $enumUserDomainNameSource = $getValue.userDomainNameSource.ToString()
+        }
+
+        $enumUsernameAADSource = $null
+        if ($null -ne $getValue.usernameAADSource)
+        {
+            $enumUsernameAADSource = $getValue.usernameAADSource.ToString()
+        }
+
+        $enumUsernameSource = $null
+        if ($null -ne $getValue.usernameSource)
+        {
+            $enumUsernameSource = $getValue.usernameSource.ToString()
+        }
+        #endregion
+
+        $results = @{
+            #region resource generator code
+            AccountName           = $getValue.accountName
+            DurationOfEmailToSync = $enumDurationOfEmailToSync
+            EmailAddressSource    = $enumEmailAddressSource
+            EmailSyncSchedule     = $enumEmailSyncSchedule
+            HostName              = $getValue.hostName
+            RequireSsl            = $getValue.requireSsl
+            SyncCalendar          = $getValue.syncCalendar
+            SyncContacts          = $getValue.syncContacts
+            SyncTasks             = $getValue.syncTasks
+            CustomDomainName      = $getValue.customDomainName
+            UserDomainNameSource  = $enumUserDomainNameSource
+            UsernameAADSource     = $enumUsernameAADSource
+            UsernameSource        = $enumUsernameSource
+            Description           = $getValue.Description
+            DisplayName           = $getValue.DisplayName
+            Id                    = $getValue.Id
+            RoleScopeTagIds       = $getValue.RoleScopeTagIds
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
+            #endregion
+        }
+
+        $returnAssignments = @()
+        $graphAssignments = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        if ($graphAssignments.Count -gt 0)
+        {
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                -IncludeDeviceFilter:$true `
+                -Assignments ($graphAssignments)
+        }
+        $results.Add('Assignments', $returnAssignments)
+
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        #region resource generator code
+        [Parameter()]
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [ValidateSet('userDefined', 'oneDay', 'threeDays', 'oneWeek', 'twoWeeks', 'oneMonth', 'unlimited')]
+        [System.String]
+        $DurationOfEmailToSync,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
+        [System.String]
+        $EmailAddressSource,
+
+        [Parameter()]
+        [ValidateSet('userDefined', 'asMessagesArrive', 'manual', 'fifteenMinutes', 'thirtyMinutes', 'sixtyMinutes', 'basedOnMyUsage')]
+        [System.String]
+        $EmailSyncSchedule,
+
+        [Parameter()]
+        [System.String]
+        $HostName,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireSsl,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncCalendar,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncContacts,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncTasks,
+
+        [Parameter()]
+        [System.String]
+        $CustomDomainName,
+
+        [Parameter()]
+        [ValidateSet('fullDomainName', 'netBiosDomainName')]
+        [System.String]
+        $UserDomainNameSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress', 'samAccountName')]
+        [System.String]
+        $UsernameAADSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
+        [System.String]
+        $UsernameSource,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating an Intune Device Configuration Email Profile Policy for Windows10 with DisplayName {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
+
+        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
+        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
+        $createParameters.Remove('Id') | Out-Null
+
+        #region resource generator code
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EasEmailProfileConfiguration')
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+
+        if ($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceConfigurations'
+        }
+        #endregion
+    }
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating the Intune Device Configuration Email Profile Policy for Windows10 with Id {$($currentInstance.Id)}"
+        $BoundParameters.Remove('Assignments') | Out-Null
+
+        $updateParameters = ([Hashtable]$boundParameters).Clone()
+        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
+        $updateParameters.Remove('Id') | Out-Null
+
+        #region resource generator code
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10EasEmailProfileConfiguration')
+        Update-MgBetaDeviceManagementDeviceConfiguration `
+            -DeviceConfigurationId $currentInstance.Id `
+            -BodyParameter $UpdateParameters
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentInstance.id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/deviceConfigurations'
+        #endregion
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing the Intune Device Configuration Email Profile Policy for Windows10 with Id {$($currentInstance.Id)}"
+        #region resource generator code
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        #endregion
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        #region resource generator code
+        [Parameter()]
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [ValidateSet('userDefined', 'oneDay', 'threeDays', 'oneWeek', 'twoWeeks', 'oneMonth', 'unlimited')]
+        [System.String]
+        $DurationOfEmailToSync,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
+        [System.String]
+        $EmailAddressSource,
+
+        [Parameter()]
+        [ValidateSet('userDefined', 'asMessagesArrive', 'manual', 'fifteenMinutes', 'thirtyMinutes', 'sixtyMinutes', 'basedOnMyUsage')]
+        [System.String]
+        $EmailSyncSchedule,
+
+        [Parameter()]
+        [System.String]
+        $HostName,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireSsl,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncCalendar,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncContacts,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncTasks,
+
+        [Parameter()]
+        [System.String]
+        $CustomDomainName,
+
+        [Parameter()]
+        [ValidateSet('fullDomainName', 'netBiosDomainName')]
+        [System.String]
+        $UserDomainNameSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress', 'samAccountName')]
+        [System.String]
+        $UsernameAADSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
+        [System.String]
+        $UsernameSource,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+        #region resource generator code
+        $baseFilter = "isof('microsoft.graph.windows10EasEmailProfileConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
+        #endregion
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($getValue.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($config in $getValue)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            $displayedKey = $config.Id
+            if (-not [String]::IsNullOrEmpty($config.displayName))
+            {
+                $displayedKey = $config.displayName
+            }
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
+            $params = @{
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @params
+            $rawResults = $Results.Clone()
+
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential `
+                -NoEscape @('Assignments') `
+                -RawResults $rawResults
+
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
+        {
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+        }
+        else
+        {
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
+            throw
+        }
+    }
+}
+
+Export-ModuleMember -Function *-TargetResource

@@ -1,0 +1,58 @@
+{
+  "resourceName": "AADCrossTenantIdentitySyncPolicyPartner",
+  "description": "Create a cross-tenant user synchronization policy for a partner-specific configuration.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Security Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.CrossTenantAccess"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyCrossTenantAccessPolicyPartner",
+        "Get-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization",
+        "Remove-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization",
+        "Set-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization"
+      ]
+    }
+  ]
+}

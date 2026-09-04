@@ -1,0 +1,29 @@
+{
+  "resourceName": "TeamsUpgradePolicy",
+  "description": "",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsUpgradePolicy",
+        "Grant-CsTeamsUpgradePolicy"
+      ]
+    }
+  ]
+}

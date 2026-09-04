@@ -1,0 +1,51 @@
+{
+  "resourceName": "AADConnectorGroupApplicationProxy",
+  "description": "This resource configures an Azure AD Connector Group Application Proxy.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.Applications"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Applications",
+      "cmdlets": [
+        "Get-MgBetaOnPremisePublishingProfileConnectorGroup",
+        "New-MgBetaOnPremisePublishingProfileConnectorGroup",
+        "Remove-MgBetaOnPremisePublishingProfileConnectorGroup",
+        "Update-MgBetaOnPremisePublishingProfileConnectorGroup"
+      ]
+    }
+  ]
+}

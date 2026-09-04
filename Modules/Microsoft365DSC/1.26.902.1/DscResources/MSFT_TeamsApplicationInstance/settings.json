@@ -1,0 +1,30 @@
+{
+  "resourceName": "TeamsApplicationInstance",
+  "description": "Manages Teams Resource Accounts.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsOnlineApplicationInstance",
+        "New-CsOnlineApplicationInstance",
+        "Set-CsOnlineApplicationInstance"
+      ]
+    }
+  ]
+}

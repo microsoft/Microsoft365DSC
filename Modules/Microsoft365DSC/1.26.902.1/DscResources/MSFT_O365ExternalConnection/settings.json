@@ -1,0 +1,54 @@
+{
+  "resourceName": "O365ExternalConnection",
+  "description": "Configures external connectors in Microsoft 365.",
+  "roles": {},
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "ExternalConnection.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "ExternalConnection.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Beta.Search"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgApplication",
+        "Get-MgServicePrincipal"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Search",
+      "cmdlets": [
+        "Get-MgBetaExternalConnection",
+        "New-MgBetaExternalConnection",
+        "Remove-MgBetaExternalConnection",
+        "Update-MgBetaExternalConnection"
+      ]
+    }
+  ]
+}

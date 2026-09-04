@@ -1,0 +1,31 @@
+{
+  "resourceName": "TeamsTranslationRule",
+  "description": "This resource configures an Cmdlet to create a new telephone number manipulation rule.",
+  "roles": {
+    "read": [
+      "Teams Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {},
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "MicrosoftTeams",
+      "cmdlets": [
+        "Get-CsTeamsTranslationRule",
+        "New-CsTeamsTranslationRule",
+        "Remove-CsTeamsTranslationRule",
+        "Set-CsTeamsTranslationRule"
+      ]
+    }
+  ]
+}

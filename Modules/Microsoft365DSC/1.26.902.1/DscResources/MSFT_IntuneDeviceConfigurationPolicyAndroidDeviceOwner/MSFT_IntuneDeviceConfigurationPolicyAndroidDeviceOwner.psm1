@@ -1,0 +1,2775 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwner'
+
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        #region resource generator code
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AccountsBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsAllowInstallFromUnknownSources,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'userChoice', 'never', 'wiFiOnly', 'always')]
+        [System.String]
+        $AppsAutoUpdatePolicy,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'prompt', 'autoGrant', 'autoDeny')]
+        [System.String]
+        $AppsDefaultPermissionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsRecommendSkippingFirstUseHints,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AzureAdSharedDeviceDataClearApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothBlockConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothBlockContactSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $CameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $CellularBlockWiFiTethering,
+
+        [Parameter()]
+        [System.Boolean]
+        $CertificateCredentialConfigurationDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CrossProfilePoliciesAllowCopyPaste,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'crossProfileDataSharingBlocked', 'dataSharingFromWorkToPersonalBlocked', 'crossProfileDataSharingAllowed', 'unkownFutureValue')]
+        [System.String]
+        $CrossProfilePoliciesAllowDataSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $CrossProfilePoliciesShowWorkContactsInPersonalProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $DataRoamingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $DateTimeConfigurationBlocked,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $DetailedHelpText,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $DeviceOwnerLockScreenMessage,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'dedicatedDevice', 'fullyManaged')]
+        [System.String]
+        $EnrollmentProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $FactoryResetBlocked,
+
+        [Parameter()]
+        [System.String[]]
+        $FactoryResetDeviceAdministratorEmails,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $GlobalProxy,
+
+        [Parameter()]
+        [System.Boolean]
+        $GoogleAccountsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskCustomizationDeviceSettingsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskCustomizationPowerButtonActionsBlocked,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'notificationsAndSystemInfoEnabled', 'systemInfoOnly')]
+        [System.String]
+        $KioskCustomizationStatusBar,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskCustomizationSystemErrorWarnings,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'navigationEnabled', 'homeButtonOnly')]
+        [System.String]
+        $KioskCustomizationSystemNavigation,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeAppOrderEnabled,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeAppPositions,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeAppsInFolderOrderedByName,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeBluetoothConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeDebugMenuEasyAccessEnabled,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeExitCode,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeFlashlightConfigurationEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'darkSquare', 'darkCircle', 'lightSquare', 'lightCircle')]
+        [System.String]
+        $KioskModeFolderIcon,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeGridHeight,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeGridWidth,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'smallest', 'small', 'regular', 'large', 'largest')]
+        [System.String]
+        $KioskModeIconSize,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeLockHomeScreen,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeManagedFolders,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenAutoSignout,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'simple', 'complex')]
+        [System.String]
+        $KioskModeManagedHomeScreenPinComplexity,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenPinRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenPinRequiredToResume,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeManagedHomeScreenSignInBackground,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeManagedHomeScreenSignInBrandingLogo,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenSignInEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedSettingsEntryDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeMediaVolumeConfigurationEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'portrait', 'landscape', 'autoRotate')]
+        [System.String]
+        $KioskModeScreenOrientation,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeScreenSaverConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeScreenSaverDetectMediaDisabled,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeScreenSaverDisplayTimeInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeScreenSaverImageUrl,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeScreenSaverStartDelayInSeconds,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeShowAppNotificationBadge,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeShowDeviceInfo,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'singleAppMode', 'multiAppMode')]
+        [System.String]
+        $KioskModeUseManagedHomeScreenApp,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeVirtualHomeButtonEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'swipeUp', 'floating')]
+        [System.String]
+        $KioskModeVirtualHomeButtonType,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeWallpaperUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $KioskModeWifiAllowedSsids,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeWiFiConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrophoneForceMute,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherCustomWallpaperAllowUserModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherCustomWallpaperEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MicrosoftLauncherCustomWallpaperImageUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherDockPresenceAllowUserModification,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'show', 'hide', 'disabled')]
+        [System.String]
+        $MicrosoftLauncherDockPresenceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherFeedAllowUserModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherFeedEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'top', 'bottom', 'hide')]
+        [System.String]
+        $MicrosoftLauncherSearchBarPlacementConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkEscapeHatchAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $NfcBlockOutgoingBeam,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordBlockKeyguard,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'camera', 'notifications', 'unredactedNotifications', 'trustAgents', 'fingerprint', 'remoteInput', 'allFeatures', 'face', 'iris', 'biometrics')]
+        [System.String[]]
+        $PasswordBlockKeyguardFeatures,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordPreviousPasswordCountToBlock,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'required', 'numeric', 'numericComplex', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'customPassword')]
+        [System.String]
+        $PasswordRequiredType,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'daily', 'unkownFutureValue')]
+        [System.String]
+        $PasswordRequireUnlock,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalProfileAppsAllowInstallFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalProfileCameraBlocked,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PersonalProfilePersonalApplications,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'blockedApps', 'allowedApps')]
+        [System.String]
+        $PersonalProfilePlayStoreMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalProfileScreenCaptureBlocked,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'allowList', 'blockList')]
+        [System.String]
+        $PlayStoreMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ScreenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityCommonCriteriaModeEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityDeveloperSettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityRequireVerifyApps,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ShortHelpText,
+
+        [Parameter()]
+        [System.Boolean]
+        $StatusBarBlocked,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'ac', 'usb', 'wireless')]
+        [System.String[]]
+        $StayOnModes,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageAllowUsb,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageBlockExternalMedia,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageBlockUsbFileTransfer,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $SystemUpdateFreezePeriods,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'postpone', 'windowed', 'automatic')]
+        [System.String]
+        $SystemUpdateInstallType,
+
+        [Parameter()]
+        [System.Int32]
+        $SystemUpdateWindowEndMinutesAfterMidnight,
+
+        [Parameter()]
+        [System.Int32]
+        $SystemUpdateWindowStartMinutesAfterMidnight,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemWindowsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersBlockAdd,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersBlockRemove,
+
+        [Parameter()]
+        [System.Boolean]
+        $VolumeBlockAdjustment,
+
+        [Parameter()]
+        [System.Boolean]
+        $VpnAlwaysOnLockdownMode,
+
+        [Parameter()]
+        [System.String]
+        $VpnAlwaysOnPackageIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $WifiBlockEditConfigurations,
+
+        [Parameter()]
+        [System.Boolean]
+        $WifiBlockEditPolicyDefinedConfigurations,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordPreviousPasswordCountToBlock,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'required', 'numeric', 'numericComplex', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'customPassword')]
+        [System.String]
+        $WorkProfilePasswordRequiredType,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'daily', 'unkownFutureValue')]
+        [System.String]
+        $WorkProfilePasswordRequireUnlock,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Getting configuration of the Intune Device Configuration Policy Android Device Owner with Id {$Id} and DisplayName {$DisplayName}"
+
+    try
+    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
+        {
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [string]::IsNullOrEmpty($Id))
+            {
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "Id eq '$Id'" -ErrorAction SilentlyContinue
+            }
+
+            if (-not $getValue)
+            {
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$($Displayname -replace "'", "''")' and isof('microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration')" -ErrorAction SilentlyContinue
+            }
+            #endregion
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Nothing with id {$id} was found"
+                return $nullResult
+            }
+        }
+        else
+        {
+            $getValue = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found something with id {$id}"
+
+        $complexAzureAdSharedDeviceDataClearApps = @()
+        $currentValueArray = $getValue.azureAdSharedDeviceDataClearApps
+        if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
+        {
+            foreach ($currentValue in $currentValueArray)
+            {
+                $currentHash = @{
+                    appId       = $currentValue.appId
+                    publisher   = $currentValue.publisher
+                    appStoreUrl = $currentValue.appStoreUrl
+                    name        = $currentValue.name
+                    odataType   = $currentValue.'@odata.type'
+                }
+                $complexAzureAdSharedDeviceDataClearApps += $currentHash
+            }
+        }
+
+        $complexDetailedHelpText = [ordered]@{}
+        $currentValue = $getValue.detailedHelpText
+        if ($null -ne $currentValue)
+        {
+            $complexDetailedHelpText.Add('DefaultMessage', $currentValue.defaultMessage)
+            $complexLocalizedMessages = @()
+            $currentValueArray = $currentValue.localizedMessages
+            if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
+            {
+                foreach ($currentChildValue in $currentValueArray)
+                {
+                    $currentHash = @{
+                        Name  = $currentChildValue.name
+                        Value = $currentChildValue.value
+                    }
+                    $complexLocalizedMessages += $currentHash
+                }
+            }
+            $complexDetailedHelpText.Add('LocalizedMessages', $complexLocalizedMessages)
+        }
+        if ($complexDetailedHelpText.Values.Where({ $null -ne $_ }).Count -eq 0)
+        {
+            $complexDetailedHelpText = $null
+        }
+
+        $complexDeviceOwnerLockScreenMessage = [ordered]@{}
+        $currentValue = $getValue.deviceOwnerLockScreenMessage
+        if ($null -ne $currentValue)
+        {
+            $complexDeviceOwnerLockScreenMessage.Add('DefaultMessage', $currentValue.defaultMessage)
+            $complexLocalizedMessages = @()
+            $currentValueArray = $currentValue.localizedMessages
+            if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
+            {
+                foreach ($currentChildValue in $currentValueArray)
+                {
+                    $currentHash = @{
+                        Name  = $currentChildValue.name
+                        Value = $currentChildValue.value
+                    }
+                    $complexLocalizedMessages += $currentHash
+                }
+            }
+            $complexDeviceOwnerLockScreenMessage.Add('LocalizedMessages', $complexLocalizedMessages)
+        }
+        if ($complexDeviceOwnerLockScreenMessage.Values.Where({ $null -ne $_ }).Count -eq 0)
+        {
+            $complexDeviceOwnerLockScreenMessage = $null
+        }
+
+        $complexGlobalProxy = [ordered]@{}
+        $currentValue = $getValue.globalProxy
+        if ($null -ne $currentValue)
+        {
+            $complexGlobalProxy.Add('ProxyAutoConfigURL', $currentValue.proxyAutoConfigURL)
+            $complexGlobalProxy.Add('ExcludedHosts', $currentValue.excludedHosts)
+            $complexGlobalProxy.Add('Host', $currentValue.host)
+            $complexGlobalProxy.Add('Port', $currentValue.port)
+            $complexGlobalProxy.Add('oDataType', $currentValue.'@odata.type')
+        }
+        if ($complexGlobalProxy.Values.Where({ $null -ne $_ }).Count -eq 0)
+        {
+            $complexGlobalProxy = $null
+        }
+
+        $complexKioskModeApps = @()
+        $currentValueArray = $getValue.kioskModeApps
+        if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
+        {
+            foreach ($currentValue in $currentValueArray)
+            {
+                $currentHash = [ordered]@{}
+                $currentHash.Add('AppId', $currentValue.appId)
+                $currentHash.Add('Publisher', $currentValue.publisher)
+                $currentHash.Add('AppStoreUrl', $currentValue.appStoreUrl)
+                $currentHash.Add('Name', $currentValue.name)
+                $currentHash.Add('oDataType', $currentValue.'@odata.type')
+                $complexKioskModeApps += $currentHash
+            }
+        }
+
+        $complexPersonalProfilePersonalApplications = @()
+        $currentValueArray = $getValue.personalProfilePersonalApplications
+        if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
+        {
+            foreach ($currentValue in $currentValueArray)
+            {
+                $currentHash = [ordered]@{}
+                $currentHash.Add('AppId', $currentValue.appId)
+                $currentHash.Add('Publisher', $currentValue.publisher)
+                $currentHash.Add('AppStoreUrl', $currentValue.appStoreUrl)
+                $currentHash.Add('Name', $currentValue.name)
+                $currentHash.Add('oDataType', $currentValue.'@odata.type')
+                $complexPersonalProfilePersonalApplications += $currentHash
+            }
+        }
+
+        $complexShortHelpText = [ordered]@{}
+        $currentValue = $getValue.shortHelpText
+        if ($null -ne $currentValue)
+        {
+            $complexShortHelpText.Add('DefaultMessage', $currentValue.defaultMessage)
+            $complexLocalizedMessages = @()
+            $currentValueArray = $currentValue.localizedMessages
+            if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
+            {
+                foreach ($currentChildValue in $currentValueArray)
+                {
+                    $currentHash = @{
+                        Name  = $currentChildValue.name
+                        Value = $currentChildValue.value
+                    }
+                    $complexLocalizedMessages += $currentHash
+                }
+            }
+            $complexShortHelpText.Add('LocalizedMessages', $complexLocalizedMessages)
+        }
+        if ($complexShortHelpText.Values.Where({ $null -ne $_ }).Count -eq 0)
+        {
+            $complexShortHelpText = $null
+        }
+
+        $complexSystemUpdateFreezePeriods = @()
+        $currentValueArray = $getValue.systemUpdateFreezePeriods
+        if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
+        {
+            foreach ($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.Add('StartDay', $currentValue.startDay)
+                $currentHash.Add('EndDay', $currentValue.endDay)
+                $currentHash.Add('StartMonth', $currentValue.startMonth)
+                $currentHash.Add('EndMonth', $currentValue.endMonth)
+                $complexSystemUpdateFreezePeriods += $currentHash
+            }
+        }
+
+        $results = @{
+            #region resource generator code
+            Id                                                       = $getValue.Id
+            Description                                              = $getValue.Description
+            #DeviceManagementApplicabilityRuleDeviceMode              = $getValue.DeviceManagementApplicabilityRuleDeviceMode
+            #DeviceManagementApplicabilityRuleOsEdition               = $getValue.DeviceManagementApplicabilityRuleOsEdition
+            #DeviceManagementApplicabilityRuleOsVersion               = $getValue.DeviceManagementApplicabilityRuleOsVersion
+            DisplayName                                              = $getValue.DisplayName
+            RoleScopeTagIds                                          = $getValue.RoleScopeTagIds
+            AccountsBlockModification                                = $getValue.accountsBlockModification
+            AppsAllowInstallFromUnknownSources                       = $getValue.appsAllowInstallFromUnknownSources
+            AppsAutoUpdatePolicy                                     = $getValue.appsAutoUpdatePolicy
+            AppsDefaultPermissionPolicy                              = $getValue.appsDefaultPermissionPolicy
+            AppsRecommendSkippingFirstUseHints                       = $getValue.appsRecommendSkippingFirstUseHints
+            AzureAdSharedDeviceDataClearApps                         = $complexAzureAdSharedDeviceDataClearApps
+            BluetoothBlockConfiguration                              = $getValue.bluetoothBlockConfiguration
+            BluetoothBlockContactSharing                             = $getValue.bluetoothBlockContactSharing
+            CameraBlocked                                            = $getValue.cameraBlocked
+            CellularBlockWiFiTethering                               = $getValue.cellularBlockWiFiTethering
+            CertificateCredentialConfigurationDisabled               = $getValue.certificateCredentialConfigurationDisabled
+            CrossProfilePoliciesAllowCopyPaste                       = $getValue.crossProfilePoliciesAllowCopyPaste
+            CrossProfilePoliciesAllowDataSharing                     = $getValue.crossProfilePoliciesAllowDataSharing
+            CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $getValue.crossProfilePoliciesShowWorkContactsInPersonalProfile
+            DataRoamingBlocked                                       = $getValue.dataRoamingBlocked
+            DateTimeConfigurationBlocked                             = $getValue.dateTimeConfigurationBlocked
+            DetailedHelpText                                         = $complexDetailedHelpText
+            DeviceOwnerLockScreenMessage                             = $complexDeviceOwnerLockScreenMessage
+            EnrollmentProfile                                        = $getValue.enrollmentProfile
+            FactoryResetBlocked                                      = $getValue.factoryResetBlocked
+            FactoryResetDeviceAdministratorEmails                    = $getValue.factoryResetDeviceAdministratorEmails
+            GlobalProxy                                              = $complexGlobalProxy
+            GoogleAccountsBlocked                                    = $getValue.googleAccountsBlocked
+            KioskCustomizationDeviceSettingsBlocked                  = $getValue.kioskCustomizationDeviceSettingsBlocked
+            KioskCustomizationPowerButtonActionsBlocked              = $getValue.kioskCustomizationPowerButtonActionsBlocked
+            KioskCustomizationStatusBar                              = $getValue.kioskCustomizationStatusBar
+            KioskCustomizationSystemErrorWarnings                    = $getValue.kioskCustomizationSystemErrorWarnings
+            KioskCustomizationSystemNavigation                       = $getValue.kioskCustomizationSystemNavigation
+            KioskModeAppOrderEnabled                                 = $getValue.kioskModeAppOrderEnabled
+            KioskModeAppPositions                                    = $getValue.kioskModeAppPositions
+            KioskModeApps                                            = $complexKioskModeApps
+            KioskModeAppsInFolderOrderedByName                       = $getValue.kioskModeAppsInFolderOrderedByName
+            KioskModeBluetoothConfigurationEnabled                   = $getValue.kioskModeBluetoothConfigurationEnabled
+            KioskModeDebugMenuEasyAccessEnabled                      = $getValue.kioskModeDebugMenuEasyAccessEnabled
+            KioskModeExitCode                                        = $getValue.kioskModeExitCode
+            KioskModeFlashlightConfigurationEnabled                  = $getValue.kioskModeFlashlightConfigurationEnabled
+            KioskModeFolderIcon                                      = $getValue.kioskModeFolderIcon
+            KioskModeGridHeight                                      = $getValue.kioskModeGridHeight
+            KioskModeGridWidth                                       = $getValue.kioskModeGridWidth
+            KioskModeIconSize                                        = $getValue.kioskModeIconSize
+            KioskModeLockHomeScreen                                  = $getValue.kioskModeLockHomeScreen
+            KioskModeManagedFolders                                  = $getValue.kioskModeManagedFolders
+            KioskModeManagedHomeScreenAutoSignout                    = $getValue.kioskModeManagedHomeScreenAutoSignout
+            KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds  = $getValue.kioskModeManagedHomeScreenInactiveSignOutDelayInSeconds
+            KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds = $getValue.kioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds
+            KioskModeManagedHomeScreenPinComplexity                  = $getValue.kioskModeManagedHomeScreenPinComplexity
+            KioskModeManagedHomeScreenPinRequired                    = $getValue.kioskModeManagedHomeScreenPinRequired
+            KioskModeManagedHomeScreenPinRequiredToResume            = $getValue.kioskModeManagedHomeScreenPinRequiredToResume
+            KioskModeManagedHomeScreenSignInBackground               = $getValue.kioskModeManagedHomeScreenSignInBackground
+            KioskModeManagedHomeScreenSignInBrandingLogo             = $getValue.kioskModeManagedHomeScreenSignInBrandingLogo
+            KioskModeManagedHomeScreenSignInEnabled                  = $getValue.kioskModeManagedHomeScreenSignInEnabled
+            KioskModeManagedSettingsEntryDisabled                    = $getValue.kioskModeManagedSettingsEntryDisabled
+            KioskModeMediaVolumeConfigurationEnabled                 = $getValue.kioskModeMediaVolumeConfigurationEnabled
+            KioskModeScreenOrientation                               = $getValue.kioskModeScreenOrientation
+            KioskModeScreenSaverConfigurationEnabled                 = $getValue.kioskModeScreenSaverConfigurationEnabled
+            KioskModeScreenSaverDetectMediaDisabled                  = $getValue.kioskModeScreenSaverDetectMediaDisabled
+            KioskModeScreenSaverDisplayTimeInSeconds                 = $getValue.kioskModeScreenSaverDisplayTimeInSeconds
+            KioskModeScreenSaverImageUrl                             = $getValue.kioskModeScreenSaverImageUrl
+            KioskModeScreenSaverStartDelayInSeconds                  = $getValue.kioskModeScreenSaverStartDelayInSeconds
+            KioskModeShowAppNotificationBadge                        = $getValue.kioskModeShowAppNotificationBadge
+            KioskModeShowDeviceInfo                                  = $getValue.kioskModeShowDeviceInfo
+            KioskModeUseManagedHomeScreenApp                         = $getValue.kioskModeUseManagedHomeScreenApp
+            KioskModeVirtualHomeButtonEnabled                        = $getValue.kioskModeVirtualHomeButtonEnabled
+            KioskModeVirtualHomeButtonType                           = $getValue.kioskModeVirtualHomeButtonType
+            KioskModeWallpaperUrl                                    = $getValue.kioskModeWallpaperUrl
+            KioskModeWifiAllowedSsids                                = $getValue.kioskModeWifiAllowedSsids
+            KioskModeWiFiConfigurationEnabled                        = $getValue.kioskModeWiFiConfigurationEnabled
+            MicrophoneForceMute                                      = $getValue.microphoneForceMute
+            MicrosoftLauncherConfigurationEnabled                    = $getValue.microsoftLauncherConfigurationEnabled
+            MicrosoftLauncherCustomWallpaperAllowUserModification    = $getValue.microsoftLauncherCustomWallpaperAllowUserModification
+            MicrosoftLauncherCustomWallpaperEnabled                  = $getValue.microsoftLauncherCustomWallpaperEnabled
+            MicrosoftLauncherCustomWallpaperImageUrl                 = $getValue.microsoftLauncherCustomWallpaperImageUrl
+            MicrosoftLauncherDockPresenceAllowUserModification       = $getValue.microsoftLauncherDockPresenceAllowUserModification
+            MicrosoftLauncherDockPresenceConfiguration               = $getValue.microsoftLauncherDockPresenceConfiguration
+            MicrosoftLauncherFeedAllowUserModification               = $getValue.microsoftLauncherFeedAllowUserModification
+            MicrosoftLauncherFeedEnabled                             = $getValue.microsoftLauncherFeedEnabled
+            MicrosoftLauncherSearchBarPlacementConfiguration         = $getValue.microsoftLauncherSearchBarPlacementConfiguration
+            NetworkEscapeHatchAllowed                                = $getValue.networkEscapeHatchAllowed
+            NfcBlockOutgoingBeam                                     = $getValue.nfcBlockOutgoingBeam
+            PasswordBlockKeyguard                                    = $getValue.passwordBlockKeyguard
+            PasswordBlockKeyguardFeatures                            = $getValue.passwordBlockKeyguardFeatures
+            PasswordExpirationDays                                   = $getValue.passwordExpirationDays
+            PasswordMinimumLength                                    = $getValue.passwordMinimumLength
+            PasswordMinimumLetterCharacters                          = $getValue.passwordMinimumLetterCharacters
+            PasswordMinimumLowerCaseCharacters                       = $getValue.passwordMinimumLowerCaseCharacters
+            PasswordMinimumNonLetterCharacters                       = $getValue.passwordMinimumNonLetterCharacters
+            PasswordMinimumNumericCharacters                         = $getValue.passwordMinimumNumericCharacters
+            PasswordMinimumSymbolCharacters                          = $getValue.passwordMinimumSymbolCharacters
+            PasswordMinimumUpperCaseCharacters                       = $getValue.passwordMinimumUpperCaseCharacters
+            PasswordMinutesOfInactivityBeforeScreenTimeout           = $getValue.passwordMinutesOfInactivityBeforeScreenTimeout
+            PasswordPreviousPasswordCountToBlock                     = $getValue.passwordPreviousPasswordCountToBlock
+            PasswordRequiredType                                     = $getValue.passwordRequiredType
+            PasswordRequireUnlock                                    = $getValue.passwordRequireUnlock
+            PasswordSignInFailureCountBeforeFactoryReset             = $getValue.passwordSignInFailureCountBeforeFactoryReset
+            PersonalProfileAppsAllowInstallFromUnknownSources        = $getValue.personalProfileAppsAllowInstallFromUnknownSources
+            PersonalProfileCameraBlocked                             = $getValue.personalProfileCameraBlocked
+            PersonalProfilePersonalApplications                      = $complexPersonalProfilePersonalApplications
+            PersonalProfilePlayStoreMode                             = $getValue.personalProfilePlayStoreMode
+            PersonalProfileScreenCaptureBlocked                      = $getValue.personalProfileScreenCaptureBlocked
+            PlayStoreMode                                            = $getValue.playStoreMode
+            ScreenCaptureBlocked                                     = $getValue.screenCaptureBlocked
+            SecurityCommonCriteriaModeEnabled                        = $getValue.securityCommonCriteriaModeEnabled
+            SecurityDeveloperSettingsEnabled                         = $getValue.securityDeveloperSettingsEnabled
+            SecurityRequireVerifyApps                                = $getValue.securityRequireVerifyApps
+            ShortHelpText                                            = $complexShortHelpText
+            StatusBarBlocked                                         = $getValue.statusBarBlocked
+            StayOnModes                                              = $getValue.stayOnModes
+            StorageAllowUsb                                          = $getValue.storageAllowUsb
+            StorageBlockExternalMedia                                = $getValue.storageBlockExternalMedia
+            StorageBlockUsbFileTransfer                              = $getValue.storageBlockUsbFileTransfer
+            SystemUpdateFreezePeriods                                = $complexSystemUpdateFreezePeriods
+            SystemUpdateInstallType                                  = $getValue.systemUpdateInstallType
+            SystemUpdateWindowEndMinutesAfterMidnight                = $getValue.systemUpdateWindowEndMinutesAfterMidnight
+            SystemUpdateWindowStartMinutesAfterMidnight              = $getValue.systemUpdateWindowStartMinutesAfterMidnight
+            SystemWindowsBlocked                                     = $getValue.systemWindowsBlocked
+            UsersBlockAdd                                            = $getValue.usersBlockAdd
+            UsersBlockRemove                                         = $getValue.usersBlockRemove
+            VolumeBlockAdjustment                                    = $getValue.volumeBlockAdjustment
+            VpnAlwaysOnLockdownMode                                  = $getValue.vpnAlwaysOnLockdownMode
+            VpnAlwaysOnPackageIdentifier                             = $getValue.vpnAlwaysOnPackageIdentifier
+            WifiBlockEditConfigurations                              = $getValue.wifiBlockEditConfigurations
+            WifiBlockEditPolicyDefinedConfigurations                 = $getValue.wifiBlockEditPolicyDefinedConfigurations
+            WorkProfilePasswordExpirationDays                        = $getValue.workProfilePasswordExpirationDays
+            WorkProfilePasswordMinimumLength                         = $getValue.workProfilePasswordMinimumLength
+            WorkProfilePasswordMinimumLetterCharacters               = $getValue.workProfilePasswordMinimumLetterCharacters
+            WorkProfilePasswordMinimumLowerCaseCharacters            = $getValue.workProfilePasswordMinimumLowerCaseCharacters
+            WorkProfilePasswordMinimumNonLetterCharacters            = $getValue.workProfilePasswordMinimumNonLetterCharacters
+            WorkProfilePasswordMinimumNumericCharacters              = $getValue.workProfilePasswordMinimumNumericCharacters
+            WorkProfilePasswordMinimumSymbolCharacters               = $getValue.workProfilePasswordMinimumSymbolCharacters
+            WorkProfilePasswordMinimumUpperCaseCharacters            = $getValue.workProfilePasswordMinimumUpperCaseCharacters
+            WorkProfilePasswordPreviousPasswordCountToBlock          = $getValue.workProfilePasswordPreviousPasswordCountToBlock
+            WorkProfilePasswordRequiredType                          = $getValue.workProfilePasswordRequiredType
+            WorkProfilePasswordRequireUnlock                         = $getValue.workProfilePasswordRequireUnlock
+            WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = $getValue.workProfilePasswordSignInFailureCountBeforeFactoryReset
+            Ensure                                                   = 'Present'
+            Credential                                               = $Credential
+            ApplicationId                                            = $ApplicationId
+            TenantId                                                 = $TenantId
+            ApplicationSecret                                        = $ApplicationSecret
+            CertificateThumbprint                                    = $CertificateThumbprint
+            CertificatePath                                          = $CertificatePath
+            CertificatePassword                                      = $CertificatePassword
+            ManagedIdentity                                          = $ManagedIdentity.IsPresent
+            AccessTokens                                             = $AccessTokens
+        }
+
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
+        $assignmentResult = @()
+        if ($assignmentsValues.Count -gt 0)
+        {
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment `
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
+        }
+        $results.Add('Assignments', $assignmentResult)
+
+        return $results
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        #region resource generator code
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AccountsBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsAllowInstallFromUnknownSources,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'userChoice', 'never', 'wiFiOnly', 'always')]
+        [System.String]
+        $AppsAutoUpdatePolicy,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'prompt', 'autoGrant', 'autoDeny')]
+        [System.String]
+        $AppsDefaultPermissionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsRecommendSkippingFirstUseHints,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AzureAdSharedDeviceDataClearApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothBlockConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothBlockContactSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $CameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $CellularBlockWiFiTethering,
+
+        [Parameter()]
+        [System.Boolean]
+        $CertificateCredentialConfigurationDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CrossProfilePoliciesAllowCopyPaste,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'crossProfileDataSharingBlocked', 'dataSharingFromWorkToPersonalBlocked', 'crossProfileDataSharingAllowed', 'unkownFutureValue')]
+        [System.String]
+        $CrossProfilePoliciesAllowDataSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $CrossProfilePoliciesShowWorkContactsInPersonalProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $DataRoamingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $DateTimeConfigurationBlocked,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $DetailedHelpText,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $DeviceOwnerLockScreenMessage,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'dedicatedDevice', 'fullyManaged')]
+        [System.String]
+        $EnrollmentProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $FactoryResetBlocked,
+
+        [Parameter()]
+        [System.String[]]
+        $FactoryResetDeviceAdministratorEmails,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $GlobalProxy,
+
+        [Parameter()]
+        [System.Boolean]
+        $GoogleAccountsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskCustomizationDeviceSettingsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskCustomizationPowerButtonActionsBlocked,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'notificationsAndSystemInfoEnabled', 'systemInfoOnly')]
+        [System.String]
+        $KioskCustomizationStatusBar,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskCustomizationSystemErrorWarnings,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'navigationEnabled', 'homeButtonOnly')]
+        [System.String]
+        $KioskCustomizationSystemNavigation,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeAppOrderEnabled,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeAppPositions,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeAppsInFolderOrderedByName,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeBluetoothConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeDebugMenuEasyAccessEnabled,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeExitCode,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeFlashlightConfigurationEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'darkSquare', 'darkCircle', 'lightSquare', 'lightCircle')]
+        [System.String]
+        $KioskModeFolderIcon,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeGridHeight,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeGridWidth,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'smallest', 'small', 'regular', 'large', 'largest')]
+        [System.String]
+        $KioskModeIconSize,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeLockHomeScreen,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeManagedFolders,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenAutoSignout,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'simple', 'complex')]
+        [System.String]
+        $KioskModeManagedHomeScreenPinComplexity,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenPinRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenPinRequiredToResume,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeManagedHomeScreenSignInBackground,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeManagedHomeScreenSignInBrandingLogo,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenSignInEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedSettingsEntryDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeMediaVolumeConfigurationEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'portrait', 'landscape', 'autoRotate')]
+        [System.String]
+        $KioskModeScreenOrientation,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeScreenSaverConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeScreenSaverDetectMediaDisabled,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeScreenSaverDisplayTimeInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeScreenSaverImageUrl,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeScreenSaverStartDelayInSeconds,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeShowAppNotificationBadge,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeShowDeviceInfo,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'singleAppMode', 'multiAppMode')]
+        [System.String]
+        $KioskModeUseManagedHomeScreenApp,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeVirtualHomeButtonEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'swipeUp', 'floating')]
+        [System.String]
+        $KioskModeVirtualHomeButtonType,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeWallpaperUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $KioskModeWifiAllowedSsids,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeWiFiConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrophoneForceMute,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherCustomWallpaperAllowUserModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherCustomWallpaperEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MicrosoftLauncherCustomWallpaperImageUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherDockPresenceAllowUserModification,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'show', 'hide', 'disabled')]
+        [System.String]
+        $MicrosoftLauncherDockPresenceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherFeedAllowUserModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherFeedEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'top', 'bottom', 'hide')]
+        [System.String]
+        $MicrosoftLauncherSearchBarPlacementConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkEscapeHatchAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $NfcBlockOutgoingBeam,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordBlockKeyguard,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'camera', 'notifications', 'unredactedNotifications', 'trustAgents', 'fingerprint', 'remoteInput', 'allFeatures', 'face', 'iris', 'biometrics')]
+        [System.String[]]
+        $PasswordBlockKeyguardFeatures,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordPreviousPasswordCountToBlock,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'required', 'numeric', 'numericComplex', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'customPassword')]
+        [System.String]
+        $PasswordRequiredType,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'daily', 'unkownFutureValue')]
+        [System.String]
+        $PasswordRequireUnlock,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalProfileAppsAllowInstallFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalProfileCameraBlocked,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PersonalProfilePersonalApplications,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'blockedApps', 'allowedApps')]
+        [System.String]
+        $PersonalProfilePlayStoreMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalProfileScreenCaptureBlocked,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'allowList', 'blockList')]
+        [System.String]
+        $PlayStoreMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ScreenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityCommonCriteriaModeEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityDeveloperSettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityRequireVerifyApps,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ShortHelpText,
+
+        [Parameter()]
+        [System.Boolean]
+        $StatusBarBlocked,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'ac', 'usb', 'wireless')]
+        [System.String[]]
+        $StayOnModes,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageAllowUsb,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageBlockExternalMedia,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockUsbFileTransfer,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $SystemUpdateFreezePeriods,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'postpone', 'windowed', 'automatic')]
+        [System.String]
+        $systemUpdateInstallType,
+
+        [Parameter()]
+        [System.Int32]
+        $SystemUpdateWindowEndMinutesAfterMidnight,
+
+        [Parameter()]
+        [System.Int32]
+        $SystemUpdateWindowStartMinutesAfterMidnight,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemWindowsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersBlockAdd,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersBlockRemove,
+
+        [Parameter()]
+        [System.Boolean]
+        $VolumeBlockAdjustment,
+
+        [Parameter()]
+        [System.Boolean]
+        $VpnAlwaysOnLockdownMode,
+
+        [Parameter()]
+        [System.String]
+        $VpnAlwaysOnPackageIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $WifiBlockEditConfigurations,
+
+        [Parameter()]
+        [System.Boolean]
+        $WifiBlockEditPolicyDefinedConfigurations,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordPreviousPasswordCountToBlock,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'required', 'numeric', 'numericComplex', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'customPassword')]
+        [System.String]
+        $WorkProfilePasswordRequiredType,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'daily', 'unkownFutureValue')]
+        [System.String]
+        $WorkProfilePasswordRequireUnlock,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    Write-Verbose -Message "Setting configuration of the Intune Device Configuration Policy Android Device Owner with Id {$Id} and DisplayName {$DisplayName}"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating {$DisplayName}"
+        $PSBoundParameters.Remove('Assignments') | Out-Null
+
+        $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+
+        $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Remove('Verbose') | Out-Null
+
+        foreach ($key in ($CreateParameters.Clone()).Keys)
+        {
+            if ($key -eq 'DetailedHelpText' -or $key -eq 'DeviceOwnerLockScreenMessage' -or $key -eq 'ShortHelpText')
+            {
+                if ($null -ne $CreateParameters.$key.DefaultMessage -or $null -ne $CreateParameters.$key.LocalizedMessages)
+                {
+                    $CreateParameters.$key.Add('@odata.type', '#microsoft.graph.androidDeviceOwnerUserFacingMessage')
+                }
+
+                if ($null -eq $CreateParameters.$key.LocalizedMessages)
+                {
+                    $CreateParameters.$key.Add('localizedMessages', @())
+                }
+            }
+
+            if ($key -ne '@odata.type')
+            {
+                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
+                $keyValue = $CreateParameters.$key
+                $CreateParameters.Remove($key) | Out-Null
+                $CreateParameters.Add($keyName, $keyValue) | Out-Null
+            }
+        }
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration')
+
+        #region resource generator code
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+
+        if ($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceConfigurations'
+        }
+        #endregion
+    }
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating {$DisplayName}"
+        $PSBoundParameters.Remove('Assignments') | Out-Null
+
+        $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+
+        $UpdateParameters.Remove('Id') | Out-Null
+        $UpdateParameters.Remove('Verbose') | Out-Null
+
+        foreach ($key in (($UpdateParameters.Clone()).Keys | Sort-Object))
+        {
+            if ($key -eq 'DetailedHelpText' -or $key -eq 'DeviceOwnerLockScreenMessage' -or $key -eq 'ShortHelpText')
+            {
+                if ($null -ne $UpdateParameters.$key.DefaultMessage -or $null -ne $UpdateParameters.$key.LocalizedMessages)
+                {
+                    $UpdateParameters.$key.Add('@odata.type', '#microsoft.graph.androidDeviceOwnerUserFacingMessage')
+                }
+
+                if ($null -eq $UpdateParameters.$key.LocalizedMessages)
+                {
+                    $UpdateParameters.$key.Add('localizedMessages', @())
+                }
+            }
+
+            if ($key -ne '@odata.type')
+            {
+                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
+                $keyValue = $UpdateParameters.$key
+                $UpdateParameters.Remove($key)
+                $UpdateParameters.Add($keyName, $keyValue)
+            }
+        }
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration')
+
+        Update-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
+            -DeviceConfigurationId $currentInstance.Id
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentInstance.id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/deviceConfigurations'
+        #endregion
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing {$DisplayName}"
+
+        #region resource generator code
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        #endregion
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        #region resource generator code
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AccountsBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsAllowInstallFromUnknownSources,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'userChoice', 'never', 'wiFiOnly', 'always')]
+        [System.String]
+        $AppsAutoUpdatePolicy,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'prompt', 'autoGrant', 'autoDeny')]
+        [System.String]
+        $AppsDefaultPermissionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsRecommendSkippingFirstUseHints,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AzureAdSharedDeviceDataClearApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothBlockConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothBlockContactSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $CameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $CellularBlockWiFiTethering,
+
+        [Parameter()]
+        [System.Boolean]
+        $CertificateCredentialConfigurationDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CrossProfilePoliciesAllowCopyPaste,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'crossProfileDataSharingBlocked', 'dataSharingFromWorkToPersonalBlocked', 'crossProfileDataSharingAllowed', 'unkownFutureValue')]
+        [System.String]
+        $CrossProfilePoliciesAllowDataSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $CrossProfilePoliciesShowWorkContactsInPersonalProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $DataRoamingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $DateTimeConfigurationBlocked,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $DetailedHelpText,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $DeviceOwnerLockScreenMessage,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'dedicatedDevice', 'fullyManaged')]
+        [System.String]
+        $EnrollmentProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $FactoryResetBlocked,
+
+        [Parameter()]
+        [System.String[]]
+        $FactoryResetDeviceAdministratorEmails,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $GlobalProxy,
+
+        [Parameter()]
+        [System.Boolean]
+        $GoogleAccountsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskCustomizationDeviceSettingsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskCustomizationPowerButtonActionsBlocked,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'notificationsAndSystemInfoEnabled', 'systemInfoOnly')]
+        [System.String]
+        $KioskCustomizationStatusBar,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskCustomizationSystemErrorWarnings,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'navigationEnabled', 'homeButtonOnly')]
+        [System.String]
+        $KioskCustomizationSystemNavigation,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeAppOrderEnabled,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeAppPositions,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeAppsInFolderOrderedByName,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeBluetoothConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeDebugMenuEasyAccessEnabled,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeExitCode,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeFlashlightConfigurationEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'darkSquare', 'darkCircle', 'lightSquare', 'lightCircle')]
+        [System.String]
+        $KioskModeFolderIcon,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeGridHeight,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeGridWidth,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'smallest', 'small', 'regular', 'large', 'largest')]
+        [System.String]
+        $KioskModeIconSize,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeLockHomeScreen,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KioskModeManagedFolders,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenAutoSignout,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'simple', 'complex')]
+        [System.String]
+        $KioskModeManagedHomeScreenPinComplexity,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenPinRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenPinRequiredToResume,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeManagedHomeScreenSignInBackground,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeManagedHomeScreenSignInBrandingLogo,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedHomeScreenSignInEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeManagedSettingsEntryDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeMediaVolumeConfigurationEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'portrait', 'landscape', 'autoRotate')]
+        [System.String]
+        $KioskModeScreenOrientation,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeScreenSaverConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeScreenSaverDetectMediaDisabled,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeScreenSaverDisplayTimeInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeScreenSaverImageUrl,
+
+        [Parameter()]
+        [System.Int32]
+        $KioskModeScreenSaverStartDelayInSeconds,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeShowAppNotificationBadge,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeShowDeviceInfo,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'singleAppMode', 'multiAppMode')]
+        [System.String]
+        $KioskModeUseManagedHomeScreenApp,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeVirtualHomeButtonEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'swipeUp', 'floating')]
+        [System.String]
+        $KioskModeVirtualHomeButtonType,
+
+        [Parameter()]
+        [System.String]
+        $KioskModeWallpaperUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $KioskModeWifiAllowedSsids,
+
+        [Parameter()]
+        [System.Boolean]
+        $KioskModeWiFiConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrophoneForceMute,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherConfigurationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherCustomWallpaperAllowUserModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherCustomWallpaperEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MicrosoftLauncherCustomWallpaperImageUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherDockPresenceAllowUserModification,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'show', 'hide', 'disabled')]
+        [System.String]
+        $MicrosoftLauncherDockPresenceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherFeedAllowUserModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftLauncherFeedEnabled,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'top', 'bottom', 'hide')]
+        [System.String]
+        $MicrosoftLauncherSearchBarPlacementConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $NetworkEscapeHatchAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $NfcBlockOutgoingBeam,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordBlockKeyguard,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'camera', 'notifications', 'unredactedNotifications', 'trustAgents', 'fingerprint', 'remoteInput', 'allFeatures', 'face', 'iris', 'biometrics')]
+        [System.String[]]
+        $PasswordBlockKeyguardFeatures,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordPreviousPasswordCountToBlock,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'required', 'numeric', 'numericComplex', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'customPassword')]
+        [System.String]
+        $PasswordRequiredType,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'daily', 'unkownFutureValue')]
+        [System.String]
+        $PasswordRequireUnlock,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalProfileAppsAllowInstallFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalProfileCameraBlocked,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PersonalProfilePersonalApplications,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'blockedApps', 'allowedApps')]
+        [System.String]
+        $PersonalProfilePlayStoreMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersonalProfileScreenCaptureBlocked,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'allowList', 'blockList')]
+        [System.String]
+        $PlayStoreMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ScreenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityCommonCriteriaModeEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityDeveloperSettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityRequireVerifyApps,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ShortHelpText,
+
+        [Parameter()]
+        [System.Boolean]
+        $StatusBarBlocked,
+
+        [Parameter()]
+        [ValidateSet('notConfigured', 'ac', 'usb', 'wireless')]
+        [System.String[]]
+        $StayOnModes,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageAllowUsb,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageBlockExternalMedia,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageBlockUsbFileTransfer,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $SystemUpdateFreezePeriods,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'postpone', 'windowed', 'automatic')]
+        [System.String]
+        $SystemUpdateInstallType,
+
+        [Parameter()]
+        [System.Int32]
+        $SystemUpdateWindowEndMinutesAfterMidnight,
+
+        [Parameter()]
+        [System.Int32]
+        $SystemUpdateWindowStartMinutesAfterMidnight,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemWindowsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersBlockAdd,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersBlockRemove,
+
+        [Parameter()]
+        [System.Boolean]
+        $VolumeBlockAdjustment,
+
+        [Parameter()]
+        [System.Boolean]
+        $VpnAlwaysOnLockdownMode,
+
+        [Parameter()]
+        [System.String]
+        $VpnAlwaysOnPackageIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $WifiBlockEditConfigurations,
+
+        [Parameter()]
+        [System.Boolean]
+        $WifiBlockEditPolicyDefinedConfigurations,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordMinimumUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordPreviousPasswordCountToBlock,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'required', 'numeric', 'numericComplex', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'customPassword')]
+        [System.String]
+        $WorkProfilePasswordRequiredType,
+
+        [Parameter()]
+        [ValidateSet('deviceDefault', 'daily', 'unkownFutureValue')]
+        [System.String]
+        $WorkProfilePasswordRequireUnlock,
+
+        [Parameter()]
+        [System.Int32]
+        $WorkProfilePasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+        -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+    return $result
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+    )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    try
+    {
+
+        #region resource generator code
+        $baseFilter = "isof('microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration')"
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($baseFilter) and ($Filter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All -ErrorAction Stop
+        #endregion
+
+        $i = 1
+        $dscContent = [System.Text.StringBuilder]::new()
+        if ($getValue.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+        foreach ($config in $getValue)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $($config.displayName)" -DeferWrite
+            $params = @{
+                Id                    = $config.id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
+            $rawResults = $Results.Clone()
+
+            if ($Results.AzureAdSharedDeviceDataClearApps)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AzureAdSharedDeviceDataClearApps -CIMInstanceName MicrosoftGraphapplistitem
+                if ($complexTypeStringResult)
+                {
+                    $Results.AzureAdSharedDeviceDataClearApps = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('AzureAdSharedDeviceDataClearApps') | Out-Null
+                }
+            }
+
+            if ($Results.DetailedHelpText)
+            {
+                $complexTypeMapping = @(
+                    @{
+                        Name            = 'DetailedHelpText'
+                        CimInstanceName = 'MicrosoftGraphandroiddeviceowneruserfacingmessage'
+                    }
+                    @{
+                        Name            = 'localizedMessages'
+                        CimInstanceName = 'MicrosoftGraphkeyvaluepair'
+                    }
+                )
+
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.DetailedHelpText `
+                    -CIMInstanceName MicrosoftGraphandroiddeviceowneruserfacingmessage `
+                    -ComplexTypeMapping $complexTypeMapping
+
+                if ($complexTypeStringResult)
+                {
+                    $Results.DetailedHelpText = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('DetailedHelpText') | Out-Null
+                }
+            }
+
+            if ($Results.DeviceOwnerLockScreenMessage)
+            {
+                $complexTypeMapping = @(
+                    @{
+                        Name            = 'DeviceOwnerLockScreenMessage'
+                        CimInstanceName = 'MicrosoftGraphandroiddeviceowneruserfacingmessage'
+                    }
+                    @{
+                        Name            = 'localizedMessages'
+                        CimInstanceName = 'MicrosoftGraphkeyvaluepair'
+                        isRequired      = $true
+                    }
+                )
+
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.DeviceOwnerLockScreenMessage `
+                    -CIMInstanceName MicrosoftGraphandroiddeviceowneruserfacingmessage `
+                    -ComplexTypeMapping $complexTypeMapping
+                if ($complexTypeStringResult)
+                {
+                    $Results.DeviceOwnerLockScreenMessage = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('DeviceOwnerLockScreenMessage') | Out-Null
+                }
+            }
+
+            if ($Results.GlobalProxy)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.GlobalProxy -CIMInstanceName MicrosoftGraphandroiddeviceownerglobalproxy
+                if ($complexTypeStringResult)
+                {
+                    $Results.GlobalProxy = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('GlobalProxy') | Out-Null
+                }
+            }
+
+            if ($Results.KioskModeAppPositions)
+            {
+                $complexTypeMapping = @(
+                    @{
+                        Name            = 'kioskModeAppPositions'
+                        CimInstanceName = 'MicrosoftGraphandroiddeviceownerkioskmodeapppositionitem'
+                    }
+                    @{
+                        Name            = 'item'
+                        CimInstanceName = 'MicrosoftGraphandroiddeviceownerkioskmodehomescreenitem'
+                        isRequired      = $true
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.KioskModeAppPositions `
+                    -CIMInstanceName MicrosoftGraphandroiddeviceownerkioskmodeapppositionitem `
+                    -ComplexTypeMapping $complexTypeMapping
+                if ($complexTypeStringResult)
+                {
+                    $Results.KioskModeAppPositions = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('KioskModeAppPositions') | Out-Null
+                }
+            }
+
+            if ($Results.KioskModeApps)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.KioskModeApps -CIMInstanceName MicrosoftGraphapplistitem
+                if ($complexTypeStringResult)
+                {
+                    $Results.KioskModeApps = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('KioskModeApps') | Out-Null
+                }
+            }
+
+            if ($Results.KioskModeManagedFolders)
+            {
+                $complexTypeMapping = @(
+                    @{
+                        Name            = 'kioskModeManagedFolders'
+                        CimInstanceName = 'MicrosoftGraphandroiddeviceownerkioskmodemanagedfolder'
+                    }
+                    @{
+                        Name            = 'items'
+                        CimInstanceName = 'MicrosoftGraphandroiddeviceownerkioskmodefolderitem'
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.KioskModeManagedFolders `
+                    -CIMInstanceName MicrosoftGraphandroiddeviceownerkioskmodemanagedfolder `
+                    -ComplexTypeMapping $complexTypeMapping
+
+                if ($complexTypeStringResult)
+                {
+                    $Results.KioskModeManagedFolders = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('KioskModeManagedFolders') | Out-Null
+                }
+            }
+
+            if ($Results.PersonalProfilePersonalApplications)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.PersonalProfilePersonalApplications -CIMInstanceName MicrosoftGraphapplistitem
+                if ($complexTypeStringResult)
+                {
+                    $Results.PersonalProfilePersonalApplications = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('PersonalProfilePersonalApplications') | Out-Null
+                }
+            }
+
+            if ($Results.ShortHelpText)
+            {
+                $complexTypeMapping = @(
+                    @{
+                        Name            = 'ShortHelpText'
+                        CimInstanceName = 'MicrosoftGraphandroiddeviceowneruserfacingmessage'
+                    }
+                    @{
+                        Name            = 'localizedMessages'
+                        CimInstanceName = 'MicrosoftGraphkeyvaluepair'
+                        isRequired      = $true
+                        isArray         = $true
+                    }
+                )
+
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ShortHelpText `
+                    -CIMInstanceName MicrosoftGraphandroiddeviceowneruserfacingmessage `
+                    -ComplexTypeMapping $complexTypeMapping
+                if ($complexTypeStringResult)
+                {
+                    $Results.ShortHelpText = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ShortHelpText') | Out-Null
+                }
+            }
+
+            if ($Results.SystemUpdateFreezePeriods)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.SystemUpdateFreezePeriods -CIMInstanceName MicrosoftGraphandroiddeviceownersystemupdatefreezeperiod
+                if ($complexTypeStringResult)
+                {
+                    $Results.SystemUpdateFreezePeriods = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('SystemUpdateFreezePeriods') | Out-Null
+                }
+            }
+
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential `
+                -NoEscape @('AzureAdSharedDeviceDataClearApps', 'DetailedHelpText', 'DeviceOwnerLockScreenMessage', 'GlobalProxy',
+                'KioskModeAppPositions', 'KioskModeApps', 'KioskModeManagedFolders', 'PersonalProfilePersonalApplications',
+                'ShortHelpText', 'SystemUpdateFreezePeriods', 'Assignments') `
+                -RawResults $rawResults
+
+            [void]$dscContent.Append($currentDSCBlock)
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        return $dscContent.ToString()
+    }
+    catch
+    {
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
+        {
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+        }
+        else
+        {
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
+            throw
+        }
+    }
+}
+
+Export-ModuleMember -Function *-TargetResource

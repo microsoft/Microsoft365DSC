@@ -1,0 +1,44 @@
+{
+  "resourceName": "EXOAddressList",
+  "description": "",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
+        "read": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ],
+        "update": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ]
+      }
+    },
+    "exchange": {
+      "requiredroles": {
+        "read": [
+          "Address Lists"
+        ],
+        "update": [
+          "Address Lists"
+        ]
+      },
+      "requiredrolegroups": {
+        "read": [],
+        "update": []
+      }
+    }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Data"
+}

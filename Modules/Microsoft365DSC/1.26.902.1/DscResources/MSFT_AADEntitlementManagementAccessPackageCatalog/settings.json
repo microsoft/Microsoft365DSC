@@ -1,0 +1,60 @@
+{
+  "resourceName": "AADEntitlementManagementAccessPackageCatalog",
+  "description": "This resource configures an Azure AD Entitlement Management Access Package Catalog.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Identity Governance Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "EntitlementManagement.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "EntitlementManagement.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "EntitlementManagement.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "EntitlementManagement.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.Identity.Governance"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaEntitlementManagementAccessPackage",
+        "Get-MgBetaEntitlementManagementAccessPackageCatalog",
+        "New-MgBetaEntitlementManagementAccessPackageCatalog",
+        "Remove-MgBetaEntitlementManagementAccessPackageCatalog",
+        "Update-MgBetaEntitlementManagementAccessPackageCatalog"
+      ]
+    }
+  ]
+}

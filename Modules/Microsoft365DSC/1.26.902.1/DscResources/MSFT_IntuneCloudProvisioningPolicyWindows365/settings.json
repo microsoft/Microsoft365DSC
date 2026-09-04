@@ -1,0 +1,73 @@
+{
+  "resourceName": "IntuneCloudProvisioningPolicyWindows365",
+  "description": "This resource configures an Intune Cloud Provisioning Policy for Windows365.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "update": [
+          {
+            "name": "CloudPC.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "read": [
+          {
+            "name": "CloudPC.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "delegated": {
+        "update": [
+          {
+            "name": "CloudPC.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "read": [
+          {
+            "name": "CloudPC.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Beta.DeviceManagement",
+    "Microsoft.Graph.Beta.DeviceManagement.Administration",
+    "Microsoft.Graph.Groups"
+  ],
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementAssignmentFilter"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement.Administration",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementVirtualEndpointProvisioningPolicy",
+        "New-MgBetaDeviceManagementVirtualEndpointProvisioningPolicy",
+        "Remove-MgBetaDeviceManagementVirtualEndpointProvisioningPolicy",
+        "Update-MgBetaDeviceManagementVirtualEndpointProvisioningPolicy"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
+}
