@@ -2,24 +2,12 @@
 
 # UNRELEASED
 
+* ADGSAPrivateAccessApplication
+  * Initial release
 * AADGSATLSInspectionPolicy
-  * Added support for managing the policy's `Rules` (TLS inspection rules),
-    including their FQDN and web category destinations.
-  * Fixed a `400 Bad Request` on `Set` for rules without destinations by always
-    sending `matchingConditions` in the request body.
-  * Excluded the two Global Secure Access auto-created system rules ("System
-    Bypass TLS inspection rule" and "Recommended TLS inspection bypass
-    categories rule") from `Get`/export output so they are never flagged as
-    drift or removed.
+  * Initial release
 * AADGSAWebContentFilteringPolicy
-  * Added support for managing the policy's `Rules` (FQDN and web category
-    filtering rules).
-  * Corrected the resource to target the actual `networkAccess/webFilteringPolicies`
-    Graph endpoint used by the Global Secure Access portal (was previously
-    calling the unrelated legacy `networkAccess/filteringPolicies` endpoint).
-    Replaced the policy-level `State`/`Priority` properties, which don't exist
-    on this endpoint, with `DefaultAction`; rules now carry their own
-    `Priority`/`Action`/`Status`/`HttpRequestMethod`/`SessionType`.
+  * Initial release
 
 # 1.26.902.1
 
