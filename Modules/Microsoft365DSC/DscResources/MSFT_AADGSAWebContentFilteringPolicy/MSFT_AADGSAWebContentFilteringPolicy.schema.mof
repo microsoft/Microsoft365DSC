@@ -1,0 +1,41 @@
+
+[ClassVersion("1.0.0.0")]
+class MSFT_AADGSAWebContentFilteringPolicyRuleDestination
+{
+    [Write, Description("The type of the destination, for example webFilteringUrlDestination or webFilteringWebCategoryDestination.")] String Type;
+    [Write, Description("The destination values, such as URLs or web category names.")] String Values[];
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_AADGSAWebContentFilteringPolicyRule
+{
+    [Write, Description("The unique identifier of the rule.")] String Id;
+    [Write, Description("The display name of the rule.")] String Name;
+    [Write, Description("The priority of the rule. Rules are evaluated in ascending order of priority.")] UInt32 Priority;
+    [Write, Description("Optional description of the rule.")] String Description;
+    [Write, Description("The action to take when traffic matches this rule."), ValueMap{"allow","block","unknownFutureValue"}, Values{"allow","block","unknownFutureValue"}] String Action;
+    [Write, Description("The status of the rule."), ValueMap{"enabled","disabled","unknownFutureValue"}, Values{"enabled","disabled","unknownFutureValue"}] String Status;
+    [Write, Description("The HTTP request method to match, for example get.")] String HttpRequestMethod;
+    [Write, Description("The type of session that must match for this rule, for example user.")] String SessionType;
+    [Write, Description("The destinations that determine when this rule applies to traffic."), EmbeddedInstance("MSFT_AADGSAWebContentFilteringPolicyRuleDestination")] String Destinations[];
+};
+
+[ClassVersion("1.0.0.2"), FriendlyName("AADGSAWebContentFilteringPolicy")]
+class MSFT_AADGSAWebContentFilteringPolicy : OMI_BaseResource
+{
+    [Key, Description("The display name of the Web Content Filtering Policy.")] String Name;
+    [Write, Description("The unique identifier of the policy.")] String Id;
+    [Write, Description("Optional description of the policy.")] String Description;
+    [Write, Description("The default action to take when no rules match."), ValueMap{"allow","block","unknownFutureValue"}, Values{"allow","block","unknownFutureValue"}] String DefaultAction;
+    [Write, Description("The rules that define the specific matching conditions and desired actions for web content filtering."), EmbeddedInstance("MSFT_AADGSAWebContentFilteringPolicyRule")] String Rules[];
+    [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the workload's Admin."), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword."), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};

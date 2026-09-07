@@ -223,6 +223,92 @@
       "Type": "System.String"
     }
   ],
+  "Get-MgApplicationFederatedIdentityCredential": [
+    {
+      "Name": "ApplicationId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "FederatedIdentityCredentialId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ExpandProperty",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Property",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Filter",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Search",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Skip",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "Sort",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Top",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "PageSize",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "All",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "CountVariable",
+      "Type": "System.String"
+    }
+  ],
   "Get-MgBetaAgreement": [
     {
       "Name": "AgreementId",
@@ -10805,6 +10891,342 @@
       "Type": "System.Management.Automation.SwitchParameter"
     }
   ],
+  "Get-MgBetaNetworkAccessTlInspectionPolicy": [
+    {
+      "Name": "TlsInspectionPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ExpandProperty",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Property",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Filter",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Search",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Skip",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "Sort",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Top",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "PageSize",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "All",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "CountVariable",
+      "Type": "System.String"
+    }
+  ],
+  "Get-MgBetaNetworkAccessTlInspectionPolicyRule": [
+    {
+      "Name": "PolicyRuleId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "TlsInspectionPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ExpandProperty",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Property",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Filter",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Search",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Skip",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "Sort",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Top",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "PageSize",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "All",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "CountVariable",
+      "Type": "System.String"
+    }
+  ],
+  "Get-MgBetaNetworkAccessWebFilteringPolicy": [
+    {
+      "Name": "WebFilteringPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Property",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ExpandProperty",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Filter",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Search",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Skip",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "Sort",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Top",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "PageSize",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "All",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "CountVariable",
+      "Type": "System.String"
+    }
+  ],
+  "Get-MgBetaNetworkAccessWebFilteringPolicyRule": [
+    {
+      "Name": "WebFilteringPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "PolicyRuleId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Property",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ExpandProperty",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Filter",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Search",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Skip",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "Sort",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Top",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "PageSize",
+      "Type": "System.Int32"
+    },
+    {
+      "Name": "All",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "CountVariable",
+      "Type": "System.String"
+    }
+  ],
   "Get-MgBetaOnPremisePublishingProfileConnectorGroup": [
     {
       "Name": "ConnectorGroupId",
@@ -16259,10 +16681,6 @@
       "Type": "System.Object"
     },
     {
-      "Name": "CreatedByAppId",
-      "Type": "System.String"
-    },
-    {
       "Name": "CreatedDateTime",
       "Type": "System.DateTime"
     },
@@ -16323,10 +16741,6 @@
       "Type": "System.Management.Automation.SwitchParameter"
     },
     {
-      "Name": "IsDisabled",
-      "Type": "System.Management.Automation.SwitchParameter"
-    },
-    {
       "Name": "IsFallbackPublicClient",
       "Type": "System.Management.Automation.SwitchParameter"
     },
@@ -16337,10 +16751,6 @@
     {
       "Name": "LogoInputFile",
       "Type": "System.String"
-    },
-    {
-      "Name": "ManagerApplications",
-      "Type": "System.String[]"
     },
     {
       "Name": "NativeAuthenticationApisEnabled",
@@ -16437,6 +16847,80 @@
     {
       "Name": "Web",
       "Type": "System.Object"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "New-MgApplicationFederatedIdentityCredential": [
+    {
+      "Name": "ApplicationId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "BodyParameter",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "AdditionalProperties",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Audiences",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Description",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Id",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Issuer",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Name",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Subject",
+      "Type": "System.String"
     },
     {
       "Name": "Break",
@@ -24153,6 +24637,250 @@
       "Type": "System.Management.Automation.SwitchParameter"
     }
   ],
+  "New-MgBetaNetworkAccessTlInspectionPolicy": [
+    {
+      "Name": "BodyParameter",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "AdditionalProperties",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Description",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Id",
+      "Type": "System.String"
+    },
+    {
+      "Name": "LastModifiedDateTime",
+      "Type": "System.DateTime"
+    },
+    {
+      "Name": "Name",
+      "Type": "System.String"
+    },
+    {
+      "Name": "PolicyRules",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "Settings",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Version",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "New-MgBetaNetworkAccessTlInspectionPolicyRule": [
+    {
+      "Name": "TlsInspectionPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "BodyParameter",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "AdditionalProperties",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Id",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Name",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "New-MgBetaNetworkAccessWebFilteringPolicy": [
+    {
+      "Name": "BodyParameter",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "AdditionalProperties",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Description",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Id",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Name",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Settings",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "New-MgBetaNetworkAccessWebFilteringPolicyRule": [
+    {
+      "Name": "WebFilteringPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "BodyParameter",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "AdditionalProperties",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Id",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Name",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
   "New-MgBetaOnPremisePublishingProfileConnectorGroup": [
     {
       "Name": "OnPremisesPublishingProfileId",
@@ -24657,10 +25385,6 @@
       "Type": "System.Collections.Hashtable"
     },
     {
-      "Name": "AppServiceConnectInbound",
-      "Type": "System.Object"
-    },
-    {
       "Name": "AutomaticUserConsentSettings",
       "Type": "System.Object"
     },
@@ -24681,10 +25405,6 @@
       "Type": "System.Object"
     },
     {
-      "Name": "BlockServiceProviderOutboundAccess",
-      "Type": "System.Management.Automation.SwitchParameter"
-    },
-    {
       "Name": "DeletedDateTime",
       "Type": "System.DateTime"
     },
@@ -24703,18 +25423,6 @@
     {
       "Name": "IsServiceProvider",
       "Type": "System.Management.Automation.SwitchParameter"
-    },
-    {
-      "Name": "M365Capabilities",
-      "Type": "System.Object"
-    },
-    {
-      "Name": "M365CollaborationInbound",
-      "Type": "System.Object"
-    },
-    {
-      "Name": "M365CollaborationOutbound",
-      "Type": "System.Object"
     },
     {
       "Name": "TenantId",
@@ -26613,10 +27321,6 @@
       "Type": "System.String"
     },
     {
-      "Name": "InfoCatalogs",
-      "Type": "System.String[]"
-    },
-    {
       "Name": "IsArchived",
       "Type": "System.Management.Automation.SwitchParameter"
     },
@@ -26745,14 +27449,6 @@
       "Type": "System.DateTime"
     },
     {
-      "Name": "ResourceBehaviorOptions",
-      "Type": "System.String[]"
-    },
-    {
-      "Name": "ResourceProvisioningOptions",
-      "Type": "System.String[]"
-    },
-    {
       "Name": "SecurityEnabled",
       "Type": "System.Management.Automation.SwitchParameter"
     },
@@ -26803,10 +27499,6 @@
     {
       "Name": "Visibility",
       "Type": "System.String"
-    },
-    {
-      "Name": "WelcomeMessageEnabled",
-      "Type": "System.Management.Automation.SwitchParameter"
     },
     {
       "Name": "Break",
@@ -27375,10 +28067,6 @@
       "Type": "System.Object"
     },
     {
-      "Name": "CreatedByAppId",
-      "Type": "System.String"
-    },
-    {
       "Name": "CreatedObjects",
       "Type": "System.Object"
     },
@@ -27429,10 +28117,6 @@
     {
       "Name": "Info",
       "Type": "System.Object"
-    },
-    {
-      "Name": "IsDisabled",
-      "Type": "System.Management.Automation.SwitchParameter"
     },
     {
       "Name": "KeyCredentials",
@@ -27949,10 +28633,6 @@
       "Type": "System.Object"
     },
     {
-      "Name": "IdentityParentId",
-      "Type": "System.String"
-    },
-    {
       "Name": "ImAddresses",
       "Type": "System.String[]"
     },
@@ -28304,6 +28984,60 @@
   "Remove-MgApplication": [
     {
       "Name": "ApplicationId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "IfMatch",
+      "Type": "System.String"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "PassThru",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "Remove-MgApplicationFederatedIdentityCredential": [
+    {
+      "Name": "ApplicationId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "FederatedIdentityCredentialId",
       "Type": "System.String"
     },
     {
@@ -32331,6 +33065,214 @@
       "Type": "System.Management.Automation.SwitchParameter"
     }
   ],
+  "Remove-MgBetaNetworkAccessTlInspectionPolicy": [
+    {
+      "Name": "TlsInspectionPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "IfMatch",
+      "Type": "System.String"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "PassThru",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "Remove-MgBetaNetworkAccessTlInspectionPolicyRule": [
+    {
+      "Name": "PolicyRuleId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "TlsInspectionPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "IfMatch",
+      "Type": "System.String"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "PassThru",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "Remove-MgBetaNetworkAccessWebFilteringPolicy": [
+    {
+      "Name": "WebFilteringPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "IfMatch",
+      "Type": "System.String"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "PassThru",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "Remove-MgBetaNetworkAccessWebFilteringPolicyRule": [
+    {
+      "Name": "WebFilteringPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "PolicyRuleId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "IfMatch",
+      "Type": "System.String"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "PassThru",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
   "Remove-MgBetaOnPremisePublishingProfileConnectorGroup": [
     {
       "Name": "ConnectorGroupId",
@@ -35011,10 +35953,6 @@
       "Type": "System.Object"
     },
     {
-      "Name": "CreatedByAppId",
-      "Type": "System.String"
-    },
-    {
       "Name": "CreatedDateTime",
       "Type": "System.DateTime"
     },
@@ -35075,10 +36013,6 @@
       "Type": "System.Management.Automation.SwitchParameter"
     },
     {
-      "Name": "IsDisabled",
-      "Type": "System.Management.Automation.SwitchParameter"
-    },
-    {
       "Name": "IsFallbackPublicClient",
       "Type": "System.Management.Automation.SwitchParameter"
     },
@@ -35089,10 +36023,6 @@
     {
       "Name": "LogoInputFile",
       "Type": "System.String"
-    },
-    {
-      "Name": "ManagerApplications",
-      "Type": "System.String[]"
     },
     {
       "Name": "NativeAuthenticationApisEnabled",
@@ -35189,6 +36119,84 @@
     {
       "Name": "Web",
       "Type": "System.Object"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "Update-MgApplicationFederatedIdentityCredential": [
+    {
+      "Name": "ApplicationId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "FederatedIdentityCredentialId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "BodyParameter",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "AdditionalProperties",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Audiences",
+      "Type": "System.String[]"
+    },
+    {
+      "Name": "Description",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Id",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Issuer",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Name",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Subject",
+      "Type": "System.String"
     },
     {
       "Name": "Break",
@@ -35347,10 +36355,6 @@
     {
       "Name": "LogoInputFile",
       "Type": "System.String"
-    },
-    {
-      "Name": "ManagerApplications",
-      "Type": "System.String[]"
     },
     {
       "Name": "NativeAuthenticationApisEnabled",
@@ -37193,10 +38197,6 @@
       "Type": "System.Object"
     },
     {
-      "Name": "AndroidAppConfigurationSchema",
-      "Type": "System.Object"
-    },
-    {
       "Name": "AndroidDeviceOwnerEnrollmentProfiles",
       "Type": "System.Object"
     },
@@ -37634,10 +38634,6 @@
     },
     {
       "Name": "RoleScopeTags",
-      "Type": "System.Object"
-    },
-    {
-      "Name": "SamsungEFotaFirmwareVersions",
       "Type": "System.Object"
     },
     {
@@ -42558,7 +43554,7 @@
     },
     {
       "Name": "BodyParameter",
-      "Type": "System.Collections.Hashtable"
+      "Type": "System.Object"
     },
     {
       "Name": "ResponseHeadersVariable",
@@ -42784,6 +43780,274 @@
     },
     {
       "Name": "NetworkPacketTaggingStatus",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "Update-MgBetaNetworkAccessTlInspectionPolicy": [
+    {
+      "Name": "TlsInspectionPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "BodyParameter",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "AdditionalProperties",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Description",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Id",
+      "Type": "System.String"
+    },
+    {
+      "Name": "LastModifiedDateTime",
+      "Type": "System.DateTime"
+    },
+    {
+      "Name": "Name",
+      "Type": "System.String"
+    },
+    {
+      "Name": "PolicyRules",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "Settings",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Version",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "Update-MgBetaNetworkAccessTlInspectionPolicyRule": [
+    {
+      "Name": "PolicyRuleId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "TlsInspectionPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "BodyParameter",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "AdditionalProperties",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Id",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Name",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "Update-MgBetaNetworkAccessWebFilteringPolicy": [
+    {
+      "Name": "WebFilteringPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "BodyParameter",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "AdditionalProperties",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Description",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Id",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Name",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Settings",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "Break",
+      "Type": "System.Management.Automation.SwitchParameter"
+    },
+    {
+      "Name": "Headers",
+      "Type": "System.Collections.IDictionary"
+    },
+    {
+      "Name": "HttpPipelineAppend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "HttpPipelinePrepend",
+      "Type": "System.Object[]"
+    },
+    {
+      "Name": "Proxy",
+      "Type": "System.Uri"
+    },
+    {
+      "Name": "ProxyCredential",
+      "Type": "System.Management.Automation.PSCredential"
+    },
+    {
+      "Name": "ProxyUseDefaultCredentials",
+      "Type": "System.Management.Automation.SwitchParameter"
+    }
+  ],
+  "Update-MgBetaNetworkAccessWebFilteringPolicyRule": [
+    {
+      "Name": "WebFilteringPolicyId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "PolicyRuleId",
+      "Type": "System.String"
+    },
+    {
+      "Name": "InputObject",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "BodyParameter",
+      "Type": "System.Object"
+    },
+    {
+      "Name": "ResponseHeadersVariable",
+      "Type": "System.String"
+    },
+    {
+      "Name": "AdditionalProperties",
+      "Type": "System.Collections.Hashtable"
+    },
+    {
+      "Name": "Id",
+      "Type": "System.String"
+    },
+    {
+      "Name": "Name",
       "Type": "System.String"
     },
     {
@@ -44199,10 +45463,6 @@
       "Type": "System.Collections.Hashtable"
     },
     {
-      "Name": "AppServiceConnectInbound",
-      "Type": "System.Object"
-    },
-    {
       "Name": "AutomaticUserConsentSettings",
       "Type": "System.Object"
     },
@@ -44223,10 +45483,6 @@
       "Type": "System.Object"
     },
     {
-      "Name": "BlockServiceProviderOutboundAccess",
-      "Type": "System.Management.Automation.SwitchParameter"
-    },
-    {
       "Name": "DeletedDateTime",
       "Type": "System.DateTime"
     },
@@ -44245,18 +45501,6 @@
     {
       "Name": "IsServiceProvider",
       "Type": "System.Management.Automation.SwitchParameter"
-    },
-    {
-      "Name": "M365Capabilities",
-      "Type": "System.Object"
-    },
-    {
-      "Name": "M365CollaborationInbound",
-      "Type": "System.Object"
-    },
-    {
-      "Name": "M365CollaborationOutbound",
-      "Type": "System.Object"
     },
     {
       "Name": "TenantId",
@@ -45677,10 +46921,6 @@
       "Type": "System.String"
     },
     {
-      "Name": "InfoCatalogs",
-      "Type": "System.String[]"
-    },
-    {
       "Name": "IsArchived",
       "Type": "System.Management.Automation.SwitchParameter"
     },
@@ -45809,14 +47049,6 @@
       "Type": "System.DateTime"
     },
     {
-      "Name": "ResourceBehaviorOptions",
-      "Type": "System.String[]"
-    },
-    {
-      "Name": "ResourceProvisioningOptions",
-      "Type": "System.String[]"
-    },
-    {
       "Name": "SecurityEnabled",
       "Type": "System.Management.Automation.SwitchParameter"
     },
@@ -45867,10 +47099,6 @@
     {
       "Name": "Visibility",
       "Type": "System.String"
-    },
-    {
-      "Name": "WelcomeMessageEnabled",
-      "Type": "System.Management.Automation.SwitchParameter"
     },
     {
       "Name": "Break",
@@ -46135,10 +47363,6 @@
       "Type": "System.Object"
     },
     {
-      "Name": "CreatedByAppId",
-      "Type": "System.String"
-    },
-    {
       "Name": "CreatedObjects",
       "Type": "System.Object"
     },
@@ -46189,10 +47413,6 @@
     {
       "Name": "Info",
       "Type": "System.Object"
-    },
-    {
-      "Name": "IsDisabled",
-      "Type": "System.Management.Automation.SwitchParameter"
     },
     {
       "Name": "KeyCredentials",
@@ -46571,10 +47791,6 @@
     {
       "Name": "Identities",
       "Type": "System.Object"
-    },
-    {
-      "Name": "IdentityParentId",
-      "Type": "System.String"
     },
     {
       "Name": "ImAddresses",

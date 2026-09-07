@@ -420,7 +420,10 @@ function Invoke-M365DSCGraphShimGetResource
     }
 
     $response = Invoke-M365DSCGraphShimRequest -Method GET -Uri $uri -Headers $requestHeaders -ErrorAction $ErrorActionPreference
-    if ($null -ne $response -and $response -is [hashtable] -and $response.ContainsKey('value'))
+
+    # Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue might return an object with the 'value' property,
+    # but we also need the values inside 'presentation'. Return the whole object inside $response instead of $response.value
+    if ($null -ne $response -and $response -is [hashtable] -and $response.ContainsKey('value') -and -not $response.ContainsKey('presentation'))
     {
         return $response.value
     }
@@ -770,11 +773,11 @@ function Get-MgApplicationFederatedIdentityCredential
 
         [Parameter()]
         [System.String[]]
-        $Property,
+        $ExpandProperty,
 
         [Parameter()]
         [System.String[]]
-        $ExpandProperty,
+        $Property,
 
         [Parameter()]
         [System.String]
@@ -795,10 +798,6 @@ function Get-MgApplicationFederatedIdentityCredential
         [Parameter()]
         [System.Int32]
         $Top,
-
-        [Parameter()]
-        [System.String]
-        $ConsistencyLevel,
 
         [Parameter()]
         [System.String]
@@ -3457,7 +3456,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyEnrollmentTimeDeviceMember
         $ProxyUseDefaultCredentials
     )
 
-    return Invoke-M365DSCGraphShimGetResource -BoundParameters $PSBoundParameters -CollectionUri "/beta/deviceManagement/configurationPolicies/$($DeviceManagementConfigurationPolicyId)/retrieveEnrollmentTimeDeviceMembershipTarget" -ErrorAction $ErrorActionPreference
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/deviceManagement/configurationPolicies/$($DeviceManagementConfigurationPolicyId)/retrieveEnrollmentTimeDeviceMembershipTarget" -Method 'POST' -ExtraExcludeParams @('DeviceManagementConfigurationPolicyId') -ErrorAction $ErrorActionPreference
 }
 
 function Get-MgBetaDeviceManagementConfigurationPolicySetting
@@ -12331,6 +12330,371 @@ function Get-MgBetaNetworkAccessSettingCrossTenantAccess
     return Invoke-M365DSCGraphShimGetResource -BoundParameters $PSBoundParameters -CollectionUri "/beta/networkAccess/settings/crossTenantAccess" -ErrorAction $ErrorActionPreference
 }
 
+function Get-MgBetaNetworkAccessTlInspectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TlsInspectionPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
+    )
+
+    $singleItemUri = if ($PSBoundParameters.ContainsKey('TlsInspectionPolicyId') -and -not [System.String]::IsNullOrEmpty($TlsInspectionPolicyId)) { "/beta/networkAccess/tlsInspectionPolicies/$($TlsInspectionPolicyId)" } else { $null }
+    return Invoke-M365DSCGraphShimGetResource -BoundParameters $PSBoundParameters -CollectionUri "/beta/networkAccess/tlsInspectionPolicies" -SingleItemUri $singleItemUri -ErrorAction $ErrorActionPreference
+}
+
+function Get-MgBetaNetworkAccessTlInspectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PolicyRuleId,
+
+        [Parameter()]
+        [System.String]
+        $TlsInspectionPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
+    )
+
+    $singleItemUri = if ($PSBoundParameters.ContainsKey('PolicyRuleId') -and -not [System.String]::IsNullOrEmpty($PolicyRuleId)) { "/beta/networkAccess/tlsInspectionPolicies/$($TlsInspectionPolicyId)/policyRules/$($PolicyRuleId)" } else { $null }
+    return Invoke-M365DSCGraphShimGetResource -BoundParameters $PSBoundParameters -CollectionUri "/beta/networkAccess/tlsInspectionPolicies/$($TlsInspectionPolicyId)/policyRules" -SingleItemUri $singleItemUri -ErrorAction $ErrorActionPreference
+}
+
+# Hand-maintained: webFilteringPolicies has no real SDK cmdlet yet (undocumented Graph endpoint); do not replace with the unrelated legacy MgBetaNetworkAccessFilteringPolicy cmdlets.
+function Get-MgBetaNetworkAccessWebFilteringPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $WebFilteringPolicyId,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $HttpPipelineAppend
+    )
+
+    $singleItemUri = if ($PSBoundParameters.ContainsKey('WebFilteringPolicyId') -and -not [System.String]::IsNullOrEmpty($WebFilteringPolicyId)) { "/beta/networkAccess/webFilteringPolicies/$($WebFilteringPolicyId)" } else { $null }
+    return Invoke-M365DSCGraphShimGetResource -BoundParameters $PSBoundParameters -CollectionUri "/beta/networkAccess/webFilteringPolicies" -SingleItemUri $singleItemUri -ErrorAction $ErrorActionPreference
+}
+
+function Get-MgBetaNetworkAccessWebFilteringPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $WebFilteringPolicyId,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $PolicyRuleId,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $HttpPipelineAppend
+    )
+
+    $singleItemUri = if ($PSBoundParameters.ContainsKey('PolicyRuleId') -and -not [System.String]::IsNullOrEmpty($PolicyRuleId)) { "/beta/networkAccess/webFilteringPolicies/$($WebFilteringPolicyId)/policyRules/$($PolicyRuleId)" } else { $null }
+    return Invoke-M365DSCGraphShimGetResource -BoundParameters $PSBoundParameters -CollectionUri "/beta/networkAccess/webFilteringPolicies/$($WebFilteringPolicyId)/policyRules" -SingleItemUri $singleItemUri -ErrorAction $ErrorActionPreference
+}
+
 function Get-MgBetaOnPremisePublishingProfileConnectorGroup
 {
     [CmdletBinding()]
@@ -18281,10 +18645,6 @@ function New-MgApplication
         $Certification,
 
         [Parameter()]
-        [System.String]
-        $CreatedByAppId,
-
-        [Parameter()]
         [System.DateTime]
         $CreatedDateTime,
 
@@ -18346,10 +18706,6 @@ function New-MgApplication
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsDisabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $IsFallbackPublicClient,
 
         [Parameter()]
@@ -18359,10 +18715,6 @@ function New-MgApplication
         [Parameter()]
         [System.String]
         $LogoInputFile,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagerApplications,
 
         [Parameter()]
         [System.String]
@@ -18513,6 +18865,10 @@ function New-MgApplicationFederatedIdentityCredential
         $ResponseHeadersVariable,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
         [System.String[]]
         $Audiences,
 
@@ -18537,10 +18893,6 @@ function New-MgApplicationFederatedIdentityCredential
         $Subject,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
@@ -18555,10 +18907,6 @@ function New-MgApplicationFederatedIdentityCredential
         [Parameter()]
         [System.Object[]]
         $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
 
         [Parameter()]
         [System.Uri]
@@ -26748,6 +27096,275 @@ function New-MgBetaNetworkAccessForwardingPolicyRule
     return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/forwardingPolicies/$($ForwardingPolicyId)/policyRules" -Method 'POST' -ExtraExcludeParams @('ForwardingPolicyId') -ErrorAction $ErrorActionPreference
 }
 
+function New-MgBetaNetworkAccessTlInspectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRules,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/tlsInspectionPolicies" -Method 'POST' -ErrorAction $ErrorActionPreference
+}
+
+function New-MgBetaNetworkAccessTlInspectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TlsInspectionPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/tlsInspectionPolicies/$($TlsInspectionPolicyId)/policyRules" -Method 'POST' -ExtraExcludeParams @('TlsInspectionPolicyId') -ErrorAction $ErrorActionPreference
+}
+
+# Hand-maintained: webFilteringPolicies has no real SDK cmdlet yet (undocumented Graph endpoint); do not replace with the unrelated legacy MgBetaNetworkAccessFilteringPolicy cmdlets.
+function New-MgBetaNetworkAccessWebFilteringPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Settings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/webFilteringPolicies" -Method 'POST' -ErrorAction $ErrorActionPreference
+}
+
+function New-MgBetaNetworkAccessWebFilteringPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $WebFilteringPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $HttpPipelineAppend
+    )
+
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/webFilteringPolicies/$($WebFilteringPolicyId)/policyRules" -Method 'POST' -ExtraExcludeParams @('WebFilteringPolicyId') -ErrorAction $ErrorActionPreference
+}
+
 function New-MgBetaOnPremisePublishingProfileConnectorGroup
 {
     [CmdletBinding()]
@@ -27298,10 +27915,6 @@ function New-MgBetaPolicyCrossTenantAccessPolicyPartner
 
         [Parameter()]
         [System.Object]
-        $AppServiceConnectInbound,
-
-        [Parameter()]
-        [System.Object]
         $AutomaticUserConsentSettings,
 
         [Parameter()]
@@ -27319,10 +27932,6 @@ function New-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [System.Object]
         $B2BDirectConnectOutbound,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $BlockServiceProviderOutboundAccess,
 
         [Parameter()]
         [System.DateTime]
@@ -27343,18 +27952,6 @@ function New-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsServiceProvider,
-
-        [Parameter()]
-        [System.Object]
-        $M365Capabilities,
-
-        [Parameter()]
-        [System.Object]
-        $M365CollaborationInbound,
-
-        [Parameter()]
-        [System.Object]
-        $M365CollaborationOutbound,
 
         [Parameter()]
         [System.String]
@@ -29385,10 +29982,6 @@ function New-MgGroup
         $Id,
 
         [Parameter()]
-        [System.String[]]
-        $InfoCatalogs,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsArchived,
 
@@ -29517,14 +30110,6 @@ function New-MgGroup
         $RenewedDateTime,
 
         [Parameter()]
-        [System.String[]]
-        $ResourceBehaviorOptions,
-
-        [Parameter()]
-        [System.String[]]
-        $ResourceProvisioningOptions,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $SecurityEnabled,
 
@@ -29575,10 +30160,6 @@ function New-MgGroup
         [Parameter()]
         [System.String]
         $Visibility,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $WelcomeMessageEnabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -30189,10 +30770,6 @@ function New-MgServicePrincipal
         $ClaimsMappingPolicies,
 
         [Parameter()]
-        [System.String]
-        $CreatedByAppId,
-
-        [Parameter()]
         [System.Object]
         $CreatedObjects,
 
@@ -30243,10 +30820,6 @@ function New-MgServicePrincipal
         [Parameter()]
         [System.Object]
         $Info,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDisabled,
 
         [Parameter()]
         [System.Object]
@@ -30779,10 +31352,6 @@ function New-MgUser
         [Parameter()]
         [System.Object]
         $Identities,
-
-        [Parameter()]
-        [System.String]
-        $IdentityParentId,
 
         [Parameter()]
         [System.String[]]
@@ -35700,6 +36269,239 @@ function Remove-MgBetaNetworkAccessForwardingPolicyRule
     Invoke-M365DSCGraphShimDeleteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/forwardingPolicies/$($ForwardingPolicyId)/policyRules/$($PolicyRuleId)" -ErrorAction $ErrorActionPreference
 }
 
+function Remove-MgBetaNetworkAccessTlInspectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TlsInspectionPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    Invoke-M365DSCGraphShimDeleteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/tlsInspectionPolicies/$($TlsInspectionPolicyId)" -ErrorAction $ErrorActionPreference
+}
+
+function Remove-MgBetaNetworkAccessTlInspectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PolicyRuleId,
+
+        [Parameter()]
+        [System.String]
+        $TlsInspectionPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    Invoke-M365DSCGraphShimDeleteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/tlsInspectionPolicies/$($TlsInspectionPolicyId)/policyRules/$($PolicyRuleId)" -ErrorAction $ErrorActionPreference
+}
+
+# Hand-maintained: webFilteringPolicies has no real SDK cmdlet yet (undocumented Graph endpoint); do not replace with the unrelated legacy MgBetaNetworkAccessFilteringPolicy cmdlets.
+function Remove-MgBetaNetworkAccessWebFilteringPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $WebFilteringPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    Invoke-M365DSCGraphShimDeleteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/webFilteringPolicies/$($WebFilteringPolicyId)" -ErrorAction $ErrorActionPreference
+}
+
+function Remove-MgBetaNetworkAccessWebFilteringPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $WebFilteringPolicyId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.String]
+        $PolicyRuleId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+
+    Invoke-M365DSCGraphShimDeleteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/webFilteringPolicies/$($WebFilteringPolicyId)/policyRules/$($PolicyRuleId)" -ErrorAction $ErrorActionPreference
+}
+
 function Remove-MgBetaOnPremisePublishingProfileConnectorGroup
 {
     [CmdletBinding()]
@@ -38653,10 +39455,6 @@ function Update-MgApplication
         $Certification,
 
         [Parameter()]
-        [System.String]
-        $CreatedByAppId,
-
-        [Parameter()]
         [System.DateTime]
         $CreatedDateTime,
 
@@ -38718,10 +39516,6 @@ function Update-MgApplication
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsDisabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $IsFallbackPublicClient,
 
         [Parameter()]
@@ -38731,10 +39525,6 @@ function Update-MgApplication
         [Parameter()]
         [System.String]
         $LogoInputFile,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagerApplications,
 
         [Parameter()]
         [System.String]
@@ -38889,6 +39679,10 @@ function Update-MgApplicationFederatedIdentityCredential
         $ResponseHeadersVariable,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
         [System.String[]]
         $Audiences,
 
@@ -38913,10 +39707,6 @@ function Update-MgApplicationFederatedIdentityCredential
         $Subject,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
@@ -38931,10 +39721,6 @@ function Update-MgApplicationFederatedIdentityCredential
         [Parameter()]
         [System.Object[]]
         $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
 
         [Parameter()]
         [System.Uri]
@@ -39083,10 +39869,6 @@ function Update-MgBetaApplication
         [Parameter()]
         [System.String]
         $LogoInputFile,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagerApplications,
 
         [Parameter()]
         [System.String]
@@ -40990,10 +41772,6 @@ function Update-MgBetaDeviceManagement
 
         [Parameter()]
         [System.Object]
-        $AndroidAppConfigurationSchema,
-
-        [Parameter()]
-        [System.Object]
         $AndroidDeviceOwnerEnrollmentProfiles,
 
         [Parameter()]
@@ -41431,10 +42209,6 @@ function Update-MgBetaDeviceManagement
         [Parameter()]
         [System.Object]
         $RoleScopeTags,
-
-        [Parameter()]
-        [System.Object]
-        $SamsungEFotaFirmwareVersions,
 
         [Parameter()]
         [System.Object]
@@ -46653,7 +47427,7 @@ function Update-MgBetaNetworkAccessForwardingProfile
         $InputObject,
 
         [Parameter()]
-        [System.Collections.Hashtable]
+        [System.Object]
         $BodyParameter,
 
         [Parameter()]
@@ -46930,6 +47704,299 @@ function Update-MgBetaNetworkAccessSettingCrossTenantAccess
     )
 
     return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/settings/crossTenantAccess" -Method 'PATCH' -ErrorAction $ErrorActionPreference
+}
+
+function Update-MgBetaNetworkAccessTlInspectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TlsInspectionPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRules,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/tlsInspectionPolicies/$($TlsInspectionPolicyId)" -Method 'PATCH' -ExtraExcludeParams @('TlsInspectionPolicyId') -ErrorAction $ErrorActionPreference
+}
+
+function Update-MgBetaNetworkAccessTlInspectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PolicyRuleId,
+
+        [Parameter()]
+        [System.String]
+        $TlsInspectionPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/tlsInspectionPolicies/$($TlsInspectionPolicyId)/policyRules/$($PolicyRuleId)" -Method 'PATCH' -ExtraExcludeParams @('TlsInspectionPolicyId', 'PolicyRuleId') -ErrorAction $ErrorActionPreference
+}
+
+# Hand-maintained: webFilteringPolicies has no real SDK cmdlet yet (undocumented Graph endpoint); do not replace with the unrelated legacy MgBetaNetworkAccessFilteringPolicy cmdlets.
+function Update-MgBetaNetworkAccessWebFilteringPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $WebFilteringPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $InputObject,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Settings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Object[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/webFilteringPolicies/$($WebFilteringPolicyId)" -Method 'PATCH' -ErrorAction $ErrorActionPreference
+}
+
+function Update-MgBetaNetworkAccessWebFilteringPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $WebFilteringPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $PolicyRuleId,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $HttpPipelineAppend
+    )
+
+    return Invoke-M365DSCGraphShimWriteResource -BoundParameters $PSBoundParameters -Uri "/beta/networkAccess/webFilteringPolicies/$($WebFilteringPolicyId)/policyRules/$($PolicyRuleId)" -Method 'PATCH' -ExtraExcludeParams @('WebFilteringPolicyId', 'PolicyRuleId') -ErrorAction $ErrorActionPreference
 }
 
 function Update-MgBetaOnPremisePublishingProfileConnectorGroup
@@ -48422,10 +49489,6 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyPartner
 
         [Parameter()]
         [System.Object]
-        $AppServiceConnectInbound,
-
-        [Parameter()]
-        [System.Object]
         $AutomaticUserConsentSettings,
 
         [Parameter()]
@@ -48443,10 +49506,6 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [System.Object]
         $B2BDirectConnectOutbound,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $BlockServiceProviderOutboundAccess,
 
         [Parameter()]
         [System.DateTime]
@@ -48467,18 +49526,6 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsServiceProvider,
-
-        [Parameter()]
-        [System.Object]
-        $M365Capabilities,
-
-        [Parameter()]
-        [System.Object]
-        $M365CollaborationInbound,
-
-        [Parameter()]
-        [System.Object]
-        $M365CollaborationOutbound,
 
         [Parameter()]
         [System.String]
@@ -50001,10 +51048,6 @@ function Update-MgGroup
         $Id,
 
         [Parameter()]
-        [System.String[]]
-        $InfoCatalogs,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsArchived,
 
@@ -50133,14 +51176,6 @@ function Update-MgGroup
         $RenewedDateTime,
 
         [Parameter()]
-        [System.String[]]
-        $ResourceBehaviorOptions,
-
-        [Parameter()]
-        [System.String[]]
-        $ResourceProvisioningOptions,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $SecurityEnabled,
 
@@ -50191,10 +51226,6 @@ function Update-MgGroup
         [Parameter()]
         [System.String]
         $Visibility,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $WelcomeMessageEnabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -50477,10 +51508,6 @@ function Update-MgServicePrincipal
         $ClaimsMappingPolicies,
 
         [Parameter()]
-        [System.String]
-        $CreatedByAppId,
-
-        [Parameter()]
         [System.Object]
         $CreatedObjects,
 
@@ -50531,10 +51558,6 @@ function Update-MgServicePrincipal
         [Parameter()]
         [System.Object]
         $Info,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDisabled,
 
         [Parameter()]
         [System.Object]
@@ -50919,10 +51942,6 @@ function Update-MgUser
         [Parameter()]
         [System.Object]
         $Identities,
-
-        [Parameter()]
-        [System.String]
-        $IdentityParentId,
 
         [Parameter()]
         [System.String[]]
@@ -51414,6 +52433,10 @@ Export-ModuleMember -Function @(
     'Get-MgBetaNetworkAccessForwardingProfilePolicy',
     'Get-MgBetaNetworkAccessSettingConditionalAccess',
     'Get-MgBetaNetworkAccessSettingCrossTenantAccess',
+    'Get-MgBetaNetworkAccessTlInspectionPolicy',
+    'Get-MgBetaNetworkAccessTlInspectionPolicyRule',
+    'Get-MgBetaNetworkAccessWebFilteringPolicy',
+    'Get-MgBetaNetworkAccessWebFilteringPolicyRule',
     'Get-MgBetaOnPremisePublishingProfileConnectorGroup',
     'Get-MgBetaOrganization',
     'Get-MgBetaOrganizationCertificateBasedAuthConfiguration',
@@ -51571,6 +52594,10 @@ Export-ModuleMember -Function @(
     'New-MgBetaNetworkAccessFilteringPolicyRule',
     'New-MgBetaNetworkAccessFilteringProfile',
     'New-MgBetaNetworkAccessForwardingPolicyRule',
+    'New-MgBetaNetworkAccessTlInspectionPolicy',
+    'New-MgBetaNetworkAccessTlInspectionPolicyRule',
+    'New-MgBetaNetworkAccessWebFilteringPolicy',
+    'New-MgBetaNetworkAccessWebFilteringPolicyRule',
     'New-MgBetaOnPremisePublishingProfileConnectorGroup',
     'New-MgBetaPolicyActivityBasedTimeoutPolicy',
     'New-MgBetaPolicyAppManagementPolicy',
@@ -51691,6 +52718,10 @@ Export-ModuleMember -Function @(
     'Remove-MgBetaNetworkAccessFilteringPolicyRule',
     'Remove-MgBetaNetworkAccessFilteringProfile',
     'Remove-MgBetaNetworkAccessForwardingPolicyRule',
+    'Remove-MgBetaNetworkAccessTlInspectionPolicy',
+    'Remove-MgBetaNetworkAccessTlInspectionPolicyRule',
+    'Remove-MgBetaNetworkAccessWebFilteringPolicy',
+    'Remove-MgBetaNetworkAccessWebFilteringPolicyRule',
     'Remove-MgBetaOnPremisePublishingProfileConnectorGroup',
     'Remove-MgBetaPolicyActivityBasedTimeoutPolicy',
     'Remove-MgBetaPolicyAppManagementPolicy',
@@ -51802,6 +52833,10 @@ Export-ModuleMember -Function @(
     'Update-MgBetaNetworkAccessForwardingProfilePolicy',
     'Update-MgBetaNetworkAccessSettingConditionalAccess',
     'Update-MgBetaNetworkAccessSettingCrossTenantAccess',
+    'Update-MgBetaNetworkAccessTlInspectionPolicy',
+    'Update-MgBetaNetworkAccessTlInspectionPolicyRule',
+    'Update-MgBetaNetworkAccessWebFilteringPolicy',
+    'Update-MgBetaNetworkAccessWebFilteringPolicyRule',
     'Update-MgBetaOnPremisePublishingProfileConnectorGroup',
     'Update-MgBetaOrganization',
     'Update-MgBetaOrganizationSettingItemInsight',
@@ -51842,3 +52877,4 @@ Export-ModuleMember -Function @(
     'Update-MgServicePrincipal',
     'Update-MgUser'
 )
+

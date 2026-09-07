@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* ADGSAPrivateAccessApplication
+  * Initial release
+* AADGSATLSInspectionPolicy
+  * Initial release
+* AADGSAWebContentFilteringPolicy
+  * Initial release
+
 # 1.26.902.1
 
 * AADApplicationFederatedIdentityCredential

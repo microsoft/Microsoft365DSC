@@ -12,7 +12,12 @@ function New-M365DSCSchemaDefinition
     {
         $readMePath = "$($file.DirectoryName)/readme.md"
         $readMeContent = Get-Content $readMePath -Raw
-        $resourceDescription = $readMeContent.Split('## Description')[1].Trim()
+        $readMeParts = $readMeContent.Split('## Description')
+        if ($readMeParts.Count -lt 2)
+        {
+            throw "readme.md for $($file.BaseName) is missing a '## Description' section: $readMePath"
+        }
+        $resourceDescription = $readMeParts[1].Trim()
 
         Write-Verbose -Message $file.Name
         $mofContent = Get-Content $file.FullName -Raw
