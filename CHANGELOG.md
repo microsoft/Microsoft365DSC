@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.26.909.1
+
+* MISC
+  * Refreshed Microsoft Graph shim module.
+
 # 1.26.902.1
 
 * AADApplicationFederatedIdentityCredential
