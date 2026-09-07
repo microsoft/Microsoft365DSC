@@ -2091,6 +2091,54 @@
       }
     ]
   },
+  "Get-MgBetaNetworkAccessTlInspectionPolicyRule": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "GET",
+        "URI": "/networkAccess/tlsInspectionPolicies/{tlsInspectionPolicy-id}/policyRules/{policyRule-id}",
+        "ApiVersion": "beta"
+      },
+      {
+        "Method": "GET",
+        "URI": "/networkAccess/tlsInspectionPolicies/{tlsInspectionPolicy-id}/policyRules",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "Get-MgBetaNetworkAccessWebFilteringPolicy": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "GET",
+        "URI": "/networkAccess/webFilteringPolicies/{webFilteringPolicy-id}",
+        "ApiVersion": "beta"
+      },
+      {
+        "Method": "GET",
+        "URI": "/networkAccess/webFilteringPolicies",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "Get-MgBetaNetworkAccessWebFilteringPolicyRule": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "GET",
+        "URI": "/networkAccess/webFilteringPolicies/{webFilteringPolicy-id}/policyRules/{policyRule-id}",
+        "ApiVersion": "beta"
+      },
+      {
+        "Method": "GET",
+        "URI": "/networkAccess/webFilteringPolicies/{webFilteringPolicy-id}/policyRules",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
   "Get-MgBetaOnPremisePublishingProfileConnectorGroup": {
     "SourceModule": "Microsoft.Graph.Beta.Applications",
     "ApiVersion": "beta",
@@ -4074,6 +4122,39 @@
       }
     ]
   },
+  "New-MgBetaNetworkAccessTlInspectionPolicyRule": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "POST",
+        "URI": "/networkAccess/tlsInspectionPolicies/{tlsInspectionPolicy-id}/policyRules",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "New-MgBetaNetworkAccessWebFilteringPolicy": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "POST",
+        "URI": "/networkAccess/webFilteringPolicies",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "New-MgBetaNetworkAccessWebFilteringPolicyRule": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "POST",
+        "URI": "/networkAccess/webFilteringPolicies/{webFilteringPolicy-id}/policyRules",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
   "New-MgBetaOnPremisePublishingProfileConnectorGroup": {
     "SourceModule": "Microsoft.Graph.Beta.Applications",
     "ApiVersion": "beta",
@@ -5405,6 +5486,39 @@
       }
     ]
   },
+  "Remove-MgBetaNetworkAccessTlInspectionPolicyRule": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "DELETE",
+        "URI": "/networkAccess/tlsInspectionPolicies/{tlsInspectionPolicy-id}/policyRules/{policyRule-id}",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "Remove-MgBetaNetworkAccessWebFilteringPolicy": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "DELETE",
+        "URI": "/networkAccess/webFilteringPolicies/{webFilteringPolicy-id}",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "Remove-MgBetaNetworkAccessWebFilteringPolicyRule": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "DELETE",
+        "URI": "/networkAccess/webFilteringPolicies/{webFilteringPolicy-id}/policyRules/{policyRule-id}",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
   "Remove-MgBetaOnPremisePublishingProfileConnectorGroup": {
     "SourceModule": "Microsoft.Graph.Beta.Applications",
     "ApiVersion": "beta",
@@ -6633,6 +6747,39 @@
       {
         "Method": "PATCH",
         "URI": "/networkAccess/tlsInspectionPolicies/{tlsInspectionPolicy-id}",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "Update-MgBetaNetworkAccessTlInspectionPolicyRule": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "PATCH",
+        "URI": "/networkAccess/tlsInspectionPolicies/{tlsInspectionPolicy-id}/policyRules/{policyRule-id}",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "Update-MgBetaNetworkAccessWebFilteringPolicy": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "PATCH",
+        "URI": "/networkAccess/webFilteringPolicies/{webFilteringPolicy-id}",
+        "ApiVersion": "beta"
+      }
+    ]
+  },
+  "Update-MgBetaNetworkAccessWebFilteringPolicyRule": {
+    "SourceModule": "Microsoft.Graph.Beta.NetworkAccess",
+    "ApiVersion": "beta",
+    "Variants": [
+      {
+        "Method": "PATCH",
+        "URI": "/networkAccess/webFilteringPolicies/{webFilteringPolicy-id}/policyRules/{policyRule-id}",
         "ApiVersion": "beta"
       }
     ]
