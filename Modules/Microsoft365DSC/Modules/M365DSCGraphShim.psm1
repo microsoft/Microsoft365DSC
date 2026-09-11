@@ -420,7 +420,10 @@ function Invoke-M365DSCGraphShimGetResource
     }
 
     $response = Invoke-M365DSCGraphShimRequest -Method GET -Uri $uri -Headers $requestHeaders -ErrorAction $ErrorActionPreference
-    if ($null -ne $response -and $response -is [hashtable] -and $response.ContainsKey('value'))
+
+    # Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue might return an object with the 'value' property,
+    # but we also need the values inside 'presentation'. Return the whole object inside $response instead of $response.value
+    if ($null -ne $response -and $response -is [hashtable] -and $response.ContainsKey('value') -and -not $response.ContainsKey('presentation'))
     {
         return $response.value
     }
@@ -770,11 +773,11 @@ function Get-MgApplicationFederatedIdentityCredential
 
         [Parameter()]
         [System.String[]]
-        $Property,
+        $ExpandProperty,
 
         [Parameter()]
         [System.String[]]
-        $ExpandProperty,
+        $Property,
 
         [Parameter()]
         [System.String]
@@ -795,10 +798,6 @@ function Get-MgApplicationFederatedIdentityCredential
         [Parameter()]
         [System.Int32]
         $Top,
-
-        [Parameter()]
-        [System.String]
-        $ConsistencyLevel,
 
         [Parameter()]
         [System.String]
@@ -18281,10 +18280,6 @@ function New-MgApplication
         $Certification,
 
         [Parameter()]
-        [System.String]
-        $CreatedByAppId,
-
-        [Parameter()]
         [System.DateTime]
         $CreatedDateTime,
 
@@ -18346,10 +18341,6 @@ function New-MgApplication
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsDisabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $IsFallbackPublicClient,
 
         [Parameter()]
@@ -18359,10 +18350,6 @@ function New-MgApplication
         [Parameter()]
         [System.String]
         $LogoInputFile,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagerApplications,
 
         [Parameter()]
         [System.String]
@@ -18513,6 +18500,10 @@ function New-MgApplicationFederatedIdentityCredential
         $ResponseHeadersVariable,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
         [System.String[]]
         $Audiences,
 
@@ -18537,10 +18528,6 @@ function New-MgApplicationFederatedIdentityCredential
         $Subject,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
@@ -18555,10 +18542,6 @@ function New-MgApplicationFederatedIdentityCredential
         [Parameter()]
         [System.Object[]]
         $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
 
         [Parameter()]
         [System.Uri]
@@ -27298,10 +27281,6 @@ function New-MgBetaPolicyCrossTenantAccessPolicyPartner
 
         [Parameter()]
         [System.Object]
-        $AppServiceConnectInbound,
-
-        [Parameter()]
-        [System.Object]
         $AutomaticUserConsentSettings,
 
         [Parameter()]
@@ -27319,10 +27298,6 @@ function New-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [System.Object]
         $B2BDirectConnectOutbound,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $BlockServiceProviderOutboundAccess,
 
         [Parameter()]
         [System.DateTime]
@@ -27343,18 +27318,6 @@ function New-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsServiceProvider,
-
-        [Parameter()]
-        [System.Object]
-        $M365Capabilities,
-
-        [Parameter()]
-        [System.Object]
-        $M365CollaborationInbound,
-
-        [Parameter()]
-        [System.Object]
-        $M365CollaborationOutbound,
 
         [Parameter()]
         [System.String]
@@ -29385,10 +29348,6 @@ function New-MgGroup
         $Id,
 
         [Parameter()]
-        [System.String[]]
-        $InfoCatalogs,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsArchived,
 
@@ -29517,14 +29476,6 @@ function New-MgGroup
         $RenewedDateTime,
 
         [Parameter()]
-        [System.String[]]
-        $ResourceBehaviorOptions,
-
-        [Parameter()]
-        [System.String[]]
-        $ResourceProvisioningOptions,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $SecurityEnabled,
 
@@ -29575,10 +29526,6 @@ function New-MgGroup
         [Parameter()]
         [System.String]
         $Visibility,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $WelcomeMessageEnabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -30189,10 +30136,6 @@ function New-MgServicePrincipal
         $ClaimsMappingPolicies,
 
         [Parameter()]
-        [System.String]
-        $CreatedByAppId,
-
-        [Parameter()]
         [System.Object]
         $CreatedObjects,
 
@@ -30243,10 +30186,6 @@ function New-MgServicePrincipal
         [Parameter()]
         [System.Object]
         $Info,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDisabled,
 
         [Parameter()]
         [System.Object]
@@ -30779,10 +30718,6 @@ function New-MgUser
         [Parameter()]
         [System.Object]
         $Identities,
-
-        [Parameter()]
-        [System.String]
-        $IdentityParentId,
 
         [Parameter()]
         [System.String[]]
@@ -38653,10 +38588,6 @@ function Update-MgApplication
         $Certification,
 
         [Parameter()]
-        [System.String]
-        $CreatedByAppId,
-
-        [Parameter()]
         [System.DateTime]
         $CreatedDateTime,
 
@@ -38718,10 +38649,6 @@ function Update-MgApplication
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsDisabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $IsFallbackPublicClient,
 
         [Parameter()]
@@ -38731,10 +38658,6 @@ function Update-MgApplication
         [Parameter()]
         [System.String]
         $LogoInputFile,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagerApplications,
 
         [Parameter()]
         [System.String]
@@ -38889,6 +38812,10 @@ function Update-MgApplicationFederatedIdentityCredential
         $ResponseHeadersVariable,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
         [System.String[]]
         $Audiences,
 
@@ -38913,10 +38840,6 @@ function Update-MgApplicationFederatedIdentityCredential
         $Subject,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
@@ -38931,10 +38854,6 @@ function Update-MgApplicationFederatedIdentityCredential
         [Parameter()]
         [System.Object[]]
         $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
 
         [Parameter()]
         [System.Uri]
@@ -39083,10 +39002,6 @@ function Update-MgBetaApplication
         [Parameter()]
         [System.String]
         $LogoInputFile,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagerApplications,
 
         [Parameter()]
         [System.String]
@@ -40990,10 +40905,6 @@ function Update-MgBetaDeviceManagement
 
         [Parameter()]
         [System.Object]
-        $AndroidAppConfigurationSchema,
-
-        [Parameter()]
-        [System.Object]
         $AndroidDeviceOwnerEnrollmentProfiles,
 
         [Parameter()]
@@ -41431,10 +41342,6 @@ function Update-MgBetaDeviceManagement
         [Parameter()]
         [System.Object]
         $RoleScopeTags,
-
-        [Parameter()]
-        [System.Object]
-        $SamsungEFotaFirmwareVersions,
 
         [Parameter()]
         [System.Object]
@@ -46653,7 +46560,7 @@ function Update-MgBetaNetworkAccessForwardingProfile
         $InputObject,
 
         [Parameter()]
-        [System.Collections.Hashtable]
+        [System.Object]
         $BodyParameter,
 
         [Parameter()]
@@ -48422,10 +48329,6 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyPartner
 
         [Parameter()]
         [System.Object]
-        $AppServiceConnectInbound,
-
-        [Parameter()]
-        [System.Object]
         $AutomaticUserConsentSettings,
 
         [Parameter()]
@@ -48443,10 +48346,6 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [System.Object]
         $B2BDirectConnectOutbound,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $BlockServiceProviderOutboundAccess,
 
         [Parameter()]
         [System.DateTime]
@@ -48467,18 +48366,6 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsServiceProvider,
-
-        [Parameter()]
-        [System.Object]
-        $M365Capabilities,
-
-        [Parameter()]
-        [System.Object]
-        $M365CollaborationInbound,
-
-        [Parameter()]
-        [System.Object]
-        $M365CollaborationOutbound,
 
         [Parameter()]
         [System.String]
@@ -50001,10 +49888,6 @@ function Update-MgGroup
         $Id,
 
         [Parameter()]
-        [System.String[]]
-        $InfoCatalogs,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsArchived,
 
@@ -50133,14 +50016,6 @@ function Update-MgGroup
         $RenewedDateTime,
 
         [Parameter()]
-        [System.String[]]
-        $ResourceBehaviorOptions,
-
-        [Parameter()]
-        [System.String[]]
-        $ResourceProvisioningOptions,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $SecurityEnabled,
 
@@ -50191,10 +50066,6 @@ function Update-MgGroup
         [Parameter()]
         [System.String]
         $Visibility,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $WelcomeMessageEnabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -50477,10 +50348,6 @@ function Update-MgServicePrincipal
         $ClaimsMappingPolicies,
 
         [Parameter()]
-        [System.String]
-        $CreatedByAppId,
-
-        [Parameter()]
         [System.Object]
         $CreatedObjects,
 
@@ -50531,10 +50398,6 @@ function Update-MgServicePrincipal
         [Parameter()]
         [System.Object]
         $Info,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDisabled,
 
         [Parameter()]
         [System.Object]
@@ -50919,10 +50782,6 @@ function Update-MgUser
         [Parameter()]
         [System.Object]
         $Identities,
-
-        [Parameter()]
-        [System.String]
-        $IdentityParentId,
 
         [Parameter()]
         [System.String[]]
