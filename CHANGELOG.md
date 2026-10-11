@@ -1,5 +1,13 @@
 ﻿# Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADCustomSecurityAttributeDefinition
+  * Updated the `allowedValues` property to be sorted by `Id`.
+* DEPENDENCIES
+  * Updated `DSCParser` to version 3.1.0.7.
+  * Updated `M365DSC.PSDSC` to version 3.1.10.
+
 # 2.26.1007.1
 
 * AADAccessReviewDefinition

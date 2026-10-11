@@ -26,7 +26,7 @@
         },
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '3.1.0.5'
+            RequiredVersion = '3.1.0.7'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -39,7 +39,7 @@
         },
         @{
             ModuleName      = 'M365DSC.PSDesiredStateConfiguration'
-            RequiredVersion = '3.1.9'
+            RequiredVersion = '3.1.10'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Authentication'
