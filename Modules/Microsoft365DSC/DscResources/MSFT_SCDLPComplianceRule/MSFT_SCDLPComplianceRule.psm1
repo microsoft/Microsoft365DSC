@@ -30,6 +30,10 @@ class SCDLPComplianceRule : M365DSCResourceBase
     [System.String] $Comment
 
     [DscProperty()]
+    [System.ComponentModel.Description('You can change the display name of DLP policies and rules.')]
+    [System.String] $DisplayName
+
+    [DscProperty()]
     [System.ComponentModel.Description('The AdvancedRule parameter uses complex rule syntax that supports multiple AND, OR, and NOT operators and nested groups')]
     [System.String] $AdvancedRule
 
@@ -438,6 +442,7 @@ class SCDLPComplianceRule : M365DSCResourceBase
                 BlockAccess                                  = $PolicyRule.BlockAccess
                 BlockAccessScope                             = $PolicyRule.BlockAccessScope
                 Comment                                      = $PolicyRule.Comment
+                DisplayName                                  = $PolicyRule.DisplayName
                 AdvancedRule                                 = $newAdvancedRule
                 ContentContainsSensitiveInformation          = $this.ConvertToContainsSensitiveInformation($PolicyRule.ContentContainsSensitiveInformation)
                 EndpointDlpRestrictions                      = [SCDLPComplianceRule]::ConvertSCDLPEndpointDlpRestrictions($PolicyRule.EndpointDlpRestrictions)

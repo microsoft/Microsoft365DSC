@@ -64,6 +64,11 @@ class AADDomainFederation : M365DSCResourceBase
     [System.Nullable[System.Boolean]] $IsSignedAuthenticationRequestRequired
 
     [DscProperty()]
+    [System.ComponentModel.Description('Browser authentication for external identity providers (IdPs) moves the external federated identity provider authentication step from an embedded WebView to the system browser. Supported platform values are Ios, Android, Macos. Multiple values can be supplied together, for example: Android, Ios. Setting this to none turns the capability off.')]
+    [ValidateSet('none', 'ios', 'android', 'macos', 'linux')]
+    [System.String[]] $SystemBrowserEnabledOn
+
+    [DscProperty()]
     [System.ComponentModel.Description('Present ensures the instance exists, absent ensures it is removed.')]
     [ValidateSet('Absent', 'Present')]
     [System.String] $Ensure
@@ -172,6 +177,12 @@ class AADDomainFederation : M365DSCResourceBase
                 $instance = $this.ExportedInstance
             }
 
+            $enabledPlatforms = $null
+            if (-not [System.String]::IsNullOrEmpty($instance.SystemBrowserEnabledOn))
+            {
+                [System.String[]]$enabledPlatforms = $instance.SystemBrowserEnabledOn -split '\s*,\s*'
+            }
+
             $results = @{
                 DomainId                                = $this.DomainId
                 Id                                      = $instance.Id
@@ -188,6 +199,7 @@ class AADDomainFederation : M365DSCResourceBase
                 FederatedIdpMfaBehavior                 = $instance.FederatedIdpMfaBehavior
                 PasswordResetUri                        = $instance.PasswordResetUri
                 IsSignedAuthenticationRequestRequired   = $instance.IsSignedAuthenticationRequestRequired
+                SystemBrowserEnabledOn                  = $enabledPlatforms
                 Ensure                                  = 'Present'
                 Credential                              = $this.Credential
                 ApplicationId                           = $this.ApplicationId
@@ -231,6 +243,10 @@ class AADDomainFederation : M365DSCResourceBase
         $setParameters.Remove('DomainId') | Out-Null
         $setParameters.Remove('Ensure') | Out-Null
         $setParameters.Remove('Id') | Out-Null
+        if ($setParameters.ContainsKey('SystemBrowserEnabledOn'))
+        {
+            $setParameters.SystemBrowserEnabledOn = $this.SystemBrowserEnabledOn -join ','
+        }
 
         # CREATE
         if ($this.Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')

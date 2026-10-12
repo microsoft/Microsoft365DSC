@@ -12,6 +12,10 @@ class SCDLPCompliancePolicy : M365DSCResourceBase
     [System.String] $Comment
 
     [DscProperty()]
+    [System.ComponentModel.Description('You can change the display name of DLP policies and rules.')]
+    [System.String] $DisplayName
+
+    [DscProperty()]
     [System.ComponentModel.Description('The EndpointDLPLocation parameter specifies the user accounts to include in the DLP policy for Endpoint DLP when they are logged on to an onboarded device. You identify the account by name or email address. You can use the value All to include all user accounts.')]
     [System.String[]] $EndpointDlpLocation
 
@@ -239,6 +243,7 @@ class SCDLPCompliancePolicy : M365DSCResourceBase
                 Ensure                                = 'Present'
                 Name                                  = $PolicyObject.Name
                 Comment                               = $PolicyObject.Comment
+                DisplayName                           = $PolicyObject.DisplayName
                 EndpointDlpLocation                   = Get-M365DSCArrayFromProperty -PropertyValue $PolicyObject.EndpointDlpLocation.Name -ElementType ([System.String])
                 EndpointDlpLocationException          = $PolicyObject.EndpointDlpLocationException
                 ExchangeLocation                      = Get-M365DSCArrayFromProperty -PropertyValue $PolicyObject.ExchangeLocation.Name -ElementType ([System.String])
@@ -340,6 +345,15 @@ class SCDLPCompliancePolicy : M365DSCResourceBase
             $boundParameters.Add('ExceptIfOneDriveSharedByMemberOf', $exceptGroupIds)
         }
 
+        $endpointDlpLocationSupported = (Get-Command -Name 'New-DlpCompliancePolicy').Parameters.ContainsKey('EndpointDlpLocation')
+        if (-not $endpointDlpLocationSupported -and
+            ($boundParameters.ContainsKey('EndpointDlpLocation') -or $boundParameters.ContainsKey('EndpointDlpLocationException')))
+        {
+            Write-Warning -Message "The Security & Compliance cmdlets no longer accept EndpointDlpLocation and EndpointDlpLocationException. Both are ignored for policy {$($this.Name)}."
+            $boundParameters.Remove('EndpointDlpLocation') | Out-Null
+            $boundParameters.Remove('EndpointDlpLocationException') | Out-Null
+        }
+
         if ($this.Ensure -eq 'Present' -and $CurrentPolicy.Ensure -eq 'Absent')
         {
             $createParameters = $boundParameters
@@ -420,8 +434,8 @@ class SCDLPCompliancePolicy : M365DSCResourceBase
 
             # Endpoint Location is specified or already existing, we need to determine
             # the delta.
-            if ($null -ne $CurrentPolicy.EndpointDlpLocation -or `
-                    $null -ne $this.EndpointDlpLocation)
+            if ($endpointDlpLocationSupported -and ($null -ne $CurrentPolicy.EndpointDlpLocation -or `
+                    $null -ne $this.EndpointDlpLocation))
             {
                 $ToBeRemoved = $CurrentPolicy.EndpointDlpLocation | `
                         Where-Object { $this.EndpointDlpLocation -notcontains $_ }
@@ -592,8 +606,8 @@ class SCDLPCompliancePolicy : M365DSCResourceBase
 
             # Endpoint Location Exception is specified or already existing, we need to determine
             # the delta.
-            if ($null -ne $CurrentPolicy.EndpointDlpLocationException -or `
-                    $null -ne $this.EndpointDlpLocationException)
+            if ($endpointDlpLocationSupported -and ($null -ne $CurrentPolicy.EndpointDlpLocationException -or `
+                    $null -ne $this.EndpointDlpLocationException))
             {
                 $ToBeRemoved = $CurrentPolicy.EndpointDlpLocationException | `
                         Where-Object { $this.EndpointDlpLocationException -notcontains $_ }
