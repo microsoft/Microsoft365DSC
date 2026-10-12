@@ -215,6 +215,8 @@ Get-M365DSCCompiledPermissionList -ResourceNameList (Get-M365DSCAllResources)
 
 The [Get-M365DSCAllResources](../cmdlets/Get-M365DSCAllResources.md) cmdlet will return a list of all components available inside of the Microsoft365DSC solution which will then by passed in the **Get-M365DSCCompiledPermissionList** cmdlet which will compile the resulting permissions needed for the list of components it receives, in occurrence all of them. These permissions need to be granted to your application instance, either using the Azure portal or automating the process via PowerShell.
 
+**NOTE:** Every component that uses Microsoft Graph also needs the **Organization.Read.All** permission, because Microsoft365DSC reads the organization when it connects to Microsoft Graph. **Get-M365DSCCompiledPermissionList** always includes it, but the permission list on each resource page does not. If you grant permissions manually from a resource page, add **Organization.Read.All** as well. Without it, every Microsoft Graph component fails with the error "Failed to initialize Graph HTTP client".
+
 ### Providing Consent For Graph Permissions
 
 We provide an easy way of consenting permissions to the Delegated Permissions application "Microsoft Graph PowerShell" in your tenant with the [Update-M365DSCAllowedGraphScopes](../cmdlets/Update-M365DSCAllowedGraphScopes.md) cmdlet. This cmdlet accepts either a list of components to grant the permissions for or can grant it for all resources if the **-All** switch is used. You also need to specify what type of permissions, Read or Update, you wish to grant it using the **-Type** parameter.

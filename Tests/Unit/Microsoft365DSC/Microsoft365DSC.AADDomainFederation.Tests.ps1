@@ -61,6 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FederatedIdpMfaBehavior                 = "acceptIfMfaDoneByFederatedIdp"
                     PasswordResetUri                        = "https://adfs.contoso.com/adfs/portal/updatepassword/"
                     IsSignedAuthenticationRequestRequired   = $true
+                    SystemBrowserEnabledOn                  = "ios,android"
                 }
             }
 
@@ -94,6 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SigningCertificate                      = "MIIDdzCCAl+gAwIBAgIQXWWjEQ=="
                     FederatedIdpMfaBehavior                 = "acceptIfMfaDoneByFederatedIdp"
                     IsSignedAuthenticationRequestRequired   = $true
+                    SystemBrowserEnabledOn                  = @("android", "ios")
                     Ensure                                  = "Present"
                     Credential                              = $Credential
                 }
@@ -155,6 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FederatedIdpMfaBehavior                 = "acceptIfMfaDoneByFederatedIdp"
                     PasswordResetUri                        = "https://adfs.contoso.com/adfs/portal/updatepassword/"
                     IsSignedAuthenticationRequestRequired   = $true
+                    SystemBrowserEnabledOn                  = @("android", "ios")
                     Ensure                                  = "Present"
                     Credential                              = $Credential
                 }
@@ -177,6 +180,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SigningCertificate                      = "MIIDdzCCAl+gAwIBAgIQXWWjEQ=="
                     FederatedIdpMfaBehavior                 = "enforceMfaByFederatedIdp"
                     IsSignedAuthenticationRequestRequired   = $false
+                    SystemBrowserEnabledOn                  = @("android", "ios", "macos")
                     Ensure                                  = "Present"
                     Credential                              = $Credential
                 }

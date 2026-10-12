@@ -133,7 +133,7 @@ class AADCustomSecurityAttributeDefinition : M365DSCResourceBase
             }
 
             $complexAllowedValues = @()
-            foreach ($allowedValue in $instance.AllowedValues)
+            foreach ($allowedValue in ($instance.AllowedValues | Sort-Object -Property Id))
             {
                 $complexAllowedValues += [ordered]@{
                     ValueId  = $allowedValue.Id

@@ -65,6 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Priority           = 1
                     SharePointLocation = 'https://contoso.sharepoint.com/sites/demo'
                     Name               = 'TestPolicy'
+                    DisplayName        = 'Test Policy'
                 }
 
                 Mock -CommandName Get-DLPCompliancePolicy -MockWith {
@@ -102,11 +103,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Mode               = 'Enable'
                     SharePointLocation = @('https://contoso.sharepoint.com/sites/demo')
                     Name               = 'TestPolicy'
+                    DisplayName        = 'Test Policy'
                 }
 
                 Mock -CommandName Get-DLPCompliancePolicy -MockWith {
                     return @{
                         Name               = 'TestPolicy'
+                        DisplayName        = 'Test Policy'
                         Priority           = 1
                         Mode               = 'Enable'
                         SharePointLocation = @(

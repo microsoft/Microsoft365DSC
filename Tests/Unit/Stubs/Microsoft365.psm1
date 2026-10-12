@@ -93687,6 +93687,10 @@ function New-DlpCompliancePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
         [System.Object[]]
         $OneDriveSharedBy,
 
@@ -93847,6 +93851,10 @@ function New-DlpComplianceRule
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.Boolean]
         $ExceptIfDocumentIsUnsupported,
@@ -96703,6 +96711,10 @@ function Set-DlpCompliancePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
         [System.Object]
         $RemoveExchangeLocation,
 
@@ -96927,6 +96939,10 @@ function Set-DlpComplianceRule
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
         [Parameter()]
         [System.Boolean]
         $ExceptIfDocumentIsUnsupported,
