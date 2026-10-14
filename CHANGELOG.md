@@ -1,6 +1,6 @@
 ﻿# Change log for Microsoft365DSC
 
-# UNRELEASED
+# 2.26.1015.1
 
 * AADCustomSecurityAttributeDefinition
   * Updated the `allowedValues` property to be sorted by `Id`.
