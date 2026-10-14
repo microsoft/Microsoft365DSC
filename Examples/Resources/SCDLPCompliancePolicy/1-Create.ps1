@@ -28,6 +28,7 @@ Configuration Example
         {
             Name                                  = "Customer Financial Data Protection"
             Comment                               = "Blocks sharing of credit card numbers"
+            DisplayName                           = "Customer Financial Data Protection"
             Priority                              = 1
             ExchangeLocation                      = @("All")
             ExchangeSenderMemberOfException       = @("SalesandMarketing@$TenantId")

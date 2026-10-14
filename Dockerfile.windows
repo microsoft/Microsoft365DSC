@@ -7,7 +7,7 @@ COPY ./Utilities/Install-PowerShell.ps1 /DSC/Install-PowerShell.ps1
 
 SHELL ["powershell", "-NoLogo"]
 
-RUN ./Utilities/Install-PowerShell.ps1
+RUN ./Install-PowerShell.ps1
 
 RUN Install-PackageProvider -Name "NuGet" -Force
 RUN Install-Module -Name "Microsoft.PowerShell.PSResourceGet" -Repository "PSGallery" -Scope "AllUsers" -Force -SkipPublisherCheck

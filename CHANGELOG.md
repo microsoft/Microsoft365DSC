@@ -1,5 +1,25 @@
 ﻿# Change log for Microsoft365DSC
 
+# 2.26.1015.1
+
+* AADCustomSecurityAttributeDefinition
+  * Updated the `allowedValues` property to be sorted by `Id`.
+* AADDomainFederation
+  * Added support for the `SystemBrowserEnabledOn` property.
+    FIXES [#7536](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7536)
+* SCDLPCompliancePolicy
+  * Added support for the `DisplayName` property.
+    FIXES [#7535](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7535)
+  * Fixed an issue where creating or updating a policy failed when `EndpointDlpLocation`
+    or `EndpointDlpLocationException` was set.
+    FIXES [#7522](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7522)
+* SCDLPComplianceRule
+  * Added support for the `DisplayName` property.
+    FIXES [#7535](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7535)
+* DEPENDENCIES
+  * Updated `DSCParser` to version 3.1.0.7.
+  * Updated `M365DSC.PSDSC` to version 3.1.10.
+
 # 2.26.1007.1
 
 * AADAccessReviewDefinition

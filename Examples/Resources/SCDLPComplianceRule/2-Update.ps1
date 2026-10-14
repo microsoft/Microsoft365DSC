@@ -34,6 +34,7 @@ Configuration Example
             AnyOfRecipientAddressContainsWords           = @("external")
             AnyOfRecipientAddressMatchesPatterns         = @("@fabrikam[.]com")
             Comment                                      = "Applies to payment card data shared outside the finance and payroll departments" # Updated Property
+            DisplayName                                  = "Low volume EU Sensitive content found"
             ContentCharacterSetContainsWords             = @("utf-8")
             ContentContainsSensitiveInformation          = MSFT_SCDLPContainsSensitiveInformation{
                 SensitiveInformation = @(

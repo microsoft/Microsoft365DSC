@@ -1,7 +1,11 @@
 name: Create GitHub Release
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - Publish to PowerShell Gallery
+    types:
+      - completed
     branches:
       - Master
 
@@ -13,15 +17,18 @@ jobs:
     runs-on: ubuntu-latest
 
     # Only when run from the main repo
-    if: github.repository == 'Microsoft365DSC/Microsoft365DSC'
+    if: github.repository == 'Microsoft365DSC/Microsoft365DSC' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Create Release
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
           $ErrorActionPreference = 'Stop'
           $version = (Import-PowerShellDataFile ./Modules/Microsoft365DSC/Microsoft365DSC.psd1).ModuleVersion
@@ -62,5 +69,5 @@ jobs:
           $notesFile = Join-Path -Path $env:RUNNER_TEMP -ChildPath 'ReleaseNotes.md'
           Set-Content -Path $notesFile -Value $body -Encoding utf8NoBOM
 
-          gh release create $version --target $env:GITHUB_SHA --title "Release $version" --notes-file $notesFile --latest
+          gh release create $version --target $env:RELEASE_SHA --title "Release $version" --notes-file $notesFile --latest
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
