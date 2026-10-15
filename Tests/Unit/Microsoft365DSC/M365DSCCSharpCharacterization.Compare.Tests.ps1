@@ -1292,6 +1292,23 @@ Describe 'ConfigurationComparer.Compare with compare rules' {
             Should -Be 'desired'
     }
 
+    It 'Reads the compare rules of every shipped resource' {
+        $schemaPath = "$PSScriptRoot/../../../Modules/Microsoft365DSC/SchemaDefinition.json"
+        if (-not (Test-Path -Path $schemaPath))
+        {
+            Set-ItResult -Skipped -Because 'the schema has not been built'
+            return
+        }
+
+        $declared = @([System.IO.File]::ReadAllText($schemaPath) | ConvertFrom-Json | Where-Object -FilterScript { $null -ne $_.CompareParameters.CompareRules })
+
+        $declared.Count | Should -BeGreaterThan 0
+        foreach ($entry in $declared)
+        {
+            { [Microsoft365DSC.Compare.CompareRule]::ParseAll($entry.CompareParameters.CompareRules) } | Should -Not -Throw -Because $entry.ClassName
+        }
+    }
+
     It 'Refuses an unknown rule type, a condition on both sides and an unreadable time span' {
         { [Microsoft365DSC.Compare.CompareRule]::ParseAll(@(@{ Type = 'Nope' })) } | Should -Throw '*Nope*'
         { [Microsoft365DSC.Compare.CompareRule]::ParseAll(@(@{ Type = 'RemoveWhen'; Properties = @('Notes'); When = @{ Side = 'Both'; Property = 'Mode'; Truthy = $true } })) } | Should -Throw '*Mode*'

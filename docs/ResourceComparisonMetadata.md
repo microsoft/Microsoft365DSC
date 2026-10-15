@@ -205,7 +205,7 @@ A comparer can explain a drift. `Test()` writes that explanation to the event lo
 
 `[Microsoft365DSC.Compare.CompareRuleRegistry]::RegisterComparer()` and `RegisterNormalizer()` add more. Each takes a factory that receives the rule declaration.
 
-The build fails when a resource declares an unknown rule type, comparer or normalizer, or misses a required member.
+The unit tests fail when a resource declares an unknown rule type, comparer or normalizer, or misses a required member.
 
 ### PostProcessing Script Pattern
 

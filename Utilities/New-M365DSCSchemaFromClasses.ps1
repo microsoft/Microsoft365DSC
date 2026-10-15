@@ -160,8 +160,6 @@ $module = Get-Module -Name 'Microsoft365DSC'
 $payload = & $module {
     param($descriptions, $propertyDescriptions)
 
-    Initialize-M365DSCDllLoader
-
     function ConvertTo-CimType
     {
         param([Type] $Type)
@@ -325,15 +323,6 @@ $payload = & $module {
         $rules = @($declared['CompareRules'] | Where-Object -FilterScript { $null -ne $_ })
         if ($rules.Count -gt 0)
         {
-            try
-            {
-                $null = [Microsoft365DSC.Compare.CompareRule]::ParseAll($rules)
-            }
-            catch
-            {
-                throw "$($Type.Name) declares an invalid compare rule: $($_.Exception.Message)"
-            }
-
             $parameters['CompareRules'] = @($rules | ForEach-Object -Process { ConvertTo-SortedDeclaration -Value $_ })
         }
 
