@@ -556,7 +556,7 @@ class EXOHostedContentFilterPolicy : M365DSCResourceBase
                 param($DesiredValues, $CurrentValues, $ValuesToCheck, $ignore)
                 if ($CurrentValues.IntraOrgFilterState -ne $DesiredValues.IntraOrgFilterState -and $DesiredValues.IntraOrgFilterState -eq 'Default')
                 {
-                    $ValuesToCheck.IntraOrgFilterState = 'HighConfidencePhish'
+                    $DesiredValues.IntraOrgFilterState = 'HighConfidencePhish'
                 }
                 return [System.Tuple[Hashtable, Hashtable, Hashtable]]::new($DesiredValues, $CurrentValues, $ValuesToCheck)
             }

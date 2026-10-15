@@ -1,5 +1,14 @@
 ﻿# Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADPermissionGrantPolicy
+  * Updated the comparison to only resolve permission names if not in a report.
+* EXOHostedContentFilterPolicy
+  * Fixed a comparison issue where the value was not correctly updated.
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Updated the comparison to only resolve mobile app names if not in a report.
+
 # 2.26.1015.1
 
 * AADCustomSecurityAttributeDefinition
