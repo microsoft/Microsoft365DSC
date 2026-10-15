@@ -88,8 +88,20 @@ namespace Microsoft365DSC.Compare
             {
                 ExcludedProperties = AsStrings(declared, "ExcludedProperties"),
                 IncludedProperties = AsStrings(declared, "IncludedProperties"),
-                Rules = MemberAccessor.TryGetMember(declared, "CompareRules", out object? rules) ? CompareRule.ParseAll(rules) : null
+                Rules = MemberAccessor.TryGetMember(declared, "CompareRules", out object? rules) ? ParseRules(resourceName, rules) : null
             };
+        }
+
+        private static List<CompareRule> ParseRules(string resourceName, object? rules)
+        {
+            try
+            {
+                return CompareRule.ParseAll(rules);
+            }
+            catch (ArgumentException exception)
+            {
+                throw new ArgumentException($"The compare rules of {resourceName} are invalid. {exception.Message}", exception);
+            }
         }
 
         private static string[]? AsStrings(object source, string name)
@@ -117,6 +129,7 @@ namespace Microsoft365DSC.Compare
             {
                 null => [],
                 string => [],
+                IDictionary dictionary => [dictionary],
                 IEnumerable<object> typed => typed,
                 IEnumerable sequence => sequence.Cast<object>(),
                 _ => [value]

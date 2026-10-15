@@ -214,19 +214,19 @@ namespace Microsoft365DSC.Compare
                 ? [.. globalExclusions.Concat(resourceExclusions).Distinct(StringComparer.OrdinalIgnoreCase)]
                 : globalExclusions;
 
-            Hashtable desiredValues = CopyRewritableValues(destination, overrides);
-            Hashtable currentValues = CopyRewritableValues(source, overrides);
+            Hashtable desiredValues = destination;
+            Hashtable currentValues = source;
             Hashtable valuesToCheck = (Hashtable)destination.Clone();
 
             if (overrides?.Rules is { Count: > 0 } rules)
             {
-                CompareRuleContext context = new(
-                    desiredValues, currentValues, valuesToCheck, index.GetParameterNames(resourceName), overrides.Now ?? DateTimeOffset.Now);
-
-                foreach (CompareRule rule in rules)
-                {
-                    rule.Apply(context);
-                }
+                (desiredValues, currentValues, valuesToCheck) = CompareRule.ApplyAll(
+                    rules, desiredValues, currentValues, valuesToCheck, index.GetParameterNames(resourceName), overrides.Now ?? DateTimeOffset.Now, null);
+            }
+            else if (overrides?.PostProcessing is not null)
+            {
+                desiredValues = (Hashtable)destination.Clone();
+                currentValues = (Hashtable)source.Clone();
             }
 
             if (overrides?.PostProcessing is { } postProcessing)
@@ -324,16 +324,6 @@ namespace Microsoft365DSC.Compare
                     return;
                 }
             }
-        }
-
-        private static Hashtable CopyRewritableValues(Hashtable values, ResourceCompareParameters? overrides)
-        {
-            if (overrides?.Rules is { Count: > 0 })
-            {
-                return CompareValues.CloneWithNestedValues(values);
-            }
-
-            return overrides?.PostProcessing is null ? values : (Hashtable)values.Clone();
         }
 
         private static ResourceCompareParameters? Overrides(

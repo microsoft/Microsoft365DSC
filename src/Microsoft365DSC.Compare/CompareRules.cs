@@ -1,3 +1,5 @@
+using Microsoft365DSC.Compare.Comparers;
+using Microsoft365DSC.Converter;
 using Microsoft365DSC.Utilities;
 using System;
 using System.Collections;
@@ -16,18 +18,22 @@ namespace Microsoft365DSC.Compare
     /// </summary>
     public sealed class CompareRuleContext
     {
+        private readonly Action<string>? _log;
+
         internal CompareRuleContext(
             Hashtable desired,
             Hashtable current,
             Hashtable valuesToCheck,
             IReadOnlyList<string> schemaPropertyNames,
-            DateTimeOffset now)
+            DateTimeOffset now,
+            Action<string>? log)
         {
             Desired = desired;
             Current = current;
             ValuesToCheck = valuesToCheck;
             SchemaPropertyNames = schemaPropertyNames;
             Now = now;
+            _log = log;
         }
 
         /// <summary>
@@ -54,6 +60,14 @@ namespace Microsoft365DSC.Compare
         /// ResourceCompareParameters.Now, or the system clock when that is null.
         /// </summary>
         public DateTimeOffset Now { get; }
+
+        /// <summary>
+        /// Logs a message indicating drift, if a log action was provided.
+        /// </summary>
+        public void LogDrift(string message)
+        {
+            _log?.Invoke(message);
+        }
 
         internal IEnumerable<Hashtable> ListSides(RuleSide side)
         {
@@ -88,6 +102,7 @@ namespace Microsoft365DSC.Compare
             ["Tolerance"] = ToleranceRule.From,
             ["IgnoreNested"] = IgnoreNestedRule.From,
             ["IgnoreWhenPast"] = IgnoreWhenPastRule.From,
+            ["SameInstant"] = SameInstantRule.From,
             ["Rename"] = RenameRule.From,
             ["DurationMatchesEnd"] = DurationMatchesEndRule.From,
             ["AllowCurrentExtras"] = AllowCurrentExtrasRule.From,
@@ -105,6 +120,49 @@ namespace Microsoft365DSC.Compare
         public static List<CompareRule> ParseAll(object? declarations)
         {
             return [.. SchemaIndex.AsSequence(declarations).Where(entry => entry is not null).Select(Parse)];
+        }
+
+        /// <summary>
+        /// Applies all the specified compare rules to the given hashtables and returns the potentially modified versions.
+        /// </summary>
+        public static Tuple<Hashtable, Hashtable, Hashtable> ApplyAll(
+            IReadOnlyList<CompareRule> rules,
+            Hashtable desired,
+            Hashtable current,
+            Hashtable valuesToCheck,
+            IEnumerable<object> schema,
+            string resourceName,
+            Action<string>? log = null)
+        {
+            (Hashtable rewrittenDesired, Hashtable rewrittenCurrent, Hashtable rewrittenValuesToCheck) = ApplyAll(
+                rules, desired, current, valuesToCheck, SchemaIndex.For(schema).GetParameterNames(resourceName), DateTimeOffset.Now, log);
+
+            return Tuple.Create(rewrittenDesired, rewrittenCurrent, rewrittenValuesToCheck);
+        }
+
+        internal static (Hashtable Desired, Hashtable Current, Hashtable ValuesToCheck) ApplyAll(
+            IReadOnlyList<CompareRule> rules,
+            Hashtable desired,
+            Hashtable current,
+            Hashtable valuesToCheck,
+            IReadOnlyList<string> schemaPropertyNames,
+            DateTimeOffset now,
+            Action<string>? log)
+        {
+            CompareRuleContext context = new(
+                CompareValues.CloneWithNestedValues(desired),
+                CompareValues.CloneWithNestedValues(current),
+                (Hashtable)valuesToCheck.Clone(),
+                schemaPropertyNames,
+                now,
+                log);
+
+            foreach (CompareRule rule in rules)
+            {
+                rule.Apply(context);
+            }
+
+            return (context.Desired, context.Current, context.ValuesToCheck);
         }
 
         internal abstract void Apply(CompareRuleContext context);
@@ -126,21 +184,35 @@ namespace Microsoft365DSC.Compare
     /// </summary>
     public static class CompareRuleRegistry
     {
-        private static readonly ConcurrentDictionary<string, Action<CompareRuleContext>> Comparers = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, Func<object, Action<CompareRuleContext>>> ComparerFactories = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["SCLabelPolicy"] = _ => SCLabelPolicyComparer.Compare,
+            ["SCSensitivityLabel"] = _ => SCSensitivityLabelComparer.Compare,
+            ["SCAutoSensitivityLabelRule"] = _ => SensitiveInformationComparer.CompareAutoSensitivityLabelRule,
+            ["SCDLPComplianceRule"] = _ => SensitiveInformationComparer.CompareDlpComplianceRule,
+            ["FeatureUpdateRollout"] = _ => FeatureUpdateRolloutComparer.Compare,
+            ["TenantIsolationRules"] = TenantIsolationRulesComparer.Create
+        };
 
         private static readonly ConcurrentDictionary<string, Func<object, Func<object?, object?>>> NormalizerFactories = new(StringComparer.OrdinalIgnoreCase)
         {
             ["StripNewlines"] = _ => value => value is string text ? text.Replace("\r", string.Empty).Replace("\n", string.Empty) : value,
             ["RegexReplace"] = CreateRegexReplace,
-            ["PrefixUnless"] = CreatePrefixUnless
+            ["PrefixUnless"] = CreatePrefixUnless,
+            ["FormatDuration"] = _ => CompareNormalizers.FormatDuration,
+            ["FormatDateTime"] = _ => CompareNormalizers.FormatDateTime,
+            ["FormatTimeOfDay"] = _ => CompareNormalizers.FormatTimeOfDay,
+            ["FormatSize"] = _ => CompareNormalizers.FormatSize,
+            ["ReformatDateTime"] = CompareNormalizers.CreateDateTimeReformat,
+            ["ExchangeFilter"] = _ => CompareNormalizers.FormatExchangeFilter
         };
 
         /// <summary>
         /// Registers a comparer under the same name. If a comparer with the same name already exists, it will be replaced.
         /// </summary>
-        public static void RegisterComparer(string name, Action<CompareRuleContext> comparer)
+        public static void RegisterComparer(string name, Func<object, Action<CompareRuleContext>> factory)
         {
-            Comparers[name] = comparer ?? throw new ArgumentNullException(nameof(comparer));
+            ComparerFactories[name] = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
         /// <summary>
@@ -151,10 +223,10 @@ namespace Microsoft365DSC.Compare
             NormalizerFactories[name] = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
-        internal static Action<CompareRuleContext> FindComparer(string name) =>
-            Comparers.TryGetValue(name, out Action<CompareRuleContext>? comparer)
-                ? comparer
-                : throw new InvalidOperationException($"No custom comparison is registered as '{name}'.");
+        internal static Action<CompareRuleContext> CreateComparer(string name, object declaration) =>
+            ComparerFactories.TryGetValue(name, out Func<object, Action<CompareRuleContext>>? factory)
+                ? factory(declaration)
+                : throw new ArgumentException($"Unknown comparer '{name}'.", nameof(name));
 
         internal static Func<object?, object?> CreateNormalizer(string name, object declaration) =>
             NormalizerFactories.TryGetValue(name, out Func<object, Func<object?, object?>>? factory)
@@ -172,6 +244,15 @@ namespace Microsoft365DSC.Compare
         {
             Regex pattern = RuleValues.ReadRequiredPattern(declaration, "Pattern");
             string format = RuleValues.ReadRequiredString(declaration, "Format");
+            try
+            {
+                _ = string.Format(CultureInfo.InvariantCulture, format, string.Empty);
+            }
+            catch (FormatException exception)
+            {
+                throw new ArgumentException($"The PrefixUnless format '{format}' is invalid.", nameof(declaration), exception);
+            }
+
             return value => value is string text && !pattern.IsMatch(text) ? string.Format(CultureInfo.InvariantCulture, format, text) : value;
         }
     }
@@ -189,13 +270,13 @@ namespace Microsoft365DSC.Compare
         {
             foreach (string name in context.SchemaPropertyNames)
             {
-                if (!RuleValues.IsNullOrEmptyCollection(RuleValues.Get(context.Current, name)) ||
-                    !RuleValues.IsNullOrEmptyCollection(RuleValues.Get(context.Desired, name)))
+                if (!RuleValues.IsNullOrEmptyCollection(RuleValues.GetValue(context.Current, name)) ||
+                    !RuleValues.IsNullOrEmptyCollection(RuleValues.GetValue(context.Desired, name)))
                 {
-                    RuleValues.Set(context.ValuesToCheck, name, null);
+                    RuleValues.SetValue(context.ValuesToCheck, name, null);
                     if (!RuleValues.HasKey(context.Desired, name))
                     {
-                        RuleValues.Set(context.Desired, name, null);
+                        RuleValues.SetValue(context.Desired, name, null);
                     }
                 }
             }
@@ -242,10 +323,10 @@ namespace Microsoft365DSC.Compare
 
             foreach (string name in removedProperties.Distinct(StringComparer.OrdinalIgnoreCase).ToArray())
             {
-                RuleValues.Remove(context.ValuesToCheck, name);
+                RuleValues.RemoveValue(context.ValuesToCheck, name);
                 if (_isAlsoFromDesired)
                 {
-                    RuleValues.Remove(context.Desired, name);
+                    RuleValues.RemoveValue(context.Desired, name);
                 }
             }
         }
@@ -273,8 +354,8 @@ namespace Microsoft365DSC.Compare
                 return;
             }
 
-            RuleValues.Set(context.ValuesToCheck, _property, null);
-            RuleValues.Set(context.Desired, _property, null);
+            RuleValues.SetValue(context.ValuesToCheck, _property, null);
+            RuleValues.SetValue(context.Desired, _property, null);
         }
     }
 
@@ -296,7 +377,7 @@ namespace Microsoft365DSC.Compare
         public static CompareRule From(object declaration) => new SetWhenRule(
             RuleValues.ReadSide(declaration, "Side", RuleSide.Desired),
             RuleValues.ReadRequiredString(declaration, "Property"),
-            RuleValues.Read(declaration, "Value"),
+            RuleValues.ReadOption(declaration, "Value"),
             RuleCondition.ReadOptional(declaration, "When"));
 
         internal override void Apply(CompareRuleContext context)
@@ -308,7 +389,7 @@ namespace Microsoft365DSC.Compare
 
             foreach (Hashtable values in context.ListSides(_side))
             {
-                RuleValues.Set(values, _property, _value);
+                RuleValues.SetValue(values, _property, _value);
             }
         }
     }
@@ -360,15 +441,15 @@ namespace Microsoft365DSC.Compare
 
         internal override void Apply(CompareRuleContext context)
         {
-            object? current = RuleValues.Get(context.Current, _property);
+            object? current = RuleValues.GetValue(context.Current, _property);
 
-            if (IsListed(RuleValues.Get(context.Desired, _property)) && IsListed(current))
+            if (IsEquivalentValue(RuleValues.GetValue(context.Desired, _property)) && IsEquivalentValue(current))
             {
-                RuleValues.Set(context.Desired, _property, current);
+                RuleValues.SetValue(context.Desired, _property, current);
             }
         }
 
-        private bool IsListed(object? value) =>
+        private bool IsEquivalentValue(object? value) =>
             _values.Contains(RuleValues.ConvertToText(value) ?? string.Empty, StringComparer.OrdinalIgnoreCase);
     }
 
@@ -391,9 +472,9 @@ namespace Microsoft365DSC.Compare
         {
             foreach (string name in RuleValues.ListKeys(context.ValuesToCheck).Where(key => _propertyPattern.IsMatch(key)).ToArray())
             {
-                foreach (Hashtable values in context.ListSides(_side).Where(values => RuleValues.Get(values, name) is null))
+                foreach (Hashtable values in context.ListSides(_side).Where(values => RuleValues.GetValue(values, name) is null))
                 {
-                    RuleValues.Set(values, name, Array.Empty<object>());
+                    RuleValues.SetValue(values, name, Array.Empty<object>());
                 }
             }
         }
@@ -412,17 +493,19 @@ namespace Microsoft365DSC.Compare
 
         public static CompareRule From(object declaration) => new ToleranceRule(
             RuleValues.ReadStrings(declaration, "Properties"),
-            TimeSpan.Parse(RuleValues.ReadRequiredString(declaration, "Within"), CultureInfo.InvariantCulture));
+            TimeSpan.TryParse(RuleValues.ReadRequiredString(declaration, "Within"), CultureInfo.InvariantCulture, out TimeSpan within)
+                ? within
+                : throw new ArgumentException("The Tolerance rule needs a Within such as 00:05:00.", nameof(declaration)));
 
         internal override void Apply(CompareRuleContext context)
         {
             foreach (string name in _properties)
             {
-                if (RuleValues.TryReadDuration(RuleValues.Get(context.Desired, name), out TimeSpan desired) &&
-                    RuleValues.TryReadDuration(RuleValues.Get(context.Current, name), out TimeSpan current) &&
+                if (RuleValues.TryReadDuration(RuleValues.GetValue(context.Desired, name), out TimeSpan desired) &&
+                    RuleValues.TryReadDuration(RuleValues.GetValue(context.Current, name), out TimeSpan current) &&
                     (desired - current).Duration() <= _within)
                 {
-                    RuleValues.Remove(context.ValuesToCheck, name);
+                    RuleValues.RemoveValue(context.ValuesToCheck, name);
                 }
             }
         }
@@ -451,20 +534,14 @@ namespace Microsoft365DSC.Compare
         }
     }
 
-    internal sealed class IgnoreWhenPastRule : CompareRule
+    internal abstract class InstantRule : CompareRule
     {
         private readonly string _path;
-        private readonly bool _isAlsoWhenSameInstant;
 
-        public IgnoreWhenPastRule(string path, bool isAlsoWhenSameInstant)
+        protected InstantRule(string path)
         {
             _path = path;
-            _isAlsoWhenSameInstant = isAlsoWhenSameInstant;
         }
-
-        public static CompareRule From(object declaration) => new IgnoreWhenPastRule(
-            RuleValues.ReadRequiredString(declaration, "Path"),
-            RuleValues.ReadBoolean(declaration, "AlsoWhenSameInstant"));
 
         internal override void Apply(CompareRuleContext context)
         {
@@ -476,12 +553,37 @@ namespace Microsoft365DSC.Compare
                 return;
             }
 
-            bool isSameInstant = desiredInstant == currentInstant;
-            if ((!isSameInstant && desiredInstant < context.Now) || (isSameInstant && _isAlsoWhenSameInstant))
+            if (CanUseCurrentDate(desiredInstant, currentInstant, context.Now))
             {
                 desired.Write(current.Read());
             }
         }
+
+        protected abstract bool CanUseCurrentDate(DateTimeOffset desired, DateTimeOffset current, DateTimeOffset now);
+    }
+
+    internal sealed class IgnoreWhenPastRule : InstantRule
+    {
+        public IgnoreWhenPastRule(string path)
+            : base(path)
+        {
+        }
+
+        public static CompareRule From(object declaration) => new IgnoreWhenPastRule(RuleValues.ReadRequiredString(declaration, "Path"));
+
+        protected override bool CanUseCurrentDate(DateTimeOffset desired, DateTimeOffset current, DateTimeOffset now) => desired != current && desired < now;
+    }
+
+    internal sealed class SameInstantRule : InstantRule
+    {
+        public SameInstantRule(string path)
+            : base(path)
+        {
+        }
+
+        public static CompareRule From(object declaration) => new SameInstantRule(RuleValues.ReadRequiredString(declaration, "Path"));
+
+        protected override bool CanUseCurrentDate(DateTimeOffset desired, DateTimeOffset current, DateTimeOffset now) => desired == current;
     }
 
     internal sealed class RenameRule : CompareRule
@@ -503,9 +605,9 @@ namespace Microsoft365DSC.Compare
         {
             foreach (Hashtable values in new[] { context.Desired, context.Current, context.ValuesToCheck }.Where(values => RuleValues.HasKey(values, _from)))
             {
-                object? value = RuleValues.Get(values, _from);
-                RuleValues.Remove(values, _from);
-                RuleValues.Set(values, _to, value);
+                object? value = RuleValues.GetValue(values, _from);
+                RuleValues.RemoveValue(values, _from);
+                RuleValues.SetValue(values, _to, value);
             }
         }
     }
@@ -534,16 +636,16 @@ namespace Microsoft365DSC.Compare
         {
             if (RuleValues.ResolveSlots(context.Desired, _expirationPath).FirstOrDefault()?.Read() is not IDictionary desired ||
                 RuleValues.ResolveSlots(context.Current, _expirationPath).FirstOrDefault()?.Read() is not IDictionary current ||
-                !HasType(desired, "afterDuration") ||
-                !HasType(current, "afterDateTime"))
+                !HasExpirationType(desired, "afterDuration") ||
+                !HasExpirationType(current, "afterDateTime"))
             {
                 return;
             }
 
             object? start = RuleValues.ResolveSlots(context.Current, _startPath).FirstOrDefault()?.Read();
-            if (!RuleValues.TryReadDuration(RuleValues.Get(desired, "duration"), out TimeSpan duration) ||
+            if (!RuleValues.TryReadDuration(RuleValues.GetValue(desired, "duration"), out TimeSpan duration) ||
                 !RuleValues.TryReadInstant(start, out DateTimeOffset startInstant) ||
-                !RuleValues.TryReadInstant(RuleValues.Get(current, "endDateTime"), out DateTimeOffset endInstant) ||
+                !RuleValues.TryReadInstant(RuleValues.GetValue(current, "endDateTime"), out DateTimeOffset endInstant) ||
                 Math.Abs((endInstant - startInstant - duration).TotalMinutes) >= _toleranceMinutes)
             {
                 return;
@@ -551,12 +653,12 @@ namespace Microsoft365DSC.Compare
 
             foreach (string name in ExpirationMembers)
             {
-                RuleValues.Set(current, name, RuleValues.Get(desired, name));
+                RuleValues.SetValue(current, name, RuleValues.GetValue(desired, name));
             }
         }
 
-        private static bool HasType(IDictionary expiration, string type) =>
-            string.Equals(RuleValues.ConvertToText(RuleValues.Get(expiration, "type")), type, StringComparison.OrdinalIgnoreCase);
+        private static bool HasExpirationType(IDictionary expiration, string type) =>
+            string.Equals(RuleValues.ConvertToText(RuleValues.GetValue(expiration, "type")), type, StringComparison.OrdinalIgnoreCase);
     }
 
     internal sealed class AllowCurrentExtrasRule : CompareRule
@@ -576,39 +678,45 @@ namespace Microsoft365DSC.Compare
 
         internal override void Apply(CompareRuleContext context)
         {
-            List<object?> desired = [.. RuleValues.ListItems(RuleValues.Get(context.Desired, _property))];
+            if (!RuleValues.HasKey(context.Desired, _property))
+            {
+                return;
+            }
+
+            List<object?> desired = [.. RuleValues.ListItems(RuleValues.GetValue(context.Desired, _property))];
             HashSet<string> desiredKeys = new(desired.OfType<IDictionary>().Select(ReadMatchKey), StringComparer.OrdinalIgnoreCase);
 
             List<object?> extras =
             [
-                .. RuleValues.ListItems(RuleValues.Get(context.Current, _property))
+                .. RuleValues.ListItems(RuleValues.GetValue(context.Current, _property))
                     .OfType<IDictionary>()
                     .Where(item => !desiredKeys.Contains(ReadMatchKey(item)))
             ];
 
             if (extras.Count > 0)
             {
-                RuleValues.Set(context.Desired, _property, desired.Concat(extras).ToArray());
+                RuleValues.SetValue(context.Desired, _property, desired.Concat(extras).ToArray());
             }
         }
 
-        private string ReadMatchKey(IDictionary item) => RuleValues.ConvertToText(RuleValues.Get(item, _matchKey)) ?? string.Empty;
+        private string ReadMatchKey(IDictionary item) => RuleValues.ConvertToText(RuleValues.GetValue(item, _matchKey)) ?? string.Empty;
     }
 
     internal sealed class CustomCompareRule : CompareRule
     {
-        private readonly string _name;
+        private readonly Action<CompareRuleContext> _comparer;
 
-        public CustomCompareRule(string name)
+        public CustomCompareRule(Action<CompareRuleContext> comparer)
         {
-            _name = name;
+            _comparer = comparer;
         }
 
-        public static CompareRule From(object declaration) => new CustomCompareRule(RuleValues.ReadRequiredString(declaration, "Name"));
+        public static CompareRule From(object declaration) =>
+            new CustomCompareRule(CompareRuleRegistry.CreateComparer(RuleValues.ReadRequiredString(declaration, "Name"), declaration));
 
         internal override void Apply(CompareRuleContext context)
         {
-            CompareRuleRegistry.FindComparer(_name)(context);
+            _comparer(context);
         }
     }
 
@@ -654,14 +762,14 @@ namespace Microsoft365DSC.Compare
             }
 
             Hashtable values = context.GetSide(_side);
-            object? value = RuleValues.Get(values, _property);
+            object? value = RuleValues.GetValue(values, _property);
 
             return _operator switch
             {
-                "Equals" => RuleValues.AreEqual(value, _operand),
-                "NotEquals" => !RuleValues.AreEqual(value, _operand),
-                "IsNullOrEmpty" => RuleValues.IsAbsent(value),
-                "NotNullOrEmpty" => !RuleValues.IsAbsent(value),
+                "Equals" => RuleValues.IsEqual(value, _operand),
+                "NotEquals" => !RuleValues.IsEqual(value, _operand),
+                "IsNullOrEmpty" => RuleValues.IsNullOrEmpty(value),
+                "NotNullOrEmpty" => !RuleValues.IsNullOrEmpty(value),
                 "HasKey" => RuleValues.HasKey(values, _property),
                 "NotHasKey" => !RuleValues.HasKey(values, _property),
                 "Truthy" => RuleValues.IsTruthy(value),
@@ -687,7 +795,10 @@ namespace Microsoft365DSC.Compare
             {
                 if (MemberAccessor.TryGetMember(declaration, candidate, out object? operand))
                 {
-                    return new RuleCondition(RuleValues.ReadSide(declaration, "Side", RuleSide.Desired), property, candidate, operand);
+                    RuleSide side = RuleValues.ReadSide(declaration, "Side", RuleSide.Desired);
+                    return side == RuleSide.Both
+                        ? throw new ArgumentException($"The condition on '{property}' only reads one side, not Both.", nameof(declaration))
+                        : new RuleCondition(side, property, candidate, operand);
                 }
             }
 
@@ -708,11 +819,11 @@ namespace Microsoft365DSC.Compare
 
         public bool IsPresent => RuleValues.HasKey(_owner, _name);
 
-        public object? Read() => RuleValues.Get(_owner, _name);
+        public object? Read() => RuleValues.GetValue(_owner, _name);
 
-        public void Write(object? value) => RuleValues.Set(_owner, _name, value);
+        public void Write(object? value) => RuleValues.SetValue(_owner, _name, value);
 
-        public void Remove() => RuleValues.Remove(_owner, _name);
+        public void Remove() => RuleValues.RemoveValue(_owner, _name);
     }
 
     /// <summary>
@@ -722,7 +833,7 @@ namespace Microsoft365DSC.Compare
     {
         private const string EachSuffix = "[]";
 
-        public static object? Read(object declaration, string name) =>
+        public static object? ReadOption(object declaration, string name) =>
             MemberAccessor.TryGetMember(declaration, name, out object? value) ? value : null;
 
         public static string ReadRequiredString(object declaration, string name) =>
@@ -731,7 +842,7 @@ namespace Microsoft365DSC.Compare
                 : throw new ArgumentException($"The compare rule needs a {name}.", nameof(declaration));
 
         public static IReadOnlyList<string> ReadStrings(object declaration, string name) =>
-            Read(declaration, name) switch
+            ReadOption(declaration, name) switch
             {
                 null => [],
                 string single => [single],
@@ -746,10 +857,11 @@ namespace Microsoft365DSC.Compare
         public static Regex ReadRequiredPattern(object declaration, string name) =>
             ReadPattern(declaration, name) ?? throw new ArgumentException($"The compare rule needs a {name}.", nameof(declaration));
 
-        public static bool ReadBoolean(object declaration, string name) => IsTruthy(Read(declaration, name));
+        public static bool ReadBoolean(object declaration, string name) =>
+            MemberAccessor.Unwrap(ReadOption(declaration, name)) is string text ? bool.TryParse(text, out bool flag) && flag : IsTruthy(ReadOption(declaration, name));
 
         public static double ReadNumber(object declaration, string name, double fallback) =>
-            double.TryParse(ConvertToText(Read(declaration, name)), NumberStyles.Float, CultureInfo.InvariantCulture, out double number)
+            double.TryParse(ConvertToText(ReadOption(declaration, name)), NumberStyles.Float, CultureInfo.InvariantCulture, out double number)
                 ? number
                 : fallback;
 
@@ -760,17 +872,18 @@ namespace Microsoft365DSC.Compare
 
         public static IEnumerable<string> ListKeys(IDictionary table) => table.Keys.Cast<object>().Select(key => key.ToString());
 
-        public static bool HasKey(IDictionary table, string name) => FindKey(table, name) is not null;
+        public static bool HasKey(IDictionary table, string name) => MemberAccessor.TryFindKey(table, name, out _);
 
-        public static object? Get(IDictionary table, string name) => FindKey(table, name) is { } key ? table[key] : null;
+        public static object? GetValue(IDictionary table, string name) => MemberAccessor.TryGetMember(table, name, out object? value) ? value : null;
 
-        public static void Set(IDictionary table, string name, object? value) => table[FindKey(table, name) ?? name] = value;
+        public static void SetValue(IDictionary table, string name, object? value) =>
+            table[MemberAccessor.TryFindKey(table, name, out object? key) ? key! : name] = value;
 
-        public static void Remove(IDictionary table, string name)
+        public static void RemoveValue(IDictionary table, string name)
         {
-            if (FindKey(table, name) is { } key)
+            if (MemberAccessor.TryFindKey(table, name, out object? key))
             {
-                table.Remove(key);
+                table.Remove(key!);
             }
         }
 
@@ -782,7 +895,7 @@ namespace Microsoft365DSC.Compare
 
             foreach (string segment in segments.Take(segments.Length - 1))
             {
-                owners = [.. owners.SelectMany(owner => ListItems(Get(owner, segment))).OfType<IDictionary>()];
+                owners = [.. owners.SelectMany(owner => ListItems(GetValue(owner, segment))).OfType<IDictionary>()];
             }
 
             return owners.Select(owner => new RuleSlot(owner, segments[segments.Length - 1]));
@@ -803,7 +916,15 @@ namespace Microsoft365DSC.Compare
             {
                 IDictionary => value,
                 string text => map(text),
-                IEnumerable sequence => sequence.Cast<object?>().Select(item => map(MemberAccessor.Unwrap(item))).ToArray(),
+                IEnumerable sequence => sequence.Cast<object?>().Select(item => MapScalar(item, map)).ToArray(),
+                var other => map(other)
+            };
+
+        private static object? MapScalar(object? item, Func<object?, object?> map) =>
+            MemberAccessor.Unwrap(item) switch
+            {
+                string text => map(text),
+                IEnumerable => item,
                 var other => map(other)
             };
 
@@ -824,7 +945,7 @@ namespace Microsoft365DSC.Compare
                 _ => false
             };
 
-        public static bool IsAbsent(object? value) =>
+        public static bool IsNullOrEmpty(object? value) =>
             MemberAccessor.Unwrap(value) is string text ? text.Length == 0 : IsNullOrEmptyCollection(value);
 
         public static bool IsTruthy(object? value) =>
@@ -838,7 +959,7 @@ namespace Microsoft365DSC.Compare
                 _ => true
             };
 
-        public static bool AreEqual(object? value, object? operand)
+        public static bool IsEqual(object? value, object? operand)
         {
             object? left = MemberAccessor.Unwrap(value);
             object? right = MemberAccessor.Unwrap(operand);
@@ -860,17 +981,21 @@ namespace Microsoft365DSC.Compare
                     instant = offset;
                     return true;
                 case DateTime date:
-                    instant = new DateTimeOffset(date);
+                    instant = new DateTimeOffset(date.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(date, DateTimeKind.Utc) : date);
                     return true;
                 case string text:
-                    return DateTimeOffset.TryParse(text, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out instant);
+                    return DateTimeOffset.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out instant);
                 default:
                     instant = default;
                     return false;
             }
         }
 
-        public static bool TryReadDuration(object? value, out TimeSpan duration)
+        public static bool TryReadDuration(object? value, out TimeSpan duration) =>
+            TryReadIsoDuration(value, out duration) ||
+            (MemberAccessor.Unwrap(value) is string text && TimeSpan.TryParse(text, CultureInfo.InvariantCulture, out duration));
+
+        public static bool TryReadIsoDuration(object? value, out TimeSpan duration)
         {
             duration = default;
             switch (MemberAccessor.Unwrap(value))
@@ -878,18 +1003,16 @@ namespace Microsoft365DSC.Compare
                 case TimeSpan span:
                     duration = span;
                     return true;
-                case string text when text.TrimStart('-').StartsWith("P", StringComparison.OrdinalIgnoreCase):
+                case string { Length: > 0 } text:
                     try
                     {
                         duration = XmlConvert.ToTimeSpan(text);
                         return true;
                     }
-                    catch (FormatException)
+                    catch (Exception exception) when (exception is FormatException or OverflowException)
                     {
                         return false;
                     }
-                case string text:
-                    return TimeSpan.TryParse(text, CultureInfo.InvariantCulture, out duration);
                 default:
                     return false;
             }
@@ -897,16 +1020,6 @@ namespace Microsoft365DSC.Compare
 
         private static string TrimEachSuffix(string segment) =>
             segment.EndsWith(EachSuffix, StringComparison.Ordinal) ? segment.Substring(0, segment.Length - EachSuffix.Length) : segment;
-
-        private static object? FindKey(IDictionary table, string name)
-        {
-            if (table.Contains(name))
-            {
-                return name;
-            }
-
-            return table.Keys.Cast<object>().FirstOrDefault(key => string.Equals(key?.ToString(), name, StringComparison.OrdinalIgnoreCase));
-        }
 
         private static bool IsNumber(IConvertible value) =>
             value.GetTypeCode() is >= TypeCode.SByte and <= TypeCode.Decimal;
@@ -931,25 +1044,19 @@ namespace Microsoft365DSC.Compare
                 Hashtable table => CloneWithNestedValues(table),
                 OrderedDictionary ordered => CloneEntries(ordered, new OrderedDictionary(StringComparer.OrdinalIgnoreCase)),
                 IDictionary dictionary => CloneEntries(dictionary, new Hashtable(StringComparer.OrdinalIgnoreCase)),
-                string text => text,
-                Array array => CloneElements(array),
+                Array array when array.Cast<object?>().All(IsLeaf) => array.Clone(),
+                var leaf when ValueClassifier.IsLeaf(leaf) => leaf,
                 IEnumerable items => items.Cast<object?>().Select(CloneValue).ToArray(),
-                var other => other
+                _ => CloneNormalized(value)
             };
 
-        private static Array CloneElements(Array source)
+        private static object? CloneNormalized(object? value)
         {
-            Array copy = (Array)source.Clone();
-            for (int index = 0; index < copy.Length; index++)
-            {
-                if (MemberAccessor.Unwrap(copy.GetValue(index)) is IEnumerable element and not string)
-                {
-                    copy.SetValue(CloneValue(element), index);
-                }
-            }
-
-            return copy;
+            object? normalized = ObjectNormalizer.Normalize(value);
+            return normalized is Hashtable or object[] ? CloneValue(normalized) : normalized;
         }
+
+        private static bool IsLeaf(object? value) => ValueClassifier.IsLeaf(MemberAccessor.Unwrap(value));
 
         private static IDictionary CloneEntries(IDictionary source, IDictionary copy)
         {

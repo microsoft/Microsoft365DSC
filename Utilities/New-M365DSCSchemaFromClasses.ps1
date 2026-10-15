@@ -160,6 +160,8 @@ $module = Get-Module -Name 'Microsoft365DSC'
 $payload = & $module {
     param($descriptions, $propertyDescriptions)
 
+    Initialize-M365DSCDllLoader
+
     function ConvertTo-CimType
     {
         param([Type] $Type)
@@ -260,6 +262,29 @@ $payload = & $module {
         return $result
     }
 
+    function ConvertTo-SortedDeclaration
+    {
+        param($Value)
+
+        if ($Value -is [System.Collections.IDictionary])
+        {
+            $sorted = [ordered] @{}
+            foreach ($key in ($Value.Keys | Sort-Object))
+            {
+                $sorted[$key] = ConvertTo-SortedDeclaration -Value $Value[$key]
+            }
+
+            return $sorted
+        }
+
+        if ($Value -is [System.Collections.IEnumerable] -and $Value -isnot [System.String])
+        {
+            return , @($Value | ForEach-Object -Process { ConvertTo-SortedDeclaration -Value $_ })
+        }
+
+        return $Value
+    }
+
     function Get-CompareParameterInfo
     {
         param([Type] $Type)
@@ -295,6 +320,21 @@ $payload = & $module {
             {
                 $parameters[$name] = $values
             }
+        }
+
+        $rules = @($declared['CompareRules'] | Where-Object -FilterScript { $null -ne $_ })
+        if ($rules.Count -gt 0)
+        {
+            try
+            {
+                $null = [Microsoft365DSC.Compare.CompareRule]::ParseAll($rules)
+            }
+            catch
+            {
+                throw "$($Type.Name) declares an invalid compare rule: $($_.Exception.Message)"
+            }
+
+            $parameters['CompareRules'] = @($rules | ForEach-Object -Process { ConvertTo-SortedDeclaration -Value $_ })
         }
 
         if ($parameters.Count -gt 0)
