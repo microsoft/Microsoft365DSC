@@ -214,14 +214,23 @@ namespace Microsoft365DSC.Compare
                 ? [.. globalExclusions.Concat(resourceExclusions).Distinct(StringComparer.OrdinalIgnoreCase)]
                 : globalExclusions;
 
-            Hashtable desiredValues = destination;
-            Hashtable currentValues = source;
+            Hashtable desiredValues = CopyRewritableValues(destination, overrides);
+            Hashtable currentValues = CopyRewritableValues(source, overrides);
             Hashtable valuesToCheck = (Hashtable)destination.Clone();
+
+            if (overrides?.Rules is { Count: > 0 } rules)
+            {
+                CompareRuleContext context = new(
+                    desiredValues, currentValues, valuesToCheck, index.GetParameterNames(resourceName), overrides.Now ?? DateTimeOffset.Now);
+
+                foreach (CompareRule rule in rules)
+                {
+                    rule.Apply(context);
+                }
+            }
 
             if (overrides?.PostProcessing is { } postProcessing)
             {
-                desiredValues = (Hashtable)destination.Clone();
-                currentValues = (Hashtable)source.Clone();
                 Tuple<Hashtable, Hashtable, Hashtable>? processed = postProcessing(
                     desiredValues, currentValues, valuesToCheck, overrides.PostProcessingArgs ?? []);
 
@@ -315,6 +324,16 @@ namespace Microsoft365DSC.Compare
                     return;
                 }
             }
+        }
+
+        private static Hashtable CopyRewritableValues(Hashtable values, ResourceCompareParameters? overrides)
+        {
+            if (overrides?.Rules is { Count: > 0 })
+            {
+                return CompareValues.CloneWithNestedValues(values);
+            }
+
+            return overrides?.PostProcessing is null ? values : (Hashtable)values.Clone();
         }
 
         private static ResourceCompareParameters? Overrides(
@@ -471,5 +490,13 @@ namespace Microsoft365DSC.Compare
         public Func<Hashtable, Hashtable, Hashtable, object[], Tuple<Hashtable, Hashtable, Hashtable>>? PostProcessing { get; set; }
 
         public object[]? PostProcessingArgs { get; set; }
+
+        /// <summary>
+        /// Run before <see cref="PostProcessing"/> on copies of both sides.
+        /// </summary>
+        public IReadOnlyList<CompareRule>? Rules { get; set; }
+
+        /// <summary>The current time to use for comparisons. Null reads the system clock.</summary>
+        public DateTimeOffset? Now { get; set; }
     }
 }

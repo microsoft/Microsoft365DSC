@@ -19,6 +19,7 @@ namespace Microsoft365DSC.Compare
         private static readonly ConditionalWeakTable<IEnumerable<object>, SchemaIndex> Indexes = new();
         private readonly Dictionary<string, object> _byClassName = new(StringComparer.OrdinalIgnoreCase);
         private readonly ConcurrentDictionary<string, ClassDefinition> _classes = new(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, ResourceCompareParameters?> _compareParameters = new(StringComparer.OrdinalIgnoreCase);
 
         private SchemaIndex(IEnumerable<object> schema)
         {
@@ -66,6 +67,16 @@ namespace Microsoft365DSC.Compare
 
         public ResourceCompareParameters? GetCompareParameters(string resourceName)
         {
+            return _compareParameters.GetOrAdd(resourceName, ReadCompareParameters);
+        }
+
+        public IReadOnlyList<string> GetParameterNames(string resourceName)
+        {
+            return TryGetResource(resourceName, out ClassDefinition definition) ? definition.ParameterNames : [];
+        }
+
+        private ResourceCompareParameters? ReadCompareParameters(string resourceName)
+        {
             if (!_byClassName.TryGetValue(ClassNamePrefix + resourceName, out object? definition) ||
                 !MemberAccessor.TryGetMember(definition, "CompareParameters", out object? declared) ||
                 declared is null)
@@ -76,7 +87,8 @@ namespace Microsoft365DSC.Compare
             return new ResourceCompareParameters
             {
                 ExcludedProperties = AsStrings(declared, "ExcludedProperties"),
-                IncludedProperties = AsStrings(declared, "IncludedProperties")
+                IncludedProperties = AsStrings(declared, "IncludedProperties"),
+                Rules = MemberAccessor.TryGetMember(declared, "CompareRules", out object? rules) ? CompareRule.ParseAll(rules) : null
             };
         }
 
@@ -116,14 +128,17 @@ namespace Microsoft365DSC.Compare
     {
         private readonly Dictionary<string, ParameterDefinition> _parameters;
 
-        private ClassDefinition(string className, Dictionary<string, ParameterDefinition> parameters, MandatoryParameters mandatory)
+        private ClassDefinition(string className, Dictionary<string, ParameterDefinition> parameters, List<string> parameterNames, MandatoryParameters mandatory)
         {
             ClassName = className;
             _parameters = parameters;
+            ParameterNames = parameterNames;
             Mandatory = mandatory;
         }
 
         public string ClassName { get; }
+
+        public IReadOnlyList<string> ParameterNames { get; }
 
         public MandatoryParameters Mandatory { get; }
 
@@ -135,6 +150,7 @@ namespace Microsoft365DSC.Compare
         public static ClassDefinition From(string className, object entry)
         {
             Dictionary<string, ParameterDefinition> parameters = new(StringComparer.OrdinalIgnoreCase);
+            List<string> parameterNames = [];
             List<string> mandatory = [];
 
             if (MemberAccessor.TryGetMember(entry, "Parameters", out object? declared))
@@ -151,6 +167,11 @@ namespace Microsoft365DSC.Compare
                         name!,
                         MemberAccessor.GetMemberAsString(parameter, "CIMType"),
                         MemberAccessor.GetMemberAsString(parameter, "Option"));
+                    if (!parameters.ContainsKey(name!))
+                    {
+                        parameterNames.Add(name!);
+                    }
+
                     parameters[name!] = definition;
 
                     if (definition.IsKey || definition.IsRequired)
@@ -160,7 +181,7 @@ namespace Microsoft365DSC.Compare
                 }
             }
 
-            return new ClassDefinition(className, parameters, new MandatoryParameters(mandatory));
+            return new ClassDefinition(className, parameters, parameterNames, new MandatoryParameters(mandatory));
         }
     }
 
