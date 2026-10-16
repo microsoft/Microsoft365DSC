@@ -85,6 +85,7 @@ namespace Microsoft365DSC.Utilities
         /// </summary>
         /// <param name="dictionary">The dictionary to search.</param>
         /// <param name="name">The key to find.</param>
+        /// <param name="key">The key value as the dictionary stores it, null when not found.</param>
         /// <returns>True when the key exists.</returns>
         public static bool TryFindKey(IDictionary dictionary, string name, out object? key)
         {
