@@ -381,7 +381,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should ignore trainable classifier ids when testing AdvancedRules for drift' {
                 $instance = New-M365DSCResourceInstance -ResourceName 'SCDLPComplianceRule' -Property $testParams
-                $result = Invoke-M365DSCCompareRules -CompareRules $instance.GetCompareParameters().CompareRules `
+                $result = & $Global:DscHelper.InvokeCompareRules -CompareRules $instance.GetCompareParameters().CompareRules `
                     -DesiredValues $instance.GetBoundParameters() -CurrentValues $instance.Get().ToHashtable()
 
                 $result.Desired.AdvancedRule | Should -Be $result.Current.AdvancedRule
@@ -602,7 +602,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 {
                     param($Desired, $Current)
 
-                    Invoke-M365DSCCompareRules -CompareRules $compareRules -DesiredValues @{ ContentContainsSensitiveInformation = $Desired } -CurrentValues @{ ContentContainsSensitiveInformation = $Current }
+                    & $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules -DesiredValues @{ ContentContainsSensitiveInformation = $Desired } -CurrentValues @{ ContentContainsSensitiveInformation = $Current }
                 }
             }
 
@@ -669,14 +669,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     } | ConvertTo-Json -Depth 12
                 }
 
-                $result = Invoke-M365DSCCompareRules -CompareRules $compareRules `
+                $result = & $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules `
                     -DesiredValues @{ AdvancedRule = ((& $advancedRule '11111111-1111-1111-1111-111111111111') | ConvertTo-Json -Compress) } `
                     -CurrentValues @{ Ensure = 'Present'; AdvancedRule = (& $advancedRule $null) }
                 $result.Desired.AdvancedRule | Should -Be $result.Current.AdvancedRule
             }
 
             It 'Should keep only the setting and values of endpoint restrictions' {
-                $result = Invoke-M365DSCCompareRules -CompareRules $compareRules `
+                $result = & $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules `
                     -DesiredValues @{ EndpointDlpRestrictions = @(@{ Setting = 'Print'; Value = 'Block'; Extra = 'x' }) } `
                     -CurrentValues @{ EndpointDlpRestrictions = @(@{ Setting = 'Print'; Value = 'Block'; Value2 = $null }) }
                 $result.Desired.EndpointDlpRestrictions[0].Keys | Sort-Object | Should -Be @('Setting', 'Value')

@@ -442,15 +442,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should compare array valued advanced settings as sets' {
                 $desired = @(@{ Key = 'attachmentaction'; Value = @('a', 'b') })
-                (Invoke-M365DSCCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = $desired } -CurrentValues @{ AdvancedSettings = @(@{ Key = 'AttachmentAction'; Value = @('b', 'a') }) }).ValuesToCheck.ContainsKey('AdvancedSettings') | Should -BeFalse
-                (Invoke-M365DSCCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = $desired } -CurrentValues @{ AdvancedSettings = @(@{ Key = 'attachmentaction'; Value = @('a') }) }).ValuesToCheck.AdvancedSettings.Drift | Should -Be 'desired'
-                (Invoke-M365DSCCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = @(@{ Key = 'attachmentaction'; Value = [System.String[]] @('a') }) } -CurrentValues @{ AdvancedSettings = @(@{ Key = 'attachmentaction'; Value = 'a' }) }).ValuesToCheck.ContainsKey('AdvancedSettings') | Should -BeFalse
-                (Invoke-M365DSCCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = @(@{ Key = 'attachmentaction'; Value = 'a' }) } -CurrentValues @{ AdvancedSettings = @(@{ Key = 'attachmentaction'; Value = @('a', 'b') }) }).ValuesToCheck.AdvancedSettings.Drift | Should -Be 'desired'
+                (& $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = $desired } -CurrentValues @{ AdvancedSettings = @(@{ Key = 'AttachmentAction'; Value = @('b', 'a') }) }).ValuesToCheck.ContainsKey('AdvancedSettings') | Should -BeFalse
+                (& $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = $desired } -CurrentValues @{ AdvancedSettings = @(@{ Key = 'attachmentaction'; Value = @('a') }) }).ValuesToCheck.AdvancedSettings.Drift | Should -Be 'desired'
+                (& $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = @(@{ Key = 'attachmentaction'; Value = [System.String[]] @('a') }) } -CurrentValues @{ AdvancedSettings = @(@{ Key = 'attachmentaction'; Value = 'a' }) }).ValuesToCheck.ContainsKey('AdvancedSettings') | Should -BeFalse
+                (& $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = @(@{ Key = 'attachmentaction'; Value = 'a' }) } -CurrentValues @{ AdvancedSettings = @(@{ Key = 'attachmentaction'; Value = @('a', 'b') }) }).ValuesToCheck.AdvancedSettings.Drift | Should -Be 'desired'
             }
 
             It 'Should ignore desired settings the current side does not have' {
-                (Invoke-M365DSCCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = @(@{ Key = 'missing'; Value = 'x' }) } -CurrentValues @{ AdvancedSettings = @() }).ValuesToCheck.ContainsKey('AdvancedSettings') | Should -BeFalse
-                (Invoke-M365DSCCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = @(@{ Key = 'missing'; Value = 'x' }) } -CurrentValues @{ }).ValuesToCheck.ContainsKey('AdvancedSettings') | Should -BeFalse
+                (& $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = @(@{ Key = 'missing'; Value = 'x' }) } -CurrentValues @{ AdvancedSettings = @() }).ValuesToCheck.ContainsKey('AdvancedSettings') | Should -BeFalse
+                (& $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules -DesiredValues @{ AdvancedSettings = @(@{ Key = 'missing'; Value = 'x' }) } -CurrentValues @{ }).ValuesToCheck.ContainsKey('AdvancedSettings') | Should -BeFalse
             }
 
             It 'Should report drift in a compare only when array valued advanced settings differ' {
@@ -463,7 +463,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should compare locations with the added and removed ones applied to the current ones' {
-                $result = Invoke-M365DSCCompareRules -CompareRules $compareRules `
+                $result = & $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules `
                     -DesiredValues @{ AddExchangeLocation = @('c'); RemoveExchangeLocation = @('a') } `
                     -CurrentValues @{ ExchangeLocation = @('a', 'b', '') }
                 $result.Desired.ExchangeLocation | Should -Be @('b', 'c')

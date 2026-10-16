@@ -374,7 +374,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 {
                     param($Property, $Desired, $Current)
 
-                    Invoke-M365DSCCompareRules -CompareRules $compareRules -DesiredValues @{ $Property = $Desired } -CurrentValues @{ $Property = $Current }
+                    & $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules -DesiredValues @{ $Property = $Desired } -CurrentValues @{ $Property = $Current }
                 }
             }
 

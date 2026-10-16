@@ -335,7 +335,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 {
                     param($Desired, $Current)
 
-                    Invoke-M365DSCCompareRules -CompareRules $compareRules -DesiredValues @{ ContentContainsSensitiveInformation = $Desired } -CurrentValues @{ ContentContainsSensitiveInformation = $Current }
+                    & $Global:DscHelper.InvokeCompareRules -CompareRules $compareRules -DesiredValues @{ ContentContainsSensitiveInformation = $Desired } -CurrentValues @{ ContentContainsSensitiveInformation = $Current }
                 }
             }
 
