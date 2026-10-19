@@ -2,17 +2,31 @@
 
 # UNRELEASED
 
+* AADAuthorizationPolicy
+  * Added support for the `AllowedToCreateAgentIdentityBlueprints` property of
+    `DefaultUserRolePermissions`.
+    FIXES [#7541](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7541)
 * AADPermissionGrantPolicy
   * Updated the comparison to only resolve permission names if not in a report.
 * EXOHostedContentFilterPolicy
   * Fixed a comparison issue where the value was not correctly updated.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixed `TamperProtection` drift being ignored during comparison.
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Fixed an issue where the comparison reported a drift when only some
+    definition values had presentation values.
+    FIXES [#7545](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7545)
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Updated the comparison to only resolve mobile app names if not in a report.
+* O365OrgSettings
+  * Fixed an issue where the export failed when the To Do settings could not be
+    retrieved.
+  * Fixed an issue where retrieving the settings registered service principals.
+    FIXES [#7546](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7546)
 * MISC
   * Added declarative compare rules, applied the same way by every comparer.
   * Moved 76 resource comparisons from scriptblocks to compare rules.
+  * Updated several incorrect role requirements for EXO resources.
 
 # 2.26.1015.1
 

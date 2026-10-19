@@ -188,6 +188,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'When the Office on the web Service Principal is not registered' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    IsSingleInstance                           = 'Yes'
+                    M365WebEnableUsersToOpenFilesFrom3PStorage = $False
+                    Credential                                 = $Credential
+                }
+
+                Mock -CommandName New-MgServicePrincipal -MockWith {
+                }
+            }
+
+            It 'Should return the default value from the Get method without registering a Service Principal' {
+                ((New-M365DSCResourceInstance -ResourceName 'O365OrgSettings' -Property $testParams).Get().ToHashtable()).M365WebEnableUsersToOpenFilesFrom3PStorage | Should -Be $True
+                Should -Invoke -CommandName New-MgServicePrincipal -Exactly 0
+            }
+
+            It 'Should return false from the Test method' {
+                ((New-M365DSCResourceInstance -ResourceName 'O365OrgSettings' -Property $testParams).Test()) | Should -Be $false
+            }
+        }
+
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
@@ -220,6 +242,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 $result = Invoke-M365DSCResourceMethod -ResourceName 'O365OrgSettings' -MethodName 'Export' -Parameters $testParams
+                $result | Should -Not -BeNullOrEmpty
+            }
+
+            It 'Should Reverse Engineer resource from the Export method when the To Do settings cannot be retrieved' {
+                Mock -CommandName Invoke-M365DSCGraphRequest -ParameterFilter { $Uri -like '*todo*' } -MockWith {
+                    throw 'Response status code does not indicate success: InternalServerError (Internal Server Error).'
+                }
+
+                Mock -CommandName Start-Sleep -ModuleName M365DSCErrorHandler -MockWith {
+                }
+
+                Mock -CommandName Get-DefaultTenantMyAnalyticsFeatureConfig -MockWith {
+                }
+
+                $result = Invoke-M365DSCResourceMethod -ResourceName 'O365OrgSettings' -MethodName 'Export' -Parameters $testParams 3> $null
                 $result | Should -Not -BeNullOrEmpty
             }
         }
