@@ -31,11 +31,17 @@ For more information and more advanced topics, please make sure you review the f
 
 ## Compiling and Validating the Configuration
 
-The first step in trying to deploy a DSC configuration is to compile the configuration file into a MOF file. Doing so simply involves executing the .ps1 file that contains your configuration. The process of compiling your configuration will also perform some level of validation on the configuration, such as ensuring that every component defined in the file has all of their mandatory parameters defined, and that there are no typos in components or property names. If the compilation process is successful, you should see a message indicating that the MOF file was created. By default, this file is created in the same path your configuration file is located, and will create a new subfolder based on the name of the configuration object defined within your file.
+The first step in trying to deploy a DSC configuration is to compile the configuration file into a MOF file. Run `Invoke-M365DSCConfigurationBuild` from a PowerShell 7 console and pass it the .ps1 file that contains your configuration:
 
-**Attention: If your configuration contains empty arrays, then it must be compiled in Windows PowerShell (5.1). Otherwise, the affected properties might be omitted in the result file.**
+```powershell
+Invoke-M365DSCConfigurationBuild -Path .\M365TenantConfig.ps1
+```
 
-Compiling a configuration and applying it with `Start-DscConfiguration` (or testing using `Test-DscConfiguration`) are the only Microsoft365DSC scenarios that involve Windows PowerShell because the Local Configuration Manager does not work with PowerShell > 5.1. The resources themselves still execute on PowerShell 7: the LCM relays every resource call into a PowerShell 7 session on the same machine. PowerShell 7.6 or higher therefore has to be installed, and the `PowerShell.7` remoting endpoint has to be registered. See [PowerShell 7+ Support](powershell7-support.md) for the details.
+The cmdlet picks up the `ConfigurationData.psd1` next to the script automatically. Executing the .ps1 file directly still works, but takes a lot longer. The process of compiling your configuration will also perform some level of validation on the configuration, such as ensuring that every component defined in the file has all of their mandatory parameters defined, and that there are no typos in components or property names. If the compilation process is successful, you should see a message indicating that the MOF file was created. By default, this file is created in the same path your configuration file is located, and will create a new subfolder based on the name of the configuration object defined within your file.
+
+**Attention: If your configuration contains empty arrays, compile it with `Invoke-M365DSCConfigurationBuild` or in Windows PowerShell (5.1). Executing the .ps1 file directly in PowerShell 7 omits the affected properties from the result file.**
+
+Applying a configuration with `Start-DscConfiguration` (or testing it using `Test-DscConfiguration`) is the only Microsoft365DSC scenario that involves Windows PowerShell because the Local Configuration Manager does not work with PowerShell > 5.1. The resources themselves still execute on PowerShell 7: the LCM relays every resource call into a PowerShell 7 session on the same machine. PowerShell 7.6 or higher therefore has to be installed, and the `PowerShell.7` remoting endpoint has to be registered. See [PowerShell 7+ Support](powershell7-support.md) for the details.
 
 <figure markdown>
   ![Running a configuration compilation](../../Images/CompileConfiguration.png)

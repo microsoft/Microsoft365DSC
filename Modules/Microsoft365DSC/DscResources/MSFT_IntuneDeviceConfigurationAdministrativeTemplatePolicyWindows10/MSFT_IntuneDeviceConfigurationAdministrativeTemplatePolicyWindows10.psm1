@@ -640,12 +640,30 @@ class IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 : M365DSCRe
     }
 
     # DefinitionValues carry read-only (Definition, presentationDefinitionLabel) and random (Id) keys that must not be compared.
+    # Definition.Id stays because it pairs each desired definition value with its current one.
     [System.Collections.Hashtable] GetCompareParameters()
     {
         return @{
             ExcludedProperties = @('Id', 'PolicyConfigurationIngestionType')
             CompareRules       = @(
-                @{ Type = 'IgnoreNested'; Paths = @('DefinitionValues[].Definition', 'DefinitionValues[].Id', 'DefinitionValues[].PresentationValues[].presentationDefinitionLabel', 'DefinitionValues[].PresentationValues[].Id') }
+                @{
+                    Type  = 'IgnoreNested'
+                    Paths = @(
+                        'DefinitionValues[].Definition.CategoryPath'
+                        'DefinitionValues[].Definition.ClassType'
+                        'DefinitionValues[].Definition.DisplayName'
+                        'DefinitionValues[].Definition.ExplainText'
+                        'DefinitionValues[].Definition.GroupPolicyCategoryId'
+                        'DefinitionValues[].Definition.HasRelatedDefinitions'
+                        'DefinitionValues[].Definition.MinDeviceCspVersion'
+                        'DefinitionValues[].Definition.MinUserCspVersion'
+                        'DefinitionValues[].Definition.PolicyType'
+                        'DefinitionValues[].Definition.SupportedOn'
+                        'DefinitionValues[].Id'
+                        'DefinitionValues[].PresentationValues[].presentationDefinitionLabel'
+                        'DefinitionValues[].PresentationValues[].Id'
+                    )
+                }
             )
         }
     }

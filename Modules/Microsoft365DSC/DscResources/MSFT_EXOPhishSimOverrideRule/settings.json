@@ -14,10 +14,10 @@
   "description": "Use this resource to manage the phishing simulation override rule.",
   "roles": {
     "read": [
-      "Exchange Admin"
+      "Security Reader"
     ],
     "update": [
-      "Exchange Admin"
+      "Security Administrator"
     ]
   },
   "permissions": {

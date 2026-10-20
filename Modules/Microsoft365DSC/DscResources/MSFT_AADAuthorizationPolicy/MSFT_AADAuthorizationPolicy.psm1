@@ -124,6 +124,7 @@ class AADAuthorizationPolicy : M365DSCResourceBase
             $Policy = Get-MgBetaPolicyAuthorizationPolicy -ErrorAction Stop
 
             $complexDefaultUserRolePermissions = @{
+                AllowedToCreateAgentIdentityBlueprints   = $Policy.DefaultUserRolePermissions.AllowedToCreateAgentIdentityBlueprints
                 AllowedToCreateApps                      = $Policy.DefaultUserRolePermissions.AllowedToCreateApps
                 AllowedToCreateSecurityGroups            = $Policy.DefaultUserRolePermissions.AllowedToCreateSecurityGroups
                 AllowedToCreateTenants                   = $Policy.DefaultUserRolePermissions.AllowedToCreateTenants
@@ -366,6 +367,10 @@ class AADAuthorizationPolicy : M365DSCResourceBase
 
 class MSFT_DefaultUserRolePermissions
 {
+    [DscProperty()]
+    [System.ComponentModel.Description('Indicates whether the default user role is allowed to create agent identity blueprints.')]
+    [System.Nullable[System.Boolean]] $AllowedToCreateAgentIdentityBlueprints
+
     [DscProperty()]
     [System.ComponentModel.Description('Indicates whether the default user role can create applications. This setting corresponds to the Users can register applications setting in the User settings menu in the Microsoft Entra admin center.')]
     [System.Nullable[System.Boolean]] $AllowedToCreateApps

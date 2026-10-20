@@ -49,6 +49,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BlockMsolPowerShell                                 = $false
                     PermissionGrantPolicyIdsAssignedToDefaultUserRole   = [string[]]@()
                     DefaultUserRolePermissions                          = [pscustomobject]@{
+                    AllowedToCreateAgentIdentityBlueprints = $false
                     AllowedToCreateApps                    = $true
                     AllowedToCreateSecurityGroups          = $true
                     AllowedToReadOtherUsers                = $true
@@ -88,9 +89,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowInvitesFrom                                  = 'Everyone'
                     blockMsolPowerShell                               = $false
                     DefaultUserRolePermissions                        = @{
-                        AllowedToCreateApps           = $true
-                        AllowedToCreateSecurityGroups = $true
-                        AllowedToReadOtherUsers       = $true
+                        AllowedToCreateAgentIdentityBlueprints = $false
+                        AllowedToCreateApps                    = $true
+                        AllowedToCreateSecurityGroups          = $true
+                        AllowedToReadOtherUsers                = $true
                     }
                     EnabledPreviewFeatures                            = [string[]]@('assignGroupsToRoles')
                     PermissionGrantPolicyIdsAssignedToDefaultUserRole = [string[]]@()
@@ -122,9 +124,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowInvitesFrom                                  = 'AdminsAndGuestInviters'
                     blockMsolPowerShell                               = $false
                     DefaultUserRolePermissions                        = @{
-                        AllowedToCreateApps           = $true
-                        AllowedToCreateSecurityGroups = $true
-                        AllowedToReadOtherUsers       = $true
+                        AllowedToCreateAgentIdentityBlueprints = $false
+                        AllowedToCreateApps                    = $true
+                        AllowedToCreateSecurityGroups          = $true
+                        AllowedToReadOtherUsers                = $true
                     }
                     EnabledPreviewFeatures                            = [string[]]@() # Drift
                     PermissionGrantPolicyIdsAssignedToDefaultUserRole = [string[]]@()

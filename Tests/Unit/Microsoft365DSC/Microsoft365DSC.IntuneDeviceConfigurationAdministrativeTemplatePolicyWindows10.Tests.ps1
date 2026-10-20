@@ -295,6 +295,96 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'The IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 Exists and Values are in the desired state in a different order' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description                      = 'FakeStringValue'
+                    DisplayName                      = 'FakeStringValue'
+                    Id                               = 'FakeStringValue'
+                    PolicyConfigurationIngestionType = 'unknown'
+                    Ensure                           = 'Present'
+                    Credential                       = $Credential
+                    Assignments                      = @(
+                        ([MSFT_DeviceManagementConfigurationPolicyAssignments] @{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        })
+                    )
+                    DefinitionValues                 = @(
+                        ([MSFT_IntuneGroupPolicyDefinitionValue] @{
+                            ConfigurationType  = 'policy'
+                            PresentationValues = @()
+                            Definition         = ([MSFT_IntuneGroupPolicyDefinitionValueDefinition] @{
+                                    Id = 'fakeDefinitionId2'
+                                })
+                            Enabled            = $True
+                        })
+                        ([MSFT_IntuneGroupPolicyDefinitionValue] @{
+                            ConfigurationType  = 'policy'
+                            PresentationValues = @()
+                            Definition         = ([MSFT_IntuneGroupPolicyDefinitionValueDefinition] @{
+                                    Id = 'fakeDefinitionId3'
+                                })
+                            Enabled            = $True
+                        })
+                        ([MSFT_IntuneGroupPolicyDefinitionValue] @{
+                            ConfigurationType  = 'policy'
+                            PresentationValues = @(
+                                ([MSFT_IntuneGroupPolicyDefinitionValuePresentationValue] @{
+                                    presentationDefinitionId = 'fakePresentationDefinitionId'
+                                    KeyValuePairValues       = @(
+                                        ([MSFT_IntuneGroupPolicyDefinitionValuePresentationValueKeyValuePair] @{
+                                            Name = 'hosted_app'
+                                        })
+                                    )
+                                    odataType                = '#microsoft.graph.groupPolicyPresentationValueList'
+                                })
+                            )
+                            Definition         = ([MSFT_IntuneGroupPolicyDefinitionValueDefinition] @{
+                                    Id = '37ab8b81-47d7-46d8-8b99-81d9cecdcce9'
+                                })
+                            Enabled            = $True
+                        })
+                    )
+                }
+
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValue -MockWith {
+                    return @(
+                        @{
+                            ConfigurationType = 'policy'
+                            Enabled           = $true
+                            Id                = 'fakeDefinitionValueId'
+                        }
+                        @{
+                            ConfigurationType = 'policy'
+                            Enabled           = $true
+                            Id                = 'fakeDefinitionValueId2'
+                        }
+                        @{
+                            ConfigurationType = 'policy'
+                            Enabled           = $true
+                            Id                = 'fakeDefinitionValueId3'
+                        }
+                    )
+                }
+
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition -ParameterFilter { $GroupPolicyDefinitionValueId -ne 'fakeDefinitionValueId' } -MockWith {
+                    return @{
+                        Id         = $GroupPolicyDefinitionValueId -replace 'fakeDefinitionValueId', 'fakeDefinitionId'
+                        PolicyType = 'admxBacked'
+                        ClassType  = 'machine'
+                    }
+                }
+
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue -ParameterFilter { $GroupPolicyDefinitionValueId -ne 'fakeDefinitionValueId' } -MockWith {
+                }
+            }
+
+            It 'Should return true from the Test method' {
+                (New-M365DSCResourceInstance -ResourceName 'IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10' -Property $testParams).Test() | Should -Be $true
+            }
+        }
+
         Context -Name 'The IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
