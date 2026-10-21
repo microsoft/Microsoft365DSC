@@ -509,7 +509,6 @@ class IntuneDeviceEnrollmentStatusPageWindows10 : M365DSCResourceBase
         return ''
     }
 
-    # TODO: Only do this if not doing a Report. It requires a connection to the Graph workload, which is not available when doing a report.
     [System.Collections.Hashtable] GetCompareParameters()
     {
         return @{
@@ -517,7 +516,9 @@ class IntuneDeviceEnrollmentStatusPageWindows10 : M365DSCResourceBase
             # Compare on app display names: resolve desired ids to names, then drop the id lists.
             PostProcessing = {
                 param($DesiredValues, $CurrentValues, $ValuesToCheck, $PostProcessingArgs)
-                if ($DesiredValues.ContainsKey('SelectedMobileAppIds') -and -not $DesiredValues.ContainsKey('SelectedMobileAppNames'))
+                # Resolving ids needs a Graph connection, which a report does not have.
+                if ($DesiredValues.ContainsKey('SelectedMobileAppIds') -and -not $DesiredValues.ContainsKey('SelectedMobileAppNames') -and
+                    -not [M365DSCResourceBase]::IsReportContext($PostProcessingArgs))
                 {
                     $resolvedNames = @()
                     foreach ($appId in $DesiredValues.SelectedMobileAppIds)

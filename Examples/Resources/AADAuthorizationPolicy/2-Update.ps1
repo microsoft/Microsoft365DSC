@@ -35,9 +35,10 @@ Configuration Example
             AllowedToUseSspr                                  = $true
             BlockMsolPowerShell                               = $false
             DefaultUserRolePermissions                        = MSFT_DefaultUserRolePermissions{
-                AllowedToCreateApps           = $true
-                AllowedToCreateSecurityGroups = $true
-                AllowedToReadOtherUsers       = $true
+                AllowedToCreateAgentIdentityBlueprints = $false
+                AllowedToCreateApps                    = $true
+                AllowedToCreateSecurityGroups          = $true
+                AllowedToReadOtherUsers                = $true
             }
             EnabledPreviewFeatures                            = @('assignGroupsToRoles')
             GuestUserRole                                     = 'Guest'

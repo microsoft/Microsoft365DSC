@@ -494,8 +494,14 @@ class AADPermissionGrantPolicy : M365DSCResourceBase
         # values. Condition set ids are assigned by the service and Set matches sets by content,
         # so they are left out of the comparison.
         return @{
-            PostProcessing = {
+            CompareRules       = @(
+                @{ Type = 'IgnoreNested'; Paths = @('Includes[].Id', 'Excludes[].Id') }
+            )
+            PostProcessing     = {
                 param($DesiredValues, $CurrentValues, $ValuesToCheck, $PostProcessingArgs)
+
+                # Resolving permission ids to names needs a Graph connection, which a report does not have.
+                $resolveNames = -not [M365DSCResourceBase]::IsReportContext($PostProcessingArgs)
 
                 foreach ($propertyName in @('Includes', 'Excludes'))
                 {
@@ -504,7 +510,7 @@ class AADPermissionGrantPolicy : M365DSCResourceBase
                         $normalizedSets = @()
                         foreach ($conditionSet in $ValuesToCheck[$propertyName])
                         {
-                            $normalizedSet = [AADPermissionGrantPolicy]::GetPermissionGrantConditionSetAsHashtable($PostProcessingArgs[0], $conditionSet)
+                            $normalizedSet = [AADPermissionGrantPolicy]::GetPermissionGrantConditionSetAsHashtable($PostProcessingArgs[0], $conditionSet, $resolveNames)
                             $normalizedSet.Remove('Id')
                             $normalizedSets += $normalizedSet
                         }
@@ -517,7 +523,7 @@ class AADPermissionGrantPolicy : M365DSCResourceBase
                         $currentSets = @()
                         foreach ($conditionSet in $CurrentValues[$propertyName])
                         {
-                            $currentSet = [AADPermissionGrantPolicy]::GetPermissionGrantConditionSetAsHashtable($PostProcessingArgs[0], $conditionSet)
+                            $currentSet = [AADPermissionGrantPolicy]::GetPermissionGrantConditionSetAsHashtable($PostProcessingArgs[0], $conditionSet, $resolveNames)
                             $currentSet.Remove('Id')
                             $currentSets += $currentSet
                         }
@@ -706,6 +712,11 @@ class AADPermissionGrantPolicy : M365DSCResourceBase
 
     hidden static [System.Collections.Hashtable] GetPermissionGrantConditionSetAsHashtable([System.Collections.Hashtable] $Cache, [System.Object] $ConditionSet)
     {
+        return [AADPermissionGrantPolicy]::GetPermissionGrantConditionSetAsHashtable($Cache, $ConditionSet, $true)
+    }
+
+    hidden static [System.Collections.Hashtable] GetPermissionGrantConditionSetAsHashtable([System.Collections.Hashtable] $Cache, [System.Object] $ConditionSet, [System.Boolean] $ResolveNames)
+    {
         $result = @{
             Id = $ConditionSet.Id
         }
@@ -755,7 +766,14 @@ class AADPermissionGrantPolicy : M365DSCResourceBase
             $resolvedPermissions = @()
             foreach ($permission in $ConditionSet.Permissions)
             {
-                $resolvedPermissions += [AADPermissionGrantPolicy]::ConvertToPermissionName($Cache, $permission, $ConditionSet.ResourceApplication, $ConditionSet.PermissionType)
+                $resolvedPermissions += if ($ResolveNames)
+                {
+                    [AADPermissionGrantPolicy]::ConvertToPermissionName($Cache, $permission, $ConditionSet.ResourceApplication, $ConditionSet.PermissionType)
+                }
+                else
+                {
+                    $permission
+                }
             }
             $result.Add('Permissions', [string[]]$resolvedPermissions)
         }

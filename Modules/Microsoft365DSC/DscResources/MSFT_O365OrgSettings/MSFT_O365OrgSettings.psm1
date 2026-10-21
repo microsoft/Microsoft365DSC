@@ -199,19 +199,17 @@ class O365OrgSettings : M365DSCResourceBase
             {
                 $OfficeOnline3rdPtyStorageAppId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
                 $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnline3rdPtyStorageAppId'" -Property 'AccountEnabled' -ErrorAction SilentlyContinue
-                if ($null -eq $M365WebEnableUsersToOpenFilesFrom3PStorageValue)
-                {
-                    Write-Verbose -Message 'Registering the Office on the web Service Principal'
-                    New-MgServicePrincipal -AppId $OfficeOnline3rdPtyStorageAppId -ErrorAction Stop | Out-Null
-                    $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Invoke-M365DSCCommand -ScriptBlock {
-                        Get-MgServicePrincipal -Filter "appId eq '$OfficeOnline3rdPtyStorageAppId'" -Property 'AccountEnabled' -ErrorAction Stop
-                    } -RetryOnNotFoundError
-                }
-
                 if ($null -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue)
                 {
                     $results += @{
                         M365WebEnableUsersToOpenFilesFrom3PStorage = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
+                    }
+                }
+                else
+                {
+                    # Third-party storage is enabled by default.
+                    $results += @{
+                        M365WebEnableUsersToOpenFilesFrom3PStorage = $true
                     }
                 }
             }
@@ -272,21 +270,6 @@ class O365OrgSettings : M365DSCResourceBase
                         Write-Warning -Message "Exporting Viva Insights configuration requires either Exchange Administrator, Insights Administrator or Global Administrator."
                     }
                 }
-            }
-
-            $MRODeviceManagerService = 'ebe0c285-db95-403f-a1a3-a793bd6d7767'
-            try
-            {
-                $servicePrincipal = Get-MgServicePrincipal -Filter "appid eq '$($MRODeviceManagerService)'"
-                if ($null -eq $servicePrincipal)
-                {
-                    Write-Verbose -Message 'Registering the MRO Device Manager Service Principal'
-                    New-MgServicePrincipal -AppId $MRODeviceManagerService -ErrorAction Stop | Out-Null
-                }
-            }
-            catch
-            {
-                Write-Verbose -Message $_
             }
 
             # Reports Display Settings
@@ -399,14 +382,29 @@ class O365OrgSettings : M365DSCResourceBase
                     $this.GetBoundParameters().ContainsKey('ToDoIsExternalShareEnabled') -or `
                     $this.ExportedInstance)
             {
-                $ToDoSettings = Invoke-M365DSCCommand -ScriptBlock { $this.GetOrgSettingsToDo() } -RetryOnNotFoundError
-                if ($null -ne $ToDoSettings)
+                try
                 {
-                    $results += @{
-                        ToDoIsPushNotificationEnabled = $ToDoSettings.IsPushNotificationEnabled
-                        ToDoIsExternalJoinEnabled     = $ToDoSettings.IsExternalJoinEnabled
-                        ToDoIsExternalShareEnabled    = $ToDoSettings.IsExternalShareEnabled
+                    $ToDoSettings = Invoke-M365DSCCommand -ScriptBlock { $this.GetOrgSettingsToDo() } -RetryOnNotFoundError
+                    if ($null -ne $ToDoSettings)
+                    {
+                        $results += @{
+                            ToDoIsPushNotificationEnabled = $ToDoSettings.IsPushNotificationEnabled
+                            ToDoIsExternalJoinEnabled     = $ToDoSettings.IsExternalJoinEnabled
+                            ToDoIsExternalShareEnabled    = $ToDoSettings.IsExternalShareEnabled
+                        }
                     }
+                }
+                catch
+                {
+                    if ($this.GetBoundParameters().ContainsKey('ToDoIsPushNotificationEnabled') -or `
+                            $this.GetBoundParameters().ContainsKey('ToDoIsExternalJoinEnabled') -or `
+                            $this.GetBoundParameters().ContainsKey('ToDoIsExternalShareEnabled'))
+                    {
+                        throw
+                    }
+
+                    # TODO: Check if the endpoint is still flaky at a later time
+                    Write-Warning -Message "Could not retrieve the Microsoft To Do settings. The ToDo properties are skipped. Error: $($_.Exception.Message)"
                 }
             }
 
@@ -437,12 +435,35 @@ class O365OrgSettings : M365DSCResourceBase
         $null = $this.Connect('MicrosoftGraph')
         $currentValues = $this.Get().ToHashtable()
 
+        $MRODeviceManagerService = 'ebe0c285-db95-403f-a1a3-a793bd6d7767'
+        try
+        {
+            $servicePrincipal = Get-MgServicePrincipal -Filter "appid eq '$($MRODeviceManagerService)'"
+            if ($null -eq $servicePrincipal)
+            {
+                Write-Verbose -Message 'Registering the MRO Device Manager Service Principal'
+                New-MgServicePrincipal -AppId $MRODeviceManagerService -ErrorAction Stop | Out-Null
+            }
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+
         if ($this.GetBoundParameters().ContainsKey('M365WebEnableUsersToOpenFilesFrom3PStorage') -and `
             ($this.M365WebEnableUsersToOpenFilesFrom3PStorage -ne $currentValues.M365WebEnableUsersToOpenFilesFrom3PStorage))
         {
             Write-Verbose -Message "Updating the Microsoft 365 On the Web setting to {$($this.M365WebEnableUsersToOpenFilesFrom3PStorage)}"
             $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
             $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
+            if ($null -eq $M365WebEnableUsersToOpenFilesFrom3PStorageValue)
+            {
+                Write-Verbose -Message 'Registering the Office on the web Service Principal'
+                New-MgServicePrincipal -AppId $OfficeOnlineId -ErrorAction Stop | Out-Null
+                $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Invoke-M365DSCCommand -ScriptBlock {
+                    Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id' -ErrorAction Stop
+                } -RetryOnNotFoundError
+            }
             Invoke-M365DSCCommand -ScriptBlock {
                 Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
                 -BodyParameter @{ accountEnabled = $this.M365WebEnableUsersToOpenFilesFrom3PStorage }

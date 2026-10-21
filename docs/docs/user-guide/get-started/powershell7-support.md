@@ -6,7 +6,7 @@ If you start a session with an older PowerShell version, or with Windows PowerSh
 
 ## Windows PowerShell and the Local Configuration Manager
 
-There is one scenario in which Windows PowerShell 5.1 is still involved: compiling a configuration into a MOF file and applying or testing it through the Local Configuration Manager, using `Start-DscConfiguration` and `Test-DscConfiguration`. The classic LCM only runs on Windows PowerShell.
+There is one scenario in which Windows PowerShell 5.1 is still involved: applying or testing a compiled configuration through the Local Configuration Manager, using `Start-DscConfiguration` and `Test-DscConfiguration`. The classic LCM only runs on Windows PowerShell.
 
 In that case, the resources do not execute on Windows PowerShell. Each resource method detects the edition it runs on and relays the call into a PowerShell 7 session on the same machine, then rebuilds the typed result from what comes back. PowerShell 7 therefore still has to be installed and reachable, even when the LCM drives the module.
 
@@ -18,7 +18,7 @@ Two things have to be in place for the relay to work:
 Everything else, including `Export-M365DSCConfiguration`, `Update-M365DSCDependencies`, `New-M365DSCDeltaReport` and `Assert-M365DSCBlueprint`, runs directly on PowerShell 7 and needs no Windows PowerShell at all.
 
 !!! note
-    If your configuration contains empty arrays, it still has to be compiled in Windows PowerShell 5.1. Otherwise, the affected properties might be omitted from the resulting MOF file. This is a limitation of the MOF compiler, not of Microsoft365DSC.
+    Compile your configuration with `Invoke-M365DSCConfigurationBuild -Path .\M365TenantConfig.ps1` from a PowerShell 7 console. It keeps properties whose value is an empty array in the resulting MOF file. Executing the configuration script directly in PowerShell 7 uses the `PSDesiredStateConfiguration` 2.x module, which omits these properties. In that case, compile the configuration in Windows PowerShell 5.1 instead.
 
 ## Installing the module and its dependencies
 
