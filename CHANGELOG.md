@@ -6,8 +6,15 @@
   * Added support for the `AllowedToCreateAgentIdentityBlueprints` property of
     `DefaultUserRolePermissions`.
     FIXES [#7541](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7541)
+* AADGroupEligibilityScheduleSettings
+  * Added support for the `id` property of approvers as user principal name or group display name.
+  * Fixed an issue where updating approvers failed.
 * AADPermissionGrantPolicy
   * Updated the comparison to only resolve permission names if not in a report.
+* AADRoleManagementPolicyRule
+  * Added support for the `id` property of approvers as user principal name or group display name.
+    FIXES [#7520](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7520)
+  * Fixed an issue where updating approvers failed.
 * EXOHostedContentFilterPolicy
   * Fixed a comparison issue where the value was not correctly updated.
 * IntuneAntivirusPolicyWindows10SettingCatalog
@@ -23,6 +30,14 @@
     retrieved.
   * Fixed an issue where retrieving the settings registered service principals.
     FIXES [#7546](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7546)
+* SCComplianceTag
+  * Added support for the `MultiStageReviewProperty` property.
+    FIXES [#7550](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7550)
+* SCRetentionComplianceRule
+  * Added support for the `PublishComplianceTag` property.
+    FIXES [#7552](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7552)
+  * Fixed an issue where updating a rule with an empty `ContentMatchQuery` failed.
+    FIXES [#7551](https://github.com/Microsoft365DSC/Microsoft365DSC/issues/7551)
 * MISC
   * Added declarative compare rules, applied the same way by every comparer.
   * Moved 76 resource comparisons from scriptblocks to compare rules.

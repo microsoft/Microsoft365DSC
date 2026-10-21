@@ -191,6 +191,7 @@ class AADRoleManagementPolicyRule : M365DSCResourceBase
                     {
                         $primaryApprover = @{
                             odataType = $approver.'@odata.type'
+                            id        = $this.GetApproverName($approver)
                         }
                         $primaryApprovers += $primaryApprover
                     }
@@ -200,6 +201,7 @@ class AADRoleManagementPolicyRule : M365DSCResourceBase
                     {
                         $escalationApprover = @{
                             odataType = $approver.'@odata.type'
+                            id        = $this.GetApproverName($approver)
                         }
                         $escalationApprovers += $escalationApprover
                     }
@@ -310,7 +312,8 @@ class AADRoleManagementPolicyRule : M365DSCResourceBase
 
         if ($this.ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyApprovalRule')
         {
-            $approvalRuleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $this.ApprovalRule
+            $approvalRuleHashmap = Rename-M365DSCCimInstanceParameter -Properties (Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $this.ApprovalRule)
+            $this.SetApproverIds($approvalRuleHashmap)
             $body += $approvalRuleHashmap
         }
 
@@ -330,6 +333,58 @@ class AADRoleManagementPolicyRule : M365DSCResourceBase
     [bool] Test()
     {
         return ([M365DSCResourceBase] $this).Test()
+    }
+
+    hidden [System.String] GetApproverName([System.Object] $Approver)
+    {
+        $name = $null
+        if ($Approver.'@odata.type' -eq '#microsoft.graph.singleUser')
+        {
+            $name = Get-M365DSCUserPrincipalNameById -UserId $Approver.id
+        }
+        elseif ($Approver.'@odata.type' -eq '#microsoft.graph.groupMembers')
+        {
+            $name = Get-M365DSCGroupDisplayNameById -GroupId $Approver.id
+        }
+
+        if ([System.String]::IsNullOrEmpty($name))
+        {
+            return $Approver.id
+        }
+
+        return $name
+    }
+
+    hidden [void] SetApproverIds([System.Collections.Hashtable] $ApprovalRule)
+    {
+        foreach ($stage in $ApprovalRule.setting.approvalStages)
+        {
+            foreach ($approver in (@($stage.primaryApprovers) + @($stage.escalationApprovers)))
+            {
+                $guid = [System.Guid]::Empty
+                if ($null -eq $approver -or [System.String]::IsNullOrEmpty($approver.id) -or [System.Guid]::TryParse($approver.id, [ref]$guid))
+                {
+                    continue
+                }
+
+                [array]$ids = @()
+                if ($approver.'@odata.type' -eq '#microsoft.graph.singleUser')
+                {
+                    [array]$ids = Get-M365DSCUserIdByPrincipalName -UserPrincipalName $approver.id
+                }
+                elseif ($approver.'@odata.type' -eq '#microsoft.graph.groupMembers')
+                {
+                    [array]$ids = Get-M365DSCGroupIdByDisplayName -GroupDisplayName ($approver.id -replace "'", "''")
+                }
+
+                if ($ids.Count -ne 1 -or [System.String]::IsNullOrEmpty($ids[0]))
+                {
+                    throw "Could not resolve the approver {$($approver.id)} of type {$($approver.'@odata.type')} to a single object id."
+                }
+
+                $approver.id = $ids[0]
+            }
+        }
     }
 
     [string] Export()
@@ -710,4 +765,8 @@ class MSFT_AADRoleManagementPolicySubjectSet
     [DscProperty(Mandatory)]
     [System.ComponentModel.Description('The type of the subject set.')]
     [System.String] $odataType
+
+    [DscProperty()]
+    [System.ComponentModel.Description('The user principal name of the user or the display name of the group. An object identifier is accepted as well.')]
+    [System.String] $id
 }

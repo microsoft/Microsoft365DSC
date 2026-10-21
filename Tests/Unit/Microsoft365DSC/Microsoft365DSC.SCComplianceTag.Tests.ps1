@@ -148,6 +148,56 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'The disposition review stages are not in the desired state' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name                     = 'TestRule'
+                    RetentionAction          = 'KeepAndDelete'
+                    RetentionDuration        = '1025'
+                    RetentionType            = 'ModificationAgeInDays'
+                    MultiStageReviewProperty = @(
+                        ([MSFT_SCMultiStageReviewSetting] @{
+                            StageName = 'Stage1'
+                            Reviewers = @('john.smith@contoso.com')
+                        })
+                        ([MSFT_SCMultiStageReviewSetting] @{
+                            StageName = 'Stage2'
+                            Reviewers = @('bob.houle@contoso.com')
+                        })
+                    )
+                    Credential               = $Credential
+                    Ensure                   = 'Present'
+                }
+
+                Mock -CommandName Get-ComplianceTag -MockWith {
+                    return @{
+                        Name                       = 'TestRule'
+                        RetentionAction            = 'KeepAndDelete'
+                        RetentionDuration          = '1025'
+                        RetentionType              = 'ModificationAgeInDays'
+                        MultiStageReviewerMetadata = '{"MultiStageReviewSettings":[{"StageId":"11111111-1111-1111-1111-111111111111","StageName":"Stage1","Reviewers":["john.smith@contoso.com"]}]}'
+                    }
+                }
+            }
+
+            It 'Should return the stages from the Get method' {
+                $result = (New-M365DSCResourceInstance -ResourceName 'SCComplianceTag' -Property $testParams).Get().ToHashtable()
+                $result.MultiStageReviewProperty.Count | Should -Be 1
+                $result.MultiStageReviewProperty[0].StageName | Should -Be 'Stage1'
+            }
+
+            It 'Should return false from the Test method' {
+                (New-M365DSCResourceInstance -ResourceName 'SCComplianceTag' -Property $testParams).Test() | Should -Be $false
+            }
+
+            It 'Should keep the existing stage id from the Set method' {
+                (New-M365DSCResourceInstance -ResourceName 'SCComplianceTag' -Property $testParams).Set()
+                Should -Invoke -CommandName Set-ComplianceTag -Exactly 1 -ParameterFilter {
+                    $MultiStageReviewProperty -like '*"StageId":"11111111-1111-1111-1111-111111111111","StageName":"Stage1"*"StageName":"Stage2"*'
+                }
+            }
+        }
+
         Context -Name 'Rule should not exist' -Fixture {
             BeforeAll {
                 $testParams = @{
