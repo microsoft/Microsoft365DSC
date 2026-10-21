@@ -1,6 +1,6 @@
 ﻿# Change log for Microsoft365DSC
 
-# UNRELEASED
+# 2.26.1021.1
 
 * AADAuthorizationPolicy
   * Added support for the `AllowedToCreateAgentIdentityBlueprints` property of
