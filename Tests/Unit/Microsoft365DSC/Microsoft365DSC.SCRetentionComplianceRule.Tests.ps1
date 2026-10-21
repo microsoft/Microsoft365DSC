@@ -128,6 +128,52 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'Rule exists, is not in the desired state and has an empty content query' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Ensure                    = 'Present'
+                    Credential                = $Credential
+                    Comment                   = 'This is a Demo Rule'
+                    ContentMatchQuery         = ''
+                    RetentionComplianceAction = 'Keep'
+                    RetentionDuration         = '365'
+                    Name                      = 'TestRule'
+                    Policy                    = 'TestPolicy'
+                }
+
+                Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+                    return @{
+                        Name = 'TestPolicy'
+                    }
+                }
+
+                Mock -CommandName Get-RetentionComplianceRule -MockWith {
+                    return @{
+                        Name                      = 'TestRule'
+                        Policy                    = 'TestPolicy'
+                        Comment                   = 'This is a Demo Rule'
+                        ContentMatchQuery         = ''
+                        RetentionComplianceAction = 'Keep'
+                        RetentionDuration         = '730'
+                    }
+                }
+
+                Mock -CommandName Set-RetentionComplianceRule -MockWith {
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                (New-M365DSCResourceInstance -ResourceName 'SCRetentionComplianceRule' -Property $testParams).Test() | Should -Be $false
+            }
+
+            It 'Should update the rule without the content query from the Set method' {
+                (New-M365DSCResourceInstance -ResourceName 'SCRetentionComplianceRule' -Property $testParams).Set()
+                Should -Invoke -CommandName 'Set-RetentionComplianceRule' -Exactly 1 -ParameterFilter {
+                    $RetentionDuration -eq '365' -and -not $PSBoundParameters.ContainsKey('ContentMatchQuery')
+                }
+            }
+        }
+
         Context -Name 'Rule should not exist' -Fixture {
             BeforeAll {
                 $testParams = @{

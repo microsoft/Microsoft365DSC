@@ -267,6 +267,10 @@ class SCRetentionComplianceRule : M365DSCResourceBase
             $CreationParams.Remove('Name')
             $CreationParams.Add('Identity', $this.Name)
             $CreationParams.Remove('Policy')
+            if ([System.String]::IsNullOrEmpty($this.ContentMatchQuery))
+            {
+                $CreationParams.Remove('ContentMatchQuery') | Out-Null
+            }
 
             Write-Verbose -Message 'Checking to see if the policy is a Teams based one.'
             $RuleObject = Get-RetentionComplianceRule -Identity $this.Name `

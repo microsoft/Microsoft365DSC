@@ -40,6 +40,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -MockWith {
             }
 
+            Mock -CommandName Get-M365DSCUserPrincipalNameById -MockWith {
+                return 'FakeStringValue'
+            }
+
+            Mock -CommandName Get-M365DSCUserIdByPrincipalName -MockWith {
+                return '00000000-0000-0000-0000-000000000001'
+            }
+
             Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                 return @{
                     Id = "FakeStringValue"
@@ -63,7 +71,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 approvalStageTimeOutInDays = 1
                                 escalationApprovers = @(
                                     @{
-                                        '@odata.type' = "FakeStringValue"
+                                        '@odata.type' = "#microsoft.graph.singleUser"
                                         id = "FakeStringValue"
                                     }
                                 )
@@ -93,7 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         approvalStageTimeOutInDays      = 1
                                         escalationApprovers             = @(
                                             @{
-                                                '@odata.type' = "FakeStringValue"
+                                                '@odata.type' = "#microsoft.graph.singleUser"
                                                 id = "FakeStringValue"
                                             }
                                         )
@@ -145,7 +153,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     isEscalationEnabled = $true
                                     escalationApprovers = @(
                                         ([MSFT_AADRoleManagementPolicySubjectSet] @{
-                                            odataType = "FakeStringValue"
+                                            odataType = "#microsoft.graph.singleUser"
                                             id = "FakeStringValue"
                                         })
                                     )
@@ -159,6 +167,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return true from the Test method' {
                 (New-M365DSCResourceInstance -ResourceName 'AADRoleManagementPolicyRule' -Property $testParams).Test() | Should -Be $true
+                Should -Invoke -CommandName Get-M365DSCUserPrincipalNameById
             }
         }
 
@@ -183,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     isEscalationEnabled = $true
                                     escalationApprovers = @(
                                         ([MSFT_AADRoleManagementPolicySubjectSet] @{
-                                            odataType = "FakeStringValue"
+                                            odataType = "#microsoft.graph.singleUser"
                                             id = "FakeStringValue"
                                         })
                                     )
@@ -202,6 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should call the Set method' {
                 (New-M365DSCResourceInstance -ResourceName 'AADRoleManagementPolicyRule' -Property $testParams).Set()
                 Should -Invoke -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -Exactly 1
+                Should -Invoke -CommandName Get-M365DSCUserIdByPrincipalName -Exactly 1
             }
         }
 
