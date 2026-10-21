@@ -370,14 +370,11 @@ class SCRetentionComplianceRule : M365DSCResourceBase
 
     [System.Collections.Hashtable] GetCompareParameters()
     {
-        if (-not [System.String]::IsNullOrEmpty($this.PublishComplianceTag))
-        {
-            return @{
-                ExcludedProperties = @('Name')
-            }
+        return @{
+            CompareRules = @(
+                @{ Type = 'RemoveWhen'; Properties = @('Name'); When = @{ Property = 'PublishComplianceTag'; NotNullOrEmpty = $true } }
+            )
         }
-
-        return @{}
     }
 
     [string] Export()
