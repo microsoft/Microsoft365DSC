@@ -210,7 +210,7 @@ class AADGroupEligibilityScheduleSettings : M365DSCResourceBase
             }
             '#microsoft.graph.unifiedRoleManagementPolicyApprovalRule'
             {
-                $ruleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $this.approvalRule
+                $ruleHashmap = Rename-M365DSCCimInstanceParameter -Properties (Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $this.approvalRule)
             }
             '#microsoft.graph.unifiedRoleManagementPolicyAuthenticationContextRule'
             {
@@ -541,6 +541,8 @@ class AADGroupEligibilityScheduleSettings : M365DSCResourceBase
                 {
                     $primaryApprover = @{
                         odataType = $approver.'@odata.type'
+                        id        = $approver.id
+                        isBackup  = $approver.isBackup
                     }
                     $primaryApprovers += $primaryApprover
                 }
@@ -550,6 +552,8 @@ class AADGroupEligibilityScheduleSettings : M365DSCResourceBase
                 {
                     $escalationApprover = @{
                         odataType = $approver.'@odata.type'
+                        id        = $approver.id
+                        isBackup  = $approver.isBackup
                     }
                     $escalationApprovers += $escalationApprover
                 }
@@ -723,4 +727,12 @@ class MSFT_AADRoleManagementPolicySubjectSet
     [DscProperty(Mandatory)]
     [System.ComponentModel.Description('The type of the subject set.')]
     [System.String] $odataType
+
+    [DscProperty()]
+    [System.ComponentModel.Description('The object identifier of the user or group.')]
+    [System.String] $id
+
+    [DscProperty()]
+    [System.ComponentModel.Description('Indicates whether the approver is a backup approver.')]
+    [System.Nullable[System.Boolean]] $isBackup
 }

@@ -191,6 +191,8 @@ class AADRoleManagementPolicyRule : M365DSCResourceBase
                     {
                         $primaryApprover = @{
                             odataType = $approver.'@odata.type'
+                            id        = $approver.id
+                            isBackup  = $approver.isBackup
                         }
                         $primaryApprovers += $primaryApprover
                     }
@@ -200,6 +202,8 @@ class AADRoleManagementPolicyRule : M365DSCResourceBase
                     {
                         $escalationApprover = @{
                             odataType = $approver.'@odata.type'
+                            id        = $approver.id
+                            isBackup  = $approver.isBackup
                         }
                         $escalationApprovers += $escalationApprover
                     }
@@ -310,7 +314,7 @@ class AADRoleManagementPolicyRule : M365DSCResourceBase
 
         if ($this.ruleType -eq '#microsoft.graph.unifiedRoleManagementPolicyApprovalRule')
         {
-            $approvalRuleHashmap = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $this.ApprovalRule
+            $approvalRuleHashmap = Rename-M365DSCCimInstanceParameter -Properties (Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $this.ApprovalRule)
             $body += $approvalRuleHashmap
         }
 
@@ -710,4 +714,12 @@ class MSFT_AADRoleManagementPolicySubjectSet
     [DscProperty(Mandatory)]
     [System.ComponentModel.Description('The type of the subject set.')]
     [System.String] $odataType
+
+    [DscProperty()]
+    [System.ComponentModel.Description('The object identifier of the user or group.')]
+    [System.String] $id
+
+    [DscProperty()]
+    [System.ComponentModel.Description('Indicates whether the approver is a backup approver.')]
+    [System.Nullable[System.Boolean]] $isBackup
 }
