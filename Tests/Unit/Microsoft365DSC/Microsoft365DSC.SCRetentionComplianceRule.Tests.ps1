@@ -200,6 +200,80 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "The rule publishes a retention label and doesn't exist" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Ensure               = 'Present'
+                    Credential           = $Credential
+                    Name                 = 'ctptr-00000000-0000-0000-0000-000000000000'
+                    Policy               = 'TestPolicy'
+                    PublishComplianceTag = 'TestLabel'
+                }
+
+                Mock -CommandName Get-RetentionComplianceRule -MockWith {
+                    return $null
+                }
+
+                Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+                    return @{
+                        Name = 'TestPolicy'
+                    }
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                (New-M365DSCResourceInstance -ResourceName 'SCRetentionComplianceRule' -Property $testParams).Test() | Should -Be $false
+            }
+
+            It 'Should create the rule without a name from the Set method' {
+                (New-M365DSCResourceInstance -ResourceName 'SCRetentionComplianceRule' -Property $testParams).Set()
+                Should -Invoke -CommandName 'New-RetentionComplianceRule' -Exactly 1 -ParameterFilter {
+                    $PublishComplianceTag -eq 'TestLabel' -and $Policy -eq 'TestPolicy' -and [System.String]::IsNullOrEmpty($Name)
+                }
+            }
+        }
+
+        Context -Name 'The rule publishes a retention label under a different name' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Ensure               = 'Present'
+                    Credential           = $Credential
+                    Name                 = 'ctptr-00000000-0000-0000-0000-000000000000'
+                    Policy               = 'TestPolicy'
+                    PublishComplianceTag = 'TestLabel'
+                }
+
+                Mock -CommandName Get-RetentionComplianceRule -ParameterFilter { -not [System.String]::IsNullOrEmpty($Identity) } -MockWith {
+                    return $null
+                }
+
+                Mock -CommandName Get-RetentionComplianceRule -ParameterFilter { $Policy -eq 'TestPolicy' } -MockWith {
+                    return @{
+                        Name                      = 'ctptr-11111111-1111-1111-1111-111111111111'
+                        Policy                    = 'TestPolicy'
+                        PublishComplianceTag      = '22222222-2222-2222-2222-222222222222,TestLabel'
+                        RetentionComplianceAction = 'KeepAndDelete'
+                    }
+                }
+
+                Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+                    return @{
+                        Name = 'TestPolicy'
+                    }
+                }
+            }
+
+            It 'Should return Present with the label name from the Get method' {
+                $result = (New-M365DSCResourceInstance -ResourceName 'SCRetentionComplianceRule' -Property $testParams).Get().ToHashtable()
+                $result.Ensure | Should -Be 'Present'
+                $result.PublishComplianceTag | Should -Be 'TestLabel'
+            }
+
+            It 'Should return true from the Test method' {
+                (New-M365DSCResourceInstance -ResourceName 'SCRetentionComplianceRule' -Property $testParams).Test() | Should -Be $true
+            }
+        }
+
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true

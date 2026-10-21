@@ -48,6 +48,10 @@ class SCRetentionComplianceRule : M365DSCResourceBase
     [System.String] $RetentionDurationDisplayHint
 
     [DscProperty()]
+    [System.ComponentModel.Description('The PublishComplianceTag parameter specifies the name of the retention label that the rule publishes. The service generates the name of such a rule.')]
+    [System.String] $PublishComplianceTag
+
+    [DscProperty()]
     [System.ComponentModel.Description('Credentials of the Exchange Global Admin')]
     [System.Management.Automation.PSCredential] $Credential
 
@@ -105,6 +109,13 @@ class SCRetentionComplianceRule : M365DSCResourceBase
 
                 $RuleObject = Invoke-M365DSCCommand -ScriptBlock { Get-RetentionComplianceRule -Identity $this.Name -ErrorAction Stop } -SuppressNotFoundError
 
+                if (($null -eq $RuleObject -or $RuleObject.Mode -eq 'PendingDeletion') -and -not [System.String]::IsNullOrEmpty($this.PublishComplianceTag))
+                {
+                    $RuleObject = Invoke-M365DSCCommand -ScriptBlock { Get-RetentionComplianceRule -Policy $this.Policy -ErrorAction Stop } -SuppressNotFoundError |
+                        Where-Object -FilterScript { $_.Mode -ne 'PendingDeletion' -and ($_.PublishComplianceTag -split ',', 2)[-1] -eq $this.PublishComplianceTag } |
+                            Select-Object -First 1
+                }
+
                 if ($null -eq $RuleObject -or $RuleObject.Mode -eq 'PendingDeletion')
                 {
                     Write-Verbose -Message "RetentionComplianceRule $($this.Name) does not exist."
@@ -118,6 +129,11 @@ class SCRetentionComplianceRule : M365DSCResourceBase
 
             Write-Verbose "Found existing RetentionComplianceRule $($this.Name)"
             $AssociatedPolicy = Invoke-M365DSCCommand -ScriptBlock { Get-RetentionCompliancePolicy -Identity $RuleObject.Policy -ErrorAction Stop }
+            $PublishComplianceTagValue = $null
+            if (-not [System.String]::IsNullOrEmpty($RuleObject.PublishComplianceTag))
+            {
+                $PublishComplianceTagValue = ($RuleObject.PublishComplianceTag -split ',', 2)[-1]
+            }
             $RetentionComplianceActionValue = $null
             if (-not [System.String]::IsNullOrEmpty($ruleObject.RetentionComplianceAction))
             {
@@ -131,6 +147,7 @@ class SCRetentionComplianceRule : M365DSCResourceBase
                 RetentionComplianceAction    = $RetentionComplianceActionValue
                 RetentionDurationDisplayHint = $RuleObject.RetentionDurationDisplayHint
                 ExpirationDateOption         = $RuleObject.ExpirationDateOption
+                PublishComplianceTag         = $PublishComplianceTagValue
                 Ensure                       = 'Present'
                 Credential                   = $this.Credential
                 ApplicationId                = $this.ApplicationId
@@ -181,9 +198,16 @@ class SCRetentionComplianceRule : M365DSCResourceBase
             Write-Verbose -Message 'Checking to see if the policy is a Teams based one.'
             $RuleObject = Get-RetentionComplianceRule -Identity $this.Name `
                 -ErrorAction SilentlyContinue
-            $AssociatedPolicy = Get-RetentionCompliancePolicy $this.Policy
+            $AssociatedPolicy = Get-RetentionCompliancePolicy -Identity $this.Policy -ErrorAction Stop
 
-            if ($AssociatedPolicy.TeamsPolicy)
+            if (-not [System.String]::IsNullOrEmpty($this.PublishComplianceTag))
+            {
+                $CreationParams = @{
+                    Policy               = $this.Policy
+                    PublishComplianceTag = $this.PublishComplianceTag
+                }
+            }
+            elseif ($AssociatedPolicy.TeamsPolicy)
             {
                 Write-Verbose -Message 'The current policy is a Teams based one, removing invalid parameters for Creation.'
                 if ($CreationParams.ContainsKey('ApplyComplianceTag'))
@@ -233,6 +257,12 @@ class SCRetentionComplianceRule : M365DSCResourceBase
         }
         elseif ($this.Ensure -eq 'Present' -and $CurrentRule.Ensure -eq 'Present')
         {
+            if (-not [System.String]::IsNullOrEmpty($this.PublishComplianceTag))
+            {
+                Write-Verbose -Message "The rule publishes the retention label {$($this.PublishComplianceTag)} and has no settings to update."
+                return
+            }
+
             $CreationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $this.GetBoundParameters()
             $CreationParams.Remove('Name')
             $CreationParams.Add('Identity', $this.Name)
@@ -313,7 +343,7 @@ class SCRetentionComplianceRule : M365DSCResourceBase
             # If the Rule exists and it shouldn't, simply remove it;
             try
             {
-                Remove-RetentionComplianceRule -Identity $this.Name -Confirm:$false -ErrorAction Stop
+                Remove-RetentionComplianceRule -Identity $CurrentRule.Name -Confirm:$false -ErrorAction Stop
             }
             catch
             {
@@ -325,13 +355,25 @@ class SCRetentionComplianceRule : M365DSCResourceBase
                 Write-Warning -Message "The removal succeeded, but the policy failed to be deployed. The service retries the deployment later. $($_.Exception.Message)"
             }
 
-            $this.CompleteDeletion($this.Name)
+            $this.CompleteDeletion($CurrentRule.Name)
         }
     }
 
     [bool] Test()
     {
         return ([M365DSCResourceBase] $this).Test()
+    }
+
+    [System.Collections.Hashtable] GetCompareParameters()
+    {
+        if (-not [System.String]::IsNullOrEmpty($this.PublishComplianceTag))
+        {
+            return @{
+                ExcludedProperties = @('Name')
+            }
+        }
+
+        return @{}
     }
 
     [string] Export()
@@ -383,6 +425,17 @@ class SCRetentionComplianceRule : M365DSCResourceBase
                     if ([System.String]::IsNullOrEmpty($Results.ExpirationDateOption))
                     {
                         $Results.Remove('ExpirationDateOption') | Out-Null
+                    }
+                    if ([System.String]::IsNullOrEmpty($Results.PublishComplianceTag))
+                    {
+                        $Results.Remove('PublishComplianceTag') | Out-Null
+                    }
+                    else
+                    {
+                        foreach ($property in @('Comment', 'ContentMatchQuery', 'ExcludedItemClasses', 'RetentionComplianceAction', 'RetentionDuration', 'RetentionDurationDisplayHint'))
+                        {
+                            $Results.Remove($property) | Out-Null
+                        }
                     }
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $this.GetResourceName() `
                         -ConnectionMode $ConnectionMode `
