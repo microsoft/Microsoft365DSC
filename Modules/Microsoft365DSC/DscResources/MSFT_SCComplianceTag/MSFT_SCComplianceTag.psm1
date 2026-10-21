@@ -41,6 +41,10 @@ class SCComplianceTag : M365DSCResourceBase
     [System.String[]] $ReviewerEmail
 
     [DscProperty()]
+    [System.ComponentModel.Description('The MultiStageReviewProperty parameter specifies the stages of the disposition review and their reviewers.')]
+    [MSFT_SCMultiStageReviewSetting[]] $MultiStageReviewProperty
+
+    [DscProperty()]
     [System.ComponentModel.Description('The RetentionDuration parameter specifies the hold duration for the retention rule. Valid values are: An integer - The hold duration in days, Unlimited - The content is held indefinitely.')]
     [System.String] $RetentionDuration
 
@@ -163,6 +167,19 @@ class SCComplianceTag : M365DSCResourceBase
                 $result.Add('FilePlanProperty', $ConvertedFilePlanProperty)
             }
 
+            if (-not [System.String]::IsNullOrEmpty($tagObject.MultiStageReviewerMetadata))
+            {
+                $stages = @()
+                foreach ($stage in (ConvertFrom-Json -InputObject $tagObject.MultiStageReviewerMetadata).MultiStageReviewSettings)
+                {
+                    $stages += @{
+                        StageName = $stage.StageName
+                        Reviewers = [System.String[]]$stage.Reviewers
+                    }
+                }
+                $result.Add('MultiStageReviewProperty', $stages)
+            }
+
             return $this.AsResult($result)
         }
         catch
@@ -199,6 +216,11 @@ class SCComplianceTag : M365DSCResourceBase
                 Write-Verbose -Message 'Converting FilePlan to JSON'
                 $FilePlanPropertyJSON = ConvertTo-Json ($this.GetFilePlanPropertyObject($this.FilePlanProperty))
                 $CreationParams.FilePlanProperty = $FilePlanPropertyJSON
+            }
+
+            if ($this.MultiStageReviewProperty)
+            {
+                $CreationParams.MultiStageReviewProperty = $this.GetMultiStageReviewPropertyJson($this.MultiStageReviewProperty, @())
             }
             Write-Verbose "Creating new Compliance Tag $($this.Name) calling the New-ComplianceTag cmdlet."
             New-ComplianceTag @CreationParams
@@ -249,6 +271,26 @@ class SCComplianceTag : M365DSCResourceBase
                 Write-Verbose -Message 'Converting FilePlan properties to JSON'
                 $FilePlanPropertyJSON = ConvertTo-Json ($this.GetFilePlanPropertyObject($this.FilePlanProperty))
                 $SetParams['FilePlanProperty'] = $FilePlanPropertyJSON
+            }
+
+            if ($null -ne $this.MultiStageReviewProperty)
+            {
+                $currentMetadata = (Get-ComplianceTag -Identity $this.Name -ErrorAction Stop).MultiStageReviewerMetadata
+                $currentStages = @()
+                if (-not [System.String]::IsNullOrEmpty($currentMetadata))
+                {
+                    $currentStages = @((ConvertFrom-Json -InputObject $currentMetadata).MultiStageReviewSettings)
+                }
+
+                $desiredReviewJson = $this.GetMultiStageReviewPropertyJson($this.MultiStageReviewProperty, $currentStages)
+                if ($desiredReviewJson -ne $this.GetMultiStageReviewPropertyJson($currentStages, $currentStages))
+                {
+                    $SetParams['MultiStageReviewProperty'] = $desiredReviewJson
+                }
+                else
+                {
+                    $SetParams.Remove('MultiStageReviewProperty')
+                }
             }
             Set-ComplianceTag @SetParams -Identity $this.Name
         }
@@ -321,12 +363,26 @@ class SCComplianceTag : M365DSCResourceBase
                         $Results.Remove('FilePlanProperty') | Out-Null
                     }
                 }
+                if ($Results.MultiStageReviewProperty)
+                {
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.MultiStageReviewProperty `
+                        -CIMInstanceName 'SCMultiStageReviewSetting'
+                    if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+                    {
+                        $Results.MultiStageReviewProperty = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('MultiStageReviewProperty') | Out-Null
+                    }
+                }
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $this.GetResourceName() `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $this.GetModulePath() `
                     -Results $Results `
                     -Credential $this.Credential `
-                    -NoEscape @('FilePlanProperty') `
+                    -NoEscape @('FilePlanProperty', 'MultiStageReviewProperty') `
                     -RawResults $rawResults
                 [void]$dscContent.Append($currentDSCBlock)
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -363,6 +419,26 @@ class SCComplianceTag : M365DSCResourceBase
         }
 
         return $result
+    }
+
+    hidden [System.String] GetMultiStageReviewPropertyJson([System.Object[]] $Stages, [System.Object[]] $CurrentStages)
+    {
+        $settings = @()
+        for ($i = 0; $i -lt $Stages.Count; $i++)
+        {
+            $stageId = [System.Guid]::NewGuid().ToString()
+            if ($i -lt $CurrentStages.Count -and -not [System.String]::IsNullOrEmpty($CurrentStages[$i].StageId))
+            {
+                $stageId = $CurrentStages[$i].StageId
+            }
+            $settings += [ordered]@{
+                StageId   = $stageId
+                StageName = $Stages[$i].StageName
+                Reviewers = [System.String[]]$Stages[$i].Reviewers
+            }
+        }
+
+        return ConvertTo-Json -InputObject @{ MultiStageReviewSettings = $settings } -Depth 3 -Compress
     }
 
     hidden [System.Collections.Hashtable] GetFilePlanProperty([System.String] $Metadata)
@@ -426,4 +502,15 @@ class MSFT_SCFilePlanProperty
     [DscProperty()]
     [System.ComponentModel.Description('File plan subcategory. Can get a list by running Get-FilePlanPropertySubCategory.')]
     [System.String] $FilePlanPropertySubCategory
+}
+
+class MSFT_SCMultiStageReviewSetting
+{
+    [DscProperty()]
+    [System.ComponentModel.Description('Name of the disposition review stage.')]
+    [System.String] $StageName
+
+    [DscProperty()]
+    [System.ComponentModel.Description('Email addresses of the reviewers of the stage.')]
+    [System.String[]] $Reviewers
 }

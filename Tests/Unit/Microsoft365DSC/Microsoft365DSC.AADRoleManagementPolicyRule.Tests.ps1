@@ -64,6 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 escalationApprovers = @(
                                     @{
                                         '@odata.type' = "FakeStringValue"
+                                        id = "FakeStringValue"
                                     }
                                 )
                                 isEscalationEnabled = $True
@@ -93,6 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         escalationApprovers             = @(
                                             @{
                                                 '@odata.type' = "FakeStringValue"
+                                                id = "FakeStringValue"
                                             }
                                         )
                                         isEscalationEnabled             = $True
@@ -144,6 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     escalationApprovers = @(
                                         ([MSFT_AADRoleManagementPolicySubjectSet] @{
                                             odataType = "FakeStringValue"
+                                            id = "FakeStringValue"
                                         })
                                     )
                                 })
@@ -181,6 +184,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     escalationApprovers = @(
                                         ([MSFT_AADRoleManagementPolicySubjectSet] @{
                                             odataType = "FakeStringValue"
+                                            id = "FakeStringValue"
                                         })
                                     )
                                 })
