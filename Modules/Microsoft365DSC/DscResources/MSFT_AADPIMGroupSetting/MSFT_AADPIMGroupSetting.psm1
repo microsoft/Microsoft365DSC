@@ -285,8 +285,9 @@ class AADPIMGroupSetting : M365DSCResourceBase
         $ActivationReqTicketValue = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).enabledRules) -contains 'Ticketing'
         $ActivationReqMFAValue = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).enabledRules) -contains 'MultiFactorAuthentication'
         $AuthenticationContextValue = ($role | Where-Object { $_.Id -eq 'AuthenticationContext_EndUser_Assignment' })
-        $ApprovaltoActivateValue = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).setting.isApprovalRequired)
-        [array]$ActivateApproversValue = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).setting.approvalStages.primaryApprovers)
+        $approvalRule = $role | Where-Object -FilterScript { $_.Id -eq 'Approval_EndUser_Assignment' }
+        $approvalSetting = [AADPIMGroupSetting]::GetApprovalProperty($approvalRule, 'setting')
+        $ApprovaltoActivateValue = [AADPIMGroupSetting]::GetApprovalProperty($approvalSetting, 'isApprovalRequired')
         $AuthenticationContextRequiredValue = $AuthenticationContextValue.isEnabled
         if ($AuthenticationContextRequiredValue)
         {
@@ -295,25 +296,66 @@ class AADPIMGroupSetting : M365DSCResourceBase
         }
 
         [string[]]$activateApproverValue = @()
-        foreach ($Item in $ActivateApproversValue.id)
-        {
-            try
-            {
-                $user = Get-MgUser -UserId $Item -ErrorAction Stop
-                $activateApproverValue += $user.UserPrincipalName
-            }
-            catch
-            {
-                try
-                {
-                    $group = Get-MgGroup -GroupId $Item -ErrorAction stop
-                    $activateApproverValue += $group.DisplayName
+        $approverContext = "AADPIMGroupSetting activation approvers for group '$($this.DisplayName)' role '$($this.RoleDefinitionId)'"
+        try {
+            if ($ApprovaltoActivateValue) {
+                $stageIndex = 0
+                foreach ($stage in [AADPIMGroupSetting]::GetApprovalProperty($approvalSetting, 'approvalStages')) {
+                    $stageIndex++
+                    $approverIndex = 0
+                    foreach ($approver in [AADPIMGroupSetting]::GetApprovalProperty($stage, 'primaryApprovers')) {
+                        $approverIndex++
+                        $approverContext = "AADPIMGroupSetting group '$($this.DisplayName)' role '$($this.RoleDefinitionId)' stage $stageIndex approver $approverIndex"
+                        $approverType = [AADPIMGroupSetting]::GetApprovalProperty($approver, '@odata.type')
+                        if ([string]::IsNullOrWhiteSpace($approverType)) {
+                            $approverType = [AADPIMGroupSetting]::GetApprovalProperty($approver, 'OdataType')
+                        }
+
+                        $identifierProperty = $null
+                        $resolvedName = $null
+                        $directoryObject = $null
+                        if ($approverType -is [string] -and $approverType -eq '#microsoft.graph.singleUser') {
+                            $identifierProperty = 'userId'
+                        }
+                        elseif ($approverType -is [string] -and $approverType -eq '#microsoft.graph.groupMembers') {
+                            $identifierProperty = 'groupId'
+                        }
+                        else {
+                            throw "$approverContext has unsupported approver type '$approverType'. Expected #microsoft.graph.singleUser or #microsoft.graph.groupMembers."
+                        }
+
+                        $approverId = [AADPIMGroupSetting]::GetApprovalProperty($approver, $identifierProperty)
+                        if ($approverId -isnot [string] -or [string]::IsNullOrWhiteSpace($approverId)) {
+                            throw "$approverContext is missing a nonempty $identifierProperty for type '$approverType'. Check the primaryApprovers policy data."
+                        }
+
+                        $approverContext = "$approverContext ($identifierProperty '$approverId')"
+                        if ($identifierProperty -eq 'userId') {
+                            $directoryObject = Get-MgUser -UserId $approverId `
+                                -ErrorAction Stop
+                            if ($null -ne $directoryObject) {
+                                $resolvedName = $directoryObject.UserPrincipalName
+                            }
+                        }
+                        else {
+                            $directoryObject = Get-MgGroup -GroupId $approverId `
+                                -ErrorAction Stop
+                            if ($null -ne $directoryObject) {
+                                $resolvedName = $directoryObject.DisplayName
+                            }
+                        }
+
+                        if ([string]::IsNullOrWhiteSpace($resolvedName)) {
+                            throw "$approverContext could not resolve a user principal name or group display name. Verify that the directory object exists and the connection has permission to read it."
+                        }
+                        $activateApproverValue += $resolvedName
+                    }
                 }
-                catch
-                {
-                    Write-Verbose -Message "Error: $($Error[0])"
-                }
             }
+        }
+        catch {
+            $this.LogError($_, "Error resolving $approverContext. Verify the approval policy and directory read permissions.")
+            throw
         }
 
         if ($this.ResourceCache['ExportMode'])
@@ -1126,6 +1168,18 @@ class AADPIMGroupSetting : M365DSCResourceBase
 
             throw
         }
+    }
+
+    hidden static [System.Object] GetApprovalProperty([System.Object] $Value, [System.String] $PropertyName) {
+        if ($null -eq $Value) {
+            return $null
+        }
+
+        $propertyValue = $Value.$PropertyName
+        if ($null -eq $propertyValue -and $null -ne $Value.AdditionalProperties) {
+            $propertyValue = $Value.AdditionalProperties.$PropertyName
+        }
+        return $propertyValue
     }
 
     hidden [AADPIMGroupSetting] AsResult([System.Object] $Values)
