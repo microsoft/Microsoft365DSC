@@ -1316,7 +1316,7 @@ function Start-M365DSCConfigurationExtract
             $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName)"
             if (Test-Path $partialPath)
             {
-                Remove-Item -Path $partialPath -Force
+                Remove-Item -Path (Get-Item $partialPath).FullName -Force
             }
         }
 
